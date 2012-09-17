@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.eclipse.mylyn.tuleap_feature_3.9.0.qualifier.jar" id="org.eclipse.mylyn.tuleap_feature" version="3.9.0.qualifier">
+      <category name="org.eclipse.mylyn.tuleap"/>
+   </feature>
+   <category-def name="org.eclipse.mylyn.tuleap" label="Tuleap">
+      <description>
+         Tuleap related plugins
+      </description>
+   </category-def>
+</site>

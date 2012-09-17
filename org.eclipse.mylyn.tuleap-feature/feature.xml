@@ -27,11 +27,7 @@
    <license url="license.html">
       %license
    </license>
-   
-   <requires>
-      <import feature="org.eclipse.mylyn_feature" version="3.9.0" match="equivalent"/>
-   </requires>
-   
+
    <plugin
          id="org.eclipse.mylyn.tuleap.core"
          download-size="0"
@@ -45,4 +41,5 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
 </feature>
