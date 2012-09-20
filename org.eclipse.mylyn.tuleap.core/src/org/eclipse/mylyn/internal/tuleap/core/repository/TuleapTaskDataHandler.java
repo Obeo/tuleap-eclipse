@@ -35,7 +35,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
 /**
  * This class is in charge of the publication and retrieval of the tasks data to and from the repository.
@@ -342,25 +341,10 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler#getMultiTaskData(org.eclipse.mylyn.tasks.core.TaskRepository,
-	 *      java.util.Set, org.eclipse.mylyn.tasks.core.data.TaskDataCollector,
-	 *      org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	@Override
-	public void getMultiTaskData(TaskRepository repository, Set<String> taskIds, TaskDataCollector collector,
-			IProgressMonitor monitor) throws CoreException {
-		// TODO Check with Enalean for multi task download
-		super.getMultiTaskData(repository, taskIds, collector, monitor);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
 	 * @see org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler#canGetMultiTaskData(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
 	@Override
 	public boolean canGetMultiTaskData(TaskRepository repository) {
-		// TODO Check with Enalean for multi task download
 		return false;
 	}
 
