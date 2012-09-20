@@ -11,7 +11,6 @@
 package org.eclipse.mylyn.internal.tuleap.core.model.field;
 
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
-import org.eclipse.mylyn.internal.tuleap.core.model.TuleapPermission;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 /**
@@ -34,20 +33,12 @@ public class TuleapPermissionOnArtifact extends AbstractTuleapField {
 	 *            The name of the form element
 	 * @param formElementLabel
 	 *            The label of the form element
-	 * @param formElementDescription
-	 *            The description of the form element
-	 * @param isRequired
-	 *            Indicates if the form element is required
-	 * @param formElementPermission
-	 *            The permission of the form element
 	 * @param formElementIdentifier
 	 *            The identifier of the form element
 	 */
 	public TuleapPermissionOnArtifact(String formElementName, String formElementLabel,
-			String formElementDescription, boolean isRequired, TuleapPermission formElementPermission,
 			String formElementIdentifier) {
-		super(formElementName, formElementLabel, formElementDescription, isRequired, formElementPermission,
-				formElementIdentifier);
+		super(formElementName, formElementLabel, formElementIdentifier);
 	}
 
 	/**

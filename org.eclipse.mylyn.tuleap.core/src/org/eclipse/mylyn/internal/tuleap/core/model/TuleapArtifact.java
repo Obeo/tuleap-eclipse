@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.core.model;
 
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -34,6 +35,16 @@ public class TuleapArtifact {
 	 * The properties of the artifact.
 	 */
 	private HashMap<String, String> properties = new HashMap<String, String>();
+
+	/**
+	 * The date of creation of the artifact.
+	 */
+	private Date creationDate;
+
+	/**
+	 * The date of the last modification of the artifact.
+	 */
+	private Date lastModificationDate;
 
 	/**
 	 * The default constructor used to create a new Tuleap artifact locally.
@@ -62,6 +73,16 @@ public class TuleapArtifact {
 	}
 
 	/**
+	 * Sets the ID of the Tuleap artifact.
+	 * 
+	 * @param newId
+	 *            The ID of the Tuleap artifact.
+	 */
+	public void setId(int newId) {
+		this.id = newId;
+	}
+
+	/**
 	 * Stores a value as it is retrieved from the repository.
 	 * 
 	 * @param keyName
@@ -73,4 +94,63 @@ public class TuleapArtifact {
 		this.properties.put(keyName, value);
 	}
 
+	/**
+	 * Returns the value of the attribute with the given key.
+	 * 
+	 * @param key
+	 *            The key of the attribute
+	 * @return The value of the attribute with the given key.
+	 */
+	public String getValue(String key) {
+		return this.properties.get(key);
+	}
+
+	/**
+	 * Returns <code>true</code> if the ID of the artifact is different from the invalid ID (-1),
+	 * <code>false</code> otherwise.
+	 * 
+	 * @return <code>true</code> if the ID of the artifact is different from the invalid ID (-1),
+	 *         <code>false</code> otherwise.
+	 */
+	public boolean isValid() {
+		return this.id != TuleapArtifact.INVALID_ID;
+	}
+
+	/**
+	 * Sets the date of the creation of the artifact.
+	 * 
+	 * @param date
+	 *            The date of the creation of the artifact
+	 */
+	public void setCreationDate(Date date) {
+		this.creationDate = date;
+	}
+
+	/**
+	 * Returns the date of the creation of the artifact.
+	 * 
+	 * @return The date of the creation of the artifact.
+	 */
+	public Date getCreationDate() {
+		return this.creationDate;
+	}
+
+	/**
+	 * Sets the date of the last modification of the artifact.
+	 * 
+	 * @param date
+	 *            The date of the last modification of the artifact.
+	 */
+	public void setLastModificationDate(Date date) {
+		this.lastModificationDate = date;
+	}
+
+	/**
+	 * Returns the date of the last modification of the artifact.
+	 * 
+	 * @return The date of the last modification of the artifact.
+	 */
+	public Date getLastModificationDate() {
+		return this.lastModificationDate;
+	}
 }

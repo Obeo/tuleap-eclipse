@@ -11,13 +11,15 @@
 package org.eclipse.mylyn.internal.tuleap.core.net;
 
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
-import org.eclipse.mylyn.internal.tuleap.core.model.TuleapPermission;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapDate;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapInteger;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapMultiSelectBox;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapSelectBox;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapString;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapText;
+import org.eclipse.mylyn.internal.tuleap.core.model.permission.ITuleapDefaultPermissionGroups;
+import org.eclipse.mylyn.internal.tuleap.core.model.permission.TuleapAccessPermission;
+import org.eclipse.mylyn.internal.tuleap.core.model.permission.TuleapPermissions;
 import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapFieldSet;
 import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConfiguration;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
@@ -57,19 +59,29 @@ public class TrackerConnector {
 				"This is a restaurant leaded by a super cook");
 
 		// The meal group
-		TuleapFieldSet mealElement = new TuleapFieldSet("Meal", "Meal", "The details of the meal", true,
-				TuleapPermission.USER_GROUP_ANONYMOUS, "__cook_meal");
-		TuleapString mealName = new TuleapString("Name", "Name", "The name of the meal", true,
-				TuleapPermission.USER_GROUP_ANONYMOUS, "__cook_meal_name");
+		TuleapFieldSet mealElement = new TuleapFieldSet("Meal", "Meal", "__cook_meal");
+		mealElement.setDescription("The details of the meal");
+		mealElement.setRequired(true);
+		TuleapPermissions permissions = new TuleapPermissions();
+		permissions.put(ITuleapDefaultPermissionGroups.ALL_USERS, TuleapAccessPermission.UPDATE, true);
+		mealElement.setPermissions(permissions);
+
+		TuleapString mealName = new TuleapString("Name", "Name", "__cook_meal_name");
+		mealName.setDescription("The name of the meal");
+		mealName.setRequired(true);
+		mealName.setPermissions(permissions);
 		mealElement.getFormElements().add(mealName);
 
-		TuleapInteger mealPrice = new TuleapInteger("Price", "Price", "The price of the meal", true,
-				TuleapPermission.USER_GROUP_PROJECT_MEMBERS, "__cook_meal_price");
+		TuleapInteger mealPrice = new TuleapInteger("Price", "Price", "__cook_meal_price");
+		mealPrice.setDescription("The price of the meal");
+		mealPrice.setRequired(true);
+		mealPrice.setPermissions(permissions);
 		mealElement.getFormElements().add(mealPrice);
 
 		TuleapSelectBox mealAwesomeness = new TuleapSelectBox("Awesomeness", "Awesomness",
-				"The awesomness of the meal", true, TuleapPermission.USER_GROUP_ANONYMOUS,
 				"__cook_meal_awesomness");
+		mealAwesomeness.setDescription("The awesomness of the meal");
+		mealAwesomeness.setPermissions(permissions);
 		mealAwesomeness.getItems().add("MAGNIFICENT");
 		mealAwesomeness.getItems().add("Amazing");
 		mealAwesomeness.getItems().add("Why not");
@@ -81,12 +93,13 @@ public class TrackerConnector {
 
 		// The persons group
 		TuleapFieldSet personElement = new TuleapFieldSet("Persons Management", "Persons Management",
-				"Management of the persons eating the meal", true,
-				TuleapPermission.USER_GROUP_PROJECT_MEMBERS, "__persons");
+				"__persons");
+		personElement.setDescription("Management of the persons eating the meal");
 
-		TuleapMultiSelectBox persons = new TuleapMultiSelectBox("Persons", "Persons",
-				"The persons eating the meal", true, TuleapPermission.USER_GROUP_PROJECT_MEMBERS,
-				"__persons_persons");
+		TuleapMultiSelectBox persons = new TuleapMultiSelectBox("Persons", "Persons", "__persons_persons");
+		persons.setDescription("The persons eating the meal");
+		persons.setPermissions(permissions);
+
 		persons.getItems().add("Stephane Begaudeau");
 		persons.getItems().add("Laurent Goubet");
 		persons.getItems().add("Cedric Notot");
@@ -97,25 +110,27 @@ public class TrackerConnector {
 		persons.getItems().add("Stephane Lacrampe");
 		personElement.getFormElements().add(persons);
 
-		TuleapDate beginDate = new TuleapDate("Begin Date", "Begin Date",
-				"The date of the beginning of the meal", true, TuleapPermission.USER_GROUP_PROJECT_MEMBERS,
-				"__persons_begin_date");
+		TuleapDate beginDate = new TuleapDate("Begin Date", "Begin Date", "__persons_begin_date");
+		beginDate.setDescription("The date of the beginning of the meal");
+		beginDate.setPermissions(permissions);
 		personElement.getFormElements().add(beginDate);
 
-		TuleapDate endDate = new TuleapDate("End Date", "End Date", "The date of the beginning of the meal",
-				true, TuleapPermission.USER_GROUP_PROJECT_MEMBERS, "__persons_begin_date");
+		TuleapDate endDate = new TuleapDate("End Date", "End Date", "__persons_begin_date");
+		endDate.setDescription("The date of the beginning of the meal");
+		endDate.setPermissions(permissions);
 		personElement.getFormElements().add(endDate);
 
 		configuration.getFormElements().add(personElement);
 
 		// The additional data group
 		TuleapFieldSet additionalElement = new TuleapFieldSet("Additional Information",
-				"Additional Information", "Additional information for the meal", false,
-				TuleapPermission.USER_GROUP_ADMIN, "__additional");
+				"Additional Information", "__additional");
+		additionalElement.setDescription("Additional information for the meal");
+		additionalElement.setPermissions(permissions);
 
-		TuleapText additionalText = new TuleapText("Description", "Description",
-				"The description of the additional information", false, TuleapPermission.USER_GROUP_ADMIN,
-				"__additional_description");
+		TuleapText additionalText = new TuleapText("Description", "Description", "__additional_description");
+		additionalText.setDescription("The description of the additional information");
+		additionalText.setPermissions(permissions);
 		additionalElement.getFormElements().add(additionalText);
 
 		configuration.getFormElements().add(additionalElement);

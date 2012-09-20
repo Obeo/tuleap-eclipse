@@ -12,6 +12,8 @@ package org.eclipse.mylyn.internal.tuleap.core.model;
 
 import java.io.Serializable;
 
+import org.eclipse.mylyn.internal.tuleap.core.model.permission.TuleapPermissions;
+
 /**
  * The common root of all Tuleap form elements.
  * 
@@ -46,9 +48,9 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 	private boolean required;
 
 	/**
-	 * The permission of this form element.
+	 * The permissions of this form element.
 	 */
-	private TuleapPermission permission;
+	private TuleapPermissions permissions;
 
 	/**
 	 * The identifier of the form element.
@@ -62,24 +64,14 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 	 *            The name of the form element
 	 * @param formElementLabel
 	 *            The label of the form element
-	 * @param formElementDescription
-	 *            The description of the form element
-	 * @param isRequired
-	 *            Indicates if the form element is required
-	 * @param formElementPermission
-	 *            The permission of the form element
 	 * @param formElementIdentifier
 	 *            The identifier of the form element
 	 */
 	public AbstractTuleapFormElement(String formElementName, String formElementLabel,
-			String formElementDescription, boolean isRequired, TuleapPermission formElementPermission,
 			String formElementIdentifier) {
 		super();
 		this.name = formElementName;
 		this.label = formElementLabel;
-		this.description = formElementDescription;
-		this.required = isRequired;
-		this.permission = formElementPermission;
 		this.identifier = formElementIdentifier;
 	}
 
@@ -102,12 +94,31 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 	}
 
 	/**
+	 * Returns the identifier of the form element.
+	 * 
+	 * @return The identifier of the form element.
+	 */
+	public String getIdentifier() {
+		return this.identifier;
+	}
+
+	/**
 	 * Returns the description of the form element.
 	 * 
 	 * @return The description of the form element.
 	 */
 	public String getDescription() {
 		return this.description;
+	}
+
+	/**
+	 * Sets a new description for the form element.
+	 * 
+	 * @param formElementDescription
+	 *            The new description to set
+	 */
+	public void setDescription(String formElementDescription) {
+		this.description = formElementDescription;
 	}
 
 	/**
@@ -120,21 +131,32 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 	}
 
 	/**
+	 * Sets the requirement of the form element.
+	 * 
+	 * @param isFormElementRequired
+	 *            The requirement to set
+	 */
+	public void setRequired(boolean isFormElementRequired) {
+		this.required = isFormElementRequired;
+	}
+
+	/**
 	 * Returns the permission of the form element.
 	 * 
 	 * @return The permission of the form element.
 	 */
-	public TuleapPermission getPermission() {
-		return this.permission;
+	public TuleapPermissions getPermissions() {
+		return this.permissions;
 	}
 
 	/**
-	 * Returns the identifier of the form element.
+	 * Sets the permission of the form element.
 	 * 
-	 * @return The identifier of the form element.
+	 * @param formElementPermissions
+	 *            The permissions to set
 	 */
-	public String getIdentifier() {
-		return this.identifier;
+	public void setPermissions(TuleapPermissions formElementPermissions) {
+		this.permissions = formElementPermissions;
 	}
 
 }

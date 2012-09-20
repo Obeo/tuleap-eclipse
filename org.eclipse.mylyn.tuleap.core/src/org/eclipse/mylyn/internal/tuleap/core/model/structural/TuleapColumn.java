@@ -15,7 +15,6 @@ import java.util.List;
 
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapStructuralElement;
-import org.eclipse.mylyn.internal.tuleap.core.model.TuleapPermission;
 
 /**
  * The Tuleap column structural element.
@@ -41,19 +40,11 @@ public class TuleapColumn extends AbstractTuleapStructuralElement {
 	 *            The name of the form element
 	 * @param formElementLabel
 	 *            The label of the form element
-	 * @param formElementDescription
-	 *            The description of the form element
-	 * @param isRequired
-	 *            Indicates if the form element is required
-	 * @param formElementPermission
-	 *            The permission of the form element
 	 * @param formElementIdentifier
 	 *            The identifier of the form element
 	 */
-	public TuleapColumn(String formElementName, String formElementLabel, String formElementDescription,
-			boolean isRequired, TuleapPermission formElementPermission, String formElementIdentifier) {
-		super(formElementName, formElementLabel, formElementDescription, isRequired, formElementPermission,
-				formElementIdentifier);
+	public TuleapColumn(String formElementName, String formElementLabel, String formElementIdentifier) {
+		super(formElementName, formElementLabel, formElementIdentifier);
 	}
 
 	/**
