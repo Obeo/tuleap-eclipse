@@ -91,7 +91,9 @@ public class TuleapArtifact {
 	 *            The value of the property
 	 */
 	public void putValue(String keyName, String value) {
-		this.properties.put(keyName, value);
+		if (!"id".equals(keyName)) { //$NON-NLS-1$			
+			this.properties.put(keyName, value);
+		}
 	}
 
 	/**
