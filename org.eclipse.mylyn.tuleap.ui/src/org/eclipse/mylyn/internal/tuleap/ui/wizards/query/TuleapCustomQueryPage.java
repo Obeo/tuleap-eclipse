@@ -11,6 +11,7 @@
 package org.eclipse.mylyn.internal.tuleap.ui.wizards.query;
 
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.mylyn.commons.workbench.forms.SectionComposite;
 import org.eclipse.mylyn.internal.tuleap.core.client.TuleapClient;
@@ -109,49 +110,11 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 	 */
 	@Override
 	public void applyTo(IRepositoryQuery query) {
-		query.setUrl(this.getQueryURL(this.getTaskRepository(), this.getQueryParameters()));
+		query.setUrl(this.getTaskRepository().getRepositoryUrl());
 		query.setSummary(this.getQueryTitle());
-	}
 
-	/**
-	 * Returns the beginning of the query parameters.
-	 * 
-	 * @return The beginning of the query parameters.
-	 */
-	private StringBuilder getQueryParameters() {
-		return new StringBuilder("name=allTuleapTasks");
-	}
-
-	/**
-	 * Returns the start of the url of the repository.
-	 * 
-	 * @param repository
-	 *            The Mylyn task repository.
-	 * @return The start of the url of the repository.
-	 */
-	private StringBuilder getQueryURLStart(TaskRepository repository) {
-		StringBuilder sb = new StringBuilder(repository.getRepositoryUrl());
-
-		if (sb.charAt(sb.length() - 1) != '/') {
-			sb.append('/');
-		}
-		sb.append("buglist.cgi?"); //$NON-NLS-1$
-		return sb;
-	}
-
-	/**
-	 * Returns the url of the query.
-	 * 
-	 * @param repository
-	 *            The Mylyn tasks repository
-	 * @param params
-	 *            the parameters of the query
-	 * @return The url of the query
-	 */
-	private String getQueryURL(TaskRepository repository, StringBuilder params) {
-		StringBuilder url = new StringBuilder(this.getQueryURLStart(repository).toString());
-		url.append(params);
-		return url.toString();
+		Map<String, String> attributes = query.getAttributes();
+		// TODO Add the attributes of the query
 	}
 
 	/**
