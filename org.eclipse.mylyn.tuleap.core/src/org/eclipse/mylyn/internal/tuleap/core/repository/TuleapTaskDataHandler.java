@@ -24,7 +24,11 @@ import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapFormElement;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapStructuralElement;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact;
+import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapSelectBox;
+import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapString;
+import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapColumn;
 import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapFieldSet;
+import org.eclipse.mylyn.internal.tuleap.core.util.TuleapMylynTasksMessages;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
@@ -155,80 +159,62 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		if (configuration != null) {
 			// TODO Configure content to display it in the editor later
 
-			// Assigned to
-			TaskAttribute attribute = taskData.getRoot().createAttribute(TaskAttribute.USER_ASSIGNED);
-			TaskAttributeMetaData metaData = attribute.getMetaData();
-			metaData.setLabel("Assigned to");
-			metaData.setKind(TaskAttribute.KIND_DEFAULT);
-			metaData.setType(TaskAttribute.TYPE_PERSON);
-			attribute.setValue("stephane.begaudeau@gmail.com");
-
-			// Priority
-			attribute = taskData.getRoot().createAttribute(TaskAttribute.PRIORITY);
-			metaData = attribute.getMetaData();
-			metaData.setLabel("Priority");
-			metaData.setKind(TaskAttribute.KIND_DEFAULT);
-			metaData.setType(TaskAttribute.TYPE_SINGLE_SELECT);
-			attribute.putOption("P1", "P1");
-			attribute.putOption("P2", "P2");
-			attribute.putOption("P3", "P3");
-			attribute.putOption("P4", "P4");
-			attribute.putOption("P5", "P5");
-			attribute.setValue("P3");
-
-			// Summary
-			attribute = taskData.getRoot().createAttribute(TaskAttribute.SUMMARY);
-			metaData = attribute.getMetaData();
-			metaData.setLabel("Summary");
-			metaData.setKind(TaskAttribute.KIND_DEFAULT);
-			metaData.setType(TaskAttribute.TYPE_SHORT_RICH_TEXT);
-			attribute.setValue("Basic summary of a new Tuleap task");
-
 			// Creation date
-			attribute = taskData.getRoot().createAttribute(TaskAttribute.DATE_CREATION);
-			metaData = attribute.getMetaData();
-			metaData.setLabel("Created");
+			TaskAttribute attribute = taskData.getRoot().createAttribute(TaskAttribute.DATE_CREATION);
+			TaskAttributeMetaData metaData = attribute.getMetaData();
+			metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.CreationDate")); //$NON-NLS-1$
 			metaData.setKind(TaskAttribute.KIND_DEFAULT);
 			metaData.setType(TaskAttribute.TYPE_DATE);
-			attribute.setValue("");
 
 			// Last modification date
 			attribute = taskData.getRoot().createAttribute(TaskAttribute.DATE_MODIFICATION);
 			metaData = attribute.getMetaData();
-			metaData.setLabel("Modified");
+			metaData.setLabel(TuleapMylynTasksMessages
+					.getString("TuleapTaskDataHandler.LastModificationDate")); //$NON-NLS-1$
 			metaData.setKind(TaskAttribute.KIND_DEFAULT);
 			metaData.setType(TaskAttribute.TYPE_DATE);
-			attribute.setValue("");
-
-			// Resolution
-			attribute = taskData.getRoot().createAttribute(TaskAttribute.RESOLUTION);
-			metaData = attribute.getMetaData();
-			metaData.setLabel("Resolution");
-			metaData.setKind(TaskAttribute.KIND_DEFAULT);
-			metaData.setType(TaskAttribute.TYPE_SINGLE_SELECT);
-			attribute.putOption("NEW", "NEW");
-			attribute.putOption("ASSIGNED", "ASSIGNED");
-			attribute.putOption("SOLVED", "SOLVED");
-			attribute.putOption("INVALID", "INVALID");
-			attribute.setValue("NEW");
 
 			// Default attributes
 			List<AbstractTuleapStructuralElement> formElements = configuration.getFormElements();
 			for (AbstractTuleapStructuralElement abstractTuleapStructuralElement : formElements) {
-				if (abstractTuleapStructuralElement instanceof TuleapFieldSet) {
-					TuleapFieldSet tuleapFieldSet = (TuleapFieldSet)abstractTuleapStructuralElement;
-					List<AbstractTuleapFormElement> fieldSetFormElements = tuleapFieldSet.getFormElements();
-					for (AbstractTuleapFormElement abstractTuleapFormElement : fieldSetFormElements) {
-						if (abstractTuleapFormElement instanceof AbstractTuleapField) {
-							this.createAttribute(taskData, (AbstractTuleapField)abstractTuleapFormElement);
-						}
-					}
+				List<AbstractTuleapField> fields = this.getFields(abstractTuleapStructuralElement);
+				for (AbstractTuleapField abstractTuleapField : fields) {
+					this.createAttribute(taskData, abstractTuleapField);
 				}
 			}
-
-			// Additional properties
-
 		}
+	}
+
+	/**
+	 * Returns the list of fields recursively contained in a given form element.
+	 * 
+	 * @param formElement
+	 *            A structural form element
+	 * @return The list of fields recursively contained in a given form element.
+	 */
+	private List<AbstractTuleapField> getFields(AbstractTuleapStructuralElement formElement) {
+		List<AbstractTuleapField> fields = new ArrayList<AbstractTuleapField>();
+		if (formElement instanceof TuleapFieldSet) {
+			TuleapFieldSet tuleapFieldSet = (TuleapFieldSet)formElement;
+			List<AbstractTuleapFormElement> formElements = tuleapFieldSet.getFormElements();
+			for (AbstractTuleapFormElement abstractTuleapFormElement : formElements) {
+				if (abstractTuleapFormElement instanceof TuleapFieldSet) {
+					TuleapFieldSet fieldSet = (TuleapFieldSet)abstractTuleapFormElement;
+					fields.addAll(this.getFields(fieldSet));
+				} else if (abstractTuleapFormElement instanceof TuleapColumn) {
+					TuleapColumn column = (TuleapColumn)abstractTuleapFormElement;
+					fields.addAll(this.getFields(column));
+				} else if (abstractTuleapFormElement instanceof AbstractTuleapField) {
+					AbstractTuleapField field = (AbstractTuleapField)abstractTuleapFormElement;
+					fields.add(field);
+
+				}
+			}
+		} else if (formElement instanceof TuleapColumn) {
+			TuleapColumn tuleapColumn = (TuleapColumn)formElement;
+			fields.addAll(tuleapColumn.getFormElements());
+		}
+		return fields;
 	}
 
 	/**
@@ -240,20 +226,48 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 *            The Tuleap field
 	 */
 	private void createAttribute(TaskData taskData, AbstractTuleapField tuleapField) {
-		TaskAttribute attribute = taskData.getRoot().createAttribute(tuleapField.getIdentifier());
+		TaskAttribute attribute = null;
 
+		// Semantic support
+		if (tuleapField instanceof TuleapString && ((TuleapString)tuleapField).isSemanticTitle()) {
+			attribute = taskData.getRoot().createAttribute(TaskAttribute.SUMMARY);
+		} else if (tuleapField instanceof TuleapSelectBox) {
+			TuleapSelectBox selectBox = (TuleapSelectBox)tuleapField;
+			if (selectBox.isSemanticStatus()) {
+				attribute = taskData.getRoot().createAttribute(TaskAttribute.RESOLUTION);
+			} else if (selectBox.isSemanticContributor()) {
+				// Create an attribute for the assigned person
+				TaskAttribute anAttribute = taskData.getRoot().createAttribute(TaskAttribute.USER_ASSIGNED);
+				TaskAttributeMetaData metaData = anAttribute.getMetaData();
+				metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.AssignedToLabel")); //$NON-NLS-1$
+				metaData.setKind(TaskAttribute.KIND_DEFAULT);
+				metaData.setType(TaskAttribute.TYPE_PERSON);
+
+				// Create the regular attribute
+				attribute = taskData.getRoot().createAttribute(tuleapField.getIdentifier());
+			} else {
+				attribute = taskData.getRoot().createAttribute(tuleapField.getIdentifier());
+			}
+		} else {
+			attribute = taskData.getRoot().createAttribute(tuleapField.getIdentifier());
+		}
+
+		// Attributes
 		TaskAttributeMetaData attributeMetadata = attribute.getMetaData();
 		attributeMetadata.setType(tuleapField.getMetadataType());
 		attributeMetadata.setKind(tuleapField.getMetadataKind());
-		// TODO Support advanced permissions (read only / visible)
-		// attributeMetadata.setReadOnly(tuleaField)
 		attributeMetadata.setLabel(tuleapField.getLabel());
 
+		// TODO Support advanced permissions (read only / visible)
+		// attributeMetadata.setReadOnly(tuleaField)
+
+		// Possible values
 		Map<String, String> options = tuleapField.getOptions();
 		for (Entry<String, String> entry : options.entrySet()) {
 			attribute.putOption(entry.getKey(), entry.getValue());
 		}
 
+		// Default values
 		Object defaultValue = tuleapField.getDefaultValue();
 		if (defaultValue instanceof String) {
 			attribute.setValue((String)defaultValue);
