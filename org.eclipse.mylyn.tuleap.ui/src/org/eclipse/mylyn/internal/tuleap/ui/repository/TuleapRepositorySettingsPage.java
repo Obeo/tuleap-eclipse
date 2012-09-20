@@ -41,6 +41,7 @@ public class TuleapRepositorySettingsPage extends AbstractRepositorySettingsPage
 		// TODO Check with Enalean for the options of the Tuleap tracker
 		this.setNeedsAnonymousLogin(true);
 		this.setNeedsEncoding(true);
+		this.setNeedsValidateOnFinish(true);
 	}
 
 	/**
