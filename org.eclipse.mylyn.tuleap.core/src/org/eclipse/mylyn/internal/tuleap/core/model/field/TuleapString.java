@@ -32,6 +32,11 @@ public class TuleapString extends AbstractTuleapField {
 	private int size;
 
 	/**
+	 * Indicates if this field is the semantic title of the artifact of the tracker.
+	 */
+	private boolean isSemanticTitle;
+
+	/**
 	 * The constructor.
 	 * 
 	 * @param formElementName
@@ -92,5 +97,26 @@ public class TuleapString extends AbstractTuleapField {
 	@Override
 	public Object getDefaultValue() {
 		return ""; //$NON-NLS-1$
+	}
+
+	/**
+	 * Sets to <code>true</code> to indicate that this field is the semantic title of the tracker.
+	 * 
+	 * @param isTitle
+	 *            Indicates if the field is the title of the tracker.
+	 */
+	public void setSemanticTitle(boolean isTitle) {
+		this.isSemanticTitle = isTitle;
+	}
+
+	/**
+	 * Returns <code>true</code> if the field is the semantic title of the tracker, <code>false</code>
+	 * otherwise.
+	 * 
+	 * @return <code>true</code> if the field is the semantic title of the tracker, <code>false</code>
+	 *         otherwise.
+	 */
+	public boolean isSemanticTitle() {
+		return this.isSemanticTitle;
 	}
 }
