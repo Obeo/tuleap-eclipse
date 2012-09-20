@@ -356,7 +356,6 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 */
 	@Override
 	public boolean canInitializeSubTaskData(TaskRepository repository, ITask task) {
-		// TODO Check with Enalean for subtask support
 		return false;
 	}
 
