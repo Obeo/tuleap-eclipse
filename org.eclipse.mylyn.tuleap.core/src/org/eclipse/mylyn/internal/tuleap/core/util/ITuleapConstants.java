@@ -33,4 +33,9 @@ public interface ITuleapConstants {
 	 * The repository url separator.
 	 */
 	String REPOSITORY_URL_SEPARATOR = "#"; //$NON-NLS-1$
+
+	/**
+	 * The ID representing the UTC timezone.
+	 */
+	String TIMEZONE_UTC = "UTC"; //$NON-NLS-1$
 }

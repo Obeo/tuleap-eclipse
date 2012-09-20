@@ -12,7 +12,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.tasks.core;bundle-version="3.7.0"
 Export-Package: org.eclipse.mylyn.internal.tuleap.core;x-internal:=true,
  org.eclipse.mylyn.internal.tuleap.core.client;x-friends:="org.eclipse.mylyn.tuleap.tests,org.eclipse.mylyn.tuleap.ui",
- org.eclipse.mylyn.internal.tuleap.core.model;x-friends:="org.eclipse.mylyn.tuleap.ui",
+ org.eclipse.mylyn.internal.tuleap.core.model;x-friends:="org.eclipse.mylyn.tuleap.ui,org.eclipse.mylyn.tuleap.tests",
  org.eclipse.mylyn.internal.tuleap.core.model.field;x-internal:=true,
  org.eclipse.mylyn.internal.tuleap.core.model.structural;x-friends:="org.eclipse.mylyn.tuleap.ui",
  org.eclipse.mylyn.internal.tuleap.core.net;x-internal:=true,

@@ -44,6 +44,21 @@ public final class AllTuleapTests {
 		return suite;
 	}
 
+	// CHECKSTYLE:OFF (suite should not have any parameters)
+	/**
+	 * Returns the test suite configured with the given test configuration.
+	 * 
+	 * @param configuration
+	 *            The test configuration
+	 * @return The test suite configured with the given test configuration.
+	 */
+	public static Test suite(TestConfiguration configuration) {
+		// CHECKSTYLE:ON
+		TestSuite suite = new TestSuite(AllTuleapTests.class.getName());
+		addTests(suite, configuration);
+		return suite;
+	}
+
 	/**
 	 * Adds the tests to the tests suite for the given configuration.
 	 * 
@@ -54,7 +69,7 @@ public final class AllTuleapTests {
 	 */
 	public static void addTests(TestSuite suite, TestConfiguration configuration) {
 		// Standalone tests (Don't require an instance of Eclipse)
-		// suite.addTest(AllTuleapHeadlessStandaloneTests.suite(configuration));
+		suite.addTest(AllTuleapHeadlessStandaloneTests.suite(configuration));
 
 		// Tests that only need to run once (i.e. no network io so doesn't matter which repository)
 		// suite.addTestSuite(BugzillaHyperlinkDetectorTest.class);
