@@ -16,6 +16,7 @@ import junit.framework.TestSuite;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.tuleap.tests.support.TuleapFixture;
+import org.eclipse.mylyn.tuleap.tests.ui.TuleapRepositorySettingsPageTest;
 
 /**
  * This class should be used to launch all Tuleap unit tests.
@@ -76,6 +77,7 @@ public final class AllTuleapTests {
 
 		// network tests
 		if (!configuration.isLocalOnly()) {
+			suite.addTestSuite(TuleapRepositorySettingsPageTest.class);
 			// suite.addTestSuite(BugzillaTaskEditorTest.class);
 			// suite.addTestSuite(BugzillaSearchPageTest.class);
 			// suite.addTestSuite(BugzillaRepositorySettingsPageTest.class);
