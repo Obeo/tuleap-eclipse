@@ -43,6 +43,11 @@ public class TuleapSelectBox extends AbstractTuleapField {
 	private String binding;
 
 	/**
+	 * The list of items that should be considered as an open status semantically.
+	 */
+	private List<String> openStatus = new ArrayList<String>();
+
+	/**
 	 * The constructor.
 	 * 
 	 * @param formElementName
@@ -63,6 +68,26 @@ public class TuleapSelectBox extends AbstractTuleapField {
 	 */
 	public List<String> getItems() {
 		return this.items;
+	}
+
+	/**
+	 * Returns the list of items that should be considered as open status semantically.
+	 * 
+	 * @return The list of items that should be considered as open status semantically.
+	 */
+	public List<String> getOpenStatus() {
+		return this.openStatus;
+	}
+
+	/**
+	 * Returns <code>true</code> if this field is to be considered as the status of the artifact semantically,
+	 * <code>false</code> otherwise.
+	 * 
+	 * @return <code>true</code> if this field is to be considered as the status of the artifact semantically,
+	 *         <code>false</code> otherwise.
+	 */
+	public boolean isSemanticStatus() {
+		return this.openStatus.size() > 0;
 	}
 
 	/**
