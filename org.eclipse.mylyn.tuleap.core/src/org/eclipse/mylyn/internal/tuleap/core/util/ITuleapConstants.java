@@ -38,4 +38,14 @@ public interface ITuleapConstants {
 	 * The ID representing the UTC timezone.
 	 */
 	String TIMEZONE_UTC = "UTC"; //$NON-NLS-1$
+
+	/**
+	 * The ID of the default static binding.
+	 */
+	String TULEAP_STATIC_BINDING_ID = "static"; //$NON-NLS-1$
+
+	/**
+	 * The ID of the default dynamic binding.
+	 */
+	String TULEAP_DYNAMIC_BINDING_USERS = "users"; //$NON-NLS-1$
 }

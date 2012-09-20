@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
+import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 /**
@@ -35,6 +36,11 @@ public class TuleapSelectBox extends AbstractTuleapField {
 	 * The select box items.
 	 */
 	private List<String> items = new ArrayList<String>();
+
+	/**
+	 * The value of the binding of the select box.
+	 */
+	private String binding;
 
 	/**
 	 * The constructor.
@@ -104,5 +110,42 @@ public class TuleapSelectBox extends AbstractTuleapField {
 			return this.items.get(0);
 		}
 		return null;
+	}
+
+	/**
+	 * Sets the value of the binding of the select box.
+	 * <p>
+	 * The binding must be one of the following value:
+	 * <ul>
+	 * <li>static (the collections of the possible bindings must then be added to
+	 * {@link org.eclipse.mylyn.internal.tuleap.core.model.TuleapSelectBox#getItems()}</li>
+	 * <li>users (the collections of users must be requested to the server and then added to
+	 * {@link org.eclipse.mylyn.internal.tuleap.core.model.TuleapSelectBox#getItems()}</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param selectBoxBinding
+	 *            The value of the binding
+	 */
+	public void setBinding(String selectBoxBinding) {
+		this.binding = selectBoxBinding;
+	}
+
+	/**
+	 * Returns the kind of binding used by this select box.
+	 * 
+	 * @return The kind of binding used by this select box.
+	 */
+	public String getBinding() {
+		return this.binding;
+	}
+
+	/**
+	 * Returns <code>true</code> if the field is statically binded, <code>false</code> otherwise.
+	 * 
+	 * @return <code>true</code> if the field is statically binded, <code>false</code> otherwise.
+	 */
+	public boolean isStaticallyBinded() {
+		return ITuleapConstants.TULEAP_STATIC_BINDING_ID.equals(this.binding);
 	}
 }
