@@ -58,6 +58,11 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 	private String identifier;
 
 	/**
+	 * The rank of the form element.
+	 */
+	private int rank;
+
+	/**
 	 * The constructor.
 	 * 
 	 * @param formElementName
@@ -157,6 +162,25 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 	 */
 	public void setPermissions(TuleapPermissions formElementPermissions) {
 		this.permissions = formElementPermissions;
+	}
+
+	/**
+	 * Sets the rank of the form element.
+	 * 
+	 * @param formElementRank
+	 *            The rank to set
+	 */
+	public void setRank(int formElementRank) {
+		this.rank = formElementRank;
+	}
+
+	/**
+	 * Returns the rank of the form element.
+	 * 
+	 * @return The rank of the form element.
+	 */
+	public int getRank() {
+		return this.rank;
 	}
 
 }
