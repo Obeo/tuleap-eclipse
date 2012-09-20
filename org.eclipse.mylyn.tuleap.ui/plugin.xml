@@ -15,4 +15,12 @@
             overlayIcon="icons/tools/tuleap-logo_16x16.png">
       </connectorUi>
    </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.ui.editors">
+      <pageFactory
+            class="org.eclipse.mylyn.internal.tuleap.ui.editor.TuleapTaskEditorPageFactory"
+            id="org.eclipse.mylyn.tuleap.ui.pageFactory">
+      </pageFactory>
+   </extension>
+
 </plugin>
