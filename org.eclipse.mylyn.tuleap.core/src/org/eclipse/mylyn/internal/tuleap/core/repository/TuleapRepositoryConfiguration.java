@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapStructuralElement;
+import org.eclipse.mylyn.internal.tuleap.core.model.TuleapCannedResponse;
 
 /**
  * The repository configuration will hold the latest known configuration of a given repository. This
@@ -53,6 +54,11 @@ public class TuleapRepositoryConfiguration implements Serializable {
 	 * The description of the Tuleap tracker.
 	 */
 	private String description;
+
+	/**
+	 * The list of canned responses.
+	 */
+	private List<TuleapCannedResponse> cannedResponses = new ArrayList<TuleapCannedResponse>();
 
 	/**
 	 * The structural elements of the Tuleap tracker.
@@ -150,5 +156,14 @@ public class TuleapRepositoryConfiguration implements Serializable {
 	 */
 	public List<AbstractTuleapStructuralElement> getFormElements() {
 		return this.formElements;
+	}
+
+	/**
+	 * Returns the list of the canned responses.
+	 * 
+	 * @return The list of the canned respones.
+	 */
+	public List<TuleapCannedResponse> getCannedResponses() {
+		return this.cannedResponses;
 	}
 }
