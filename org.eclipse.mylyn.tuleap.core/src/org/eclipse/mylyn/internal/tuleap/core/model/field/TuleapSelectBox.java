@@ -54,6 +54,11 @@ public class TuleapSelectBox extends AbstractTuleapField {
 	private TuleapWorkflow workflow;
 
 	/**
+	 * Indicates if this field represents the list of contributors of the artifact.
+	 */
+	private boolean isSemanticContributor;
+
+	/**
 	 * The constructor.
 	 * 
 	 * @param formElementName
@@ -94,6 +99,29 @@ public class TuleapSelectBox extends AbstractTuleapField {
 	 */
 	public boolean isSemanticStatus() {
 		return this.openStatus.size() > 0;
+	}
+
+	/**
+	 * Returns <code>true</code> if this field represents the list of contributors on the artifact of the
+	 * tracker, <code>false</code> otherwise.
+	 * 
+	 * @return <code>true</code> if this field represents the list of contributors on the artifact of the
+	 *         tracker, <code>false</code> otherwise.
+	 */
+	public boolean isSemanticContributor() {
+		return this.isSemanticContributor;
+	}
+
+	/**
+	 * Sets to indicate that this field represents the list of the contributors on the artifact of the
+	 * tracker.
+	 * 
+	 * @param isContributor
+	 *            <code>true</code> to indicate that this field represents the list of contributors on the
+	 *            artifact of the tracker.
+	 */
+	public void setSemanticContributor(boolean isContributor) {
+		this.isSemanticContributor = isContributor;
 	}
 
 	/**
