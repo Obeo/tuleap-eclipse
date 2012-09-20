@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
+import org.eclipse.mylyn.internal.tuleap.core.model.workflow.TuleapWorkflow;
 import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
@@ -46,6 +47,11 @@ public class TuleapSelectBox extends AbstractTuleapField {
 	 * The list of items that should be considered as an open status semantically.
 	 */
 	private List<String> openStatus = new ArrayList<String>();
+
+	/**
+	 * The workflow of the field.
+	 */
+	private TuleapWorkflow workflow;
 
 	/**
 	 * The constructor.
@@ -172,5 +178,24 @@ public class TuleapSelectBox extends AbstractTuleapField {
 	 */
 	public boolean isStaticallyBinded() {
 		return ITuleapConstants.TULEAP_STATIC_BINDING_ID.equals(this.binding);
+	}
+
+	/**
+	 * Sets the workflow of the field.
+	 * 
+	 * @param fieldWorkflow
+	 *            The workflow to set
+	 */
+	public void setWorkflow(TuleapWorkflow fieldWorkflow) {
+		this.workflow = fieldWorkflow;
+	}
+
+	/**
+	 * Returns the workflow of the field.
+	 * 
+	 * @return The workflow of the field.
+	 */
+	public TuleapWorkflow getWorkflow() {
+		return this.workflow;
 	}
 }
