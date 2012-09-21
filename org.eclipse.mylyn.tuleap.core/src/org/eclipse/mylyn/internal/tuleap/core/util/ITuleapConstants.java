@@ -48,4 +48,10 @@ public interface ITuleapConstants {
 	 * The ID of the default dynamic binding.
 	 */
 	String TULEAP_DYNAMIC_BINDING_USERS = "users"; //$NON-NLS-1$
+
+	/**
+	 * Part of the Tuleap repository URL. The URL format is :
+	 * "https://<domainName>/plugins/tracker/?group_id=<trackerId>"
+	 */
+	String TULEAP_REPOSITORY_URL_STRUCTURE = "/plugins/tracker/?group_id="; //$NON-NLS-1$
 }

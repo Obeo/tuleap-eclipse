@@ -14,6 +14,7 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
+import org.eclipse.mylyn.internal.tuleap.core.util.TuleapUtil;
 import org.eclipse.mylyn.internal.tuleap.ui.util.TuleapMylynTasksUIMessages;
 import org.eclipse.mylyn.internal.tuleap.ui.wizards.NewTuleapTaskWizard;
 import org.eclipse.mylyn.internal.tuleap.ui.wizards.query.TuleapCustomQueryPage;
@@ -40,6 +41,18 @@ public class TuleapConnectorUi extends AbstractRepositoryConnectorUi {
 	 */
 	public TuleapConnectorUi() {
 		// nothing
+	}
+
+	@Override
+	public String getAccountCreationUrl(TaskRepository taskRepository) {
+		// Account creation url : https://<nom-de-domaine>/account/register.php
+		return TuleapUtil.getDomainRepositoryURl(taskRepository) + "/account/register.php"; //$NON-NLS-1$
+	}
+
+	@Override
+	public String getAccountManagementUrl(TaskRepository taskRepository) {
+		// Account management url : https://<nom-de-domaine>/my/
+		return TuleapUtil.getDomainRepositoryURl(taskRepository) + "/my/"; //$NON-NLS-1$
 	}
 
 	/**

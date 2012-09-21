@@ -22,6 +22,8 @@ import java.util.Date;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+
 /**
  * Utility class containing various simple static utility methods.
  * 
@@ -92,6 +94,18 @@ public final class TuleapUtil {
 			// Read file in completely
 		}
 		return check.getChecksum().getValue();
+	}
+
+	/**
+	 * Extract the domain name URL from the repository URL.
+	 * 
+	 * @param taskRepository
+	 *            The task repository : "https://<domainName>/plugins/tracker/?group_id=<trackerId>"
+	 * @return The domain name URL : "https://<domainName>/"
+	 */
+	public static String getDomainRepositoryURl(TaskRepository taskRepository) {
+		String repositoryUrl = taskRepository.getRepositoryUrl();
+		return repositoryUrl.substring(0, repositoryUrl.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE));
 	}
 
 }
