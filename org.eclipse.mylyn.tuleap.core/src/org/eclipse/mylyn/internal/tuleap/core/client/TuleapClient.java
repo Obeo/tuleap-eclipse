@@ -10,16 +10,21 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.core.client;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.commons.net.WebLocation;
+import org.eclipse.mylyn.internal.tuleap.core.TuleapCoreActivator;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact;
 import org.eclipse.mylyn.internal.tuleap.core.net.TrackerConnector;
 import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
@@ -99,10 +104,18 @@ public class TuleapClient {
 	 *            The progress monitor
 	 * @param forceRefresh
 	 *            Indicates that we should force the refresh of the attributes
+	 * @throws CoreException
+	 *             If configuration file is not accessible
 	 */
-	public void updateAttributes(IProgressMonitor monitor, boolean forceRefresh) {
+	public void updateAttributes(IProgressMonitor monitor, boolean forceRefresh) throws CoreException {
 		if (!this.hasAttributes() || forceRefresh) {
-			this.updateAttributes(monitor);
+			try {
+				this.updateAttributes(monitor);
+			} catch (IOException e) {
+				IStatus status = new RepositoryStatus(taskRepository.getRepositoryUrl(), IStatus.ERROR,
+						TuleapCoreActivator.PLUGIN_ID, RepositoryStatus.ERROR_REPOSITORY, e.getMessage(), e);
+				throw new CoreException(status);
+			}
 			this.configuration.setLastUpdate(System.currentTimeMillis());
 		}
 	}
@@ -121,8 +134,10 @@ public class TuleapClient {
 	 * 
 	 * @param monitor
 	 *            The progress monitor
+	 * @throws IOException
+	 *             if configuration file is not accessible
 	 */
-	public void updateAttributes(IProgressMonitor monitor) {
+	public void updateAttributes(IProgressMonitor monitor) throws IOException {
 		TrackerConnector trackerConnector = new TrackerConnector(new WebLocation(this.taskRepository
 				.getRepositoryUrl()));
 		configuration = trackerConnector.getTuleapRepositoryConfiguration();

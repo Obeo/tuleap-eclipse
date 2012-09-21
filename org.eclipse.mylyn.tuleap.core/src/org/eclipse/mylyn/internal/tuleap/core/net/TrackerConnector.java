@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.core.net;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapDate;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapInteger;
@@ -22,6 +25,7 @@ import org.eclipse.mylyn.internal.tuleap.core.model.permission.TuleapAccessPermi
 import org.eclipse.mylyn.internal.tuleap.core.model.permission.TuleapPermissions;
 import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapFieldSet;
 import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConfiguration;
+import org.eclipse.mylyn.internal.tuleap.core.util.TuleapUtil;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
@@ -51,8 +55,38 @@ public class TrackerConnector {
 	 * Returns the repository configuration of the tracker.
 	 * 
 	 * @return The repository configuration of the tracker.
+	 * @throws IOException
+	 *             if repository configuration is not accessible
 	 */
-	public TuleapRepositoryConfiguration getTuleapRepositoryConfiguration() {
+	public TuleapRepositoryConfiguration getTuleapRepositoryConfiguration() throws IOException {
+		TuleapRepositoryConfiguration configuration = reloadRepositoryConfiguration();
+		return configuration;
+	}
+
+	/**
+	 * Reload the repository configuration from the server.
+	 * 
+	 * @return Repository configuration
+	 * @throws IOException
+	 *             In case the configuration is not accessible
+	 */
+	private TuleapRepositoryConfiguration reloadRepositoryConfiguration() throws IOException {
+		// Download the repository configuration file from the tracker
+		File tempConfigurationFile = File.createTempFile("temp", "tuleap_config");
+		TuleapUtil.download(this.trackerLocation.getUrl(), tempConfigurationFile);
+
+		// Parse repository configuration
+		return parseRepositoryConfiguration(tempConfigurationFile);
+	}
+
+	/**
+	 * Parse the repository configuration.
+	 * 
+	 * @param tempConfigurationFile
+	 *            Configuration file
+	 * @return Configuration file transformed to Mylyn repository configuration
+	 */
+	private TuleapRepositoryConfiguration parseRepositoryConfiguration(File tempConfigurationFile) {
 		// TODO Returns the real repository configuration from the tracker
 		TuleapRepositoryConfiguration configuration = new TuleapRepositoryConfiguration(this.trackerLocation
 				.getUrl(), "Super Cook", "Super Cook Item Name",

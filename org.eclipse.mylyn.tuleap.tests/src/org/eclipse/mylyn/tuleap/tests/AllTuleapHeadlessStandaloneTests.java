@@ -15,6 +15,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.tuleap.tests.client.TuleapArtifactTests;
+import org.eclipse.mylyn.tuleap.tests.core.TuleapUtilTests;
 import org.eclipse.mylyn.tuleap.tests.support.TuleapFixture;
 
 /**
@@ -54,6 +55,7 @@ public final class AllTuleapHeadlessStandaloneTests {
 		// CHECKSTYLE:ON
 		TestSuite suite = new TestSuite(AllTuleapHeadlessStandaloneTests.class.getName());
 		suite.addTestSuite(TuleapArtifactTests.class);
+		suite.addTestSuite(TuleapUtilTests.class);
 		return suite;
 	}
 

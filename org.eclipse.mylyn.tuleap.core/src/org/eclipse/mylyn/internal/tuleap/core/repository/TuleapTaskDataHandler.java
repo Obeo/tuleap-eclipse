@@ -306,8 +306,11 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 * @param monitor
 	 *            the progress monitor
 	 * @return The Mylyn task data for the task matching the given task id in the given Mylyn task repository.
+	 * @throws CoreException
+	 *             If repository file configuration is not accessible
 	 */
-	public TaskData getTaskData(TaskRepository taskRepository, String taskId, IProgressMonitor monitor) {
+	public TaskData getTaskData(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
+			throws CoreException {
 		return downloadTaskData(taskRepository, TuleapRepositoryConnector.getArtifactId(taskId), monitor);
 	}
 
@@ -322,8 +325,11 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 *            The progress monitor
 	 * @return The Mylyn task data with the information obtained from the Tuleap artifact matching the given
 	 *         task ID obtained from the Tuleap client.
+	 * @throws CoreException
+	 *             If repository file configuration is not accessible
 	 */
-	public TaskData downloadTaskData(TaskRepository taskRepository, int taskId, IProgressMonitor monitor) {
+	public TaskData downloadTaskData(TaskRepository taskRepository, int taskId, IProgressMonitor monitor)
+			throws CoreException {
 		TuleapClient tuleapClient = this.connector.getClientManager().getClient(taskRepository);
 
 		tuleapClient.updateAttributes(monitor, false);
