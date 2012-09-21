@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.ui.editor;
 
+import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
@@ -38,7 +39,7 @@ public class TuleapTaskEditorPage extends AbstractTaskEditorPage {
 	 */
 	public TuleapTaskEditorPage(TaskEditor editor) {
 		super(editor, ITuleapConstants.CONNECTOR_KIND);
-		this.setNeedsPrivateSection(true);
+		this.setNeedsPrivateSection(false);
 		this.setNeedsSubmitButton(true);
 	}
 
@@ -50,11 +51,31 @@ public class TuleapTaskEditorPage extends AbstractTaskEditorPage {
 	@Override
 	protected Set<TaskEditorPartDescriptor> createPartDescriptors() {
 		Set<TaskEditorPartDescriptor> descriptors = super.createPartDescriptors();
+		// Remove useless parts
+		this.removePart(descriptors, AbstractTaskEditorPage.ID_PART_DESCRIPTION);
+		//this.removePart(descriptors, AbstractTaskEditorPage.ID_PART_PLANNING);
 
-		// TODO Remove unnecessary default editor parts
+		// Add our own parts
 
-		// TODO Add the necessary editor parts for the repository configuration
 		return descriptors;
+	}
+
+	/**
+	 * Removes the parts with an ID matching the given partId from the set of parts.
+	 * 
+	 * @param parts
+	 *            The set of parts
+	 * @param partId
+	 *            The part ID.
+	 */
+	private void removePart(Set<TaskEditorPartDescriptor> parts, String partId) {
+		Iterator<TaskEditorPartDescriptor> iterator = parts.iterator();
+		while (iterator.hasNext()) {
+			TaskEditorPartDescriptor taskEditorPartDescriptor = iterator.next();
+			if (partId.equals(taskEditorPartDescriptor.getId())) {
+				iterator.remove();
+			}
+		}
 	}
 
 	/**
