@@ -71,16 +71,7 @@ public class TuleapTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 	 */
 	@Override
 	public IFormPage createPage(TaskEditor parentEditor) {
-		IFormPage page = null;
-		TaskEditorInput input = parentEditor.getTaskEditorInput();
-
-		if (TasksUiUtil.isOutgoingNewTask(input.getTask(), ITuleapConstants.CONNECTOR_KIND)) {
-			page = new TuleapTaskEditorPage(parentEditor);
-		}
-
-		// TODO Support browser form page? Task url from task ID
-
-		return page;
+		return new TuleapTaskEditorPage(parentEditor);
 	}
 
 	/**
