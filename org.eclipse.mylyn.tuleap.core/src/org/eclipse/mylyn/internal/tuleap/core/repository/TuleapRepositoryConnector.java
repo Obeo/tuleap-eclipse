@@ -36,6 +36,7 @@ import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
@@ -172,6 +173,16 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public TuleapTaskDataHandler getTaskDataHandler() {
 		return this.taskDataHandler;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getTaskAttachmentHandler()
+	 */
+	@Override
+	public AbstractTaskAttachmentHandler getTaskAttachmentHandler() {
+		return new TuleapTaskAttachmentHandler();
 	}
 
 	/**
