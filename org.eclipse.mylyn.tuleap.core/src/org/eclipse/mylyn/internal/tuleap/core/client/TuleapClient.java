@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.core.client;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact;
@@ -44,6 +47,12 @@ public class TuleapClient {
 	 * The configuration of the repository.
 	 */
 	private TuleapRepositoryConfiguration configuration;
+
+	// FIXME DELETE LATER §§§§
+	/**
+	 * A cache.
+	 */
+	private Map<Integer, TuleapArtifact> cache = new HashMap<Integer, TuleapArtifact>();
 
 	/**
 	 * The constructor.
@@ -133,7 +142,7 @@ public class TuleapClient {
 	 */
 	public TuleapArtifact getArtifact(int taskId, IProgressMonitor monitor) {
 		// TODO Obtain the artifact from the server
-		return null;
+		return this.cache.get(Integer.valueOf(taskId));
 	}
 
 	/**
@@ -147,7 +156,10 @@ public class TuleapClient {
 	 */
 	public int createArtifact(TuleapArtifact artifact, IProgressMonitor monitor) {
 		// TODO Create the artifact on the server and return the artifact id computed by the server
-		return 0;
+		int id = (int)(System.currentTimeMillis() / 1000);
+		artifact.setId(id);
+		cache.put(Integer.valueOf(id), artifact);
+		return id;
 	}
 
 	/**

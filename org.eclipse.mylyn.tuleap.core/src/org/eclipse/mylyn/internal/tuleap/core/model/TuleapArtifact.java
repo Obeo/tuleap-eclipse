@@ -10,8 +10,10 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.core.model;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * This class represents a Tuleap artifact obtained from the Tuleap tracker.
@@ -105,6 +107,15 @@ public class TuleapArtifact {
 	 */
 	public String getValue(String key) {
 		return this.properties.get(key);
+	}
+
+	/**
+	 * Returns the set of the keys of all the properties.
+	 * 
+	 * @return The set of the keys of all the properties.
+	 */
+	public Set<String> getKeys() {
+		return Collections.unmodifiableSet(this.properties.keySet());
 	}
 
 	/**

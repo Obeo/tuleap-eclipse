@@ -28,6 +28,7 @@ import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapSelectBox;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapString;
 import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapColumn;
 import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapFieldSet;
+import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
 import org.eclipse.mylyn.internal.tuleap.core.util.TuleapMylynTasksMessages;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
@@ -348,8 +349,26 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 */
 	private TaskData createTaskDataFromArtifact(TuleapClient tuleapClient, TaskRepository taskRepository,
 			TuleapArtifact tuleapArtifact, IProgressMonitor monitor) {
-		// TODO Convert Tuleap artifact to Mylyn task data
-		return null;
+		// Create the default attributes
+		TaskData taskData = new TaskData(this.getAttributeMapper(taskRepository),
+				ITuleapConstants.CONNECTOR_KIND, taskRepository.getRepositoryUrl(), Integer.valueOf(
+						tuleapArtifact.getId()).toString());
+
+		tuleapClient.updateAttributes(monitor, false);
+		this.createDefaultAttributes(taskData, tuleapClient, false);
+
+		// Convert Tuleap artifact to Mylyn task data
+		Set<String> keys = tuleapArtifact.getKeys();
+		for (String key : keys) {
+			String value = tuleapArtifact.getValue(key);
+			TaskAttribute attribute = taskData.getRoot();
+			Map<String, TaskAttribute> attributes = attribute.getAttributes();
+			TaskAttribute taskAttribute = attributes.get(key);
+			if (taskAttribute != null) {
+				taskAttribute.setValue(value);
+			}
+		}
+		return taskData;
 	}
 
 	/**
