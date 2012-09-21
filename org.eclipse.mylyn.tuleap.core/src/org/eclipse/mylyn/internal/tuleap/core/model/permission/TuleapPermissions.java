@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.core.model.permission;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +22,12 @@ import java.util.Set;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 1.0
  */
-public class TuleapPermissions {
+public class TuleapPermissions implements Serializable {
+	/**
+	 * The serialization ID.
+	 */
+	private static final long serialVersionUID = 2538582446703848888L;
+
 	/**
 	 * The mapping between the different group and their ability to manipulate the field for which those
 	 * permissions are defined.
