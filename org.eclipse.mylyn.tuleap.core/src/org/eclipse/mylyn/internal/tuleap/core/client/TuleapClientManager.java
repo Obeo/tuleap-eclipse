@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.core.client;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
@@ -25,6 +28,11 @@ public class TuleapClientManager {
 	 * The Tuleap repository connector.
 	 */
 	private TuleapRepositoryConnector repositoryConnector;
+
+	/**
+	 * The client cache.
+	 */
+	private Map<TaskRepository, TuleapClient> clientCache = new HashMap<TaskRepository, TuleapClient>();
 
 	/**
 	 * The constructor.
@@ -44,7 +52,12 @@ public class TuleapClientManager {
 	 * @return the Tuleap client matching the given Mylyn tasks repository
 	 */
 	public TuleapClient getClient(TaskRepository taskRepository) {
-		return this.createClient(taskRepository);
+		TuleapClient tuleapClient = this.clientCache.get(taskRepository);
+		if (tuleapClient == null) {
+			tuleapClient = this.createClient(taskRepository);
+			this.clientCache.put(taskRepository, tuleapClient);
+		}
+		return tuleapClient;
 	}
 
 	/**
