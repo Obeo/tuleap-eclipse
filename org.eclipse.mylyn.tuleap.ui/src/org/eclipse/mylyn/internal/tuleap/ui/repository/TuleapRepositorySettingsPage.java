@@ -80,6 +80,20 @@ public class TuleapRepositorySettingsPage extends AbstractRepositorySettingsPage
 	/**
 	 * {@inheritDoc}
 	 * 
+	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#isMissingCredentials()
+	 */
+	@Override
+	protected boolean isMissingCredentials() {
+		boolean isMissingCredentials = super.isMissingCredentials();
+		if (!isMissingCredentials) {
+			isMissingCredentials = "".equals(repositoryPasswordEditor.getStringValue().trim()); //$NON-NLS-1$
+		}
+		return isMissingCredentials;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#applyTo(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
 	@Override
