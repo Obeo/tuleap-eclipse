@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.tuleap.core.util;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -22,6 +23,7 @@ import java.util.Date;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 
+import org.eclipse.mylyn.internal.tuleap.core.TuleapCoreActivator;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -66,14 +68,16 @@ public final class TuleapUtil {
 	 *            File to download
 	 * @param file
 	 *            Path to save file
-	 * @throws IOException
-	 *             if the file to download is not accessible
 	 */
-	public static void download(String url, File file) throws IOException {
-		ReadableByteChannel rbc = Channels.newChannel(new URL(url).openStream());
-		FileOutputStream fos = new FileOutputStream(file);
-		fos.getChannel().transferFrom(rbc, 0, TRANSFER_COUNT);
-		fos.close();
+	public static void download(String url, File file) {
+		try {
+			ReadableByteChannel rbc = Channels.newChannel(new URL(url).openStream());
+			FileOutputStream fos = new FileOutputStream(file);
+			fos.getChannel().transferFrom(rbc, 0, TRANSFER_COUNT);
+			fos.close();
+		} catch (IOException e) {
+			TuleapCoreActivator.log(e, true);
+		}
 	}
 
 	/**
@@ -81,19 +85,43 @@ public final class TuleapUtil {
 	 * 
 	 * @param file
 	 *            File
-	 * @return Checksum
-	 * @throws IOException
-	 *             if file is not accessible
+	 * @return The checksum of the given file
 	 */
-	public static long getChecksum(File file) throws IOException {
-		FileInputStream inputStream = new FileInputStream(file);
-		CheckedInputStream check = new CheckedInputStream(inputStream, new CRC32());
-		@SuppressWarnings("resource")
-		BufferedInputStream in = new BufferedInputStream(check);
-		while (in.read() != -1) {
-			// Read file in completely
+	public static long getChecksum(File file) {
+		long checksum = -1;
+
+		FileInputStream inputStream = null;
+		CheckedInputStream check = null;
+		BufferedInputStream in = null;
+		try {
+			inputStream = new FileInputStream(file);
+			check = new CheckedInputStream(inputStream, new CRC32());
+			in = new BufferedInputStream(check);
+			while (in.read() != -1) {
+				// Read file in completely
+			}
+			checksum = check.getChecksum().getValue();
+		} catch (FileNotFoundException e) {
+			TuleapCoreActivator.log(e, true);
+		} catch (IOException e) {
+			TuleapCoreActivator.log(e, true);
+		} finally {
+			try {
+				if (in != null) {
+					in.close();
+				}
+				if (check != null) {
+					check.close();
+				}
+				if (inputStream != null) {
+					inputStream.close();
+				}
+			} catch (IOException e) {
+				TuleapCoreActivator.log(e, true);
+			}
 		}
-		return check.getChecksum().getValue();
+
+		return checksum;
 	}
 
 	/**
@@ -105,7 +133,8 @@ public final class TuleapUtil {
 	 */
 	public static String getDomainRepositoryURl(TaskRepository taskRepository) {
 		String repositoryUrl = taskRepository.getRepositoryUrl();
-		return repositoryUrl.substring(0, repositoryUrl.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE));
+		return repositoryUrl.substring(0, repositoryUrl
+				.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE));
 	}
 
 }

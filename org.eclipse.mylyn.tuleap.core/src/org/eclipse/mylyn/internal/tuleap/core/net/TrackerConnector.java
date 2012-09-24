@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.internal.tuleap.core.TuleapCoreActivator;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapDate;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapInteger;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapMultiSelectBox;
@@ -25,6 +26,7 @@ import org.eclipse.mylyn.internal.tuleap.core.model.permission.TuleapAccessPermi
 import org.eclipse.mylyn.internal.tuleap.core.model.permission.TuleapPermissions;
 import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapFieldSet;
 import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConfiguration;
+import org.eclipse.mylyn.internal.tuleap.core.util.TuleapMylynTasksMessages;
 import org.eclipse.mylyn.internal.tuleap.core.util.TuleapUtil;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
@@ -36,6 +38,16 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
  * @since 1.0
  */
 public class TrackerConnector {
+	/**
+	 * The name of the temporary file used to store the configuration.
+	 */
+	private static final String TEMP_FILE_NAME = "temp"; //$NON-NLS-1$
+
+	/**
+	 * The suffix of the temporary file used to store the configuration.
+	 */
+	private static final String TEMP_FILE_SUFFIX = "tuleap_suffix"; //$NON-NLS-1$
+
 	/**
 	 * The location of the tracker.
 	 */
@@ -55,10 +67,8 @@ public class TrackerConnector {
 	 * Returns the repository configuration of the tracker.
 	 * 
 	 * @return The repository configuration of the tracker.
-	 * @throws IOException
-	 *             if repository configuration is not accessible
 	 */
-	public TuleapRepositoryConfiguration getTuleapRepositoryConfiguration() throws IOException {
+	public TuleapRepositoryConfiguration getTuleapRepositoryConfiguration() {
 		TuleapRepositoryConfiguration configuration = reloadRepositoryConfiguration();
 		return configuration;
 	}
@@ -67,16 +77,23 @@ public class TrackerConnector {
 	 * Reload the repository configuration from the server.
 	 * 
 	 * @return Repository configuration
-	 * @throws IOException
-	 *             In case the configuration is not accessible
 	 */
-	private TuleapRepositoryConfiguration reloadRepositoryConfiguration() throws IOException {
+	private TuleapRepositoryConfiguration reloadRepositoryConfiguration() {
+		TuleapRepositoryConfiguration tuleapRepositoryConfiguration = null;
 		// Download the repository configuration file from the tracker
-		File tempConfigurationFile = File.createTempFile("temp", "tuleap_config");
-		TuleapUtil.download(this.trackerLocation.getUrl(), tempConfigurationFile);
+		File tempConfigurationFile;
+		try {
+			tempConfigurationFile = File.createTempFile(TEMP_FILE_NAME, TEMP_FILE_SUFFIX);
+			TuleapUtil.download(this.trackerLocation.getUrl(), tempConfigurationFile);
 
-		// Parse repository configuration
-		return parseRepositoryConfiguration(tempConfigurationFile);
+			// Parse repository configuration
+			tuleapRepositoryConfiguration = parseRepositoryConfiguration(tempConfigurationFile);
+		} catch (IOException e) {
+			TuleapCoreActivator.log(TuleapMylynTasksMessages
+					.getString("TrackerConnector.ProblemWithTempFileCreation"), true); //$NON-NLS-1$
+		}
+
+		return tuleapRepositoryConfiguration;
 	}
 
 	/**
