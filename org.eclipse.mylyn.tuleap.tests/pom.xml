@@ -15,7 +15,7 @@
     <test.suite>${project.artifactId}.AllTuleapTests</test.suite>
   </properties>
   <build>
-    <!-- resources for standalone tests -->
+    <!-- resources for standalone tests
     <resources>
       <resource>
         <directory>${basedir}</directory>
@@ -23,7 +23,7 @@
           <include>testdata/**</include>
         </includes>
       </resource>
-    </resources>
+    </resources> -->
     <plugins>
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
