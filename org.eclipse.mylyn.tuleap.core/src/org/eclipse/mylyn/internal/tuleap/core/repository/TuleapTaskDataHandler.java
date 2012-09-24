@@ -26,6 +26,8 @@ import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapStructuralElem
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapSelectBox;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapString;
+import org.eclipse.mylyn.internal.tuleap.core.model.permission.ITuleapDefaultPermissionGroups;
+import org.eclipse.mylyn.internal.tuleap.core.model.permission.TuleapAccessPermission;
 import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapColumn;
 import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapFieldSet;
 import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
@@ -259,8 +261,12 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		attributeMetadata.setKind(tuleapField.getMetadataKind());
 		attributeMetadata.setLabel(tuleapField.getLabel());
 
-		// TODO Support advanced permissions (read only / visible)
-		// attributeMetadata.setReadOnly(tuleaField)
+		// TODO Compute the group of the user
+		String group = ITuleapDefaultPermissionGroups.ALL_USERS;
+		if (!tuleapField.getPermissions().canSubmit(group)
+				&& !(TuleapAccessPermission.UPDATE == tuleapField.getPermissions().getAccessPermission(group))) {
+			attributeMetadata.setReadOnly(true);
+		}
 
 		// Possible values
 		Map<String, String> options = tuleapField.getOptions();
