@@ -133,8 +133,11 @@ public final class TuleapUtil {
 	 */
 	public static String getDomainRepositoryURl(TaskRepository taskRepository) {
 		String repositoryUrl = taskRepository.getRepositoryUrl();
-		return repositoryUrl.substring(0, repositoryUrl
-				.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE));
+		if (repositoryUrl.contains(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE)) {
+			return repositoryUrl.substring(0, repositoryUrl
+					.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE));
+		}
+		return null;
 	}
 
 }
