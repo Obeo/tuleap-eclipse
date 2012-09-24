@@ -33,6 +33,9 @@
           <skip>${test.component.skip}</skip> 
           <testSuite>${project.artifactId}</testSuite>
           <testClass>${test.suite}</testClass>
+          <includes>
+          	<include>**/*.java</include>
+          </includes>
         </configuration>
       </plugin>
       <plugin>
