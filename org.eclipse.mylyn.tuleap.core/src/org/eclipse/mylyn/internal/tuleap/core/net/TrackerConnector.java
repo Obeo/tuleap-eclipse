@@ -41,6 +41,11 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
  */
 public class TrackerConnector {
 	/**
+	 * Export URL suffix.
+	 */
+	private static final String EXPORT_URL_SUFFIX = "&func=admin-export"; //$NON-NLS-1$
+
+	/**
 	 * The name of the temporary file used to store the configuration.
 	 */
 	private static final String TEMP_FILE_NAME = "temp"; //$NON-NLS-1$
@@ -85,11 +90,13 @@ public class TrackerConnector {
 		// Download the repository configuration file from the tracker
 		File tempConfigurationFile;
 		try {
+			// The configuration file url : https://mydomain/plugins/tracker/?tracker=42&func=admin-export
 			tempConfigurationFile = File.createTempFile(TEMP_FILE_NAME, TEMP_FILE_SUFFIX);
-			TuleapUtil.download(this.trackerLocation.getUrl(), tempConfigurationFile);
+			TuleapUtil.download(this.trackerLocation.getUrl() + EXPORT_URL_SUFFIX, tempConfigurationFile);
 
 			// Parse repository configuration
-			tuleapRepositoryConfiguration = parseRepositoryConfiguration(tempConfigurationFile);
+			tuleapRepositoryConfiguration = parseRepositoryConfiguration(tempConfigurationFile,
+					this.trackerLocation.getUrl());
 		} catch (IOException e) {
 			TuleapCoreActivator.log(TuleapMylynTasksMessages
 					.getString("TrackerConnector.ProblemWithTempFileCreation"), true); //$NON-NLS-1$
@@ -103,36 +110,79 @@ public class TrackerConnector {
 	 * 
 	 * @param tempConfigurationFile
 	 *            Configuration file
+	 * @param repositoryUrl
+	 *            Repository URL
 	 * @return Configuration file transformed to Mylyn repository configuration
 	 */
-	private TuleapRepositoryConfiguration parseRepositoryConfiguration(File tempConfigurationFile) {
-		// TODO Returns the real repository configuration from the tracker
+	private TuleapRepositoryConfiguration parseRepositoryConfiguration(File tempConfigurationFile,
+			String repositoryUrl) {
+		// TODO Returns the real repository configuration from the tracker when the connection to the server
+		// will be done
+		// FileInputStream stream;
+		// try {
+		// stream = new FileInputStream(tempConfigurationFile);
+		// BufferedReader in = new BufferedReader(new InputStreamReader(stream));
+		//
+		// SaxConfigurationContentHandler contentHandler = new SaxConfigurationContentHandler(repositoryUrl);
+		// XMLReader reader = XMLReaderFactory.createXMLReader();
+		// reader.setContentHandler(contentHandler);
+		// reader.setErrorHandler(new ErrorHandler() {
+		//
+		// public void error(SAXParseException exception) throws SAXException {
+		// throw exception;
+		// }
+		//
+		// public void fatalError(SAXParseException exception) throws SAXException {
+		// throw exception;
+		// }
+		//
+		// public void warning(SAXParseException exception) throws SAXException {
+		// throw exception;
+		// }
+		// });
+		// reader.parse(new InputSource(in));
+		//
+		// TuleapRepositoryConfiguration configuration = contentHandler.getConfiguration();
+		// return configuration;
+		// } catch (SAXException e) {
+		// TuleapCoreActivator.log(e, true);
+		// } catch (IOException e) {
+		// TuleapCoreActivator.log(e, true);
+		// }
+
 		TuleapRepositoryConfiguration configuration = new TuleapRepositoryConfiguration(this.trackerLocation
 				.getUrl(), "Super Cook", "Super Cook Item Name",
 				"This is a restaurant leaded by a super cook");
 
 		// The meal group
-		TuleapFieldSet mealElement = new TuleapFieldSet("Meal", "Meal", "__cook_meal");
+		TuleapFieldSet mealElement = new TuleapFieldSet("__cook_meal");
+		mealElement.setName("Meal");
+		mealElement.setLabel("Meal");
 		mealElement.setDescription("The details of the meal");
 		mealElement.setRequired(true);
 		TuleapPermissions permissions = new TuleapPermissions();
 		permissions.put(ITuleapDefaultPermissionGroups.ALL_USERS, TuleapAccessPermission.UPDATE, true);
 		mealElement.setPermissions(permissions);
 
-		TuleapString mealName = new TuleapString("Name", "Name", "__cook_meal_name");
+		TuleapString mealName = new TuleapString("__cook_meal_name");
+		mealName.setName("Name");
+		mealName.setLabel("Name");
 		mealName.setDescription("The name of the meal");
 		mealName.setRequired(true);
 		mealName.setPermissions(permissions);
 		mealElement.getFormElements().add(mealName);
 
-		TuleapInteger mealPrice = new TuleapInteger("Price", "Price", "__cook_meal_price");
+		TuleapInteger mealPrice = new TuleapInteger("__cook_meal_price");
+		mealPrice.setName("Price");
+		mealPrice.setLabel("Price");
 		mealPrice.setDescription("The price of the meal");
 		mealPrice.setRequired(true);
 		mealPrice.setPermissions(permissions);
 		mealElement.getFormElements().add(mealPrice);
 
-		TuleapSelectBox mealAwesomeness = new TuleapSelectBox("Awesomeness", "Awesomness",
-				"__cook_meal_awesomness");
+		TuleapSelectBox mealAwesomeness = new TuleapSelectBox("__cook_meal_awesomness");
+		mealAwesomeness.setName("Awesomeness");
+		mealAwesomeness.setLabel("Awesomeness");
 		mealAwesomeness.setDescription("The awesomness of the meal");
 		mealAwesomeness.setPermissions(permissions);
 		mealAwesomeness.getItems().add("MAGNIFICENT");
@@ -145,11 +195,14 @@ public class TrackerConnector {
 		configuration.getFormElements().add(mealElement);
 
 		// The persons group
-		TuleapFieldSet personElement = new TuleapFieldSet("Persons Management", "Persons Management",
-				"__persons");
+		TuleapFieldSet personElement = new TuleapFieldSet("__persons");
+		personElement.setName("Persons Management");
+		personElement.setLabel("Persons Management");
 		personElement.setDescription("Management of the persons eating the meal");
 
-		TuleapMultiSelectBox persons = new TuleapMultiSelectBox("Persons", "Persons", "__persons_persons");
+		TuleapMultiSelectBox persons = new TuleapMultiSelectBox("__persons_persons");
+		persons.setName("Persons");
+		persons.setLabel("Persons");
 		persons.setDescription("The persons eating the meal");
 		persons.setPermissions(permissions);
 
@@ -163,12 +216,16 @@ public class TrackerConnector {
 		persons.getItems().add("Stephane Lacrampe");
 		personElement.getFormElements().add(persons);
 
-		TuleapDate beginDate = new TuleapDate("Begin Date", "Begin Date", "__persons_begin_date");
+		TuleapDate beginDate = new TuleapDate("__persons_begin_date");
+		beginDate.setName("Begin Date");
+		beginDate.setLabel("Begin Date");
 		beginDate.setDescription("The date of the beginning of the meal");
 		beginDate.setPermissions(permissions);
 		personElement.getFormElements().add(beginDate);
 
-		TuleapDate endDate = new TuleapDate("End Date", "End Date", "__persons_begin_date");
+		TuleapDate endDate = new TuleapDate("__persons_begin_date");
+		endDate.setName("End Date");
+		endDate.setLabel("End Date");
 		endDate.setDescription("The date of the beginning of the meal");
 		endDate.setPermissions(permissions);
 		personElement.getFormElements().add(endDate);
@@ -176,17 +233,22 @@ public class TrackerConnector {
 		configuration.getFormElements().add(personElement);
 
 		// The additional data group
-		TuleapFieldSet additionalElement = new TuleapFieldSet("Additional Information",
-				"Additional Information", "__additional");
+		TuleapFieldSet additionalElement = new TuleapFieldSet("__additional");
+		additionalElement.setName("Additional Information");
+		additionalElement.setLabel("Additional Information");
 		additionalElement.setDescription("Additional information for the meal");
 		additionalElement.setPermissions(permissions);
 
-		TuleapText additionalText = new TuleapText("Description", "Description", "__additional_description");
+		TuleapText additionalText = new TuleapText("__additional_description");
+		additionalText.setName("Description");
+		additionalText.setLabel("Description");
 		additionalText.setDescription("The description of the additional information");
 		additionalText.setPermissions(permissions);
 		additionalElement.getFormElements().add(additionalText);
 
-		TuleapSelectBox box = new TuleapSelectBox("Status", "The status of the meal", "__status");
+		TuleapSelectBox box = new TuleapSelectBox("__status");
+		box.setName("Status");
+		box.setLabel("The status of the meal");
 		box.setPermissions(permissions);
 		box.getOpenStatus().add("Open");
 		box.getOpenStatus().add("Verified");
@@ -209,7 +271,7 @@ public class TrackerConnector {
 
 		configuration.getFormElements().add(additionalElement);
 
-		return configuration;
+		return null;
 	}
 
 	/**

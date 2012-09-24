@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.tuleap.core.client.TuleapClient;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapDynamicField;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
-import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapStructuralElement;
+import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapFormElement;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapSelectBox;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapString;
@@ -195,8 +195,8 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		metaData.setType(TaskAttribute.TYPE_DATE);
 
 		// Default attributes
-		List<AbstractTuleapStructuralElement> formElements = configuration.getFormElements();
-		for (AbstractTuleapStructuralElement abstractTuleapStructuralElement : formElements) {
+		List<AbstractTuleapFormElement> formElements = configuration.getFormElements();
+		for (AbstractTuleapFormElement abstractTuleapStructuralElement : formElements) {
 			List<AbstractTuleapField> fields = TuleapRepositoryConfiguration
 					.getFields(abstractTuleapStructuralElement);
 			for (AbstractTuleapField abstractTuleapField : fields) {
@@ -301,8 +301,8 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 		// Create operations from the status semantic
 		TuleapRepositoryConfiguration configuration = tuleapClient.getRepositoryConfiguration();
-		List<AbstractTuleapStructuralElement> formElements = configuration.getFormElements();
-		for (AbstractTuleapStructuralElement abstractTuleapStructuralElement : formElements) {
+		List<AbstractTuleapFormElement> formElements = configuration.getFormElements();
+		for (AbstractTuleapFormElement abstractTuleapStructuralElement : formElements) {
 			List<AbstractTuleapField> fields = TuleapRepositoryConfiguration
 					.getFields(abstractTuleapStructuralElement);
 			for (AbstractTuleapField abstractTuleapField : fields) {

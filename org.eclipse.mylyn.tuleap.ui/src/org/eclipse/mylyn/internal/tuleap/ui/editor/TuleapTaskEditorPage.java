@@ -16,7 +16,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
-import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapStructuralElement;
+import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapFormElement;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapFileUpload;
 import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConnector;
@@ -76,8 +76,8 @@ public class TuleapTaskEditorPage extends AbstractTaskEditorPage {
 						.getRepositoryConfiguration(taskRepository, false, new NullProgressMonitor());
 
 				boolean hasUploadPart = false;
-				List<AbstractTuleapStructuralElement> formElements = configuration.getFormElements();
-				for (AbstractTuleapStructuralElement abstractTuleapStructuralElement : formElements) {
+				List<AbstractTuleapFormElement> formElements = configuration.getFormElements();
+				for (AbstractTuleapFormElement abstractTuleapStructuralElement : formElements) {
 					List<AbstractTuleapField> fields = TuleapRepositoryConfiguration
 							.getFields(abstractTuleapStructuralElement);
 					for (AbstractTuleapField abstractTuleapField : fields) {

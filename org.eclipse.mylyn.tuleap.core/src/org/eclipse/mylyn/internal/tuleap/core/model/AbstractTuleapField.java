@@ -29,15 +29,11 @@ public abstract class AbstractTuleapField extends AbstractTuleapFormElement {
 	/**
 	 * The constructor.
 	 * 
-	 * @param formElementName
-	 *            The name of the form element
-	 * @param formElementLabel
-	 *            The label of the form element
 	 * @param formElementIdentifier
 	 *            The identifier of the form element
 	 */
-	public AbstractTuleapField(String formElementName, String formElementLabel, String formElementIdentifier) {
-		super(formElementName, formElementLabel, formElementIdentifier);
+	public AbstractTuleapField(String formElementIdentifier) {
+		super(formElementIdentifier);
 	}
 
 	/**

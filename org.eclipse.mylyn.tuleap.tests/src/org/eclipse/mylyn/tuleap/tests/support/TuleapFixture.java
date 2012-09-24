@@ -12,6 +12,7 @@ package org.eclipse.mylyn.tuleap.tests.support;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import junit.framework.AssertionFailedError;
 
@@ -227,5 +228,18 @@ public class TuleapFixture extends TestFixture {
 	 */
 	public static File getFile(String filename) throws IOException {
 		return CommonTestUtil.getFile(TuleapFixture.class, filename);
+	}
+
+	/**
+	 * Returns our utility resource.
+	 * 
+	 * @param filename
+	 *            The name of the resource.
+	 * @return Stream of the utility resource.
+	 * @throws IOException
+	 *             In case of problems
+	 */
+	public static InputStream getResource(String filename) throws IOException {
+		return CommonTestUtil.getResource(TuleapFixture.class, filename);
 	}
 }

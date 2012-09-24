@@ -25,16 +25,11 @@ public abstract class AbstractTuleapStructuralElement extends AbstractTuleapForm
 	/**
 	 * The constructor.
 	 * 
-	 * @param formElementName
-	 *            The name of the form element
-	 * @param formElementLabel
-	 *            The label of the form element
 	 * @param formElementIdentifier
 	 *            The identifier of the form element
 	 */
-	public AbstractTuleapStructuralElement(String formElementName, String formElementLabel,
-			String formElementIdentifier) {
-		super(formElementName, formElementLabel, formElementIdentifier);
+	public AbstractTuleapStructuralElement(String formElementIdentifier) {
+		super(formElementIdentifier);
 	}
 
 }

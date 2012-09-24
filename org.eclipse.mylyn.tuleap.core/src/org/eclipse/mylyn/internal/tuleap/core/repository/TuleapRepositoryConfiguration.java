@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapFormElement;
-import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapStructuralElement;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapCannedResponse;
 import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapColumn;
 import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapFieldSet;
@@ -67,7 +66,7 @@ public class TuleapRepositoryConfiguration implements Serializable {
 	/**
 	 * The structural elements of the Tuleap tracker.
 	 */
-	private List<AbstractTuleapStructuralElement> formElements = new ArrayList<AbstractTuleapStructuralElement>();
+	private List<AbstractTuleapFormElement> formElements = new ArrayList<AbstractTuleapFormElement>();
 
 	/**
 	 * The default constructor.
@@ -158,7 +157,7 @@ public class TuleapRepositoryConfiguration implements Serializable {
 	 * 
 	 * @return The form elements of the repository.
 	 */
-	public List<AbstractTuleapStructuralElement> getFormElements() {
+	public List<AbstractTuleapFormElement> getFormElements() {
 		return this.formElements;
 	}
 
@@ -178,7 +177,7 @@ public class TuleapRepositoryConfiguration implements Serializable {
 	 *            A structural form element
 	 * @return The list of fields recursively contained in a given form element.
 	 */
-	public static List<AbstractTuleapField> getFields(AbstractTuleapStructuralElement formElement) {
+	public static List<AbstractTuleapField> getFields(AbstractTuleapFormElement formElement) {
 		List<AbstractTuleapField> fields = new ArrayList<AbstractTuleapField>();
 		if (formElement instanceof TuleapFieldSet) {
 			TuleapFieldSet tuleapFieldSet = (TuleapFieldSet)formElement;

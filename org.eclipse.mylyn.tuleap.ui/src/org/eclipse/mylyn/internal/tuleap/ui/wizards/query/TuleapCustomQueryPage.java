@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.eclipse.mylyn.commons.workbench.forms.SectionComposite;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapFormElement;
-import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapStructuralElement;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapMultiSelectBox;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapSelectBox;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapString;
@@ -136,8 +135,8 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 		TuleapRepositoryConfiguration repositoryConfiguration = repositoryConnector
 				.getRepositoryConfiguration(this.getTaskRepository().getRepositoryUrl());
 		if (repositoryConfiguration != null) {
-			List<AbstractTuleapStructuralElement> formElements = repositoryConfiguration.getFormElements();
-			for (AbstractTuleapStructuralElement abstractTuleapStructuralElement : formElements) {
+			List<AbstractTuleapFormElement> formElements = repositoryConfiguration.getFormElements();
+			for (AbstractTuleapFormElement abstractTuleapStructuralElement : formElements) {
 				if (abstractTuleapStructuralElement instanceof TuleapFieldSet) {
 					// Create a SWT group for each Tuleap field set
 					TuleapFieldSet fieldSet = (TuleapFieldSet)abstractTuleapStructuralElement;

@@ -37,15 +37,11 @@ public class TuleapFieldSet extends AbstractTuleapStructuralElement {
 	/**
 	 * The constructor.
 	 * 
-	 * @param formElementName
-	 *            The name of the form element
-	 * @param formElementLabel
-	 *            The label of the form element
 	 * @param formElementIdentifier
 	 *            The identifier of the form element
 	 */
-	public TuleapFieldSet(String formElementName, String formElementLabel, String formElementIdentifier) {
-		super(formElementName, formElementLabel, formElementIdentifier);
+	public TuleapFieldSet(String formElementIdentifier) {
+		super(formElementIdentifier);
 	}
 
 	/**

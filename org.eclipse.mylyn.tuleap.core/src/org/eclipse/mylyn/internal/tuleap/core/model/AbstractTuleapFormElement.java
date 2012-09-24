@@ -65,18 +65,11 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 	/**
 	 * The constructor.
 	 * 
-	 * @param formElementName
-	 *            The name of the form element
-	 * @param formElementLabel
-	 *            The label of the form element
 	 * @param formElementIdentifier
 	 *            The identifier of the form element
 	 */
-	public AbstractTuleapFormElement(String formElementName, String formElementLabel,
-			String formElementIdentifier) {
+	public AbstractTuleapFormElement(String formElementIdentifier) {
 		super();
-		this.name = formElementName;
-		this.label = formElementLabel;
 		this.identifier = formElementIdentifier;
 	}
 
@@ -90,12 +83,32 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 	}
 
 	/**
+	 * Sets a new name for the form element.
+	 * 
+	 * @param formElementName
+	 *            The new name to set
+	 */
+	public void setName(String formElementName) {
+		this.name = formElementName;
+	}
+
+	/**
 	 * Returns the label of the form element.
 	 * 
 	 * @return The label of the form element.
 	 */
 	public String getLabel() {
 		return this.label;
+	}
+
+	/**
+	 * Sets a new label for the form element.
+	 * 
+	 * @param formElementLabel
+	 *            The new label to set
+	 */
+	public void setLabel(String formElementLabel) {
+		this.label = formElementLabel;
 	}
 
 	/**
