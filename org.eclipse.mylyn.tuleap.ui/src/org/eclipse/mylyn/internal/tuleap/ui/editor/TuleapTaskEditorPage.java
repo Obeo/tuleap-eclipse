@@ -11,9 +11,18 @@
 package org.eclipse.mylyn.internal.tuleap.ui.editor;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
+import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapStructuralElement;
+import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapFileUpload;
+import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConfiguration;
+import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConnector;
 import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
@@ -53,9 +62,35 @@ public class TuleapTaskEditorPage extends AbstractTaskEditorPage {
 		Set<TaskEditorPartDescriptor> descriptors = super.createPartDescriptors();
 		// Remove useless parts
 		this.removePart(descriptors, AbstractTaskEditorPage.ID_PART_DESCRIPTION);
-		//this.removePart(descriptors, AbstractTaskEditorPage.ID_PART_PLANNING);
 
-		// Add our own parts
+		// Remove the part that we won't use
+		TaskRepository taskRepository = this.getTaskRepository();
+		if (taskRepository != null) {
+			AbstractRepositoryConnector connector = this.getConnector();
+			if (connector instanceof TuleapRepositoryConnector) {
+				TuleapRepositoryConnector tuleapRepositoryConnector = (TuleapRepositoryConnector)connector;
+				TuleapRepositoryConfiguration configuration = tuleapRepositoryConnector
+						.getRepositoryConfiguration(taskRepository, false, new NullProgressMonitor());
+
+				boolean hasUploadPart = false;
+				List<AbstractTuleapStructuralElement> formElements = configuration.getFormElements();
+				for (AbstractTuleapStructuralElement abstractTuleapStructuralElement : formElements) {
+					List<AbstractTuleapField> fields = TuleapRepositoryConfiguration
+							.getFields(abstractTuleapStructuralElement);
+					for (AbstractTuleapField abstractTuleapField : fields) {
+						if (abstractTuleapField instanceof TuleapFileUpload) {
+							hasUploadPart = true;
+						}
+					}
+				}
+
+				if (!hasUploadPart) {
+					this.removePart(descriptors, AbstractTaskEditorPage.ID_PART_ATTACHMENTS);
+				} else {
+					// Create custom attachments part
+				}
+			}
+		}
 
 		return descriptors;
 	}
