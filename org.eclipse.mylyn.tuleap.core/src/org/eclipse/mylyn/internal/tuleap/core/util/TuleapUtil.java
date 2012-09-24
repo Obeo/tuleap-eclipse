@@ -139,5 +139,4 @@ public final class TuleapUtil {
 		}
 		return null;
 	}
-
 }

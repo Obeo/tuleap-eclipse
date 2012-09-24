@@ -14,8 +14,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
+import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapFormElement;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapStructuralElement;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapCannedResponse;
+import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapColumn;
+import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapFieldSet;
 
 /**
  * The repository configuration will hold the latest known configuration of a given repository. This
@@ -165,5 +169,37 @@ public class TuleapRepositoryConfiguration implements Serializable {
 	 */
 	public List<TuleapCannedResponse> getCannedResponses() {
 		return this.cannedResponses;
+	}
+
+	/**
+	 * Returns the list of fields recursively contained in a given form element.
+	 * 
+	 * @param formElement
+	 *            A structural form element
+	 * @return The list of fields recursively contained in a given form element.
+	 */
+	public static List<AbstractTuleapField> getFields(AbstractTuleapStructuralElement formElement) {
+		List<AbstractTuleapField> fields = new ArrayList<AbstractTuleapField>();
+		if (formElement instanceof TuleapFieldSet) {
+			TuleapFieldSet tuleapFieldSet = (TuleapFieldSet)formElement;
+			List<AbstractTuleapFormElement> formElements = tuleapFieldSet.getFormElements();
+			for (AbstractTuleapFormElement abstractTuleapFormElement : formElements) {
+				if (abstractTuleapFormElement instanceof TuleapFieldSet) {
+					TuleapFieldSet fieldSet = (TuleapFieldSet)abstractTuleapFormElement;
+					fields.addAll(TuleapRepositoryConfiguration.getFields(fieldSet));
+				} else if (abstractTuleapFormElement instanceof TuleapColumn) {
+					TuleapColumn column = (TuleapColumn)abstractTuleapFormElement;
+					fields.addAll(TuleapRepositoryConfiguration.getFields(column));
+				} else if (abstractTuleapFormElement instanceof AbstractTuleapField) {
+					AbstractTuleapField field = (AbstractTuleapField)abstractTuleapFormElement;
+					fields.add(field);
+
+				}
+			}
+		} else if (formElement instanceof TuleapColumn) {
+			TuleapColumn tuleapColumn = (TuleapColumn)formElement;
+			fields.addAll(tuleapColumn.getFormElements());
+		}
+		return fields;
 	}
 }

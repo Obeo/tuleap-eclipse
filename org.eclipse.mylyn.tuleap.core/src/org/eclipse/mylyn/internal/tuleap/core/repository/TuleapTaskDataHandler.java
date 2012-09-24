@@ -21,15 +21,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.tuleap.core.client.TuleapClient;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
-import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapFormElement;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapStructuralElement;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapSelectBox;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapString;
 import org.eclipse.mylyn.internal.tuleap.core.model.permission.ITuleapDefaultPermissionGroups;
 import org.eclipse.mylyn.internal.tuleap.core.model.permission.TuleapAccessPermission;
-import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapColumn;
-import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapFieldSet;
 import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
 import org.eclipse.mylyn.internal.tuleap.core.util.TuleapMylynTasksMessages;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -180,44 +177,13 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			// Default attributes
 			List<AbstractTuleapStructuralElement> formElements = configuration.getFormElements();
 			for (AbstractTuleapStructuralElement abstractTuleapStructuralElement : formElements) {
-				List<AbstractTuleapField> fields = this.getFields(abstractTuleapStructuralElement);
+				List<AbstractTuleapField> fields = TuleapRepositoryConfiguration
+						.getFields(abstractTuleapStructuralElement);
 				for (AbstractTuleapField abstractTuleapField : fields) {
 					this.createAttribute(taskData, abstractTuleapField);
 				}
 			}
 		}
-	}
-
-	/**
-	 * Returns the list of fields recursively contained in a given form element.
-	 * 
-	 * @param formElement
-	 *            A structural form element
-	 * @return The list of fields recursively contained in a given form element.
-	 */
-	private List<AbstractTuleapField> getFields(AbstractTuleapStructuralElement formElement) {
-		List<AbstractTuleapField> fields = new ArrayList<AbstractTuleapField>();
-		if (formElement instanceof TuleapFieldSet) {
-			TuleapFieldSet tuleapFieldSet = (TuleapFieldSet)formElement;
-			List<AbstractTuleapFormElement> formElements = tuleapFieldSet.getFormElements();
-			for (AbstractTuleapFormElement abstractTuleapFormElement : formElements) {
-				if (abstractTuleapFormElement instanceof TuleapFieldSet) {
-					TuleapFieldSet fieldSet = (TuleapFieldSet)abstractTuleapFormElement;
-					fields.addAll(this.getFields(fieldSet));
-				} else if (abstractTuleapFormElement instanceof TuleapColumn) {
-					TuleapColumn column = (TuleapColumn)abstractTuleapFormElement;
-					fields.addAll(this.getFields(column));
-				} else if (abstractTuleapFormElement instanceof AbstractTuleapField) {
-					AbstractTuleapField field = (AbstractTuleapField)abstractTuleapFormElement;
-					fields.add(field);
-
-				}
-			}
-		} else if (formElement instanceof TuleapColumn) {
-			TuleapColumn tuleapColumn = (TuleapColumn)formElement;
-			fields.addAll(tuleapColumn.getFormElements());
-		}
-		return fields;
 	}
 
 	/**
