@@ -45,13 +45,13 @@ public class TuleapConnectorUi extends AbstractRepositoryConnectorUi {
 
 	@Override
 	public String getAccountCreationUrl(TaskRepository taskRepository) {
-		// Account creation url : https://<nom-de-domaine>/account/register.php
+		// Account creation url : https://<domain-name>/account/register.php
 		return TuleapUtil.getDomainRepositoryURl(taskRepository) + "/account/register.php"; //$NON-NLS-1$
 	}
 
 	@Override
 	public String getAccountManagementUrl(TaskRepository taskRepository) {
-		// Account management url : https://<nom-de-domaine>/my/
+		// Account management url : https://<domain-name>/my/
 		return TuleapUtil.getDomainRepositoryURl(taskRepository) + "/my/"; //$NON-NLS-1$
 	}
 
