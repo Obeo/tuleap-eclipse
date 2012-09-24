@@ -311,11 +311,9 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector {
 	 * @param monitor
 	 *            the progress monitor
 	 * @return The configuration of the Tuleap repository.
-	 * @throws CoreException
-	 *             In case of issue while resolving the configuration of the repository.
 	 */
 	public TuleapRepositoryConfiguration getRepositoryConfiguration(TaskRepository repository,
-			boolean forceRefresh, IProgressMonitor monitor) throws CoreException {
+			boolean forceRefresh, IProgressMonitor monitor) {
 		// TODO Returns and/or update the configuration of the given repository.
 		TuleapClient client = this.getClientManager().getClient(repository);
 		client.updateAttributes(monitor, true);
