@@ -11,10 +11,8 @@
 package org.eclipse.mylyn.internal.tuleap.ui.wizards.query;
 
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.mylyn.commons.workbench.forms.SectionComposite;
-import org.eclipse.mylyn.internal.tuleap.core.client.TuleapClient;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapFormElement;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapStructuralElement;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapMultiSelectBox;
@@ -113,8 +111,8 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 		query.setUrl(this.getTaskRepository().getRepositoryUrl());
 		query.setSummary(this.getQueryTitle());
 
-		Map<String, String> attributes = query.getAttributes();
 		// TODO Add the attributes of the query
+		// Map<String, String> attributes = query.getAttributes();
 	}
 
 	/**
@@ -128,99 +126,148 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 		String connectorKind = this.getTaskRepository().getConnectorKind();
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				connectorKind);
-		if (connector instanceof TuleapRepositoryConnector) {
-			TuleapRepositoryConnector repositoryConnector = (TuleapRepositoryConnector)connector;
-			TuleapClient client = repositoryConnector.getClientManager().getClient(this.getTaskRepository());
-			TuleapRepositoryConfiguration repositoryConfiguration = repositoryConnector
-					.getRepositoryConfiguration(this.getTaskRepository().getRepositoryUrl());
-			if (repositoryConfiguration != null) {
-				List<AbstractTuleapStructuralElement> formElements = repositoryConfiguration
-						.getFormElements();
-				for (AbstractTuleapStructuralElement abstractTuleapStructuralElement : formElements) {
-					if (abstractTuleapStructuralElement instanceof TuleapFieldSet) {
-						// Create a SWT group for each Tuleap field set
-						TuleapFieldSet fieldSet = (TuleapFieldSet)abstractTuleapStructuralElement;
+		if (!(connector instanceof TuleapRepositoryConnector)) {
+			TuleapTasksUIPlugin.log(TuleapMylynTasksUIMessages.getString(
+					"TuleapCustomQueryPage.InvalidConnector", this.getTaskRepository().getRepositoryUrl()), //$NON-NLS-1$
+					true);
+			return;
+		}
+		TuleapRepositoryConnector repositoryConnector = (TuleapRepositoryConnector)connector;
+		TuleapRepositoryConfiguration repositoryConfiguration = repositoryConnector
+				.getRepositoryConfiguration(this.getTaskRepository().getRepositoryUrl());
+		if (repositoryConfiguration != null) {
+			List<AbstractTuleapStructuralElement> formElements = repositoryConfiguration.getFormElements();
+			for (AbstractTuleapStructuralElement abstractTuleapStructuralElement : formElements) {
+				if (abstractTuleapStructuralElement instanceof TuleapFieldSet) {
+					// Create a SWT group for each Tuleap field set
+					TuleapFieldSet fieldSet = (TuleapFieldSet)abstractTuleapStructuralElement;
 
-						Group group = new Group(parent.getContent(), SWT.NONE);
-						group.setText(fieldSet.getLabel());
-						GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
-						gridData.grabExcessVerticalSpace = false;
-						group.setLayoutData(gridData);
-						group.setLayout(new GridLayout(3, false));
+					Group group = new Group(parent.getContent(), SWT.NONE);
+					group.setText(fieldSet.getLabel());
+					GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
+					gridData.grabExcessVerticalSpace = false;
+					group.setLayoutData(gridData);
+					group.setLayout(new GridLayout(3, false));
 
-						List<AbstractTuleapFormElement> fieldSetFormElements = fieldSet.getFormElements();
-						for (AbstractTuleapFormElement abstractTuleapFormElement : fieldSetFormElements) {
-							if (abstractTuleapFormElement instanceof TuleapString) {
-								// Create a single line text field for each Tuleap string
-								TuleapString tuleapString = (TuleapString)abstractTuleapFormElement;
-								Label label = new Label(group, SWT.NONE);
-								label.setText(tuleapString.getLabel());
-
-								Combo combo = new Combo(group, SWT.SINGLE | SWT.READ_ONLY);
-								combo.setItems(new String[] {"contains", "equals", "starts with",
-										"ends with", });
-								combo.setText("contains");
-
-								Text text = new Text(group, SWT.SINGLE | SWT.BORDER);
-								gridData = new GridData(GridData.FILL_HORIZONTAL);
-								text.setLayoutData(gridData);
-							} else if (abstractTuleapFormElement instanceof TuleapSelectBox) {
-								// Create a single selection combo for each Tuleap select box
-								TuleapSelectBox tuleapSelectBox = (TuleapSelectBox)abstractTuleapFormElement;
-								Label label = new Label(group, SWT.NONE);
-								label.setText(tuleapSelectBox.getLabel());
-
-								Combo combo = new Combo(group, SWT.SINGLE | SWT.READ_ONLY);
-								combo.setItems(new String[] {"equals", });
-								combo.setText("equals");
-
-								combo = new Combo(group, SWT.SINGLE | SWT.READ_ONLY);
-								combo.setItems(tuleapSelectBox.getItems().toArray(
-										new String[tuleapSelectBox.getItems().size()]));
-								gridData = new GridData(GridData.FILL_HORIZONTAL);
-								combo.setLayoutData(gridData);
-								if (tuleapSelectBox.getItems().size() > 0) {
-									combo.setText(tuleapSelectBox.getItems().get(0));
-								}
-							} else if (abstractTuleapFormElement instanceof TuleapMultiSelectBox) {
-								// Create a multi selection combo for each Tuleap multi select box
-								TuleapMultiSelectBox tuleapSelectBox = (TuleapMultiSelectBox)abstractTuleapFormElement;
-								Label label = new Label(group, SWT.NONE);
-								label.setText(tuleapSelectBox.getLabel());
-
-								Combo combo = new Combo(group, SWT.SINGLE | SWT.READ_ONLY);
-								combo.setItems(new String[] {"contains", "equals", });
-								combo.setText("contains");
-
-								org.eclipse.swt.widgets.List list = new org.eclipse.swt.widgets.List(group,
-										SWT.MULTI | SWT.READ_ONLY | SWT.BORDER);
-								list.setItems(tuleapSelectBox.getItems().toArray(
-										new String[tuleapSelectBox.getItems().size()]));
-								gridData = new GridData(GridData.FILL_HORIZONTAL);
-								list.setLayoutData(gridData);
-							} else if (abstractTuleapFormElement instanceof TuleapText) {
-								// Create a multi line text for each Tuleap text
-								TuleapText tuleapText = (TuleapText)abstractTuleapFormElement;
-								Label label = new Label(group, SWT.NONE);
-								label.setText(tuleapText.getLabel());
-
-								Combo combo = new Combo(group, SWT.SINGLE | SWT.READ_ONLY);
-								combo.setItems(new String[] {"contains", "equals", "starts with",
-										"ends with", });
-								combo.setText("contains");
-
-								Text text = new Text(group, SWT.BORDER | SWT.MULTI);
-								gridData = new GridData(GridData.FILL_HORIZONTAL);
-								text.setLayoutData(gridData);
-							}
+					List<AbstractTuleapFormElement> fieldSetFormElements = fieldSet.getFormElements();
+					for (AbstractTuleapFormElement abstractTuleapFormElement : fieldSetFormElements) {
+						if (abstractTuleapFormElement instanceof TuleapString) {
+							this.createGroupContent((TuleapString)abstractTuleapFormElement, group);
+						} else if (abstractTuleapFormElement instanceof TuleapSelectBox) {
+							this.createGroupContent((TuleapSelectBox)abstractTuleapFormElement, group);
+						} else if (abstractTuleapFormElement instanceof TuleapMultiSelectBox) {
+							this.createGroupContent((TuleapMultiSelectBox)abstractTuleapFormElement, group);
+						} else if (abstractTuleapFormElement instanceof TuleapText) {
+							this.createGroupContent((TuleapText)abstractTuleapFormElement, group);
+						} else {
+							// TODO Support other type of widget
 						}
 					}
 				}
 			}
-		} else {
-			throw new IllegalArgumentException(TuleapMylynTasksUIMessages.getString(
-					"TuleapCustomQueryPage.InvalidConnector", this.getTaskRepository().getRepositoryUrl()));
 		}
+	}
+
+	/**
+	 * Creates the dedicated type of widget for the Tuleap string field.
+	 * 
+	 * @param tuleapString
+	 *            The Tuleap string field
+	 * @param group
+	 *            The group in which the widget should be created
+	 */
+	private void createGroupContent(TuleapString tuleapString, Group group) {
+		// Create a single line text field for each Tuleap string
+		Label label = new Label(group, SWT.NONE);
+		label.setText(tuleapString.getLabel());
+
+		Combo combo = new Combo(group, SWT.SINGLE | SWT.READ_ONLY);
+		combo.setItems(new String[] {ITuleapQueryOptions.StringOptions.STRING_OPTIONS_EQUALS,
+				ITuleapQueryOptions.StringOptions.STRING_OPTIONS_STARTS_WITH,
+				ITuleapQueryOptions.StringOptions.STRING_OPTIONS_ENDS_WITH,
+				ITuleapQueryOptions.StringOptions.STRING_OPTIONS_CONTAINS, });
+		combo.setText(ITuleapQueryOptions.StringOptions.STRING_OPTIONS_EQUALS);
+
+		Text text = new Text(group, SWT.SINGLE | SWT.BORDER);
+		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
+		text.setLayoutData(gridData);
+	}
+
+	/**
+	 * Creates the dedicated type of widget for the Tuleap select box field.
+	 * 
+	 * @param tuleapSelectBox
+	 *            The Tuleap select box field
+	 * @param group
+	 *            The group in which the widget should be created
+	 */
+	private void createGroupContent(TuleapSelectBox tuleapSelectBox, Group group) {
+		// Create a single selection combo for each Tuleap select box
+		Label label = new Label(group, SWT.NONE);
+		label.setText(tuleapSelectBox.getLabel());
+
+		Combo combo = new Combo(group, SWT.SINGLE | SWT.READ_ONLY);
+		combo.setItems(new String[] {ITuleapQueryOptions.StringOptions.STRING_OPTIONS_EQUALS, });
+		combo.setText(ITuleapQueryOptions.StringOptions.STRING_OPTIONS_EQUALS);
+
+		combo = new Combo(group, SWT.SINGLE | SWT.READ_ONLY);
+		combo.setItems(tuleapSelectBox.getItems().toArray(new String[tuleapSelectBox.getItems().size()]));
+		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
+		combo.setLayoutData(gridData);
+		if (tuleapSelectBox.getItems().size() > 0) {
+			combo.setText(tuleapSelectBox.getItems().get(0));
+		}
+	}
+
+	/**
+	 * Creates the dedicated type of widget for the Tuleap multi select box field.
+	 * 
+	 * @param tuleapMultiSelectBox
+	 *            The Tuleap multi select box field
+	 * @param group
+	 *            The group in which the widget should be created
+	 */
+	private void createGroupContent(TuleapMultiSelectBox tuleapMultiSelectBox, Group group) {
+		// Create a multi selection combo for each Tuleap multi select box
+		Label label = new Label(group, SWT.NONE);
+		label.setText(tuleapMultiSelectBox.getLabel());
+
+		Combo combo = new Combo(group, SWT.SINGLE | SWT.READ_ONLY);
+		combo.setItems(new String[] {ITuleapQueryOptions.StringOptions.STRING_OPTIONS_CONTAINS,
+				ITuleapQueryOptions.StringOptions.STRING_OPTIONS_EQUALS, });
+		combo.setText(ITuleapQueryOptions.StringOptions.STRING_OPTIONS_CONTAINS);
+
+		org.eclipse.swt.widgets.List list = new org.eclipse.swt.widgets.List(group, SWT.MULTI | SWT.READ_ONLY
+				| SWT.BORDER);
+		list.setItems(tuleapMultiSelectBox.getItems().toArray(
+				new String[tuleapMultiSelectBox.getItems().size()]));
+		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
+		list.setLayoutData(gridData);
+	}
+
+	/**
+	 * Creates the dedicated type of widget for the Tuleap text field.
+	 * 
+	 * @param tuleapText
+	 *            The Tuleap text field
+	 * @param group
+	 *            The group in which the widget should be created
+	 */
+	private void createGroupContent(TuleapText tuleapText, Group group) {
+		// Create a multi line text for each Tuleap text
+		Label label = new Label(group, SWT.NONE);
+		label.setText(tuleapText.getLabel());
+
+		Combo combo = new Combo(group, SWT.SINGLE | SWT.READ_ONLY);
+		combo.setItems(new String[] {ITuleapQueryOptions.StringOptions.STRING_OPTIONS_EQUALS,
+				ITuleapQueryOptions.StringOptions.STRING_OPTIONS_STARTS_WITH,
+				ITuleapQueryOptions.StringOptions.STRING_OPTIONS_ENDS_WITH,
+				ITuleapQueryOptions.StringOptions.STRING_OPTIONS_CONTAINS, });
+		combo.setText(ITuleapQueryOptions.StringOptions.STRING_OPTIONS_EQUALS);
+
+		Text text = new Text(group, SWT.BORDER | SWT.MULTI);
+		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
+		text.setLayoutData(gridData);
 	}
 
 	/**
