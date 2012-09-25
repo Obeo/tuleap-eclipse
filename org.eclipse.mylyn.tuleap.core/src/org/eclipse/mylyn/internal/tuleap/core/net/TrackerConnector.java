@@ -25,6 +25,8 @@ import org.eclipse.mylyn.internal.tuleap.core.model.permission.ITuleapDefaultPer
 import org.eclipse.mylyn.internal.tuleap.core.model.permission.TuleapAccessPermission;
 import org.eclipse.mylyn.internal.tuleap.core.model.permission.TuleapPermissions;
 import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapFieldSet;
+import org.eclipse.mylyn.internal.tuleap.core.model.workflow.TuleapWorkflow;
+import org.eclipse.mylyn.internal.tuleap.core.model.workflow.TuleapWorkflowTransition;
 import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.util.TuleapMylynTasksMessages;
 import org.eclipse.mylyn.internal.tuleap.core.util.TuleapUtil;
@@ -183,6 +185,27 @@ public class TrackerConnector {
 		additionalText.setDescription("The description of the additional information");
 		additionalText.setPermissions(permissions);
 		additionalElement.getFormElements().add(additionalText);
+
+		TuleapSelectBox box = new TuleapSelectBox("Status", "The status of the meal", "__status");
+		box.setPermissions(permissions);
+		box.getOpenStatus().add("Open");
+		box.getOpenStatus().add("Verified");
+		box.getOpenStatus().add("Assigned");
+		box.getItems().add("Open");
+		box.getItems().add("Verified");
+		box.getItems().add("Assigned");
+		box.getItems().add("Closed");
+		box.getItems().add("Resolved");
+
+		TuleapWorkflow fieldWorkflow = new TuleapWorkflow();
+		fieldWorkflow.getTransitions().add(new TuleapWorkflowTransition("Open", "Verified"));
+		fieldWorkflow.getTransitions().add(new TuleapWorkflowTransition("Open", "Assigned"));
+		fieldWorkflow.getTransitions().add(new TuleapWorkflowTransition("Verified", "Resolved"));
+		fieldWorkflow.getTransitions().add(new TuleapWorkflowTransition("Assigned", "Resolved"));
+		fieldWorkflow.getTransitions().add(new TuleapWorkflowTransition("Resolved", "Closed"));
+		box.setWorkflow(fieldWorkflow);
+
+		additionalElement.getFormElements().add(box);
 
 		configuration.getFormElements().add(additionalElement);
 
