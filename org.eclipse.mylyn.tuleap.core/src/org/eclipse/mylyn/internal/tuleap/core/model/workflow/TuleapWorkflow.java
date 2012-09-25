@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.core.model.workflow;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,12 @@ import java.util.List;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 1.0
  */
-public class TuleapWorkflow {
+public class TuleapWorkflow implements Serializable {
+	/**
+	 * The serialization ID.
+	 */
+	private static final long serialVersionUID = -8494847603902677049L;
+
 	/**
 	 * The transitions of the workflow.
 	 */
