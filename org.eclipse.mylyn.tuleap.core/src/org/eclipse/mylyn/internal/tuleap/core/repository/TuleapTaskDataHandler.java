@@ -12,6 +12,7 @@ package org.eclipse.mylyn.internal.tuleap.core.repository;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -20,6 +21,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.tuleap.core.client.TuleapClient;
+import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapDynamicField;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapStructuralElement;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact;
@@ -27,6 +29,7 @@ import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapSelectBox;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapString;
 import org.eclipse.mylyn.internal.tuleap.core.model.permission.ITuleapDefaultPermissionGroups;
 import org.eclipse.mylyn.internal.tuleap.core.model.permission.TuleapAccessPermission;
+import org.eclipse.mylyn.internal.tuleap.core.model.workflow.TuleapWorkflow;
 import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
 import org.eclipse.mylyn.internal.tuleap.core.util.TuleapMylynTasksMessages;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -39,6 +42,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 
 /**
  * This class is in charge of the publication and retrieval of the tasks data to and from the repository.
@@ -139,6 +144,16 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				TuleapClient tuleapClient = this.connector.getClientManager().getClient(repository);
 				tuleapClient.updateAttributes(monitor, false);
 				this.createDefaultAttributes(taskData, tuleapClient, false);
+				// TODO Compute the default value of the status, null if none
+				this.createOperations(taskData, tuleapClient, "Open");
+
+				// Sets the creation date and last modification date.
+				ITaskMapping taskMapping = this.connector.getTaskMapping(taskData);
+				if (taskMapping instanceof TaskMapper) {
+					TaskMapper taskMapper = (TaskMapper)taskMapping;
+					taskMapper.setCreationDate(new Date());
+					taskMapper.setModificationDate(new Date());
+				}
 			}
 		}
 		return true;
@@ -156,32 +171,32 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 */
 	private void createDefaultAttributes(TaskData taskData, TuleapClient tuleapClient, boolean existingTask) {
 		TuleapRepositoryConfiguration configuration = tuleapClient.getRepositoryConfiguration();
-		if (configuration != null) {
-			// TODO Configure content to display it in the editor later
+		if (configuration == null) {
+			return;
+		}
+		// TODO Configure content to display it in the editor later
 
-			// Creation date
-			TaskAttribute attribute = taskData.getRoot().createAttribute(TaskAttribute.DATE_CREATION);
-			TaskAttributeMetaData metaData = attribute.getMetaData();
-			metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.CreationDate")); //$NON-NLS-1$
-			metaData.setKind(TaskAttribute.KIND_DEFAULT);
-			metaData.setType(TaskAttribute.TYPE_DATE);
+		// Creation date
+		TaskAttribute attribute = taskData.getRoot().createAttribute(TaskAttribute.DATE_CREATION);
+		TaskAttributeMetaData metaData = attribute.getMetaData();
+		metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.CreationDate")); //$NON-NLS-1$
+		metaData.setKind(TaskAttribute.KIND_DEFAULT);
+		metaData.setType(TaskAttribute.TYPE_DATE);
 
-			// Last modification date
-			attribute = taskData.getRoot().createAttribute(TaskAttribute.DATE_MODIFICATION);
-			metaData = attribute.getMetaData();
-			metaData.setLabel(TuleapMylynTasksMessages
-					.getString("TuleapTaskDataHandler.LastModificationDate")); //$NON-NLS-1$
-			metaData.setKind(TaskAttribute.KIND_DEFAULT);
-			metaData.setType(TaskAttribute.TYPE_DATE);
+		// Last modification date
+		attribute = taskData.getRoot().createAttribute(TaskAttribute.DATE_MODIFICATION);
+		metaData = attribute.getMetaData();
+		metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.LastModificationDate")); //$NON-NLS-1$
+		metaData.setKind(TaskAttribute.KIND_DEFAULT);
+		metaData.setType(TaskAttribute.TYPE_DATE);
 
-			// Default attributes
-			List<AbstractTuleapStructuralElement> formElements = configuration.getFormElements();
-			for (AbstractTuleapStructuralElement abstractTuleapStructuralElement : formElements) {
-				List<AbstractTuleapField> fields = TuleapRepositoryConfiguration
-						.getFields(abstractTuleapStructuralElement);
-				for (AbstractTuleapField abstractTuleapField : fields) {
-					this.createAttribute(taskData, abstractTuleapField);
-				}
+		// Default attributes
+		List<AbstractTuleapStructuralElement> formElements = configuration.getFormElements();
+		for (AbstractTuleapStructuralElement abstractTuleapStructuralElement : formElements) {
+			List<AbstractTuleapField> fields = TuleapRepositoryConfiguration
+					.getFields(abstractTuleapStructuralElement);
+			for (AbstractTuleapField abstractTuleapField : fields) {
+				this.createAttribute(taskData, abstractTuleapField);
 			}
 		}
 	}
@@ -202,9 +217,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			attribute = taskData.getRoot().createAttribute(TaskAttribute.SUMMARY);
 		} else if (tuleapField instanceof TuleapSelectBox) {
 			TuleapSelectBox selectBox = (TuleapSelectBox)tuleapField;
-			if (selectBox.isSemanticStatus()) {
-				attribute = taskData.getRoot().createAttribute(TaskAttribute.RESOLUTION);
-			} else if (selectBox.isSemanticContributor()) {
+			if (selectBox.isSemanticContributor()) {
 				// Create an attribute for the assigned person
 				TaskAttribute anAttribute = taskData.getRoot().createAttribute(TaskAttribute.USER_ASSIGNED);
 				TaskAttributeMetaData metaData = anAttribute.getMetaData();
@@ -234,6 +247,11 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			attributeMetadata.setReadOnly(true);
 		}
 
+		// Dynamic fields are read only
+		if (tuleapField instanceof AbstractTuleapDynamicField) {
+			attributeMetadata.setReadOnly(true);
+		}
+
 		// Possible values
 		Map<String, String> options = tuleapField.getOptions();
 		for (Entry<String, String> entry : options.entrySet()) {
@@ -255,6 +273,94 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			}
 
 			attribute.setValues(strList);
+		}
+
+	}
+
+	/**
+	 * Creates the operations available on the task data thanks to the configuration of the client while using
+	 * the given current status.
+	 * 
+	 * @param taskData
+	 *            The task data
+	 * @param tuleapClient
+	 *            The tuleap client used to get the configuration of the tracker
+	 * @param currentStatus
+	 *            The current status
+	 */
+	private void createOperations(TaskData taskData, TuleapClient tuleapClient, String currentStatus) {
+		TuleapSelectBox statusSelectBox = null;
+
+		// Create operations from the status semantic
+		TuleapRepositoryConfiguration configuration = tuleapClient.getRepositoryConfiguration();
+		List<AbstractTuleapStructuralElement> formElements = configuration.getFormElements();
+		for (AbstractTuleapStructuralElement abstractTuleapStructuralElement : formElements) {
+			List<AbstractTuleapField> fields = TuleapRepositoryConfiguration
+					.getFields(abstractTuleapStructuralElement);
+			for (AbstractTuleapField abstractTuleapField : fields) {
+				if (abstractTuleapField instanceof TuleapSelectBox) {
+					TuleapSelectBox selectBox = (TuleapSelectBox)abstractTuleapField;
+					if (selectBox.isSemanticStatus()) {
+						statusSelectBox = selectBox;
+					}
+				}
+			}
+		}
+
+		if (statusSelectBox != null) {
+			// Create the default attribute for the operation
+			TaskAttribute operationAttribute = taskData.getRoot().getAttribute(TaskAttribute.OPERATION);
+			if (operationAttribute == null) {
+				operationAttribute = taskData.getRoot().createAttribute(TaskAttribute.OPERATION);
+			}
+
+			TaskAttribute attrStatus = taskData.getRoot().createAttribute(
+					TaskAttribute.PREFIX_OPERATION + "tuleap.status");
+
+			// Compute the label of the status
+			String leaveAsLabel = TuleapMylynTasksMessages.getString(
+					"TuleapTaskDataHandler.LeaveAs", currentStatus); //$NON-NLS-1$
+			TaskAttribute leaveOperationAttribute = taskData.getRoot().createAttribute(
+					ITuleapConstants.LEAVE_OPERATION);
+
+			TaskOperation.applyTo(leaveOperationAttribute, ITuleapConstants.LEAVE_OPERATION, leaveAsLabel);
+
+			// Set as default
+			TaskOperation.applyTo(operationAttribute, ITuleapConstants.LEAVE_OPERATION, leaveAsLabel);
+
+			TuleapWorkflow workflow = statusSelectBox.getWorkflow();
+			List<String> tuleapStatus = workflow.accessibleStates(currentStatus);
+			List<String> openedAccessibleStatus = new ArrayList<String>();
+			List<String> closedAccessibleStatus = new ArrayList<String>();
+
+			for (String aStatus : tuleapStatus) {
+				// Compute if the reachable state is an "opened" state
+				if (statusSelectBox.getOpenStatus().contains(aStatus)) {
+					openedAccessibleStatus.add(aStatus);
+				} else {
+					closedAccessibleStatus.add(aStatus);
+				}
+			}
+
+			TaskAttribute attrResolved = taskData.getRoot().createAttribute("tuleap.resolution");
+			TaskAttribute attrResolvedInput = taskData.getRoot().createAttribute("tuleap.resolution.input");
+			attrResolvedInput.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+			TaskOperation.applyTo(attrResolved, "tuleap.resolution", "Resolve as");
+			attrResolved.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID,
+					"tuleap.resolution.input");
+			for (String openedStatus : openedAccessibleStatus) {
+				attrResolvedInput.putOption(openedStatus, openedStatus);
+			}
+
+			TaskAttribute attrClosed = taskData.getRoot().createAttribute("tuleap.close");
+			TaskAttribute attrClosedInput = taskData.getRoot().createAttribute("tuleap.close.input");
+			attrClosedInput.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+			TaskOperation.applyTo(attrClosed, "tuleap.close", "Close as");
+			attrClosed.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID,
+					"tuleap.close.input");
+			for (String closedStatus : closedAccessibleStatus) {
+				attrClosedInput.putOption(closedStatus, closedStatus);
+			}
 		}
 	}
 
@@ -334,6 +440,8 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 		tuleapClient.updateAttributes(monitor, false);
 		this.createDefaultAttributes(taskData, tuleapClient, false);
+		// TODO Compute the status of the tuleap artifact
+		this.createOperations(taskData, tuleapClient, "Open");
 
 		// Convert Tuleap artifact to Mylyn task data
 		Set<String> keys = tuleapArtifact.getKeys();

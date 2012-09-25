@@ -54,4 +54,9 @@ public interface ITuleapConstants {
 	 * "https://<domainName>/plugins/tracker/?group_id=<trackerId>"
 	 */
 	String TULEAP_REPOSITORY_URL_STRUCTURE = "/plugins/tracker/?group_id="; //$NON-NLS-1$
+
+	/**
+	 * The suffix for the task data "leave" operation.
+	 */
+	String LEAVE_OPERATION = "leave"; //$NON-NLS-1$
 }
