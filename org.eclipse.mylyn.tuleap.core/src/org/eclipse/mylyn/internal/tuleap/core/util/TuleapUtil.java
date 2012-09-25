@@ -17,6 +17,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.Date;
@@ -75,6 +76,8 @@ public final class TuleapUtil {
 			FileOutputStream fos = new FileOutputStream(file);
 			fos.getChannel().transferFrom(rbc, 0, TRANSFER_COUNT);
 			fos.close();
+		} catch (UnknownHostException e) {
+			TuleapCoreActivator.log(TuleapMylynTasksMessages.getString("TuleapUtil.UnknownHost", url), true); //$NON-NLS-1$
 		} catch (IOException e) {
 			TuleapCoreActivator.log(e, true);
 		}
