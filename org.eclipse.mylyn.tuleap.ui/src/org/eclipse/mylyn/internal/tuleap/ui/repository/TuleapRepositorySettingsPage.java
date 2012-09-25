@@ -38,7 +38,6 @@ public class TuleapRepositorySettingsPage extends AbstractRepositorySettingsPage
 		super(TuleapMylynTasksUIMessages.getString("TuleapRepositorySettingsPage.Name"), //$NON-NLS-1$
 				TuleapMylynTasksUIMessages.getString("TuleapRepositorySettingsPage.Description"), //$NON-NLS-1$
 				taskRepository);
-		// TODO Check with Enalean for the options of the Tuleap tracker
 		this.setNeedsAnonymousLogin(true);
 		this.setNeedsEncoding(true);
 		this.setNeedsValidateOnFinish(true);
@@ -74,7 +73,7 @@ public class TuleapRepositorySettingsPage extends AbstractRepositorySettingsPage
 		// The Tuleap tracker that the repository will respect the following pattern
 		// "https://<domainName>/plugins/tracker/?group_id=<trackerId>"
 		boolean isValid = super.isValidUrl(url);
-		return isValid && url.matches("https://.*/plugins/tracker/\\?group_id=[0-9]*"); //$NON-NLS-1$
+		return isValid && url.matches("https://.*/plugins/tracker/\\?tracker=[0-9]*"); //$NON-NLS-1$
 	}
 
 	/**
