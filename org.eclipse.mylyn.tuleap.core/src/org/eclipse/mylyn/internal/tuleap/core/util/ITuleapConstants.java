@@ -51,9 +51,9 @@ public interface ITuleapConstants {
 
 	/**
 	 * Part of the Tuleap repository URL. The URL format is :
-	 * "https://<domainName>/plugins/tracker/?group_id=<trackerId>"
+	 * "https://<domainName>/plugins/tracker/?tracker=<trackerId>"
 	 */
-	String TULEAP_REPOSITORY_URL_STRUCTURE = "/plugins/tracker/?group_id="; //$NON-NLS-1$
+	String TULEAP_REPOSITORY_URL_STRUCTURE = "/plugins/tracker/?tracker="; //$NON-NLS-1$
 
 	/**
 	 * The suffix for the task data "leave" operation.
