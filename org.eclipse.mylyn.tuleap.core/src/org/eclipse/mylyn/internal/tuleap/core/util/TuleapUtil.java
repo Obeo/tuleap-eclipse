@@ -71,15 +71,32 @@ public final class TuleapUtil {
 	 *            Path to save file
 	 */
 	public static void download(String url, File file) {
+		ReadableByteChannel rbc = null;
+		FileOutputStream fos = null;
 		try {
-			ReadableByteChannel rbc = Channels.newChannel(new URL(url).openStream());
-			FileOutputStream fos = new FileOutputStream(file);
+			rbc = Channels.newChannel(new URL(url).openStream());
+			fos = new FileOutputStream(file);
 			fos.getChannel().transferFrom(rbc, 0, TRANSFER_COUNT);
-			fos.close();
 		} catch (UnknownHostException e) {
 			TuleapCoreActivator.log(TuleapMylynTasksMessages.getString("TuleapUtil.UnknownHost", url), true); //$NON-NLS-1$
 		} catch (IOException e) {
 			TuleapCoreActivator.log(e, true);
+		} finally {
+			if (fos != null) {
+				try {
+					fos.close();
+				} catch (IOException e) {
+					TuleapCoreActivator.log(e, true);
+				} finally {
+					if (rbc != null) {
+						try {
+							rbc.close();
+						} catch (IOException e) {
+							TuleapCoreActivator.log(e, true);
+						}
+					}
+				}
+			}
 		}
 	}
 
