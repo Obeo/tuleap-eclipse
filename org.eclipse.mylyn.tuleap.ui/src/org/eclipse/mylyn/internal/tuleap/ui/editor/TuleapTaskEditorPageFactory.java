@@ -13,7 +13,6 @@ package org.eclipse.mylyn.internal.tuleap.ui.editor;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
 import org.eclipse.mylyn.internal.tuleap.ui.util.TuleapMylynTasksUIMessages;
-import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
@@ -91,6 +90,6 @@ public class TuleapTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 	 */
 	@Override
 	public String[] getConflictingIds(TaskEditorInput input) {
-		return new String[] {ITasksUiConstants.ID_PAGE_PLANNING };
+		return new String[] {};
 	}
 }
