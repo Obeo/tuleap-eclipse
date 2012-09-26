@@ -176,8 +176,12 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		}
 		// TODO Configure content to display it in the editor later
 
+		// The kind of the task
+		TaskAttribute attribute = taskData.getRoot().createAttribute(TaskAttribute.TASK_KIND);
+		attribute.setValue(configuration.getName());
+
 		// Creation date
-		TaskAttribute attribute = taskData.getRoot().createAttribute(TaskAttribute.DATE_CREATION);
+		attribute = taskData.getRoot().createAttribute(TaskAttribute.DATE_CREATION);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
 		metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.CreationDate")); //$NON-NLS-1$
 		metaData.setKind(TaskAttribute.KIND_DEFAULT);
@@ -217,6 +221,10 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			attribute = taskData.getRoot().createAttribute(TaskAttribute.SUMMARY);
 		} else if (tuleapField instanceof TuleapSelectBox) {
 			TuleapSelectBox selectBox = (TuleapSelectBox)tuleapField;
+			if (selectBox.isSemanticStatus()) {
+				return;
+			}
+
 			if (selectBox.isSemanticContributor()) {
 				// Create an attribute for the assigned person
 				TaskAttribute anAttribute = taskData.getRoot().createAttribute(TaskAttribute.USER_ASSIGNED);
@@ -342,24 +350,29 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				}
 			}
 
-			TaskAttribute attrResolved = taskData.getRoot().createAttribute("tuleap.resolution");
-			TaskAttribute attrResolvedInput = taskData.getRoot().createAttribute("tuleap.resolution.input");
-			attrResolvedInput.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
-			TaskOperation.applyTo(attrResolved, "tuleap.resolution", "Resolve as");
-			attrResolved.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID,
-					"tuleap.resolution.input");
-			for (String openedStatus : openedAccessibleStatus) {
-				attrResolvedInput.putOption(openedStatus, openedStatus);
+			if (openedAccessibleStatus.size() > 0) {
+				TaskAttribute attrResolved = taskData.getRoot().createAttribute("tuleap.resolution");
+				TaskAttribute attrResolvedInput = taskData.getRoot().createAttribute(
+						"tuleap.resolution.input");
+				attrResolvedInput.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+				TaskOperation.applyTo(attrResolved, "tuleap.resolution", "Resolve as");
+				attrResolved.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID,
+						"tuleap.resolution.input");
+				for (String openedStatus : openedAccessibleStatus) {
+					attrResolvedInput.putOption(openedStatus, openedStatus);
+				}
 			}
 
-			TaskAttribute attrClosed = taskData.getRoot().createAttribute("tuleap.close");
-			TaskAttribute attrClosedInput = taskData.getRoot().createAttribute("tuleap.close.input");
-			attrClosedInput.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
-			TaskOperation.applyTo(attrClosed, "tuleap.close", "Close as");
-			attrClosed.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID,
-					"tuleap.close.input");
-			for (String closedStatus : closedAccessibleStatus) {
-				attrClosedInput.putOption(closedStatus, closedStatus);
+			if (closedAccessibleStatus.size() > 0) {
+				TaskAttribute attrClosed = taskData.getRoot().createAttribute("tuleap.close");
+				TaskAttribute attrClosedInput = taskData.getRoot().createAttribute("tuleap.close.input");
+				attrClosedInput.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+				TaskOperation.applyTo(attrClosed, "tuleap.close", "Close as");
+				attrClosed.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID,
+						"tuleap.close.input");
+				for (String closedStatus : closedAccessibleStatus) {
+					attrClosedInput.putOption(closedStatus, closedStatus);
+				}
 			}
 		}
 	}

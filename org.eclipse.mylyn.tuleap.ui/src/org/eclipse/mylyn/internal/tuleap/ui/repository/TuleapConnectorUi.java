@@ -75,7 +75,12 @@ public class TuleapConnectorUi extends AbstractRepositoryConnectorUi {
 	 */
 	@Override
 	public String getTaskKindLabel(ITask task) {
-		return TuleapMylynTasksUIMessages.getString("TuleapConnectorUi.TaskKindLabel"); //$NON-NLS-1$
+		String taskKind = task.getTaskKind();
+		if (taskKind == null || taskKind.length() == 0 || taskKind.equals(ITuleapConstants.CONNECTOR_KIND)) {
+			// By default, use the name "Artifact" if we don"t have anything, or just "tuleap"
+			taskKind = TuleapMylynTasksUIMessages.getString("TuleapConnectorUi.TaskKindLabel"); //$NON-NLS-1$
+		}
+		return taskKind;
 	}
 
 	/**
