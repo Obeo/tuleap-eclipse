@@ -16,7 +16,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.tuleap.ui.repository.TuleapRepositorySettingsPage;
-import org.eclipse.mylyn.internal.tuleap.ui.repository.TuleapValidator;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -29,11 +28,6 @@ public class TuleapRepositorySettingsPageTest extends TestCase {
 	 * Repository settings test page.
 	 */
 	private MyTuleapRepositorySettingsPage page;
-
-	/**
-	 * Validator.
-	 */
-	private TuleapValidator validator;
 
 	/**
 	 * Wizard.
@@ -107,21 +101,21 @@ public class TuleapRepositorySettingsPageTest extends TestCase {
 	 * Test {@link TuleapRepositorySettingsPage.isValidUrl}.
 	 */
 	public void testValidUrl() {
-		assertFalse(page.isValidUrl(""));
-		assertFalse(page.isValidUrl("http:/google.com"));
-		assertFalse(page.isValidUrl("http:/google.com/"));
-		assertFalse(page.isValidUrl("http://google.com/"));
-		assertFalse(page.isValidUrl("http://google.com/foo /space"));
-		assertFalse(page.isValidUrl("http://google.com"));
-		assertFalse(page.isValidUrl("https://google.com"));
-		assertFalse(page.isValidUrl("http://mylyn.org/trac30"));
-		assertFalse(page.isValidUrl("http://www.mylyn.org/trac30"));
-		assertFalse(page.isValidUrl("https://plugins/tracker/?group_id=42"));
-		assertFalse(page.isValidUrl("https://my.demo.domain/plugins/tracker/?group_id=aa"));
-		assertFalse(page.isValidUrl("https://my.demo.domain /plugins/tracker/?group_id=42"));
-		assertFalse(page.isValidUrl("https://my.demo.domain/plugins/tracker/?group_id=42x"));
-		assertTrue(page.isValidUrl("https://my.demo.domain/subdomain/plugins/tracker/?group_id=42"));
-		assertTrue(page.isValidUrl("https://my.demo.domain/plugins/tracker/?group_id=42"));
+		assertFalse(page.isValidUrl("")); //$NON-NLS-1$
+		assertFalse(page.isValidUrl("http:/google.com")); //$NON-NLS-1$
+		assertFalse(page.isValidUrl("http:/google.com/")); //$NON-NLS-1$
+		assertFalse(page.isValidUrl("http://google.com/")); //$NON-NLS-1$
+		assertFalse(page.isValidUrl("http://google.com/foo /space")); //$NON-NLS-1$
+		assertFalse(page.isValidUrl("http://google.com")); //$NON-NLS-1$
+		assertFalse(page.isValidUrl("https://google.com")); //$NON-NLS-1$
+		assertFalse(page.isValidUrl("http://mylyn.org/trac30")); //$NON-NLS-1$
+		assertFalse(page.isValidUrl("http://www.mylyn.org/trac30")); //$NON-NLS-1$
+		assertFalse(page.isValidUrl("https://plugins/tracker/?tracker=42")); //$NON-NLS-1$
+		assertFalse(page.isValidUrl("https://my.demo.domain/plugins/tracker/?tracker=aa")); //$NON-NLS-1$
+		assertFalse(page.isValidUrl("https://my.demo.domain /plugins/tracker/?tracker=42")); //$NON-NLS-1$
+		assertFalse(page.isValidUrl("https://my.demo.domain/plugins/tracker/?tracker=42x")); //$NON-NLS-1$
+		assertTrue(page.isValidUrl("https://my.demo.domain/subdomain/plugins/tracker/?tracker=42")); //$NON-NLS-1$
+		assertTrue(page.isValidUrl("https://my.demo.domain/plugins/tracker/?tracker=42")); //$NON-NLS-1$
 	}
 
 }
