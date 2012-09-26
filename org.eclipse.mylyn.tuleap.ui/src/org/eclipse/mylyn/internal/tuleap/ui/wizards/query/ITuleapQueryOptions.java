@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.ui.wizards.query;
 
+import org.eclipse.mylyn.internal.tuleap.ui.util.TuleapMylynTasksUIMessages;
+
 /**
  * This interface contains the list of options available for each type of widget.
  * 
@@ -31,21 +33,25 @@ public interface ITuleapQueryOptions {
 		/**
 		 * Contains.
 		 */
-		String STRING_OPTIONS_CONTAINS = "contains";
+		String STRING_OPTIONS_CONTAINS = TuleapMylynTasksUIMessages
+				.getString("ITuleapQueryOptions.StringsOptions.Contains"); //$NON-NLS-1$
 
 		/**
 		 * Starts with.
 		 */
-		String STRING_OPTIONS_STARTS_WITH = "starts with";
+		String STRING_OPTIONS_STARTS_WITH = TuleapMylynTasksUIMessages
+				.getString("ITuleapQueryOptions.StringsOptions.StartsWith"); //$NON-NLS-1$
 
 		/**
 		 * Ends with.
 		 */
-		String STRING_OPTIONS_ENDS_WITH = "ends with";
+		String STRING_OPTIONS_ENDS_WITH = TuleapMylynTasksUIMessages
+				.getString("ITuleapQueryOptions.StringsOptions.EndsWith"); //$NON-NLS-1$
 
 		/**
 		 * Equals.
 		 */
-		String STRING_OPTIONS_EQUALS = "equals";
+		String STRING_OPTIONS_EQUALS = TuleapMylynTasksUIMessages
+				.getString("ITuleapQueryOptions.StringsOptions.Equals"); //$NON-NLS-1$
 	}
 }
