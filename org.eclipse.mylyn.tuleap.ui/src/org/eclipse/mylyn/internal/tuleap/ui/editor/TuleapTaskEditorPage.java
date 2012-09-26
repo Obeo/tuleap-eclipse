@@ -60,8 +60,11 @@ public class TuleapTaskEditorPage extends AbstractTaskEditorPage {
 	@Override
 	protected Set<TaskEditorPartDescriptor> createPartDescriptors() {
 		Set<TaskEditorPartDescriptor> descriptors = super.createPartDescriptors();
-		// Remove useless parts
+		// Remove useless part
 		this.removePart(descriptors, AbstractTaskEditorPage.ID_PART_DESCRIPTION);
+
+		// This part will have its dedicated tab
+		this.removePart(descriptors, AbstractTaskEditorPage.ID_PART_PLANNING);
 
 		// Remove the part that we won't use
 		TaskRepository taskRepository = this.getTaskRepository();
