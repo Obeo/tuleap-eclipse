@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -22,7 +23,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 1.0
  */
-public class TuleapClientManager {
+public class TuleapClientManager implements IRepositoryListener {
 
 	/**
 	 * The Tuleap repository connector.
@@ -68,6 +69,46 @@ public class TuleapClientManager {
 	 * @return A new Tuleap client for the given Mylyn tasks repository.
 	 */
 	protected TuleapClient createClient(TaskRepository taskRepository) {
-		return TuleapClientFactory.createClient(taskRepository, this.repositoryConnector);
+		return TuleapClientFactory.getDefault().createClient(taskRepository, this.repositoryConnector);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.mylyn.tasks.core.IRepositoryListener#repositoryAdded(org.eclipse.mylyn.tasks.core.TaskRepository)
+	 */
+	public void repositoryAdded(TaskRepository repository) {
+		// Do nothing for now
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.mylyn.tasks.core.IRepositoryListener#repositoryRemoved(org.eclipse.mylyn.tasks.core.TaskRepository)
+	 */
+	public void repositoryRemoved(TaskRepository repository) {
+		// Force the re-creation of the client if the repository changes
+		this.clientCache.remove(repository);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.mylyn.tasks.core.IRepositoryListener#repositorySettingsChanged(org.eclipse.mylyn.tasks.core.TaskRepository)
+	 */
+	public void repositorySettingsChanged(TaskRepository repository) {
+		// Force the re-creation of the client if the repository changes
+		this.clientCache.remove(repository);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.mylyn.tasks.core.IRepositoryListener#repositoryUrlChanged(org.eclipse.mylyn.tasks.core.TaskRepository,
+	 *      java.lang.String)
+	 */
+	public void repositoryUrlChanged(TaskRepository repository, String oldUrl) {
+		// Force the re-creation of the client if the repository changes
+		this.clientCache.remove(repository);
 	}
 }

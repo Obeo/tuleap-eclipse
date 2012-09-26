@@ -22,10 +22,27 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 public final class TuleapClientFactory {
 
 	/**
+	 * The sole instance.
+	 */
+	private static TuleapClientFactory instance;
+
+	/**
 	 * The constructor.
 	 */
 	private TuleapClientFactory() {
 		// Prevent instantiation
+	}
+
+	/**
+	 * Returns the sole instance of the client factory.
+	 * 
+	 * @return The sole instance of the client factory.
+	 */
+	public static synchronized TuleapClientFactory getDefault() {
+		if (instance == null) {
+			instance = new TuleapClientFactory();
+		}
+		return instance;
 	}
 
 	/**
@@ -39,7 +56,7 @@ public final class TuleapClientFactory {
 	 * @return a new configured Tuleap client for the given Tuleap task repository and the given Tuleap
 	 *         repository connector
 	 */
-	public static TuleapClient createClient(TaskRepository taskRepository, TuleapRepositoryConnector connector) {
+	public TuleapClient createClient(TaskRepository taskRepository, TuleapRepositoryConnector connector) {
 		TuleapClient client = new TuleapClient(taskRepository, connector);
 		return client;
 	}

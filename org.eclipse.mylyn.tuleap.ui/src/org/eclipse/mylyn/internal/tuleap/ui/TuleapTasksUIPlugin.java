@@ -18,7 +18,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConnector;
+import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
 import org.eclipse.mylyn.internal.tuleap.ui.util.TuleapMylynTasksUIMessages;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -53,10 +57,24 @@ public class TuleapTasksUIPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		instance = this;
+
+		AbstractRepositoryConnector repositoryConnector = TasksUi.getRepositoryManager()
+				.getRepositoryConnector(ITuleapConstants.CONNECTOR_KIND);
+		if (repositoryConnector instanceof TuleapRepositoryConnector) {
+			TuleapRepositoryConnector tuleapRepositoryConnector = (TuleapRepositoryConnector)repositoryConnector;
+			TasksUi.getRepositoryManager().addListener(tuleapRepositoryConnector.getClientManager());
+		}
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		AbstractRepositoryConnector repositoryConnector = TasksUi.getRepositoryManager()
+				.getRepositoryConnector(ITuleapConstants.CONNECTOR_KIND);
+		if (repositoryConnector instanceof TuleapRepositoryConnector) {
+			TuleapRepositoryConnector tuleapRepositoryConnector = (TuleapRepositoryConnector)repositoryConnector;
+			TasksUi.getRepositoryManager().removeListener(tuleapRepositoryConnector.getClientManager());
+		}
+
 		Iterator<Image> imageIterator = imageMap.values().iterator();
 		while (imageIterator.hasNext()) {
 			Image image = imageIterator.next();
