@@ -298,9 +298,9 @@
       </bind>
     </formElement>
     <formElement type="art_link" ID="F36" rank="2662">
-      <name>artefactlink</name>
-      <label>ArtefactLink</label>
-      <description>ArtefactLink description</description>
+      <name>artifactlink</name>
+      <label>ArtifactLink</label>
+      <description>ArtifactLink description</description>
     </formElement>
     <formElement type="perm" ID="F37" rank="2663">
       <name>permission_1</name>
@@ -308,9 +308,9 @@
       <description>Permission description</description>
     </formElement>
     <formElement type="aid" ID="F38" rank="2664">
-      <name>artefactid</name>
-      <label>ArtefactID</label>
-      <description>ArtefactID description</description>
+      <name>artifactid</name>
+      <label>ArtifactID</label>
+      <description>ArtifactID description</description>
     </formElement>
     <formElement type="lud" ID="F39" rank="2665">
       <name>lastupdatedate</name>
@@ -318,9 +318,9 @@
       <description>LastUpdateDate description</description>
     </formElement>
     <formElement type="subby" ID="F40" rank="2666">
-      <name>artefactauthor</name>
-      <label>ArtefactAuthor</label>
-      <description>ArtefactAuthor description</description>
+      <name>artifactauthor</name>
+      <label>ArtifactAuthor</label>
+      <description>ArtifactAuthor description</description>
     </formElement>
     <formElement type="subon" ID="F41" rank="2667">
       <name>submissiondate</name>
@@ -328,9 +328,9 @@
       <description>SubmissionDate description</description>
     </formElement>
     <formElement type="cross" ID="F42" rank="2668">
-      <name>crossreference</name>
-      <label>CrossReference</label>
-      <description>CrossReference description</description>
+      <name>crossreferences</name>
+      <label>CrossReferences</label>
+      <description>CrossReferences description</description>
     </formElement>
     <formElement type="burndown" ID="F43" rank="2669">
       <name>chart_1</name>
@@ -338,9 +338,9 @@
       <description>Chart description</description>
     </formElement>
     <formElement type="computed" ID="F44" rank="2670">
-      <name>calculatedfield</name>
-      <label>CalculatedField</label>
-      <description>CalculatedField description</description>
+      <name>computedfield</name>
+      <label>ComputedField</label>
+      <description>ComputedField description</description>
       <properties target_field_name="TargetField"/>
     </formElement>
     <formElement type="aid" ID="F45" rank="0" use_it="0">

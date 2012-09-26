@@ -37,5 +37,6 @@ public class TuleapUtilTests extends TestCase {
 		File originFile = new File("./resource/Codendi_CLI.zip"); //$NON-NLS-1$
 
 		assertEquals(TuleapUtil.getChecksum(originFile), TuleapUtil.getChecksum(downloadedFile));
+		downloadedFile.delete();
 	}
 }
