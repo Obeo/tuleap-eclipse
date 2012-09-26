@@ -4,7 +4,10 @@
   <local-check-config name="Tuleap" location="/org.eclipse.mylyn.tuleap-feature/codeStyle/CheckstyleConfiguration.xml" type="project" description="Tuleap Checkstyle Configuration">
     <additional-data name="protect-config-file" value="false"/>
   </local-check-config>
-  <fileset name="all" enabled="true" check-config-name="Tuleap" local="true">
+  <local-check-config name="Tuleap Tests" location="/org.eclipse.mylyn.tuleap-feature/codeStyle/CheckstyleTestConfiguration.xml" type="project" description="The checkstyle configuration of the tests project.">
+    <additional-data name="protect-config-file" value="true"/>
+  </local-check-config>
+  <fileset name="all" enabled="true" check-config-name="Tuleap Tests" local="true">
     <file-match-pattern match-pattern="." include-pattern="true"/>
   </fileset>
 </fileset-config>
