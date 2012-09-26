@@ -15,7 +15,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.tuleap.tests.client.TuleapArtifactTests;
-import org.eclipse.mylyn.tuleap.tests.core.TuleapConfigurationTest;
+import org.eclipse.mylyn.tuleap.tests.core.TuleapConfigurationTests;
 import org.eclipse.mylyn.tuleap.tests.core.TuleapUtilTests;
 import org.eclipse.mylyn.tuleap.tests.support.TuleapFixture;
 
@@ -25,6 +25,7 @@ import org.eclipse.mylyn.tuleap.tests.support.TuleapFixture;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 1.0
  */
+// Test configuration
 @SuppressWarnings("restriction")
 public final class AllTuleapHeadlessStandaloneTests {
 
@@ -57,7 +58,7 @@ public final class AllTuleapHeadlessStandaloneTests {
 		TestSuite suite = new TestSuite(AllTuleapHeadlessStandaloneTests.class.getName());
 		suite.addTestSuite(TuleapArtifactTests.class);
 		suite.addTestSuite(TuleapUtilTests.class);
-		suite.addTestSuite(TuleapConfigurationTest.class);
+		suite.addTestSuite(TuleapConfigurationTests.class);
 		return suite;
 	}
 
@@ -69,7 +70,7 @@ public final class AllTuleapHeadlessStandaloneTests {
 	 * @param fixture
 	 *            The Tuleap fixture
 	 */
-	private static void addTests(TestSuite suite, TuleapFixture fixture) {
+	public static void addTests(TestSuite suite, TuleapFixture fixture) {
 		fixture.createSuite(suite);
 		fixture.done();
 	}

@@ -54,220 +54,6 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class SaxConfigurationContentHandler extends DefaultHandler {
 
-	/**************************************************************************
-	 * Structural elements.
-	 **************************************************************************/
-	/**
-	 * Field set.
-	 */
-	private static final String FIELDSET = "fieldset"; //$NON-NLS-1$
-
-	/**
-	 * Column.
-	 */
-	private static final String COLUMN = "column"; //$NON-NLS-1$
-
-	/**
-	 * Line break.
-	 */
-	private static final String LINEBREAK = "linebreak"; //$NON-NLS-1$
-
-	/**
-	 * Separator.
-	 */
-	private static final String SEPARATOR = "separator"; //$NON-NLS-1$
-
-	/**
-	 * Static text.
-	 */
-	private static final String STATIC_TEXT = "staticrichtext"; //$NON-NLS-1$
-
-	/**************************************************************************
-	 * Structural sub elements.
-	 **************************************************************************/
-	/**
-	 * Form element container.
-	 */
-	private static final String FORM_ELEMENTS = "formElements"; //$NON-NLS-1$
-
-	/**
-	 * Structural element definition.
-	 */
-	private static final String FORM_ELEMENT = "formElement"; //$NON-NLS-1$
-
-	/**
-	 * Properties.
-	 */
-	private static final String PROPERTIES = "properties"; //$NON-NLS-1$
-
-	/**
-	 * Bind.
-	 */
-	private static final String BIND = "bind"; //$NON-NLS-1$
-
-	/**
-	 * Item.
-	 */
-	private static final String ITEM = "item"; //$NON-NLS-1$
-
-	/**
-	 * Name.
-	 */
-	private static final String NAME = "name"; //$NON-NLS-1$
-
-	/**
-	 * Label.
-	 */
-	private static final String LABEL = "label"; //$NON-NLS-1$
-
-	/**
-	 * Description.
-	 */
-	private static final String DESCRIPTION = "description"; //$NON-NLS-1$
-
-	/**************************************************************************
-	 * Dynamic elements.
-	 **************************************************************************/
-	/**
-	 * Artifact ID.
-	 */
-	private static final String AID = "aid"; //$NON-NLS-1$
-
-	/**
-	 * Last update date.
-	 */
-	private static final String LUD = "lud"; //$NON-NLS-1$
-
-	/**
-	 * Artifact author.
-	 */
-	private static final String SUBBY = "subby"; //$NON-NLS-1$
-
-	/**
-	 * Submission date.
-	 */
-	private static final String SUBON = "subon"; //$NON-NLS-1$
-
-	/**
-	 * Cross references.
-	 */
-	private static final String CROSS = "cross"; //$NON-NLS-1$
-
-	/**
-	 * Completion diagram.
-	 */
-	private static final String BURNDOWN = "burndown"; //$NON-NLS-1$
-
-	/**
-	 * Computed field.
-	 */
-	private static final String COMPUTED = "computed"; //$NON-NLS-1$
-
-	/**************************************************************************
-	 * Fields.
-	 **************************************************************************/
-	/**
-	 * String.
-	 */
-	private static final String STRING = "string"; //$NON-NLS-1$
-
-	/**
-	 * Text.
-	 */
-	private static final String TEXT = "text"; //$NON-NLS-1$
-
-	/**
-	 * Select box.
-	 */
-	private static final String SB = "sb"; //$NON-NLS-1$
-
-	/**
-	 * Multi select box.
-	 */
-	private static final String MSB = "msb"; //$NON-NLS-1$
-
-	/**
-	 * Date.
-	 */
-	private static final String DATE = "date"; //$NON-NLS-1$
-
-	/**
-	 * File upload.
-	 */
-	private static final String FILE = "file"; //$NON-NLS-1$
-
-	/**
-	 * Integer.
-	 */
-	private static final String INT = "int"; //$NON-NLS-1$
-
-	/**
-	 * Float.
-	 */
-	private static final String FLOAT = "float"; //$NON-NLS-1$
-
-	/**
-	 * Open list.
-	 */
-	private static final String TBL = "tbl"; //$NON-NLS-1$
-
-	/**
-	 * Artifact link.
-	 */
-	private static final String ARTLINK = "art_link"; //$NON-NLS-1$
-
-	/**
-	 * Artifact permission.
-	 */
-	private static final String PERM = "perm"; //$NON-NLS-1$
-
-	/**
-	 * TODO Shared field.
-	 */
-
-	/**************************************************************************
-	 * Attributes.
-	 **************************************************************************/
-	/**
-	 * Type.
-	 */
-	private static final String TYPE = "type"; //$NON-NLS-1$
-
-	/**
-	 * Required.
-	 */
-	private static final String REQUIRED = "required"; //$NON-NLS-1$
-
-	/**
-	 * Rank.
-	 */
-	private static final String RANK = "rank"; //$NON-NLS-1$
-
-	/**
-	 * Identifier.
-	 */
-	private static final String ID = "ID"; //$NON-NLS-1$
-
-	/**
-	 * Size.
-	 */
-	private static final String SIZE = "size"; //$NON-NLS-1$
-
-	/**
-	 * Rows.
-	 */
-	private static final String ROWS = "rows"; //$NON-NLS-1$
-
-	/**
-	 * Columns.
-	 */
-	private static final String COLUMNS = "cols"; //$NON-NLS-1$
-
-	/**
-	 * Default value.
-	 */
-	private static final String DEFAULT_VALUE = "default_value"; //$NON-NLS-1$
-
 	/**
 	 * Tuleap repository configuration.
 	 */
@@ -337,7 +123,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 	 * Tuleap configuration handler.
 	 * 
 	 * @param repositoryURL
-	 *            Repository URL
+	 *            The URL of the repository
 	 */
 	public SaxConfigurationContentHandler(String repositoryURL) {
 		configuration = new TuleapRepositoryConfiguration(repositoryURL);
@@ -364,23 +150,23 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			throws SAXException {
 		characters = new StringBuffer();
 		// Form elements
-		if (localName.equals(FORM_ELEMENT)) {
+		if (ITuleapConfigurationConstants.FORM_ELEMENT.equals(localName)) {
 			parseFormElementAttributes(attributes);
 			Object formElement = createFormElement();
 			currentElement = formElement;
 			attachFormElement(formElement);
-		} else if (localName.equals(FORM_ELEMENTS)) {
+		} else if (ITuleapConfigurationConstants.FORM_ELEMENTS.equals(localName)) {
 			parentHierarchy.add(currentElement);
-		} else if (localName.equals(PROPERTIES)) {
+		} else if (ITuleapConfigurationConstants.PROPERTIES.equals(localName)) {
 			parsePropertiesAttributes(attributes);
-		} else if (localName.equals(BIND)) {
+		} else if (ITuleapConfigurationConstants.BIND.equals(localName)) {
 			parentHierarchy.add(currentElement);
 			parseBindAttributes(attributes);
-		} else if (localName.equals(ITEM)) {
+		} else if (ITuleapConfigurationConstants.ITEM.equals(localName)) {
 			if (ITuleapConstants.TULEAP_DYNAMIC_BINDING_USERS.equals(currentBinding)) {
 				// TODO Implement dynamic binding
 			} else {
-				String item = attributes.getValue(LABEL);
+				String item = attributes.getValue(ITuleapConfigurationConstants.LABEL);
 				attachItem(item);
 			}
 		}
@@ -412,7 +198,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 	 * Attach the item to the good parent in hierarchy.
 	 * 
 	 * @param item
-	 *            Item
+	 *            The value of an item of a {@link TuleapSelectBox} or a {@link TuleapMultiSelectBox}
 	 */
 	private void attachItem(String item) {
 		Object currentParent = parentHierarchy.get(parentHierarchy.size() - 1);
@@ -426,55 +212,55 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 	/**
 	 * Create the form element according to its type.
 	 * 
-	 * @return Form element
+	 * @return The form element created.
 	 */
 	private AbstractTuleapFormElement createFormElement() {
 		AbstractTuleapFormElement formElement = null;
-		if (COLUMN.equals(currentType)) {
+		if (ITuleapConfigurationConstants.COLUMN.equals(currentType)) {
 			formElement = new TuleapColumn(currentIdentifier);
-		} else if (TEXT.equals(currentType)) {
+		} else if (ITuleapConfigurationConstants.TEXT.equals(currentType)) {
 			formElement = new TuleapText(currentIdentifier);
-		} else if (STRING.equals(currentType)) {
+		} else if (ITuleapConfigurationConstants.STRING.equals(currentType)) {
 			formElement = new TuleapString(currentIdentifier);
-		} else if (ARTLINK.equals(currentType)) {
+		} else if (ITuleapConfigurationConstants.ARTLINK.equals(currentType)) {
 			formElement = new TuleapArtifactLink(currentIdentifier);
-		} else if (FIELDSET.equals(currentType)) {
+		} else if (ITuleapConfigurationConstants.FIELDSET.equals(currentType)) {
 			formElement = new TuleapFieldSet(currentIdentifier);
-		} else if (SB.equals(currentType)) {
+		} else if (ITuleapConfigurationConstants.SB.equals(currentType)) {
 			formElement = new TuleapSelectBox(currentIdentifier);
-		} else if (MSB.equals(currentType)) {
+		} else if (ITuleapConfigurationConstants.MSB.equals(currentType)) {
 			formElement = new TuleapMultiSelectBox(currentIdentifier);
-		} else if (DATE.equals(currentType)) {
+		} else if (ITuleapConfigurationConstants.DATE.equals(currentType)) {
 			formElement = new TuleapDate(currentIdentifier);
-		} else if (FILE.equals(currentType)) {
+		} else if (ITuleapConfigurationConstants.FILE.equals(currentType)) {
 			formElement = new TuleapFileUpload(currentIdentifier);
-		} else if (INT.equals(currentType)) {
+		} else if (ITuleapConfigurationConstants.INT.equals(currentType)) {
 			formElement = new TuleapInteger(currentIdentifier);
-		} else if (FLOAT.equals(currentType)) {
+		} else if (ITuleapConfigurationConstants.FLOAT.equals(currentType)) {
 			formElement = new TuleapFloat(currentIdentifier);
-		} else if (TBL.equals(currentType)) {
+		} else if (ITuleapConfigurationConstants.TBL.equals(currentType)) {
 			formElement = new TuleapOpenList(currentIdentifier);
-		} else if (PERM.equals(currentType)) {
+		} else if (ITuleapConfigurationConstants.PERM.equals(currentType)) {
 			formElement = new TuleapPermissionOnArtifact(currentIdentifier);
-		} else if (LINEBREAK.equals(currentType)) {
+		} else if (ITuleapConfigurationConstants.LINEBREAK.equals(currentType)) {
 			formElement = new TuleapLineBreak(currentIdentifier);
-		} else if (SEPARATOR.equals(currentType)) {
+		} else if (ITuleapConfigurationConstants.SEPARATOR.equals(currentType)) {
 			formElement = new TuleapSeparator(currentIdentifier);
-		} else if (STATIC_TEXT.equals(currentType)) {
+		} else if (ITuleapConfigurationConstants.STATIC_TEXT.equals(currentType)) {
 			formElement = new TuleapStaticText(currentIdentifier);
-		} else if (AID.equals(currentType)) {
+		} else if (ITuleapConfigurationConstants.AID.equals(currentType)) {
 			formElement = new TuleapArtifactId(currentIdentifier);
-		} else if (CROSS.equals(currentType)) {
+		} else if (ITuleapConfigurationConstants.CROSS.equals(currentType)) {
 			formElement = new TuleapCrossReferences(currentIdentifier);
-		} else if (LUD.equals(currentType)) {
+		} else if (ITuleapConfigurationConstants.LUD.equals(currentType)) {
 			formElement = new TuleapLastUpdateDate(currentIdentifier);
-		} else if (SUBON.equals(currentType)) {
+		} else if (ITuleapConfigurationConstants.SUBON.equals(currentType)) {
 			formElement = new TuleapSubmittedOn(currentIdentifier);
-		} else if (SUBBY.equals(currentType)) {
+		} else if (ITuleapConfigurationConstants.SUBBY.equals(currentType)) {
 			formElement = new TuleapSubmittedBy(currentIdentifier);
-		} else if (BURNDOWN.equals(currentType)) {
+		} else if (ITuleapConfigurationConstants.BURNDOWN.equals(currentType)) {
 			formElement = new TuleapBurndownChart(currentIdentifier);
-		} else if (COMPUTED.equals(currentType)) {
+		} else if (ITuleapConfigurationConstants.COMPUTED.equals(currentType)) {
 			formElement = new TuleapComputedValue(currentIdentifier);
 		} else {
 			TuleapCoreActivator.log(TuleapMylynTasksMessages.getString(
@@ -500,21 +286,21 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 	 */
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
-		if (localName.equals(FORM_ELEMENTS)) {
+		if (localName.equals(ITuleapConfigurationConstants.FORM_ELEMENTS)) {
 			parentHierarchy.remove(parentHierarchy.size() - 1);
-		} else if (localName.equals(NAME)) {
+		} else if (localName.equals(ITuleapConfigurationConstants.NAME)) {
 			if (currentElement instanceof AbstractTuleapFormElement) {
 				((AbstractTuleapFormElement)currentElement).setName(characters.toString());
 			}
-		} else if (localName.equals(LABEL)) {
+		} else if (localName.equals(ITuleapConfigurationConstants.LABEL)) {
 			if (currentElement instanceof AbstractTuleapFormElement) {
 				((AbstractTuleapFormElement)currentElement).setLabel(characters.toString());
 			}
-		} else if (localName.equals(DESCRIPTION)) {
+		} else if (localName.equals(ITuleapConfigurationConstants.DESCRIPTION)) {
 			if (currentElement instanceof AbstractTuleapFormElement) {
 				((AbstractTuleapFormElement)currentElement).setDescription(characters.toString());
 			}
-		} else if (localName.equals(PROPERTIES)) {
+		} else if (localName.equals(ITuleapConfigurationConstants.PROPERTIES)) {
 			if (currentElement instanceof TuleapString) {
 				// TODO Semantic Title
 				// TODO Default value
@@ -523,7 +309,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 				((TuleapText)currentElement).setRows(currentNumberOfRows);
 				((TuleapText)currentElement).setColumns(currentNumberOfColumns);
 			}
-		} else if (localName.equals(BIND)) {
+		} else if (localName.equals(ITuleapConfigurationConstants.BIND)) {
 			parentHierarchy.remove(parentHierarchy.size() - 1);
 			if (currentElement instanceof TuleapSelectBox) {
 				((TuleapSelectBox)currentElement).setBinding(currentBinding);
@@ -539,26 +325,31 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.xml.sax.helpers.DefaultHandler#characters(char[], int, int)
+	 */
 	@Override
 	public void characters(char[] ch, int start, int length) throws SAXException {
 		characters.append(ch, start, length);
 	}
 
 	/**
-	 * Parse attributes.
+	 * Parse the attributes of the form element.
 	 * 
 	 * @param attributes
-	 *            Attributes
+	 *            The attributes of the form element that need to be parsed
 	 */
 	private void parseFormElementAttributes(Attributes attributes) {
 		if (attributes == null) {
 			return;
 		}
 
-		currentIdentifier = attributes.getValue(ID);
-		currentType = attributes.getValue(TYPE);
-		currentRequired = "1".equals(attributes.getValue(REQUIRED)); //$NON-NLS-1$
-		currentRank = Integer.parseInt(attributes.getValue(RANK));
+		currentIdentifier = attributes.getValue(ITuleapConfigurationConstants.ID);
+		currentType = attributes.getValue(ITuleapConfigurationConstants.TYPE);
+		currentRequired = "1".equals(attributes.getValue(ITuleapConfigurationConstants.REQUIRED)); //$NON-NLS-1$
+		currentRank = Integer.parseInt(attributes.getValue(ITuleapConfigurationConstants.RANK));
 		// TODO Get permissions
 	}
 
@@ -566,27 +357,28 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 	 * Parse attributes of properties element.
 	 * 
 	 * @param attributes
-	 *            Attributes
+	 *            The attributes that need to be parsed
 	 */
 	private void parsePropertiesAttributes(Attributes attributes) {
 		if (attributes == null) {
 			return;
 		}
 
-		String size = attributes.getValue(SIZE);
+		String size = attributes.getValue(ITuleapConfigurationConstants.SIZE);
 		if (size != null) {
-			currentSize = Integer.parseInt(attributes.getValue(SIZE));
+			currentSize = Integer.parseInt(attributes.getValue(ITuleapConfigurationConstants.SIZE));
 		}
-		currentDefaultValue = attributes.getValue(DEFAULT_VALUE);
+		currentDefaultValue = attributes.getValue(ITuleapConfigurationConstants.DEFAULT_VALUE);
 
-		String rows = attributes.getValue(ROWS);
+		String rows = attributes.getValue(ITuleapConfigurationConstants.ROWS);
 		if (rows != null) {
-			currentNumberOfRows = Integer.parseInt(attributes.getValue(ROWS));
+			currentNumberOfRows = Integer.parseInt(attributes.getValue(ITuleapConfigurationConstants.ROWS));
 		}
 
-		String columns = attributes.getValue(COLUMNS);
+		String columns = attributes.getValue(ITuleapConfigurationConstants.COLUMNS);
 		if (columns != null) {
-			currentNumberOfColumns = Integer.parseInt(attributes.getValue(COLUMNS));
+			currentNumberOfColumns = Integer.parseInt(attributes
+					.getValue(ITuleapConfigurationConstants.COLUMNS));
 		}
 	}
 
@@ -594,13 +386,13 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 	 * Parse attributes of bind element.
 	 * 
 	 * @param attributes
-	 *            Attributes
+	 *            The attributes that need to be parsed
 	 */
 	private void parseBindAttributes(Attributes attributes) {
 		if (attributes == null) {
 			return;
 		}
 
-		currentBinding = attributes.getValue(TYPE);
+		currentBinding = attributes.getValue(ITuleapConfigurationConstants.TYPE);
 	}
 }

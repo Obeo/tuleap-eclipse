@@ -38,6 +38,7 @@ import org.eclipse.osgi.util.NLS;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 1.0
  */
+// Mylyn test util
 @SuppressWarnings("restriction")
 public class TuleapFixture extends TestFixture {
 

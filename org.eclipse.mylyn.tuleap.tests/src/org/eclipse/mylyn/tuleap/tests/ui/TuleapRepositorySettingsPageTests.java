@@ -22,8 +22,9 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * Test Tuleap repository settings page.
  * 
  * @author <a href="mailto:melanie.bats@obeo.fr">Melanie Bats</a>
+ * @since 1.0
  */
-public class TuleapRepositorySettingsPageTest extends TestCase {
+public class TuleapRepositorySettingsPageTests extends TestCase {
 	/**
 	 * Repository settings test page.
 	 */
@@ -37,7 +38,7 @@ public class TuleapRepositorySettingsPageTest extends TestCase {
 	/**
 	 * Tuleap repository settings page test.
 	 */
-	public TuleapRepositorySettingsPageTest() {
+	public TuleapRepositorySettingsPageTests() {
 	}
 
 	@Override

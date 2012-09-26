@@ -15,8 +15,9 @@ import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
+import org.eclipse.mylyn.tuleap.tests.core.TuleapTaskDataHandlerTests;
 import org.eclipse.mylyn.tuleap.tests.support.TuleapFixture;
-import org.eclipse.mylyn.tuleap.tests.ui.TuleapRepositorySettingsPageTest;
+import org.eclipse.mylyn.tuleap.tests.ui.TuleapRepositorySettingsPageTests;
 
 /**
  * This class should be used to launch all Tuleap unit tests.
@@ -24,6 +25,7 @@ import org.eclipse.mylyn.tuleap.tests.ui.TuleapRepositorySettingsPageTest;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 1.0
  */
+// Test configuration
 @SuppressWarnings("restriction")
 public final class AllTuleapTests {
 
@@ -76,8 +78,11 @@ public final class AllTuleapTests {
 		// suite.addTestSuite(BugzillaHyperlinkDetectorTest.class);
 
 		// network tests
+
+		// local tests
 		if (!configuration.isLocalOnly()) {
-			suite.addTestSuite(TuleapRepositorySettingsPageTest.class);
+			suite.addTestSuite(TuleapRepositorySettingsPageTests.class);
+			suite.addTestSuite(TuleapTaskDataHandlerTests.class);
 			// suite.addTestSuite(BugzillaTaskEditorTest.class);
 			// suite.addTestSuite(BugzillaSearchPageTest.class);
 			// suite.addTestSuite(BugzillaRepositorySettingsPageTest.class);
@@ -99,7 +104,7 @@ public final class AllTuleapTests {
 	 * @param fixture
 	 *            The Tuleap fixture to use
 	 */
-	private static void addTests(TestSuite suite, TuleapFixture fixture) {
+	public static void addTests(TestSuite suite, TuleapFixture fixture) {
 		if (fixture.isExcluded()) {
 			return;
 		}

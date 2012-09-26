@@ -20,6 +20,7 @@ import org.eclipse.mylyn.internal.tuleap.core.util.TuleapUtil;
  * Test utility methods.
  * 
  * @author <a href="mailto:melanie.bats@obeo.fr">Melanie Bats</a>
+ * @since 1.0
  */
 public class TuleapUtilTests extends TestCase {
 

@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Composite;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 1.0
  */
+// IRepositoryConstants
 @SuppressWarnings("restriction")
 public class TuleapRepositorySettingsPage extends AbstractRepositorySettingsPage {
 

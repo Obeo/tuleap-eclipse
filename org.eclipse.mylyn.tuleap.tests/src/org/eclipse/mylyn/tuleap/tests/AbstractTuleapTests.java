@@ -38,8 +38,9 @@ import org.eclipse.mylyn.tuleap.tests.support.TuleapFixture;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 1.0
  */
+// TasksUi plugin
 @SuppressWarnings("restriction")
-public abstract class AbstractTuleapTest extends TestCase {
+public abstract class AbstractTuleapTests extends TestCase {
 	/**
 	 * The Tuleap repository connector.
 	 */
