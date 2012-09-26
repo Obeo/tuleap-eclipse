@@ -30,10 +30,10 @@ public class TuleapUtilTests extends TestCase {
 	 *             Exception
 	 */
 	public void testDownload() throws Exception {
-		String url = "https://demo.tuleap.net/downloads/Codendi_CLI.zip";
-		File downloadedFile = File.createTempFile("temp", "");
+		String url = "https://demo.tuleap.net/downloads/Codendi_CLI.zip"; //$NON-NLS-1$
+		File downloadedFile = File.createTempFile("temp", ""); //$NON-NLS-1$ //$NON-NLS-2$
 		TuleapUtil.download(url, downloadedFile);
-		File originFile = new File("./resource/Codendi_CLI.zip");
+		File originFile = new File("./resource/Codendi_CLI.zip"); //$NON-NLS-1$
 
 		assertEquals(TuleapUtil.getChecksum(originFile), TuleapUtil.getChecksum(downloadedFile));
 	}

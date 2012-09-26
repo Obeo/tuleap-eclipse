@@ -41,9 +41,9 @@ public class TuleapDefaultQueriesPage extends AbstractRepositoryQueryPage2 {
 	 *            The task repository
 	 */
 	public TuleapDefaultQueriesPage(TaskRepository taskRepository) {
-		super(TuleapMylynTasksUIMessages.getString("TuleapDefaultQueriesPage.Name"), taskRepository, null);
-		this.setTitle(TuleapMylynTasksUIMessages.getString("TuleapDefaultQueriesPage.Title"));
-		this.setDescription(TuleapMylynTasksUIMessages.getString("TuleapDefaultQueriesPage.Description"));
+		super(TuleapMylynTasksUIMessages.getString("TuleapDefaultQueriesPage.Name"), taskRepository, null); //$NON-NLS-1$
+		this.setTitle(TuleapMylynTasksUIMessages.getString("TuleapDefaultQueriesPage.Title")); //$NON-NLS-1$
+		this.setDescription(TuleapMylynTasksUIMessages.getString("TuleapDefaultQueriesPage.Description")); //$NON-NLS-1$
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class TuleapDefaultQueriesPage extends AbstractRepositoryQueryPage2 {
 	protected void createPageContent(SectionComposite parent) {
 		Group defaultQueriesGroup = new Group(parent.getContent(), SWT.NONE);
 		defaultQueriesGroup.setText(TuleapMylynTasksUIMessages
-				.getString("TuleapDefaultQueriesPage.DefaultQueriesGroup.Name"));
+				.getString("TuleapDefaultQueriesPage.DefaultQueriesGroup.Name")); //$NON-NLS-1$
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.grabExcessVerticalSpace = false;
 		defaultQueriesGroup.setLayoutData(gridData);
