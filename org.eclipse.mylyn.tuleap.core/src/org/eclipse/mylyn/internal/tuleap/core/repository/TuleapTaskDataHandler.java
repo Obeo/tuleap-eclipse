@@ -185,15 +185,19 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		attribute = taskData.getRoot().createAttribute(TaskAttribute.DATE_CREATION);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
 		metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.CreationDate")); //$NON-NLS-1$
-		metaData.setKind(TaskAttribute.KIND_DEFAULT);
 		metaData.setType(TaskAttribute.TYPE_DATE);
 
 		// Last modification date
 		attribute = taskData.getRoot().createAttribute(TaskAttribute.DATE_MODIFICATION);
 		metaData = attribute.getMetaData();
 		metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.LastModificationDate")); //$NON-NLS-1$
-		metaData.setKind(TaskAttribute.KIND_DEFAULT);
 		metaData.setType(TaskAttribute.TYPE_DATE);
+
+		// New comment
+		attribute = taskData.getRoot().createAttribute(TaskAttribute.COMMENT_NEW);
+		metaData = attribute.getMetaData();
+		metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.NewComment")); //$NON-NLS-1$
+		metaData.setType(TaskAttribute.TYPE_LONG_RICH_TEXT);
 
 		// Default attributes
 		List<AbstractTuleapFormElement> formElements = configuration.getFormElements();
@@ -250,14 +254,25 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		// Attributes
 		TaskAttributeMetaData attributeMetadata = attribute.getMetaData();
 		attributeMetadata.setType(tuleapField.getMetadataType());
-		attributeMetadata.setKind(tuleapField.getMetadataKind());
 		attributeMetadata.setLabel(tuleapField.getLabel());
 
-		// TODO Compute the group of the user
+		// Set the kind if we do not have a semantic field
+		boolean isTitle = tuleapField instanceof TuleapString
+				&& ((TuleapString)tuleapField).isSemanticTitle();
+		boolean isStatus = tuleapField instanceof TuleapSelectBox
+				&& ((TuleapSelectBox)tuleapField).isSemanticStatus();
+		boolean isContributor = tuleapField instanceof TuleapSelectBox
+				&& ((TuleapSelectBox)tuleapField).isSemanticContributor();
+
+		if (!isTitle && !isStatus && !isContributor) {
+			attributeMetadata.setKind(tuleapField.getMetadataKind());
+		}
+
 		String group = ITuleapDefaultPermissionGroups.ALL_USERS;
 		if (!tuleapField.getPermissions().canSubmit(group)
 				&& !(TuleapAccessPermission.UPDATE == tuleapField.getPermissions().getAccessPermission(group))) {
-			attributeMetadata.setReadOnly(true);
+			// TODO Compute the group of the user
+			// attributeMetadata.setReadOnly(true);
 		}
 
 		// Dynamic fields are read only
@@ -286,6 +301,8 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			}
 
 			attribute.setValues(strList);
+		} else if (defaultValue == null && isTitle) {
+			attribute.setValue(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.DefaultNewTitle")); //$NON-NLS-1$
 		}
 
 	}
@@ -342,41 +359,43 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			TaskOperation.applyTo(operationAttribute, ITuleapConstants.LEAVE_OPERATION, leaveAsLabel);
 
 			TuleapWorkflow workflow = statusSelectBox.getWorkflow();
-			List<String> tuleapStatus = workflow.accessibleStates(currentStatus);
-			List<String> openedAccessibleStatus = new ArrayList<String>();
-			List<String> closedAccessibleStatus = new ArrayList<String>();
+			if (workflow != null) {
+				List<String> tuleapStatus = workflow.accessibleStates(currentStatus);
+				List<String> openedAccessibleStatus = new ArrayList<String>();
+				List<String> closedAccessibleStatus = new ArrayList<String>();
 
-			for (String aStatus : tuleapStatus) {
-				// Compute if the reachable state is an "opened" state
-				if (statusSelectBox.getOpenStatus().contains(aStatus)) {
-					openedAccessibleStatus.add(aStatus);
-				} else {
-					closedAccessibleStatus.add(aStatus);
+				for (String aStatus : tuleapStatus) {
+					// Compute if the reachable state is an "opened" state
+					if (statusSelectBox.getOpenStatus().contains(aStatus)) {
+						openedAccessibleStatus.add(aStatus);
+					} else {
+						closedAccessibleStatus.add(aStatus);
+					}
 				}
-			}
 
-			if (openedAccessibleStatus.size() > 0) {
-				TaskAttribute attrResolved = taskData.getRoot().createAttribute("tuleap.resolution");
-				TaskAttribute attrResolvedInput = taskData.getRoot().createAttribute(
-						"tuleap.resolution.input");
-				attrResolvedInput.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
-				TaskOperation.applyTo(attrResolved, "tuleap.resolution", "Resolve as");
-				attrResolved.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID,
-						"tuleap.resolution.input");
-				for (String openedStatus : openedAccessibleStatus) {
-					attrResolvedInput.putOption(openedStatus, openedStatus);
+				if (openedAccessibleStatus.size() > 0) {
+					TaskAttribute attrResolved = taskData.getRoot().createAttribute("tuleap.resolution");
+					TaskAttribute attrResolvedInput = taskData.getRoot().createAttribute(
+							"tuleap.resolution.input");
+					attrResolvedInput.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+					TaskOperation.applyTo(attrResolved, "tuleap.resolution", "Resolve as");
+					attrResolved.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID,
+							"tuleap.resolution.input");
+					for (String openedStatus : openedAccessibleStatus) {
+						attrResolvedInput.putOption(openedStatus, openedStatus);
+					}
 				}
-			}
 
-			if (closedAccessibleStatus.size() > 0) {
-				TaskAttribute attrClosed = taskData.getRoot().createAttribute("tuleap.close");
-				TaskAttribute attrClosedInput = taskData.getRoot().createAttribute("tuleap.close.input");
-				attrClosedInput.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
-				TaskOperation.applyTo(attrClosed, "tuleap.close", "Close as");
-				attrClosed.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID,
-						"tuleap.close.input");
-				for (String closedStatus : closedAccessibleStatus) {
-					attrClosedInput.putOption(closedStatus, closedStatus);
+				if (closedAccessibleStatus.size() > 0) {
+					TaskAttribute attrClosed = taskData.getRoot().createAttribute("tuleap.close");
+					TaskAttribute attrClosedInput = taskData.getRoot().createAttribute("tuleap.close.input");
+					attrClosedInput.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+					TaskOperation.applyTo(attrClosed, "tuleap.close", "Close as");
+					attrClosed.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID,
+							"tuleap.close.input");
+					for (String closedStatus : closedAccessibleStatus) {
+						attrClosedInput.putOption(closedStatus, closedStatus);
+					}
 				}
 			}
 		}
