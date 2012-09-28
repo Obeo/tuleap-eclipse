@@ -2,7 +2,7 @@
 <tracker xmlns="http://codendi.org/tracker">
   <name>Tasks</name>
   <item_name>tsk</item_name>
-  <description>Tasks</description>
+  <description>Tasks description</description>
   <cannedResponses/>
   <formElements>
     <formElement type="column" ID="F1" rank="462">

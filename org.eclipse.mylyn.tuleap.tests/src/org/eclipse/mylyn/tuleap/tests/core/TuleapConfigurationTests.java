@@ -18,6 +18,7 @@ import java.io.InputStreamReader;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.tuleap.core.config.SaxConfigurationContentHandler;
+import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapFormElement;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapArtifactLink;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapDate;
@@ -78,13 +79,30 @@ public class TuleapConfigurationTests extends TestCase {
 	}
 
 	/**
+	 * Test the parsing of the properties of the configuration.
+	 */
+	public void testRepositoryConfiguration() {
+		assertEquals("ToolName", this.config.getName()); //$NON-NLS-1$
+		assertEquals("ToolShortName", this.config.getItemName()); //$NON-NLS-1$
+		assertEquals("Tool Description", this.config.getDescription()); //$NON-NLS-1$
+	}
+
+	/**
 	 * Test the parsing of the structural elements from the configuration.
 	 */
 	public void testRepositoryConfigurationStructuralElements() {
 		// Check structural elements
-		AbstractTuleapFormElement fieldset = config.getFormElements().get(2);
+		AbstractTuleapFormElement fieldset = config.getFormElements().get(0);
 		assertEquals(TuleapFieldSet.class, fieldset.getClass());
-		this.check(fieldset, "F16", "Fieldset", "fieldset", "Filedset description", false, 1424); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
+		this.check(fieldset, "F1", "Details", "fieldset_1", "fieldset_default_tasks_desc_key", true, 495); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
+
+		AbstractTuleapFormElement fieldset2 = config.getFormElements().get(1);
+		assertEquals(TuleapFieldSet.class, fieldset2.getClass());
+		this.check(fieldset2, "F6", "State of Progress", "fieldset_2", null, true, 1423); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+
+		AbstractTuleapFormElement fieldset3 = config.getFormElements().get(2);
+		assertEquals(TuleapFieldSet.class, fieldset3.getClass());
+		this.check(fieldset3, "F16", "Fieldset", "fieldset", "Filedset description", false, 1424); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
 
 		AbstractTuleapFormElement column = config.getFormElements().get(3);
 		assertEquals(TuleapColumn.class, column.getClass());
@@ -200,6 +218,64 @@ public class TuleapConfigurationTests extends TestCase {
 		AbstractTuleapFormElement permission = config.getFormElements().get(18);
 		assertEquals(TuleapPermissionOnArtifact.class, permission.getClass());
 		this.check(permission, "F37", "Permission", "permission_1", "Permission description", false, 2663); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	}
+
+	/**
+	 * Test the parsing of the semantic information from the configuration.
+	 */
+	public void testRepositoryConfigurationSemantic() {
+		// Title
+		AbstractTuleapFormElement fieldset = config.getFormElements().get(0);
+		assertEquals(TuleapFieldSet.class, fieldset.getClass());
+		if (fieldset instanceof TuleapFieldSet) {
+			TuleapFieldSet tuleapFieldSet = (TuleapFieldSet)fieldset;
+			AbstractTuleapFormElement abstractTuleapFormElement = tuleapFieldSet.getFormElements().get(0);
+			assertEquals(TuleapString.class, abstractTuleapFormElement.getClass());
+			if (abstractTuleapFormElement instanceof TuleapString) {
+				TuleapString tuleapString = (TuleapString)abstractTuleapFormElement;
+				assertTrue(tuleapString.isSemanticTitle());
+			} else {
+				fail();
+			}
+		} else {
+			fail();
+		}
+
+		// Contributor
+		fieldset = config.getFormElements().get(1);
+		assertEquals(TuleapFieldSet.class, fieldset.getClass());
+		if (fieldset instanceof TuleapFieldSet) {
+			TuleapFieldSet tuleapFieldSet = (TuleapFieldSet)fieldset;
+			AbstractTuleapFormElement abstractTuleapFormElement = tuleapFieldSet.getFormElements().get(3);
+			assertEquals(TuleapColumn.class, abstractTuleapFormElement.getClass());
+			if (abstractTuleapFormElement instanceof TuleapColumn) {
+				TuleapColumn tuleapColumn = (TuleapColumn)abstractTuleapFormElement;
+				AbstractTuleapField abstractTuleapField = tuleapColumn.getFormElements().get(0);
+				assertEquals(TuleapMultiSelectBox.class, abstractTuleapField.getClass());
+				if (abstractTuleapField instanceof TuleapMultiSelectBox) {
+					TuleapMultiSelectBox tuleapMultiSelectBox = (TuleapMultiSelectBox)abstractTuleapField;
+					assertTrue(tuleapMultiSelectBox.isSemanticContributor());
+				} else {
+					fail();
+				}
+			} else {
+				fail();
+			}
+		} else {
+			fail();
+		}
+
+		// Status (check open and closed status)
+
+		// TODO Tooltip (unsupported for now)
+
+	}
+
+	/**
+	 * Test the parsing of the workflow from the configuration.
+	 */
+	public void testRepositoryConfigurationWorkflow() {
+		fail();
 	}
 
 	/**

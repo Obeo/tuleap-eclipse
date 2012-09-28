@@ -590,14 +590,14 @@
   <semantics>
     <semantic type="title">
       <shortname>title</shortname>
-      <label>Titre</label>
-      <description>Définir le titre d'un artéfact</description>
+      <label>Title</label>
+      <description>Define the title of the artifact</description>
       <field REF="F2"/>
     </semantic>
     <semantic type="contributor">
       <shortname>contributor</shortname>
-      <label>Contributeur</label>
-      <description>Définir le contributeur d'un artéfact</description>
+      <label>Contributor</label>
+      <description>Define the contributor of the artifact</description>
       <field REF="F11"/>
     </semantic>
     <semantic type="tooltip"/>

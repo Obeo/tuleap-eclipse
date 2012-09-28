@@ -120,6 +120,16 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 	private List<Object> parentHierarchy = new ArrayList<Object>();
 
 	/**
+	 * Indicates if we are currently analyzing the semantics block.
+	 */
+	private boolean isAnalyzingSemantics;
+
+	/**
+	 * The currently anlayzed type of semantic.
+	 */
+	private String currentSemantictype;
+
+	/**
 	 * Tuleap configuration handler.
 	 * 
 	 * @param repositoryURL
@@ -170,6 +180,51 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			} else {
 				String item = attributes.getValue(ITuleapConfigurationConstants.LABEL);
 				attachItem(item);
+			}
+		} else if (ITuleapConfigurationConstants.SEMANTICS.equals(localName)) {
+			this.isAnalyzingSemantics = true;
+		} else if (ITuleapConfigurationConstants.SEMANTIC.equals(localName)) {
+			// Tell which semantic is active
+			String type = attributes.getValue(ITuleapConfigurationConstants.TYPE);
+			if (ITuleapConfigurationConstants.SEMANTIC_KIND_TITLE.equals(type)) {
+				currentSemantictype = type;
+			} else if (ITuleapConfigurationConstants.SEMANTIC_KIND_STATUS.equals(type)) {
+				currentSemantictype = type;
+			} else if (ITuleapConfigurationConstants.SEMANTIC_KIND_CONTRIBUTOR.equals(type)) {
+				currentSemantictype = type;
+			} else if (ITuleapConfigurationConstants.SEMANTIC_KIND_TOOLTIP.equals(type)) {
+				currentSemantictype = type;
+			}
+		} else if (ITuleapConfigurationConstants.FIELD.equals(localName)) {
+			String ref = attributes.getValue(ITuleapConfigurationConstants.REF);
+
+			// Look for a field with the given reference as its id.
+			List<AbstractTuleapFormElement> formElements = this.configuration.getFormElements();
+			for (AbstractTuleapFormElement abstractTuleapStructuralElement : formElements) {
+				List<AbstractTuleapField> fields = TuleapRepositoryConfiguration
+						.getFields(abstractTuleapStructuralElement);
+				for (AbstractTuleapField abstractTuleapField : fields) {
+					if (abstractTuleapField.getIdentifier() != null
+							&& abstractTuleapField.getIdentifier().equals(ref)) {
+						if (ITuleapConfigurationConstants.SEMANTIC_KIND_TITLE
+								.equals(this.currentSemantictype)
+								&& abstractTuleapField instanceof TuleapString) {
+							// Sets the field as the title of the configuration
+							TuleapString tuleapString = (TuleapString)abstractTuleapField;
+							tuleapString.setSemanticTitle(true);
+						} else if (ITuleapConfigurationConstants.SEMANTIC_KIND_CONTRIBUTOR
+								.equals(this.currentSemantictype)
+								&& abstractTuleapField instanceof TuleapMultiSelectBox) {
+							// Sets the field as the contributor of the configuration
+							TuleapMultiSelectBox tuleapMultiSelectBox = (TuleapMultiSelectBox)abstractTuleapField;
+							tuleapMultiSelectBox.setSemanticContributor(true);
+						} else if (ITuleapConfigurationConstants.SEMANTIC_KIND_TOOLTIP
+								.equals(this.currentSemantictype)) {
+							// Sets the field as the tooltip of the configuration
+							// TODO unsupported for now
+						}
+					}
+				}
 			}
 		}
 	}
@@ -327,6 +382,10 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 				// TODO SemanticContributor
 				// TODO open status
 				// TODO workflow
+			}
+		} else if (localName.equals(ITuleapConfigurationConstants.ITEM_NAME)) {
+			if (currentElement instanceof TuleapRepositoryConfiguration) {
+				((TuleapRepositoryConfiguration)currentElement).setItemName(characters.toString());
 			}
 		}
 	}

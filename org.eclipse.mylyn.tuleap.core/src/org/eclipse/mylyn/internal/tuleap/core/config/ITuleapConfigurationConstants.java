@@ -27,6 +27,11 @@ public interface ITuleapConfigurationConstants {
 	 */
 	String TRACKER = "tracker"; //$NON-NLS-1$
 
+	/**
+	 * The item name.
+	 */
+	String ITEM_NAME = "item_name"; //$NON-NLS-1$
+
 	/**************************************************************************
 	 * Structural elements.
 	 **************************************************************************/
@@ -240,4 +245,62 @@ public interface ITuleapConfigurationConstants {
 	 * Default value.
 	 */
 	String DEFAULT_VALUE = "default_value"; //$NON-NLS-1$
+
+	/**************************************************************************
+	 * Semantic.
+	 **************************************************************************/
+	/**
+	 * Semantics.
+	 */
+	String SEMANTICS = "semantics"; //$NON-NLS-1$
+
+	/**
+	 * Semantic.
+	 */
+	String SEMANTIC = "semantic"; //$NON-NLS-1$
+
+	/**
+	 * Short name.
+	 */
+	String SHORT_NAME = "shortname"; //$NON-NLS-1$
+
+	/**
+	 * Field.
+	 */
+	String FIELD = "field"; //$NON-NLS-1$
+
+	/**
+	 * REF.
+	 */
+	String REF = "REF"; //$NON-NLS-1$
+
+	/**
+	 * The open values.
+	 */
+	String OPEN_VALUES = "open_values"; //$NON-NLS-1$
+
+	/**
+	 * The open value.
+	 */
+	String OPEN_VALUE = "open_value"; //$NON-NLS-1$
+
+	/**
+	 * The kind of semantic: "title".
+	 */
+	String SEMANTIC_KIND_TITLE = "title"; //$NON-NLS-1$
+
+	/**
+	 * The kind of semantic: "contributor".
+	 */
+	String SEMANTIC_KIND_CONTRIBUTOR = "contributor"; //$NON-NLS-1$
+
+	/**
+	 * The kind of semantic: "status".
+	 */
+	String SEMANTIC_KIND_STATUS = "status"; //$NON-NLS-1$
+
+	/**
+	 * The kind of semantic: "tooltip".
+	 */
+	String SEMANTIC_KIND_TOOLTIP = "tooltip"; //$NON-NLS-1$
 }

@@ -154,6 +154,16 @@ public class TuleapRepositoryConfiguration implements Serializable {
 	}
 
 	/**
+	 * Sets the item name of the repository.
+	 * 
+	 * @param repositoryItemName
+	 *            The item name of the repository.
+	 */
+	public void setItemName(String repositoryItemName) {
+		this.itemName = repositoryItemName;
+	}
+
+	/**
 	 * Returns the description of the repository.
 	 * 
 	 * @return The description of the repository.
