@@ -46,6 +46,7 @@ import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapFieldSet;
 import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapLineBreak;
 import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapSeparator;
 import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapStaticText;
+import org.eclipse.mylyn.internal.tuleap.core.model.workflow.TuleapWorkflow;
 import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
 import org.eclipse.mylyn.tuleap.tests.support.TuleapFixture;
@@ -309,7 +310,56 @@ public class TuleapConfigurationTests extends TestCase {
 	 * Test the parsing of the workflow from the configuration.
 	 */
 	public void testRepositoryConfigurationWorkflow() {
-		fail();
+		AbstractTuleapFormElement fieldset = config.getFormElements().get(1);
+		assertEquals(TuleapFieldSet.class, fieldset.getClass());
+		if (fieldset instanceof TuleapFieldSet) {
+			TuleapFieldSet tuleapFieldSet = (TuleapFieldSet)fieldset;
+			AbstractTuleapFormElement abstractTuleapFormElement = tuleapFieldSet.getFormElements().get(4);
+			assertEquals(TuleapColumn.class, abstractTuleapFormElement.getClass());
+			if (abstractTuleapFormElement instanceof TuleapColumn) {
+				TuleapColumn tuleapColumn = (TuleapColumn)abstractTuleapFormElement;
+				AbstractTuleapField abstractTuleapField = tuleapColumn.getFormElements().get(0);
+				assertEquals(TuleapSelectBox.class, abstractTuleapField.getClass());
+				if (abstractTuleapField instanceof TuleapSelectBox) {
+					TuleapSelectBox tuleapSelectBox = (TuleapSelectBox)abstractTuleapField;
+					assertEquals("F13", tuleapSelectBox.getIdentifier()); //$NON-NLS-1$
+					assertTrue(tuleapSelectBox.isSemanticStatus());
+
+					TuleapWorkflow workflow = tuleapSelectBox.getWorkflow();
+					assertNotNull(workflow);
+
+					final String open = "Open"; //$NON-NLS-1$
+					final String closed = "Closed"; //$NON-NLS-1$
+					final String verified = "Verified"; //$NON-NLS-1$
+					final String assigned = "Assigned"; //$NON-NLS-1$
+					final String reopened = "Reopened"; //$NON-NLS-1$
+
+					assertEquals(3, workflow.accessibleStates(open).size());
+					assertTrue(workflow.accessibleStates(open).contains(assigned));
+					assertTrue(workflow.accessibleStates(open).contains(verified));
+					assertTrue(workflow.accessibleStates(open).contains(closed));
+
+					assertEquals(2, workflow.accessibleStates(verified).size());
+					assertTrue(workflow.accessibleStates(verified).contains(assigned));
+					assertTrue(workflow.accessibleStates(verified).contains(closed));
+
+					assertEquals(1, workflow.accessibleStates(assigned).size());
+					assertTrue(workflow.accessibleStates(assigned).contains(closed));
+
+					assertEquals(1, workflow.accessibleStates(closed).size());
+					assertTrue(workflow.accessibleStates(closed).contains(reopened));
+
+					assertEquals(1, workflow.accessibleStates(reopened).size());
+					assertTrue(workflow.accessibleStates(reopened).contains(closed));
+				} else {
+					fail();
+				}
+			} else {
+				fail();
+			}
+		} else {
+			fail();
+		}
 	}
 
 	/**
