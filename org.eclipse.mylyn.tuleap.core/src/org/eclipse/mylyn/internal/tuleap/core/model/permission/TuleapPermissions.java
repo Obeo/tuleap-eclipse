@@ -66,7 +66,7 @@ public class TuleapPermissions implements Serializable {
 	 *         otherwise.
 	 */
 	public boolean canSubmit(String group) {
-		return this.group2canSubmit.get(group).booleanValue();
+		return this.group2canSubmit.get(group) != null && this.group2canSubmit.get(group).booleanValue();
 	}
 
 	/**

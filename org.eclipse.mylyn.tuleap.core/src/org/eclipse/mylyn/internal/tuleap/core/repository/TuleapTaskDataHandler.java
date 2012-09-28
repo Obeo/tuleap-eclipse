@@ -25,6 +25,7 @@ import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapDynamicField;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapFormElement;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact;
+import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapFileUpload;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapSelectBox;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapString;
 import org.eclipse.mylyn.internal.tuleap.core.model.permission.ITuleapDefaultPermissionGroups;
@@ -200,6 +201,10 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			List<AbstractTuleapField> fields = TuleapRepositoryConfiguration
 					.getFields(abstractTuleapStructuralElement);
 			for (AbstractTuleapField abstractTuleapField : fields) {
+				if (abstractTuleapField instanceof TuleapFileUpload) {
+					// TODO Check if this is a good solution to ignore file upload fields entirely
+					continue;
+				}
 				this.createAttribute(taskData, abstractTuleapField);
 			}
 		}

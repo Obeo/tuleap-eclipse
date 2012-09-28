@@ -135,6 +135,16 @@ public class TuleapRepositoryConfiguration implements Serializable {
 	}
 
 	/**
+	 * Sets the name of the configuration.
+	 * 
+	 * @param configurationName
+	 *            The name of the configuration.
+	 */
+	public void setName(String configurationName) {
+		this.name = configurationName;
+	}
+
+	/**
 	 * Returns the item name of the repository.
 	 * 
 	 * @return The item name of the repository.
@@ -150,6 +160,16 @@ public class TuleapRepositoryConfiguration implements Serializable {
 	 */
 	public String getDescription() {
 		return this.description;
+	}
+
+	/**
+	 * Sets the description of the repository.
+	 * 
+	 * @param repositoryDescription
+	 *            The description of the repository.
+	 */
+	public void setDescription(String repositoryDescription) {
+		this.description = repositoryDescription;
 	}
 
 	/**

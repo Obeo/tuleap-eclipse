@@ -9,7 +9,9 @@ Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.commons.net,
- org.eclipse.mylyn.tasks.core;bundle-version="3.7.0"
+ org.eclipse.mylyn.tasks.core;bundle-version="3.7.0",
+ org.apache.httpcomponents.httpclient,
+ org.apache.httpcomponents.httpcore
 Export-Package: org.eclipse.mylyn.internal.tuleap.core;x-internal:=true,
  org.eclipse.mylyn.internal.tuleap.core.client;x-friends:="org.eclipse.mylyn.tuleap.tests,org.eclipse.mylyn.tuleap.ui",
  org.eclipse.mylyn.internal.tuleap.core.config;x-friends:="org.eclipse.mylyn.tuleap.tests",
@@ -17,7 +19,7 @@ Export-Package: org.eclipse.mylyn.internal.tuleap.core;x-internal:=true,
  org.eclipse.mylyn.internal.tuleap.core.model.field;x-friends:="org.eclipse.mylyn.tuleap.ui,org.eclipse.mylyn.tuleap.tests",
  org.eclipse.mylyn.internal.tuleap.core.model.field.dynamic;x-friends:="org.eclipse.mylyn.tuleap.tests",
  org.eclipse.mylyn.internal.tuleap.core.model.structural;x-friends:="org.eclipse.mylyn.tuleap.ui,org.eclipse.mylyn.tuleap.tests",
- org.eclipse.mylyn.internal.tuleap.core.net;x-internal:=true,
+ org.eclipse.mylyn.internal.tuleap.core.net;x-friends:="org.eclipse.mylyn.tuleap.tests",
  org.eclipse.mylyn.internal.tuleap.core.repository;x-friends:="org.eclipse.mylyn.tuleap.tests,org.eclipse.mylyn.tuleap.ui",
  org.eclipse.mylyn.internal.tuleap.core.util;x-friends:="org.eclipse.mylyn.tuleap.ui,org.eclipse.mylyn.tuleap.tests"
 Bundle-Activator: org.eclipse.mylyn.internal.tuleap.core.TuleapCoreActivator

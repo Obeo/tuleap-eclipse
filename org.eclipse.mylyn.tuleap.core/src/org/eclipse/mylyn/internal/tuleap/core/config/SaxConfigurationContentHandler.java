@@ -150,7 +150,9 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			throws SAXException {
 		characters = new StringBuffer();
 		// Form elements
-		if (ITuleapConfigurationConstants.FORM_ELEMENT.equals(localName)) {
+		if (ITuleapConfigurationConstants.TRACKER.equals(localName)) {
+			currentElement = configuration;
+		} else if (ITuleapConfigurationConstants.FORM_ELEMENT.equals(localName)) {
 			parseFormElementAttributes(attributes);
 			Object formElement = createFormElement();
 			currentElement = formElement;
@@ -291,6 +293,8 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 		} else if (localName.equals(ITuleapConfigurationConstants.NAME)) {
 			if (currentElement instanceof AbstractTuleapFormElement) {
 				((AbstractTuleapFormElement)currentElement).setName(characters.toString());
+			} else if (currentElement instanceof TuleapRepositoryConfiguration) {
+				((TuleapRepositoryConfiguration)currentElement).setName(characters.toString());
 			}
 		} else if (localName.equals(ITuleapConfigurationConstants.LABEL)) {
 			if (currentElement instanceof AbstractTuleapFormElement) {
@@ -299,6 +303,8 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 		} else if (localName.equals(ITuleapConfigurationConstants.DESCRIPTION)) {
 			if (currentElement instanceof AbstractTuleapFormElement) {
 				((AbstractTuleapFormElement)currentElement).setDescription(characters.toString());
+			} else if (currentElement instanceof TuleapRepositoryConfiguration) {
+				((TuleapRepositoryConfiguration)currentElement).setDescription(characters.toString());
 			}
 		} else if (localName.equals(ITuleapConfigurationConstants.PROPERTIES)) {
 			if (currentElement instanceof TuleapString) {

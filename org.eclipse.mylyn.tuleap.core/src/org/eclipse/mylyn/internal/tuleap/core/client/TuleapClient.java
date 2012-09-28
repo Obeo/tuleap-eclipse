@@ -14,11 +14,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylyn.commons.net.WebLocation;
+import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.internal.tuleap.core.TuleapCoreActivator;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact;
 import org.eclipse.mylyn.internal.tuleap.core.net.TrackerConnector;
+import org.eclipse.mylyn.internal.tuleap.core.net.TrackerSoapConnector;
 import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConnector;
+import org.eclipse.mylyn.internal.tuleap.core.util.TuleapMylynTasksMessages;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
@@ -34,9 +38,9 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 public class TuleapClient {
 
 	/**
-	 * The Mylyn tasks repository.
+	 * The location of the repository.
 	 */
-	private TaskRepository taskRepository;
+	private AbstractWebLocation location;
 
 	/**
 	 * The Tuleap repository connector.
@@ -48,6 +52,11 @@ public class TuleapClient {
 	 */
 	private TuleapRepositoryConfiguration configuration;
 
+	/**
+	 * The task repository.
+	 */
+	private TaskRepository taskRepository;
+
 	// FIXME DELETE LATER §§§§
 	/**
 	 * A cache.
@@ -58,14 +67,18 @@ public class TuleapClient {
 	 * The constructor.
 	 * 
 	 * @param repository
-	 *            The Mylyn tasks repository
+	 *            The task repository
+	 * @param weblocation
+	 *            The location of the tracker
 	 * @param connector
 	 *            The Tuleap repository connector
 	 */
-	public TuleapClient(TaskRepository repository, TuleapRepositoryConnector connector) {
+	public TuleapClient(TaskRepository repository, AbstractWebLocation weblocation,
+			TuleapRepositoryConnector connector) {
+		this.location = weblocation;
 		this.taskRepository = repository;
 		this.repositoryConnector = connector;
-		this.configuration = new TuleapRepositoryConfiguration(this.taskRepository.getRepositoryUrl());
+		this.configuration = new TuleapRepositoryConfiguration(this.location.getUrl());
 	}
 
 	/**
@@ -86,9 +99,8 @@ public class TuleapClient {
 	public boolean getSearchHits(IRepositoryQuery query, TaskDataCollector collector,
 			TaskAttributeMapper mapper, IProgressMonitor monitor) {
 		// Get the result of the query
-		TrackerConnector trackerConnector = new TrackerConnector(new WebLocation(this.taskRepository
-				.getRepositoryUrl()));
-		int hit = trackerConnector.performQuery(collector, mapper, TaskDataCollector.MAX_HITS);
+		TrackerSoapConnector trackerSoapConnector = new TrackerSoapConnector(this.location);
+		int hit = trackerSoapConnector.performQuery(collector, mapper, TaskDataCollector.MAX_HITS);
 		return hit > 0;
 	}
 
@@ -123,12 +135,21 @@ public class TuleapClient {
 	 *            The progress monitor
 	 */
 	public void updateAttributes(IProgressMonitor monitor) {
-		TrackerConnector trackerConnector = new TrackerConnector(new WebLocation(this.taskRepository
-				.getRepositoryUrl()));
-		configuration = trackerConnector.getTuleapRepositoryConfiguration();
+		String username = this.taskRepository.getUserName();
+		String password = this.taskRepository.getCredentials(AuthenticationType.REPOSITORY).getPassword();
 
-		this.repositoryConnector.putRepositoryConfiguration(this.taskRepository.getRepositoryUrl(),
-				configuration);
+		TrackerConnector trackerConnector = new TrackerConnector(username, password, this.location);
+
+		TuleapRepositoryConfiguration newConfiguration = trackerConnector
+				.getTuleapRepositoryConfiguration(monitor);
+		if (newConfiguration != null) {
+			this.configuration = newConfiguration;
+		} else {
+			TuleapCoreActivator.log(TuleapMylynTasksMessages.getString(
+					"TuleapClient.FailToRetrieveTheConfiguration", this.location.getUrl()), false); //$NON-NLS-1$
+		}
+
+		this.repositoryConnector.putRepositoryConfiguration(this.location.getUrl(), configuration);
 	}
 
 	/**

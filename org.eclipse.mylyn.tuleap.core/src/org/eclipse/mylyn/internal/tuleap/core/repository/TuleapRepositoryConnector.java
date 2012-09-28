@@ -317,7 +317,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector {
 			boolean forceRefresh, IProgressMonitor monitor) {
 		// TODO Returns and/or update the configuration of the given repository.
 		TuleapClient client = this.getClientManager().getClient(repository);
-		client.updateAttributes(monitor, true);
+		client.updateAttributes(monitor, forceRefresh);
 		return this.repositoryConfigurations.get(repository.getRepositoryUrl());
 	}
 

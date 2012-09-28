@@ -71,6 +71,7 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 	public AbstractTuleapFormElement(String formElementIdentifier) {
 		super();
 		this.identifier = formElementIdentifier;
+		this.permissions = new TuleapPermissions();
 	}
 
 	/**

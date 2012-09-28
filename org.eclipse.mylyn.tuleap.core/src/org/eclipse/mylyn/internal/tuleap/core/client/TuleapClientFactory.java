@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.core.client;
 
+import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
@@ -46,18 +47,21 @@ public final class TuleapClientFactory {
 	}
 
 	/**
-	 * Returns a new configured Tuleap client for the given Mylyn task repository and the given Tuleap
-	 * repository connector.
+	 * Returns a new configured Tuleap client for the given tracker location and the given Tuleap repository
+	 * connector.
 	 * 
-	 * @param taskRepository
-	 *            The Mylyn tasks repository
+	 * @param repository
+	 *            The task repository
+	 * @param location
+	 *            The location of the Tuleap tracker
 	 * @param connector
 	 *            the Tuleap tasks repository connector
 	 * @return a new configured Tuleap client for the given Tuleap task repository and the given Tuleap
 	 *         repository connector
 	 */
-	public TuleapClient createClient(TaskRepository taskRepository, TuleapRepositoryConnector connector) {
-		TuleapClient client = new TuleapClient(taskRepository, connector);
+	public TuleapClient createClient(TaskRepository repository, AbstractWebLocation location,
+			TuleapRepositoryConnector connector) {
+		TuleapClient client = new TuleapClient(repository, location, connector);
 		return client;
 	}
 }
