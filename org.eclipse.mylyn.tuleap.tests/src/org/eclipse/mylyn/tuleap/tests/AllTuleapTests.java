@@ -18,6 +18,7 @@ import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.tuleap.tests.core.TuleapTaskDataHandlerTests;
 import org.eclipse.mylyn.tuleap.tests.support.TuleapFixture;
 import org.eclipse.mylyn.tuleap.tests.ui.TuleapRepositorySettingsPageTests;
+import org.eclipse.mylyn.tuleap.tests.ui.TuleapValidatorTests;
 
 /**
  * This class should be used to launch all Tuleap unit tests.
@@ -78,6 +79,7 @@ public final class AllTuleapTests {
 		// suite.addTestSuite(BugzillaHyperlinkDetectorTest.class);
 
 		// network tests
+		suite.addTestSuite(TuleapValidatorTests.class);
 
 		// local tests
 		if (!configuration.isLocalOnly()) {

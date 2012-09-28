@@ -24,6 +24,7 @@ import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
+import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.client.TuleapClient;
 import org.eclipse.mylyn.internal.tuleap.core.client.TuleapClientManager;
 import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConnector;
@@ -43,10 +44,14 @@ import org.eclipse.osgi.util.NLS;
 public class TuleapFixture extends TestFixture {
 
 	/**
+	 * URL of the test server for Tuleap 5.0.
+	 */
+	public static final String TEST_TULEAP_50_URL = "https://demo.tuleap.net/plugins/tracker/?tracker=409"; //$NON-NLS-1$
+
+	/**
 	 * Version 1.0 of the Tuleap fixture.
 	 */
-	private static final TuleapFixture TULEAP_1_0 = new TuleapFixture(ITuleapConstants.CONNECTOR_KIND,
-			"1.0", ""); //$NON-NLS-1$//$NON-NLS-2$
+	private static final TuleapFixture TULEAP_1_0 = new TuleapFixture(TEST_TULEAP_50_URL, "5.0", ""); //$NON-NLS-1$//$NON-NLS-2$
 
 	/**
 	 * The default version of the Tuleap fixture.
@@ -73,13 +78,26 @@ public class TuleapFixture extends TestFixture {
 	}
 
 	/**
+	 * Returns a server URL built after the given Tuleap tracker version.
+	 * 
+	 * @param version
+	 *            the version of the Tuleap tracker
+	 * @return A server URL built after the given Tuleap tracker version.
+	 */
+	public static String getServerUrl(String version) {
+		return TestConfiguration.getRepositoryUrl(version);
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.mylyn.tests.util.TestFixture#activate()
 	 */
 	@Override
 	protected TestFixture activate() {
-		return null;
+		current = this;
+		this.setUpFramework();
+		return this;
 	}
 
 	/**
@@ -89,7 +107,7 @@ public class TuleapFixture extends TestFixture {
 	 */
 	@Override
 	protected TestFixture getDefault() {
-		return null;
+		return DEFAULT;
 	}
 
 	/**
@@ -126,8 +144,7 @@ public class TuleapFixture extends TestFixture {
 	 */
 	public TuleapClient client() throws CoreException, IOException {
 		UserCredentials credentials = CommonTestUtil.getCredentials(PrivilegeLevel.USER);
-		return client(getRepositoryUrl(), credentials.getUserName(), credentials.getPassword(),
-				"", "", "UTF-8"); //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
+		return client(getRepositoryUrl(), "begaudeaus", "n9Um4sq074ccAIR", "", "", "UTF-8"); //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
 	}
 
 	/**

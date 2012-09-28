@@ -11,32 +11,32 @@
 package org.eclipse.mylyn.tuleap.tests.core;
 
 import java.io.File;
+import java.io.IOException;
 
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.tuleap.core.util.TuleapUtil;
 
 /**
- * Test utility methods.
+ * Test class for {@link TuleapUtil}.
  * 
- * @author <a href="mailto:melanie.bats@obeo.fr">Melanie Bats</a>
+ * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 1.0
  */
 public class TuleapUtilTests extends TestCase {
-
 	/**
-	 * Test {@link TuleapUtil#download(String, File)}.
-	 * 
-	 * @throws Exception
-	 *             Exception
+	 * Test the download of the configuration.
 	 */
-	public void testDownload() throws Exception {
-		String url = "https://demo.tuleap.net/downloads/Codendi_CLI.zip"; //$NON-NLS-1$
-		File downloadedFile = File.createTempFile("temp", ""); //$NON-NLS-1$ //$NON-NLS-2$
-		TuleapUtil.download(url, downloadedFile);
-		File originFile = new File("./resource/Codendi_CLI.zip"); //$NON-NLS-1$
-
-		assertEquals(TuleapUtil.getChecksum(originFile), TuleapUtil.getChecksum(downloadedFile));
-		downloadedFile.delete();
+	public void testDownloadConfiguration() {
+		File file;
+		try {
+			file = File.createTempFile("repositoryConfiguration", "xml"); //$NON-NLS-1$ //$NON-NLS-2$
+			TuleapUtil.download("https://demo.tuleap.net/plugins/tracker/?tracker=409&func=admin-export", //$NON-NLS-1$
+					file);
+			System.out.println(file.getAbsolutePath());
+			System.out.println();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
