@@ -1,13 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2012 Steffen Pingel and others.
+ * Copyright (c) 2012 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Steffen Pingel - initial API and implementation
- *     Stephane Begaudeau - Heavy refactoring
+ *     Obeo - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.core.net;
 
@@ -32,12 +31,9 @@ import org.eclipse.mylyn.internal.tuleap.core.TuleapCoreActivator;
 import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
 
 /**
- * This class manipulate Http requests. <br />
- * <br />
- * This class is heavily inspired by the EPL licensed class TracWebClient.Request from the Eclipse Mylyn Tasks
- * project created by Steffen Pingel.
+ * This class manipulate Http requests.
  * 
- * @author <a href="mailto:steffen.pingel@tasktop.com">Steffen Pingel</a>
+ * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 1.0
  */
 public class Request {
@@ -94,7 +90,8 @@ public class Request {
 	 * @param requestUrl
 	 *            The url of the http request.
 	 */
-	public Request(String userLogin, String userPassword, AbstractWebLocation trackerLocation, String requestUrl) {
+	public Request(String userLogin, String userPassword, AbstractWebLocation trackerLocation,
+			String requestUrl) {
 		this.name = userLogin;
 		this.password = userPassword;
 		this.location = trackerLocation;

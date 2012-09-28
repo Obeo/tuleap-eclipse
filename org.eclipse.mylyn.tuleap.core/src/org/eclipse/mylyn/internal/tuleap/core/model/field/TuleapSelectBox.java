@@ -36,7 +36,7 @@ public class TuleapSelectBox extends AbstractTuleapField {
 	/**
 	 * The select box items.
 	 */
-	private List<String> items = new ArrayList<String>();
+	private List<TuleapSelectBoxItem> items = new ArrayList<TuleapSelectBoxItem>();
 
 	/**
 	 * The value of the binding of the select box.
@@ -46,7 +46,7 @@ public class TuleapSelectBox extends AbstractTuleapField {
 	/**
 	 * The list of items that should be considered as an open status semantically.
 	 */
-	private List<String> openStatus = new ArrayList<String>();
+	private List<TuleapSelectBoxItem> openStatus = new ArrayList<TuleapSelectBoxItem>();
 
 	/**
 	 * The workflow of the field.
@@ -73,17 +73,28 @@ public class TuleapSelectBox extends AbstractTuleapField {
 	 * 
 	 * @return The list of the items available in the select box.
 	 */
-	public List<String> getItems() {
+	public List<TuleapSelectBoxItem> getItems() {
 		return this.items;
 	}
 
 	/**
-	 * Returns the list of items that should be considered as open status semantically.
+	 * Returns the list of items that should be considered as opened status semantically.
 	 * 
-	 * @return The list of items that should be considered as open status semantically.
+	 * @return The list of items that should be considered as opened status semantically.
 	 */
-	public List<String> getOpenStatus() {
+	public List<TuleapSelectBoxItem> getOpenStatus() {
 		return this.openStatus;
+	}
+
+	/**
+	 * Returns the list of items that should be considered as closed status semantically.
+	 * 
+	 * @return The list of items that should be considered as closed status semantically.
+	 */
+	public List<TuleapSelectBoxItem> getClosedStatus() {
+		ArrayList<TuleapSelectBoxItem> closedStatus = new ArrayList<TuleapSelectBoxItem>(this.items);
+		closedStatus.removeAll(this.openStatus);
+		return closedStatus;
 	}
 
 	/**
@@ -148,8 +159,8 @@ public class TuleapSelectBox extends AbstractTuleapField {
 	@Override
 	public Map<String, String> getOptions() {
 		Map<String, String> options = new HashMap<String, String>();
-		for (String item : this.items) {
-			options.put(item, item);
+		for (TuleapSelectBoxItem item : this.items) {
+			options.put(item.getLabel(), item.getLabel());
 		}
 		return options;
 	}
@@ -162,7 +173,7 @@ public class TuleapSelectBox extends AbstractTuleapField {
 	@Override
 	public Object getDefaultValue() {
 		if (this.items.size() > 0) {
-			return this.items.get(0);
+			return this.items.get(0).getLabel();
 		}
 		return null;
 	}

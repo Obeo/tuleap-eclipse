@@ -25,6 +25,7 @@ import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapMultiSelectBox;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapOpenList;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapPermissionOnArtifact;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapSelectBox;
+import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapSelectBoxItem;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapString;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapText;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.dynamic.TuleapArtifactId;
@@ -178,8 +179,10 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			if (ITuleapConstants.TULEAP_DYNAMIC_BINDING_USERS.equals(currentBinding)) {
 				// TODO Implement dynamic binding
 			} else {
-				String item = attributes.getValue(ITuleapConfigurationConstants.LABEL);
-				attachItem(item);
+				String id = attributes.getValue(ITuleapConfigurationConstants.ID);
+				String label = attributes.getValue(ITuleapConfigurationConstants.LABEL);
+				String description = attributes.getValue(ITuleapConfigurationConstants.DESCRIPTION);
+				attachItem(id, label, description);
 			}
 		} else if (ITuleapConfigurationConstants.SEMANTICS.equals(localName)) {
 			this.isAnalyzingSemantics = true;
@@ -226,6 +229,36 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 					}
 				}
 			}
+		} else if (ITuleapConfigurationConstants.OPEN_VALUE.equals(localName)
+				&& ITuleapConfigurationConstants.SEMANTIC_KIND_STATUS.equals(this.currentSemantictype)) {
+			// Analyzing the status semantic
+			String openvalueRef = attributes.getValue(ITuleapConfigurationConstants.REF);
+			String ref = ""; //$NON-NLS-1$
+			if (openvalueRef.contains(ITuleapConfigurationConstants.OPEN_VALUE_SEPARATOR)) {
+				ref = openvalueRef.substring(0, openvalueRef
+						.indexOf(ITuleapConfigurationConstants.OPEN_VALUE_SEPARATOR));
+			}
+
+			// Look for a field with the given reference as its id.
+			List<AbstractTuleapFormElement> formElements = this.configuration.getFormElements();
+			for (AbstractTuleapFormElement abstractTuleapStructuralElement : formElements) {
+				List<AbstractTuleapField> fields = TuleapRepositoryConfiguration
+						.getFields(abstractTuleapStructuralElement);
+				for (AbstractTuleapField abstractTuleapField : fields) {
+					if (abstractTuleapField.getIdentifier() != null
+							&& abstractTuleapField.getIdentifier().equals(ref)
+							&& abstractTuleapField instanceof TuleapSelectBox) {
+						TuleapSelectBox tuleapSelectBox = (TuleapSelectBox)abstractTuleapField;
+						List<TuleapSelectBoxItem> items = tuleapSelectBox.getItems();
+						for (TuleapSelectBoxItem item : items) {
+							if (openvalueRef.equals(item.getIdentifier())) {
+								// Adds a new open status
+								tuleapSelectBox.getOpenStatus().add(item);
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -254,10 +287,18 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 	/**
 	 * Attach the item to the good parent in hierarchy.
 	 * 
-	 * @param item
-	 *            The value of an item of a {@link TuleapSelectBox} or a {@link TuleapMultiSelectBox}
+	 * @param id
+	 *            The id of the select box item
+	 * @param label
+	 *            The label of the item of a {@link TuleapSelectBox} or a {@link TuleapMultiSelectBox}
+	 * @param description
+	 *            The description of the item
 	 */
-	private void attachItem(String item) {
+	private void attachItem(String id, String label, String description) {
+		TuleapSelectBoxItem item = new TuleapSelectBoxItem(id);
+		item.setLabel(label);
+		item.setDescription(description);
+
 		Object currentParent = parentHierarchy.get(parentHierarchy.size() - 1);
 		if (currentParent instanceof TuleapSelectBox) {
 			((TuleapSelectBox)currentParent).getItems().add(item);

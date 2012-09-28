@@ -285,6 +285,11 @@ public interface ITuleapConfigurationConstants {
 	String OPEN_VALUE = "open_value"; //$NON-NLS-1$
 
 	/**
+	 * The open value separator.
+	 */
+	String OPEN_VALUE_SEPARATOR = "-"; //$NON-NLS-1$
+
+	/**
 	 * The kind of semantic: "title".
 	 */
 	String SEMANTIC_KIND_TITLE = "title"; //$NON-NLS-1$

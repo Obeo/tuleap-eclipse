@@ -5,7 +5,7 @@
   <description>Tool Description</description>
   <cannedResponses/>
   <formElements>
-    <formElement type="fieldset" ID="F1" rank="495" required="1">
+    <formElement type="fieldset" ID="F1" rank="498" required="1">
       <name>fieldset_1</name>
       <label>Details</label>
       <description>fieldset_default_tasks_desc_key</description>
@@ -48,7 +48,7 @@
         </formElement>
       </formElements>
     </formElement>
-    <formElement type="fieldset" ID="F6" rank="1423" required="1">
+    <formElement type="fieldset" ID="F6" rank="1426" required="1">
       <name>fieldset_2</name>
       <label>State of Progress</label>
       <formElements>
@@ -103,6 +103,9 @@
                   <item ID="F13-V1" label="Closed" is_hidden="0">
                     <description>The artifact is no longer active. See the Resolution field for details on how it was resolved.</description>
                   </item>
+                  <item ID="F13-V2" label="Reopened" is_hidden="0"/>
+                  <item ID="F13-V3" label="Verified" is_hidden="0"/>
+                  <item ID="F13-V4" label="Assigned" is_hidden="0"/>
                 </items>
               </bind>
             </formElement>
@@ -155,33 +158,33 @@
         </formElement>
       </formElements>
     </formElement>
-    <formElement type="fieldset" ID="F16" rank="1424">
+    <formElement type="fieldset" ID="F16" rank="1427">
       <name>fieldset</name>
       <label>Fieldset</label>
       <description>Filedset description</description>
       <formElements/>
     </formElement>
-    <formElement type="column" ID="F17" rank="2646">
+    <formElement type="column" ID="F17" rank="2649">
       <name>column</name>
       <label>Column</label>
       <description>Column description</description>
       <formElements/>
     </formElement>
-    <formElement type="linebreak" ID="F18" rank="2647">
+    <formElement type="linebreak" ID="F18" rank="2650">
       <name>line_break</name>
       <label>Line Break</label>
     </formElement>
-    <formElement type="separator" ID="F19" rank="2648">
+    <formElement type="separator" ID="F19" rank="2651">
       <name>separator</name>
       <label>Separator</label>
     </formElement>
-    <formElement type="staticrichtext" ID="F20" rank="2649">
+    <formElement type="staticrichtext" ID="F20" rank="2652">
       <name>static_text</name>
       <label>Static text</label>
       <description>Static text description</description>
       <properties static_value="&lt;p&gt;&#13;&#10;&#9;Static value&lt;/p&gt;&#13;&#10;"/>
     </formElement>
-    <formElement type="fieldset" ID="F21" rank="2650">
+    <formElement type="fieldset" ID="F21" rank="2653">
       <name>fieldset0</name>
       <label>Fieldset0</label>
       <description>Fieldset0 description</description>
@@ -220,19 +223,19 @@
         </formElement>
       </formElements>
     </formElement>
-    <formElement type="string" ID="F27" rank="2651" required="1">
+    <formElement type="string" ID="F27" rank="2654" required="1">
       <name>string</name>
       <label>String</label>
       <description>String description</description>
       <properties size="30" default_value="DefaultValue"/>
     </formElement>
-    <formElement type="text" ID="F28" rank="2653">
+    <formElement type="text" ID="F28" rank="2656">
       <name>text</name>
       <label>Text</label>
       <description>Text description</description>
       <properties rows="10" cols="50" default_value="DefaultValue"/>
     </formElement>
-    <formElement type="sb" ID="F29" rank="2654">
+    <formElement type="sb" ID="F29" rank="2657">
       <name>selectbox</name>
       <label>SelectBox</label>
       <description>SelectBox description</description>
@@ -247,7 +250,7 @@
         </items>
       </bind>
     </formElement>
-    <formElement type="msb" ID="F30" rank="2655">
+    <formElement type="msb" ID="F30" rank="2658">
       <name>multiselectbox</name>
       <label>MultiSelectBox</label>
       <description>MultiSelectBox description</description>
@@ -258,30 +261,30 @@
         </items>
       </bind>
     </formElement>
-    <formElement type="date" ID="F31" rank="2656">
+    <formElement type="date" ID="F31" rank="2659">
       <name>date</name>
       <label>Date</label>
       <description>Date description</description>
       <properties default_value="today"/>
     </formElement>
-    <formElement type="file" ID="F32" rank="2657">
+    <formElement type="file" ID="F32" rank="2660">
       <name>fileupload</name>
       <label>FileUpload</label>
       <description>FileUpload description</description>
     </formElement>
-    <formElement type="int" ID="F33" rank="2658" required="1">
+    <formElement type="int" ID="F33" rank="2661" required="1">
       <name>integer</name>
       <label>Integer</label>
       <description>Integer description</description>
       <properties size="5" default_value="42"/>
     </formElement>
-    <formElement type="float" ID="F34" rank="2660">
+    <formElement type="float" ID="F34" rank="2663">
       <name>float</name>
       <label>Float</label>
       <description>Float description</description>
       <properties size="5" default_value="42.4200"/>
     </formElement>
-    <formElement type="tbl" ID="F35" rank="2661">
+    <formElement type="tbl" ID="F35" rank="2664">
       <name>openlist</name>
       <label>OpenList</label>
       <description>OpenList description</description>
@@ -297,222 +300,222 @@
         </items>
       </bind>
     </formElement>
-    <formElement type="art_link" ID="F36" rank="2662">
+    <formElement type="art_link" ID="F36" rank="2665">
       <name>artifactlink</name>
       <label>ArtifactLink</label>
       <description>ArtifactLink description</description>
     </formElement>
-    <formElement type="perm" ID="F37" rank="2663">
+    <formElement type="perm" ID="F37" rank="2667">
       <name>permission_1</name>
       <label>Permission</label>
       <description>Permission description</description>
     </formElement>
-    <formElement type="aid" ID="F38" rank="2664">
+    <formElement type="aid" ID="F38" rank="2668">
       <name>artifactid</name>
       <label>ArtifactID</label>
       <description>ArtifactID description</description>
     </formElement>
-    <formElement type="lud" ID="F39" rank="2665">
+    <formElement type="lud" ID="F39" rank="2672">
       <name>lastupdatedate</name>
       <label>LastUpdateDate</label>
       <description>LastUpdateDate description</description>
     </formElement>
-    <formElement type="subby" ID="F40" rank="2666">
+    <formElement type="subby" ID="F40" rank="2673">
       <name>artifactauthor</name>
       <label>ArtifactAuthor</label>
       <description>ArtifactAuthor description</description>
     </formElement>
-    <formElement type="subon" ID="F41" rank="2667">
+    <formElement type="subon" ID="F41" rank="2675">
       <name>submissiondate</name>
       <label>SubmissionDate</label>
       <description>SubmissionDate description</description>
     </formElement>
-    <formElement type="cross" ID="F42" rank="2668">
+    <formElement type="cross" ID="F42" rank="2676">
       <name>crossreferences</name>
       <label>CrossReferences</label>
       <description>CrossReferences description</description>
     </formElement>
-    <formElement type="burndown" ID="F43" rank="2669">
+    <formElement type="burndown" ID="F43" rank="2678">
       <name>chart_1</name>
       <label>Chart</label>
       <description>Chart description</description>
     </formElement>
-    <formElement type="computed" ID="F44" rank="2670">
+    <formElement type="computed" ID="F44" rank="2679">
       <name>computedfield</name>
       <label>ComputedField</label>
       <description>ComputedField description</description>
       <properties target_field_name="TargetField"/>
     </formElement>
-    <formElement type="aid" ID="F45" rank="0" use_it="0">
+    <formElement type="aid" ID="F45" rank="2" use_it="0">
       <name>artifact_id</name>
       <label>Artifact ID</label>
       <description>Unique artifact identifier</description>
     </formElement>
-    <formElement type="date" ID="F46" rank="1" use_it="0">
+    <formElement type="date" ID="F46" rank="3" use_it="0">
       <name>due_date</name>
       <label>Due Date</label>
       <description>Due Date</description>
       <properties/>
     </formElement>
-    <formElement type="file" ID="F47" rank="3" use_it="0">
+    <formElement type="file" ID="F47" rank="6" use_it="0">
       <name>attachment</name>
       <label>Attachments</label>
     </formElement>
-    <formElement type="cross" ID="F48" rank="4" use_it="0">
+    <formElement type="cross" ID="F48" rank="7" use_it="0">
       <name>cross_references</name>
       <label>Cross references</label>
     </formElement>
-    <formElement type="date" ID="F49" rank="5" use_it="0">
+    <formElement type="date" ID="F49" rank="8" use_it="0">
       <name>end_date</name>
       <label>End Date</label>
       <description>End Date</description>
       <properties/>
     </formElement>
-    <formElement type="date" ID="F50" rank="6" use_it="0">
+    <formElement type="date" ID="F50" rank="9" use_it="0">
       <name>start_date</name>
       <label>Start Date</label>
       <description>Start Date</description>
       <properties default_value="today"/>
     </formElement>
-    <formElement type="int" ID="F51" rank="7" use_it="0">
+    <formElement type="int" ID="F51" rank="10" use_it="0">
       <name>percent</name>
       <label>Percentage of completion (1-100)</label>
       <description>Integer value between 0-100</description>
       <properties size="5"/>
     </formElement>
-    <formElement type="string" ID="F52" rank="8" use_it="0" required="1">
+    <formElement type="string" ID="F52" rank="11" use_it="0" required="1">
       <name>name</name>
       <label>Name</label>
       <properties size="30"/>
     </formElement>
-    <formElement type="string" ID="F53" rank="9" use_it="0" required="1">
+    <formElement type="string" ID="F53" rank="12" use_it="0" required="1">
       <name>location</name>
       <label>Location</label>
       <properties size="30"/>
     </formElement>
-    <formElement type="date" ID="F54" rank="10" use_it="0" required="1">
+    <formElement type="date" ID="F54" rank="13" use_it="0" required="1">
       <name>birthday</name>
       <label>Birthday</label>
       <properties default_value="today"/>
     </formElement>
-    <formElement type="column" ID="F55" rank="11" use_it="0">
+    <formElement type="column" ID="F55" rank="14" use_it="0">
       <name>column5</name>
       <label>Column Progress 1</label>
       <formElements/>
     </formElement>
-    <formElement type="fieldset" ID="F56" rank="12" use_it="0">
+    <formElement type="fieldset" ID="F56" rank="15" use_it="0">
       <name>stuff</name>
       <label>Stuff</label>
       <formElements/>
     </formElement>
-    <formElement type="sb" ID="F57" rank="13" use_it="0">
+    <formElement type="sb" ID="F57" rank="16" use_it="0">
       <name>category</name>
       <label>Category</label>
       <bind type="static" is_rank_alpha="0"/>
     </formElement>
-    <formElement type="lud" ID="F58" rank="14" use_it="0">
+    <formElement type="lud" ID="F58" rank="17" use_it="0">
       <name>last_update_date</name>
       <label>Last Modified On</label>
       <description>Date and time of the latest modification in an artifact</description>
     </formElement>
-    <formElement type="art_link" ID="F59" rank="15" use_it="0">
+    <formElement type="art_link" ID="F59" rank="18" use_it="0">
       <name>artifact_link</name>
       <label>Artifact Link</label>
     </formElement>
-    <formElement type="subon" ID="F60" rank="16" use_it="0">
+    <formElement type="subon" ID="F60" rank="19" use_it="0">
       <name>open_date</name>
       <label>Submitted on</label>
       <description>Date and time for the initial artifact submission</description>
     </formElement>
-    <formElement type="perm" ID="F61" rank="17" use_it="0">
+    <formElement type="perm" ID="F61" rank="20" use_it="0">
       <name>permission</name>
       <label>Permission</label>
     </formElement>
-    <formElement type="burndown" ID="F62" rank="18" use_it="0">
+    <formElement type="burndown" ID="F62" rank="21" use_it="0">
       <name>chart</name>
       <label>Chart</label>
     </formElement>
-    <formElement type="string" ID="F63" rank="19" use_it="0">
+    <formElement type="string" ID="F63" rank="22" use_it="0">
       <name>additional_information</name>
       <label>Additional information</label>
       <properties size="30"/>
     </formElement>
-    <formElement type="subby" ID="F64" rank="20" use_it="0">
+    <formElement type="subby" ID="F64" rank="23" use_it="0">
       <name>submitted_by</name>
       <label>Submitted by</label>
       <description>User who originally submitted the artifact</description>
     </formElement>
-    <formElement type="text" ID="F65" rank="24" use_it="0">
+    <formElement type="text" ID="F65" rank="27" use_it="0">
       <name>details</name>
       <label>Original Submission</label>
       <description>A full description of the artifact</description>
       <properties rows="7" cols="103"/>
     </formElement>
-    <formElement type="string" ID="F66" rank="25" use_it="0">
+    <formElement type="string" ID="F66" rank="28" use_it="0">
       <name>validation</name>
       <label>Validation</label>
       <description>Reason why this task should be done</description>
       <properties size="30" default_value="None"/>
     </formElement>
-    <formElement type="column" ID="F67" rank="26" use_it="0">
+    <formElement type="column" ID="F67" rank="29" use_it="0">
       <name>test_column</name>
       <label>Test Column</label>
       <formElements/>
     </formElement>
-    <formElement type="tbl" ID="F68" rank="27" use_it="0">
+    <formElement type="tbl" ID="F68" rank="30" use_it="0">
       <name>open_list</name>
       <label>Open List</label>
       <properties hint="Type in a search term"/>
       <bind type="static" is_rank_alpha="0"/>
     </formElement>
-    <formElement type="column" ID="F69" rank="37" use_it="0">
+    <formElement type="column" ID="F69" rank="40" use_it="0">
       <name>column3</name>
       <label>Column Details 1</label>
       <formElements/>
     </formElement>
-    <formElement type="fieldset" ID="F70" rank="38" use_it="0">
+    <formElement type="fieldset" ID="F70" rank="41" use_it="0">
       <name>testfieldset</name>
       <label>TestFieldset</label>
       <formElements/>
     </formElement>
-    <formElement type="column" ID="F71" rank="40" use_it="0">
+    <formElement type="column" ID="F71" rank="43" use_it="0">
       <name>column_3</name>
       <label>Column 3</label>
       <formElements/>
     </formElement>
-    <formElement type="sb" ID="F72" rank="286" use_it="0">
+    <formElement type="sb" ID="F72" rank="289" use_it="0">
       <name>subproject_1</name>
       <label>Subproject</label>
       <description>Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)</description>
       <bind type="static" is_rank_alpha="0"/>
     </formElement>
-    <formElement type="date" ID="F73" rank="289" use_it="0">
+    <formElement type="date" ID="F73" rank="292" use_it="0">
       <name>close_date</name>
       <label>Close Date</label>
       <description>Close Date</description>
       <properties default_value="today"/>
     </formElement>
-    <formElement type="column" ID="F74" rank="491" use_it="0">
+    <formElement type="column" ID="F74" rank="494" use_it="0">
       <name>column1</name>
       <label>Column Top 1</label>
       <formElements/>
     </formElement>
-    <formElement type="column" ID="F75" rank="493" use_it="0">
+    <formElement type="column" ID="F75" rank="496" use_it="0">
       <name>column2</name>
       <label>Column Top 2</label>
       <formElements/>
     </formElement>
-    <formElement type="fieldset" ID="F76" rank="1421" use_it="0">
+    <formElement type="fieldset" ID="F76" rank="1424" use_it="0">
       <name>identity</name>
       <label>Identity</label>
       <formElements/>
     </formElement>
-    <formElement type="fieldset" ID="F77" rank="1443" use_it="0">
+    <formElement type="fieldset" ID="F77" rank="1446" use_it="0">
       <name>fieldset1</name>
       <label>Attachments</label>
       <formElements/>
     </formElement>
-    <formElement type="fieldset" ID="F78" rank="1445" use_it="0">
+    <formElement type="fieldset" ID="F78" rank="1448" use_it="0">
       <name>fieldset1_1</name>
       <label>References</label>
       <formElements/>
@@ -591,13 +594,25 @@
     <semantic type="title">
       <shortname>title</shortname>
       <label>Title</label>
-      <description>Define the title of the artifact</description>
+      <description>Define the title of an artifact</description>
       <field REF="F2"/>
+    </semantic>
+    <semantic type="status">
+      <shortname>status</shortname>
+      <label>Status</label>
+      <description>Define the status of an artifact</description>
+      <field REF="F13"/>
+      <open_values>
+        <open_value REF="F13-V0"/>
+        <open_value REF="F13-V2"/>
+        <open_value REF="F13-V3"/>
+        <open_value REF="F13-V4"/>
+      </open_values>
     </semantic>
     <semantic type="contributor">
       <shortname>contributor</shortname>
-      <label>Contributor</label>
-      <description>Define the contributor of the artifact</description>
+      <label>Contributor/assignee</label>
+      <description>Define the contributor/assignee of an artifact</description>
       <field REF="F11"/>
     </semantic>
     <semantic type="tooltip"/>
@@ -627,7 +642,6 @@
         <renderer type="table" rank="0" chunksz="15">
           <name>Results</name>
           <columns>
-            <field REF="F45"/>
             <field REF="F2"/>
             <field REF="F11"/>
             <field REF="F13"/>
@@ -671,30 +685,26 @@
         <renderer type="table" rank="0" chunksz="15">
           <name>Results</name>
           <columns>
-            <field REF="F45"/>
             <field REF="F2"/>
             <field REF="F5"/>
-            <field REF="F50"/>
-            <field REF="F46"/>
             <field REF="F11"/>
-            <field REF="F49"/>
             <field REF="F13"/>
           </columns>
         </renderer>
         <renderer type="plugin_graphontrackersv5" rank="1">
           <name>Graphs</name>
           <charts>
-            <chart type="bar" width="600" height="400" rank="0" base="F5">
-              <title>Priority</title>
-              <description>Number of Artifacts by priority level</description>
+            <chart type="pie" width="600" height="400" rank="0" base="F13">
+              <title>Status</title>
+              <description>Number of Artifacts by Status</description>
             </chart>
             <chart type="bar" width="600" height="400" rank="0" base="F11">
               <title>Assignement</title>
               <description>Number of artifacts by Assignee</description>
             </chart>
-            <chart type="pie" width="600" height="400" rank="0" base="F13">
-              <title>Status</title>
-              <description>Number of Artifacts by Status</description>
+            <chart type="bar" width="600" height="400" rank="0" base="F5">
+              <title>Priority</title>
+              <description>Number of Artifacts by priority level</description>
             </chart>
           </charts>
         </renderer>
@@ -711,7 +721,68 @@
       </renderers>
     </report>
   </reports>
-  <workflow/>
+  <workflow>
+    <field_id REF="F13"/>
+    <is_used>1</is_used>
+    <transitions>
+      <transition>
+        <from_id REF="F13-V0"/>
+        <to_id REF="F13-V1"/>
+        <permissions>
+          <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
+        </permissions>
+      </transition>
+      <transition>
+        <from_id REF="F13-V0"/>
+        <to_id REF="F13-V3"/>
+        <permissions>
+          <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
+        </permissions>
+      </transition>
+      <transition>
+        <from_id REF="F13-V0"/>
+        <to_id REF="F13-V4"/>
+        <permissions>
+          <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
+        </permissions>
+      </transition>
+      <transition>
+        <from_id REF="F13-V1"/>
+        <to_id REF="F13-V2"/>
+        <permissions>
+          <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
+        </permissions>
+      </transition>
+      <transition>
+        <from_id REF="F13-V2"/>
+        <to_id REF="F13-V1"/>
+        <permissions>
+          <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
+        </permissions>
+      </transition>
+      <transition>
+        <from_id REF="F13-V3"/>
+        <to_id REF="F13-V1"/>
+        <permissions>
+          <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
+        </permissions>
+      </transition>
+      <transition>
+        <from_id REF="F13-V3"/>
+        <to_id REF="F13-V4"/>
+        <permissions>
+          <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
+        </permissions>
+      </transition>
+      <transition>
+        <from_id REF="F13-V4"/>
+        <to_id REF="F13-V1"/>
+        <permissions>
+          <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
+        </permissions>
+      </transition>
+    </transitions>
+  </workflow>
   <permissions>
     <permission scope="tracker" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_ACCESS_ASSIGNEE"/>
     <permission scope="tracker" ugroup="UGROUP_PROJECT_ADMIN" type="PLUGIN_TRACKER_ACCESS_FULL"/>

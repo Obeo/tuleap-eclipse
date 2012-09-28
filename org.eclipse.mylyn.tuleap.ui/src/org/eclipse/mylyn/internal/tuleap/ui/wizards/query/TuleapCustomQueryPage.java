@@ -214,7 +214,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 		combo.setLayoutData(gridData);
 		if (tuleapSelectBox.getItems().size() > 0) {
-			combo.setText(tuleapSelectBox.getItems().get(0));
+			combo.setText(tuleapSelectBox.getItems().get(0).getLabel());
 		}
 	}
 
