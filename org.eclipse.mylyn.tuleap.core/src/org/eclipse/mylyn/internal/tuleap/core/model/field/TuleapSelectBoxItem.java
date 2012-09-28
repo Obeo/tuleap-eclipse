@@ -10,13 +10,20 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.core.model.field;
 
+import java.io.Serializable;
+
 /**
  * This class represents an item of a Tuleap (multi) select box field.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 1.0
  */
-public class TuleapSelectBoxItem {
+public class TuleapSelectBoxItem implements Serializable {
+	/**
+	 * The serialization ID.
+	 */
+	private static final long serialVersionUID = 9223260684164103221L;
+
 	/**
 	 * The identifier of the item.
 	 */
