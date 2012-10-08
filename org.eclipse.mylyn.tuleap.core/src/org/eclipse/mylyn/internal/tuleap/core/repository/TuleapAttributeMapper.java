@@ -30,7 +30,7 @@ public class TuleapAttributeMapper extends TaskAttributeMapper {
 	 * @param repositoryConnector
 	 *            The Tuleap repository connector.
 	 */
-	public TuleapAttributeMapper(TaskRepository taskRepository, TuleapRepositoryConnector repositoryConnector) {
+	public TuleapAttributeMapper(TaskRepository taskRepository, ITuleapRepositoryConnector repositoryConnector) {
 		super(taskRepository);
 	}
 

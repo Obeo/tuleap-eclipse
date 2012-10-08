@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.mylyn.commons.net.WebLocation;
-import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConnector;
+import org.eclipse.mylyn.internal.tuleap.core.repository.ITuleapRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
@@ -24,17 +24,17 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 1.0
  */
-public class TuleapClientManager implements IRepositoryListener {
+public class TuleapClientManager implements ITuleapClientManager, IRepositoryListener {
 
 	/**
 	 * The Tuleap repository connector.
 	 */
-	private TuleapRepositoryConnector repositoryConnector;
+	private ITuleapRepositoryConnector repositoryConnector;
 
 	/**
 	 * The client cache.
 	 */
-	private Map<TaskRepository, TuleapClient> clientCache = new HashMap<TaskRepository, TuleapClient>();
+	private Map<TaskRepository, ITuleapClient> clientCache = new HashMap<TaskRepository, ITuleapClient>();
 
 	/**
 	 * The constructor.
@@ -42,19 +42,17 @@ public class TuleapClientManager implements IRepositoryListener {
 	 * @param connector
 	 *            The Tuleap repository connector.
 	 */
-	public TuleapClientManager(TuleapRepositoryConnector connector) {
+	public TuleapClientManager(ITuleapRepositoryConnector connector) {
 		this.repositoryConnector = connector;
 	}
 
 	/**
-	 * Returns the Tuleap client matching the given Mylyn tasks repository.
+	 * {@inheritDoc}
 	 * 
-	 * @param taskRepository
-	 *            The Mylyn tasks repository
-	 * @return the Tuleap client matching the given Mylyn tasks repository
+	 * @see org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClientManager#getClient(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
-	public TuleapClient getClient(TaskRepository taskRepository) {
-		TuleapClient tuleapClient = this.clientCache.get(taskRepository);
+	public ITuleapClient getClient(TaskRepository taskRepository) {
+		ITuleapClient tuleapClient = this.clientCache.get(taskRepository);
 		if (tuleapClient == null) {
 			tuleapClient = this.createClient(taskRepository);
 			this.clientCache.put(taskRepository, tuleapClient);
@@ -69,7 +67,7 @@ public class TuleapClientManager implements IRepositoryListener {
 	 *            The Mylyn tasks repository
 	 * @return A new Tuleap client for the given Mylyn tasks repository.
 	 */
-	protected TuleapClient createClient(TaskRepository taskRepository) {
+	protected ITuleapClient createClient(TaskRepository taskRepository) {
 		return TuleapClientFactory.getDefault().createClient(taskRepository,
 				new WebLocation(taskRepository.getRepositoryUrl()), this.repositoryConnector);
 	}

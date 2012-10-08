@@ -16,8 +16,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,8 +29,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.tuleap.core.TuleapCoreActivator;
-import org.eclipse.mylyn.internal.tuleap.core.client.TuleapClient;
+import org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClient;
+import org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClientManager;
 import org.eclipse.mylyn.internal.tuleap.core.client.TuleapClientManager;
+import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
+import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapFormElement;
+import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapSelectBox;
+import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapSelectBoxItem;
 import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
 import org.eclipse.mylyn.internal.tuleap.core.util.TuleapMylynTasksMessages;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -50,7 +57,7 @@ import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 1.0
  */
-public class TuleapRepositoryConnector extends AbstractRepositoryConnector {
+public class TuleapRepositoryConnector extends AbstractRepositoryConnector implements ITuleapRepositoryConnector {
 
 	/**
 	 * The task data handler.
@@ -60,7 +67,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector {
 	/**
 	 * The Tuleap client manager.
 	 */
-	private TuleapClientManager clientManager;
+	private ITuleapClientManager clientManager;
 
 	/**
 	 * The repository configuration file.
@@ -183,7 +190,8 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector {
 	 */
 	@Override
 	public AbstractTaskAttachmentHandler getTaskAttachmentHandler() {
-		return new TuleapTaskAttachmentHandler();
+		// return new TuleapTaskAttachmentHandler();
+		return null;
 	}
 
 	/**
@@ -194,6 +202,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector {
 	 */
 	@Override
 	public String getTaskUrl(String repositoryUrl, String taskId) {
+		// Example: https://demo.tuleap.net/plugins/tracker/?tracker=409&aid=453
 		return repositoryUrl + ITuleapConstants.REPOSITORY_URL_SEPARATOR + taskId;
 	}
 
@@ -243,11 +252,11 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	/**
-	 * Returns the Tuleap client manager.
+	 * {@inheritDoc}
 	 * 
-	 * @return The Tuleap client manager.
+	 * @see org.eclipse.mylyn.internal.tuleap.core.repository.ITuleapRepositoryConnector#getClientManager()
 	 */
-	public TuleapClientManager getClientManager() {
+	public ITuleapClientManager getClientManager() {
 		if (clientManager == null) {
 			clientManager = new TuleapClientManager(this);
 		}
@@ -279,7 +288,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector {
 	public IStatus performQuery(TaskRepository repository, IRepositoryQuery query,
 			TaskDataCollector collector, ISynchronizationSession session, IProgressMonitor monitor) {
 		// Populate the collector with the task data resulting from the query
-		TuleapClient client = this.getClientManager().getClient(repository);
+		ITuleapClient client = this.getClientManager().getClient(repository);
 		TaskAttributeMapper mapper = this.getTaskDataHandler().getAttributeMapper(repository);
 		boolean hitReceived = client.getSearchHits(query, collector, mapper, monitor);
 		if (!hitReceived) {
@@ -303,20 +312,15 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	/**
-	 * Returns the configuration of the Tuleap repository.
+	 * {@inheritDoc}
 	 * 
-	 * @param repository
-	 *            the Mylyn task repository
-	 * @param forceRefresh
-	 *            Indicates if the refresh of the configuration is forced
-	 * @param monitor
-	 *            the progress monitor
-	 * @return The configuration of the Tuleap repository.
+	 * @see org.eclipse.mylyn.internal.tuleap.core.repository.ITuleapRepositoryConnector#getRepositoryConfiguration(org.eclipse.mylyn.tasks.core.TaskRepository,
+	 *      boolean, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public TuleapRepositoryConfiguration getRepositoryConfiguration(TaskRepository repository,
 			boolean forceRefresh, IProgressMonitor monitor) {
 		// TODO Returns and/or update the configuration of the given repository.
-		TuleapClient client = this.getClientManager().getClient(repository);
+		ITuleapClient client = this.getClientManager().getClient(repository);
 		client.updateAttributes(monitor, forceRefresh);
 		return this.repositoryConfigurations.get(repository.getRepositoryUrl());
 	}
@@ -334,10 +338,59 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector {
 		if (taskMapping instanceof TaskMapper) {
 			TaskMapper mapper = (TaskMapper)taskMapping;
 			mapper.applyTo(task);
-
-			// TODO Update the task data with the new value from the tracker
-			// task.setSummary("Tuleap default summary fetched from the tracker");
 		}
+
+		// Update the completion date of the task from the status of the task data
+		TaskAttribute attributeStatus = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
+		if (attributeStatus != null) {
+			TuleapRepositoryConfiguration configuration = this.getRepositoryConfiguration(taskRepository
+					.getRepositoryUrl());
+			boolean isCompleted = isTaskCompleted(attributeStatus.getValue(), configuration);
+			if (isCompleted) {
+				if (task.getCompletionDate() == null) {
+					task.setCompletionDate(new Date(0));
+				}
+			} else {
+				if (task.getCompletionDate() != null) {
+					task.setCompletionDate(null);
+				}
+			}
+		}
+
+		// TODO Update the task with new values from the task data
+
+	}
+
+	/**
+	 * Indicates if the given current status of a task matches a closed status of the configuration.
+	 * 
+	 * @param currentStatus
+	 *            The current status of a task
+	 * @param configuration
+	 *            The configuration of the repository containing the task
+	 * @return <code>true</code> if the current status matches a closed status, <code>false</code> otherwise.
+	 */
+	private boolean isTaskCompleted(String currentStatus, TuleapRepositoryConfiguration configuration) {
+		if (configuration != null) {
+			List<AbstractTuleapFormElement> formElements = configuration.getFormElements();
+			for (AbstractTuleapFormElement abstractTuleapFormElement : formElements) {
+				List<AbstractTuleapField> fields = TuleapRepositoryConfiguration
+						.getFields(abstractTuleapFormElement);
+				for (AbstractTuleapField abstractTuleapField : fields) {
+					if (abstractTuleapField instanceof TuleapSelectBox
+							&& ((TuleapSelectBox)abstractTuleapField).isSemanticStatus()) {
+						TuleapSelectBox tuleapSelectBox = (TuleapSelectBox)abstractTuleapField;
+						List<TuleapSelectBoxItem> closedStatus = tuleapSelectBox.getClosedStatus();
+						for (TuleapSelectBoxItem tuleapSelectBoxItem : closedStatus) {
+							if (currentStatus.equals(tuleapSelectBoxItem.getLabel())) {
+								return true;
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -382,12 +435,10 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	/**
-	 * Puts the repository configuration in the cache.
+	 * {@inheritDoc}
 	 * 
-	 * @param repositoryUrl
-	 *            The url of the repository
-	 * @param configuration
-	 *            The configuration
+	 * @see org.eclipse.mylyn.internal.tuleap.core.repository.ITuleapRepositoryConnector#putRepositoryConfiguration(java.lang.String,
+	 *      org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConfiguration)
 	 */
 	public void putRepositoryConfiguration(String repositoryUrl, TuleapRepositoryConfiguration configuration) {
 		this.repositoryConfigurations.put(repositoryUrl, configuration);
