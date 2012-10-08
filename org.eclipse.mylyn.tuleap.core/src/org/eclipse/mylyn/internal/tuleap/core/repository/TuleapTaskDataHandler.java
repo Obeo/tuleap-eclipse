@@ -193,6 +193,9 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		String name = configuration.getName();
 		if (name != null) {
 			attribute.setValue(name);
+		} else {
+			attribute.setValue(TuleapMylynTasksMessages
+					.getString("TuleapTaskDataHandler.DefaultConfigurationName")); //$NON-NLS-1$
 		}
 
 		// Creation date
