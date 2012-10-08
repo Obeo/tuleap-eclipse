@@ -35,19 +35,6 @@ public class TuleapWorkflowTransition implements Serializable {
 	private String to;
 
 	/**
-	 * The constructor.
-	 * 
-	 * @param transitionFrom
-	 *            The state from which we are starting from
-	 * @param transitionTo
-	 *            The state that we can go to
-	 */
-	public TuleapWorkflowTransition(String transitionFrom, String transitionTo) {
-		this.from = transitionFrom;
-		this.to = transitionTo;
-	}
-
-	/**
 	 * Returns the state from which we are starting from.
 	 * 
 	 * @return The state from which we are starting from.
@@ -57,11 +44,31 @@ public class TuleapWorkflowTransition implements Serializable {
 	}
 
 	/**
+	 * Sets from which state the transition starts.
+	 * 
+	 * @param transitionStart
+	 *            The state from which the transition starts.
+	 */
+	public void setFrom(String transitionStart) {
+		this.from = transitionStart;
+	}
+
+	/**
 	 * Returns the state that we can go to.
 	 * 
 	 * @return The state that we can go to.
 	 */
 	public String getTo() {
 		return this.to;
+	}
+
+	/**
+	 * Sets to which state the transition ends.
+	 * 
+	 * @param transitionEnd
+	 *            The state to which the transition ends.
+	 */
+	public void setTo(String transitionEnd) {
+		this.to = transitionEnd;
 	}
 }

@@ -51,7 +51,7 @@ public class TuleapSelectBox extends AbstractTuleapField {
 	/**
 	 * The workflow of the field.
 	 */
-	private TuleapWorkflow workflow;
+	private TuleapWorkflow workflow = new TuleapWorkflow();
 
 	/**
 	 * Indicates if this field represents the list of contributors of the artifact.
@@ -213,16 +213,6 @@ public class TuleapSelectBox extends AbstractTuleapField {
 	 */
 	public boolean isStaticallyBinded() {
 		return ITuleapConstants.TULEAP_STATIC_BINDING_ID.equals(this.binding);
-	}
-
-	/**
-	 * Sets the workflow of the field.
-	 * 
-	 * @param fieldWorkflow
-	 *            The workflow to set
-	 */
-	public void setWorkflow(TuleapWorkflow fieldWorkflow) {
-		this.workflow = fieldWorkflow;
 	}
 
 	/**

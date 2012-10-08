@@ -40,6 +40,8 @@ import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapFieldSet;
 import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapLineBreak;
 import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapSeparator;
 import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapStaticText;
+import org.eclipse.mylyn.internal.tuleap.core.model.workflow.TuleapWorkflow;
+import org.eclipse.mylyn.internal.tuleap.core.model.workflow.TuleapWorkflowTransition;
 import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
 import org.eclipse.mylyn.internal.tuleap.core.util.TuleapMylynTasksMessages;
@@ -121,14 +123,24 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 	private List<Object> parentHierarchy = new ArrayList<Object>();
 
 	/**
-	 * Indicates if we are currently analyzing the semantics block.
-	 */
-	private boolean isAnalyzingSemantics;
-
-	/**
 	 * The currently anlayzed type of semantic.
 	 */
 	private String currentSemantictype;
+
+	/**
+	 * Indicates that we are currently analyzing the workflow.
+	 */
+	private boolean isInWorkflow;
+
+	/**
+	 * The field which possess a workflow.
+	 */
+	private TuleapSelectBox fieldWithWorkflow;
+
+	/**
+	 * The currently analyzed transition of the workflow.
+	 */
+	private TuleapWorkflowTransition currentTransition;
 
 	/**
 	 * Tuleap configuration handler.
@@ -184,8 +196,6 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 				String description = attributes.getValue(ITuleapConfigurationConstants.DESCRIPTION);
 				attachItem(id, label, description);
 			}
-		} else if (ITuleapConfigurationConstants.SEMANTICS.equals(localName)) {
-			this.isAnalyzingSemantics = true;
 		} else if (ITuleapConfigurationConstants.SEMANTIC.equals(localName)) {
 			// Tell which semantic is active
 			String type = attributes.getValue(ITuleapConfigurationConstants.TYPE);
@@ -200,7 +210,6 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			}
 		} else if (ITuleapConfigurationConstants.FIELD.equals(localName)) {
 			String ref = attributes.getValue(ITuleapConfigurationConstants.REF);
-
 			// Look for a field with the given reference as its id.
 			List<AbstractTuleapFormElement> formElements = this.configuration.getFormElements();
 			for (AbstractTuleapFormElement abstractTuleapStructuralElement : formElements) {
@@ -258,6 +267,43 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 						}
 					}
 				}
+			}
+		} else if (ITuleapConfigurationConstants.WORKFLOW.equals(localName)) {
+			// Analyzing the workflow
+			this.isInWorkflow = true;
+		} else if (ITuleapConfigurationConstants.FIELD_ID.equals(localName) && this.isInWorkflow) {
+			String ref = attributes.getValue(ITuleapConfigurationConstants.REF);
+			if (ref != null && ref.trim().length() > 0) {
+				List<AbstractTuleapFormElement> formElements = this.configuration.getFormElements();
+				for (AbstractTuleapFormElement abstractTuleapStructuralElement : formElements) {
+					List<AbstractTuleapField> fields = TuleapRepositoryConfiguration
+							.getFields(abstractTuleapStructuralElement);
+					for (AbstractTuleapField abstractTuleapField : fields) {
+						if (abstractTuleapField.getIdentifier() != null
+								&& abstractTuleapField.getIdentifier().equals(ref)
+								&& abstractTuleapField instanceof TuleapSelectBox) {
+							this.fieldWithWorkflow = (TuleapSelectBox)abstractTuleapField;
+						}
+					}
+				}
+			}
+		} else if (ITuleapConfigurationConstants.TRANSITION.equals(localName) && this.isInWorkflow
+				&& this.fieldWithWorkflow != null) {
+			// We are starting to analyze one transition
+			this.currentTransition = new TuleapWorkflowTransition();
+			TuleapWorkflow workflow = this.fieldWithWorkflow.getWorkflow();
+			workflow.getTransitions().add(this.currentTransition);
+		} else if (ITuleapConfigurationConstants.FROM_ID.equals(localName) && this.isInWorkflow
+				&& this.currentTransition != null) {
+			String ref = attributes.getValue(ITuleapConfigurationConstants.REF);
+			if (ref != null && ref.trim().length() > 0) {
+				this.currentTransition.setFrom(ref);
+			}
+		} else if (ITuleapConfigurationConstants.TO_ID.equals(localName) && this.isInWorkflow
+				&& this.currentTransition != null) {
+			String ref = attributes.getValue(ITuleapConfigurationConstants.REF);
+			if (ref != null && ref.trim().length() > 0) {
+				this.currentTransition.setTo(ref);
 			}
 		}
 	}

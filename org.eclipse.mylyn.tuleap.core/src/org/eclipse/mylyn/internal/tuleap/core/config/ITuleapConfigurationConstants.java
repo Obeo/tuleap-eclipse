@@ -308,4 +308,42 @@ public interface ITuleapConfigurationConstants {
 	 * The kind of semantic: "tooltip".
 	 */
 	String SEMANTIC_KIND_TOOLTIP = "tooltip"; //$NON-NLS-1$
+
+	/**************************************************************************
+	 * Workflow.
+	 **************************************************************************/
+	/**
+	 * Workflow.
+	 */
+	String WORKFLOW = "workflow"; //$NON-NLS-1$
+
+	/**
+	 * Field id.
+	 */
+	String FIELD_ID = "field_id"; //$NON-NLS-1$
+
+	/**
+	 * Is Used.
+	 */
+	String IS_USED = "is_used"; //$NON-NLS-1$
+
+	/**
+	 * Transitions.
+	 */
+	String TRANSITIONS = "transitions"; //$NON-NLS-1$
+
+	/**
+	 * Transition.
+	 */
+	String TRANSITION = "transition"; //$NON-NLS-1$
+
+	/**
+	 * From id.
+	 */
+	String FROM_ID = "from_id"; //$NON-NLS-1$
+
+	/**
+	 * To id.
+	 */
+	String TO_ID = "to_id"; //$NON-NLS-1$
 }
