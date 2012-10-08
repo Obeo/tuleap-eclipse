@@ -32,7 +32,7 @@ public interface ITuleapConstants {
 	/**
 	 * The repository url separator.
 	 */
-	String REPOSITORY_URL_SEPARATOR = "#"; //$NON-NLS-1$
+	String REPOSITORY_URL_SEPARATOR = "&aid="; //$NON-NLS-1$
 
 	/**
 	 * The ID representing the UTC timezone.
