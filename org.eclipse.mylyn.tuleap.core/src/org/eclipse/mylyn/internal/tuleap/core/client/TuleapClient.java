@@ -10,7 +10,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.core.client;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -184,5 +186,20 @@ public class TuleapClient implements ITuleapClient {
 	 */
 	public TuleapRepositoryConfiguration getRepositoryConfiguration() {
 		return this.configuration;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClient#getTrackerList(boolean)
+	 */
+	public List<String> getTrackerList(boolean forceRefresh, IProgressMonitor monitor) {
+		List<String> trackers = new ArrayList<String>();
+		// FIXME Get the list of the trackers from the server
+		trackers.add("First tracker");
+		trackers.add("Second tracker");
+		trackers.add("Third tracker");
+		trackers.add("Fourth tracker");
+		return trackers;
 	}
 }
