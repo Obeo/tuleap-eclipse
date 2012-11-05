@@ -26,18 +26,18 @@ public class TuleapRepositoryConnectorTests extends TestCase {
 	 * Test the retrieval of the repository url from a given task url.
 	 */
 	public void testGetRepositoryUrlFromTaskUrl() {
-		final String taskUrl = "https://demo.tuleap.net/plugins/tracker/?tracker=409&aid=453"; //$NON-NLS-1$
+		final String taskUrl = "https://demo.tuleap.net/plugins/tracker/?group_id=409&aid=453"; //$NON-NLS-1$
 
 		TuleapRepositoryConnector connector = new TuleapRepositoryConnector();
 		String repositoryUrl = connector.getRepositoryUrlFromTaskUrl(taskUrl);
-		assertEquals("https://demo.tuleap.net/plugins/tracker/?tracker=409", repositoryUrl); //$NON-NLS-1$
+		assertEquals("https://demo.tuleap.net/plugins/tracker/?group_id=409", repositoryUrl); //$NON-NLS-1$
 	}
 
 	/**
 	 * Test the retrieval of the task id from the url of the task.
 	 */
 	public void testGetTaskIdFromTaskUrl() {
-		final String taskUrl = "https://demo.tuleap.net/plugins/tracker/?tracker=409&aid=217"; //$NON-NLS-1$
+		final String taskUrl = "https://demo.tuleap.net/plugins/tracker/?group_id=409&aid=217"; //$NON-NLS-1$
 
 		TuleapRepositoryConnector connector = new TuleapRepositoryConnector();
 		String taskId = connector.getTaskIdFromTaskUrl(taskUrl);
@@ -48,12 +48,12 @@ public class TuleapRepositoryConnectorTests extends TestCase {
 	 * Test the creation of the task url from the repository url and the task id.
 	 */
 	public void testGetTaskUrl() {
-		final String repositoryUrl = "https://demo.tuleap.net/plugins/tracker/?tracker=409"; //$NON-NLS-1$
+		final String repositoryUrl = "https://demo.tuleap.net/plugins/tracker/?group_id=409"; //$NON-NLS-1$
 		final String taskId = "821"; //$NON-NLS-1$
 
 		TuleapRepositoryConnector connector = new TuleapRepositoryConnector();
 		String taskUrl = connector.getTaskUrl(repositoryUrl, taskId);
-		assertEquals("https://demo.tuleap.net/plugins/tracker/?tracker=409&aid=821", taskUrl); //$NON-NLS-1$
+		assertEquals("https://demo.tuleap.net/plugins/tracker/?group_id=409&aid=821", taskUrl); //$NON-NLS-1$
 	}
 
 }
