@@ -10,7 +10,16 @@
  *******************************************************************************/
 package org.eclipse.mylyn.tuleap.tests.core;
 
-import org.eclipse.mylyn.tuleap.tests.AbstractTuleapTests;
+import junit.framework.TestCase;
+
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapAttributeMapper;
+import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapTaskDataHandler;
+import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 
 /**
  * The tests class for the Tuleap task data handler.
@@ -18,13 +27,33 @@ import org.eclipse.mylyn.tuleap.tests.AbstractTuleapTests;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 1.0
  */
-public class TuleapTaskDataHandlerTests extends AbstractTuleapTests {
+public class TuleapTaskDataHandlerTests extends TestCase {
 
 	/**
-	 * Test the retrieval of the task data for a basic task.
+	 * A mocked Tuleap repository connector.
 	 */
-	public void testGetTaskData() {
-		fail();
+	private MockedTuleapRepositoryConnector repositoryConnector;
+
+	/**
+	 * Test the initialization of the task data.
+	 */
+	public void testInitializeTaskData() {
+		String repositoryUrl = "https://demo.tuleap.net/plugins/tracker/?tracker=871"; //$NON-NLS-1$
+		String connectorKind = ITuleapConstants.CONNECTOR_KIND;
+		String taskId = ""; //$NON-NLS-1$
+
+		TaskRepository repository = new TaskRepository(connectorKind, repositoryUrl);
+
+		TuleapTaskDataHandler tuleapTaskDataHandler = new TuleapTaskDataHandler(repositoryConnector);
+		TaskData taskData = new TaskData(new TuleapAttributeMapper(repository, repositoryConnector),
+				repositoryUrl, connectorKind, taskId);
+		try {
+			boolean isInitialized = tuleapTaskDataHandler.initializeTaskData(repository, taskData,
+					new TaskMapper(taskData), new NullProgressMonitor());
+			assertTrue(isInitialized);
+		} catch (CoreException e) {
+			fail(e.getMessage());
+		}
 	}
 
 	/**
@@ -35,16 +64,16 @@ public class TuleapTaskDataHandlerTests extends AbstractTuleapTests {
 	}
 
 	/**
-	 * Test the update of the task data.
+	 * Test the retrieval of the task data for a basic task.
 	 */
-	public void testUpdateTaskData() {
+	public void testGetTaskData() {
 		fail();
 	}
 
 	/**
-	 * Test the initialization of the task data.
+	 * Test the update of the task data.
 	 */
-	public void testInitializeTaskData() {
+	public void testUpdateTaskData() {
 		fail();
 	}
 

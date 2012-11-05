@@ -22,6 +22,7 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.internal.tuleap.core.config.SaxConfigurationContentHandler;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapFormElement;
+import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapArtifactLink;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapDate;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapFileUpload;
@@ -47,7 +48,6 @@ import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapLineBreak;
 import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapSeparator;
 import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapStaticText;
 import org.eclipse.mylyn.internal.tuleap.core.model.workflow.TuleapWorkflow;
-import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
 import org.eclipse.mylyn.tuleap.tests.support.TuleapFixture;
 import org.xml.sax.ErrorHandler;
@@ -68,7 +68,7 @@ public class TuleapConfigurationTests extends TestCase {
 	/**
 	 * The configuration of the repository.
 	 */
-	private TuleapRepositoryConfiguration config;
+	private TuleapTrackerConfiguration config;
 
 	@Override
 	public void setUp() {
@@ -331,62 +331,44 @@ public class TuleapConfigurationTests extends TestCase {
 				TuleapWorkflow workflow = tuleapSelectBox.getWorkflow();
 				assertNotNull(workflow);
 
-				final String open = "Open"; //$NON-NLS-1$
-				TuleapSelectBoxItem openItem = null;
-				final String closed = "Closed"; //$NON-NLS-1$
-				TuleapSelectBoxItem closedItem = null;
-				final String verified = "Verified"; //$NON-NLS-1$
-				TuleapSelectBoxItem verifiedItem = null;
-				final String assigned = "Assigned"; //$NON-NLS-1$
-				TuleapSelectBoxItem assignedItem = null;
-				final String reopened = "Reopened"; //$NON-NLS-1$
-				TuleapSelectBoxItem reopenedItem = null;
+				String open = ""; //$NON-NLS-1$
+				String closed = ""; //$NON-NLS-1$
+				String verified = ""; //$NON-NLS-1$
+				String assigned = ""; //$NON-NLS-1$
+				String reopened = ""; //$NON-NLS-1$
 
 				List<TuleapSelectBoxItem> items = tuleapSelectBox.getItems();
 				for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
-					if (tuleapSelectBoxItem.getLabel().equals(open)) {
-						openItem = tuleapSelectBoxItem;
-					} else if (tuleapSelectBoxItem.getLabel().equals(closed)) {
-						closedItem = tuleapSelectBoxItem;
-					} else if (tuleapSelectBoxItem.getLabel().equals(verified)) {
-						verifiedItem = tuleapSelectBoxItem;
-					} else if (tuleapSelectBoxItem.getLabel().equals(assigned)) {
-						assignedItem = tuleapSelectBoxItem;
-					} else if (tuleapSelectBoxItem.getLabel().equals(reopened)) {
-						reopenedItem = tuleapSelectBoxItem;
+					if ("Open".equals(tuleapSelectBoxItem.getLabel())) { //$NON-NLS-1$
+						open = tuleapSelectBoxItem.getIdentifier();
+					} else if ("Closed".equals(tuleapSelectBoxItem.getLabel())) { //$NON-NLS-1$
+						closed = tuleapSelectBoxItem.getIdentifier();
+					} else if ("Verified".equals(tuleapSelectBoxItem.getLabel())) { //$NON-NLS-1$
+						verified = tuleapSelectBoxItem.getIdentifier();
+					} else if ("Assigned".equals(tuleapSelectBoxItem.getLabel())) { //$NON-NLS-1$
+						assigned = tuleapSelectBoxItem.getIdentifier();
+					} else if ("Reopened".equals(tuleapSelectBoxItem.getLabel())) { //$NON-NLS-1$
+						reopened = tuleapSelectBoxItem.getIdentifier();
 					}
 				}
 
-				if (openItem != null) {
-					assertEquals(3, workflow.accessibleStates(openItem.getIdentifier()).size());
-					assertTrue(workflow.accessibleStates(openItem.getIdentifier()).contains(
-							assignedItem.getIdentifier()));
-					assertTrue(workflow.accessibleStates(openItem.getIdentifier()).contains(
-							verifiedItem.getIdentifier()));
-					assertTrue(workflow.accessibleStates(openItem.getIdentifier()).contains(
-							closedItem.getIdentifier()));
-				}
+				assertEquals(3, workflow.accessibleStates(open).size());
+				assertTrue(workflow.accessibleStates(open).contains(assigned));
+				assertTrue(workflow.accessibleStates(open).contains(verified));
+				assertTrue(workflow.accessibleStates(open).contains(closed));
 
-				if (verifiedItem != null) {
-					assertEquals(2, workflow.accessibleStates(verified).size());
-					assertTrue(workflow.accessibleStates(verified).contains(assigned));
-					assertTrue(workflow.accessibleStates(verified).contains(closed));
-				}
+				assertEquals(2, workflow.accessibleStates(verified).size());
+				assertTrue(workflow.accessibleStates(verified).contains(assigned));
+				assertTrue(workflow.accessibleStates(verified).contains(closed));
 
-				if (assignedItem != null) {
-					assertEquals(1, workflow.accessibleStates(assigned).size());
-					assertTrue(workflow.accessibleStates(assigned).contains(closed));
-				}
+				assertEquals(1, workflow.accessibleStates(assigned).size());
+				assertTrue(workflow.accessibleStates(assigned).contains(closed));
 
-				if (closedItem != null) {
-					assertEquals(1, workflow.accessibleStates(closed).size());
-					assertTrue(workflow.accessibleStates(closed).contains(reopened));
-				}
+				assertEquals(1, workflow.accessibleStates(closed).size());
+				assertTrue(workflow.accessibleStates(closed).contains(reopened));
 
-				if (reopenedItem != null) {
-					assertEquals(1, workflow.accessibleStates(reopened).size());
-					assertTrue(workflow.accessibleStates(reopened).contains(closed));
-				}
+				assertEquals(1, workflow.accessibleStates(reopened).size());
+				assertTrue(workflow.accessibleStates(reopened).contains(closed));
 			} else {
 				fail();
 			}
@@ -475,7 +457,7 @@ public class TuleapConfigurationTests extends TestCase {
 	 * @throws IOException
 	 *             In case of problems during the parsing
 	 */
-	private TuleapRepositoryConfiguration parseConfiguration(InputStream stream) throws SAXException,
+	private TuleapTrackerConfiguration parseConfiguration(InputStream stream) throws SAXException,
 			IOException {
 		BufferedReader in = new BufferedReader(new InputStreamReader(stream));
 		SaxConfigurationContentHandler contentHandler = new SaxConfigurationContentHandler(
@@ -498,7 +480,7 @@ public class TuleapConfigurationTests extends TestCase {
 		});
 		reader.parse(new InputSource(in));
 
-		TuleapRepositoryConfiguration configuration = contentHandler.getConfiguration();
+		TuleapTrackerConfiguration configuration = contentHandler.getConfiguration();
 		assertNotNull(configuration);
 		return configuration;
 	}

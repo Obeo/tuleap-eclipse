@@ -25,8 +25,8 @@ import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
-import org.eclipse.mylyn.internal.tuleap.core.client.TuleapClient;
-import org.eclipse.mylyn.internal.tuleap.core.client.TuleapClientManager;
+import org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClient;
+import org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClientManager;
 import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConnector;
 import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -142,7 +142,7 @@ public class TuleapFixture extends TestFixture {
 	 * @throws IOException
 	 *             In case of problems
 	 */
-	public TuleapClient client() throws CoreException, IOException {
+	public ITuleapClient client() throws CoreException, IOException {
 		UserCredentials credentials = CommonTestUtil.getCredentials(PrivilegeLevel.USER);
 		return client(getRepositoryUrl(), "begaudeaus", "n9Um4sq074ccAIR", "", "", "UTF-8"); //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
 	}
@@ -168,7 +168,7 @@ public class TuleapFixture extends TestFixture {
 	 * @throws IOException
 	 *             In case of problems
 	 */
-	public TuleapClient client(String hostUrl, String username, String password, String htAuthUser,
+	public ITuleapClient client(String hostUrl, String username, String password, String htAuthUser,
 			String htAuthPass, String encoding) throws CoreException, IOException {
 		WebLocation location = new WebLocation(hostUrl);
 		location.setCredentials(AuthenticationType.REPOSITORY, username, password);
@@ -188,7 +188,7 @@ public class TuleapFixture extends TestFixture {
 	 * @throws CoreException
 	 *             In case of problems
 	 */
-	public TuleapClient client(AbstractWebLocation location, String encoding) throws CoreException {
+	public ITuleapClient client(AbstractWebLocation location, String encoding) throws CoreException {
 		TaskRepository taskRepository = new TaskRepository(ITuleapConstants.CONNECTOR_KIND, location.getUrl());
 		String filepath = "testdata/repository/" + getRepositoryName(location.getUrl()) //$NON-NLS-1$
 				+ "/DesciptorFile.txt"; //$NON-NLS-1$
@@ -211,8 +211,8 @@ public class TuleapFixture extends TestFixture {
 		taskRepository.setCharacterEncoding(encoding);
 
 		this.connector = new TuleapRepositoryConnector();
-		TuleapClientManager tuleapClientManager = ((TuleapRepositoryConnector)connector).getClientManager();
-		TuleapClient client = tuleapClientManager.getClient(taskRepository);
+		ITuleapClientManager tuleapClientManager = ((TuleapRepositoryConnector)connector).getClientManager();
+		ITuleapClient client = tuleapClientManager.getClient(taskRepository);
 
 		((TuleapRepositoryConnector)connector).getRepositoryConfiguration(taskRepository, false,
 				new NullProgressMonitor());

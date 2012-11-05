@@ -15,7 +15,6 @@ import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
-import org.eclipse.mylyn.tuleap.tests.core.TuleapTaskDataHandlerTests;
 import org.eclipse.mylyn.tuleap.tests.support.TuleapFixture;
 import org.eclipse.mylyn.tuleap.tests.ui.TuleapRepositorySettingsPageTests;
 import org.eclipse.mylyn.tuleap.tests.ui.TuleapValidatorTests;
@@ -84,7 +83,6 @@ public final class AllTuleapTests {
 		// local tests
 		if (!configuration.isLocalOnly()) {
 			suite.addTestSuite(TuleapRepositorySettingsPageTests.class);
-			suite.addTestSuite(TuleapTaskDataHandlerTests.class);
 			// suite.addTestSuite(BugzillaTaskEditorTest.class);
 			// suite.addTestSuite(BugzillaSearchPageTest.class);
 			// suite.addTestSuite(BugzillaRepositorySettingsPageTest.class);

@@ -20,7 +20,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.internal.tuleap.core.client.TuleapClient;
+import org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClient;
 import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
@@ -64,7 +64,7 @@ public abstract class AbstractTuleapTests extends TestCase {
 	/**
 	 * The Tuleap client.
 	 */
-	protected TuleapClient client;
+	protected ITuleapClient client;
 
 	/**
 	 * {@inheritDoc}
