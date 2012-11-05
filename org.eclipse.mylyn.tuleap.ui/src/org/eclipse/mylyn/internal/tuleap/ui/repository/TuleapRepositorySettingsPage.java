@@ -12,6 +12,7 @@ package org.eclipse.mylyn.internal.tuleap.ui.repository;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
 import org.eclipse.mylyn.internal.tuleap.ui.util.TuleapMylynTasksUIMessages;
@@ -72,9 +73,9 @@ public class TuleapRepositorySettingsPage extends AbstractRepositorySettingsPage
 	@Override
 	protected boolean isValidUrl(String url) {
 		// The Tuleap tracker that the repository will respect the following pattern
-		// "https://<domainName>/plugins/tracker/?tracker=<trackerId>"
+		// "https://<domainName>/plugins/tracker/?group_id=<trackerId>"
 		boolean isValid = super.isValidUrl(url);
-		return isValid && url.matches("https://.*/plugins/tracker/\\?tracker=[0-9]*"); //$NON-NLS-1$
+		return isValid && url.matches("https://.*/plugins/tracker/\\?group_id=[0-9]*"); //$NON-NLS-1$
 	}
 
 	/**
@@ -143,7 +144,8 @@ public class TuleapRepositorySettingsPage extends AbstractRepositorySettingsPage
 		 */
 		@Override
 		public void run(IProgressMonitor monitor) throws CoreException {
-			this.tuleapValidator.validate(monitor);
+			IStatus validationStatus = this.tuleapValidator.validate(monitor);
+			this.setStatus(validationStatus);
 		}
 
 	}

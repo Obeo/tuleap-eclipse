@@ -11,7 +11,7 @@
 package org.eclipse.mylyn.internal.tuleap.core.util;
 
 /**
- * This interface is a container of constants used accros the Mylyn tasks Tuleap connector.
+ * This interface is a container of constants used accross the Mylyn tasks Tuleap connector.
  * 
  * @noextend This class is not intended to be subclassed by clients.
  * @noinstantiate This class is not intended to be instantiated by clients.
@@ -51,12 +51,22 @@ public interface ITuleapConstants {
 
 	/**
 	 * Part of the Tuleap repository URL. The URL format is :
-	 * "https://<domainName>/plugins/tracker/?tracker=<trackerId>"
+	 * "https://<domainName>/plugins/tracker/?groupd_id=<groupdId>"
 	 */
-	String TULEAP_REPOSITORY_URL_STRUCTURE = "/plugins/tracker/?tracker="; //$NON-NLS-1$
+	String TULEAP_REPOSITORY_URL_STRUCTURE = "/plugins/tracker/?group_id="; //$NON-NLS-1$
 
 	/**
 	 * The suffix for the task data "leave" operation.
 	 */
 	String LEAVE_OPERATION = "leave"; //$NON-NLS-1$
+
+	/**
+	 * The url used to invoke the soap v1 services.
+	 */
+	String SOAP_V1_URL = "https://demo.tuleap.net/soap/"; //$NON-NLS-1$
+
+	/**
+	 * The url used to invoke the soap v2 services.
+	 */
+	String SOAP_V2_URL = "https://demo.tuleap.net/plugins/tracker/soap/"; //$NON-NLS-1$
 }

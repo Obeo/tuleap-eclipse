@@ -12,9 +12,14 @@ package org.eclipse.mylyn.internal.tuleap.ui.repository;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.internal.tuleap.core.net.TrackerSoapConnector;
 import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConnector;
 import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
+import org.eclipse.mylyn.internal.tuleap.core.util.TuleapMylynTasksMessages;
+import org.eclipse.mylyn.internal.tuleap.ui.TuleapTasksUIPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
@@ -51,20 +56,18 @@ public class TuleapValidator {
 	 *            The progress monitor
 	 * @throws CoreException
 	 *             In case of error with the configuration of the repository
+	 * @return A status indicating if the validation went well.
 	 */
-	public void validate(IProgressMonitor monitor) throws CoreException {
+	public IStatus validate(IProgressMonitor monitor) throws CoreException {
 		AbstractRepositoryConnector repositoryConnector = TasksUi.getRepositoryManager()
 				.getRepositoryConnector(ITuleapConstants.CONNECTOR_KIND);
 		if (repositoryConnector instanceof TuleapRepositoryConnector) {
 			AbstractWebLocation location = new TaskRepositoryLocationFactory()
 					.createWebLocation(taskRepository);
-			// Try the Http request
-
-			// TuleapRepositoryConnector tuleapRepositoryConnector =
-			// (TuleapRepositoryConnector)repositoryConnector;
-			// TuleapClient tuleapClient = TuleapClientFactory.getDefault().createClient(location,
-			// tuleapRepositoryConnector);
-			// tuleapClient.validate(monitor);
+			TrackerSoapConnector trackerSoapConnector = new TrackerSoapConnector(location);
+			return trackerSoapConnector.validateConnection();
 		}
+		return new Status(IStatus.ERROR, TuleapTasksUIPlugin.PLUGIN_ID, TuleapMylynTasksMessages
+				.getString("TuleapValidator.InvalidRepositoryConnector")); //$NON-NLS-1$
 	}
 }

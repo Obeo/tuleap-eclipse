@@ -25,7 +25,6 @@ import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 
 import org.eclipse.mylyn.internal.tuleap.core.TuleapCoreActivator;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * Utility class containing various simple static utility methods.
@@ -147,16 +146,33 @@ public final class TuleapUtil {
 	/**
 	 * Extract the domain name URL from the repository URL.
 	 * 
-	 * @param taskRepository
-	 *            The task repository : "https://<domainName>/plugins/tracker/?group_id=<trackerId>"
+	 * @param repositoryUrl
+	 *            The task repository url : "https://<domainName>/plugins/tracker/?group_id=<groupId>"
 	 * @return The domain name URL : "https://<domainName>/"
 	 */
-	public static String getDomainRepositoryURl(TaskRepository taskRepository) {
-		String repositoryUrl = taskRepository.getRepositoryUrl();
+	public static String getDomainRepositoryURL(String repositoryUrl) {
 		if (repositoryUrl.contains(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE)) {
 			return repositoryUrl.substring(0, repositoryUrl
 					.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE));
 		}
 		return null;
+	}
+
+	/**
+	 * Extract the group id from the repository URL.
+	 * 
+	 * @param repositoryUrl
+	 *            The task repository url : "https://<domainName>/plugins/tracker/?group_id=<groupId>"
+	 * @return The group id URL : "<groupId>"
+	 */
+	public static int getGroupId(String repositoryUrl) {
+		int indexOf = repositoryUrl.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
+		if (indexOf != -1) {
+
+			String groupId = repositoryUrl.substring(indexOf
+					+ ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE.length());
+			return Integer.valueOf(groupId).intValue();
+		}
+		return -1;
 	}
 }

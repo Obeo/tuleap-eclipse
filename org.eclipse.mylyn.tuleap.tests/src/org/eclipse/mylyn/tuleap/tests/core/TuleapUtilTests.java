@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.tuleap.tests.core;
 
-import java.io.File;
-import java.io.IOException;
-
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.tuleap.core.util.TuleapUtil;
@@ -25,18 +22,20 @@ import org.eclipse.mylyn.internal.tuleap.core.util.TuleapUtil;
  */
 public class TuleapUtilTests extends TestCase {
 	/**
-	 * Test the download of the configuration.
+	 * Test the parsing of the domain of the repository from the given task repository.
 	 */
-	public void testDownloadConfiguration() {
-		File file;
-		try {
-			file = File.createTempFile("repositoryConfiguration", "xml"); //$NON-NLS-1$ //$NON-NLS-2$
-			TuleapUtil.download("https://demo.tuleap.net/plugins/tracker/?tracker=409&func=admin-export", //$NON-NLS-1$
-					file);
-			System.out.println(file.getAbsolutePath());
-			System.out.println();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public void testGetDomainRepositoryURL() {
+		String repositoryUrl = "https://tuleap.mylyn.eclipse.org/plugins/tracker/?group_id=42"; //$NON-NLS-1$
+		String domainRepositoryURL = TuleapUtil.getDomainRepositoryURL(repositoryUrl);
+		assertEquals("https://tuleap.mylyn.eclipse.org", domainRepositoryURL); //$NON-NLS-1$
+	}
+
+	/**
+	 * Test the parsing of the group id of the repository from the given task repository.
+	 */
+	public void testGetGroupId() {
+		String repositoryUrl = "https://tuleap.mylyn.eclipse.org/plugins/tracker/?group_id=42"; //$NON-NLS-1$
+		int groupId = TuleapUtil.getGroupId(repositoryUrl);
+		assertEquals(42, groupId);
 	}
 }
