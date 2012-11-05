@@ -13,8 +13,12 @@ package org.eclipse.mylyn.internal.tuleap.ui.repository;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConnector;
+import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * The Tuleap validator will be used inside of the repository setting page in orde rto check the
@@ -49,9 +53,18 @@ public class TuleapValidator {
 	 *             In case of error with the configuration of the repository
 	 */
 	public void validate(IProgressMonitor monitor) throws CoreException {
-		// TODO Check connection, login/password
-		AbstractWebLocation location = new TaskRepositoryLocationFactory().createWebLocation(taskRepository);
+		AbstractRepositoryConnector repositoryConnector = TasksUi.getRepositoryManager()
+				.getRepositoryConnector(ITuleapConstants.CONNECTOR_KIND);
+		if (repositoryConnector instanceof TuleapRepositoryConnector) {
+			AbstractWebLocation location = new TaskRepositoryLocationFactory()
+					.createWebLocation(taskRepository);
+			// Try the Http request
 
-		// Return an Eclipse status?
+			// TuleapRepositoryConnector tuleapRepositoryConnector =
+			// (TuleapRepositoryConnector)repositoryConnector;
+			// TuleapClient tuleapClient = TuleapClientFactory.getDefault().createClient(location,
+			// tuleapRepositoryConnector);
+			// tuleapClient.validate(monitor);
+		}
 	}
 }

@@ -26,7 +26,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.internal.tuleap.core.TuleapCoreActivator;
 import org.eclipse.mylyn.internal.tuleap.core.config.SaxConfigurationContentHandler;
-import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConfiguration;
+import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.util.TuleapMylynTasksMessages;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
@@ -100,8 +100,8 @@ public class TrackerConnector {
 	 *            The progress monitor
 	 * @return The repository configuration of the tracker.
 	 */
-	public TuleapRepositoryConfiguration getTuleapRepositoryConfiguration(IProgressMonitor monitor) {
-		TuleapRepositoryConfiguration configuration = reloadRepositoryConfiguration(monitor);
+	public TuleapTrackerConfiguration getTuleapRepositoryConfiguration(IProgressMonitor monitor) {
+		TuleapTrackerConfiguration configuration = reloadRepositoryConfiguration(monitor);
 		return configuration;
 	}
 
@@ -113,8 +113,8 @@ public class TrackerConnector {
 	 * @return The newly downloaded configuration from the Tuleap tracker or <code>null</code> in case of
 	 *         error.
 	 */
-	private TuleapRepositoryConfiguration reloadRepositoryConfiguration(IProgressMonitor monitor) {
-		TuleapRepositoryConfiguration tuleapRepositoryConfiguration = null;
+	private TuleapTrackerConfiguration reloadRepositoryConfiguration(IProgressMonitor monitor) {
+		TuleapTrackerConfiguration tuleapRepositoryConfiguration = null;
 		// Download the repository configuration file from the tracker
 		File tempConfigurationFile;
 		try {
@@ -173,11 +173,11 @@ public class TrackerConnector {
 	 *            Repository URL
 	 * @return Configuration file transformed to Mylyn repository configuration
 	 */
-	private TuleapRepositoryConfiguration parseRepositoryConfiguration(File tempConfigurationFile,
+	private TuleapTrackerConfiguration parseRepositoryConfiguration(File tempConfigurationFile,
 			String repositoryUrl) {
 		// TODO Returns the real repository configuration from the tracker when the connection to the server
 		// will be done
-		TuleapRepositoryConfiguration configuration = null;
+		TuleapTrackerConfiguration configuration = null;
 
 		FileInputStream stream = null;
 		InputStreamReader isr = null;

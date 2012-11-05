@@ -312,47 +312,80 @@ public class TuleapConfigurationTests extends TestCase {
 	public void testRepositoryConfigurationWorkflow() {
 		AbstractTuleapFormElement fieldset = config.getFormElements().get(1);
 		assertEquals(TuleapFieldSet.class, fieldset.getClass());
-		if (fieldset instanceof TuleapFieldSet) {
-			TuleapFieldSet tuleapFieldSet = (TuleapFieldSet)fieldset;
-			AbstractTuleapFormElement abstractTuleapFormElement = tuleapFieldSet.getFormElements().get(4);
-			assertEquals(TuleapColumn.class, abstractTuleapFormElement.getClass());
-			if (abstractTuleapFormElement instanceof TuleapColumn) {
-				TuleapColumn tuleapColumn = (TuleapColumn)abstractTuleapFormElement;
-				AbstractTuleapField abstractTuleapField = tuleapColumn.getFormElements().get(0);
-				assertEquals(TuleapSelectBox.class, abstractTuleapField.getClass());
-				if (abstractTuleapField instanceof TuleapSelectBox) {
-					TuleapSelectBox tuleapSelectBox = (TuleapSelectBox)abstractTuleapField;
-					assertEquals("F13", tuleapSelectBox.getIdentifier()); //$NON-NLS-1$
-					assertTrue(tuleapSelectBox.isSemanticStatus());
+		if (!(fieldset instanceof TuleapFieldSet)) {
+			fail();
+		}
 
-					TuleapWorkflow workflow = tuleapSelectBox.getWorkflow();
-					assertNotNull(workflow);
+		TuleapFieldSet tuleapFieldSet = (TuleapFieldSet)fieldset;
+		AbstractTuleapFormElement abstractTuleapFormElement = tuleapFieldSet.getFormElements().get(4);
+		assertEquals(TuleapColumn.class, abstractTuleapFormElement.getClass());
+		if (abstractTuleapFormElement instanceof TuleapColumn) {
+			TuleapColumn tuleapColumn = (TuleapColumn)abstractTuleapFormElement;
+			AbstractTuleapField abstractTuleapField = tuleapColumn.getFormElements().get(0);
+			assertEquals(TuleapSelectBox.class, abstractTuleapField.getClass());
+			if (abstractTuleapField instanceof TuleapSelectBox) {
+				TuleapSelectBox tuleapSelectBox = (TuleapSelectBox)abstractTuleapField;
+				assertEquals("F13", tuleapSelectBox.getIdentifier()); //$NON-NLS-1$
+				assertTrue(tuleapSelectBox.isSemanticStatus());
 
-					final String open = "Open"; //$NON-NLS-1$
-					final String closed = "Closed"; //$NON-NLS-1$
-					final String verified = "Verified"; //$NON-NLS-1$
-					final String assigned = "Assigned"; //$NON-NLS-1$
-					final String reopened = "Reopened"; //$NON-NLS-1$
+				TuleapWorkflow workflow = tuleapSelectBox.getWorkflow();
+				assertNotNull(workflow);
 
-					assertEquals(3, workflow.accessibleStates(open).size());
-					assertTrue(workflow.accessibleStates(open).contains(assigned));
-					assertTrue(workflow.accessibleStates(open).contains(verified));
-					assertTrue(workflow.accessibleStates(open).contains(closed));
+				final String open = "Open"; //$NON-NLS-1$
+				TuleapSelectBoxItem openItem = null;
+				final String closed = "Closed"; //$NON-NLS-1$
+				TuleapSelectBoxItem closedItem = null;
+				final String verified = "Verified"; //$NON-NLS-1$
+				TuleapSelectBoxItem verifiedItem = null;
+				final String assigned = "Assigned"; //$NON-NLS-1$
+				TuleapSelectBoxItem assignedItem = null;
+				final String reopened = "Reopened"; //$NON-NLS-1$
+				TuleapSelectBoxItem reopenedItem = null;
 
+				List<TuleapSelectBoxItem> items = tuleapSelectBox.getItems();
+				for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
+					if (tuleapSelectBoxItem.getLabel().equals(open)) {
+						openItem = tuleapSelectBoxItem;
+					} else if (tuleapSelectBoxItem.getLabel().equals(closed)) {
+						closedItem = tuleapSelectBoxItem;
+					} else if (tuleapSelectBoxItem.getLabel().equals(verified)) {
+						verifiedItem = tuleapSelectBoxItem;
+					} else if (tuleapSelectBoxItem.getLabel().equals(assigned)) {
+						assignedItem = tuleapSelectBoxItem;
+					} else if (tuleapSelectBoxItem.getLabel().equals(reopened)) {
+						reopenedItem = tuleapSelectBoxItem;
+					}
+				}
+
+				if (openItem != null) {
+					assertEquals(3, workflow.accessibleStates(openItem.getIdentifier()).size());
+					assertTrue(workflow.accessibleStates(openItem.getIdentifier()).contains(
+							assignedItem.getIdentifier()));
+					assertTrue(workflow.accessibleStates(openItem.getIdentifier()).contains(
+							verifiedItem.getIdentifier()));
+					assertTrue(workflow.accessibleStates(openItem.getIdentifier()).contains(
+							closedItem.getIdentifier()));
+				}
+
+				if (verifiedItem != null) {
 					assertEquals(2, workflow.accessibleStates(verified).size());
 					assertTrue(workflow.accessibleStates(verified).contains(assigned));
 					assertTrue(workflow.accessibleStates(verified).contains(closed));
+				}
 
+				if (assignedItem != null) {
 					assertEquals(1, workflow.accessibleStates(assigned).size());
 					assertTrue(workflow.accessibleStates(assigned).contains(closed));
+				}
 
+				if (closedItem != null) {
 					assertEquals(1, workflow.accessibleStates(closed).size());
 					assertTrue(workflow.accessibleStates(closed).contains(reopened));
+				}
 
+				if (reopenedItem != null) {
 					assertEquals(1, workflow.accessibleStates(reopened).size());
 					assertTrue(workflow.accessibleStates(reopened).contains(closed));
-				} else {
-					fail();
 				}
 			} else {
 				fail();

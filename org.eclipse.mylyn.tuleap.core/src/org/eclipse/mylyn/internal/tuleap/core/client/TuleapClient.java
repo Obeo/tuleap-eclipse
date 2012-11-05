@@ -20,10 +20,10 @@ import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.tuleap.core.TuleapCoreActivator;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact;
+import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.net.TrackerConnector;
 import org.eclipse.mylyn.internal.tuleap.core.net.TrackerSoapConnector;
 import org.eclipse.mylyn.internal.tuleap.core.repository.ITuleapRepositoryConnector;
-import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.util.TuleapMylynTasksMessages;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -52,7 +52,7 @@ public class TuleapClient implements ITuleapClient {
 	/**
 	 * The configuration of the repository.
 	 */
-	private TuleapRepositoryConfiguration configuration;
+	private TuleapTrackerConfiguration configuration;
 
 	/**
 	 * The task repository.
@@ -80,7 +80,7 @@ public class TuleapClient implements ITuleapClient {
 		this.location = weblocation;
 		this.taskRepository = repository;
 		this.repositoryConnector = connector;
-		this.configuration = new TuleapRepositoryConfiguration(this.location.getUrl());
+		this.configuration = new TuleapTrackerConfiguration(this.location.getUrl());
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class TuleapClient implements ITuleapClient {
 
 		TrackerConnector trackerConnector = new TrackerConnector(username, password, this.location);
 
-		TuleapRepositoryConfiguration newConfiguration = trackerConnector
+		TuleapTrackerConfiguration newConfiguration = trackerConnector
 				.getTuleapRepositoryConfiguration(monitor);
 		if (newConfiguration != null) {
 			this.configuration = newConfiguration;
@@ -184,7 +184,7 @@ public class TuleapClient implements ITuleapClient {
 	 * 
 	 * @see org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClient#getRepositoryConfiguration()
 	 */
-	public TuleapRepositoryConfiguration getRepositoryConfiguration() {
+	public TuleapTrackerConfiguration getRepositoryConfiguration() {
 		return this.configuration;
 	}
 

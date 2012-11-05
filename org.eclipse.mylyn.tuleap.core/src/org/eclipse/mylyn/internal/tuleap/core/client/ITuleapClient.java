@@ -14,7 +14,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact;
-import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConfiguration;
+import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
@@ -74,7 +74,7 @@ public interface ITuleapClient {
 	 * 
 	 * @return The configuration of the repository handled by the client.
 	 */
-	TuleapRepositoryConfiguration getRepositoryConfiguration();
+	TuleapTrackerConfiguration getRepositoryConfiguration();
 
 	/**
 	 * Execute the given query on the task repository in order to collect a set of tasks. The tasks are

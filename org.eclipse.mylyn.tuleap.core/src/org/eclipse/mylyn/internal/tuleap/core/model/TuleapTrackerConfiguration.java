@@ -8,15 +8,12 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.internal.tuleap.core.repository;
+package org.eclipse.mylyn.internal.tuleap.core.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
-import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapFormElement;
-import org.eclipse.mylyn.internal.tuleap.core.model.TuleapCannedResponse;
 import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapColumn;
 import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapFieldSet;
 
@@ -27,7 +24,7 @@ import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapFieldSet;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 1.0
  */
-public class TuleapRepositoryConfiguration implements Serializable {
+public class TuleapTrackerConfiguration implements Serializable {
 	/**
 	 * The serialization version ID.
 	 */
@@ -74,7 +71,7 @@ public class TuleapRepositoryConfiguration implements Serializable {
 	 * @param repositoryURL
 	 *            The URL of the repository.
 	 */
-	public TuleapRepositoryConfiguration(String repositoryURL) {
+	public TuleapTrackerConfiguration(String repositoryURL) {
 		this.url = repositoryURL;
 	}
 
@@ -90,7 +87,7 @@ public class TuleapRepositoryConfiguration implements Serializable {
 	 * @param repositoryDescription
 	 *            The description of the repository
 	 */
-	public TuleapRepositoryConfiguration(String repositoryURL, String repositoryName,
+	public TuleapTrackerConfiguration(String repositoryURL, String repositoryName,
 			String repositoryItemName, String repositoryDescription) {
 		this.url = repositoryURL;
 		this.name = repositoryName;
@@ -215,10 +212,10 @@ public class TuleapRepositoryConfiguration implements Serializable {
 			for (AbstractTuleapFormElement abstractTuleapFormElement : formElements) {
 				if (abstractTuleapFormElement instanceof TuleapFieldSet) {
 					TuleapFieldSet fieldSet = (TuleapFieldSet)abstractTuleapFormElement;
-					fields.addAll(TuleapRepositoryConfiguration.getFields(fieldSet));
+					fields.addAll(TuleapTrackerConfiguration.getFields(fieldSet));
 				} else if (abstractTuleapFormElement instanceof TuleapColumn) {
 					TuleapColumn column = (TuleapColumn)abstractTuleapFormElement;
-					fields.addAll(TuleapRepositoryConfiguration.getFields(column));
+					fields.addAll(TuleapTrackerConfiguration.getFields(column));
 				} else if (abstractTuleapFormElement instanceof AbstractTuleapField) {
 					AbstractTuleapField field = (AbstractTuleapField)abstractTuleapFormElement;
 					fields.add(field);

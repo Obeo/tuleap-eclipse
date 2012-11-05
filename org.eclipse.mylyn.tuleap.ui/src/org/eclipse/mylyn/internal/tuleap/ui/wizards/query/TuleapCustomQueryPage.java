@@ -14,12 +14,12 @@ import java.util.List;
 
 import org.eclipse.mylyn.commons.workbench.forms.SectionComposite;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapFormElement;
+import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapMultiSelectBox;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapSelectBox;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapString;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapText;
 import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapFieldSet;
-import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConnector;
 import org.eclipse.mylyn.internal.tuleap.ui.TuleapTasksUIPlugin;
 import org.eclipse.mylyn.internal.tuleap.ui.util.ITuleapUIConstants;
@@ -132,7 +132,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 			return;
 		}
 		TuleapRepositoryConnector repositoryConnector = (TuleapRepositoryConnector)connector;
-		TuleapRepositoryConfiguration repositoryConfiguration = repositoryConnector
+		TuleapTrackerConfiguration repositoryConfiguration = repositoryConnector
 				.getRepositoryConfiguration(this.getTaskRepository().getRepositoryUrl());
 		if (repositoryConfiguration != null) {
 			List<AbstractTuleapFormElement> formElements = repositoryConfiguration.getFormElements();

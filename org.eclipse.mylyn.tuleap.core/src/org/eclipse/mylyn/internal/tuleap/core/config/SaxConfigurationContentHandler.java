@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.mylyn.internal.tuleap.core.TuleapCoreActivator;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapFormElement;
+import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapArtifactLink;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapDate;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapFileUpload;
@@ -42,7 +43,6 @@ import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapSeparator;
 import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapStaticText;
 import org.eclipse.mylyn.internal.tuleap.core.model.workflow.TuleapWorkflow;
 import org.eclipse.mylyn.internal.tuleap.core.model.workflow.TuleapWorkflowTransition;
-import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
 import org.eclipse.mylyn.internal.tuleap.core.util.TuleapMylynTasksMessages;
 import org.xml.sax.Attributes;
@@ -50,7 +50,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * Tuleap configuration parser. Populates a {@link TuleapRepositoryConfiguration} data structure.
+ * Tuleap configuration parser. Populates a {@link TuleapTrackerConfiguration} data structure.
  * 
  * @author <a href="mailto:melanie.bats@obeo.fr">Melanie Bats</a>
  * @since 1.0
@@ -60,7 +60,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 	/**
 	 * Tuleap repository configuration.
 	 */
-	private TuleapRepositoryConfiguration configuration;
+	private TuleapTrackerConfiguration configuration;
 
 	/**
 	 * The characters of the XML document.
@@ -149,7 +149,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 	 *            The URL of the repository
 	 */
 	public SaxConfigurationContentHandler(String repositoryURL) {
-		configuration = new TuleapRepositoryConfiguration(repositoryURL);
+		configuration = new TuleapTrackerConfiguration(repositoryURL);
 		currentElement = configuration;
 	}
 
@@ -158,7 +158,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 	 * 
 	 * @return Tuleap repository configuration
 	 */
-	public TuleapRepositoryConfiguration getConfiguration() {
+	public TuleapTrackerConfiguration getConfiguration() {
 		return configuration;
 	}
 
@@ -213,7 +213,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			// Look for a field with the given reference as its id.
 			List<AbstractTuleapFormElement> formElements = this.configuration.getFormElements();
 			for (AbstractTuleapFormElement abstractTuleapStructuralElement : formElements) {
-				List<AbstractTuleapField> fields = TuleapRepositoryConfiguration
+				List<AbstractTuleapField> fields = TuleapTrackerConfiguration
 						.getFields(abstractTuleapStructuralElement);
 				for (AbstractTuleapField abstractTuleapField : fields) {
 					if (abstractTuleapField.getIdentifier() != null
@@ -251,7 +251,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			// Look for a field with the given reference as its id.
 			List<AbstractTuleapFormElement> formElements = this.configuration.getFormElements();
 			for (AbstractTuleapFormElement abstractTuleapStructuralElement : formElements) {
-				List<AbstractTuleapField> fields = TuleapRepositoryConfiguration
+				List<AbstractTuleapField> fields = TuleapTrackerConfiguration
 						.getFields(abstractTuleapStructuralElement);
 				for (AbstractTuleapField abstractTuleapField : fields) {
 					if (abstractTuleapField.getIdentifier() != null
@@ -276,7 +276,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			if (ref != null && ref.trim().length() > 0) {
 				List<AbstractTuleapFormElement> formElements = this.configuration.getFormElements();
 				for (AbstractTuleapFormElement abstractTuleapStructuralElement : formElements) {
-					List<AbstractTuleapField> fields = TuleapRepositoryConfiguration
+					List<AbstractTuleapField> fields = TuleapTrackerConfiguration
 							.getFields(abstractTuleapStructuralElement);
 					for (AbstractTuleapField abstractTuleapField : fields) {
 						if (abstractTuleapField.getIdentifier() != null
@@ -435,8 +435,8 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 		} else if (localName.equals(ITuleapConfigurationConstants.NAME)) {
 			if (currentElement instanceof AbstractTuleapFormElement) {
 				((AbstractTuleapFormElement)currentElement).setName(characters.toString());
-			} else if (currentElement instanceof TuleapRepositoryConfiguration) {
-				((TuleapRepositoryConfiguration)currentElement).setName(characters.toString());
+			} else if (currentElement instanceof TuleapTrackerConfiguration) {
+				((TuleapTrackerConfiguration)currentElement).setName(characters.toString());
 			}
 		} else if (localName.equals(ITuleapConfigurationConstants.LABEL)) {
 			if (currentElement instanceof AbstractTuleapFormElement) {
@@ -445,8 +445,8 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 		} else if (localName.equals(ITuleapConfigurationConstants.DESCRIPTION)) {
 			if (currentElement instanceof AbstractTuleapFormElement) {
 				((AbstractTuleapFormElement)currentElement).setDescription(characters.toString());
-			} else if (currentElement instanceof TuleapRepositoryConfiguration) {
-				((TuleapRepositoryConfiguration)currentElement).setDescription(characters.toString());
+			} else if (currentElement instanceof TuleapTrackerConfiguration) {
+				((TuleapTrackerConfiguration)currentElement).setDescription(characters.toString());
 			}
 		} else if (localName.equals(ITuleapConfigurationConstants.PROPERTIES)) {
 			if (currentElement instanceof TuleapString) {
@@ -471,8 +471,8 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 				// TODO workflow
 			}
 		} else if (localName.equals(ITuleapConfigurationConstants.ITEM_NAME)) {
-			if (currentElement instanceof TuleapRepositoryConfiguration) {
-				((TuleapRepositoryConfiguration)currentElement).setItemName(characters.toString());
+			if (currentElement instanceof TuleapTrackerConfiguration) {
+				((TuleapTrackerConfiguration)currentElement).setItemName(characters.toString());
 			}
 		}
 	}

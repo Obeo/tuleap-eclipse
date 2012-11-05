@@ -25,6 +25,7 @@ import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapDynamicField;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapFormElement;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact;
+import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapFileUpload;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapMultiSelectBox;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapSelectBox;
@@ -145,7 +146,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	public boolean initializeTaskData(TaskRepository repository, TaskData taskData,
 			ITaskMapping initializationData, IProgressMonitor monitor) throws CoreException {
 		if (taskData.isNew()) {
-			TuleapRepositoryConfiguration repositoryConfiguration = connector.getRepositoryConfiguration(
+			TuleapTrackerConfiguration repositoryConfiguration = connector.getRepositoryConfiguration(
 					repository, false, monitor);
 			if (repositoryConfiguration != null) {
 				// Update the available attributes for the tasks
@@ -184,7 +185,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 *            Indicates if we are manipulating a newly created task
 	 */
 	private void createDefaultAttributes(TaskData taskData, ITuleapClient tuleapClient, boolean existingTask) {
-		TuleapRepositoryConfiguration configuration = tuleapClient.getRepositoryConfiguration();
+		TuleapTrackerConfiguration configuration = tuleapClient.getRepositoryConfiguration();
 		if (configuration == null) {
 			return;
 		}
@@ -219,7 +220,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		// Default attributes
 		List<AbstractTuleapFormElement> formElements = configuration.getFormElements();
 		for (AbstractTuleapFormElement abstractTuleapStructuralElement : formElements) {
-			List<AbstractTuleapField> fields = TuleapRepositoryConfiguration
+			List<AbstractTuleapField> fields = TuleapTrackerConfiguration
 					.getFields(abstractTuleapStructuralElement);
 			for (AbstractTuleapField abstractTuleapField : fields) {
 				if (shouldCreateAttributeFor(abstractTuleapField)) {
@@ -378,10 +379,10 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		TuleapSelectBox statusSelectBox = null;
 
 		// Create operations from the status semantic
-		TuleapRepositoryConfiguration configuration = tuleapClient.getRepositoryConfiguration();
+		TuleapTrackerConfiguration configuration = tuleapClient.getRepositoryConfiguration();
 		List<AbstractTuleapFormElement> formElements = configuration.getFormElements();
 		for (AbstractTuleapFormElement abstractTuleapStructuralElement : formElements) {
-			List<AbstractTuleapField> fields = TuleapRepositoryConfiguration
+			List<AbstractTuleapField> fields = TuleapTrackerConfiguration
 					.getFields(abstractTuleapStructuralElement);
 			for (AbstractTuleapField abstractTuleapField : fields) {
 				if (abstractTuleapField instanceof TuleapSelectBox) {
@@ -446,10 +447,10 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	private void createPersons(TaskData taskData, ITuleapClient tuleapClient) {
 		AbstractTuleapField personsSelectBox = null;
 
-		TuleapRepositoryConfiguration configuration = tuleapClient.getRepositoryConfiguration();
+		TuleapTrackerConfiguration configuration = tuleapClient.getRepositoryConfiguration();
 		List<AbstractTuleapFormElement> formElements = configuration.getFormElements();
 		for (AbstractTuleapFormElement abstractTuleapStructuralElement : formElements) {
-			List<AbstractTuleapField> fields = TuleapRepositoryConfiguration
+			List<AbstractTuleapField> fields = TuleapTrackerConfiguration
 					.getFields(abstractTuleapStructuralElement);
 			for (AbstractTuleapField abstractTuleapField : fields) {
 				if (abstractTuleapField instanceof TuleapSelectBox) {

@@ -34,6 +34,7 @@ import org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClientManager;
 import org.eclipse.mylyn.internal.tuleap.core.client.TuleapClientManager;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapFormElement;
+import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapSelectBox;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapSelectBoxItem;
 import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
@@ -77,7 +78,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	/**
 	 * The cache of the repository configurations.
 	 */
-	private final Map<String, TuleapRepositoryConfiguration> repositoryConfigurations = new HashMap<String, TuleapRepositoryConfiguration>();
+	private final Map<String, TuleapTrackerConfiguration> repositoryConfigurations = new HashMap<String, TuleapTrackerConfiguration>();
 
 	/**
 	 * Indicates that the cache of the repository configuration has been read.
@@ -317,7 +318,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 * @see org.eclipse.mylyn.internal.tuleap.core.repository.ITuleapRepositoryConnector#getRepositoryConfiguration(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      boolean, org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public TuleapRepositoryConfiguration getRepositoryConfiguration(TaskRepository repository,
+	public TuleapTrackerConfiguration getRepositoryConfiguration(TaskRepository repository,
 			boolean forceRefresh, IProgressMonitor monitor) {
 		// TODO Returns and/or update the configuration of the given repository.
 		ITuleapClient client = this.getClientManager().getClient(repository);
@@ -343,7 +344,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		// Update the completion date of the task from the status of the task data
 		TaskAttribute attributeStatus = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
 		if (attributeStatus != null) {
-			TuleapRepositoryConfiguration configuration = this.getRepositoryConfiguration(taskRepository
+			TuleapTrackerConfiguration configuration = this.getRepositoryConfiguration(taskRepository
 					.getRepositoryUrl());
 			boolean isCompleted = isTaskCompleted(attributeStatus.getValue(), configuration);
 			if (isCompleted) {
@@ -370,11 +371,11 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 *            The configuration of the repository containing the task
 	 * @return <code>true</code> if the current status matches a closed status, <code>false</code> otherwise.
 	 */
-	private boolean isTaskCompleted(String currentStatus, TuleapRepositoryConfiguration configuration) {
+	private boolean isTaskCompleted(String currentStatus, TuleapTrackerConfiguration configuration) {
 		if (configuration != null) {
 			List<AbstractTuleapFormElement> formElements = configuration.getFormElements();
 			for (AbstractTuleapFormElement abstractTuleapFormElement : formElements) {
-				List<AbstractTuleapField> fields = TuleapRepositoryConfiguration
+				List<AbstractTuleapField> fields = TuleapTrackerConfiguration
 						.getFields(abstractTuleapFormElement);
 				for (AbstractTuleapField abstractTuleapField : fields) {
 					if (abstractTuleapField instanceof TuleapSelectBox
@@ -438,9 +439,9 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.mylyn.internal.tuleap.core.repository.ITuleapRepositoryConnector#putRepositoryConfiguration(java.lang.String,
-	 *      org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConfiguration)
+	 *      org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration)
 	 */
-	public void putRepositoryConfiguration(String repositoryUrl, TuleapRepositoryConfiguration configuration) {
+	public void putRepositoryConfiguration(String repositoryUrl, TuleapTrackerConfiguration configuration) {
 		this.repositoryConfigurations.put(repositoryUrl, configuration);
 	}
 
@@ -451,7 +452,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 *            The repository url
 	 * @return The repository configuration matching the given url.
 	 */
-	public TuleapRepositoryConfiguration getRepositoryConfiguration(String repositoryUrl) {
+	public TuleapTrackerConfiguration getRepositoryConfiguration(String repositoryUrl) {
 		this.readRepositoryConfigurationFile();
 		return repositoryConfigurations.get(repositoryUrl);
 	}
@@ -470,7 +471,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 				in = new ObjectInputStream(new FileInputStream(repositoryConfigurationFile));
 				int size = in.readInt();
 				for (int nX = 0; nX < size; nX++) {
-					TuleapRepositoryConfiguration item = (TuleapRepositoryConfiguration)in.readObject();
+					TuleapTrackerConfiguration item = (TuleapTrackerConfiguration)in.readObject();
 					if (item != null) {
 						repositoryConfigurations.put(item.getUrl(), item);
 					}
@@ -512,15 +513,15 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		if (repositoryConfigurationFile != null) {
 			ObjectOutputStream out = null;
 			try {
-				Set<TuleapRepositoryConfiguration> tempConfigs;
+				Set<TuleapTrackerConfiguration> tempConfigs;
 				synchronized(repositoryConfigurations) {
-					tempConfigs = new HashSet<TuleapRepositoryConfiguration>(repositoryConfigurations
+					tempConfigs = new HashSet<TuleapTrackerConfiguration>(repositoryConfigurations
 							.values());
 				}
 				if (tempConfigs.size() > 0) {
 					out = new ObjectOutputStream(new FileOutputStream(repositoryConfigurationFile));
 					out.writeInt(tempConfigs.size());
-					for (TuleapRepositoryConfiguration repositoryConfiguration : tempConfigs) {
+					for (TuleapTrackerConfiguration repositoryConfiguration : tempConfigs) {
 						if (repositoryConfiguration != null) {
 							out.writeObject(repositoryConfiguration);
 						}
