@@ -18,12 +18,14 @@ import javax.xml.rpc.ServiceException;
 
 import org.apache.axis.EngineConfiguration;
 import org.apache.axis.configuration.FileProvider;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.tuleap.core.TuleapCoreActivator;
 import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
+import org.eclipse.mylyn.internal.tuleap.core.util.TuleapMylynTasksMessages;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.TuleapSoapServiceLocator;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v1.CodendiAPIPortType;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v1.Session;
@@ -31,12 +33,12 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
 /**
- * This class will be used to connect Mylyn to the SOAP services provided by the Tuleap tracker.
+ * This class will be used to connect Mylyn to the SOAP services provided by the Tuleap instance.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 1.0
  */
-public class TrackerSoapConnector {
+public class TuleapSoapConnector {
 	/**
 	 * The location of the configuration file.
 	 */
@@ -53,16 +55,19 @@ public class TrackerSoapConnector {
 	 * @param location
 	 *            The location of the tracker.
 	 */
-	public TrackerSoapConnector(AbstractWebLocation location) {
+	public TuleapSoapConnector(AbstractWebLocation location) {
 		this.trackerLocation = location;
 	}
 
 	/**
 	 * Validates the connection to the repository.
 	 * 
+	 * @param monitor
+	 *            The progress monitor
 	 * @return A status indicating if the connection has been successfully tested.
 	 */
-	public IStatus validateConnection() {
+	public IStatus validateConnection(IProgressMonitor monitor) {
+		monitor.beginTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.ValidateConnection"), 100); //$NON-NLS-1$
 		IStatus status = Status.OK_STATUS;
 
 		String username = trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
@@ -73,10 +78,15 @@ public class TrackerSoapConnector {
 					CONFIG_FILE));
 			TuleapSoapServiceLocator locator = new TuleapSoapServiceLocator(config, trackerLocation);
 
+			final int fifty = 50;
+			monitor.worked(fifty);
+
 			URL url = new URL(ITuleapConstants.SOAP_V1_URL);
 			CodendiAPIPortType codendiAPIPort = locator.getCodendiAPIPort(url);
 			Session session = codendiAPIPort.login(username, password);
 			String sessionHash = session.getSession_hash();
+
+			monitor.worked(fifty);
 
 			codendiAPIPort.logout(sessionHash);
 		} catch (MalformedURLException e) {

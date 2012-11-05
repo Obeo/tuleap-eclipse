@@ -22,7 +22,7 @@ import org.eclipse.mylyn.internal.tuleap.core.TuleapCoreActivator;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.net.TrackerConnector;
-import org.eclipse.mylyn.internal.tuleap.core.net.TrackerSoapConnector;
+import org.eclipse.mylyn.internal.tuleap.core.net.TuleapSoapConnector;
 import org.eclipse.mylyn.internal.tuleap.core.repository.ITuleapRepositoryConnector;
 import org.eclipse.mylyn.internal.tuleap.core.util.TuleapMylynTasksMessages;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -93,7 +93,7 @@ public class TuleapClient implements ITuleapClient {
 	public boolean getSearchHits(IRepositoryQuery query, TaskDataCollector collector,
 			TaskAttributeMapper mapper, IProgressMonitor monitor) {
 		// Get the result of the query
-		TrackerSoapConnector trackerSoapConnector = new TrackerSoapConnector(this.location);
+		TuleapSoapConnector trackerSoapConnector = new TuleapSoapConnector(this.location);
 		int hit = trackerSoapConnector.performQuery(collector, mapper, TaskDataCollector.MAX_HITS);
 		return hit > 0;
 	}

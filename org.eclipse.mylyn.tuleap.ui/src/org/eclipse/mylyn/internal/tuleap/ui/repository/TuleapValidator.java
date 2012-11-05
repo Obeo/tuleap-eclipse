@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
-import org.eclipse.mylyn.internal.tuleap.core.net.TrackerSoapConnector;
+import org.eclipse.mylyn.internal.tuleap.core.net.TuleapSoapConnector;
 import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConnector;
 import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
 import org.eclipse.mylyn.internal.tuleap.core.util.TuleapMylynTasksMessages;
@@ -64,8 +64,8 @@ public class TuleapValidator {
 		if (repositoryConnector instanceof TuleapRepositoryConnector) {
 			AbstractWebLocation location = new TaskRepositoryLocationFactory()
 					.createWebLocation(taskRepository);
-			TrackerSoapConnector trackerSoapConnector = new TrackerSoapConnector(location);
-			return trackerSoapConnector.validateConnection();
+			TuleapSoapConnector trackerSoapConnector = new TuleapSoapConnector(location);
+			return trackerSoapConnector.validateConnection(monitor);
 		}
 		return new Status(IStatus.ERROR, TuleapTasksUIPlugin.PLUGIN_ID, TuleapMylynTasksMessages
 				.getString("TuleapValidator.InvalidRepositoryConnector")); //$NON-NLS-1$

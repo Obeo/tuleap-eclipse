@@ -203,7 +203,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 */
 	@Override
 	public String getTaskUrl(String repositoryUrl, String taskId) {
-		// Example: https://demo.tuleap.net/plugins/tracker/?tracker=409&aid=453
+		// Example: https://demo.tuleap.net/plugins/tracker/?group_id=409&aid=453
 		return repositoryUrl + ITuleapConstants.REPOSITORY_URL_SEPARATOR + taskId;
 	}
 
@@ -515,8 +515,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			try {
 				Set<TuleapTrackerConfiguration> tempConfigs;
 				synchronized(repositoryConfigurations) {
-					tempConfigs = new HashSet<TuleapTrackerConfiguration>(repositoryConfigurations
-							.values());
+					tempConfigs = new HashSet<TuleapTrackerConfiguration>(repositoryConfigurations.values());
 				}
 				if (tempConfigs.size() > 0) {
 					out = new ObjectOutputStream(new FileOutputStream(repositoryConfigurationFile));
