@@ -34,7 +34,7 @@ public class TuleapLastUpdateDate extends AbstractTuleapDynamicField {
 	 * @param formElementIdentifier
 	 *            The identifier of the form element.
 	 */
-	public TuleapLastUpdateDate(String formElementIdentifier) {
+	public TuleapLastUpdateDate(int formElementIdentifier) {
 		super(formElementIdentifier);
 	}
 

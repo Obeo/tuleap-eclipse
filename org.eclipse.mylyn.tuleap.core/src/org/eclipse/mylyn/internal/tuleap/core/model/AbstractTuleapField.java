@@ -32,7 +32,7 @@ public abstract class AbstractTuleapField extends AbstractTuleapFormElement {
 	 * @param formElementIdentifier
 	 *            The identifier of the form element
 	 */
-	public AbstractTuleapField(String formElementIdentifier) {
+	public AbstractTuleapField(int formElementIdentifier) {
 		super(formElementIdentifier);
 	}
 

@@ -10,16 +10,12 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.ui.wizards.query;
 
-import java.util.List;
-
 import org.eclipse.mylyn.commons.workbench.forms.SectionComposite;
-import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapFormElement;
-import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
+import org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapMultiSelectBox;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapSelectBox;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapString;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapText;
-import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapFieldSet;
 import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConnector;
 import org.eclipse.mylyn.internal.tuleap.ui.TuleapTasksUIPlugin;
 import org.eclipse.mylyn.internal.tuleap.ui.util.ITuleapUIConstants;
@@ -32,7 +28,6 @@ import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -132,38 +127,30 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 			return;
 		}
 		TuleapRepositoryConnector repositoryConnector = (TuleapRepositoryConnector)connector;
-		TuleapTrackerConfiguration repositoryConfiguration = repositoryConnector
+		TuleapInstanceConfiguration repositoryConfiguration = repositoryConnector
 				.getRepositoryConfiguration(this.getTaskRepository().getRepositoryUrl());
 		if (repositoryConfiguration != null) {
-			List<AbstractTuleapFormElement> formElements = repositoryConfiguration.getFormElements();
-			for (AbstractTuleapFormElement abstractTuleapStructuralElement : formElements) {
-				if (abstractTuleapStructuralElement instanceof TuleapFieldSet) {
-					// Create a SWT group for each Tuleap field set
-					TuleapFieldSet fieldSet = (TuleapFieldSet)abstractTuleapStructuralElement;
 
-					Group group = new Group(parent.getContent(), SWT.NONE);
-					group.setText(fieldSet.getLabel());
-					GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
-					gridData.grabExcessVerticalSpace = false;
-					group.setLayoutData(gridData);
-					group.setLayout(new GridLayout(3, false));
-
-					List<AbstractTuleapFormElement> fieldSetFormElements = fieldSet.getFormElements();
-					for (AbstractTuleapFormElement abstractTuleapFormElement : fieldSetFormElements) {
-						if (abstractTuleapFormElement instanceof TuleapString) {
-							this.createGroupContent((TuleapString)abstractTuleapFormElement, group);
-						} else if (abstractTuleapFormElement instanceof TuleapSelectBox) {
-							this.createGroupContent((TuleapSelectBox)abstractTuleapFormElement, group);
-						} else if (abstractTuleapFormElement instanceof TuleapMultiSelectBox) {
-							this.createGroupContent((TuleapMultiSelectBox)abstractTuleapFormElement, group);
-						} else if (abstractTuleapFormElement instanceof TuleapText) {
-							this.createGroupContent((TuleapText)abstractTuleapFormElement, group);
-						} else {
-							// TODO Support other type of widget
-						}
-					}
-				}
-			}
+			// Group group = new Group(parent.getContent(), SWT.NONE);
+			// GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
+			// gridData.grabExcessVerticalSpace = false;
+			// group.setLayoutData(gridData);
+			// group.setLayout(new GridLayout(3, false));
+			//
+			// List<AbstractTuleapFormElement> fieldSetFormElements = repositoryConfiguration.getFields();
+			// for (AbstractTuleapFormElement abstractTuleapFormElement : fieldSetFormElements) {
+			// if (abstractTuleapFormElement instanceof TuleapString) {
+			// this.createGroupContent((TuleapString)abstractTuleapFormElement, group);
+			// } else if (abstractTuleapFormElement instanceof TuleapSelectBox) {
+			// this.createGroupContent((TuleapSelectBox)abstractTuleapFormElement, group);
+			// } else if (abstractTuleapFormElement instanceof TuleapMultiSelectBox) {
+			// this.createGroupContent((TuleapMultiSelectBox)abstractTuleapFormElement, group);
+			// } else if (abstractTuleapFormElement instanceof TuleapText) {
+			// this.createGroupContent((TuleapText)abstractTuleapFormElement, group);
+			// } else {
+			// // TODO Support other type of widget
+			// }
+			// }
 		}
 	}
 

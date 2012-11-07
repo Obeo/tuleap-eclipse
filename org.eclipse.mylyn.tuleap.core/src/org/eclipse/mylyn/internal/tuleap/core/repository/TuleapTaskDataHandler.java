@@ -20,11 +20,12 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylyn.internal.tuleap.core.TuleapCoreActivator;
 import org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClient;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapDynamicField;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
-import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapFormElement;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact;
+import org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapFileUpload;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapMultiSelectBox;
@@ -145,33 +146,52 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	@Override
 	public boolean initializeTaskData(TaskRepository repository, TaskData taskData,
 			ITaskMapping initializationData, IProgressMonitor monitor) throws CoreException {
-		if (taskData.isNew()) {
-			TuleapTrackerConfiguration repositoryConfiguration = connector.getRepositoryConfiguration(
-					repository, false, monitor);
-			if (repositoryConfiguration != null) {
-				// Update the available attributes for the tasks
-				ITuleapClient tuleapClient = this.connector.getClientManager().getClient(repository);
-				tuleapClient.updateAttributes(monitor, false);
-				this.createDefaultAttributes(taskData, tuleapClient, false);
+		if (!taskData.isNew()) {
+			return false;
+		}
 
-				// Sets the creation date and last modification date.
-				if (this.connector instanceof AbstractRepositoryConnector
-						&& ((AbstractRepositoryConnector)this.connector).getTaskMapping(taskData) instanceof TaskMapper) {
-					ITaskMapping taskMapping = ((AbstractRepositoryConnector)this.connector)
-							.getTaskMapping(taskData);
-					TaskMapper taskMapper = (TaskMapper)taskMapping;
-					taskMapper.setCreationDate(new Date());
-					taskMapper.setModificationDate(new Date());
-					taskMapper.setSummary(TuleapMylynTasksMessages.getString(
-							"TuleapTaskDataHandler.DefaultNewTitle", repositoryConfiguration.getItemName())); //$NON-NLS-1$
+		boolean isInitialized = false;
+		TuleapInstanceConfiguration repositoryConfiguration = connector.getRepositoryConfiguration(
+				repository, false, monitor);
+		if (repositoryConfiguration != null) {
+			// Update the available attributes for the tasks
+			ITuleapClient tuleapClient = this.connector.getClientManager().getClient(repository);
+			tuleapClient.updateAttributes(monitor, false);
 
-					this.createOperations(taskData, tuleapClient, taskMapper.getStatus());
-					this.createPersons(taskData, tuleapClient);
-					return true;
+			// Sets the creation date and last modification date.
+			if (this.connector instanceof AbstractRepositoryConnector
+					&& ((AbstractRepositoryConnector)this.connector).getTaskMapping(taskData) instanceof TaskMapper) {
+				ITaskMapping taskMapping = ((AbstractRepositoryConnector)this.connector)
+						.getTaskMapping(taskData);
+
+				String product = taskMapping.getProduct();
+				int trackerId = -1;
+				try {
+					trackerId = Integer.valueOf(product).intValue();
+
+					TuleapTrackerConfiguration trackerConfiguration = repositoryConfiguration
+							.getTrackerConfiguration(trackerId);
+					if (trackerConfiguration != null) {
+						this.createDefaultAttributes(taskData, tuleapClient, trackerConfiguration, false);
+
+						TaskMapper taskMapper = (TaskMapper)taskMapping;
+						taskMapper.setCreationDate(new Date());
+						taskMapper.setModificationDate(new Date());
+						taskMapper.setSummary(TuleapMylynTasksMessages.getString(
+								"TuleapTaskDataHandler.DefaultNewTitle", trackerConfiguration.getItemName())); //$NON-NLS-1$
+
+						this.createOperations(taskData, tuleapClient, trackerConfiguration, taskMapper
+								.getStatus());
+						this.createPersons(taskData, tuleapClient, trackerConfiguration);
+						isInitialized = true;
+					}
+				} catch (NumberFormatException e) {
+					TuleapCoreActivator.log(e, true);
 				}
+
 			}
 		}
-		return false;
+		return isInitialized;
 	}
 
 	/**
@@ -181,11 +201,13 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 *            The task data
 	 * @param tuleapClient
 	 *            The Tuleap client
+	 * @param configuration
+	 *            The configuration of the tracker where the task will be created.
 	 * @param existingTask
 	 *            Indicates if we are manipulating a newly created task
 	 */
-	private void createDefaultAttributes(TaskData taskData, ITuleapClient tuleapClient, boolean existingTask) {
-		TuleapTrackerConfiguration configuration = tuleapClient.getRepositoryConfiguration();
+	private void createDefaultAttributes(TaskData taskData, ITuleapClient tuleapClient,
+			TuleapTrackerConfiguration configuration, boolean existingTask) {
 		if (configuration == null) {
 			return;
 		}
@@ -218,14 +240,10 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		metaData.setType(TaskAttribute.TYPE_LONG_RICH_TEXT);
 
 		// Default attributes
-		List<AbstractTuleapFormElement> formElements = configuration.getFormElements();
-		for (AbstractTuleapFormElement abstractTuleapStructuralElement : formElements) {
-			List<AbstractTuleapField> fields = TuleapTrackerConfiguration
-					.getFields(abstractTuleapStructuralElement);
-			for (AbstractTuleapField abstractTuleapField : fields) {
-				if (shouldCreateAttributeFor(abstractTuleapField)) {
-					this.createAttribute(taskData, abstractTuleapField);
-				}
+		List<AbstractTuleapField> fields = configuration.getFields();
+		for (AbstractTuleapField abstractTuleapField : fields) {
+			if (shouldCreateAttributeFor(abstractTuleapField)) {
+				this.createAttribute(taskData, abstractTuleapField);
 			}
 		}
 	}
@@ -347,14 +365,16 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.AssignedToLabel")); //$NON-NLS-1$
 				metaData.setType(TaskAttribute.TYPE_PERSON);
 			} else {
-				attribute = taskData.getRoot().createAttribute(tuleapField.getIdentifier());
+				attribute = taskData.getRoot().createAttribute(
+						Integer.valueOf(tuleapField.getIdentifier()).toString());
 				// Attributes
 				TaskAttributeMetaData attributeMetadata = attribute.getMetaData();
 				attributeMetadata.setType(tuleapField.getMetadataType());
 				attributeMetadata.setLabel(tuleapField.getLabel());
 			}
 		} else {
-			attribute = taskData.getRoot().createAttribute(tuleapField.getIdentifier());
+			attribute = taskData.getRoot().createAttribute(
+					Integer.valueOf(tuleapField.getIdentifier()).toString());
 			// Attributes
 			TaskAttributeMetaData attributeMetadata = attribute.getMetaData();
 			attributeMetadata.setType(tuleapField.getMetadataType());
@@ -372,24 +392,22 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 *            The task data
 	 * @param tuleapClient
 	 *            The tuleap client used to get the configuration of the tracker
+	 * @param configuration
+	 *            The configuration of the tracker on which the task will be created.
 	 * @param currentStatus
 	 *            The current status
 	 */
-	private void createOperations(TaskData taskData, ITuleapClient tuleapClient, String currentStatus) {
+	private void createOperations(TaskData taskData, ITuleapClient tuleapClient,
+			TuleapTrackerConfiguration configuration, String currentStatus) {
 		TuleapSelectBox statusSelectBox = null;
 
 		// Create operations from the status semantic
-		TuleapTrackerConfiguration configuration = tuleapClient.getRepositoryConfiguration();
-		List<AbstractTuleapFormElement> formElements = configuration.getFormElements();
-		for (AbstractTuleapFormElement abstractTuleapStructuralElement : formElements) {
-			List<AbstractTuleapField> fields = TuleapTrackerConfiguration
-					.getFields(abstractTuleapStructuralElement);
-			for (AbstractTuleapField abstractTuleapField : fields) {
-				if (abstractTuleapField instanceof TuleapSelectBox) {
-					TuleapSelectBox selectBox = (TuleapSelectBox)abstractTuleapField;
-					if (selectBox.isSemanticStatus()) {
-						statusSelectBox = selectBox;
-					}
+		List<AbstractTuleapField> fields = configuration.getFields();
+		for (AbstractTuleapField abstractTuleapField : fields) {
+			if (abstractTuleapField instanceof TuleapSelectBox) {
+				TuleapSelectBox selectBox = (TuleapSelectBox)abstractTuleapField;
+				if (selectBox.isSemanticStatus()) {
+					statusSelectBox = selectBox;
 				}
 			}
 		}
@@ -443,26 +461,24 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 *            The task data
 	 * @param tuleapClient
 	 *            The tuleap client used to get the configuration of the tracker
+	 * @param configuration
+	 *            The configuration of the tracker on which the task is created
 	 */
-	private void createPersons(TaskData taskData, ITuleapClient tuleapClient) {
+	private void createPersons(TaskData taskData, ITuleapClient tuleapClient,
+			TuleapTrackerConfiguration configuration) {
 		AbstractTuleapField personsSelectBox = null;
 
-		TuleapTrackerConfiguration configuration = tuleapClient.getRepositoryConfiguration();
-		List<AbstractTuleapFormElement> formElements = configuration.getFormElements();
-		for (AbstractTuleapFormElement abstractTuleapStructuralElement : formElements) {
-			List<AbstractTuleapField> fields = TuleapTrackerConfiguration
-					.getFields(abstractTuleapStructuralElement);
-			for (AbstractTuleapField abstractTuleapField : fields) {
-				if (abstractTuleapField instanceof TuleapSelectBox) {
-					TuleapSelectBox selectBox = (TuleapSelectBox)abstractTuleapField;
-					if (selectBox.isSemanticStatus()) {
-						personsSelectBox = selectBox;
-					}
-				} else if (abstractTuleapField instanceof TuleapMultiSelectBox) {
-					TuleapMultiSelectBox selectBox = (TuleapMultiSelectBox)abstractTuleapField;
-					if (selectBox.isSemanticStatus()) {
-						personsSelectBox = selectBox;
-					}
+		List<AbstractTuleapField> fields = configuration.getFields();
+		for (AbstractTuleapField abstractTuleapField : fields) {
+			if (abstractTuleapField instanceof TuleapSelectBox) {
+				TuleapSelectBox selectBox = (TuleapSelectBox)abstractTuleapField;
+				if (selectBox.isSemanticStatus()) {
+					personsSelectBox = selectBox;
+				}
+			} else if (abstractTuleapField instanceof TuleapMultiSelectBox) {
+				TuleapMultiSelectBox selectBox = (TuleapMultiSelectBox)abstractTuleapField;
+				if (selectBox.isSemanticStatus()) {
+					personsSelectBox = selectBox;
 				}
 			}
 		}
@@ -571,8 +587,12 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 						tuleapArtifact.getId()).toString());
 
 		tuleapClient.updateAttributes(monitor, false);
-		this.createDefaultAttributes(taskData, tuleapClient, false);
-		this.createOperations(taskData, tuleapClient, tuleapArtifact.getValue(TaskAttribute.STATUS));
+		TuleapInstanceConfiguration repositoryConfiguration = tuleapClient.getRepositoryConfiguration();
+		TuleapTrackerConfiguration trackerConfiguration = repositoryConfiguration
+				.getTrackerConfiguration(tuleapArtifact.getTrackerId());
+		this.createDefaultAttributes(taskData, tuleapClient, trackerConfiguration, false);
+		this.createOperations(taskData, tuleapClient, trackerConfiguration, tuleapArtifact
+				.getValue(TaskAttribute.STATUS));
 
 		// Convert Tuleap artifact to Mylyn task data
 		Set<String> keys = tuleapArtifact.getKeys();

@@ -14,9 +14,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapColumn;
-import org.eclipse.mylyn.internal.tuleap.core.model.structural.TuleapFieldSet;
-
 /**
  * The repository configuration will hold the latest known configuration of a given repository. This
  * configuration can dramatically evolve over time and it should be refreshed automatically or manually.
@@ -61,17 +58,25 @@ public class TuleapTrackerConfiguration implements Serializable {
 	private List<TuleapCannedResponse> cannedResponses = new ArrayList<TuleapCannedResponse>();
 
 	/**
-	 * The structural elements of the Tuleap tracker.
+	 * The fields of the Tuleap tracker.
 	 */
-	private List<AbstractTuleapFormElement> formElements = new ArrayList<AbstractTuleapFormElement>();
+	private List<AbstractTuleapField> fields = new ArrayList<AbstractTuleapField>();
+
+	/**
+	 * The identifier of the tracker.
+	 */
+	private int trackerId;
 
 	/**
 	 * The default constructor.
 	 * 
+	 * @param trackerIdentifier
+	 *            The id of the tracker.
 	 * @param repositoryURL
 	 *            The URL of the repository.
 	 */
-	public TuleapTrackerConfiguration(String repositoryURL) {
+	public TuleapTrackerConfiguration(int trackerIdentifier, String repositoryURL) {
+		this.trackerId = trackerIdentifier;
 		this.url = repositoryURL;
 	}
 
@@ -87,8 +92,8 @@ public class TuleapTrackerConfiguration implements Serializable {
 	 * @param repositoryDescription
 	 *            The description of the repository
 	 */
-	public TuleapTrackerConfiguration(String repositoryURL, String repositoryName,
-			String repositoryItemName, String repositoryDescription) {
+	public TuleapTrackerConfiguration(String repositoryURL, String repositoryName, String repositoryItemName,
+			String repositoryDescription) {
 		this.url = repositoryURL;
 		this.name = repositoryName;
 		this.itemName = repositoryItemName;
@@ -180,12 +185,12 @@ public class TuleapTrackerConfiguration implements Serializable {
 	}
 
 	/**
-	 * Returns the form elements of the repository.
+	 * Returns the fields of the tracker.
 	 * 
-	 * @return The form elements of the repository.
+	 * @return The fields of the tracker.
 	 */
-	public List<AbstractTuleapFormElement> getFormElements() {
-		return this.formElements;
+	public List<AbstractTuleapField> getFields() {
+		return this.fields;
 	}
 
 	/**
@@ -198,34 +203,20 @@ public class TuleapTrackerConfiguration implements Serializable {
 	}
 
 	/**
-	 * Returns the list of fields recursively contained in a given form element.
+	 * Returns a qualified name composed of the name and the identifier.
 	 * 
-	 * @param formElement
-	 *            A structural form element
-	 * @return The list of fields recursively contained in a given form element.
+	 * @return A qualified name composed of the name and the identifier.
 	 */
-	public static List<AbstractTuleapField> getFields(AbstractTuleapFormElement formElement) {
-		List<AbstractTuleapField> fields = new ArrayList<AbstractTuleapField>();
-		if (formElement instanceof TuleapFieldSet) {
-			TuleapFieldSet tuleapFieldSet = (TuleapFieldSet)formElement;
-			List<AbstractTuleapFormElement> formElements = tuleapFieldSet.getFormElements();
-			for (AbstractTuleapFormElement abstractTuleapFormElement : formElements) {
-				if (abstractTuleapFormElement instanceof TuleapFieldSet) {
-					TuleapFieldSet fieldSet = (TuleapFieldSet)abstractTuleapFormElement;
-					fields.addAll(TuleapTrackerConfiguration.getFields(fieldSet));
-				} else if (abstractTuleapFormElement instanceof TuleapColumn) {
-					TuleapColumn column = (TuleapColumn)abstractTuleapFormElement;
-					fields.addAll(TuleapTrackerConfiguration.getFields(column));
-				} else if (abstractTuleapFormElement instanceof AbstractTuleapField) {
-					AbstractTuleapField field = (AbstractTuleapField)abstractTuleapFormElement;
-					fields.add(field);
+	public String getQualifiedName() {
+		return this.name + " [" + this.trackerId + ']'; //$NON-NLS-1$
+	}
 
-				}
-			}
-		} else if (formElement instanceof TuleapColumn) {
-			TuleapColumn tuleapColumn = (TuleapColumn)formElement;
-			fields.addAll(tuleapColumn.getFormElements());
-		}
-		return fields;
+	/**
+	 * Returns the tracker id.
+	 * 
+	 * @return The tracker id.
+	 */
+	public int getTrackerId() {
+		return this.trackerId;
 	}
 }

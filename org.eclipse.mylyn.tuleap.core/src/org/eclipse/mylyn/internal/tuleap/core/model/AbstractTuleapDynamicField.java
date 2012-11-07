@@ -29,7 +29,7 @@ public abstract class AbstractTuleapDynamicField extends AbstractTuleapField {
 	 * @param formElementIdentifier
 	 *            The identifier of the form element.
 	 */
-	public AbstractTuleapDynamicField(String formElementIdentifier) {
+	public AbstractTuleapDynamicField(int formElementIdentifier) {
 		super(formElementIdentifier);
 	}
 

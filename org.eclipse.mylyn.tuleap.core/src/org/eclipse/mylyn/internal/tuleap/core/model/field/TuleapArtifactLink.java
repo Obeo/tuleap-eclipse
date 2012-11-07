@@ -32,7 +32,7 @@ public class TuleapArtifactLink extends AbstractTuleapField {
 	 * @param formElementIdentifier
 	 *            The identifier of the form element
 	 */
-	public TuleapArtifactLink(String formElementIdentifier) {
+	public TuleapArtifactLink(int formElementIdentifier) {
 		super(formElementIdentifier);
 	}
 

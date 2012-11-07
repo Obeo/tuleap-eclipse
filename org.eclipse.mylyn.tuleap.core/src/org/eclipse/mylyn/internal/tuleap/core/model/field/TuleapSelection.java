@@ -32,7 +32,7 @@ public class TuleapSelection extends AbstractTuleapField {
 	 * @param formElementIdentifier
 	 *            The identifier of the form element
 	 */
-	public TuleapSelection(String formElementIdentifier) {
+	public TuleapSelection(int formElementIdentifier) {
 		super(formElementIdentifier);
 	}
 

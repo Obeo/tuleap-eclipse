@@ -32,7 +32,7 @@ public class TuleapSharedField extends AbstractTuleapField {
 	 * @param formElementIdentifier
 	 *            The identifier of the form element
 	 */
-	public TuleapSharedField(String formElementIdentifier) {
+	public TuleapSharedField(int formElementIdentifier) {
 		super(formElementIdentifier);
 	}
 

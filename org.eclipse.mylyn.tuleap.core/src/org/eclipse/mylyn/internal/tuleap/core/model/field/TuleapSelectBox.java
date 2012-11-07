@@ -64,7 +64,7 @@ public class TuleapSelectBox extends AbstractTuleapField {
 	 * @param formElementIdentifier
 	 *            The identifier of the form element
 	 */
-	public TuleapSelectBox(String formElementIdentifier) {
+	public TuleapSelectBox(int formElementIdentifier) {
 		super(formElementIdentifier);
 	}
 

@@ -32,7 +32,7 @@ public class TuleapPermissionOnArtifact extends AbstractTuleapField {
 	 * @param formElementIdentifier
 	 *            The identifier of the form element
 	 */
-	public TuleapPermissionOnArtifact(String formElementIdentifier) {
+	public TuleapPermissionOnArtifact(int formElementIdentifier) {
 		super(formElementIdentifier);
 	}
 

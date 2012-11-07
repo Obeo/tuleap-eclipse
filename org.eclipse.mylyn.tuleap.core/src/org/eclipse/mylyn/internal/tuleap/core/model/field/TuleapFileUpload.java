@@ -32,7 +32,7 @@ public class TuleapFileUpload extends AbstractTuleapField {
 	 * @param formElementIdentifier
 	 *            The identifier of the form element
 	 */
-	public TuleapFileUpload(String formElementIdentifier) {
+	public TuleapFileUpload(int formElementIdentifier) {
 		super(formElementIdentifier);
 	}
 

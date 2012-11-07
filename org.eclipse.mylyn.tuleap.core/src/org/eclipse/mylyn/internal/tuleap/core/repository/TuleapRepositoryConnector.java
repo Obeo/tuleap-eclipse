@@ -33,7 +33,7 @@ import org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClient;
 import org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClientManager;
 import org.eclipse.mylyn.internal.tuleap.core.client.TuleapClientManager;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
-import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapFormElement;
+import org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapSelectBox;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapSelectBoxItem;
@@ -78,7 +78,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	/**
 	 * The cache of the repository configurations.
 	 */
-	private final Map<String, TuleapTrackerConfiguration> repositoryConfigurations = new HashMap<String, TuleapTrackerConfiguration>();
+	private final Map<String, TuleapInstanceConfiguration> repositoryConfigurations = new HashMap<String, TuleapInstanceConfiguration>();
 
 	/**
 	 * Indicates that the cache of the repository configuration has been read.
@@ -146,7 +146,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		if (url == null) {
 			return null;
 		}
-		int index = url.indexOf(ITuleapConstants.REPOSITORY_URL_SEPARATOR);
+		int index = url.indexOf(ITuleapConstants.REPOSITORY_TASK_URL_SEPARATOR);
 		String repositoryUrl = null;
 
 		if (index != -1) {
@@ -166,10 +166,10 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			return null;
 		}
 
-		int index = url.indexOf(ITuleapConstants.REPOSITORY_URL_SEPARATOR);
+		int index = url.indexOf(ITuleapConstants.REPOSITORY_TASK_URL_SEPARATOR);
 		String taskId = null;
 		if (index != -1) {
-			taskId = url.substring(index + ITuleapConstants.REPOSITORY_URL_SEPARATOR.length());
+			taskId = url.substring(index + ITuleapConstants.REPOSITORY_TASK_URL_SEPARATOR.length());
 		}
 		return taskId;
 	}
@@ -204,7 +204,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	@Override
 	public String getTaskUrl(String repositoryUrl, String taskId) {
 		// Example: https://demo.tuleap.net/plugins/tracker/?group_id=409&aid=453
-		return repositoryUrl + ITuleapConstants.REPOSITORY_URL_SEPARATOR + taskId;
+		return repositoryUrl + ITuleapConstants.REPOSITORY_TASK_URL_SEPARATOR + taskId;
 	}
 
 	/**
@@ -318,7 +318,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 * @see org.eclipse.mylyn.internal.tuleap.core.repository.ITuleapRepositoryConnector#getRepositoryConfiguration(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      boolean, org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public TuleapTrackerConfiguration getRepositoryConfiguration(TaskRepository repository,
+	public TuleapInstanceConfiguration getRepositoryConfiguration(TaskRepository repository,
 			boolean forceRefresh, IProgressMonitor monitor) {
 		// TODO Returns and/or update the configuration of the given repository.
 		ITuleapClient client = this.getClientManager().getClient(repository);
@@ -343,18 +343,30 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 		// Update the completion date of the task from the status of the task data
 		TaskAttribute attributeStatus = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
-		if (attributeStatus != null) {
-			TuleapTrackerConfiguration configuration = this.getRepositoryConfiguration(taskRepository
-					.getRepositoryUrl());
-			boolean isCompleted = isTaskCompleted(attributeStatus.getValue(), configuration);
-			if (isCompleted) {
-				if (task.getCompletionDate() == null) {
-					task.setCompletionDate(new Date(0));
+		TaskAttribute attributeProduct = taskData.getRoot().getMappedAttribute(TaskAttribute.PRODUCT);
+		if (attributeStatus != null && attributeProduct != null) {
+			int trackerId = -1;
+			String value = attributeProduct.getValue();
+			try {
+				trackerId = Integer.valueOf(value).intValue();
+				TuleapInstanceConfiguration configuration = this.getRepositoryConfiguration(taskRepository
+						.getRepositoryUrl());
+				TuleapTrackerConfiguration trackerConfiguration = configuration
+						.getTrackerConfiguration(trackerId);
+
+				boolean isCompleted = isTaskCompleted(attributeStatus.getValue(), trackerConfiguration);
+
+				if (isCompleted) {
+					if (task.getCompletionDate() == null) {
+						task.setCompletionDate(new Date(0));
+					}
+				} else {
+					if (task.getCompletionDate() != null) {
+						task.setCompletionDate(null);
+					}
 				}
-			} else {
-				if (task.getCompletionDate() != null) {
-					task.setCompletionDate(null);
-				}
+			} catch (NumberFormatException e) {
+				TuleapCoreActivator.log(e, true);
 			}
 		}
 
@@ -373,19 +385,15 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 */
 	private boolean isTaskCompleted(String currentStatus, TuleapTrackerConfiguration configuration) {
 		if (configuration != null) {
-			List<AbstractTuleapFormElement> formElements = configuration.getFormElements();
-			for (AbstractTuleapFormElement abstractTuleapFormElement : formElements) {
-				List<AbstractTuleapField> fields = TuleapTrackerConfiguration
-						.getFields(abstractTuleapFormElement);
-				for (AbstractTuleapField abstractTuleapField : fields) {
-					if (abstractTuleapField instanceof TuleapSelectBox
-							&& ((TuleapSelectBox)abstractTuleapField).isSemanticStatus()) {
-						TuleapSelectBox tuleapSelectBox = (TuleapSelectBox)abstractTuleapField;
-						List<TuleapSelectBoxItem> closedStatus = tuleapSelectBox.getClosedStatus();
-						for (TuleapSelectBoxItem tuleapSelectBoxItem : closedStatus) {
-							if (currentStatus.equals(tuleapSelectBoxItem.getLabel())) {
-								return true;
-							}
+			List<AbstractTuleapField> fields = configuration.getFields();
+			for (AbstractTuleapField abstractTuleapField : fields) {
+				if (abstractTuleapField instanceof TuleapSelectBox
+						&& ((TuleapSelectBox)abstractTuleapField).isSemanticStatus()) {
+					TuleapSelectBox tuleapSelectBox = (TuleapSelectBox)abstractTuleapField;
+					List<TuleapSelectBoxItem> closedStatus = tuleapSelectBox.getClosedStatus();
+					for (TuleapSelectBoxItem tuleapSelectBoxItem : closedStatus) {
+						if (currentStatus.equals(tuleapSelectBoxItem.getLabel())) {
+							return true;
 						}
 					}
 				}
@@ -441,7 +449,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 * @see org.eclipse.mylyn.internal.tuleap.core.repository.ITuleapRepositoryConnector#putRepositoryConfiguration(java.lang.String,
 	 *      org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration)
 	 */
-	public void putRepositoryConfiguration(String repositoryUrl, TuleapTrackerConfiguration configuration) {
+	public void putRepositoryConfiguration(String repositoryUrl, TuleapInstanceConfiguration configuration) {
 		this.repositoryConfigurations.put(repositoryUrl, configuration);
 	}
 
@@ -452,7 +460,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 *            The repository url
 	 * @return The repository configuration matching the given url.
 	 */
-	public TuleapTrackerConfiguration getRepositoryConfiguration(String repositoryUrl) {
+	public TuleapInstanceConfiguration getRepositoryConfiguration(String repositoryUrl) {
 		this.readRepositoryConfigurationFile();
 		return repositoryConfigurations.get(repositoryUrl);
 	}
@@ -471,7 +479,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 				in = new ObjectInputStream(new FileInputStream(repositoryConfigurationFile));
 				int size = in.readInt();
 				for (int nX = 0; nX < size; nX++) {
-					TuleapTrackerConfiguration item = (TuleapTrackerConfiguration)in.readObject();
+					TuleapInstanceConfiguration item = (TuleapInstanceConfiguration)in.readObject();
 					if (item != null) {
 						repositoryConfigurations.put(item.getUrl(), item);
 					}
@@ -513,14 +521,14 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		if (repositoryConfigurationFile != null) {
 			ObjectOutputStream out = null;
 			try {
-				Set<TuleapTrackerConfiguration> tempConfigs;
+				Set<TuleapInstanceConfiguration> tempConfigs;
 				synchronized(repositoryConfigurations) {
-					tempConfigs = new HashSet<TuleapTrackerConfiguration>(repositoryConfigurations.values());
+					tempConfigs = new HashSet<TuleapInstanceConfiguration>(repositoryConfigurations.values());
 				}
 				if (tempConfigs.size() > 0) {
 					out = new ObjectOutputStream(new FileOutputStream(repositoryConfigurationFile));
 					out.writeInt(tempConfigs.size());
-					for (TuleapTrackerConfiguration repositoryConfiguration : tempConfigs) {
+					for (TuleapInstanceConfiguration repositoryConfiguration : tempConfigs) {
 						if (repositoryConfiguration != null) {
 							out.writeObject(repositoryConfiguration);
 						}

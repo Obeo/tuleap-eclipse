@@ -11,6 +11,7 @@
 package org.eclipse.mylyn.internal.tuleap.ui.wizards;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -25,6 +26,8 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClient;
 import org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClientManager;
+import org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration;
+import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.repository.ITuleapRepositoryConnector;
 import org.eclipse.mylyn.internal.tuleap.ui.util.TuleapMylynTasksUIMessages;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -149,7 +152,14 @@ public class TuleapTrackerPage extends WizardPage {
 
 				public void run(IProgressMonitor monitor) throws InvocationTargetException,
 						InterruptedException {
-					List<String> trackersList = client.getTrackerList(forceRefresh, monitor);
+					List<String> trackersList = new ArrayList<String>();
+					TuleapInstanceConfiguration instanceConfiguration = client.getRepositoryConfiguration();
+					List<TuleapTrackerConfiguration> trackerConfigurations = instanceConfiguration
+							.getAllTrackerConfigurations();
+					for (TuleapTrackerConfiguration tuleapTrackerConfiguration : trackerConfigurations) {
+						trackersList.add(tuleapTrackerConfiguration.getQualifiedName());
+					}
+
 					TuleapTrackerPage.this.trackerTree.getViewer().setInput(trackersList);
 				}
 			};
@@ -173,7 +183,25 @@ public class TuleapTrackerPage extends WizardPage {
 	 */
 	public String getTrackerSelected() {
 		IStructuredSelection selection = (IStructuredSelection)this.trackerTree.getViewer().getSelection();
-		return (String)selection.getFirstElement();
+		String qualifiedName = (String)selection.getFirstElement();
+
+		String connectorKind = this.repository.getConnectorKind();
+		AbstractRepositoryConnector repositoryConnector = TasksUi.getRepositoryManager()
+				.getRepositoryConnector(connectorKind);
+		if (repositoryConnector instanceof ITuleapRepositoryConnector) {
+			ITuleapRepositoryConnector connector = (ITuleapRepositoryConnector)repositoryConnector;
+			ITuleapClientManager clientManager = connector.getClientManager();
+			final ITuleapClient client = clientManager.getClient(this.repository);
+			TuleapInstanceConfiguration instanceConfiguration = client.getRepositoryConfiguration();
+			List<TuleapTrackerConfiguration> trackerConfigurations = instanceConfiguration
+					.getAllTrackerConfigurations();
+			for (TuleapTrackerConfiguration tuleapTrackerConfiguration : trackerConfigurations) {
+				if (tuleapTrackerConfiguration.getQualifiedName().equals(qualifiedName)) {
+					return Integer.valueOf(tuleapTrackerConfiguration.getTrackerId()).toString();
+				}
+			}
+		}
+		return null;
 	}
 
 	/**

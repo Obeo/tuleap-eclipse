@@ -49,6 +49,11 @@ public class TuleapArtifact {
 	private Date lastModificationDate;
 
 	/**
+	 * The id of the tracker on which the artifact has been created.
+	 */
+	private int trackerId;
+
+	/**
 	 * The default constructor used to create a new Tuleap artifact locally.
 	 */
 	public TuleapArtifact() {
@@ -165,5 +170,14 @@ public class TuleapArtifact {
 	 */
 	public Date getLastModificationDate() {
 		return this.lastModificationDate;
+	}
+
+	/**
+	 * Returns the id of the tracker on which the artifact has been created.
+	 * 
+	 * @return The id of the tracker on which the artifact has been created.
+	 */
+	public int getTrackerId() {
+		return this.trackerId;
 	}
 }

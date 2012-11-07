@@ -34,7 +34,7 @@ public class TuleapSubmittedOn extends AbstractTuleapDynamicField {
 	 * @param formElementIdentifier
 	 *            The identifier of the form element.
 	 */
-	public TuleapSubmittedOn(String formElementIdentifier) {
+	public TuleapSubmittedOn(int formElementIdentifier) {
 		super(formElementIdentifier);
 	}
 

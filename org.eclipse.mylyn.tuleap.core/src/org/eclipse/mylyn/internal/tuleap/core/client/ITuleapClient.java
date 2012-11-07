@@ -10,11 +10,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.core.client;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact;
-import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
+import org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
@@ -74,7 +72,7 @@ public interface ITuleapClient {
 	 * 
 	 * @return The configuration of the repository handled by the client.
 	 */
-	TuleapTrackerConfiguration getRepositoryConfiguration();
+	TuleapInstanceConfiguration getRepositoryConfiguration();
 
 	/**
 	 * Execute the given query on the task repository in order to collect a set of tasks. The tasks are
@@ -93,16 +91,4 @@ public interface ITuleapClient {
 	 */
 	boolean getSearchHits(IRepositoryQuery query, TaskDataCollector collector, TaskAttributeMapper mapper,
 			IProgressMonitor monitor);
-
-	/**
-	 * Returns the list of the available trackers.
-	 * 
-	 * @param forceRefresh
-	 *            Indicates if we should force the refresh
-	 * @param monitor
-	 *            The progress monitor
-	 * @return The list of the available trackers.
-	 */
-	List<String> getTrackerList(boolean forceRefresh, IProgressMonitor monitor);
-
 }

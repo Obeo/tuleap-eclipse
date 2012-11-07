@@ -32,7 +32,7 @@ public class TuleapOpenList extends AbstractTuleapField {
 	 * @param formElementIdentifier
 	 *            The identifier of the form element
 	 */
-	public TuleapOpenList(String formElementIdentifier) {
+	public TuleapOpenList(int formElementIdentifier) {
 		super(formElementIdentifier);
 	}
 

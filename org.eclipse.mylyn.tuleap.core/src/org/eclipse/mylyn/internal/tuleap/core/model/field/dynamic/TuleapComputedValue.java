@@ -32,7 +32,7 @@ public class TuleapComputedValue extends AbstractTuleapDynamicField {
 	 * @param formElementIdentifier
 	 *            The identifier of the form element.
 	 */
-	public TuleapComputedValue(String formElementIdentifier) {
+	public TuleapComputedValue(int formElementIdentifier) {
 		super(formElementIdentifier);
 	}
 

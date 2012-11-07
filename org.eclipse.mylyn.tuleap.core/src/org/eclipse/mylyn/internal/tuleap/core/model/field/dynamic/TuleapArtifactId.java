@@ -32,7 +32,7 @@ public class TuleapArtifactId extends AbstractTuleapDynamicField {
 	 * @param formElementIdentifier
 	 *            The identifier of the form element.
 	 */
-	public TuleapArtifactId(String formElementIdentifier) {
+	public TuleapArtifactId(int formElementIdentifier) {
 		super(formElementIdentifier);
 	}
 

@@ -32,7 +32,7 @@ public class TuleapFloat extends AbstractTuleapField {
 	 * @param formElementIdentifier
 	 *            The identifier of the form element
 	 */
-	public TuleapFloat(String formElementIdentifier) {
+	public TuleapFloat(int formElementIdentifier) {
 		super(formElementIdentifier);
 	}
 

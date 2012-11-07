@@ -32,7 +32,7 @@ public class TuleapCrossReferences extends AbstractTuleapDynamicField {
 	 * @param formElementIdentifier
 	 *            The identifier of the form element.
 	 */
-	public TuleapCrossReferences(String formElementIdentifier) {
+	public TuleapCrossReferences(int formElementIdentifier) {
 		super(formElementIdentifier);
 	}
 

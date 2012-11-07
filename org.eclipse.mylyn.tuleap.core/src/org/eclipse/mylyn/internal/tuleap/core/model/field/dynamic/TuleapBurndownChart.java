@@ -32,7 +32,7 @@ public class TuleapBurndownChart extends AbstractTuleapDynamicField {
 	 * @param formElementIdentifier
 	 *            The identifier of the form element.
 	 */
-	public TuleapBurndownChart(String formElementIdentifier) {
+	public TuleapBurndownChart(int formElementIdentifier) {
 		super(formElementIdentifier);
 	}
 

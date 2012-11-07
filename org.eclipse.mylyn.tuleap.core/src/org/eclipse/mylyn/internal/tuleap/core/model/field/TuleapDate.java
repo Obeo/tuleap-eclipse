@@ -32,7 +32,7 @@ public class TuleapDate extends AbstractTuleapField {
 	 * @param formElementIdentifier
 	 *            The identifier of the form element
 	 */
-	public TuleapDate(String formElementIdentifier) {
+	public TuleapDate(int formElementIdentifier) {
 		super(formElementIdentifier);
 	}
 

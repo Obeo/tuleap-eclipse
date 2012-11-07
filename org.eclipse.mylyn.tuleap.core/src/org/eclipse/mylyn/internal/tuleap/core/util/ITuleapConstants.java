@@ -30,9 +30,19 @@ public interface ITuleapConstants {
 	String TULEAP_DESCRIPTOR_FILE = "tuleap.desciptorFile"; //$NON-NLS-1$
 
 	/**
-	 * The repository url separator.
+	 * The task separator.
 	 */
-	String REPOSITORY_URL_SEPARATOR = "&aid="; //$NON-NLS-1$
+	String REPOSITORY_TASK_URL_SEPARATOR = "&aid="; //$NON-NLS-1$
+
+	/**
+	 * The tracker separator.
+	 */
+	String REPOSITORY_TRACKER_URL_SEPARATOR = "&tracker="; //$NON-NLS-1$
+
+	/**
+	 * The group id separator.
+	 */
+	String REPOSITORY_GROUP_ID_URL_SEPARATOR = "&group_id="; //$NON-NLS-1$
 
 	/**
 	 * The ID representing the UTC timezone.

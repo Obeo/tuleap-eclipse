@@ -10,18 +10,14 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.core.client;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
-import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.tuleap.core.TuleapCoreActivator;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact;
-import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
-import org.eclipse.mylyn.internal.tuleap.core.net.TrackerConnector;
+import org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.net.TuleapSoapConnector;
 import org.eclipse.mylyn.internal.tuleap.core.repository.ITuleapRepositoryConnector;
 import org.eclipse.mylyn.internal.tuleap.core.util.TuleapMylynTasksMessages;
@@ -52,7 +48,7 @@ public class TuleapClient implements ITuleapClient {
 	/**
 	 * The configuration of the repository.
 	 */
-	private TuleapTrackerConfiguration configuration;
+	private TuleapInstanceConfiguration configuration;
 
 	/**
 	 * The task repository.
@@ -80,7 +76,7 @@ public class TuleapClient implements ITuleapClient {
 		this.location = weblocation;
 		this.taskRepository = repository;
 		this.repositoryConnector = connector;
-		this.configuration = new TuleapTrackerConfiguration(this.location.getUrl());
+		this.configuration = new TuleapInstanceConfiguration(this.location.getUrl());
 	}
 
 	/**
@@ -127,13 +123,10 @@ public class TuleapClient implements ITuleapClient {
 	 *            The progress monitor
 	 */
 	private void updateAttributes(IProgressMonitor monitor) {
-		String username = this.taskRepository.getUserName();
-		String password = this.taskRepository.getCredentials(AuthenticationType.REPOSITORY).getPassword();
+		TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(location);
 
-		TrackerConnector trackerConnector = new TrackerConnector(username, password, this.location);
-
-		TuleapTrackerConfiguration newConfiguration = trackerConnector
-				.getTuleapRepositoryConfiguration(monitor);
+		TuleapInstanceConfiguration newConfiguration = tuleapSoapConnector
+				.getTuleapInstanceConfiguration(monitor);
 		if (newConfiguration != null) {
 			this.configuration = newConfiguration;
 		} else {
@@ -184,22 +177,7 @@ public class TuleapClient implements ITuleapClient {
 	 * 
 	 * @see org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClient#getRepositoryConfiguration()
 	 */
-	public TuleapTrackerConfiguration getRepositoryConfiguration() {
+	public TuleapInstanceConfiguration getRepositoryConfiguration() {
 		return this.configuration;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClient#getTrackerList(boolean)
-	 */
-	public List<String> getTrackerList(boolean forceRefresh, IProgressMonitor monitor) {
-		List<String> trackers = new ArrayList<String>();
-		// FIXME Get the list of the trackers from the server
-		trackers.add("First tracker");
-		trackers.add("Second tracker");
-		trackers.add("Third tracker");
-		trackers.add("Fourth tracker");
-		return trackers;
 	}
 }

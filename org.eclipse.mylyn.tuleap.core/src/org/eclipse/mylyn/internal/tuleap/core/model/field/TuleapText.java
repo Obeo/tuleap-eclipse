@@ -42,7 +42,7 @@ public class TuleapText extends AbstractTuleapField {
 	 * @param formElementIdentifier
 	 *            The identifier of the form element
 	 */
-	public TuleapText(String formElementIdentifier) {
+	public TuleapText(int formElementIdentifier) {
 		super(formElementIdentifier);
 	}
 

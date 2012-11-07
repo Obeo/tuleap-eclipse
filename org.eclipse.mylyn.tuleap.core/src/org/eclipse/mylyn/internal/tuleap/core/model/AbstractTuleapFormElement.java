@@ -55,7 +55,7 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 	/**
 	 * The identifier of the form element.
 	 */
-	private String identifier;
+	private int identifier;
 
 	/**
 	 * The rank of the form element.
@@ -68,7 +68,7 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 	 * @param formElementIdentifier
 	 *            The identifier of the form element
 	 */
-	public AbstractTuleapFormElement(String formElementIdentifier) {
+	public AbstractTuleapFormElement(int formElementIdentifier) {
 		super();
 		this.identifier = formElementIdentifier;
 		this.permissions = new TuleapPermissions();
@@ -117,7 +117,7 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 	 * 
 	 * @return The identifier of the form element.
 	 */
-	public String getIdentifier() {
+	public int getIdentifier() {
 		return this.identifier;
 	}
 
