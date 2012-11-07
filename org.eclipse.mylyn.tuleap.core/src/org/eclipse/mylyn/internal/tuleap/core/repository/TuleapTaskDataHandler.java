@@ -161,10 +161,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			// Sets the creation date and last modification date.
 			if (this.connector instanceof AbstractRepositoryConnector
 					&& ((AbstractRepositoryConnector)this.connector).getTaskMapping(taskData) instanceof TaskMapper) {
-				ITaskMapping taskMapping = ((AbstractRepositoryConnector)this.connector)
-						.getTaskMapping(taskData);
-
-				String product = taskMapping.getProduct();
+				String product = initializationData.getProduct();
 				int trackerId = -1;
 				try {
 					trackerId = Integer.valueOf(product).intValue();
@@ -174,7 +171,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 					if (trackerConfiguration != null) {
 						this.createDefaultAttributes(taskData, tuleapClient, trackerConfiguration, false);
 
-						TaskMapper taskMapper = (TaskMapper)taskMapping;
+						TaskMapper taskMapper = new TaskMapper(taskData);
 						taskMapper.setCreationDate(new Date());
 						taskMapper.setModificationDate(new Date());
 						taskMapper.setSummary(TuleapMylynTasksMessages.getString(
