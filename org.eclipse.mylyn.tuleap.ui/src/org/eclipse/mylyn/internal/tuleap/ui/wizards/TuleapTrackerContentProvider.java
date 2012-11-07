@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.ui.wizards;
 
+import java.util.List;
+
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
@@ -27,9 +29,10 @@ public class TuleapTrackerContentProvider implements ITreeContentProvider {
 	 * 
 	 * @see org.eclipse.jface.viewers.ITreeContentProvider#getElements(java.lang.Object)
 	 */
+	@SuppressWarnings("rawtypes")
 	public Object[] getElements(Object inputElement) {
-		if (inputElement instanceof String[]) {
-			return (String[])inputElement;
+		if (inputElement instanceof List) {
+			return ((List)inputElement).toArray();
 		}
 		return null;
 	}
