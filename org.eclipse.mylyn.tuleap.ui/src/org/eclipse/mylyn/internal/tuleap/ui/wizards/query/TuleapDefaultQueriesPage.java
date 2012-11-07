@@ -10,12 +10,21 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.ui.wizards.query;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.workbench.forms.SectionComposite;
+import org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration;
+import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
+import org.eclipse.mylyn.internal.tuleap.core.repository.ITuleapRepositoryConnector;
 import org.eclipse.mylyn.internal.tuleap.ui.TuleapTasksUIPlugin;
 import org.eclipse.mylyn.internal.tuleap.ui.util.ITuleapUIConstants;
 import org.eclipse.mylyn.internal.tuleap.ui.util.TuleapMylynTasksUIMessages;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -35,6 +44,17 @@ import org.eclipse.swt.widgets.Group;
 public class TuleapDefaultQueriesPage extends AbstractRepositoryQueryPage2 {
 
 	/**
+	 * Select box default value.
+	 */
+	private static final String DEFAULT_VALUE = TuleapMylynTasksUIMessages
+			.getString("TuleapDefaultQueriesPage.SelectBox.DefaultValue"); //$NON-NLS-1$
+
+	/**
+	 * The task repository.
+	 */
+	private TaskRepository repository;
+
+	/**
 	 * The constructor.
 	 * 
 	 * @param taskRepository
@@ -42,6 +62,7 @@ public class TuleapDefaultQueriesPage extends AbstractRepositoryQueryPage2 {
 	 */
 	public TuleapDefaultQueriesPage(TaskRepository taskRepository) {
 		super(TuleapMylynTasksUIMessages.getString("TuleapDefaultQueriesPage.Name"), taskRepository, null); //$NON-NLS-1$
+		this.repository = taskRepository;
 		this.setTitle(TuleapMylynTasksUIMessages.getString("TuleapDefaultQueriesPage.Title")); //$NON-NLS-1$
 		this.setDescription(TuleapMylynTasksUIMessages.getString("TuleapDefaultQueriesPage.Description")); //$NON-NLS-1$
 	}
@@ -73,13 +94,40 @@ public class TuleapDefaultQueriesPage extends AbstractRepositoryQueryPage2 {
 		projectsQueryButton.setSelection(true);
 
 		Combo projectSelectionCombo = new Combo(groupComposite, SWT.SINGLE);
-		projectSelectionCombo.setItems(new String[] {"All available projects", "Acceleo", "ATL", "EEF",
-				"EMF Compare", "Intent", });
-		projectSelectionCombo.setText("All available projects");
+		List<String> trackers = getAllAvailableTrackers();
+		projectSelectionCombo.setItems(trackers.toArray(new String[trackers.size()]));
+		projectSelectionCombo.setText(DEFAULT_VALUE);
 
 		Button allQueryButton = new Button(groupComposite, SWT.RADIO);
 		allQueryButton.setText(TuleapMylynTasksUIMessages
 				.getString("TuleapDefaultQueriesPage.AllQueryButton.Name")); //$NON-NLS-1$
+	}
+
+	/**
+	 * Get all available trackers.
+	 * 
+	 * @return List of trackers
+	 */
+	private List<String> getAllAvailableTrackers() {
+		List<String> trackersList = new ArrayList<String>();
+		trackersList.add(DEFAULT_VALUE);
+		String connectorKind = repository.getConnectorKind();
+		final AbstractRepositoryConnector repositoryConnector = TasksUi.getRepositoryManager()
+				.getRepositoryConnector(connectorKind);
+		if (repositoryConnector instanceof ITuleapRepositoryConnector) {
+
+			ITuleapRepositoryConnector connector = (ITuleapRepositoryConnector)repositoryConnector;
+			final TuleapInstanceConfiguration instanceConfiguration = connector.getRepositoryConfiguration(
+					repository, true, new NullProgressMonitor());
+
+			List<TuleapTrackerConfiguration> trackerConfigurations = instanceConfiguration
+					.getAllTrackerConfigurations();
+			for (TuleapTrackerConfiguration tuleapTrackerConfiguration : trackerConfigurations) {
+				trackersList.add(tuleapTrackerConfiguration.getQualifiedName());
+			}
+
+		}
+		return trackersList;
 	}
 
 	/**
