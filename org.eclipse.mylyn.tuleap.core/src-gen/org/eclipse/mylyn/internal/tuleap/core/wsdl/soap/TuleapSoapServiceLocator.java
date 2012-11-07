@@ -27,6 +27,7 @@ import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v1.CodendiAPILocator;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 1.0
  */
+@SuppressWarnings("all")
 public class TuleapSoapServiceLocator extends CodendiAPILocator {
 
 	/**

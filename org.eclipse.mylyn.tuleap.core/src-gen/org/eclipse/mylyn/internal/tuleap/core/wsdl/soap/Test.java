@@ -18,6 +18,9 @@ import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.ArtifactQueryResult;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.Criteria;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.Tracker;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerField;
+import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerSemantic;
+import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerStructure;
+import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerWorkflow;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TuleapTrackerV5APILocator;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TuleapTrackerV5APIPortType;
 
@@ -35,6 +38,7 @@ import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TuleapTrackerV5APIPor
 /**
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
+@SuppressWarnings("all")
 public class Test {
 	private static final String CONFIG_FILE = "org/eclipse/mylyn/internal/tuleap/core/wsdl/soap/client-config.wsdd"; //$NON-NLS-1$
 
@@ -84,12 +88,19 @@ public class Test {
 						tracker_id);
 				System.out.println("Tracker Fields Length: " + trackerFields.length);
 
-				// TrackerStructure trackerStructure =
-				// tuleapTrackerV5APIPort.getTrackerStructure(session_hash,
-				// groupId, tracker_id);
-				// TrackerSemantic semantic = trackerStructure.getSemantic();
-				// TrackerWorkflow workflow = trackerStructure.getWorkflow();
-				// System.out.println();
+				TrackerStructure trackerStructure = tuleapTrackerV5APIPort.getTrackerStructure(session_hash,
+						groupId, tracker_id);
+				TrackerSemantic semantic = trackerStructure.getSemantic();
+				TrackerWorkflow workflow = trackerStructure.getWorkflow();
+				System.out.println("Semantic : " + semantic.getContributor().getField_name() + " "
+						+ semantic.getTitle().getField_name() + " " + semantic.getStatus().getField_name());
+				System.out.println("Semantic Title: " + semantic.getTitle().getField_name());
+				System.out.println("Semantic Status: " + semantic.getStatus().getField_name());
+				System.out.println("Semantic Status Values Length: "
+						+ semantic.getStatus().getValues().length);
+				System.out.println("Semantic Contributor: " + semantic.getContributor().getField_name());
+				System.out.println("Workflow Id: " + workflow.getField_id());
+				System.out.println("Workflow Transitions Length: " + workflow.getTransitions().length);
 
 				Criteria[] criteria = new Criteria[] {};
 				ArtifactQueryResult artifacts = tuleapTrackerV5APIPort.getArtifacts(session_hash, groupId,
