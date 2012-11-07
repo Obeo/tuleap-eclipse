@@ -141,25 +141,22 @@ public class TuleapTrackerPage extends WizardPage {
 	 */
 	protected void updateTrackersList(final boolean forceRefresh) {
 		String connectorKind = this.repository.getConnectorKind();
-		AbstractRepositoryConnector repositoryConnector = TasksUi.getRepositoryManager()
+		final AbstractRepositoryConnector repositoryConnector = TasksUi.getRepositoryManager()
 				.getRepositoryConnector(connectorKind);
 		if (repositoryConnector instanceof ITuleapRepositoryConnector) {
-			ITuleapRepositoryConnector connector = (ITuleapRepositoryConnector)repositoryConnector;
-			ITuleapClientManager clientManager = connector.getClientManager();
-			final ITuleapClient client = clientManager.getClient(this.repository);
-
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {
 
 				public void run(IProgressMonitor monitor) throws InvocationTargetException,
 						InterruptedException {
+					ITuleapRepositoryConnector connector = (ITuleapRepositoryConnector)repositoryConnector;
+					final TuleapInstanceConfiguration instanceConfiguration = connector
+							.getRepositoryConfiguration(TuleapTrackerPage.this.repository, true, monitor);
 					List<String> trackersList = new ArrayList<String>();
-					TuleapInstanceConfiguration instanceConfiguration = client.getRepositoryConfiguration();
 					List<TuleapTrackerConfiguration> trackerConfigurations = instanceConfiguration
 							.getAllTrackerConfigurations();
 					for (TuleapTrackerConfiguration tuleapTrackerConfiguration : trackerConfigurations) {
 						trackersList.add(tuleapTrackerConfiguration.getQualifiedName());
 					}
-
 					TuleapTrackerPage.this.trackerTree.getViewer().setInput(trackersList);
 				}
 			};
