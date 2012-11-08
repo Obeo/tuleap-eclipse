@@ -27,7 +27,7 @@ public class TuleapSelectBoxItem implements Serializable {
 	/**
 	 * The identifier of the item.
 	 */
-	private String identifier;
+	private int identifier;
 
 	/**
 	 * The label of the item.
@@ -45,7 +45,7 @@ public class TuleapSelectBoxItem implements Serializable {
 	 * @param id
 	 *            The identifier of the item.
 	 */
-	public TuleapSelectBoxItem(String id) {
+	public TuleapSelectBoxItem(int id) {
 		this.identifier = id;
 	}
 
@@ -92,7 +92,7 @@ public class TuleapSelectBoxItem implements Serializable {
 	 * 
 	 * @return The identifier of the item.
 	 */
-	public String getIdentifier() {
+	public int getIdentifier() {
 		return this.identifier;
 	}
 

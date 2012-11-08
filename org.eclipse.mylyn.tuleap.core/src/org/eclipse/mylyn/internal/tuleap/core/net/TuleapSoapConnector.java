@@ -18,6 +18,7 @@ import javax.xml.rpc.ServiceException;
 
 import org.apache.axis.EngineConfiguration;
 import org.apache.axis.configuration.FileProvider;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -36,6 +37,7 @@ import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapMultiSelectBox;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapOpenList;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapPermissionOnArtifact;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapSelectBox;
+import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapSelectBoxItem;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapString;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapText;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.dynamic.TuleapArtifactId;
@@ -44,6 +46,8 @@ import org.eclipse.mylyn.internal.tuleap.core.model.field.dynamic.TuleapCrossRef
 import org.eclipse.mylyn.internal.tuleap.core.model.field.dynamic.TuleapLastUpdateDate;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.dynamic.TuleapSubmittedBy;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.dynamic.TuleapSubmittedOn;
+import org.eclipse.mylyn.internal.tuleap.core.model.workflow.TuleapWorkflow;
+import org.eclipse.mylyn.internal.tuleap.core.model.workflow.TuleapWorkflowTransition;
 import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
 import org.eclipse.mylyn.internal.tuleap.core.util.TuleapMylynTasksMessages;
 import org.eclipse.mylyn.internal.tuleap.core.util.TuleapUtil;
@@ -53,6 +57,14 @@ import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v1.CodendiAPIPortType;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v1.Session;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.Tracker;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerField;
+import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerFieldBindValue;
+import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerSemantic;
+import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerSemanticContributor;
+import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerSemanticStatus;
+import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerSemanticTitle;
+import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerStructure;
+import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerWorkflow;
+import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerWorkflowTransition;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TuleapTrackerV5APILocator;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TuleapTrackerV5APIPortType;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
@@ -223,17 +235,34 @@ public class TuleapSoapConnector {
 		try {
 			monitor.subTask(TuleapMylynTasksMessages.getString(
 					"TuleapSoapConnector.RetrievingFieldsDescriptionFromTracker", tracker.getName())); //$NON-NLS-1$
+
+			TrackerStructure trackerStructure = tuleapTrackerV5APIPort.getTrackerStructure(sessionHash,
+					tracker.getGroup_id(), tracker.getTracker_id());
+			TrackerSemantic trackerSemantic = trackerStructure.getSemantic();
+			TrackerSemanticTitle trackerSemanticTitle = trackerSemantic.getTitle();
+			String trackerSemanticTitleFieldName = trackerSemanticTitle.getField_name();
+			TrackerSemanticStatus trackerSemanticStatus = trackerSemantic.getStatus();
+			int[] trackerSemanticStatusOpenValues = trackerSemanticStatus.getValues();
+
+			TrackerSemanticContributor trackerSemanticContributor = trackerSemantic.getContributor();
+			String trackerSemanticContributorFieldName = trackerSemanticContributor.getField_name();
+
+			TrackerWorkflow trackerWorkflow = trackerStructure.getWorkflow();
+			TrackerWorkflowTransition[] trackerWorkflowTransitions = trackerWorkflow.getTransitions();
+
 			TrackerField[] trackerFields = tuleapTrackerV5APIPort.getTrackerFields(sessionHash, tracker
 					.getGroup_id(), tracker.getTracker_id());
 			monitor.worked(10);
 
 			for (TrackerField trackerField : trackerFields) {
 				AbstractTuleapField tuleapField = null;
-
 				String type = trackerField.getType();
 				int fieldIdentifier = trackerField.getField_id();
 				if (ITuleapConfigurationConstants.STRING.equals(type)) {
 					tuleapField = new TuleapString(fieldIdentifier);
+					if (trackerSemanticTitleFieldName.equals(type)) {
+						((TuleapString)tuleapField).setSemanticTitle(true);
+					}
 				} else if (ITuleapConfigurationConstants.TEXT.equals(type)) {
 					tuleapField = new TuleapText(fieldIdentifier);
 				} else if (ITuleapConfigurationConstants.AID.equals(type)) {
@@ -242,8 +271,38 @@ public class TuleapSoapConnector {
 					tuleapField = new TuleapLastUpdateDate(fieldIdentifier);
 				} else if (ITuleapConfigurationConstants.SB.equals(type)) {
 					tuleapField = new TuleapSelectBox(fieldIdentifier);
+					TuleapWorkflow tuleapWorkflow = ((TuleapSelectBox)tuleapField).getWorkflow();
+					for (TrackerWorkflowTransition trackerTransition : trackerWorkflowTransitions) {
+						TuleapWorkflowTransition tuleapTransition = new TuleapWorkflowTransition();
+						tuleapTransition.setFrom(trackerTransition.getFrom_id());
+						tuleapTransition.setTo(trackerTransition.getTo_id());
+						tuleapWorkflow.getTransitions().add(tuleapTransition);
+					}
+					for (TrackerFieldBindValue trackerFieldBindValue : trackerField.getValues()) {
+						TuleapSelectBoxItem tuleapSelectBoxItem = new TuleapSelectBoxItem(
+								trackerFieldBindValue.getField_id());
+						tuleapSelectBoxItem.setLabel(trackerFieldBindValue.getBind_value_label());
+						((TuleapSelectBox)tuleapField).getItems().add(tuleapSelectBoxItem);
+						if (ArrayUtils.contains(trackerSemanticStatusOpenValues, trackerFieldBindValue
+								.getBind_value_id())) {
+							((TuleapSelectBox)tuleapField).getOpenStatus().add(tuleapSelectBoxItem);
+						}
+					}
 				} else if (ITuleapConfigurationConstants.MSB.equals(type)) {
 					tuleapField = new TuleapMultiSelectBox(fieldIdentifier);
+					if (trackerSemanticContributorFieldName.equals(type)) {
+						((TuleapMultiSelectBox)tuleapField).setSemanticContributor(true);
+					}
+					for (TrackerFieldBindValue trackerFieldBindValue : trackerField.getValues()) {
+						TuleapSelectBoxItem tuleapSelectBoxItem = new TuleapSelectBoxItem(
+								trackerFieldBindValue.getField_id());
+						tuleapSelectBoxItem.setLabel(trackerFieldBindValue.getBind_value_label());
+						((TuleapMultiSelectBox)tuleapField).getItems().add(tuleapSelectBoxItem);
+						if (ArrayUtils.contains(trackerSemanticStatusOpenValues, trackerFieldBindValue
+								.getBind_value_id())) {
+							((TuleapSelectBox)tuleapField).getOpenStatus().add(tuleapSelectBoxItem);
+						}
+					}
 				} else if (ITuleapConfigurationConstants.DATE.equals(type)) {
 					tuleapField = new TuleapDate(fieldIdentifier);
 				} else if (ITuleapConfigurationConstants.FILE.equals(type)) {
@@ -268,6 +327,7 @@ public class TuleapSoapConnector {
 					TuleapCoreActivator.log(TuleapMylynTasksMessages.getString(
 							"TuleapSoapConnector.UnsupportedTrackerFieldType", type), true); //$NON-NLS-1$
 				}
+
 				if (tuleapField != null) {
 					tuleapField.setName(trackerField.getShort_name());
 					tuleapField.setLabel(trackerField.getLabel());

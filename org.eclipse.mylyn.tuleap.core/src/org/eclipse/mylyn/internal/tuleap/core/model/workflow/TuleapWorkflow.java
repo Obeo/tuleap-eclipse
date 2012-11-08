@@ -47,12 +47,12 @@ public class TuleapWorkflow implements Serializable {
 	 *            The state from which we need to compute the accessible states.
 	 * @return The list of accessible state from the given state.
 	 */
-	public List<String> accessibleStates(String from) {
+	public List<String> accessibleStates(int from) {
 		List<String> accessibleStates = new ArrayList<String>();
 
 		for (TuleapWorkflowTransition transition : this.transitions) {
-			if (from.equals(transition.getFrom())) {
-				accessibleStates.add(transition.getTo());
+			if (from == transition.getFrom()) {
+				accessibleStates.add(String.valueOf(transition.getTo()));
 			}
 		}
 
