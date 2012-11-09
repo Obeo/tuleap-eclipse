@@ -120,6 +120,21 @@ public class Test {
 						System.out.println("Name: " + field_name + " Value: " + field_value);
 					}
 				}
+
+				if (tracker_id == 484) {
+					ArtifactFieldValue[] value = new ArtifactFieldValue[] {new ArtifactFieldValue("String",
+							"string", "New Artifact " + System.currentTimeMillis()) };
+					int artifact_id = tuleapTrackerV5APIPort.addArtifact(session_hash, groupId, tracker_id,
+							value);
+					System.out.println("Id of the newly created artifact: " + artifact_id);
+
+					value = new ArtifactFieldValue[] {new ArtifactFieldValue("String", "string",
+							"Updated Artifact " + System.currentTimeMillis()) };
+
+					int updatedArtifactId = tuleapTrackerV5APIPort.updateArtifact(session_hash, groupId,
+							tracker_id, artifact_id, value, "Updated programmatically", "UTF-8");
+					System.out.println("Updated artifact id: " + updatedArtifactId);
+				}
 			}
 
 			codendiAPIPort.logout(session_hash);
