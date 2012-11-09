@@ -29,10 +29,9 @@ public class TuleapTrackerContentProvider implements ITreeContentProvider {
 	 * 
 	 * @see org.eclipse.jface.viewers.ITreeContentProvider#getElements(java.lang.Object)
 	 */
-	@SuppressWarnings("rawtypes")
 	public Object[] getElements(Object inputElement) {
-		if (inputElement instanceof List) {
-			return ((List)inputElement).toArray();
+		if (inputElement instanceof List<?>) {
+			return ((List<?>)inputElement).toArray();
 		}
 		return null;
 	}
