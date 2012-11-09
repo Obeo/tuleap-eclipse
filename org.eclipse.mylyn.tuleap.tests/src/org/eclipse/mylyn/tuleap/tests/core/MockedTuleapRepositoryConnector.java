@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClientManager;
-import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
+import org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.repository.ITuleapRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -47,7 +47,7 @@ public class MockedTuleapRepositoryConnector extends AbstractRepositoryConnector
 	 * @see org.eclipse.mylyn.internal.tuleap.core.repository.ITuleapRepositoryConnector#getRepositoryConfiguration(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      boolean, org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public TuleapTrackerConfiguration getRepositoryConfiguration(TaskRepository taskRepository,
+	public TuleapInstanceConfiguration getRepositoryConfiguration(TaskRepository taskRepository,
 			boolean forceRefresh, IProgressMonitor monitor) {
 		return null;
 	}
@@ -56,9 +56,9 @@ public class MockedTuleapRepositoryConnector extends AbstractRepositoryConnector
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.mylyn.internal.tuleap.core.repository.ITuleapRepositoryConnector#putRepositoryConfiguration(java.lang.String,
-	 *      org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration)
+	 *      org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration)
 	 */
-	public void putRepositoryConfiguration(String repositoryUrl, TuleapTrackerConfiguration configuration) {
+	public void putRepositoryConfiguration(String repositoryUrl, TuleapInstanceConfiguration configuration) {
 		// do nothing
 	}
 
