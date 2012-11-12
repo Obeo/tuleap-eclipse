@@ -55,8 +55,8 @@ public class Test {
 				CONFIG_FILE));
 		TuleapSoapServiceLocator locator = new TuleapSoapServiceLocator(config, location);
 		try {
-			String loginname = "begaudeaus";
-			String passwd = "n9Um4sq074ccAIR";
+			String loginname = "";
+			String passwd = "";
 
 			URL url = new URL("https://demo.tuleap.net/soap/");
 			CodendiAPIPortType codendiAPIPort = locator.getCodendiAPIPort(url);
