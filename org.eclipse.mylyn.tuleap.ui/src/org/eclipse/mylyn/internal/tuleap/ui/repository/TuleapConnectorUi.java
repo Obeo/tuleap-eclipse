@@ -133,8 +133,9 @@ public class TuleapConnectorUi extends AbstractRepositoryConnectorUi {
 	 */
 	@Override
 	public IWizard getQueryWizard(TaskRepository taskRepository, IRepositoryQuery queryToEdit) {
-		// TODO Subclass repository query wizard to handle next/finish
 		RepositoryQueryWizard wizard = new RepositoryQueryWizard(taskRepository);
+		wizard.setNeedsProgressMonitor(true);
+
 		if (queryToEdit != null) {
 			// edit an existing query
 			wizard.addPage(new TuleapCustomQueryPage(taskRepository, queryToEdit));
