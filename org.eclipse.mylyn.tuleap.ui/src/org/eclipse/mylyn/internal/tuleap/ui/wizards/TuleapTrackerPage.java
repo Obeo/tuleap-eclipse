@@ -130,6 +130,8 @@ public class TuleapTrackerPage extends WizardPage {
 
 		Dialog.applyDialogFont(composite);
 
+		this.updateTrackersList(false);
+
 		setControl(composite);
 	}
 
@@ -150,7 +152,8 @@ public class TuleapTrackerPage extends WizardPage {
 						InterruptedException {
 					ITuleapRepositoryConnector connector = (ITuleapRepositoryConnector)repositoryConnector;
 					final TuleapInstanceConfiguration instanceConfiguration = connector
-							.getRepositoryConfiguration(TuleapTrackerPage.this.repository, true, monitor);
+							.getRepositoryConfiguration(TuleapTrackerPage.this.repository, forceRefresh,
+									monitor);
 					List<String> trackersList = new ArrayList<String>();
 					List<TuleapTrackerConfiguration> trackerConfigurations = instanceConfiguration
 							.getAllTrackerConfigurations();
