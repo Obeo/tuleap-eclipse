@@ -191,8 +191,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 */
 	@Override
 	public AbstractTaskAttachmentHandler getTaskAttachmentHandler() {
-		// return new TuleapTaskAttachmentHandler();
-		return null;
+		return new TuleapTaskAttachmentHandler();
 	}
 
 	/**
@@ -227,21 +226,12 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 */
 	@Override
 	public boolean hasTaskChanged(TaskRepository taskRepository, ITask task, TaskData taskData) {
-		// TODO Checks if the task has changed
-		System.out.println("has task changed?");
-		return true;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#canSynchronizeTask(org.eclipse.mylyn.tasks.core.TaskRepository,
-	 *      org.eclipse.mylyn.tasks.core.ITask)
-	 */
-	@Override
-	public boolean canSynchronizeTask(TaskRepository taskRepository, ITask task) {
-		// TODO Checks if we can synchronize the task
-		System.out.println("can cynshronize task?");
+		ITaskMapping scheme = getTaskMapping(taskData);
+		Date repositoryDate = scheme.getModificationDate();
+		Date localDate = task.getModificationDate();
+		if (repositoryDate != null && repositoryDate.equals(localDate)) {
+			return false;
+		}
 		return true;
 	}
 

@@ -583,17 +583,33 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		this.createDefaultAttributes(taskData, trackerConfiguration, false);
 		this.createOperations(taskData, trackerConfiguration, tuleapArtifact.getValue(TaskAttribute.STATUS));
 
-		// Convert Tuleap artifact to Mylyn task data
-		Set<String> keys = tuleapArtifact.getKeys();
-		for (String key : keys) {
-			String value = tuleapArtifact.getValue(key);
-			TaskAttribute attribute = taskData.getRoot();
-			Map<String, TaskAttribute> attributes = attribute.getAttributes();
-			TaskAttribute taskAttribute = attributes.get(key);
-			if (taskAttribute != null && value != null) {
-				taskAttribute.setValue(value);
+		TaskMapper taskMapper = new TaskMapper(taskData);
+		taskMapper.setCreationDate(tuleapArtifact.getCreationDate());
+		taskMapper.setModificationDate(tuleapArtifact.getLastModificationDate());
+
+		List<AbstractTuleapField> fields = trackerConfiguration.getFields();
+		for (AbstractTuleapField abstractTuleapField : fields) {
+			if (abstractTuleapField instanceof TuleapString
+					&& ((TuleapString)abstractTuleapField).isSemanticTitle()) {
+				// Look for the summary
+				taskMapper.setSummary(tuleapArtifact.getValue(abstractTuleapField.getName()));
+			} else if (abstractTuleapField instanceof TuleapSelectBox
+					&& ((TuleapSelectBox)abstractTuleapField).isSemanticStatus()) {
+				// Look for the status
+				taskMapper.setStatus(tuleapArtifact.getValue(abstractTuleapField.getName()));
+			} else {
+				String value = tuleapArtifact.getValue(abstractTuleapField.getName());
+
+				TaskAttribute attribute = taskData.getRoot();
+				Map<String, TaskAttribute> attributes = attribute.getAttributes();
+				TaskAttribute taskAttribute = attributes.get(Integer.valueOf(
+						abstractTuleapField.getIdentifier()).toString());
+				if (taskAttribute != null && value != null) {
+					taskAttribute.setValue(value);
+				}
 			}
 		}
+
 		return taskData;
 	}
 

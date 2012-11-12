@@ -82,6 +82,9 @@ public class TuleapArtifact {
 	public TuleapArtifact(Artifact artifact) {
 		this.id = artifact.getArtifact_id();
 		this.trackerId = artifact.getTracker_id();
+
+		this.creationDate = new Date(artifact.getSubmitted_on());
+		this.lastModificationDate = new Date(artifact.getLast_update_date());
 	}
 
 	/**

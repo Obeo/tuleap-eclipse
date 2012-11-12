@@ -443,6 +443,12 @@ public class TuleapSoapConnector {
 					Artifact[] artifacts = artifactQueryResult.getArtifacts();
 					for (Artifact artifact : artifacts) {
 						TuleapArtifact tuleapArtifact = new TuleapArtifact(artifact);
+						ArtifactFieldValue[] value = artifact.getValue();
+						for (ArtifactFieldValue artifactFieldValue : value) {
+							tuleapArtifact.putValue(artifactFieldValue.getField_name(), artifactFieldValue
+									.getField_value());
+						}
+
 						TaskData taskData = taskDataHandler.createTaskDataFromArtifact(tuleapClient,
 								tuleapClient.getTaskRepository(), tuleapArtifact, monitor);
 						collector.accept(taskData);
@@ -518,6 +524,12 @@ public class TuleapSoapConnector {
 			Artifact artifact = tuleapTrackerV5APIPort.getArtifact(sessionHash, groupId, trackerId,
 					artifactId);
 			tuleapArtifact = new TuleapArtifact(artifact);
+
+			ArtifactFieldValue[] value = artifact.getValue();
+			for (ArtifactFieldValue artifactFieldValue : value) {
+				tuleapArtifact.putValue(artifactFieldValue.getField_name(), artifactFieldValue
+						.getField_value());
+			}
 
 			monitor.worked(fifty);
 
