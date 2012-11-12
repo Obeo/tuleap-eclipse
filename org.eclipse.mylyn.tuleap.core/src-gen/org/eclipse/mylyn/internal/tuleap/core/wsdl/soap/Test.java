@@ -55,8 +55,8 @@ public class Test {
 				CONFIG_FILE));
 		TuleapSoapServiceLocator locator = new TuleapSoapServiceLocator(config, location);
 		try {
-			String loginname = "";
-			String passwd = "";
+			String loginname = "begaudeaus";
+			String passwd = "n9Um4sq074ccAIR";
 
 			URL url = new URL("https://demo.tuleap.net/soap/");
 			CodendiAPIPortType codendiAPIPort = locator.getCodendiAPIPort(url);
@@ -128,11 +128,8 @@ public class Test {
 							value);
 					System.out.println("Id of the newly created artifact: " + artifact_id);
 
-					value = new ArtifactFieldValue[] {new ArtifactFieldValue("String", "string",
-							"Updated Artifact " + System.currentTimeMillis()) };
-
 					int updatedArtifactId = tuleapTrackerV5APIPort.updateArtifact(session_hash, groupId,
-							tracker_id, artifact_id, value, "Updated programmatically", "UTF-8");
+							tracker_id, artifact_id, value, "Updated without changes", "UTF-8");
 					System.out.println("Updated artifact id: " + updatedArtifactId);
 				}
 			}

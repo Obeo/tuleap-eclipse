@@ -79,4 +79,24 @@ public interface ITuleapConstants {
 	 * The url used to invoke the soap v2 services.
 	 */
 	String SOAP_V2_URL = "https://demo.tuleap.net/plugins/tracker/soap/"; //$NON-NLS-1$
+
+	/**
+	 * The separator used in the id of the task data.
+	 */
+	String TASK_DATA_ID_SEPARATOR = " #"; //$NON-NLS-1$
+
+	/**
+	 * The key used to specify the kind of the query.
+	 */
+	String QUERY_KIND = "tuleap_query_kind"; //$NON-NLS-1$
+
+	/**
+	 * The key used to specify that the query is looking for all artifacts from a specific tracker.
+	 */
+	String QUERY_KIND_ALL_FROM_TRACKER = "tuleap_query_all_from_tracker"; //$NON-NLS-1$
+
+	/**
+	 * The key used to identify the tracker id on which the query will be run.
+	 */
+	String QUERY_TRACKER_ID = "tuleap_query_tracker_id"; //$NON-NLS-1$
 }

@@ -38,4 +38,30 @@ public class TuleapUtilTests extends TestCase {
 		int groupId = TuleapUtil.getGroupId(repositoryUrl);
 		assertEquals(42, groupId);
 	}
+
+	/**
+	 * Test the parsing of the artifact id from the task data id.
+	 */
+	public void testGetArtifactIdFromTaskDataId() {
+		String taskDataId = "141 #131"; //$NON-NLS-1$
+		int artifactId = TuleapUtil.getArtifactIdFromTaskDataId(taskDataId);
+		assertEquals(131, artifactId);
+	}
+
+	/**
+	 * Test the parsing of the tracker item name from the task data id.
+	 */
+	public void testGetTrackerItemNameFromTaskDataId() {
+		String taskDataId = "222 #134"; //$NON-NLS-1$
+		int trackerId = TuleapUtil.getTrackerIdFromTaskDataId(taskDataId);
+		assertEquals(222, trackerId);
+	}
+
+	/**
+	 * Test the creation of the task data id.
+	 */
+	public void testGetTaskDataId() {
+		String taskDataId = TuleapUtil.getTaskDataId(178, 134);
+		assertEquals("178 #134", taskDataId); //$NON-NLS-1$
+	}
 }

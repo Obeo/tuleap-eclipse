@@ -15,6 +15,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Set;
 
+import org.eclipse.mylyn.internal.tuleap.core.util.TuleapUtil;
+import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.Artifact;
+
 /**
  * This class represents a Tuleap artifact obtained from the Tuleap tracker.
  * 
@@ -68,6 +71,17 @@ public class TuleapArtifact {
 	 */
 	public TuleapArtifact(int artifactId) {
 		this.id = artifactId;
+	}
+
+	/**
+	 * The constructor used to create a Tuleap artifact from a real artifact.
+	 * 
+	 * @param artifact
+	 *            The artifact
+	 */
+	public TuleapArtifact(Artifact artifact) {
+		this.id = artifact.getArtifact_id();
+		this.trackerId = artifact.getTracker_id();
 	}
 
 	/**
@@ -179,5 +193,17 @@ public class TuleapArtifact {
 	 */
 	public int getTrackerId() {
 		return this.trackerId;
+	}
+
+	/**
+	 * Returns the Tuleap artifact unique name.
+	 * 
+	 * @return The tuleap artifact unique name.
+	 */
+	public String getUniqueName() {
+		if (this.trackerId != INVALID_ID && this.id != INVALID_ID) {
+			return TuleapUtil.getTaskDataId(trackerId, this.id);
+		}
+		return null;
 	}
 }

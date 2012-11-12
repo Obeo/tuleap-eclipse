@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.core.client;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.internal.tuleap.core.TuleapCoreActivator;
@@ -20,7 +17,10 @@ import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.net.TuleapSoapConnector;
 import org.eclipse.mylyn.internal.tuleap.core.repository.ITuleapRepositoryConnector;
+import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapTaskDataHandler;
 import org.eclipse.mylyn.internal.tuleap.core.util.TuleapMylynTasksMessages;
+import org.eclipse.mylyn.internal.tuleap.core.util.TuleapUtil;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
@@ -55,12 +55,6 @@ public class TuleapClient implements ITuleapClient {
 	 */
 	private TaskRepository taskRepository;
 
-	// FIXME DELETE LATER §§§§
-	/**
-	 * A cache.
-	 */
-	private Map<Integer, TuleapArtifact> cache = new HashMap<Integer, TuleapArtifact>();
-
 	/**
 	 * The constructor.
 	 * 
@@ -89,8 +83,15 @@ public class TuleapClient implements ITuleapClient {
 	public boolean getSearchHits(IRepositoryQuery query, TaskDataCollector collector,
 			TaskAttributeMapper mapper, IProgressMonitor monitor) {
 		// Get the result of the query
-		TuleapSoapConnector trackerSoapConnector = new TuleapSoapConnector(this.location);
-		int hit = trackerSoapConnector.performQuery(collector, mapper, TaskDataCollector.MAX_HITS);
+		int hit = 0;
+		if (this.repositoryConnector instanceof AbstractRepositoryConnector
+				&& ((AbstractRepositoryConnector)this.repositoryConnector).getTaskDataHandler() instanceof TuleapTaskDataHandler) {
+			AbstractRepositoryConnector abstractRepositoryConnector = (AbstractRepositoryConnector)this.repositoryConnector;
+			TuleapSoapConnector trackerSoapConnector = new TuleapSoapConnector(this.location);
+			hit = trackerSoapConnector.performQuery(query, collector, mapper,
+					(TuleapTaskDataHandler)abstractRepositoryConnector.getTaskDataHandler(), this,
+					TaskDataCollector.MAX_HITS, monitor);
+		}
 		return hit > 0;
 	}
 
@@ -143,9 +144,12 @@ public class TuleapClient implements ITuleapClient {
 	 * @see org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClient#getArtifact(int,
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public TuleapArtifact getArtifact(int taskId, IProgressMonitor monitor) {
-		// TODO Obtain the artifact from the server
-		return this.cache.get(Integer.valueOf(taskId));
+	public TuleapArtifact getArtifact(String taskId, IProgressMonitor monitor) {
+		TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(this.location);
+		int trackerId = TuleapUtil.getTrackerIdFromTaskDataId(taskId);
+		int artifactId = TuleapUtil.getArtifactIdFromTaskDataId(taskId);
+		TuleapArtifact tuleapArtifact = tuleapSoapConnector.getArtifact(trackerId, artifactId, monitor);
+		return tuleapArtifact;
 	}
 
 	/**
@@ -154,12 +158,10 @@ public class TuleapClient implements ITuleapClient {
 	 * @see org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClient#createArtifact(org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact,
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public int createArtifact(TuleapArtifact artifact, IProgressMonitor monitor) {
-		// TODO Create the artifact on the server and return the artifact id computed by the server
-		int id = (int)(System.currentTimeMillis() / 1000);
-		artifact.setId(id);
-		cache.put(Integer.valueOf(id), artifact);
-		return id;
+	public String createArtifact(TuleapArtifact artifact, IProgressMonitor monitor) {
+		TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(this.location);
+		String taskDataId = tuleapSoapConnector.createArtifact(artifact, monitor);
+		return taskDataId;
 	}
 
 	/**
@@ -179,5 +181,14 @@ public class TuleapClient implements ITuleapClient {
 	 */
 	public TuleapInstanceConfiguration getRepositoryConfiguration() {
 		return this.configuration;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClient#getTaskRepository()
+	 */
+	public TaskRepository getTaskRepository() {
+		return this.taskRepository;
 	}
 }

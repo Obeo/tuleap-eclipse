@@ -93,13 +93,11 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		TuleapArtifact artifact = TuleapTaskDataHandler.getTuleapArtifact(repository, taskData);
 		ITuleapClient client = this.connector.getClientManager().getClient(repository);
 		if (taskData.isNew()) {
-			int artifactId = client.createArtifact(artifact, monitor);
-			response = new RepositoryResponse(ResponseKind.TASK_CREATED, Integer.valueOf(artifactId)
-					.toString());
+			String artifactId = client.createArtifact(artifact, monitor);
+			response = new RepositoryResponse(ResponseKind.TASK_CREATED, artifactId);
 		} else {
 			client.updateArtifact(artifact, monitor);
-			response = new RepositoryResponse(ResponseKind.TASK_UPDATED, Integer.valueOf(artifact.getId())
-					.toString());
+			response = new RepositoryResponse(ResponseKind.TASK_UPDATED, artifact.getUniqueName());
 		}
 
 		return response;
@@ -169,7 +167,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 					TuleapTrackerConfiguration trackerConfiguration = repositoryConfiguration
 							.getTrackerConfiguration(trackerId);
 					if (trackerConfiguration != null) {
-						this.createDefaultAttributes(taskData, tuleapClient, trackerConfiguration, false);
+						this.createDefaultAttributes(taskData, trackerConfiguration, false);
 
 						TaskMapper taskMapper = new TaskMapper(taskData);
 						taskMapper.setCreationDate(new Date());
@@ -177,8 +175,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 						taskMapper.setSummary(TuleapMylynTasksMessages.getString(
 								"TuleapTaskDataHandler.DefaultNewTitle", trackerConfiguration.getItemName())); //$NON-NLS-1$
 
-						this.createOperations(taskData, tuleapClient, trackerConfiguration, taskMapper
-								.getStatus());
+						this.createOperations(taskData, trackerConfiguration, taskMapper.getStatus());
 						this.createPersons(taskData, tuleapClient, trackerConfiguration);
 						isInitialized = true;
 					}
@@ -196,15 +193,13 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 * 
 	 * @param taskData
 	 *            The task data
-	 * @param tuleapClient
-	 *            The Tuleap client
 	 * @param configuration
 	 *            The configuration of the tracker where the task will be created.
 	 * @param existingTask
 	 *            Indicates if we are manipulating a newly created task
 	 */
-	private void createDefaultAttributes(TaskData taskData, ITuleapClient tuleapClient,
-			TuleapTrackerConfiguration configuration, boolean existingTask) {
+	private void createDefaultAttributes(TaskData taskData, TuleapTrackerConfiguration configuration,
+			boolean existingTask) {
 		if (configuration == null) {
 			return;
 		}
@@ -387,15 +382,13 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 * 
 	 * @param taskData
 	 *            The task data
-	 * @param tuleapClient
-	 *            The tuleap client used to get the configuration of the tracker
 	 * @param configuration
 	 *            The configuration of the tracker on which the task will be created.
 	 * @param currentStatus
 	 *            The current status
 	 */
-	private void createOperations(TaskData taskData, ITuleapClient tuleapClient,
-			TuleapTrackerConfiguration configuration, String currentStatus) {
+	private void createOperations(TaskData taskData, TuleapTrackerConfiguration configuration,
+			String currentStatus) {
 		TuleapSelectBox statusSelectBox = null;
 
 		// Create operations from the status semantic
@@ -534,7 +527,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 */
 	public TaskData getTaskData(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
-		return downloadTaskData(taskRepository, TuleapRepositoryConnector.getArtifactId(taskId), monitor);
+		return downloadTaskData(taskRepository, taskId, monitor);
 	}
 
 	/**
@@ -551,7 +544,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 * @throws CoreException
 	 *             If repository file configuration is not accessible
 	 */
-	public TaskData downloadTaskData(TaskRepository taskRepository, int taskId, IProgressMonitor monitor)
+	public TaskData downloadTaskData(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
 		ITuleapClient tuleapClient = this.connector.getClientManager().getClient(taskRepository);
 
@@ -576,20 +569,19 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 *            The progress monitor
 	 * @return The Mylyn task data computed from the Tuleap artifact.
 	 */
-	private TaskData createTaskDataFromArtifact(ITuleapClient tuleapClient, TaskRepository taskRepository,
+	public TaskData createTaskDataFromArtifact(ITuleapClient tuleapClient, TaskRepository taskRepository,
 			TuleapArtifact tuleapArtifact, IProgressMonitor monitor) {
 		// Create the default attributes
 		TaskData taskData = new TaskData(this.getAttributeMapper(taskRepository),
-				ITuleapConstants.CONNECTOR_KIND, taskRepository.getRepositoryUrl(), Integer.valueOf(
-						tuleapArtifact.getId()).toString());
+				ITuleapConstants.CONNECTOR_KIND, taskRepository.getRepositoryUrl(), tuleapArtifact
+						.getUniqueName());
 
 		tuleapClient.updateAttributes(monitor, false);
 		TuleapInstanceConfiguration repositoryConfiguration = tuleapClient.getRepositoryConfiguration();
 		TuleapTrackerConfiguration trackerConfiguration = repositoryConfiguration
 				.getTrackerConfiguration(tuleapArtifact.getTrackerId());
-		this.createDefaultAttributes(taskData, tuleapClient, trackerConfiguration, false);
-		this.createOperations(taskData, tuleapClient, trackerConfiguration, tuleapArtifact
-				.getValue(TaskAttribute.STATUS));
+		this.createDefaultAttributes(taskData, trackerConfiguration, false);
+		this.createOperations(taskData, trackerConfiguration, tuleapArtifact.getValue(TaskAttribute.STATUS));
 
 		// Convert Tuleap artifact to Mylyn task data
 		Set<String> keys = tuleapArtifact.getKeys();

@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
@@ -34,7 +35,7 @@ public interface ITuleapClient {
 	 *            The progress monitor
 	 * @return The ID of the newly created artifact, computed by the tracker
 	 */
-	int createArtifact(TuleapArtifact artifact, IProgressMonitor monitor);
+	String createArtifact(TuleapArtifact artifact, IProgressMonitor monitor);
 
 	/**
 	 * Updates the Tuleap artifact located on the tracker.
@@ -55,7 +56,7 @@ public interface ITuleapClient {
 	 *            The progress monitor
 	 * @return The Tuleap artifact matching the given task ID.
 	 */
-	TuleapArtifact getArtifact(int taskId, IProgressMonitor monitor);
+	TuleapArtifact getArtifact(String taskId, IProgressMonitor monitor);
 
 	/**
 	 * Updates the attributes handled by the Tuleap client.
@@ -91,4 +92,11 @@ public interface ITuleapClient {
 	 */
 	boolean getSearchHits(IRepositoryQuery query, TaskDataCollector collector, TaskAttributeMapper mapper,
 			IProgressMonitor monitor);
+
+	/**
+	 * Returns the task repository on which the client is working.
+	 * 
+	 * @return The task repository on which the client is working.
+	 */
+	TaskRepository getTaskRepository();
 }

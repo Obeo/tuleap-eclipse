@@ -228,6 +228,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	@Override
 	public boolean hasTaskChanged(TaskRepository taskRepository, ITask task, TaskData taskData) {
 		// TODO Checks if the task has changed
+		System.out.println("has task changed?");
 		return true;
 	}
 
@@ -239,6 +240,8 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 */
 	@Override
 	public boolean canSynchronizeTask(TaskRepository taskRepository, ITask task) {
+		// TODO Checks if we can synchronize the task
+		System.out.println("can cynshronize task?");
 		return true;
 	}
 

@@ -175,4 +175,51 @@ public final class TuleapUtil {
 		}
 		return -1;
 	}
+
+	/**
+	 * Returns the artifact id from the given task data id.
+	 * 
+	 * @param taskDataId
+	 *            The task data id
+	 * @return The artifact id from the given task data id.
+	 */
+	public static int getArtifactIdFromTaskDataId(String taskDataId) {
+		int index = taskDataId.indexOf(ITuleapConstants.TASK_DATA_ID_SEPARATOR);
+		if (index != -1) {
+			String artifactId = taskDataId
+					.substring(index + ITuleapConstants.TASK_DATA_ID_SEPARATOR.length());
+			return Integer.valueOf(artifactId).intValue();
+		}
+		return -1;
+	}
+
+	/**
+	 * Returns the track id from the given task data id.
+	 * 
+	 * @param taskDataId
+	 *            The task data id
+	 * @return The track id from the given task data id.
+	 */
+	public static int getTrackerIdFromTaskDataId(String taskDataId) {
+		int index = taskDataId.indexOf(ITuleapConstants.TASK_DATA_ID_SEPARATOR);
+		if (index != -1) {
+			String trackerId = taskDataId.substring(0, index);
+			return Integer.valueOf(trackerId).intValue();
+		}
+		return -1;
+	}
+
+	/**
+	 * Returns the task data id from the given tracker id and the given artifact id.
+	 * 
+	 * @param trackerId
+	 *            The id of the tracker.
+	 * @param artifactId
+	 *            The id of the artifact
+	 * @return The task data id
+	 */
+	public static String getTaskDataId(int trackerId, int artifactId) {
+		return Integer.valueOf(trackerId).toString() + ITuleapConstants.TASK_DATA_ID_SEPARATOR
+				+ Integer.valueOf(artifactId).toString();
+	}
 }
