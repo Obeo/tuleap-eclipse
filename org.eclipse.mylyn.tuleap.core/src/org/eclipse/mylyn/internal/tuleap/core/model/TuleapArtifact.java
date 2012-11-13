@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.core.model;
 
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -83,8 +84,13 @@ public class TuleapArtifact {
 		this.id = artifact.getArtifact_id();
 		this.trackerId = artifact.getTracker_id();
 
-		this.creationDate = new Date(artifact.getSubmitted_on());
-		this.lastModificationDate = new Date(artifact.getLast_update_date());
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(Long.valueOf(artifact.getSubmitted_on()).longValue() * 1000);
+		this.creationDate = calendar.getTime();
+
+		calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(Long.valueOf(artifact.getSubmitted_on()).longValue() * 1000);
+		this.lastModificationDate = calendar.getTime();
 	}
 
 	/**
