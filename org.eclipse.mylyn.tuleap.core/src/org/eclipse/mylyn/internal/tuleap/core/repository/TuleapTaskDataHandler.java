@@ -11,6 +11,7 @@
 package org.eclipse.mylyn.internal.tuleap.core.repository;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -27,6 +28,7 @@ import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
+import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapDate;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapFileUpload;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapMultiSelectBox;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapSelectBox;
@@ -36,11 +38,10 @@ import org.eclipse.mylyn.internal.tuleap.core.model.field.dynamic.TuleapArtifact
 import org.eclipse.mylyn.internal.tuleap.core.model.field.dynamic.TuleapLastUpdateDate;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.dynamic.TuleapSubmittedBy;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.dynamic.TuleapSubmittedOn;
-import org.eclipse.mylyn.internal.tuleap.core.model.permission.ITuleapDefaultPermissionGroups;
-import org.eclipse.mylyn.internal.tuleap.core.model.permission.TuleapAccessPermission;
 import org.eclipse.mylyn.internal.tuleap.core.model.workflow.TuleapWorkflow;
 import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
 import org.eclipse.mylyn.internal.tuleap.core.util.TuleapMylynTasksMessages;
+import org.eclipse.mylyn.internal.tuleap.core.util.TuleapUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
@@ -118,7 +119,8 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		if (taskData.isNew()) {
 			artifact = new TuleapArtifact();
 		} else {
-			artifact = new TuleapArtifact(TuleapRepositoryConnector.getArtifactId(taskData.getTaskId()));
+			artifact = new TuleapArtifact(TuleapUtil.getArtifactIdFromTaskDataId(taskData.getTaskId()));
+			artifact.setTrackerId(TuleapUtil.getTrackerIdFromTaskDataId(taskData.getTaskId()));
 		}
 
 		Collection<TaskAttribute> attributes = taskData.getRoot().getAttributes().values();
@@ -127,9 +129,12 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			if (!TuleapAttributeMapper.isInternalAttribute(taskAttribute)) {
 				artifact.putValue(taskAttribute.getId(), taskAttribute.getValue());
 			}
+			if (TaskAttribute.PRODUCT.equals(taskAttribute.getId())) {
+				String product = taskAttribute.getValue();
+				int trackerId = Integer.valueOf(product).intValue();
+				artifact.setTrackerId(trackerId);
+			}
 		}
-
-		// TODO Handle the other attributes (date to parse, status to set, etc...)
 
 		return artifact;
 	}
@@ -174,6 +179,9 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 						taskMapper.setModificationDate(new Date());
 						taskMapper.setSummary(TuleapMylynTasksMessages.getString(
 								"TuleapTaskDataHandler.DefaultNewTitle", trackerConfiguration.getItemName())); //$NON-NLS-1$
+
+						// Set the tracker id
+						taskData.getRoot().createAttribute(TaskAttribute.PRODUCT).addValue(product);
 
 						this.createOperations(taskData, trackerConfiguration, taskMapper.getStatus());
 						this.createPersons(taskData, tuleapClient, trackerConfiguration);
@@ -223,6 +231,12 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		attribute = taskData.getRoot().createAttribute(TaskAttribute.DATE_MODIFICATION);
 		metaData = attribute.getMetaData();
 		metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.LastModificationDate")); //$NON-NLS-1$
+		metaData.setType(TaskAttribute.TYPE_DATE);
+
+		// Completion date
+		attribute = taskData.getRoot().createAttribute(TaskAttribute.DATE_COMPLETION);
+		metaData = attribute.getMetaData();
+		metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.CompletionDate")); //$NON-NLS-1$
 		metaData.setType(TaskAttribute.TYPE_DATE);
 
 		// New comment
@@ -287,22 +301,13 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			attributeMetaData.setKind(tuleapField.getMetadataKind());
 		}
 
-		String group = ITuleapDefaultPermissionGroups.ALL_USERS;
-		if (!tuleapField.getPermissions().canSubmit(group)
-				&& !(TuleapAccessPermission.UPDATE == tuleapField.getPermissions().getAccessPermission(group))) {
-			// TODO Compute the group of the user
-			// attributeMetadata.setReadOnly(true);
+		if (!tuleapField.isSubmitable() && !tuleapField.isUpdatable()) {
+			attributeMetaData.setReadOnly(true);
 		}
 
 		// Dynamic fields are read only
 		if (tuleapField instanceof AbstractTuleapDynamicField) {
 			attributeMetaData.setReadOnly(true);
-		}
-
-		// Possible values
-		Map<String, String> options = tuleapField.getOptions();
-		for (Entry<String, String> entry : options.entrySet()) {
-			attribute.putOption(entry.getKey(), entry.getValue());
 		}
 
 		// Default values
@@ -320,6 +325,44 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			}
 
 			attribute.setValues(strList);
+		}
+
+		// Possible values
+		if (tuleapField instanceof TuleapSelectBox
+				&& ((TuleapSelectBox)tuleapField).getWorkflow().getTransitions().size() > 0) {
+			// The widget has a workflow
+
+			TuleapSelectBox tuleapSelectBox = (TuleapSelectBox)tuleapField;
+			TuleapSelectBoxItem item = null;
+			String value = attribute.getValue();
+
+			List<TuleapSelectBoxItem> items = tuleapSelectBox.getItems();
+			for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
+				if (value != null && value.equals(tuleapSelectBoxItem.getLabel())) {
+					item = tuleapSelectBoxItem;
+				}
+			}
+
+			if (item != null) {
+				List<Integer> accessibleStates = tuleapSelectBox.getWorkflow().accessibleStates(
+						item.getIdentifier());
+				attribute.clearOptions();
+				attribute.putOption(value, value);
+
+				for (Integer accessibleState : accessibleStates) {
+					for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
+						if (accessibleState.intValue() == tuleapSelectBoxItem.getIdentifier()) {
+							attribute.putOption(tuleapSelectBoxItem.getLabel(), tuleapSelectBoxItem
+									.getLabel());
+						}
+					}
+				}
+			}
+		} else {
+			Map<String, String> options = tuleapField.getOptions();
+			for (Entry<String, String> entry : options.entrySet()) {
+				attribute.putOption(entry.getKey(), entry.getValue());
+			}
 		}
 	}
 
@@ -402,46 +445,57 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			}
 		}
 
-		if (statusSelectBox != null) {
-			// Create the default attribute for the operation
-			TaskAttribute operationAttribute = taskData.getRoot().getAttribute(TaskAttribute.OPERATION);
-			if (operationAttribute == null) {
-				operationAttribute = taskData.getRoot().createAttribute(TaskAttribute.OPERATION);
-			}
-			TaskOperation.applyTo(operationAttribute, TaskAttribute.STATUS, TuleapMylynTasksMessages
-					.getString("TuleapTaskDataHandler.MarkAs")); //$NON-NLS-1$
+		if (statusSelectBox == null) {
+			// shortcut
+			return;
+		}
 
-			List<String> tuleapStatus = new ArrayList<String>();
+		// Create the default attribute for the operation
+		TaskAttribute operationAttribute = taskData.getRoot().getAttribute(TaskAttribute.OPERATION);
+		if (operationAttribute == null) {
+			operationAttribute = taskData.getRoot().createAttribute(TaskAttribute.OPERATION);
+		}
+		TaskOperation.applyTo(operationAttribute, TaskAttribute.STATUS, TuleapMylynTasksMessages
+				.getString("TuleapTaskDataHandler.MarkAs")); //$NON-NLS-1$
 
-			TuleapWorkflow workflow = statusSelectBox.getWorkflow();
-			if (workflow.getTransitions().size() > 0) {
-				List<TuleapSelectBoxItem> items = statusSelectBox.getItems();
-				for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
-					if (tuleapSelectBoxItem.getLabel().equals(currentStatus)) {
-						// Only support the reachable state from the current status
-						tuleapStatus.addAll(workflow.accessibleStates(tuleapSelectBoxItem.getIdentifier()));
+		List<String> tuleapStatus = new ArrayList<String>();
+
+		TuleapWorkflow workflow = statusSelectBox.getWorkflow();
+		if (workflow.getTransitions().size() > 0) {
+			List<TuleapSelectBoxItem> items = statusSelectBox.getItems();
+			for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
+				if (tuleapSelectBoxItem.getLabel().equals(currentStatus)) {
+					// Only support the reachable state from the current status
+					List<Integer> accessibleStates = workflow.accessibleStates(tuleapSelectBoxItem
+							.getIdentifier());
+					for (Integer accessibleState : accessibleStates) {
+						for (TuleapSelectBoxItem item : statusSelectBox.getItems()) {
+							if (item.getIdentifier() == accessibleState.intValue()) {
+								tuleapStatus.add(item.getLabel());
+							}
+						}
 					}
 				}
-			} else {
-				List<TuleapSelectBoxItem> items = statusSelectBox.getItems();
-				for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
-					tuleapStatus.add(tuleapSelectBoxItem.getLabel());
-				}
 			}
-
-			TaskAttribute attrResolvedInput = taskData.getRoot().createAttribute(
-					TaskAttribute.PREFIX_OPERATION + TaskAttribute.STATUS);
-			attrResolvedInput.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
-			attrResolvedInput.getMetaData().setKind(TaskAttribute.KIND_OPERATION);
-			for (String status : tuleapStatus) {
-				attrResolvedInput.putOption(status, status);
+		} else {
+			List<TuleapSelectBoxItem> items = statusSelectBox.getItems();
+			for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
+				tuleapStatus.add(tuleapSelectBoxItem.getLabel());
 			}
-			TaskOperation.applyTo(attrResolvedInput, TaskAttribute.STATUS, TuleapMylynTasksMessages
-					.getString("TuleapTaskDataHandler.MarkAs")); //$NON-NLS-1$
-
-			attrResolvedInput.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID,
-					TaskAttribute.STATUS);
 		}
+
+		TaskAttribute attrResolvedInput = taskData.getRoot().createAttribute(
+				TaskAttribute.PREFIX_OPERATION + TaskAttribute.STATUS);
+		attrResolvedInput.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+		attrResolvedInput.getMetaData().setKind(TaskAttribute.KIND_OPERATION);
+		for (String status : tuleapStatus) {
+			attrResolvedInput.putOption(status, status);
+		}
+		TaskOperation.applyTo(attrResolvedInput, TaskAttribute.STATUS, TuleapMylynTasksMessages
+				.getString("TuleapTaskDataHandler.MarkAs")); //$NON-NLS-1$
+
+		attrResolvedInput.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID,
+				TaskAttribute.STATUS);
 	}
 
 	/**
@@ -596,7 +650,49 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			} else if (abstractTuleapField instanceof TuleapSelectBox
 					&& ((TuleapSelectBox)abstractTuleapField).isSemanticStatus()) {
 				// Look for the status
-				taskMapper.setStatus(tuleapArtifact.getValue(abstractTuleapField.getName()));
+				String status = tuleapArtifact.getValue(abstractTuleapField.getName());
+				taskMapper.setStatus(status);
+
+				// If the status matches a "closed" status, set the completion date to the last modification
+				// date or the current date
+				boolean isClosed = false;
+				List<TuleapSelectBoxItem> closedStatus = ((TuleapSelectBox)abstractTuleapField)
+						.getClosedStatus();
+				for (TuleapSelectBoxItem tuleapSelectBoxItem : closedStatus) {
+					if (tuleapSelectBoxItem.getLabel().equals(status)) {
+						isClosed = true;
+						break;
+					}
+				}
+				if (isClosed) {
+					// Sets the completion date
+					Date lastModificationDate = tuleapArtifact.getLastModificationDate();
+					if (lastModificationDate != null) {
+						taskMapper.setCompletionDate(lastModificationDate);
+					} else {
+						taskMapper.setCompletionDate(new Date());
+					}
+				} else {
+					// Remove an existing completion date
+					taskMapper.setCompletionDate(null);
+				}
+			} else if (abstractTuleapField instanceof TuleapDate) {
+				// Date need to have their timestamp converted
+				String value = tuleapArtifact.getValue(abstractTuleapField.getName());
+
+				TaskAttribute attribute = taskData.getRoot();
+				Map<String, TaskAttribute> attributes = attribute.getAttributes();
+				TaskAttribute taskAttribute = attributes.get(Integer.valueOf(
+						abstractTuleapField.getIdentifier()).toString());
+				if (taskAttribute != null && value != null) {
+					try {
+						Calendar calendar = Calendar.getInstance();
+						calendar.setTimeInMillis(Long.valueOf(value).longValue() * 1000);
+						taskAttribute.setValue(Long.valueOf(calendar.getTimeInMillis()).toString());
+					} catch (NumberFormatException e) {
+						// The date is empty
+					}
+				}
 			} else {
 				String value = tuleapArtifact.getValue(abstractTuleapField.getName());
 
@@ -606,6 +702,47 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 						abstractTuleapField.getIdentifier()).toString());
 				if (taskAttribute != null && value != null) {
 					taskAttribute.setValue(value);
+				}
+			}
+
+			if (abstractTuleapField instanceof TuleapSelectBox
+					&& ((TuleapSelectBox)abstractTuleapField).getWorkflow().getTransitions().size() > 0) {
+				// The widget has a workflow
+
+				TuleapSelectBox tuleapSelectBox = (TuleapSelectBox)abstractTuleapField;
+				TuleapSelectBoxItem item = null;
+
+				TaskAttribute attribute = null;
+				if (tuleapSelectBox.isSemanticStatus()) {
+					attribute = taskData.getRoot().getAttribute(TaskAttribute.STATUS);
+				} else {
+					attribute = taskData.getRoot().getAttribute(
+							Integer.valueOf(abstractTuleapField.getIdentifier()).toString());
+				}
+
+				String value = attribute.getValue();
+
+				List<TuleapSelectBoxItem> items = tuleapSelectBox.getItems();
+				for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
+					if (value != null && value.equals(tuleapSelectBoxItem.getLabel())) {
+						item = tuleapSelectBoxItem;
+					}
+				}
+
+				if (item != null) {
+					attribute.clearOptions();
+					attribute.putOption(value, value);
+
+					List<Integer> accessibleStates = tuleapSelectBox.getWorkflow().accessibleStates(
+							item.getIdentifier());
+					for (Integer accessibleState : accessibleStates) {
+						for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
+							if (accessibleState.intValue() == tuleapSelectBoxItem.getIdentifier()) {
+								attribute.putOption(tuleapSelectBoxItem.getLabel(), tuleapSelectBoxItem
+										.getLabel());
+							}
+						}
+					}
 				}
 			}
 		}

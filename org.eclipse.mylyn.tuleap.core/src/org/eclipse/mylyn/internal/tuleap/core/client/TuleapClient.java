@@ -171,7 +171,8 @@ public class TuleapClient implements ITuleapClient {
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public void updateArtifact(TuleapArtifact artifact, IProgressMonitor monitor) {
-		// TODO Update the artifact located on the tracker
+		TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(this.location);
+		tuleapSoapConnector.updateArtifact(artifact, monitor);
 	}
 
 	/**

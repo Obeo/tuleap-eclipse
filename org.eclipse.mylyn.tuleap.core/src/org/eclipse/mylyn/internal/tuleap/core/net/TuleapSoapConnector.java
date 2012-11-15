@@ -13,6 +13,8 @@ package org.eclipse.mylyn.internal.tuleap.core.net;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.rpc.ServiceException;
 
@@ -77,6 +79,7 @@ import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerWorkflowTransi
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TuleapTrackerV5APILocator;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TuleapTrackerV5APIPortType;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
@@ -259,8 +262,49 @@ public class TuleapSoapConnector {
 			monitor.subTask(TuleapMylynTasksMessages.getString(
 					"TuleapSoapConnector.RetrievingFieldsDescriptionFromTracker", tracker.getName())); //$NON-NLS-1$
 
+			TrackerField[] trackerFields = tuleapTrackerV5APIPort.getTrackerFields(sessionHash, tracker
+					.getGroup_id(), tracker.getTracker_id());
+			monitor.worked(10);
+
+			for (TrackerField trackerField : trackerFields) {
+				AbstractTuleapField tuleapField = getTuleapTrackerField(tuleapTrackerV5APIPort, trackerField,
+						sessionHash, tracker.getGroup_id(), tracker.getTracker_id());
+
+				if (tuleapField != null) {
+					tuleapField.setName(trackerField.getShort_name());
+					tuleapField.setLabel(trackerField.getLabel());
+					tuleapField.setPermissions(trackerField.getPermissions());
+					tuleapTrackerConfiguration.getFields().add(tuleapField);
+				}
+			}
+		} catch (RemoteException e) {
+			TuleapCoreActivator.log(e, true);
+		}
+
+		return tuleapTrackerConfiguration;
+	}
+
+	/**
+	 * Returns the tuleap tracker field for the given tracker field.
+	 * 
+	 * @param tuleapTrackerV5APIPort
+	 *            The entry point to communicate with the server
+	 * @param trackerField
+	 *            The tracker field
+	 * @param sessionHash
+	 *            The session hash
+	 * @param groupId
+	 *            The group id
+	 * @param trackerId
+	 *            The tracker id
+	 * @return The tuleap tracker field
+	 */
+	private AbstractTuleapField getTuleapTrackerField(TuleapTrackerV5APIPortType tuleapTrackerV5APIPort,
+			TrackerField trackerField, String sessionHash, int groupId, int trackerId) {
+		AbstractTuleapField tuleapField = null;
+		try {
 			TrackerStructure trackerStructure = tuleapTrackerV5APIPort.getTrackerStructure(sessionHash,
-					tracker.getGroup_id(), tracker.getTracker_id());
+					groupId, trackerId);
 			TrackerSemantic trackerSemantic = trackerStructure.getSemantic();
 			TrackerSemanticTitle trackerSemanticTitle = trackerSemantic.getTitle();
 			String trackerSemanticTitleFieldName = trackerSemanticTitle.getField_name();
@@ -273,108 +317,93 @@ public class TuleapSoapConnector {
 			TrackerWorkflow trackerWorkflow = trackerStructure.getWorkflow();
 			TrackerWorkflowTransition[] trackerWorkflowTransitions = trackerWorkflow.getTransitions();
 
-			TrackerField[] trackerFields = tuleapTrackerV5APIPort.getTrackerFields(sessionHash, tracker
-					.getGroup_id(), tracker.getTracker_id());
-			monitor.worked(10);
-
-			for (TrackerField trackerField : trackerFields) {
-				AbstractTuleapField tuleapField = null;
-				String type = trackerField.getType();
-				int fieldIdentifier = trackerField.getField_id();
-				if (ITuleapConfigurationConstants.STRING.equals(type)) {
-					tuleapField = new TuleapString(fieldIdentifier);
-					if (trackerSemanticTitleFieldName.equals(trackerField.getShort_name())) {
-						((TuleapString)tuleapField).setSemanticTitle(true);
+			String type = trackerField.getType();
+			int fieldIdentifier = trackerField.getField_id();
+			if (ITuleapConfigurationConstants.STRING.equals(type)) {
+				tuleapField = new TuleapString(fieldIdentifier);
+				if (trackerSemanticTitleFieldName.equals(trackerField.getShort_name())) {
+					((TuleapString)tuleapField).setSemanticTitle(true);
+				}
+			} else if (ITuleapConfigurationConstants.TEXT.equals(type)) {
+				tuleapField = new TuleapText(fieldIdentifier);
+			} else if (ITuleapConfigurationConstants.AID.equals(type)) {
+				tuleapField = new TuleapArtifactId(fieldIdentifier);
+			} else if (ITuleapConfigurationConstants.LUD.equals(type)) {
+				tuleapField = new TuleapLastUpdateDate(fieldIdentifier);
+			} else if (ITuleapConfigurationConstants.SB.equals(type)) {
+				tuleapField = new TuleapSelectBox(fieldIdentifier);
+				if (trackerWorkflow.getField_id() == fieldIdentifier) {
+					// Workflow
+					TuleapWorkflow tuleapWorkflow = ((TuleapSelectBox)tuleapField).getWorkflow();
+					for (TrackerWorkflowTransition trackerTransition : trackerWorkflowTransitions) {
+						TuleapWorkflowTransition tuleapTransition = new TuleapWorkflowTransition();
+						tuleapTransition.setFrom(trackerTransition.getFrom_id());
+						tuleapTransition.setTo(trackerTransition.getTo_id());
+						tuleapWorkflow.getTransitions().add(tuleapTransition);
 					}
-				} else if (ITuleapConfigurationConstants.TEXT.equals(type)) {
-					tuleapField = new TuleapText(fieldIdentifier);
-				} else if (ITuleapConfigurationConstants.AID.equals(type)) {
-					tuleapField = new TuleapArtifactId(fieldIdentifier);
-				} else if (ITuleapConfigurationConstants.LUD.equals(type)) {
-					tuleapField = new TuleapLastUpdateDate(fieldIdentifier);
-				} else if (ITuleapConfigurationConstants.SB.equals(type)) {
-					tuleapField = new TuleapSelectBox(fieldIdentifier);
-					if (trackerWorkflow.getField_id() == fieldIdentifier) {
-						// Workflow
-						TuleapWorkflow tuleapWorkflow = ((TuleapSelectBox)tuleapField).getWorkflow();
-						for (TrackerWorkflowTransition trackerTransition : trackerWorkflowTransitions) {
-							TuleapWorkflowTransition tuleapTransition = new TuleapWorkflowTransition();
-							tuleapTransition.setFrom(trackerTransition.getFrom_id());
-							tuleapTransition.setTo(trackerTransition.getTo_id());
-							tuleapWorkflow.getTransitions().add(tuleapTransition);
-						}
-					}
+				}
 
-					for (TrackerFieldBindValue trackerFieldBindValue : trackerField.getValues()) {
-						TuleapSelectBoxItem tuleapSelectBoxItem = new TuleapSelectBoxItem(
-								trackerFieldBindValue.getField_id());
-						tuleapSelectBoxItem.setLabel(trackerFieldBindValue.getBind_value_label());
-						((TuleapSelectBox)tuleapField).getItems().add(tuleapSelectBoxItem);
+				for (TrackerFieldBindValue trackerFieldBindValue : trackerField.getValues()) {
+					TuleapSelectBoxItem tuleapSelectBoxItem = new TuleapSelectBoxItem(trackerFieldBindValue
+							.getBind_value_id());
+					tuleapSelectBoxItem.setLabel(trackerFieldBindValue.getBind_value_label());
+					((TuleapSelectBox)tuleapField).getItems().add(tuleapSelectBoxItem);
 
-						// Semantic status
-						if (trackerField.getShort_name().equals(trackerSemanticStatus.getField_name())) {
-							if (ArrayUtils.contains(trackerSemanticStatusOpenValues, trackerFieldBindValue
-									.getBind_value_id())) {
-								((TuleapSelectBox)tuleapField).getOpenStatus().add(tuleapSelectBoxItem);
-							}
-						}
-					}
-
-				} else if (ITuleapConfigurationConstants.MSB.equals(type)) {
-					tuleapField = new TuleapMultiSelectBox(fieldIdentifier);
-					if (trackerSemanticContributorFieldName.equals(trackerField.getShort_name())) {
-						((TuleapMultiSelectBox)tuleapField).setSemanticContributor(true);
-					}
-					for (TrackerFieldBindValue trackerFieldBindValue : trackerField.getValues()) {
-						TuleapSelectBoxItem tuleapSelectBoxItem = new TuleapSelectBoxItem(
-								trackerFieldBindValue.getBind_value_id());
-						tuleapSelectBoxItem.setLabel(trackerFieldBindValue.getBind_value_label());
-						((TuleapMultiSelectBox)tuleapField).getItems().add(tuleapSelectBoxItem);
+					// Semantic status
+					if (trackerField.getShort_name().equals(trackerSemanticStatus.getField_name())) {
 						if (ArrayUtils.contains(trackerSemanticStatusOpenValues, trackerFieldBindValue
 								.getBind_value_id())) {
 							((TuleapSelectBox)tuleapField).getOpenStatus().add(tuleapSelectBoxItem);
 						}
 					}
-				} else if (ITuleapConfigurationConstants.DATE.equals(type)) {
-					tuleapField = new TuleapDate(fieldIdentifier);
-				} else if (ITuleapConfigurationConstants.FILE.equals(type)) {
-					tuleapField = new TuleapFileUpload(fieldIdentifier);
-				} else if (ITuleapConfigurationConstants.CROSS.equals(type)) {
-					tuleapField = new TuleapCrossReferences(fieldIdentifier);
-				} else if (ITuleapConfigurationConstants.ARTLINK.equals(type)) {
-					tuleapField = new TuleapArtifactLink(fieldIdentifier);
-				} else if (ITuleapConfigurationConstants.SUBBY.equals(type)) {
-					tuleapField = new TuleapSubmittedBy(fieldIdentifier);
-				} else if (ITuleapConfigurationConstants.SUBON.equals(type)) {
-					tuleapField = new TuleapSubmittedOn(fieldIdentifier);
-				} else if (ITuleapConfigurationConstants.INT.equals(type)) {
-					tuleapField = new TuleapInteger(fieldIdentifier);
-				} else if (ITuleapConfigurationConstants.BURNDOWN.equals(type)) {
-					tuleapField = new TuleapBurndownChart(fieldIdentifier);
-				} else if (ITuleapConfigurationConstants.PERM.equals(type)) {
-					tuleapField = new TuleapPermissionOnArtifact(fieldIdentifier);
-				} else if (ITuleapConfigurationConstants.TBL.equals(type)) {
-					tuleapField = new TuleapOpenList(fieldIdentifier);
-				} else if (ITuleapConfigurationConstants.FLOAT.equals(type)) {
-					tuleapField = new TuleapFloat(fieldIdentifier);
-				} else if (ITuleapConfigurationConstants.COMPUTED.equals(type)) {
-					tuleapField = new TuleapComputedValue(fieldIdentifier);
-				} else {
-					TuleapCoreActivator.log(TuleapMylynTasksMessages.getString(
-							"TuleapSoapConnector.UnsupportedTrackerFieldType", type), true); //$NON-NLS-1$
 				}
-
-				if (tuleapField != null) {
-					tuleapField.setName(trackerField.getShort_name());
-					tuleapField.setLabel(trackerField.getLabel());
-					tuleapTrackerConfiguration.getFields().add(tuleapField);
+			} else if (ITuleapConfigurationConstants.MSB.equals(type)) {
+				tuleapField = new TuleapMultiSelectBox(fieldIdentifier);
+				if (trackerSemanticContributorFieldName.equals(trackerField.getShort_name())) {
+					((TuleapMultiSelectBox)tuleapField).setSemanticContributor(true);
 				}
+				for (TrackerFieldBindValue trackerFieldBindValue : trackerField.getValues()) {
+					TuleapSelectBoxItem tuleapSelectBoxItem = new TuleapSelectBoxItem(trackerFieldBindValue
+							.getBind_value_id());
+					tuleapSelectBoxItem.setLabel(trackerFieldBindValue.getBind_value_label());
+					((TuleapMultiSelectBox)tuleapField).getItems().add(tuleapSelectBoxItem);
+					if (ArrayUtils.contains(trackerSemanticStatusOpenValues, trackerFieldBindValue
+							.getBind_value_id())) {
+						((TuleapSelectBox)tuleapField).getOpenStatus().add(tuleapSelectBoxItem);
+					}
+				}
+			} else if (ITuleapConfigurationConstants.DATE.equals(type)) {
+				tuleapField = new TuleapDate(fieldIdentifier);
+			} else if (ITuleapConfigurationConstants.FILE.equals(type)) {
+				tuleapField = new TuleapFileUpload(fieldIdentifier);
+			} else if (ITuleapConfigurationConstants.CROSS.equals(type)) {
+				tuleapField = new TuleapCrossReferences(fieldIdentifier);
+			} else if (ITuleapConfigurationConstants.ARTLINK.equals(type)) {
+				tuleapField = new TuleapArtifactLink(fieldIdentifier);
+			} else if (ITuleapConfigurationConstants.SUBBY.equals(type)) {
+				tuleapField = new TuleapSubmittedBy(fieldIdentifier);
+			} else if (ITuleapConfigurationConstants.SUBON.equals(type)) {
+				tuleapField = new TuleapSubmittedOn(fieldIdentifier);
+			} else if (ITuleapConfigurationConstants.INT.equals(type)) {
+				tuleapField = new TuleapInteger(fieldIdentifier);
+			} else if (ITuleapConfigurationConstants.BURNDOWN.equals(type)) {
+				tuleapField = new TuleapBurndownChart(fieldIdentifier);
+			} else if (ITuleapConfigurationConstants.PERM.equals(type)) {
+				tuleapField = new TuleapPermissionOnArtifact(fieldIdentifier);
+			} else if (ITuleapConfigurationConstants.TBL.equals(type)) {
+				tuleapField = new TuleapOpenList(fieldIdentifier);
+			} else if (ITuleapConfigurationConstants.FLOAT.equals(type)) {
+				tuleapField = new TuleapFloat(fieldIdentifier);
+			} else if (ITuleapConfigurationConstants.COMPUTED.equals(type)) {
+				tuleapField = new TuleapComputedValue(fieldIdentifier);
+			} else {
+				TuleapCoreActivator.log(TuleapMylynTasksMessages.getString(
+						"TuleapSoapConnector.UnsupportedTrackerFieldType", type), true); //$NON-NLS-1$
 			}
 		} catch (RemoteException e) {
 			TuleapCoreActivator.log(e, true);
 		}
-
-		return tuleapTrackerConfiguration;
+		return tuleapField;
 	}
 
 	/**
@@ -587,11 +616,44 @@ public class TuleapSoapConnector {
 
 			TuleapTrackerV5APIPortType tuleapTrackerV5APIPort = tuleapLocator.getTuleapTrackerV5APIPort(url);
 
-			ArtifactFieldValue[] values = new ArtifactFieldValue[] {};
+			List<ArtifactFieldValue> valuesList = new ArrayList<ArtifactFieldValue>();
+			TrackerField[] trackerFields = tuleapTrackerV5APIPort.getTrackerFields(sessionHash, groupId,
+					artifact.getTrackerId());
+			TrackerStructure trackerStructure = tuleapTrackerV5APIPort.getTrackerStructure(sessionHash,
+					groupId, artifact.getTrackerId());
+			for (TrackerField trackerField : trackerFields) {
+				if (trackerStructure != null) {
+					if (trackerStructure.getSemantic() != null
+							&& trackerStructure.getSemantic().getTitle() != null
+							&& trackerField.getShort_name().equals(
+									trackerStructure.getSemantic().getTitle().getField_name())) {
+						// The title of the artifact
+						valuesList.add(new ArtifactFieldValue(trackerField.getShort_name(), trackerField
+								.getLabel(), artifact.getValue(TaskAttribute.SUMMARY)));
+					} else if (trackerStructure.getSemantic() != null
+							&& trackerStructure.getSemantic().getStatus() != null
+							&& trackerField.getShort_name().equals(
+									trackerStructure.getSemantic().getStatus().getField_name())) {
+						// The status of the artifact
+						valuesList.add(new ArtifactFieldValue(trackerField.getShort_name(), trackerField
+								.getLabel(), artifact.getValue(TaskAttribute.STATUS)));
+					} else if (ITuleapConfigurationConstants.DATE.equals(trackerField.getType())) {
+						// Convert the date into a valid timestamp
+						String value = artifact.getValue(Integer.valueOf(trackerField.getField_id())
+								.toString());
+						System.out.println("Support date: " + value); //$NON-NLS-1$
+					} else {
+						// Any other value
+						valuesList.add(new ArtifactFieldValue(trackerField.getShort_name(), trackerField
+								.getLabel(), artifact.getValue(Integer.valueOf(trackerField.getField_id())
+								.toString())));
+					}
+				}
+			}
+			int artifactId = tuleapTrackerV5APIPort.addArtifact(sessionHash, groupId,
+					artifact.getTrackerId(), valuesList.toArray(new ArtifactFieldValue[valuesList.size()]));
 
-			// TODO Add the properties!
-
-			tuleapTrackerV5APIPort.addArtifact(sessionHash, groupId, artifact.getTrackerId(), values);
+			taskDataId = TuleapUtil.getTaskDataId(artifact.getTrackerId(), artifactId);
 
 			monitor.worked(fifty);
 
@@ -605,5 +667,99 @@ public class TuleapSoapConnector {
 		}
 
 		return taskDataId;
+	}
+
+	/**
+	 * Updates the artifact on the Tuleap tracker with the information from the given Tuleap artifact.
+	 * 
+	 * @param artifact
+	 *            The Tuleap artifact
+	 * @param monitor
+	 *            the progress monitor
+	 */
+	public void updateArtifact(TuleapArtifact artifact, IProgressMonitor monitor) {
+		monitor.beginTask(VALIDATE_CONNECTION_MESSAGE, 100);
+
+		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
+		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
+
+		try {
+			EngineConfiguration config = new FileProvider(getClass().getClassLoader().getResourceAsStream(
+					CONFIG_FILE));
+			TuleapSoapServiceLocator locator = new TuleapSoapServiceLocator(config, this.trackerLocation);
+
+			final int fifty = 50;
+			monitor.worked(fifty);
+			monitor.subTask(LOGIN_MESSAGE);
+
+			URL url = new URL(ITuleapConstants.SOAP_V1_URL);
+			CodendiAPIPortType codendiAPIPort = locator.getCodendiAPIPort(url);
+			Session session = codendiAPIPort.login(username, password);
+			String sessionHash = session.getSession_hash();
+
+			monitor.worked(5);
+
+			int groupId = TuleapUtil.getGroupId(this.trackerLocation.getUrl());
+
+			config = new FileProvider(getClass().getClassLoader().getResourceAsStream(CONFIG_FILE));
+			TuleapTrackerV5APILocator tuleapLocator = new TuleapTrackerV5APILocatorImpl(config,
+					this.trackerLocation);
+			url = new URL(ITuleapConstants.SOAP_V2_URL);
+
+			TuleapTrackerV5APIPortType tuleapTrackerV5APIPort = tuleapLocator.getTuleapTrackerV5APIPort(url);
+
+			List<ArtifactFieldValue> valuesList = new ArrayList<ArtifactFieldValue>();
+			TrackerField[] trackerFields = tuleapTrackerV5APIPort.getTrackerFields(sessionHash, groupId,
+					artifact.getTrackerId());
+			TrackerStructure trackerStructure = tuleapTrackerV5APIPort.getTrackerStructure(sessionHash,
+					groupId, artifact.getTrackerId());
+			for (TrackerField trackerField : trackerFields) {
+				if (trackerStructure != null) {
+					if (trackerStructure.getSemantic() != null
+							&& trackerStructure.getSemantic().getTitle() != null
+							&& trackerField.getShort_name().equals(
+									trackerStructure.getSemantic().getTitle().getField_name())) {
+						// The title of the artifact
+						valuesList.add(new ArtifactFieldValue(trackerField.getShort_name(), trackerField
+								.getLabel(), artifact.getValue(TaskAttribute.SUMMARY)));
+					} else if (trackerStructure.getSemantic() != null
+							&& trackerStructure.getSemantic().getStatus() != null
+							&& trackerField.getShort_name().equals(
+									trackerStructure.getSemantic().getStatus().getField_name())) {
+						// The status of the artifact
+						valuesList.add(new ArtifactFieldValue(trackerField.getShort_name(), trackerField
+								.getLabel(), artifact.getValue(TaskAttribute.STATUS)));
+					} else if (ITuleapConfigurationConstants.DATE.equals(trackerField.getType())) {
+						// Convert the date into a valid timestamp
+						String value = artifact.getValue(Integer.valueOf(trackerField.getField_id())
+								.toString());
+						System.out.println("Support date: " + value); //$NON-NLS-1$
+					} else {
+						// Any other value
+						valuesList.add(new ArtifactFieldValue(trackerField.getShort_name(), trackerField
+								.getLabel(), artifact.getValue(Integer.valueOf(trackerField.getField_id())
+								.toString())));
+					}
+				}
+			}
+
+			String newComment = artifact.getValue(TaskAttribute.COMMENT_NEW);
+			if (newComment == null) {
+				newComment = TuleapMylynTasksMessages.getString("TuleapSoapConnector.DefaultComment"); //$NON-NLS-1$
+			}
+			tuleapTrackerV5APIPort.updateArtifact(sessionHash, groupId, artifact.getTrackerId(), artifact
+					.getId(), valuesList.toArray(new ArtifactFieldValue[valuesList.size()]), newComment,
+					ITuleapConstants.UTF8);
+
+			monitor.worked(fifty);
+
+			codendiAPIPort.logout(sessionHash);
+		} catch (MalformedURLException e) {
+			TuleapCoreActivator.log(e, true);
+		} catch (ServiceException e) {
+			TuleapCoreActivator.log(e, true);
+		} catch (RemoteException e) {
+			TuleapCoreActivator.log(e, true);
+		}
 	}
 }

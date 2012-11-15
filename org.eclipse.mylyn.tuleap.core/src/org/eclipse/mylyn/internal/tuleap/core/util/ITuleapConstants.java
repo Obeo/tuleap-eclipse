@@ -99,4 +99,24 @@ public interface ITuleapConstants {
 	 * The key used to identify the tracker id on which the query will be run.
 	 */
 	String QUERY_TRACKER_ID = "tuleap_query_tracker_id"; //$NON-NLS-1$
+
+	/**
+	 * Indicates that the user can read the field.
+	 */
+	String PERMISSION_READ = "read"; //$NON-NLS-1$
+
+	/**
+	 * Indicates that the user can update the field.
+	 */
+	String PERMISSION_UPDATE = "update"; //$NON-NLS-1$
+
+	/**
+	 * Indicates that the user can submit a newly created artifact with the field set.
+	 */
+	String PERMISSION_SUBMIT = "submit"; //$NON-NLS-1$
+
+	/**
+	 * The UTF-8 constants.
+	 */
+	String UTF8 = "UTF-8";
 }

@@ -191,7 +191,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 */
 	@Override
 	public AbstractTaskAttachmentHandler getTaskAttachmentHandler() {
-		return new TuleapTaskAttachmentHandler();
+		return new TuleapTaskAttachmentHandler(this);
 	}
 
 	/**
@@ -418,22 +418,6 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 				return taskData.getRepositoryUrl();
 			}
 		};
-	}
-
-	/**
-	 * Returns the artifact ID matching the given task ID.
-	 * 
-	 * @param taskId
-	 *            The task id.
-	 * @return The artifact ID matching the given task ID.
-	 */
-	public static int getArtifactId(String taskId) {
-		try {
-			return Integer.parseInt(taskId);
-		} catch (NumberFormatException e) {
-			TuleapCoreActivator.log(e, true);
-		}
-		return 0;
 	}
 
 	/**

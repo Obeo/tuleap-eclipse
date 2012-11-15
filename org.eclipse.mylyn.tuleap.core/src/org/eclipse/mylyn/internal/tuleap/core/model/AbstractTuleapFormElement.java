@@ -11,8 +11,10 @@
 package org.eclipse.mylyn.internal.tuleap.core.model;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 
-import org.eclipse.mylyn.internal.tuleap.core.model.permission.TuleapPermissions;
+import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
 
 /**
  * The common root of all Tuleap form elements.
@@ -48,11 +50,6 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 	private boolean required;
 
 	/**
-	 * The permissions of this form element.
-	 */
-	private TuleapPermissions permissions;
-
-	/**
 	 * The identifier of the form element.
 	 */
 	private int identifier;
@@ -63,6 +60,21 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 	private int rank;
 
 	/**
+	 * Indicates that the field is readable.
+	 */
+	private boolean readable;
+
+	/**
+	 * Indicates that the field is submitable.
+	 */
+	private boolean submitable;
+
+	/**
+	 * Indicates that the field is updatable.
+	 */
+	private boolean updatable;
+
+	/**
 	 * The constructor.
 	 * 
 	 * @param formElementIdentifier
@@ -71,7 +83,6 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 	public AbstractTuleapFormElement(int formElementIdentifier) {
 		super();
 		this.identifier = formElementIdentifier;
-		this.permissions = new TuleapPermissions();
 	}
 
 	/**
@@ -160,22 +171,43 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 	}
 
 	/**
-	 * Returns the permission of the form element.
+	 * Sets the permission on the element.
 	 * 
-	 * @return The permission of the form element.
+	 * @param permissions
+	 *            The array of permissions containing values among "read", "submit", "write".
 	 */
-	public TuleapPermissions getPermissions() {
-		return this.permissions;
+	public void setPermissions(String[] permissions) {
+		List<String> list = Arrays.asList(permissions);
+		this.readable = list.contains(ITuleapConstants.PERMISSION_READ);
+		this.submitable = list.contains(ITuleapConstants.PERMISSION_SUBMIT);
+		this.updatable = list.contains(ITuleapConstants.PERMISSION_UPDATE);
 	}
 
 	/**
-	 * Sets the permission of the form element.
+	 * Returns <code>true</code> if this field can be read, <code>false</code> otherwise.
 	 * 
-	 * @param formElementPermissions
-	 *            The permissions to set
+	 * @return <code>true</code> if this field can be read, <code>false</code> otherwise.
 	 */
-	public void setPermissions(TuleapPermissions formElementPermissions) {
-		this.permissions = formElementPermissions;
+	public boolean isReadable() {
+		return this.readable;
+	}
+
+	/**
+	 * Returns <code>true</code> if this field can be updated, <code>false</code> otherwise.
+	 * 
+	 * @return <code>true</code> if this field can be updated, <code>false</code> otherwise.
+	 */
+	public boolean isUpdatable() {
+		return this.updatable;
+	}
+
+	/**
+	 * Returns <code>true</code> if this field can be submitted, <code>false</code> otherwise.
+	 * 
+	 * @return <code>true</code> if this field can be submitted, <code>false</code> otherwise.
+	 */
+	public boolean isSubmitable() {
+		return this.submitable;
 	}
 
 	/**

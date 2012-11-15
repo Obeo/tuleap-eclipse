@@ -84,13 +84,21 @@ public class TuleapArtifact {
 		this.id = artifact.getArtifact_id();
 		this.trackerId = artifact.getTracker_id();
 
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTimeInMillis(Long.valueOf(artifact.getSubmitted_on()).longValue() * 1000);
-		this.creationDate = calendar.getTime();
+		try {
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTimeInMillis(Long.valueOf(artifact.getSubmitted_on()).longValue() * 1000);
+			this.creationDate = calendar.getTime();
+		} catch (NumberFormatException e) {
+			// Empty date
+		}
 
-		calendar = Calendar.getInstance();
-		calendar.setTimeInMillis(Long.valueOf(artifact.getSubmitted_on()).longValue() * 1000);
-		this.lastModificationDate = calendar.getTime();
+		try {
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTimeInMillis(Long.valueOf(artifact.getSubmitted_on()).longValue() * 1000);
+			this.lastModificationDate = calendar.getTime();
+		} catch (NumberFormatException e) {
+			// Empty date
+		}
 	}
 
 	/**
@@ -202,6 +210,16 @@ public class TuleapArtifact {
 	 */
 	public int getTrackerId() {
 		return this.trackerId;
+	}
+
+	/**
+	 * Sets the new value of the tracker id.
+	 * 
+	 * @param newTrackerId
+	 *            The new value of the tracker id.
+	 */
+	public void setTrackerId(int newTrackerId) {
+		this.trackerId = newTrackerId;
 	}
 
 	/**
