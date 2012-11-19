@@ -50,7 +50,7 @@ public class TuleapTrackerV5APILocatorImpl extends TuleapTrackerV5APILocator {
 		call.setProperty(SoapHttpSender.LOCATION, this.location);
 
 		Hashtable<String, String> headers = new Hashtable<String, String>();
-		headers.put(HTTPConstants.HEADER_USER_AGENT, WebUtil.getUserAgent("JiraConnector Axis/1.4")); //$NON-NLS-1$
+		headers.put(HTTPConstants.HEADER_USER_AGENT, WebUtil.getUserAgent("TuleapConnector Axis/1.4")); //$NON-NLS-1$
 		// some servers break with a 411 Length Required when chunked encoding is used
 		headers.put(HTTPConstants.HEADER_TRANSFER_ENCODING_CHUNKED, Boolean.FALSE.toString());
 		call.setProperty(HTTPConstants.REQUEST_HEADERS, headers);
