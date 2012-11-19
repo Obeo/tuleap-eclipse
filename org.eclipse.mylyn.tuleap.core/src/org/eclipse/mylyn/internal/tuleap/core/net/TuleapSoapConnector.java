@@ -14,6 +14,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.rpc.ServiceException;
@@ -642,11 +643,18 @@ public class TuleapSoapConnector {
 						String value = artifact.getValue(Integer.valueOf(trackerField.getField_id())
 								.toString());
 						System.out.println("Support date: " + value); //$NON-NLS-1$
-					} else {
+					} else if (!ITuleapConfigurationConstants.AID.equals(trackerField.getType())
+							&& !ITuleapConfigurationConstants.ARTLINK.equals(trackerField.getType())
+							&& !ITuleapConfigurationConstants.SUBON.equals(trackerField.getType())
+							&& !ITuleapConfigurationConstants.SUBBY.equals(trackerField.getType())
+							&& !ITuleapConfigurationConstants.LUD.equals(trackerField.getType())) {
 						// Any other value
-						valuesList.add(new ArtifactFieldValue(trackerField.getShort_name(), trackerField
-								.getLabel(), artifact.getValue(Integer.valueOf(trackerField.getField_id())
-								.toString())));
+						if (Arrays.asList(trackerField.getPermissions()).contains(
+								ITuleapConstants.PERMISSION_SUBMIT)) {
+							valuesList.add(new ArtifactFieldValue(trackerField.getShort_name(), trackerField
+									.getLabel(), artifact.getValue(Integer
+									.valueOf(trackerField.getField_id()).toString())));
+						}
 					}
 				}
 			}
@@ -734,11 +742,19 @@ public class TuleapSoapConnector {
 						String value = artifact.getValue(Integer.valueOf(trackerField.getField_id())
 								.toString());
 						System.out.println("Support date: " + value); //$NON-NLS-1$
-					} else {
+
+					} else if (!ITuleapConfigurationConstants.AID.equals(trackerField.getType())
+							&& !ITuleapConfigurationConstants.ARTLINK.equals(trackerField.getType())
+							&& !ITuleapConfigurationConstants.SUBON.equals(trackerField.getType())
+							&& !ITuleapConfigurationConstants.SUBBY.equals(trackerField.getType())
+							&& !ITuleapConfigurationConstants.LUD.equals(trackerField.getType())) {
 						// Any other value
-						valuesList.add(new ArtifactFieldValue(trackerField.getShort_name(), trackerField
-								.getLabel(), artifact.getValue(Integer.valueOf(trackerField.getField_id())
-								.toString())));
+						if (Arrays.asList(trackerField.getPermissions()).contains(
+								ITuleapConstants.PERMISSION_SUBMIT)) {
+							valuesList.add(new ArtifactFieldValue(trackerField.getShort_name(), trackerField
+									.getLabel(), artifact.getValue(Integer
+									.valueOf(trackerField.getField_id()).toString())));
+						}
 					}
 				}
 			}
