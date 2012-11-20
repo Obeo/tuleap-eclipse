@@ -73,12 +73,12 @@ public interface ITuleapConstants {
 	/**
 	 * The url used to invoke the soap v1 services.
 	 */
-	String SOAP_V1_URL = "https://demo.tuleap.net/soap/"; //$NON-NLS-1$
+	String SOAP_V1_URL = "/soap/"; //$NON-NLS-1$
 
 	/**
 	 * The url used to invoke the soap v2 services.
 	 */
-	String SOAP_V2_URL = "https://demo.tuleap.net/plugins/tracker/soap/"; //$NON-NLS-1$
+	String SOAP_V2_URL = "/plugins/tracker/soap/"; //$NON-NLS-1$
 
 	/**
 	 * The separator used in the id of the task data.

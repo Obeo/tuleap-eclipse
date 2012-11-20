@@ -138,6 +138,13 @@ public class TuleapSoapConnector {
 		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
 		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
 
+		String soapv1url = trackerLocation.getUrl();
+		int index = soapv1url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
+		if (index != -1) {
+			soapv1url = soapv1url.substring(0, index);
+			soapv1url = soapv1url + ITuleapConstants.SOAP_V1_URL;
+		}
+
 		try {
 			EngineConfiguration config = new FileProvider(getClass().getClassLoader().getResourceAsStream(
 					CONFIG_FILE));
@@ -147,7 +154,7 @@ public class TuleapSoapConnector {
 			monitor.worked(fifty);
 			monitor.subTask(LOGIN_MESSAGE);
 
-			URL url = new URL(ITuleapConstants.SOAP_V1_URL);
+			URL url = new URL(soapv1url);
 			CodendiAPIPortType codendiAPIPort = locator.getCodendiAPIPort(url);
 			Session session = codendiAPIPort.login(username, password);
 			String sessionHash = session.getSession_hash();
@@ -185,6 +192,20 @@ public class TuleapSoapConnector {
 		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
 		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
 
+		String soapv1url = trackerLocation.getUrl();
+		int index = soapv1url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
+		if (index != -1) {
+			soapv1url = soapv1url.substring(0, index);
+			soapv1url = soapv1url + ITuleapConstants.SOAP_V1_URL;
+		}
+
+		String soapv2url = trackerLocation.getUrl();
+		index = soapv2url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
+		if (index != -1) {
+			soapv2url = soapv2url.substring(0, index);
+			soapv2url = soapv2url + ITuleapConstants.SOAP_V2_URL;
+		}
+
 		try {
 			EngineConfiguration config = new FileProvider(getClass().getClassLoader().getResourceAsStream(
 					CONFIG_FILE));
@@ -193,7 +214,7 @@ public class TuleapSoapConnector {
 			monitor.worked(1);
 			monitor.subTask(LOGIN_MESSAGE);
 
-			URL url = new URL(ITuleapConstants.SOAP_V1_URL);
+			URL url = new URL(soapv1url);
 			CodendiAPIPortType codendiAPIPort = locator.getCodendiAPIPort(url);
 			Session session = codendiAPIPort.login(username, password);
 			String sessionHash = session.getSession_hash();
@@ -204,7 +225,7 @@ public class TuleapSoapConnector {
 			config = new FileProvider(getClass().getClassLoader().getResourceAsStream(CONFIG_FILE));
 			TuleapTrackerV5APILocator tuleapLocator = new TuleapTrackerV5APILocatorImpl(config,
 					this.trackerLocation);
-			url = new URL(ITuleapConstants.SOAP_V2_URL);
+			url = new URL(soapv2url);
 
 			TuleapTrackerV5APIPortType tuleapTrackerV5APIPort = tuleapLocator.getTuleapTrackerV5APIPort(url);
 
@@ -437,6 +458,20 @@ public class TuleapSoapConnector {
 		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
 		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
 
+		String soapv1url = trackerLocation.getUrl();
+		int index = soapv1url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
+		if (index != -1) {
+			soapv1url = soapv1url.substring(0, index);
+			soapv1url = soapv1url + ITuleapConstants.SOAP_V1_URL;
+		}
+
+		String soapv2url = trackerLocation.getUrl();
+		index = soapv2url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
+		if (index != -1) {
+			soapv2url = soapv2url.substring(0, index);
+			soapv2url = soapv2url + ITuleapConstants.SOAP_V2_URL;
+		}
+
 		try {
 			EngineConfiguration config = new FileProvider(getClass().getClassLoader().getResourceAsStream(
 					CONFIG_FILE));
@@ -446,7 +481,7 @@ public class TuleapSoapConnector {
 			monitor.worked(fifty);
 			monitor.subTask(LOGIN_MESSAGE);
 
-			URL url = new URL(ITuleapConstants.SOAP_V1_URL);
+			URL url = new URL(soapv1url);
 			CodendiAPIPortType codendiAPIPort = locator.getCodendiAPIPort(url);
 			Session session = codendiAPIPort.login(username, password);
 			String sessionHash = session.getSession_hash();
@@ -458,7 +493,7 @@ public class TuleapSoapConnector {
 			config = new FileProvider(getClass().getClassLoader().getResourceAsStream(CONFIG_FILE));
 			TuleapTrackerV5APILocator tuleapLocator = new TuleapTrackerV5APILocatorImpl(config,
 					this.trackerLocation);
-			url = new URL(ITuleapConstants.SOAP_V2_URL);
+			url = new URL(soapv2url);
 
 			TuleapTrackerV5APIPortType tuleapTrackerV5APIPort = tuleapLocator.getTuleapTrackerV5APIPort(url);
 			if (ITuleapConstants.QUERY_KIND_ALL_FROM_TRACKER.equals(query
@@ -527,6 +562,20 @@ public class TuleapSoapConnector {
 		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
 		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
 
+		String soapv1url = trackerLocation.getUrl();
+		int index = soapv1url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
+		if (index != -1) {
+			soapv1url = soapv1url.substring(0, index);
+			soapv1url = soapv1url + ITuleapConstants.SOAP_V1_URL;
+		}
+
+		String soapv2url = trackerLocation.getUrl();
+		index = soapv2url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
+		if (index != -1) {
+			soapv2url = soapv2url.substring(0, index);
+			soapv2url = soapv2url + ITuleapConstants.SOAP_V2_URL;
+		}
+
 		try {
 			EngineConfiguration config = new FileProvider(getClass().getClassLoader().getResourceAsStream(
 					CONFIG_FILE));
@@ -536,7 +585,7 @@ public class TuleapSoapConnector {
 			monitor.worked(fifty);
 			monitor.subTask(LOGIN_MESSAGE);
 
-			URL url = new URL(ITuleapConstants.SOAP_V1_URL);
+			URL url = new URL(soapv1url);
 			CodendiAPIPortType codendiAPIPort = locator.getCodendiAPIPort(url);
 			Session session = codendiAPIPort.login(username, password);
 			String sessionHash = session.getSession_hash();
@@ -548,7 +597,7 @@ public class TuleapSoapConnector {
 			config = new FileProvider(getClass().getClassLoader().getResourceAsStream(CONFIG_FILE));
 			TuleapTrackerV5APILocator tuleapLocator = new TuleapTrackerV5APILocatorImpl(config,
 					this.trackerLocation);
-			url = new URL(ITuleapConstants.SOAP_V2_URL);
+			url = new URL(soapv2url);
 
 			TuleapTrackerV5APIPortType tuleapTrackerV5APIPort = tuleapLocator.getTuleapTrackerV5APIPort(url);
 			Artifact artifact = tuleapTrackerV5APIPort.getArtifact(sessionHash, groupId, trackerId,
@@ -592,6 +641,20 @@ public class TuleapSoapConnector {
 		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
 		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
 
+		String soapv1url = trackerLocation.getUrl();
+		int index = soapv1url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
+		if (index != -1) {
+			soapv1url = soapv1url.substring(0, index);
+			soapv1url = soapv1url + ITuleapConstants.SOAP_V1_URL;
+		}
+
+		String soapv2url = trackerLocation.getUrl();
+		index = soapv2url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
+		if (index != -1) {
+			soapv2url = soapv2url.substring(0, index);
+			soapv2url = soapv2url + ITuleapConstants.SOAP_V2_URL;
+		}
+
 		try {
 			EngineConfiguration config = new FileProvider(getClass().getClassLoader().getResourceAsStream(
 					CONFIG_FILE));
@@ -601,7 +664,7 @@ public class TuleapSoapConnector {
 			monitor.worked(fifty);
 			monitor.subTask(LOGIN_MESSAGE);
 
-			URL url = new URL(ITuleapConstants.SOAP_V1_URL);
+			URL url = new URL(soapv1url);
 			CodendiAPIPortType codendiAPIPort = locator.getCodendiAPIPort(url);
 			Session session = codendiAPIPort.login(username, password);
 			String sessionHash = session.getSession_hash();
@@ -613,7 +676,7 @@ public class TuleapSoapConnector {
 			config = new FileProvider(getClass().getClassLoader().getResourceAsStream(CONFIG_FILE));
 			TuleapTrackerV5APILocator tuleapLocator = new TuleapTrackerV5APILocatorImpl(config,
 					this.trackerLocation);
-			url = new URL(ITuleapConstants.SOAP_V2_URL);
+			url = new URL(soapv2url);
 
 			TuleapTrackerV5APIPortType tuleapTrackerV5APIPort = tuleapLocator.getTuleapTrackerV5APIPort(url);
 
@@ -643,11 +706,7 @@ public class TuleapSoapConnector {
 						String value = artifact.getValue(Integer.valueOf(trackerField.getField_id())
 								.toString());
 						System.out.println("Support date: " + value); //$NON-NLS-1$
-					} else if (!ITuleapConfigurationConstants.AID.equals(trackerField.getType())
-							&& !ITuleapConfigurationConstants.ARTLINK.equals(trackerField.getType())
-							&& !ITuleapConfigurationConstants.SUBON.equals(trackerField.getType())
-							&& !ITuleapConfigurationConstants.SUBBY.equals(trackerField.getType())
-							&& !ITuleapConfigurationConstants.LUD.equals(trackerField.getType())) {
+					} else if (this.shouldConsider(trackerField.getType())) {
 						// Any other value
 						if (Arrays.asList(trackerField.getPermissions()).contains(
 								ITuleapConstants.PERMISSION_SUBMIT)) {
@@ -691,6 +750,20 @@ public class TuleapSoapConnector {
 		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
 		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
 
+		String soapv1url = trackerLocation.getUrl();
+		int index = soapv1url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
+		if (index != -1) {
+			soapv1url = soapv1url.substring(0, index);
+			soapv1url = soapv1url + ITuleapConstants.SOAP_V1_URL;
+		}
+
+		String soapv2url = trackerLocation.getUrl();
+		index = soapv2url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
+		if (index != -1) {
+			soapv2url = soapv2url.substring(0, index);
+			soapv2url = soapv2url + ITuleapConstants.SOAP_V2_URL;
+		}
+
 		try {
 			EngineConfiguration config = new FileProvider(getClass().getClassLoader().getResourceAsStream(
 					CONFIG_FILE));
@@ -700,7 +773,7 @@ public class TuleapSoapConnector {
 			monitor.worked(fifty);
 			monitor.subTask(LOGIN_MESSAGE);
 
-			URL url = new URL(ITuleapConstants.SOAP_V1_URL);
+			URL url = new URL(soapv1url);
 			CodendiAPIPortType codendiAPIPort = locator.getCodendiAPIPort(url);
 			Session session = codendiAPIPort.login(username, password);
 			String sessionHash = session.getSession_hash();
@@ -712,7 +785,7 @@ public class TuleapSoapConnector {
 			config = new FileProvider(getClass().getClassLoader().getResourceAsStream(CONFIG_FILE));
 			TuleapTrackerV5APILocator tuleapLocator = new TuleapTrackerV5APILocatorImpl(config,
 					this.trackerLocation);
-			url = new URL(ITuleapConstants.SOAP_V2_URL);
+			url = new URL(soapv2url);
 
 			TuleapTrackerV5APIPortType tuleapTrackerV5APIPort = tuleapLocator.getTuleapTrackerV5APIPort(url);
 
@@ -741,13 +814,14 @@ public class TuleapSoapConnector {
 						// Convert the date into a valid timestamp
 						String value = artifact.getValue(Integer.valueOf(trackerField.getField_id())
 								.toString());
-						System.out.println("Support date: " + value); //$NON-NLS-1$
-
-					} else if (!ITuleapConfigurationConstants.AID.equals(trackerField.getType())
-							&& !ITuleapConfigurationConstants.ARTLINK.equals(trackerField.getType())
-							&& !ITuleapConfigurationConstants.SUBON.equals(trackerField.getType())
-							&& !ITuleapConfigurationConstants.SUBBY.equals(trackerField.getType())
-							&& !ITuleapConfigurationConstants.LUD.equals(trackerField.getType())) {
+						if (value != null && value.length() > 0) {
+							// FIXME
+							// int date = Long.valueOf(Long.valueOf(value).longValue() / 1000).intValue();
+							// valuesList.add(new ArtifactFieldValue(trackerField.getShort_name(),
+							// trackerField
+							// .getLabel(), Integer.valueOf(date).toString()));
+						}
+					} else if (this.shouldConsider(trackerField.getType())) {
 						// Any other value
 						if (Arrays.asList(trackerField.getPermissions()).contains(
 								ITuleapConstants.PERMISSION_SUBMIT)) {
@@ -777,5 +851,22 @@ public class TuleapSoapConnector {
 		} catch (RemoteException e) {
 			TuleapCoreActivator.log(e, true);
 		}
+	}
+
+	/**
+	 * Indicates if we should consider the given tracker field type for the creation or update or an artifact.
+	 * 
+	 * @param trackerFieldType
+	 *            The type of the field of the tracker
+	 * @return <code>true</code> if we should consider it, <code>false</code> otherwise
+	 */
+	private boolean shouldConsider(String trackerFieldType) {
+		boolean shouldConsider = true;
+		shouldConsider = shouldConsider && !ITuleapConfigurationConstants.AID.equals(trackerFieldType);
+		shouldConsider = shouldConsider && !ITuleapConfigurationConstants.ARTLINK.equals(trackerFieldType);
+		shouldConsider = shouldConsider && !ITuleapConfigurationConstants.SUBON.equals(trackerFieldType);
+		shouldConsider = shouldConsider && !ITuleapConfigurationConstants.SUBBY.equals(trackerFieldType);
+		shouldConsider = shouldConsider && !ITuleapConfigurationConstants.LUD.equals(trackerFieldType);
+		return shouldConsider;
 	}
 }
