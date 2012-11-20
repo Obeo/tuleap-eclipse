@@ -94,7 +94,7 @@ public class TuleapArtifact {
 
 		try {
 			Calendar calendar = Calendar.getInstance();
-			calendar.setTimeInMillis(Long.valueOf(artifact.getSubmitted_on()).longValue() * 1000);
+			calendar.setTimeInMillis(Long.valueOf(artifact.getLast_update_date()).longValue() * 1000);
 			this.lastModificationDate = calendar.getTime();
 		} catch (NumberFormatException e) {
 			// Empty date
