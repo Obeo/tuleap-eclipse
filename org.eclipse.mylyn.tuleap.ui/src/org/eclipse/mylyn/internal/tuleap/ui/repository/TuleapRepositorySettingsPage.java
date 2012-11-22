@@ -13,6 +13,8 @@ package org.eclipse.mylyn.internal.tuleap.ui.repository;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
 import org.eclipse.mylyn.internal.tuleap.ui.util.TuleapMylynTasksUIMessages;
@@ -41,8 +43,8 @@ public class TuleapRepositorySettingsPage extends AbstractRepositorySettingsPage
 				TuleapMylynTasksUIMessages.getString("TuleapRepositorySettingsPage.Description"), //$NON-NLS-1$
 				taskRepository);
 		this.setNeedsAnonymousLogin(true);
-		this.setNeedsEncoding(true);
 		this.setNeedsValidateOnFinish(true);
+		this.setNeedsHttpAuth(true);
 	}
 
 	/**
@@ -112,6 +114,32 @@ public class TuleapRepositorySettingsPage extends AbstractRepositorySettingsPage
 	@Override
 	protected Validator getValidator(TaskRepository taskRepository) {
 		return new TuleapRepositoryValidator(taskRepository);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#validateSettings()
+	 */
+	@Override
+	protected void validateSettings() {
+		if (repository != null) {
+			AuthenticationCredentials repoCredentials = repository
+					.getCredentials(AuthenticationType.REPOSITORY);
+			AuthenticationCredentials proxyCredentials = repository.getCredentials(AuthenticationType.PROXY);
+			AuthenticationCredentials httpCredentials = repository.getCredentials(AuthenticationType.HTTP);
+
+			super.validateSettings();
+
+			repository.setCredentials(AuthenticationType.REPOSITORY, repoCredentials, repository
+					.getSavePassword(AuthenticationType.REPOSITORY));
+			repository.setCredentials(AuthenticationType.HTTP, httpCredentials, repository
+					.getSavePassword(AuthenticationType.HTTP));
+			repository.setCredentials(AuthenticationType.PROXY, proxyCredentials, repository
+					.getSavePassword(AuthenticationType.PROXY));
+		} else {
+			super.validateSettings();
+		}
 	}
 
 	/**

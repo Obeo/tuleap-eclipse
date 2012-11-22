@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.core.net;
 
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
+import java.net.Proxy;
+import java.net.SocketAddress;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -19,6 +22,7 @@ import java.util.List;
 
 import javax.xml.rpc.ServiceException;
 
+import org.apache.axis.AxisProperties;
 import org.apache.axis.EngineConfiguration;
 import org.apache.axis.configuration.FileProvider;
 import org.apache.commons.lang.ArrayUtils;
@@ -138,6 +142,8 @@ public class TuleapSoapConnector {
 		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
 		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
 
+		this.ensureProxySettingsRegistration();
+
 		String soapv1url = trackerLocation.getUrl();
 		int index = soapv1url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
 		if (index != -1) {
@@ -174,6 +180,29 @@ public class TuleapSoapConnector {
 		}
 
 		return status;
+	}
+
+	/**
+	 * Ensures that the settings of the proxy are correctly registered in the Axis properties.
+	 */
+	private void ensureProxySettingsRegistration() {
+		// FIXME Register the setting of the proxy
+
+		String url = this.trackerLocation.getUrl();
+		Proxy proxy = this.trackerLocation.getProxyForHost(url, "HTTP"); //$NON-NLS-1$
+		if (proxy == null) {
+			proxy = this.trackerLocation.getProxyForHost(url, "HTTPS"); //$NON-NLS-1$
+		}
+		if (proxy != null) {
+			SocketAddress address = proxy.address();
+			if (address instanceof InetSocketAddress) {
+				InetSocketAddress inetSocketAddress = (InetSocketAddress)address;
+				int port = inetSocketAddress.getPort();
+				String hostName = inetSocketAddress.getHostName();
+				AxisProperties.setProperty("http.proxyHost", hostName); //$NON-NLS-1$
+				AxisProperties.setProperty("http.proxyPort", Integer.valueOf(port).toString()); //$NON-NLS-1$
+			}
+		}
 	}
 
 	/**
@@ -234,7 +263,7 @@ public class TuleapSoapConnector {
 			Tracker[] trackers = tuleapTrackerV5APIPort.getTrackerList(sessionHash, groupId);
 
 			for (Tracker tracker : trackers) {
-				monitor.worked(10);
+				monitor.worked(5);
 				monitor.setTaskName(TuleapMylynTasksMessages.getString(
 						"TuleapSoapConnector.AnalyzingTracker", tracker.getName())); //$NON-NLS-1$
 				TuleapTrackerConfiguration tuleapTrackerConfiguration = this.getTuleapTrackerConfiguration(
@@ -286,12 +315,12 @@ public class TuleapSoapConnector {
 
 			TrackerField[] trackerFields = tuleapTrackerV5APIPort.getTrackerFields(sessionHash, tracker
 					.getGroup_id(), tracker.getTracker_id());
-			monitor.worked(10);
+			monitor.worked(5);
 
 			for (TrackerField trackerField : trackerFields) {
 				AbstractTuleapField tuleapField = getTuleapTrackerField(tuleapTrackerV5APIPort, trackerField,
-						sessionHash, tracker.getGroup_id(), tracker.getTracker_id());
-
+						sessionHash, tracker.getGroup_id(), tracker.getTracker_id(), monitor);
+				monitor.worked(1);
 				if (tuleapField != null) {
 					tuleapField.setName(trackerField.getShort_name());
 					tuleapField.setLabel(trackerField.getLabel());
@@ -319,11 +348,18 @@ public class TuleapSoapConnector {
 	 *            The group id
 	 * @param trackerId
 	 *            The tracker id
+	 * @param monitor
+	 *            The progress monitor
 	 * @return The tuleap tracker field
 	 */
 	private AbstractTuleapField getTuleapTrackerField(TuleapTrackerV5APIPortType tuleapTrackerV5APIPort,
-			TrackerField trackerField, String sessionHash, int groupId, int trackerId) {
+			TrackerField trackerField, String sessionHash, int groupId, int trackerId,
+			IProgressMonitor monitor) {
 		AbstractTuleapField tuleapField = null;
+
+		monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.AnalyzeTuleapTrackerField", //$NON-NLS-1$
+				trackerField.getLabel()));
+
 		try {
 			TrackerStructure trackerStructure = tuleapTrackerV5APIPort.getTrackerStructure(sessionHash,
 					groupId, trackerId);
@@ -425,6 +461,9 @@ public class TuleapSoapConnector {
 		} catch (RemoteException e) {
 			TuleapCoreActivator.log(e, true);
 		}
+
+		monitor.worked(1);
+
 		return tuleapField;
 	}
 
@@ -495,6 +534,7 @@ public class TuleapSoapConnector {
 					this.trackerLocation);
 			url = new URL(soapv2url);
 
+			monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.ExecutingQuery")); //$NON-NLS-1$
 			TuleapTrackerV5APIPortType tuleapTrackerV5APIPort = tuleapLocator.getTuleapTrackerV5APIPort(url);
 			if (ITuleapConstants.QUERY_KIND_ALL_FROM_TRACKER.equals(query
 					.getAttribute(ITuleapConstants.QUERY_KIND))
@@ -506,6 +546,9 @@ public class TuleapSoapConnector {
 					artifactQueryResult = tuleapTrackerV5APIPort.getArtifacts(sessionHash, groupId,
 							trackerId, new Criteria[] {}, 0, maxHits);
 					Artifact[] artifacts = artifactQueryResult.getArtifacts();
+
+					monitor.worked(fifty);
+
 					for (Artifact artifact : artifacts) {
 						TuleapArtifact tuleapArtifact = new TuleapArtifact(artifact);
 						ArtifactFieldValue[] value = artifact.getValue();
@@ -513,6 +556,8 @@ public class TuleapSoapConnector {
 							tuleapArtifact.putValue(artifactFieldValue.getField_name(), artifactFieldValue
 									.getField_value());
 						}
+
+						monitor.worked(5);
 
 						TaskData taskData = taskDataHandler.createTaskDataFromArtifact(tuleapClient,
 								tuleapClient.getTaskRepository(), tuleapArtifact, monitor);
@@ -608,6 +653,7 @@ public class TuleapSoapConnector {
 			for (ArtifactFieldValue artifactFieldValue : value) {
 				tuleapArtifact.putValue(artifactFieldValue.getField_name(), artifactFieldValue
 						.getField_value());
+				monitor.worked(1);
 			}
 
 			monitor.worked(fifty);
@@ -680,11 +726,18 @@ public class TuleapSoapConnector {
 
 			TuleapTrackerV5APIPortType tuleapTrackerV5APIPort = tuleapLocator.getTuleapTrackerV5APIPort(url);
 
+			monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.RetrievingTrackerFields")); //$NON-NLS-1$
+
 			List<ArtifactFieldValue> valuesList = new ArrayList<ArtifactFieldValue>();
 			TrackerField[] trackerFields = tuleapTrackerV5APIPort.getTrackerFields(sessionHash, groupId,
 					artifact.getTrackerId());
+			monitor.worked(10);
+
+			monitor.subTask(TuleapMylynTasksMessages
+					.getString("TuleapSoapConnector.RetrievingTrackerSemantic")); //$NON-NLS-1$
 			TrackerStructure trackerStructure = tuleapTrackerV5APIPort.getTrackerStructure(sessionHash,
 					groupId, artifact.getTrackerId());
+			monitor.worked(10);
 			for (TrackerField trackerField : trackerFields) {
 				if (trackerStructure != null) {
 					ArtifactFieldValue artifactFieldValue = getArtifactFieldValue(trackerStructure,
@@ -693,6 +746,7 @@ public class TuleapSoapConnector {
 						valuesList.add(artifactFieldValue);
 					}
 				}
+				monitor.worked(1);
 			}
 			int artifactId = tuleapTrackerV5APIPort.addArtifact(sessionHash, groupId,
 					artifact.getTrackerId(), valuesList.toArray(new ArtifactFieldValue[valuesList.size()]));
@@ -766,11 +820,17 @@ public class TuleapSoapConnector {
 
 			TuleapTrackerV5APIPortType tuleapTrackerV5APIPort = tuleapLocator.getTuleapTrackerV5APIPort(url);
 
+			monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.RetrievingTrackerFields")); //$NON-NLS-1$
 			List<ArtifactFieldValue> valuesList = new ArrayList<ArtifactFieldValue>();
 			TrackerField[] trackerFields = tuleapTrackerV5APIPort.getTrackerFields(sessionHash, groupId,
 					artifact.getTrackerId());
+			monitor.worked(10);
+
+			monitor.subTask(TuleapMylynTasksMessages
+					.getString("TuleapSoapConnector.RetrievingTrackerSemantic")); //$NON-NLS-1$
 			TrackerStructure trackerStructure = tuleapTrackerV5APIPort.getTrackerStructure(sessionHash,
 					groupId, artifact.getTrackerId());
+			monitor.worked(10);
 			for (TrackerField trackerField : trackerFields) {
 				if (trackerStructure != null) {
 					ArtifactFieldValue artifactFieldValue = getArtifactFieldValue(trackerStructure,
@@ -779,6 +839,7 @@ public class TuleapSoapConnector {
 						valuesList.add(artifactFieldValue);
 					}
 				}
+				monitor.worked(1);
 			}
 
 			String newComment = artifact.getValue(TaskAttribute.COMMENT_NEW);
