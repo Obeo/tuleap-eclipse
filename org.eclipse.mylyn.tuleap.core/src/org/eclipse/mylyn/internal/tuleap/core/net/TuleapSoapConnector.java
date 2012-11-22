@@ -853,13 +853,34 @@ public class TuleapSoapConnector {
 				value = ITuleapConstants.SELECT_BOX_NONE_VALUE;
 			}
 
-			if (Arrays.asList(trackerField.getPermissions()).contains(permission) && hasKey) {
+			if (Arrays.asList(trackerField.getPermissions()).contains(permission) && hasKey
+					&& canSubmitValue(trackerField.getType(), value)) {
 				artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField
 						.getLabel(), value);
 			}
 		}
 
 		return artifactFieldValue;
+	}
+
+	/**
+	 * Indicates if we can submit the value for the given type of field.
+	 * 
+	 * @param fieldType
+	 *            The type of the field
+	 * @param value
+	 *            The value to submit
+	 * @return <code>true</code> if we can submit the value, <code>false</code> otherwise
+	 */
+	private boolean canSubmitValue(String fieldType, String value) {
+		if (value == null || "".equals(value.trim())) { //$NON-NLS-1$			
+			boolean canSubmitEmptyValue = false;
+			canSubmitEmptyValue = canSubmitEmptyValue
+					|| ITuleapConfigurationConstants.STRING.equals(fieldType);
+			canSubmitEmptyValue = canSubmitEmptyValue || ITuleapConfigurationConstants.TEXT.equals(fieldType);
+			return canSubmitEmptyValue;
+		}
+		return true;
 	}
 
 	/**
