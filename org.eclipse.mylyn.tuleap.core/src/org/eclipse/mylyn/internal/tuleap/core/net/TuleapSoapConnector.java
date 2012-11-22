@@ -848,13 +848,14 @@ public class TuleapSoapConnector {
 			boolean hasKey = artifact.getKeys().contains(fieldId);
 			String value = artifact.getValue(fieldId);
 
-			if (ITuleapConfigurationConstants.SB.equals(trackerField.getType())
+			if ((ITuleapConfigurationConstants.SB.equals(trackerField.getType()) || ITuleapConfigurationConstants.MSB
+					.equals(trackerField.getType()))
 					&& (value == null || "".equals(value))) { //$NON-NLS-1$
 				value = ITuleapConstants.SELECT_BOX_NONE_VALUE;
 			}
 
 			if (Arrays.asList(trackerField.getPermissions()).contains(permission) && hasKey
-					&& !"".equals(value)) {
+					&& !"".equals(value)) { //$NON-NLS-1$
 				artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField
 						.getLabel(), value);
 			}
