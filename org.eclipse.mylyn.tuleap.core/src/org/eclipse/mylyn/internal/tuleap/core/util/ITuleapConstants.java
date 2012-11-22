@@ -118,5 +118,10 @@ public interface ITuleapConstants {
 	/**
 	 * The UTF-8 constants.
 	 */
-	String UTF8 = "UTF-8";
+	String UTF8 = "UTF-8"; //$NON-NLS-1$
+
+	/**
+	 * The select box "none" value.
+	 */
+	String SELECT_BOX_NONE_VALUE = "None"; //$NON-NLS-1$
 }

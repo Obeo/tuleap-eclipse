@@ -172,9 +172,6 @@ public class TuleapSelectBox extends AbstractTuleapField {
 	 */
 	@Override
 	public Object getDefaultValue() {
-		if (this.items.size() > 0) {
-			return this.items.get(0).getLabel();
-		}
 		return null;
 	}
 

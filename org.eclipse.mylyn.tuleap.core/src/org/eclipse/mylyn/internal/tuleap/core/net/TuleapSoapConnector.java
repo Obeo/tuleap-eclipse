@@ -687,33 +687,10 @@ public class TuleapSoapConnector {
 					groupId, artifact.getTrackerId());
 			for (TrackerField trackerField : trackerFields) {
 				if (trackerStructure != null) {
-					if (trackerStructure.getSemantic() != null
-							&& trackerStructure.getSemantic().getTitle() != null
-							&& trackerField.getShort_name().equals(
-									trackerStructure.getSemantic().getTitle().getField_name())) {
-						// The title of the artifact
-						valuesList.add(new ArtifactFieldValue(trackerField.getShort_name(), trackerField
-								.getLabel(), artifact.getValue(TaskAttribute.SUMMARY)));
-					} else if (trackerStructure.getSemantic() != null
-							&& trackerStructure.getSemantic().getStatus() != null
-							&& trackerField.getShort_name().equals(
-									trackerStructure.getSemantic().getStatus().getField_name())) {
-						// The status of the artifact
-						valuesList.add(new ArtifactFieldValue(trackerField.getShort_name(), trackerField
-								.getLabel(), artifact.getValue(TaskAttribute.STATUS)));
-					} else if (ITuleapConfigurationConstants.DATE.equals(trackerField.getType())) {
-						// Convert the date into a valid timestamp
-						String value = artifact.getValue(Integer.valueOf(trackerField.getField_id())
-								.toString());
-						System.out.println("Support date: " + value); //$NON-NLS-1$
-					} else if (this.shouldConsider(trackerField.getType())) {
-						// Any other value
-						if (Arrays.asList(trackerField.getPermissions()).contains(
-								ITuleapConstants.PERMISSION_SUBMIT)) {
-							valuesList.add(new ArtifactFieldValue(trackerField.getShort_name(), trackerField
-									.getLabel(), artifact.getValue(Integer
-									.valueOf(trackerField.getField_id()).toString())));
-						}
+					ArtifactFieldValue artifactFieldValue = getArtifactFieldValue(trackerStructure,
+							trackerField, artifact, ITuleapConstants.PERMISSION_SUBMIT);
+					if (artifactFieldValue != null) {
+						valuesList.add(artifactFieldValue);
 					}
 				}
 			}
@@ -796,39 +773,10 @@ public class TuleapSoapConnector {
 					groupId, artifact.getTrackerId());
 			for (TrackerField trackerField : trackerFields) {
 				if (trackerStructure != null) {
-					if (trackerStructure.getSemantic() != null
-							&& trackerStructure.getSemantic().getTitle() != null
-							&& trackerField.getShort_name().equals(
-									trackerStructure.getSemantic().getTitle().getField_name())) {
-						// The title of the artifact
-						valuesList.add(new ArtifactFieldValue(trackerField.getShort_name(), trackerField
-								.getLabel(), artifact.getValue(TaskAttribute.SUMMARY)));
-					} else if (trackerStructure.getSemantic() != null
-							&& trackerStructure.getSemantic().getStatus() != null
-							&& trackerField.getShort_name().equals(
-									trackerStructure.getSemantic().getStatus().getField_name())) {
-						// The status of the artifact
-						valuesList.add(new ArtifactFieldValue(trackerField.getShort_name(), trackerField
-								.getLabel(), artifact.getValue(TaskAttribute.STATUS)));
-					} else if (ITuleapConfigurationConstants.DATE.equals(trackerField.getType())) {
-						// Convert the date into a valid timestamp
-						String value = artifact.getValue(Integer.valueOf(trackerField.getField_id())
-								.toString());
-						if (value != null && value.length() > 0) {
-							// FIXME
-							// int date = Long.valueOf(Long.valueOf(value).longValue() / 1000).intValue();
-							// valuesList.add(new ArtifactFieldValue(trackerField.getShort_name(),
-							// trackerField
-							// .getLabel(), Integer.valueOf(date).toString()));
-						}
-					} else if (this.shouldConsider(trackerField.getType())) {
-						// Any other value
-						if (Arrays.asList(trackerField.getPermissions()).contains(
-								ITuleapConstants.PERMISSION_SUBMIT)) {
-							valuesList.add(new ArtifactFieldValue(trackerField.getShort_name(), trackerField
-									.getLabel(), artifact.getValue(Integer
-									.valueOf(trackerField.getField_id()).toString())));
-						}
+					ArtifactFieldValue artifactFieldValue = getArtifactFieldValue(trackerStructure,
+							trackerField, artifact, ITuleapConstants.PERMISSION_UPDATE);
+					if (artifactFieldValue != null) {
+						valuesList.add(artifactFieldValue);
 					}
 				}
 			}
@@ -851,6 +799,68 @@ public class TuleapSoapConnector {
 		} catch (RemoteException e) {
 			TuleapCoreActivator.log(e, true);
 		}
+	}
+
+	/**
+	 * Creates the artifact field value from the given tuleap artifact, the tracker structure and the tracker
+	 * field.
+	 * 
+	 * @param trackerStructure
+	 *            The structure of the tracker holding the semantic and the workflow of the tracker.
+	 * @param trackerField
+	 *            The field of the tracker.
+	 * @param artifact
+	 *            The artifact that should be submitted
+	 * @param permission
+	 *            The permission that should be checked.
+	 * @return The artifact field value
+	 */
+	private ArtifactFieldValue getArtifactFieldValue(TrackerStructure trackerStructure,
+			TrackerField trackerField, TuleapArtifact artifact, String permission) {
+		ArtifactFieldValue artifactFieldValue = null;
+		if (trackerStructure.getSemantic() != null
+				&& trackerStructure.getSemantic().getTitle() != null
+				&& trackerField.getShort_name().equals(
+						trackerStructure.getSemantic().getTitle().getField_name())) {
+			// The title of the artifact
+			artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(),
+					trackerField.getLabel(), artifact.getValue(TaskAttribute.SUMMARY));
+		} else if (trackerStructure.getSemantic() != null
+				&& trackerStructure.getSemantic().getStatus() != null
+				&& trackerField.getShort_name().equals(
+						trackerStructure.getSemantic().getStatus().getField_name())) {
+			// The status of the artifact
+			artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(),
+					trackerField.getLabel(), artifact.getValue(TaskAttribute.STATUS));
+		} else if (ITuleapConfigurationConstants.DATE.equals(trackerField.getType())) {
+			// Convert the date into a valid timestamp
+			String value = artifact.getValue(Integer.valueOf(trackerField.getField_id()).toString());
+			if (value != null && value.length() > 0) {
+				// FIXME
+				// int date = Long.valueOf(Long.valueOf(value).longValue() / 1000).intValue();
+				// valuesList.add(new ArtifactFieldValue(trackerField.getShort_name(),
+				// trackerField
+				// .getLabel(), Integer.valueOf(date).toString()));
+			}
+		} else if (this.shouldConsider(trackerField.getType())) {
+			// Any other value
+			String fieldId = Integer.valueOf(trackerField.getField_id()).toString();
+			boolean hasKey = artifact.getKeys().contains(fieldId);
+			String value = artifact.getValue(fieldId);
+
+			if (ITuleapConfigurationConstants.SB.equals(trackerField.getType())
+					&& (value == null || "".equals(value))) { //$NON-NLS-1$
+				value = ITuleapConstants.SELECT_BOX_NONE_VALUE;
+			}
+
+			if (Arrays.asList(trackerField.getPermissions()).contains(permission) && hasKey
+					&& !"".equals(value)) {
+				artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField
+						.getLabel(), value);
+			}
+		}
+
+		return artifactFieldValue;
 	}
 
 	/**
