@@ -836,11 +836,10 @@ public class TuleapSoapConnector {
 			// Convert the date into a valid timestamp
 			String value = artifact.getValue(Integer.valueOf(trackerField.getField_id()).toString());
 			if (value != null && value.length() > 0) {
-				// FIXME
+				// FIXME Bug date creation / upload
 				// int date = Long.valueOf(Long.valueOf(value).longValue() / 1000).intValue();
-				// valuesList.add(new ArtifactFieldValue(trackerField.getShort_name(),
-				// trackerField
-				// .getLabel(), Integer.valueOf(date).toString()));
+				// artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField
+				// .getLabel(), Integer.valueOf(date).toString());
 			}
 		} else if (this.shouldConsider(trackerField.getType())) {
 			// Any other value
