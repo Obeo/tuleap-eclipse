@@ -853,8 +853,7 @@ public class TuleapSoapConnector {
 				value = ITuleapConstants.SELECT_BOX_NONE_VALUE;
 			}
 
-			if (Arrays.asList(trackerField.getPermissions()).contains(permission) && hasKey
-					&& !"".equals(value)) { //$NON-NLS-1$
+			if (Arrays.asList(trackerField.getPermissions()).contains(permission) && hasKey) {
 				artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField
 						.getLabel(), value);
 			}
