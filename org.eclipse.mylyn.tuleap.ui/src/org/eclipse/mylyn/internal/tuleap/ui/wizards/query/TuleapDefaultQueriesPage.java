@@ -10,13 +10,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.ui.wizards.query;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.commons.workbench.forms.SectionComposite;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
@@ -35,7 +31,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
@@ -53,19 +48,22 @@ public class TuleapDefaultQueriesPage extends AbstractRepositoryQueryPage2 {
 	private TaskRepository repository;
 
 	/**
-	 * This combo will display the trackers available.
+	 * The tracker.
 	 */
-	private Combo projectSelectionCombo;
+	private String tracker;
 
 	/**
 	 * The constructor.
 	 * 
 	 * @param taskRepository
 	 *            The task repository
+	 * @param selectedTracker
+	 *            The selected tracker
 	 */
-	public TuleapDefaultQueriesPage(TaskRepository taskRepository) {
+	public TuleapDefaultQueriesPage(TaskRepository taskRepository, String selectedTracker) {
 		super(TuleapMylynTasksUIMessages.getString("TuleapDefaultQueriesPage.Name"), taskRepository, null); //$NON-NLS-1$
 		this.repository = taskRepository;
+		this.tracker = selectedTracker;
 		this.setTitle(TuleapMylynTasksUIMessages.getString("TuleapDefaultQueriesPage.Title")); //$NON-NLS-1$
 		this.setDescription(TuleapMylynTasksUIMessages.getString("TuleapDefaultQueriesPage.Description")); //$NON-NLS-1$
 	}
@@ -93,51 +91,8 @@ public class TuleapDefaultQueriesPage extends AbstractRepositoryQueryPage2 {
 
 		Button projectsQueryButton = new Button(groupComposite, SWT.RADIO);
 		projectsQueryButton.setText(TuleapMylynTasksUIMessages
-				.getString("TuleapDefaultQueriesPage.ProjectsQueryButton.Name")); //$NON-NLS-1$
+				.getString("TuleapDefaultQueriesPage.ProjectsQueryButton.Name") + this.tracker); //$NON-NLS-1$
 		projectsQueryButton.setSelection(true);
-
-		projectSelectionCombo = new Combo(groupComposite, SWT.SINGLE);
-		List<String> trackers = getAllAvailableTrackers();
-		projectSelectionCombo.setItems(trackers.toArray(new String[trackers.size()]));
-		if (projectSelectionCombo.getItemCount() > 0) {
-			projectSelectionCombo.setText(projectSelectionCombo.getItem(0));
-		}
-	}
-
-	/**
-	 * Get all available trackers.
-	 * 
-	 * @return List of trackers
-	 */
-	private List<String> getAllAvailableTrackers() {
-		final List<String> trackersList = new ArrayList<String>();
-
-		IRunnableWithProgress runnable = new IRunnableWithProgress() {
-			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-				String connectorKind = repository.getConnectorKind();
-				final AbstractRepositoryConnector repositoryConnector = TasksUi.getRepositoryManager()
-						.getRepositoryConnector(connectorKind);
-				if (repositoryConnector instanceof ITuleapRepositoryConnector) {
-					ITuleapRepositoryConnector connector = (ITuleapRepositoryConnector)repositoryConnector;
-					final TuleapInstanceConfiguration instanceConfiguration = connector
-							.getRepositoryConfiguration(repository, true, monitor);
-
-					List<TuleapTrackerConfiguration> trackerConfigurations = instanceConfiguration
-							.getAllTrackerConfigurations();
-					for (TuleapTrackerConfiguration tuleapTrackerConfiguration : trackerConfigurations) {
-						trackersList.add(tuleapTrackerConfiguration.getQualifiedName());
-					}
-				}
-			}
-		};
-		try {
-			this.getContainer().run(false, false, runnable);
-		} catch (InvocationTargetException e) {
-			TuleapTasksUIPlugin.log(e, true);
-		} catch (InterruptedException e) {
-			TuleapTasksUIPlugin.log(e, true);
-		}
-		return trackersList;
 	}
 
 	/**
@@ -189,8 +144,7 @@ public class TuleapDefaultQueriesPage extends AbstractRepositoryQueryPage2 {
 			List<TuleapTrackerConfiguration> trackerConfigurations = instanceConfiguration
 					.getAllTrackerConfigurations();
 			for (TuleapTrackerConfiguration tuleapTrackerConfiguration : trackerConfigurations) {
-				if (tuleapTrackerConfiguration.getQualifiedName()
-						.equals(this.projectSelectionCombo.getText())) {
+				if (tuleapTrackerConfiguration.getQualifiedName().equals(tracker)) {
 					query.setSummary(this.getQueryTitle());
 					query.setAttribute(ITuleapConstants.QUERY_KIND,
 							ITuleapConstants.QUERY_KIND_ALL_FROM_TRACKER);

@@ -53,5 +53,24 @@ public interface ITuleapQueryOptions {
 		 */
 		String STRING_OPTIONS_EQUALS = TuleapMylynTasksUIMessages
 				.getString("ITuleapQueryOptions.StringsOptions.Equals"); //$NON-NLS-1$
+
+		/**
+		 * Date equals.
+		 */
+		String STRING_OPTIONS_DATE_EQUALS = TuleapMylynTasksUIMessages
+				.getString("ITuleapQueryOptions.StringsOptions.DateEquals"); //$NON-NLS-1$
+
+		/**
+		 * Before.
+		 */
+		String STRING_OPTIONS_BEFORE = TuleapMylynTasksUIMessages
+				.getString("ITuleapQueryOptions.StringsOptions.DateBefore"); //$NON-NLS-1$
+
+		/**
+		 * After.
+		 */
+		String STRING_OPTIONS_AFTER = TuleapMylynTasksUIMessages
+				.getString("ITuleapQueryOptions.StringsOptions.DateAfter"); //$NON-NLS-1$
+
 	}
 }

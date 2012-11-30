@@ -96,6 +96,11 @@ public interface ITuleapConstants {
 	String QUERY_KIND_ALL_FROM_TRACKER = "tuleap_query_all_from_tracker"; //$NON-NLS-1$
 
 	/**
+	 * The key used to specify that the query is a custom query.
+	 */
+	String QUERY_KIND_CUSTOM = "tuleap_query_custom"; //$NON-NLS-1$
+
+	/**
 	 * The key used to identify the tracker id on which the query will be run.
 	 */
 	String QUERY_TRACKER_ID = "tuleap_query_tracker_id"; //$NON-NLS-1$
@@ -124,4 +129,9 @@ public interface ITuleapConstants {
 	 * The select box "none" value.
 	 */
 	String SELECT_BOX_NONE_VALUE = "None"; //$NON-NLS-1$
+
+	/**
+	 * The attributes query separator.
+	 */
+	String QUERY_ATTRIBUTES_SEPARATOR = ","; //$NON-NLS-1$
 }
