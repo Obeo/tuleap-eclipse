@@ -62,6 +62,17 @@ public final class TuleapUtil {
 	}
 
 	/**
+	 * Returns a new long from the given {@link java.util.Date} representing the timestamp.
+	 * 
+	 * @param date
+	 *            The date
+	 * @return A new long from the given {@link java.util.Date} representing the timestamp.
+	 */
+	public static long parseDate(Date date) {
+		return date.getTime() / 1000L;
+	}
+
+	/**
 	 * Download a file from an URL.
 	 * 
 	 * @param url

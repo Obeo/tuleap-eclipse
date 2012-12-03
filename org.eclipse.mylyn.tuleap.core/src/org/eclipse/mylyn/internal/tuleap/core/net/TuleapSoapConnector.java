@@ -98,6 +98,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
  * This class will be used to connect Mylyn to the SOAP services provided by the Tuleap instance.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
+ * @author <a href="mailto:melanie.bats@obeo.fr">Melanie Bats</a>
  * @since 1.0
  */
 public class TuleapSoapConnector {
@@ -662,14 +663,17 @@ public class TuleapSoapConnector {
 						.equals(ITuleapConstants.QUERY_TRACKER_ID))) {
 					String[] attributes = getAttributes(query.getAttributes().get(attributeKey));
 					CriteriaValueDate criteriaValueDate = null;
+					// First attribute is the value
 					String value = attributes[0];
+
+					// If it exists a second attribute it means that we have to do a query on date and have
+					// to get the operation
 					if (attributes.length == 2) {
 						String operation = attributes[1];
 						DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy"); //$NON-NLS-1$
 						try {
-							// FIXME How to convert date to int for soap service ?
-							criteriaValueDate = new CriteriaValueDate(operation, (int)dateFormat.parse(value)
-									.getTime());
+							criteriaValueDate = new CriteriaValueDate(operation, Long.valueOf(
+									TuleapUtil.parseDate(dateFormat.parse(value))).intValue());
 						} catch (ParseException e) {
 							TuleapCoreActivator.log(e, true);
 						}
