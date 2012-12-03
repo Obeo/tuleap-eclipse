@@ -171,7 +171,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 							if (operation != null) {
 								attributeValue += ITuleapConstants.QUERY_ATTRIBUTES_SEPARATOR + operation;
 							}
-							if (!value.isEmpty()) {
+							if (value.length() != 0) {
 								query.setAttribute(String.valueOf(element.getTuleapFieldName()),
 										attributeValue);
 							}
