@@ -10,21 +10,13 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.ui.wizards.query;
 
-import java.util.List;
-
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.workbench.forms.SectionComposite;
-import org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration;
-import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
-import org.eclipse.mylyn.internal.tuleap.core.repository.ITuleapRepositoryConnector;
 import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
 import org.eclipse.mylyn.internal.tuleap.ui.TuleapTasksUIPlugin;
 import org.eclipse.mylyn.internal.tuleap.ui.util.ITuleapUIConstants;
 import org.eclipse.mylyn.internal.tuleap.ui.util.TuleapMylynTasksUIMessages;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -132,27 +124,14 @@ public class TuleapDefaultQueriesPage extends AbstractRepositoryQueryPage2 {
 	 */
 	@Override
 	public void applyTo(IRepositoryQuery query) {
-		String connectorKind = repository.getConnectorKind();
-		final AbstractRepositoryConnector repositoryConnector = TasksUi.getRepositoryManager()
-				.getRepositoryConnector(connectorKind);
-		if (repositoryConnector instanceof ITuleapRepositoryConnector) {
-
-			ITuleapRepositoryConnector connector = (ITuleapRepositoryConnector)repositoryConnector;
-			final TuleapInstanceConfiguration instanceConfiguration = connector.getRepositoryConfiguration(
-					repository, true, new NullProgressMonitor());
-
-			List<TuleapTrackerConfiguration> trackerConfigurations = instanceConfiguration
-					.getAllTrackerConfigurations();
-			for (TuleapTrackerConfiguration tuleapTrackerConfiguration : trackerConfigurations) {
-				if (tuleapTrackerConfiguration.getQualifiedName().equals(tracker)) {
-					query.setSummary(this.getQueryTitle());
-					query.setAttribute(ITuleapConstants.QUERY_KIND,
-							ITuleapConstants.QUERY_KIND_ALL_FROM_TRACKER);
-					query.setAttribute(ITuleapConstants.QUERY_TRACKER_ID, Integer.valueOf(
-							tuleapTrackerConfiguration.getTrackerId()).toString());
-					break;
-				}
-			}
+		int indexStart = this.tracker.indexOf(ITuleapConstants.TRACKER_ID_START_DELIMITER);
+		int indexEnd = this.tracker.indexOf(ITuleapConstants.TRACKER_ID_END_DELIMITER);
+		if (indexStart != -1 && indexEnd != -1 && indexStart < indexEnd) {
+			String id = this.tracker.substring(indexStart
+					+ ITuleapConstants.TRACKER_ID_START_DELIMITER.length(), indexEnd);
+			query.setSummary(this.getQueryTitle());
+			query.setAttribute(ITuleapConstants.QUERY_KIND, ITuleapConstants.QUERY_KIND_ALL_FROM_TRACKER);
+			query.setAttribute(ITuleapConstants.QUERY_TRACKER_ID, id);
 		}
 	}
 
