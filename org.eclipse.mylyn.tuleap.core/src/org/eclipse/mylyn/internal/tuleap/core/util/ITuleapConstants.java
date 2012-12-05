@@ -81,6 +81,11 @@ public interface ITuleapConstants {
 	String SOAP_V2_URL = "/plugins/tracker/soap/"; //$NON-NLS-1$
 
 	/**
+	 * The separator between the project name and the tracker id.
+	 */
+	String TRACKER_ID_SEPARATOR = ":"; //$NON-NLS-1$
+
+	/**
 	 * The separator used in the id of the task data.
 	 */
 	String TASK_DATA_ID_SEPARATOR = " #"; //$NON-NLS-1$
@@ -124,6 +129,16 @@ public interface ITuleapConstants {
 	 * The UTF-8 constants.
 	 */
 	String UTF8 = "UTF-8"; //$NON-NLS-1$
+
+	/**
+	 * The start delimiter of the tracker id.
+	 */
+	String TRACKER_ID_START_DELIMITER = "["; //$NON-NLS-1$
+
+	/**
+	 * The end delimiter of the tracker id.
+	 */
+	String TRACKER_ID_END_DELIMITER = "]"; //$NON-NLS-1$
 
 	/**
 	 * The select box "none" value.

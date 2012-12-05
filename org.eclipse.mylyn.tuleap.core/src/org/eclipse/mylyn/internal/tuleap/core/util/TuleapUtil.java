@@ -212,25 +212,79 @@ public final class TuleapUtil {
 	 * @return The track id from the given task data id.
 	 */
 	public static int getTrackerIdFromTaskDataId(String taskDataId) {
-		int index = taskDataId.indexOf(ITuleapConstants.TASK_DATA_ID_SEPARATOR);
-		if (index != -1) {
-			String trackerId = taskDataId.substring(0, index);
+		int index = taskDataId.indexOf(ITuleapConstants.TRACKER_ID_SEPARATOR);
+		int indexEnd = taskDataId.indexOf(ITuleapConstants.TASK_DATA_ID_SEPARATOR);
+		if (index != -1 && indexEnd != -1) {
+			String trackerId = taskDataId.substring(index, indexEnd);
+			int indexStartDelimiter = trackerId.indexOf(ITuleapConstants.TRACKER_ID_START_DELIMITER);
+			int indexEndDelimiter = trackerId.indexOf(ITuleapConstants.TRACKER_ID_END_DELIMITER);
+			trackerId = trackerId.substring(indexStartDelimiter
+					+ ITuleapConstants.TRACKER_ID_START_DELIMITER.length(), indexEndDelimiter);
 			return Integer.valueOf(trackerId).intValue();
 		}
 		return -1;
 	}
 
 	/**
+	 * Create a string representing the id of the tracker.
+	 * 
+	 * @param trackerName
+	 *            The name of the tracker
+	 * @param id
+	 *            The id of the tracker
+	 * @return The string representing the id of the tracker
+	 */
+	public static String getTrackerId(String trackerName, int id) {
+		String trackerId = trackerName;
+		trackerId = trackerId + ITuleapConstants.TRACKER_ID_START_DELIMITER + Integer.valueOf(id).intValue()
+				+ ITuleapConstants.TRACKER_ID_END_DELIMITER;
+		return trackerId;
+	}
+
+	/**
 	 * Returns the task data id from the given tracker id and the given artifact id.
 	 * 
+	 * @param projectName
+	 *            The name of the project
 	 * @param trackerId
 	 *            The id of the tracker.
 	 * @param artifactId
 	 *            The id of the artifact
 	 * @return The task data id
 	 */
-	public static String getTaskDataId(int trackerId, int artifactId) {
-		return Integer.valueOf(trackerId).toString() + ITuleapConstants.TASK_DATA_ID_SEPARATOR
-				+ Integer.valueOf(artifactId).toString();
+	public static String getTaskDataId(String projectName, String trackerId, int artifactId) {
+		return projectName + ITuleapConstants.TRACKER_ID_SEPARATOR + trackerId
+				+ ITuleapConstants.TASK_DATA_ID_SEPARATOR + Integer.valueOf(artifactId).toString();
+	}
+
+	/**
+	 * Returns the project name from the given task id.
+	 * 
+	 * @param taskId
+	 *            The identifier of the task
+	 * @return The project name from the given task id.
+	 */
+	public static String getProjectNameFromTaskDataId(String taskId) {
+		int index = taskId.indexOf(ITuleapConstants.TRACKER_ID_SEPARATOR);
+		if (index != -1) {
+			return taskId.substring(0, index);
+		}
+		return taskId;
+	}
+
+	/**
+	 * Returns the name of the tracker from the given task id.
+	 * 
+	 * @param taskId
+	 *            The identifier of the task
+	 * @return The name of the tracker from the given task id.
+	 */
+	public static String getTrackerNameFromTaskDataId(String taskId) {
+		int indexStart = taskId.indexOf(ITuleapConstants.TRACKER_ID_SEPARATOR);
+		int indexEnd = taskId.indexOf(ITuleapConstants.TRACKER_ID_START_DELIMITER);
+		if (indexStart != -1 && indexEnd != -1 && indexStart < indexEnd) {
+			return taskId.substring(indexStart + ITuleapConstants.TRACKER_ID_SEPARATOR.length(), indexEnd);
+		}
+		return taskId;
 	}
 }

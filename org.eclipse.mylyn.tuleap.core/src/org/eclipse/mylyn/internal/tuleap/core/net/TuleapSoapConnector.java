@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.xml.rpc.ServiceException;
 
@@ -69,6 +70,7 @@ import org.eclipse.mylyn.internal.tuleap.core.util.TuleapUtil;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.TuleapSoapServiceLocator;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.TuleapTrackerV5APILocatorImpl;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v1.CodendiAPIPortType;
+import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v1.Group;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v1.Session;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.Artifact;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.ArtifactFieldValue;
@@ -534,18 +536,73 @@ public class TuleapSoapConnector {
 			monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.ExecutingQuery")); //$NON-NLS-1$
 			TuleapTrackerV5APIPortType tuleapTrackerV5APIPort = tuleapLocator.getTuleapTrackerV5APIPort(url);
 
+			List<Criteria> criterias = new ArrayList<Criteria>();
 			if (ITuleapConstants.QUERY_KIND_ALL_FROM_TRACKER.equals(query
 					.getAttribute(ITuleapConstants.QUERY_KIND))
 					&& query.getAttribute(ITuleapConstants.QUERY_TRACKER_ID) != null) {
-				// Download all artifacts from the given tracker
-				artifactQueryResult = performAllFromTrackerQuery(query, collector, taskDataHandler,
-						tuleapClient, maxHits, monitor, sessionHash, groupId, tuleapTrackerV5APIPort);
+				// Download all artifacts from the given tracker -> no criteria
 			} else if (ITuleapConstants.QUERY_KIND_CUSTOM.equals(query
 					.getAttribute(ITuleapConstants.QUERY_KIND))
 					&& query.getAttribute(ITuleapConstants.QUERY_TRACKER_ID) != null) {
 				// Custom query
-				artifactQueryResult = performCustomQuery(query, collector, taskDataHandler, tuleapClient,
-						maxHits, monitor, sessionHash, groupId, tuleapTrackerV5APIPort);
+				criterias.addAll(this.getCriterias(query));
+			}
+
+			try {
+				String queryTrackerId = query.getAttribute(ITuleapConstants.QUERY_TRACKER_ID);
+				int trackerId = Integer.valueOf(queryTrackerId).intValue();
+				artifactQueryResult = tuleapTrackerV5APIPort.getArtifacts(sessionHash, groupId, trackerId,
+						criterias.toArray(new Criteria[criterias.size()]), 0, maxHits);
+				Artifact[] artifacts = artifactQueryResult.getArtifacts();
+
+				monitor.worked(fifty);
+
+				TrackerField[] trackerFields = tuleapTrackerV5APIPort.getTrackerFields(sessionHash, groupId,
+						trackerId);
+
+				Group group = codendiAPIPort.getGroupById(sessionHash, groupId);
+				String projectName = group.getGroup_name();
+				String trackerName = null;
+				Tracker[] trackers = tuleapTrackerV5APIPort.getTrackerList(sessionHash, groupId);
+				for (Tracker tracker : trackers) {
+					if (trackerId == tracker.getTracker_id()) {
+						trackerName = tracker.getName();
+						break;
+					}
+				}
+
+				for (Artifact artifact : artifacts) {
+					TuleapArtifact tuleapArtifact = new TuleapArtifact(artifact, trackerName, projectName);
+					ArtifactFieldValue[] value = artifact.getValue();
+
+					for (TrackerField trackerField : trackerFields) {
+						boolean found = false;
+						for (ArtifactFieldValue artifactFieldValue : value) {
+							if (artifactFieldValue.getField_name().equals(trackerField.getShort_name())
+									&& artifactFieldValue.getField_label().equals(trackerField.getLabel())) {
+								tuleapArtifact.putValue(artifactFieldValue.getField_name(),
+										artifactFieldValue.getField_value());
+								monitor.worked(1);
+								found = true;
+							}
+						}
+
+						if (!found) {
+							// The value is not set in the artifact
+							// Let's create an empty entry in the artifact
+
+							tuleapArtifact.putValue(trackerField.getShort_name(), null);
+							monitor.worked(1);
+						}
+					}
+					monitor.worked(5);
+
+					TaskData taskData = taskDataHandler.createTaskDataFromArtifact(tuleapClient, tuleapClient
+							.getTaskRepository(), tuleapArtifact, monitor);
+					collector.accept(taskData);
+				}
+			} catch (NumberFormatException e) {
+				TuleapCoreActivator.log(e, true);
 			}
 
 			monitor.worked(fifty);
@@ -567,151 +624,41 @@ public class TuleapSoapConnector {
 	}
 
 	/**
-	 * Perform query to get all artifacts from specified tracker.
+	 * Returns the list of the criteria to take into account for a custom query.
 	 * 
 	 * @param query
-	 *            Query
-	 * @param collector
-	 *            Task data collector
-	 * @param taskDataHandler
-	 *            Tuleap task data handler
-	 * @param tuleapClient
-	 *            Tuleap client
-	 * @param maxHits
-	 *            Maximum number of hits
-	 * @param monitor
-	 *            Progress monitor
-	 * @param sessionHash
-	 *            Session hash
-	 * @param groupId
-	 *            Group id
-	 * @param tuleapTrackerV5APIPort
-	 *            Tracker API port
-	 * @return Artifact query result
-	 * @throws RemoteException
-	 *             Occurs if the operation to get artifacts from server fails
+	 *            The query from which we have to extract the criteria
+	 * @return The list of the criteria to take into account for a custom query.
 	 */
-	private ArtifactQueryResult performAllFromTrackerQuery(IRepositoryQuery query,
-			TaskDataCollector collector, TuleapTaskDataHandler taskDataHandler, ITuleapClient tuleapClient,
-			int maxHits, IProgressMonitor monitor, String sessionHash, int groupId,
-			TuleapTrackerV5APIPortType tuleapTrackerV5APIPort) throws RemoteException {
-		ArtifactQueryResult artifactQueryResult = null;
-		try {
-			String queryTrackerId = query.getAttribute(ITuleapConstants.QUERY_TRACKER_ID);
-			int trackerId = Integer.valueOf(queryTrackerId).intValue();
-			artifactQueryResult = tuleapTrackerV5APIPort.getArtifacts(sessionHash, groupId, trackerId,
-					new Criteria[] {}, 0, maxHits);
-			Artifact[] artifacts = artifactQueryResult.getArtifacts();
+	private List<Criteria> getCriterias(IRepositoryQuery query) {
+		List<Criteria> criterias = new ArrayList<Criteria>();
+		for (Entry<String, String> entry : query.getAttributes().entrySet()) {
+			if (!(entry.getKey().equals(ITuleapConstants.QUERY_KIND) || entry.getKey().equals(
+					ITuleapConstants.QUERY_TRACKER_ID))) {
+				String[] attributes = this.getAttributes(entry.getValue());
+				CriteriaValueDate criteriaValueDate = null;
+				// First attribute is the value
+				String value = attributes[0];
 
-			final int fifty = 50;
-			monitor.worked(fifty);
-
-			for (Artifact artifact : artifacts) {
-				TuleapArtifact tuleapArtifact = new TuleapArtifact(artifact);
-				ArtifactFieldValue[] value = artifact.getValue();
-				for (ArtifactFieldValue artifactFieldValue : value) {
-					tuleapArtifact.putValue(artifactFieldValue.getField_name(), artifactFieldValue
-							.getField_value());
-				}
-
-				monitor.worked(5);
-
-				TaskData taskData = taskDataHandler.createTaskDataFromArtifact(tuleapClient, tuleapClient
-						.getTaskRepository(), tuleapArtifact, monitor);
-				collector.accept(taskData);
-			}
-		} catch (NumberFormatException e) {
-			TuleapCoreActivator.log(e, true);
-		}
-		return artifactQueryResult;
-	}
-
-	/**
-	 * Perform query to get all artifacts from specified tracker.
-	 * 
-	 * @param query
-	 *            Query
-	 * @param collector
-	 *            Task data collector
-	 * @param taskDataHandler
-	 *            Tuleap task data handler
-	 * @param tuleapClient
-	 *            Tuleap client
-	 * @param maxHits
-	 *            Maximum number of hits
-	 * @param monitor
-	 *            Progress monitor
-	 * @param sessionHash
-	 *            Session hash
-	 * @param groupId
-	 *            Group id
-	 * @param tuleapTrackerV5APIPort
-	 *            Tracker API port
-	 * @return Artifact query result
-	 * @throws RemoteException
-	 *             Occurs if the operation to get artifacts from server fails
-	 */
-	private ArtifactQueryResult performCustomQuery(IRepositoryQuery query, TaskDataCollector collector,
-			TuleapTaskDataHandler taskDataHandler, ITuleapClient tuleapClient, int maxHits,
-			IProgressMonitor monitor, String sessionHash, int groupId,
-			TuleapTrackerV5APIPortType tuleapTrackerV5APIPort) throws RemoteException {
-		ArtifactQueryResult artifactQueryResult = null;
-		try {
-			List<Criteria> criterias = new ArrayList<Criteria>();
-			for (String attributeKey : query.getAttributes().keySet()) {
-				if (!(attributeKey.equals(ITuleapConstants.QUERY_KIND) || attributeKey
-						.equals(ITuleapConstants.QUERY_TRACKER_ID))) {
-					String[] attributes = getAttributes(query.getAttributes().get(attributeKey));
-					CriteriaValueDate criteriaValueDate = null;
-					// First attribute is the value
-					String value = attributes[0];
-
-					// If it exists a second attribute it means that we have to do a query on date and have
-					// to get the operation
-					if (attributes.length == 2) {
-						String operation = attributes[1];
-						DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy"); //$NON-NLS-1$
-						try {
-							criteriaValueDate = new CriteriaValueDate(operation, Long.valueOf(
-									TuleapUtil.parseDate(dateFormat.parse(value))).intValue());
-						} catch (ParseException e) {
-							TuleapCoreActivator.log(e, true);
-						}
+				// If it exists a second attribute it means that we have to do a query on date and have
+				// to get the operation
+				if (attributes.length == 2) {
+					String operation = attributes[1];
+					DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy"); //$NON-NLS-1$
+					try {
+						criteriaValueDate = new CriteriaValueDate(operation, Long.valueOf(
+								TuleapUtil.parseDate(dateFormat.parse(value))).intValue());
+					} catch (ParseException e) {
+						TuleapCoreActivator.log(e, true);
 					}
-
-					CriteriaValue attributeValue = new CriteriaValue(value, criteriaValueDate, null);
-					Criteria criteria = new Criteria(attributeKey, attributeValue);
-					criterias.add(criteria);
-				}
-			}
-
-			String queryTrackerId = query.getAttribute(ITuleapConstants.QUERY_TRACKER_ID);
-			int trackerId = Integer.valueOf(queryTrackerId).intValue();
-			artifactQueryResult = tuleapTrackerV5APIPort.getArtifacts(sessionHash, groupId, trackerId,
-					criterias.toArray(new Criteria[criterias.size()]), 0, maxHits);
-			Artifact[] artifacts = artifactQueryResult.getArtifacts();
-
-			final int fifty = 50;
-			monitor.worked(fifty);
-
-			for (Artifact artifact : artifacts) {
-				TuleapArtifact tuleapArtifact = new TuleapArtifact(artifact);
-				ArtifactFieldValue[] value = artifact.getValue();
-				for (ArtifactFieldValue artifactFieldValue : value) {
-					tuleapArtifact.putValue(artifactFieldValue.getField_name(), artifactFieldValue
-							.getField_value());
 				}
 
-				monitor.worked(5);
-
-				TaskData taskData = taskDataHandler.createTaskDataFromArtifact(tuleapClient, tuleapClient
-						.getTaskRepository(), tuleapArtifact, monitor);
-				collector.accept(taskData);
+				CriteriaValue attributeValue = new CriteriaValue(value, criteriaValueDate, null);
+				Criteria criteria = new Criteria(entry.getKey(), attributeValue);
+				criterias.add(criteria);
 			}
-		} catch (NumberFormatException e) {
-			TuleapCoreActivator.log(e, true);
 		}
-		return artifactQueryResult;
+		return criterias;
 	}
 
 	/**
@@ -784,13 +731,44 @@ public class TuleapSoapConnector {
 			TuleapTrackerV5APIPortType tuleapTrackerV5APIPort = tuleapLocator.getTuleapTrackerV5APIPort(url);
 			Artifact artifact = tuleapTrackerV5APIPort.getArtifact(sessionHash, groupId, trackerId,
 					artifactId);
-			tuleapArtifact = new TuleapArtifact(artifact);
+
+			Group group = codendiAPIPort.getGroupById(sessionHash, groupId);
+			String projectName = group.getGroup_name();
+
+			String trackerName = null;
+			Tracker[] trackers = tuleapTrackerV5APIPort.getTrackerList(sessionHash, groupId);
+			for (Tracker tracker : trackers) {
+				if (trackerId == tracker.getTracker_id()) {
+					trackerName = tracker.getName();
+					break;
+				}
+			}
+
+			tuleapArtifact = new TuleapArtifact(artifact, trackerName, projectName);
 
 			ArtifactFieldValue[] value = artifact.getValue();
-			for (ArtifactFieldValue artifactFieldValue : value) {
-				tuleapArtifact.putValue(artifactFieldValue.getField_name(), artifactFieldValue
-						.getField_value());
-				monitor.worked(1);
+
+			TrackerField[] trackerFields = tuleapTrackerV5APIPort.getTrackerFields(sessionHash, groupId,
+					trackerId);
+			for (TrackerField trackerField : trackerFields) {
+				boolean found = false;
+				for (ArtifactFieldValue artifactFieldValue : value) {
+					if (artifactFieldValue.getField_name().equals(trackerField.getShort_name())
+							&& artifactFieldValue.getField_label().equals(trackerField.getLabel())) {
+						tuleapArtifact.putValue(artifactFieldValue.getField_name(), artifactFieldValue
+								.getField_value());
+						monitor.worked(1);
+						found = true;
+					}
+				}
+
+				if (!found) {
+					// The value is not set in the artifact
+					// Let's create an empty entry in the artifact
+
+					tuleapArtifact.putValue(trackerField.getShort_name(), null);
+					monitor.worked(1);
+				}
 			}
 
 			monitor.worked(fifty);
@@ -856,6 +834,9 @@ public class TuleapSoapConnector {
 
 			int groupId = TuleapUtil.getGroupId(this.trackerLocation.getUrl());
 
+			Group group = codendiAPIPort.getGroupById(sessionHash, groupId);
+			String projectName = group.getGroup_name();
+
 			config = new FileProvider(getClass().getClassLoader().getResourceAsStream(CONFIG_FILE));
 			TuleapTrackerV5APILocator tuleapLocator = new TuleapTrackerV5APILocatorImpl(config,
 					this.trackerLocation);
@@ -888,7 +869,16 @@ public class TuleapSoapConnector {
 			int artifactId = tuleapTrackerV5APIPort.addArtifact(sessionHash, groupId,
 					artifact.getTrackerId(), valuesList.toArray(new ArtifactFieldValue[valuesList.size()]));
 
-			taskDataId = TuleapUtil.getTaskDataId(artifact.getTrackerId(), artifactId);
+			String trackerName = ""; //$NON-NLS-1$
+			Tracker[] trackerList = tuleapTrackerV5APIPort.getTrackerList(sessionHash, groupId);
+			for (Tracker tracker : trackerList) {
+				if (tracker.getTracker_id() == artifact.getTrackerId()) {
+					trackerName = tracker.getName();
+					break;
+				}
+			}
+			String trackerId = TuleapUtil.getTrackerId(trackerName, artifact.getTrackerId());
+			taskDataId = TuleapUtil.getTaskDataId(projectName, trackerId, artifactId);
 
 			monitor.worked(fifty);
 

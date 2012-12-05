@@ -119,8 +119,11 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		if (taskData.isNew()) {
 			artifact = new TuleapArtifact();
 		} else {
-			artifact = new TuleapArtifact(TuleapUtil.getArtifactIdFromTaskDataId(taskData.getTaskId()));
-			artifact.setTrackerId(TuleapUtil.getTrackerIdFromTaskDataId(taskData.getTaskId()));
+			String projectName = TuleapUtil.getProjectNameFromTaskDataId(taskData.getTaskId());
+			String trackerName = TuleapUtil.getTrackerNameFromTaskDataId(taskData.getTaskId());
+			int trackerId = TuleapUtil.getTrackerIdFromTaskDataId(taskData.getTaskId());
+			int artifactId = TuleapUtil.getArtifactIdFromTaskDataId(taskData.getTaskId());
+			artifact = new TuleapArtifact(artifactId, trackerId, trackerName, projectName);
 		}
 
 		Collection<TaskAttribute> attributes = taskData.getRoot().getAttributes().values();

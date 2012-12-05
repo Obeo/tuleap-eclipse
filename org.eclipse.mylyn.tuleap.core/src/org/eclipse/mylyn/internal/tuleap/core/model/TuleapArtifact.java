@@ -58,6 +58,16 @@ public class TuleapArtifact {
 	private int trackerId;
 
 	/**
+	 * The name of the project.
+	 */
+	private String projectName;
+
+	/**
+	 * The name of the containing tracker.
+	 */
+	private String trackerName;
+
+	/**
 	 * The default constructor used to create a new Tuleap artifact locally.
 	 */
 	public TuleapArtifact() {
@@ -69,9 +79,18 @@ public class TuleapArtifact {
 	 * 
 	 * @param artifactId
 	 *            The Tuleap artifact ID.
+	 * @param tId
+	 *            The id of the tracker
+	 * @param tName
+	 *            The name of the tracker
+	 * @param pName
+	 *            The name of the project
 	 */
-	public TuleapArtifact(int artifactId) {
+	public TuleapArtifact(int artifactId, int tId, String tName, String pName) {
 		this.id = artifactId;
+		this.trackerId = tId;
+		this.trackerName = tName;
+		this.projectName = pName;
 	}
 
 	/**
@@ -79,10 +98,16 @@ public class TuleapArtifact {
 	 * 
 	 * @param artifact
 	 *            The artifact
+	 * @param tName
+	 *            The name of the tracker
+	 * @param pName
+	 *            The name of the project
 	 */
-	public TuleapArtifact(Artifact artifact) {
+	public TuleapArtifact(Artifact artifact, String tName, String pName) {
 		this.id = artifact.getArtifact_id();
 		this.trackerId = artifact.getTracker_id();
+		this.trackerName = tName;
+		this.projectName = pName;
 
 		try {
 			Calendar calendar = Calendar.getInstance();
@@ -229,8 +254,29 @@ public class TuleapArtifact {
 	 */
 	public String getUniqueName() {
 		if (this.trackerId != INVALID_ID && this.id != INVALID_ID) {
-			return TuleapUtil.getTaskDataId(trackerId, this.id);
+			return TuleapUtil.getTaskDataId(this.projectName, TuleapUtil.getTrackerId(this.trackerName,
+					this.trackerId), this.id);
 		}
 		return null;
+	}
+
+	/**
+	 * Sets the name of the project containing the artifact.
+	 * 
+	 * @param name
+	 *            The name of the project containing the artifact
+	 */
+	public void setProjectName(String name) {
+		this.projectName = name;
+	}
+
+	/**
+	 * Sets the name of the tracker containing the artifact.
+	 * 
+	 * @param name
+	 *            The name of the tracker containing the artifact.
+	 */
+	public void setTrackerName(String name) {
+		this.trackerName = name;
 	}
 }
