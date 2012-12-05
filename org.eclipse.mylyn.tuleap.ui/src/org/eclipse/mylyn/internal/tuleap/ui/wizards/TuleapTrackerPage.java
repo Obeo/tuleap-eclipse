@@ -40,6 +40,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 
@@ -124,13 +125,13 @@ public class TuleapTrackerPage extends WizardPage {
 		updateButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
-				TuleapTrackerPage.this.updateTrackersList(true);
+				TuleapTrackerPage.this.updateTrackersList(true, true);
 			}
 		});
 
 		Dialog.applyDialogFont(composite);
 
-		this.updateTrackersList(false);
+		this.updateTrackersList(false, false);
 
 		setControl(composite);
 	}
@@ -140,11 +141,15 @@ public class TuleapTrackerPage extends WizardPage {
 	 * 
 	 * @param forceRefresh
 	 *            Indicates if we should force the refresh of the list of the tracker.
+	 * @param inWizard
+	 *            Indicates if we should display the progression in the wizard or in an external progress
+	 *            monitor.
 	 */
-	protected void updateTrackersList(final boolean forceRefresh) {
+	protected void updateTrackersList(final boolean forceRefresh, boolean inWizard) {
 		String connectorKind = this.repository.getConnectorKind();
 		final AbstractRepositoryConnector repositoryConnector = TasksUi.getRepositoryManager()
 				.getRepositoryConnector(connectorKind);
+		final List<String> trackersList = new ArrayList<String>();
 		if (repositoryConnector instanceof ITuleapRepositoryConnector) {
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {
 
@@ -154,18 +159,20 @@ public class TuleapTrackerPage extends WizardPage {
 					final TuleapInstanceConfiguration instanceConfiguration = connector
 							.getRepositoryConfiguration(TuleapTrackerPage.this.repository, forceRefresh,
 									monitor);
-					List<String> trackersList = new ArrayList<String>();
 					List<TuleapTrackerConfiguration> trackerConfigurations = instanceConfiguration
 							.getAllTrackerConfigurations();
 					for (TuleapTrackerConfiguration tuleapTrackerConfiguration : trackerConfigurations) {
 						trackersList.add(tuleapTrackerConfiguration.getQualifiedName());
 					}
-					TuleapTrackerPage.this.trackerTree.getViewer().setInput(trackersList);
 				}
 			};
 
 			try {
-				this.getContainer().run(false, true, runnable);
+				if (inWizard) {
+					this.getContainer().run(true, false, runnable);
+				} else {
+					PlatformUI.getWorkbench().getProgressService().run(true, false, runnable);
+				}
 			} catch (InvocationTargetException e) {
 				e.printStackTrace();
 			} catch (InterruptedException e) {
@@ -173,6 +180,8 @@ public class TuleapTrackerPage extends WizardPage {
 			} finally {
 				this.getWizard().getContainer().updateButtons();
 			}
+
+			this.trackerTree.getViewer().setInput(trackersList);
 		}
 	}
 
