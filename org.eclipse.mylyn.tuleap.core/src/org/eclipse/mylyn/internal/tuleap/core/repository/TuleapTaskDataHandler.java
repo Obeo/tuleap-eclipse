@@ -519,12 +519,12 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		for (AbstractTuleapField abstractTuleapField : fields) {
 			if (abstractTuleapField instanceof TuleapSelectBox) {
 				TuleapSelectBox selectBox = (TuleapSelectBox)abstractTuleapField;
-				if (selectBox.isSemanticStatus()) {
+				if (selectBox.isSemanticContributor()) {
 					personsSelectBox = selectBox;
 				}
 			} else if (abstractTuleapField instanceof TuleapMultiSelectBox) {
 				TuleapMultiSelectBox selectBox = (TuleapMultiSelectBox)abstractTuleapField;
-				if (selectBox.isSemanticStatus()) {
+				if (selectBox.isSemanticContributor()) {
 					personsSelectBox = selectBox;
 				}
 			}

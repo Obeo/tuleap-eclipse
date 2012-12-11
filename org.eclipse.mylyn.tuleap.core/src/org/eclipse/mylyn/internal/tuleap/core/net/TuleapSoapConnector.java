@@ -416,6 +416,11 @@ public class TuleapSoapConnector {
 						((TuleapSelectBox)tuleapField).getOpenStatus().add(tuleapSelectBoxItem);
 					}
 				}
+
+				// Contributor
+				if (trackerSemanticContributorFieldName.equals(trackerField.getShort_name())) {
+					((TuleapSelectBox)tuleapField).setSemanticContributor(true);
+				}
 			}
 		} else if (ITuleapConfigurationConstants.MSB.equals(type)
 				|| ITuleapConfigurationConstants.CB.equals(type)) {
@@ -430,7 +435,7 @@ public class TuleapSoapConnector {
 				((TuleapMultiSelectBox)tuleapField).getItems().add(tuleapSelectBoxItem);
 				if (ArrayUtils.contains(trackerSemanticStatusOpenValues, trackerFieldBindValue
 						.getBind_value_id())) {
-					((TuleapSelectBox)tuleapField).getOpenStatus().add(tuleapSelectBoxItem);
+					((TuleapMultiSelectBox)tuleapField).getOpenStatus().add(tuleapSelectBoxItem);
 				}
 			}
 		} else if (ITuleapConfigurationConstants.DATE.equals(type)) {
