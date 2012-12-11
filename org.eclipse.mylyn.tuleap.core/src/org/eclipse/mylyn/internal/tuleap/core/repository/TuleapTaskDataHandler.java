@@ -296,9 +296,13 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		boolean isTitle = tuleapField instanceof TuleapString
 				&& ((TuleapString)tuleapField).isSemanticTitle();
 		boolean isStatus = tuleapField instanceof TuleapSelectBox
-				&& ((TuleapSelectBox)tuleapField).isSemanticStatus();
+				&& ((TuleapSelectBox)tuleapField).isSemanticStatus()
+				|| tuleapField instanceof TuleapMultiSelectBox
+				&& ((TuleapMultiSelectBox)tuleapField).isSemanticStatus();
 		boolean isContributor = tuleapField instanceof TuleapSelectBox
-				&& ((TuleapSelectBox)tuleapField).isSemanticContributor();
+				&& ((TuleapSelectBox)tuleapField).isSemanticContributor()
+				|| tuleapField instanceof TuleapMultiSelectBox
+				&& ((TuleapMultiSelectBox)tuleapField).isSemanticContributor();
 
 		if (!isTitle && !isStatus && !isContributor) {
 			attributeMetaData.setKind(tuleapField.getMetadataKind());
