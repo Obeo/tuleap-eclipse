@@ -417,7 +417,8 @@ public class TuleapSoapConnector {
 					}
 				}
 			}
-		} else if (ITuleapConfigurationConstants.MSB.equals(type)) {
+		} else if (ITuleapConfigurationConstants.MSB.equals(type)
+				|| ITuleapConfigurationConstants.CB.equals(type)) {
 			tuleapField = new TuleapMultiSelectBox(fieldIdentifier);
 			if (trackerSemanticContributorFieldName.equals(trackerField.getShort_name())) {
 				((TuleapMultiSelectBox)tuleapField).setSemanticContributor(true);

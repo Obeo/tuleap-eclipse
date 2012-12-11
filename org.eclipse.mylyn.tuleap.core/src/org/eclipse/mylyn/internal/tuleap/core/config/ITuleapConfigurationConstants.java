@@ -165,6 +165,11 @@ public interface ITuleapConfigurationConstants {
 	String MSB = "msb"; //$NON-NLS-1$
 
 	/**
+	 * Check box.
+	 */
+	String CB = "cb"; //$NON-NLS-1$
+
+	/**
 	 * Date.
 	 */
 	String DATE = "date"; //$NON-NLS-1$
