@@ -260,7 +260,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 	 */
 	private void createGroupContent(TuleapString tuleapString, Group group) {
 		// Create a single line text field for each Tuleap string
-		createGroupContentForString(tuleapString.getLabel(), group, tuleapString.getName());
+		createGroupContentForString(tuleapString.getLabel(), group, tuleapString);
 	}
 
 	/**
@@ -273,7 +273,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 	 */
 	private void createGroupContent(TuleapInteger tuleapInteger, Group group) {
 		// Create a single line text field for each Tuleap integer
-		createGroupContentForString(tuleapInteger.getLabel(), group, tuleapInteger.getName());
+		createGroupContentForString(tuleapInteger.getLabel(), group, tuleapInteger);
 	}
 
 	/**
@@ -286,7 +286,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 	 */
 	private void createGroupContent(TuleapComputedValue tuleapComputedValue, Group group) {
 		// Create a single line text field for each Tuleap computed value
-		createGroupContentForString(tuleapComputedValue.getLabel(), group, tuleapComputedValue.getName());
+		createGroupContentForString(tuleapComputedValue.getLabel(), group, tuleapComputedValue);
 	}
 
 	/**
@@ -299,7 +299,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 	 */
 	private void createGroupContent(TuleapFloat tuleapFloat, Group group) {
 		// Create a single line text field for each Tuleap float
-		createGroupContentForString(tuleapFloat.getLabel(), group, tuleapFloat.getName());
+		createGroupContentForString(tuleapFloat.getLabel(), group, tuleapFloat);
 	}
 
 	/**
@@ -309,10 +309,10 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 	 *            The label
 	 * @param group
 	 *            The group in which the widget should be created
-	 * @param tuleapFieldName
-	 *            The tuleap field name
+	 * @param tuleapField
+	 *            The tuleap field
 	 */
-	private void createGroupContentForString(String tuleapLabel, Group group, String tuleapFieldName) {
+	private void createGroupContentForString(String tuleapLabel, Group group, AbstractTuleapField tuleapField) {
 		Label label = new Label(group, SWT.NONE);
 		label.setText(tuleapLabel);
 
@@ -324,7 +324,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 		text.setLayoutData(gridData);
 
-		elements.add(new TuleapCustomQueryElement(text, tuleapFieldName));
+		elements.add(new TuleapCustomQueryElement(text, tuleapField));
 	}
 
 	/**
@@ -337,7 +337,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 	 */
 	private void createGroupContent(TuleapSubmittedBy tuleapSubmittedBy, Group group) {
 		// Create a single line text field for each Tuleap submitted by
-		createGroupContentForString(tuleapSubmittedBy.getLabel(), group, tuleapSubmittedBy.getName());
+		createGroupContentForString(tuleapSubmittedBy.getLabel(), group, tuleapSubmittedBy);
 	}
 
 	/**
@@ -349,7 +349,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 	 *            The group in which the widget should be created
 	 */
 	private void createGroupContent(TuleapLastUpdateDate tuleapDate, Group group) {
-		createGroupContentForDate(tuleapDate.getLabel(), group, tuleapDate.getName());
+		createGroupContentForDate(tuleapDate.getLabel(), group, tuleapDate);
 	}
 
 	/**
@@ -361,7 +361,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 	 *            The group in which the widget should be created
 	 */
 	private void createGroupContent(TuleapSubmittedOn tuleapDate, Group group) {
-		createGroupContentForDate(tuleapDate.getLabel(), group, tuleapDate.getName());
+		createGroupContentForDate(tuleapDate.getLabel(), group, tuleapDate);
 	}
 
 	/**
@@ -373,7 +373,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 	 *            The group in which the widget should be created
 	 */
 	private void createGroupContent(TuleapDate tuleapDate, Group group) {
-		createGroupContentForDate(tuleapDate.getLabel(), group, tuleapDate.getName());
+		createGroupContentForDate(tuleapDate.getLabel(), group, tuleapDate);
 	}
 
 	/**
@@ -383,10 +383,10 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 	 *            The label
 	 * @param group
 	 *            The group in which the widget should be created
-	 * @param tuleapFieldName
-	 *            The tuleap field name
+	 * @param tuleapField
+	 *            The tuleap field
 	 */
-	private void createGroupContentForDate(String tuleapLabel, Group group, String tuleapFieldName) {
+	private void createGroupContentForDate(String tuleapLabel, Group group, AbstractTuleapField tuleapField) {
 		Label label = new Label(group, SWT.NONE);
 		label.setText(tuleapLabel);
 
@@ -404,7 +404,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 		// Initialize field with current date
 		text.setText(dateFormat.format(date));
 
-		elements.add(new TuleapCustomQueryElement(text, tuleapFieldName, combo));
+		elements.add(new TuleapCustomQueryElement(text, tuleapField, combo));
 	}
 
 	/**
@@ -417,7 +417,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 	 */
 	private void createGroupContent(TuleapArtifactId tuleapArtifactId, Group group) {
 		// Create a single line text field for each Tuleap ArtifactId
-		createGroupContentForString(tuleapArtifactId.getLabel(), group, tuleapArtifactId.getName());
+		createGroupContentForString(tuleapArtifactId.getLabel(), group, tuleapArtifactId);
 	}
 
 	/**
@@ -450,7 +450,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 			combo.select(0);
 		}
 
-		elements.add(new TuleapCustomQueryElement(combo, tuleapSelectBox.getName()));
+		elements.add(new TuleapCustomQueryElement(combo, tuleapSelectBox));
 	}
 
 	/**
@@ -483,7 +483,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 			list.setSelection(0);
 		}
 
-		elements.add(new TuleapCustomQueryElement(list, tuleapMultiSelectBox.getName()));
+		elements.add(new TuleapCustomQueryElement(list, tuleapMultiSelectBox));
 	}
 
 	/**
@@ -507,7 +507,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 		text.setLayoutData(gridData);
 
-		elements.add(new TuleapCustomQueryElement(text, tuleapText.getName()));
+		elements.add(new TuleapCustomQueryElement(text, tuleapText));
 	}
 
 	/**

@@ -12,6 +12,10 @@ package org.eclipse.mylyn.internal.tuleap.ui.wizards.query;
 
 import java.util.ArrayList;
 
+import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
+import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapMultiSelectBox;
+import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapSelectBox;
+import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapSelectBoxItem;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Text;
@@ -35,21 +39,21 @@ public class TuleapCustomQueryElement {
 	private Combo graphicalElementOperation;
 
 	/**
-	 * Name of the field in the Tuleap tracker configuration.
+	 * The field in the Tuleap tracker configuration.
 	 */
-	private String tuleapFieldName;
+	private AbstractTuleapField tuleapField;
 
 	/**
 	 * The constructor.
 	 * 
 	 * @param element
 	 *            The graphical element
-	 * @param fieldName
-	 *            The field name
+	 * @param field
+	 *            The field
 	 */
-	public TuleapCustomQueryElement(Object element, String fieldName) {
+	public TuleapCustomQueryElement(Object element, AbstractTuleapField field) {
 		this.graphicalElementValue = element;
-		this.tuleapFieldName = fieldName;
+		this.tuleapField = field;
 	}
 
 	/**
@@ -57,14 +61,14 @@ public class TuleapCustomQueryElement {
 	 * 
 	 * @param element
 	 *            The graphical element
-	 * @param fieldName
-	 *            The field name
+	 * @param field
+	 *            The field
 	 * @param operation
 	 *            The operation
 	 */
-	public TuleapCustomQueryElement(Object element, String fieldName, Combo operation) {
+	public TuleapCustomQueryElement(Object element, AbstractTuleapField field, Combo operation) {
 		this.graphicalElementValue = element;
-		this.tuleapFieldName = fieldName;
+		this.tuleapField = field;
 		this.graphicalElementOperation = operation;
 	}
 
@@ -74,7 +78,7 @@ public class TuleapCustomQueryElement {
 	 * @return Field name
 	 */
 	public String getTuleapFieldName() {
-		return tuleapFieldName;
+		return tuleapField.getName();
 	}
 
 	/**
@@ -87,7 +91,7 @@ public class TuleapCustomQueryElement {
 		if (graphicalElementValue instanceof Text) {
 			result.add(((Text)graphicalElementValue).getText());
 		} else if (graphicalElementValue instanceof Combo) {
-			result.add(((Combo)graphicalElementValue).getText());
+			result.add(getTuleapSelectBoxValueId(((Combo)graphicalElementValue).getText()));
 		} else if (graphicalElementValue instanceof List) {
 			return ((List)graphicalElementValue).getSelection();
 		}
@@ -104,5 +108,32 @@ public class TuleapCustomQueryElement {
 			return null;
 		}
 		return graphicalElementOperation.getText();
+	}
+
+	/**
+	 * Get the identifier associated to a select box item value label.
+	 * 
+	 * @param selectedValue
+	 *            Select box item label
+	 * @return The identifier associated to the item value label
+	 */
+	private String getTuleapSelectBoxValueId(String selectedValue) {
+		String id = null;
+		if (tuleapField instanceof TuleapSelectBox) {
+			TuleapSelectBox tuleapSelectBox = (TuleapSelectBox)tuleapField;
+			for (TuleapSelectBoxItem item : tuleapSelectBox.getItems()) {
+				if (selectedValue.equals(item.getLabel())) {
+					id = String.valueOf(item.getIdentifier());
+				}
+			}
+		} else if (tuleapField instanceof TuleapMultiSelectBox) {
+			TuleapMultiSelectBox tuleapSelectBox = (TuleapMultiSelectBox)tuleapField;
+			for (TuleapSelectBoxItem item : tuleapSelectBox.getItems()) {
+				if (selectedValue.equals(item.getLabel())) {
+					id = String.valueOf(item.getIdentifier());
+				}
+			}
+		}
+		return id;
 	}
 }
