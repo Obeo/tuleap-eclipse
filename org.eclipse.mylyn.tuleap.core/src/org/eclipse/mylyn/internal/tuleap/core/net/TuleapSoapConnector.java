@@ -1039,7 +1039,17 @@ public class TuleapSoapConnector {
 			// Any other value
 			String fieldId = Integer.valueOf(trackerField.getField_id()).toString();
 			boolean hasKey = artifact.getKeys().contains(fieldId);
-			String value = artifact.getValue(fieldId);
+			String value = ""; //$NON-NLS-1$
+			if (!artifact.getValues(fieldId).isEmpty()) {
+				for (int i = 0; i < artifact.getValues(fieldId).size(); i++) {
+					value += artifact.getValues(fieldId).get(i);
+					if (i < artifact.getValues(fieldId).size() - 1) {
+						value += ","; //$NON-NLS-1$
+					}
+				}
+			} else {
+				value = artifact.getValue(fieldId);
+			}
 
 			if ((ITuleapConfigurationConstants.SB.equals(trackerField.getType()) || ITuleapConfigurationConstants.MSB
 					.equals(trackerField.getType()))

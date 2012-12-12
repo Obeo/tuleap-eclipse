@@ -10,10 +10,12 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.core.model;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.tuleap.core.util.TuleapUtil;
@@ -40,7 +42,7 @@ public class TuleapArtifact {
 	/**
 	 * The properties of the artifact.
 	 */
-	private HashMap<String, String> properties = new HashMap<String, String>();
+	private HashMap<String, List<String>> properties = new HashMap<String, List<String>>();
 
 	/**
 	 * The date of creation of the artifact.
@@ -154,8 +156,13 @@ public class TuleapArtifact {
 	 *            The value of the property
 	 */
 	public void putValue(String keyName, String value) {
-		if (!"id".equals(keyName)) { //$NON-NLS-1$			
-			this.properties.put(keyName, value);
+		if (!"id".equals(keyName)) { //$NON-NLS-1$	
+			List<String> values = this.properties.get(keyName);
+			if (values == null) {
+				values = new ArrayList<String>();
+			}
+			values.add(value);
+			this.properties.put(keyName, values);
 		}
 	}
 
@@ -167,6 +174,20 @@ public class TuleapArtifact {
 	 * @return The value of the attribute with the given key.
 	 */
 	public String getValue(String key) {
+		if (this.properties.get(key) != null) {
+			return this.properties.get(key).get(0);
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the value of the attribute with the given key.
+	 * 
+	 * @param key
+	 *            The key of the attribute
+	 * @return The value of the attribute with the given key.
+	 */
+	public List<String> getValues(String key) {
 		return this.properties.get(key);
 	}
 

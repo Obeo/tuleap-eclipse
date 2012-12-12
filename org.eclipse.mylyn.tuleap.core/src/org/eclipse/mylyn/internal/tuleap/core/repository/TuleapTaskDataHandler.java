@@ -130,7 +130,13 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		for (TaskAttribute taskAttribute : attributes) {
 			// Ignore Tuleap internal attributes
 			if (!TuleapAttributeMapper.isInternalAttribute(taskAttribute)) {
-				artifact.putValue(taskAttribute.getId(), taskAttribute.getValue());
+				if (taskAttribute.getValues().size() > 1) {
+					for (String value : taskAttribute.getValues()) {
+						artifact.putValue(taskAttribute.getId(), value);
+					}
+				} else {
+					artifact.putValue(taskAttribute.getId(), taskAttribute.getValue());
+				}
 			}
 			if (TaskAttribute.PRODUCT.equals(taskAttribute.getId())) {
 				String product = taskAttribute.getValue();
