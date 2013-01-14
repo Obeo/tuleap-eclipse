@@ -1,105 +1,80 @@
 /**
- * ArtifactFile.java
+ * FieldValueFileInfo.java
  *
  * This file was auto-generated from WSDL
  * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
  */
 
-package org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v1;
+package org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2;
 
 @SuppressWarnings("all")
-public class ArtifactFile implements java.io.Serializable {
-	private int id;
+public class FieldValueFileInfo implements java.io.Serializable {
+	private java.lang.String id;
 
-	private int artifact_id;
-
-	private java.lang.String filename;
+	private int submitted_by;
 
 	private java.lang.String description;
 
-	private byte[] bin_data;
+	private java.lang.String filename;
 
 	private int filesize;
 
 	private java.lang.String filetype;
 
-	private int adddate;
+	private java.lang.String action;
 
-	private java.lang.String submitted_by;
-
-	public ArtifactFile() {
+	public FieldValueFileInfo() {
 	}
 
-	public ArtifactFile(int id, int artifact_id, java.lang.String filename, java.lang.String description,
-			byte[] bin_data, int filesize, java.lang.String filetype, int adddate,
-			java.lang.String submitted_by) {
+	public FieldValueFileInfo(java.lang.String id, int submitted_by, java.lang.String description,
+			java.lang.String filename, int filesize, java.lang.String filetype, java.lang.String action) {
 		this.id = id;
-		this.artifact_id = artifact_id;
-		this.filename = filename;
+		this.submitted_by = submitted_by;
 		this.description = description;
-		this.bin_data = bin_data;
+		this.filename = filename;
 		this.filesize = filesize;
 		this.filetype = filetype;
-		this.adddate = adddate;
-		this.submitted_by = submitted_by;
+		this.action = action;
 	}
 
 	/**
-	 * Gets the id value for this ArtifactFile.
+	 * Gets the id value for this FieldValueFileInfo.
 	 * 
 	 * @return id
 	 */
-	public int getId() {
+	public java.lang.String getId() {
 		return id;
 	}
 
 	/**
-	 * Sets the id value for this ArtifactFile.
+	 * Sets the id value for this FieldValueFileInfo.
 	 * 
 	 * @param id
 	 */
-	public void setId(int id) {
+	public void setId(java.lang.String id) {
 		this.id = id;
 	}
 
 	/**
-	 * Gets the artifact_id value for this ArtifactFile.
+	 * Gets the submitted_by value for this FieldValueFileInfo.
 	 * 
-	 * @return artifact_id
+	 * @return submitted_by
 	 */
-	public int getArtifact_id() {
-		return artifact_id;
+	public int getSubmitted_by() {
+		return submitted_by;
 	}
 
 	/**
-	 * Sets the artifact_id value for this ArtifactFile.
+	 * Sets the submitted_by value for this FieldValueFileInfo.
 	 * 
-	 * @param artifact_id
+	 * @param submitted_by
 	 */
-	public void setArtifact_id(int artifact_id) {
-		this.artifact_id = artifact_id;
+	public void setSubmitted_by(int submitted_by) {
+		this.submitted_by = submitted_by;
 	}
 
 	/**
-	 * Gets the filename value for this ArtifactFile.
-	 * 
-	 * @return filename
-	 */
-	public java.lang.String getFilename() {
-		return filename;
-	}
-
-	/**
-	 * Sets the filename value for this ArtifactFile.
-	 * 
-	 * @param filename
-	 */
-	public void setFilename(java.lang.String filename) {
-		this.filename = filename;
-	}
-
-	/**
-	 * Gets the description value for this ArtifactFile.
+	 * Gets the description value for this FieldValueFileInfo.
 	 * 
 	 * @return description
 	 */
@@ -108,7 +83,7 @@ public class ArtifactFile implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the description value for this ArtifactFile.
+	 * Sets the description value for this FieldValueFileInfo.
 	 * 
 	 * @param description
 	 */
@@ -117,25 +92,25 @@ public class ArtifactFile implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the bin_data value for this ArtifactFile.
+	 * Gets the filename value for this FieldValueFileInfo.
 	 * 
-	 * @return bin_data
+	 * @return filename
 	 */
-	public byte[] getBin_data() {
-		return bin_data;
+	public java.lang.String getFilename() {
+		return filename;
 	}
 
 	/**
-	 * Sets the bin_data value for this ArtifactFile.
+	 * Sets the filename value for this FieldValueFileInfo.
 	 * 
-	 * @param bin_data
+	 * @param filename
 	 */
-	public void setBin_data(byte[] bin_data) {
-		this.bin_data = bin_data;
+	public void setFilename(java.lang.String filename) {
+		this.filename = filename;
 	}
 
 	/**
-	 * Gets the filesize value for this ArtifactFile.
+	 * Gets the filesize value for this FieldValueFileInfo.
 	 * 
 	 * @return filesize
 	 */
@@ -144,7 +119,7 @@ public class ArtifactFile implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the filesize value for this ArtifactFile.
+	 * Sets the filesize value for this FieldValueFileInfo.
 	 * 
 	 * @param filesize
 	 */
@@ -153,7 +128,7 @@ public class ArtifactFile implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the filetype value for this ArtifactFile.
+	 * Gets the filetype value for this FieldValueFileInfo.
 	 * 
 	 * @return filetype
 	 */
@@ -162,7 +137,7 @@ public class ArtifactFile implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the filetype value for this ArtifactFile.
+	 * Sets the filetype value for this FieldValueFileInfo.
 	 * 
 	 * @param filetype
 	 */
@@ -171,48 +146,30 @@ public class ArtifactFile implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the adddate value for this ArtifactFile.
+	 * Gets the action value for this FieldValueFileInfo.
 	 * 
-	 * @return adddate
+	 * @return action
 	 */
-	public int getAdddate() {
-		return adddate;
+	public java.lang.String getAction() {
+		return action;
 	}
 
 	/**
-	 * Sets the adddate value for this ArtifactFile.
+	 * Sets the action value for this FieldValueFileInfo.
 	 * 
-	 * @param adddate
+	 * @param action
 	 */
-	public void setAdddate(int adddate) {
-		this.adddate = adddate;
-	}
-
-	/**
-	 * Gets the submitted_by value for this ArtifactFile.
-	 * 
-	 * @return submitted_by
-	 */
-	public java.lang.String getSubmitted_by() {
-		return submitted_by;
-	}
-
-	/**
-	 * Sets the submitted_by value for this ArtifactFile.
-	 * 
-	 * @param submitted_by
-	 */
-	public void setSubmitted_by(java.lang.String submitted_by) {
-		this.submitted_by = submitted_by;
+	public void setAction(java.lang.String action) {
+		this.action = action;
 	}
 
 	private java.lang.Object __equalsCalc = null;
 
 	public synchronized boolean equals(java.lang.Object obj) {
-		if (!(obj instanceof ArtifactFile)) {
+		if (!(obj instanceof FieldValueFileInfo)) {
 			return false;
 		}
-		ArtifactFile other = (ArtifactFile)obj;
+		FieldValueFileInfo other = (FieldValueFileInfo)obj;
 		if (obj == null) {
 			return false;
 		}
@@ -225,20 +182,18 @@ public class ArtifactFile implements java.io.Serializable {
 		__equalsCalc = obj;
 		boolean _equals;
 		_equals = true
-				&& this.id == other.getId()
-				&& this.artifact_id == other.getArtifact_id()
-				&& (this.filename == null && other.getFilename() == null || this.filename != null
-						&& this.filename.equals(other.getFilename()))
+				&& (this.id == null && other.getId() == null || this.id != null
+						&& this.id.equals(other.getId()))
+				&& this.submitted_by == other.getSubmitted_by()
 				&& (this.description == null && other.getDescription() == null || this.description != null
 						&& this.description.equals(other.getDescription()))
-				&& (this.bin_data == null && other.getBin_data() == null || this.bin_data != null
-						&& java.util.Arrays.equals(this.bin_data, other.getBin_data()))
+				&& (this.filename == null && other.getFilename() == null || this.filename != null
+						&& this.filename.equals(other.getFilename()))
 				&& this.filesize == other.getFilesize()
 				&& (this.filetype == null && other.getFiletype() == null || this.filetype != null
 						&& this.filetype.equals(other.getFiletype()))
-				&& this.adddate == other.getAdddate()
-				&& (this.submitted_by == null && other.getSubmitted_by() == null || this.submitted_by != null
-						&& this.submitted_by.equals(other.getSubmitted_by()));
+				&& (this.action == null && other.getAction() == null || this.action != null
+						&& this.action.equals(other.getAction()));
 		__equalsCalc = null;
 		return _equals;
 	}
@@ -251,29 +206,22 @@ public class ArtifactFile implements java.io.Serializable {
 		}
 		__hashCodeCalc = true;
 		int _hashCode = 1;
-		_hashCode += getId();
-		_hashCode += getArtifact_id();
-		if (getFilename() != null) {
-			_hashCode += getFilename().hashCode();
+		if (getId() != null) {
+			_hashCode += getId().hashCode();
 		}
+		_hashCode += getSubmitted_by();
 		if (getDescription() != null) {
 			_hashCode += getDescription().hashCode();
 		}
-		if (getBin_data() != null) {
-			for (int i = 0; i < java.lang.reflect.Array.getLength(getBin_data()); i++) {
-				java.lang.Object obj = java.lang.reflect.Array.get(getBin_data(), i);
-				if (obj != null && !obj.getClass().isArray()) {
-					_hashCode += obj.hashCode();
-				}
-			}
+		if (getFilename() != null) {
+			_hashCode += getFilename().hashCode();
 		}
 		_hashCode += getFilesize();
 		if (getFiletype() != null) {
 			_hashCode += getFiletype().hashCode();
 		}
-		_hashCode += getAdddate();
-		if (getSubmitted_by() != null) {
-			_hashCode += getSubmitted_by().hashCode();
+		if (getAction() != null) {
+			_hashCode += getAction().hashCode();
 		}
 		__hashCodeCalc = false;
 		return _hashCode;
@@ -281,26 +229,21 @@ public class ArtifactFile implements java.io.Serializable {
 
 	// Type metadata
 	private static org.apache.axis.description.TypeDesc typeDesc = new org.apache.axis.description.TypeDesc(
-			ArtifactFile.class, true);
+			FieldValueFileInfo.class, true);
 
 	static {
-		typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactFile"));
+		typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap",
+				"FieldValueFileInfo"));
 		org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
 		elemField.setFieldName("id");
 		elemField.setXmlName(new javax.xml.namespace.QName("", "id"));
-		elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
-		elemField.setNillable(false);
-		typeDesc.addFieldDesc(elemField);
-		elemField = new org.apache.axis.description.ElementDesc();
-		elemField.setFieldName("artifact_id");
-		elemField.setXmlName(new javax.xml.namespace.QName("", "artifact_id"));
-		elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
-		elemField.setNillable(false);
-		typeDesc.addFieldDesc(elemField);
-		elemField = new org.apache.axis.description.ElementDesc();
-		elemField.setFieldName("filename");
-		elemField.setXmlName(new javax.xml.namespace.QName("", "filename"));
 		elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+		elemField.setNillable(false);
+		typeDesc.addFieldDesc(elemField);
+		elemField = new org.apache.axis.description.ElementDesc();
+		elemField.setFieldName("submitted_by");
+		elemField.setXmlName(new javax.xml.namespace.QName("", "submitted_by"));
+		elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
 		elemField.setNillable(false);
 		typeDesc.addFieldDesc(elemField);
 		elemField = new org.apache.axis.description.ElementDesc();
@@ -310,10 +253,9 @@ public class ArtifactFile implements java.io.Serializable {
 		elemField.setNillable(false);
 		typeDesc.addFieldDesc(elemField);
 		elemField = new org.apache.axis.description.ElementDesc();
-		elemField.setFieldName("bin_data");
-		elemField.setXmlName(new javax.xml.namespace.QName("", "bin_data"));
-		elemField
-				.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "base64Binary"));
+		elemField.setFieldName("filename");
+		elemField.setXmlName(new javax.xml.namespace.QName("", "filename"));
+		elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
 		elemField.setNillable(false);
 		typeDesc.addFieldDesc(elemField);
 		elemField = new org.apache.axis.description.ElementDesc();
@@ -329,14 +271,8 @@ public class ArtifactFile implements java.io.Serializable {
 		elemField.setNillable(false);
 		typeDesc.addFieldDesc(elemField);
 		elemField = new org.apache.axis.description.ElementDesc();
-		elemField.setFieldName("adddate");
-		elemField.setXmlName(new javax.xml.namespace.QName("", "adddate"));
-		elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
-		elemField.setNillable(false);
-		typeDesc.addFieldDesc(elemField);
-		elemField = new org.apache.axis.description.ElementDesc();
-		elemField.setFieldName("submitted_by");
-		elemField.setXmlName(new javax.xml.namespace.QName("", "submitted_by"));
+		elemField.setFieldName("action");
+		elemField.setXmlName(new javax.xml.namespace.QName("", "action"));
 		elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
 		elemField.setNillable(false);
 		typeDesc.addFieldDesc(elemField);

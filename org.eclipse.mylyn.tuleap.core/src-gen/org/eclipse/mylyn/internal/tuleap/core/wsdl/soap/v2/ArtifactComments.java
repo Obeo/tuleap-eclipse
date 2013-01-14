@@ -1,89 +1,88 @@
 /**
- * ArtifactCanned.java
+ * ArtifactComments.java
  *
  * This file was auto-generated from WSDL
  * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
  */
 
-package org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v1;
+package org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2;
 
 @SuppressWarnings("all")
-public class ArtifactCanned implements java.io.Serializable {
-	private int artifact_canned_id;
+public class ArtifactComments implements java.io.Serializable {
+	private int submitted_by;
 
-	private int group_artifact_id;
+	private java.lang.String email;
 
-	private java.lang.String title;
+	private int submitted_on;
 
 	private java.lang.String body;
 
-	public ArtifactCanned() {
+	public ArtifactComments() {
 	}
 
-	public ArtifactCanned(int artifact_canned_id, int group_artifact_id, java.lang.String title,
-			java.lang.String body) {
-		this.artifact_canned_id = artifact_canned_id;
-		this.group_artifact_id = group_artifact_id;
-		this.title = title;
+	public ArtifactComments(int submitted_by, java.lang.String email, int submitted_on, java.lang.String body) {
+		this.submitted_by = submitted_by;
+		this.email = email;
+		this.submitted_on = submitted_on;
 		this.body = body;
 	}
 
 	/**
-	 * Gets the artifact_canned_id value for this ArtifactCanned.
+	 * Gets the submitted_by value for this ArtifactComments.
 	 * 
-	 * @return artifact_canned_id
+	 * @return submitted_by
 	 */
-	public int getArtifact_canned_id() {
-		return artifact_canned_id;
+	public int getSubmitted_by() {
+		return submitted_by;
 	}
 
 	/**
-	 * Sets the artifact_canned_id value for this ArtifactCanned.
+	 * Sets the submitted_by value for this ArtifactComments.
 	 * 
-	 * @param artifact_canned_id
+	 * @param submitted_by
 	 */
-	public void setArtifact_canned_id(int artifact_canned_id) {
-		this.artifact_canned_id = artifact_canned_id;
+	public void setSubmitted_by(int submitted_by) {
+		this.submitted_by = submitted_by;
 	}
 
 	/**
-	 * Gets the group_artifact_id value for this ArtifactCanned.
+	 * Gets the email value for this ArtifactComments.
 	 * 
-	 * @return group_artifact_id
+	 * @return email
 	 */
-	public int getGroup_artifact_id() {
-		return group_artifact_id;
+	public java.lang.String getEmail() {
+		return email;
 	}
 
 	/**
-	 * Sets the group_artifact_id value for this ArtifactCanned.
+	 * Sets the email value for this ArtifactComments.
 	 * 
-	 * @param group_artifact_id
+	 * @param email
 	 */
-	public void setGroup_artifact_id(int group_artifact_id) {
-		this.group_artifact_id = group_artifact_id;
+	public void setEmail(java.lang.String email) {
+		this.email = email;
 	}
 
 	/**
-	 * Gets the title value for this ArtifactCanned.
+	 * Gets the submitted_on value for this ArtifactComments.
 	 * 
-	 * @return title
+	 * @return submitted_on
 	 */
-	public java.lang.String getTitle() {
-		return title;
+	public int getSubmitted_on() {
+		return submitted_on;
 	}
 
 	/**
-	 * Sets the title value for this ArtifactCanned.
+	 * Sets the submitted_on value for this ArtifactComments.
 	 * 
-	 * @param title
+	 * @param submitted_on
 	 */
-	public void setTitle(java.lang.String title) {
-		this.title = title;
+	public void setSubmitted_on(int submitted_on) {
+		this.submitted_on = submitted_on;
 	}
 
 	/**
-	 * Gets the body value for this ArtifactCanned.
+	 * Gets the body value for this ArtifactComments.
 	 * 
 	 * @return body
 	 */
@@ -92,7 +91,7 @@ public class ArtifactCanned implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the body value for this ArtifactCanned.
+	 * Sets the body value for this ArtifactComments.
 	 * 
 	 * @param body
 	 */
@@ -103,10 +102,10 @@ public class ArtifactCanned implements java.io.Serializable {
 	private java.lang.Object __equalsCalc = null;
 
 	public synchronized boolean equals(java.lang.Object obj) {
-		if (!(obj instanceof ArtifactCanned)) {
+		if (!(obj instanceof ArtifactComments)) {
 			return false;
 		}
-		ArtifactCanned other = (ArtifactCanned)obj;
+		ArtifactComments other = (ArtifactComments)obj;
 		if (obj == null) {
 			return false;
 		}
@@ -119,10 +118,10 @@ public class ArtifactCanned implements java.io.Serializable {
 		__equalsCalc = obj;
 		boolean _equals;
 		_equals = true
-				&& this.artifact_canned_id == other.getArtifact_canned_id()
-				&& this.group_artifact_id == other.getGroup_artifact_id()
-				&& (this.title == null && other.getTitle() == null || this.title != null
-						&& this.title.equals(other.getTitle()))
+				&& this.submitted_by == other.getSubmitted_by()
+				&& (this.email == null && other.getEmail() == null || this.email != null
+						&& this.email.equals(other.getEmail()))
+				&& this.submitted_on == other.getSubmitted_on()
 				&& (this.body == null && other.getBody() == null || this.body != null
 						&& this.body.equals(other.getBody()));
 		__equalsCalc = null;
@@ -137,11 +136,11 @@ public class ArtifactCanned implements java.io.Serializable {
 		}
 		__hashCodeCalc = true;
 		int _hashCode = 1;
-		_hashCode += getArtifact_canned_id();
-		_hashCode += getGroup_artifact_id();
-		if (getTitle() != null) {
-			_hashCode += getTitle().hashCode();
+		_hashCode += getSubmitted_by();
+		if (getEmail() != null) {
+			_hashCode += getEmail().hashCode();
 		}
+		_hashCode += getSubmitted_on();
 		if (getBody() != null) {
 			_hashCode += getBody().hashCode();
 		}
@@ -151,26 +150,27 @@ public class ArtifactCanned implements java.io.Serializable {
 
 	// Type metadata
 	private static org.apache.axis.description.TypeDesc typeDesc = new org.apache.axis.description.TypeDesc(
-			ArtifactCanned.class, true);
+			ArtifactComments.class, true);
 
 	static {
-		typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactCanned"));
+		typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap",
+				"ArtifactComments"));
 		org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
-		elemField.setFieldName("artifact_canned_id");
-		elemField.setXmlName(new javax.xml.namespace.QName("", "artifact_canned_id"));
+		elemField.setFieldName("submitted_by");
+		elemField.setXmlName(new javax.xml.namespace.QName("", "submitted_by"));
 		elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
 		elemField.setNillable(false);
 		typeDesc.addFieldDesc(elemField);
 		elemField = new org.apache.axis.description.ElementDesc();
-		elemField.setFieldName("group_artifact_id");
-		elemField.setXmlName(new javax.xml.namespace.QName("", "group_artifact_id"));
-		elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
-		elemField.setNillable(false);
-		typeDesc.addFieldDesc(elemField);
-		elemField = new org.apache.axis.description.ElementDesc();
-		elemField.setFieldName("title");
-		elemField.setXmlName(new javax.xml.namespace.QName("", "title"));
+		elemField.setFieldName("email");
+		elemField.setXmlName(new javax.xml.namespace.QName("", "email"));
 		elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+		elemField.setNillable(false);
+		typeDesc.addFieldDesc(elemField);
+		elemField = new org.apache.axis.description.ElementDesc();
+		elemField.setFieldName("submitted_on");
+		elemField.setXmlName(new javax.xml.namespace.QName("", "submitted_on"));
+		elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
 		elemField.setNillable(false);
 		typeDesc.addFieldDesc(elemField);
 		elemField = new org.apache.axis.description.ElementDesc();

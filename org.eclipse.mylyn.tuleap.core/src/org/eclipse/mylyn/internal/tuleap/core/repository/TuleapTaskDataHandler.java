@@ -26,6 +26,7 @@ import org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClient;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapDynamicField;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact;
+import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifactComment;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapDate;
@@ -52,6 +53,7 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
+import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskOperation;
@@ -128,8 +130,10 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 		Collection<TaskAttribute> attributes = taskData.getRoot().getAttributes().values();
 		for (TaskAttribute taskAttribute : attributes) {
-			// Ignore Tuleap internal attributes
-			if (!TuleapAttributeMapper.isInternalAttribute(taskAttribute)) {
+			if (taskAttribute.getId().startsWith(TaskAttribute.PREFIX_COMMENT)) {
+				// Ignore comments since we won't resubmit old comments
+			} else if (!TuleapAttributeMapper.isInternalAttribute(taskAttribute)) {
+				// Ignore Tuleap internal attributes
 				if (taskAttribute.getValues().size() > 1) {
 					for (String value : taskAttribute.getValues()) {
 						artifact.putValue(taskAttribute.getId(), value);
@@ -643,6 +647,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				ITuleapConstants.CONNECTOR_KIND, taskRepository.getRepositoryUrl(), tuleapArtifact
 						.getUniqueName());
 
+		// Structure
 		tuleapClient.updateAttributes(monitor, false);
 		TuleapInstanceConfiguration repositoryConfiguration = tuleapClient.getRepositoryConfiguration();
 		TuleapTrackerConfiguration trackerConfiguration = repositoryConfiguration
@@ -650,9 +655,13 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		this.createDefaultAttributes(taskData, trackerConfiguration, false);
 		this.createOperations(taskData, trackerConfiguration, tuleapArtifact.getValue(TaskAttribute.STATUS));
 
+		// Date
 		TaskMapper taskMapper = new TaskMapper(taskData);
 		taskMapper.setCreationDate(tuleapArtifact.getCreationDate());
 		taskMapper.setModificationDate(tuleapArtifact.getLastModificationDate());
+
+		// Comments
+		taskData = this.populateComments(tuleapArtifact, taskData);
 
 		List<AbstractTuleapField> fields = trackerConfiguration.getFields();
 		for (AbstractTuleapField abstractTuleapField : fields) {
@@ -760,6 +769,34 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			}
 		}
 
+		return taskData;
+	}
+
+	/**
+	 * Populate the comments of the task data thanks to the comment from the Tuleap artifact.
+	 * 
+	 * @param tuleapArtifact
+	 *            The Tuleap artifact
+	 * @param taskData
+	 *            The task data
+	 * @return The task data
+	 */
+	private TaskData populateComments(TuleapArtifact tuleapArtifact, TaskData taskData) {
+		int count = 0;
+		List<TuleapArtifactComment> comments = tuleapArtifact.getComments();
+		for (TuleapArtifactComment tuleapArtifactComment : comments) {
+			TaskAttribute attribute = taskData.getRoot().createAttribute(
+					TaskAttribute.PREFIX_COMMENT + Integer.valueOf(count).toString());
+			TaskCommentMapper taskComment = TaskCommentMapper.createFrom(attribute);
+
+			taskComment.setCommentId(Integer.valueOf(count).toString());
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTimeInMillis(Long.valueOf(tuleapArtifactComment.getSubmittedOn()).longValue() * 1000);
+			Date creationDate = calendar.getTime();
+			taskComment.setCreationDate(creationDate);
+			taskComment.setText(tuleapArtifactComment.getBody());
+			count++;
+		}
 		return taskData;
 	}
 

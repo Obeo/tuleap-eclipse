@@ -1,69 +1,69 @@
 /**
- * Session.java
+ * ArtifactCrossReferences.java
  *
  * This file was auto-generated from WSDL
  * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
  */
 
-package org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v1;
+package org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2;
 
 @SuppressWarnings("all")
-public class Session implements java.io.Serializable {
-	private int user_id;
+public class ArtifactCrossReferences implements java.io.Serializable {
+	private java.lang.String ref;
 
-	private java.lang.String session_hash;
+	private java.lang.String url;
 
-	public Session() {
+	public ArtifactCrossReferences() {
 	}
 
-	public Session(int user_id, java.lang.String session_hash) {
-		this.user_id = user_id;
-		this.session_hash = session_hash;
-	}
-
-	/**
-	 * Gets the user_id value for this Session.
-	 * 
-	 * @return user_id
-	 */
-	public int getUser_id() {
-		return user_id;
+	public ArtifactCrossReferences(java.lang.String ref, java.lang.String url) {
+		this.ref = ref;
+		this.url = url;
 	}
 
 	/**
-	 * Sets the user_id value for this Session.
+	 * Gets the ref value for this ArtifactCrossReferences.
 	 * 
-	 * @param user_id
+	 * @return ref
 	 */
-	public void setUser_id(int user_id) {
-		this.user_id = user_id;
+	public java.lang.String getRef() {
+		return ref;
 	}
 
 	/**
-	 * Gets the session_hash value for this Session.
+	 * Sets the ref value for this ArtifactCrossReferences.
 	 * 
-	 * @return session_hash
+	 * @param ref
 	 */
-	public java.lang.String getSession_hash() {
-		return session_hash;
+	public void setRef(java.lang.String ref) {
+		this.ref = ref;
 	}
 
 	/**
-	 * Sets the session_hash value for this Session.
+	 * Gets the url value for this ArtifactCrossReferences.
 	 * 
-	 * @param session_hash
+	 * @return url
 	 */
-	public void setSession_hash(java.lang.String session_hash) {
-		this.session_hash = session_hash;
+	public java.lang.String getUrl() {
+		return url;
+	}
+
+	/**
+	 * Sets the url value for this ArtifactCrossReferences.
+	 * 
+	 * @param url
+	 */
+	public void setUrl(java.lang.String url) {
+		this.url = url;
 	}
 
 	private java.lang.Object __equalsCalc = null;
 
 	public synchronized boolean equals(java.lang.Object obj) {
-		if (!(obj instanceof Session)) {
+		if (!(obj instanceof ArtifactCrossReferences)) {
 			return false;
 		}
-		Session other = (Session)obj;
+		ArtifactCrossReferences other = (ArtifactCrossReferences)obj;
 		if (obj == null) {
 			return false;
 		}
@@ -76,9 +76,10 @@ public class Session implements java.io.Serializable {
 		__equalsCalc = obj;
 		boolean _equals;
 		_equals = true
-				&& this.user_id == other.getUser_id()
-				&& (this.session_hash == null && other.getSession_hash() == null || this.session_hash != null
-						&& this.session_hash.equals(other.getSession_hash()));
+				&& (this.ref == null && other.getRef() == null || this.ref != null
+						&& this.ref.equals(other.getRef()))
+				&& (this.url == null && other.getUrl() == null || this.url != null
+						&& this.url.equals(other.getUrl()));
 		__equalsCalc = null;
 		return _equals;
 	}
@@ -91,9 +92,11 @@ public class Session implements java.io.Serializable {
 		}
 		__hashCodeCalc = true;
 		int _hashCode = 1;
-		_hashCode += getUser_id();
-		if (getSession_hash() != null) {
-			_hashCode += getSession_hash().hashCode();
+		if (getRef() != null) {
+			_hashCode += getRef().hashCode();
+		}
+		if (getUrl() != null) {
+			_hashCode += getUrl().hashCode();
 		}
 		__hashCodeCalc = false;
 		return _hashCode;
@@ -101,19 +104,20 @@ public class Session implements java.io.Serializable {
 
 	// Type metadata
 	private static org.apache.axis.description.TypeDesc typeDesc = new org.apache.axis.description.TypeDesc(
-			Session.class, true);
+			ArtifactCrossReferences.class, true);
 
 	static {
-		typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net", "Session"));
+		typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap",
+				"ArtifactCrossReferences"));
 		org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
-		elemField.setFieldName("user_id");
-		elemField.setXmlName(new javax.xml.namespace.QName("", "user_id"));
-		elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
+		elemField.setFieldName("ref");
+		elemField.setXmlName(new javax.xml.namespace.QName("", "ref"));
+		elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
 		elemField.setNillable(false);
 		typeDesc.addFieldDesc(elemField);
 		elemField = new org.apache.axis.description.ElementDesc();
-		elemField.setFieldName("session_hash");
-		elemField.setXmlName(new javax.xml.namespace.QName("", "session_hash"));
+		elemField.setFieldName("url");
+		elemField.setXmlName(new javax.xml.namespace.QName("", "url"));
 		elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
 		elemField.setNillable(false);
 		typeDesc.addFieldDesc(elemField);

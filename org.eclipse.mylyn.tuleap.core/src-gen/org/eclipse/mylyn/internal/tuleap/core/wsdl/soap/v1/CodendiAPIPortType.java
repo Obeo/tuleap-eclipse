@@ -2,12 +2,11 @@
  * CodendiAPIPortType.java
  *
  * This file was auto-generated from WSDL
- * by the Apache Axis 1.3 Oct 05, 2005 (05:23:37 EDT) WSDL2Java emitter.
+ * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
  */
 
 package org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v1;
 
-@SuppressWarnings("all")
 public interface CodendiAPIPortType extends java.rmi.Remote {
 
     /**

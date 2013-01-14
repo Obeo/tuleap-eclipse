@@ -2,12 +2,11 @@
  * TuleapTrackerV5API.java
  *
  * This file was auto-generated from WSDL
- * by the Apache Axis 1.3 Oct 05, 2005 (05:23:37 EDT) WSDL2Java emitter.
+ * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
  */
 
 package org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2;
 
-@SuppressWarnings("all")
 public interface TuleapTrackerV5API extends javax.xml.rpc.Service {
     public java.lang.String getTuleapTrackerV5APIPortAddress();
 

@@ -70,6 +70,11 @@ public class TuleapArtifact {
 	private String trackerName;
 
 	/**
+	 * The comments of the artifact.
+	 */
+	private List<TuleapArtifactComment> comments = new ArrayList<TuleapArtifactComment>();
+
+	/**
 	 * The default constructor used to create a new Tuleap artifact locally.
 	 */
 	public TuleapArtifact() {
@@ -299,5 +304,24 @@ public class TuleapArtifact {
 	 */
 	public void setTrackerName(String name) {
 		this.trackerName = name;
+	}
+
+	/**
+	 * Adds a comment to the artifact.
+	 * 
+	 * @param artifactComment
+	 *            The comment to add.
+	 */
+	public void addComment(TuleapArtifactComment artifactComment) {
+		this.comments.add(artifactComment);
+	}
+
+	/**
+	 * Returns the comments of the artifact.
+	 * 
+	 * @return the comments of the artifact.
+	 */
+	public List<TuleapArtifactComment> getComments() {
+		return this.comments;
 	}
 }

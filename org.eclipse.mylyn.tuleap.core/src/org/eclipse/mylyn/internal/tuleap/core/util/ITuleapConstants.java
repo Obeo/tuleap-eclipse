@@ -106,6 +106,16 @@ public interface ITuleapConstants {
 	String QUERY_KIND_CUSTOM = "tuleap_query_custom"; //$NON-NLS-1$
 
 	/**
+	 * The key used to specify that the query will execute a report.
+	 */
+	String QUERY_KIND_REPORT = "tuleap_query_report"; //$NON-NLS-1$
+
+	/**
+	 * The id of the report to run.
+	 */
+	String QUERY_REPORT_ID = "tuleap_query_report_id"; //$NON-NLS-1$
+
+	/**
 	 * The key used to identify the tracker id on which the query will be run.
 	 */
 	String QUERY_TRACKER_ID = "tuleap_query_tracker_id"; //$NON-NLS-1$

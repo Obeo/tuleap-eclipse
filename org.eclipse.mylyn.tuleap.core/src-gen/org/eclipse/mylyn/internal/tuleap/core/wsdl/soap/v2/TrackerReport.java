@@ -1,74 +1,56 @@
 /**
- * ArtifactReportDesc.java
+ * TrackerReport.java
  *
  * This file was auto-generated from WSDL
  * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
  */
 
-package org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v1;
+package org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2;
 
 @SuppressWarnings("all")
-public class ArtifactReportDesc implements java.io.Serializable {
-	private int report_id;
-
-	private int group_artifact_id;
+public class TrackerReport implements java.io.Serializable {
+	private int id;
 
 	private java.lang.String name;
 
 	private java.lang.String description;
 
-	private java.lang.String scope;
+	private int user_id;
 
-	public ArtifactReportDesc() {
+	private boolean is_default;
+
+	public TrackerReport() {
 	}
 
-	public ArtifactReportDesc(int report_id, int group_artifact_id, java.lang.String name,
-			java.lang.String description, java.lang.String scope) {
-		this.report_id = report_id;
-		this.group_artifact_id = group_artifact_id;
+	public TrackerReport(int id, java.lang.String name, java.lang.String description, int user_id,
+			boolean is_default) {
+		this.id = id;
 		this.name = name;
 		this.description = description;
-		this.scope = scope;
+		this.user_id = user_id;
+		this.is_default = is_default;
 	}
 
 	/**
-	 * Gets the report_id value for this ArtifactReportDesc.
+	 * Gets the id value for this TrackerReport.
 	 * 
-	 * @return report_id
+	 * @return id
 	 */
-	public int getReport_id() {
-		return report_id;
+	public int getId() {
+		return id;
 	}
 
 	/**
-	 * Sets the report_id value for this ArtifactReportDesc.
+	 * Sets the id value for this TrackerReport.
 	 * 
-	 * @param report_id
+	 * @param id
 	 */
-	public void setReport_id(int report_id) {
-		this.report_id = report_id;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	/**
-	 * Gets the group_artifact_id value for this ArtifactReportDesc.
-	 * 
-	 * @return group_artifact_id
-	 */
-	public int getGroup_artifact_id() {
-		return group_artifact_id;
-	}
-
-	/**
-	 * Sets the group_artifact_id value for this ArtifactReportDesc.
-	 * 
-	 * @param group_artifact_id
-	 */
-	public void setGroup_artifact_id(int group_artifact_id) {
-		this.group_artifact_id = group_artifact_id;
-	}
-
-	/**
-	 * Gets the name value for this ArtifactReportDesc.
+	 * Gets the name value for this TrackerReport.
 	 * 
 	 * @return name
 	 */
@@ -77,7 +59,7 @@ public class ArtifactReportDesc implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the name value for this ArtifactReportDesc.
+	 * Sets the name value for this TrackerReport.
 	 * 
 	 * @param name
 	 */
@@ -86,7 +68,7 @@ public class ArtifactReportDesc implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the description value for this ArtifactReportDesc.
+	 * Gets the description value for this TrackerReport.
 	 * 
 	 * @return description
 	 */
@@ -95,7 +77,7 @@ public class ArtifactReportDesc implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the description value for this ArtifactReportDesc.
+	 * Sets the description value for this TrackerReport.
 	 * 
 	 * @param description
 	 */
@@ -104,30 +86,48 @@ public class ArtifactReportDesc implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the scope value for this ArtifactReportDesc.
+	 * Gets the user_id value for this TrackerReport.
 	 * 
-	 * @return scope
+	 * @return user_id
 	 */
-	public java.lang.String getScope() {
-		return scope;
+	public int getUser_id() {
+		return user_id;
 	}
 
 	/**
-	 * Sets the scope value for this ArtifactReportDesc.
+	 * Sets the user_id value for this TrackerReport.
 	 * 
-	 * @param scope
+	 * @param user_id
 	 */
-	public void setScope(java.lang.String scope) {
-		this.scope = scope;
+	public void setUser_id(int user_id) {
+		this.user_id = user_id;
+	}
+
+	/**
+	 * Gets the is_default value for this TrackerReport.
+	 * 
+	 * @return is_default
+	 */
+	public boolean isIs_default() {
+		return is_default;
+	}
+
+	/**
+	 * Sets the is_default value for this TrackerReport.
+	 * 
+	 * @param is_default
+	 */
+	public void setIs_default(boolean is_default) {
+		this.is_default = is_default;
 	}
 
 	private java.lang.Object __equalsCalc = null;
 
 	public synchronized boolean equals(java.lang.Object obj) {
-		if (!(obj instanceof ArtifactReportDesc)) {
+		if (!(obj instanceof TrackerReport)) {
 			return false;
 		}
-		ArtifactReportDesc other = (ArtifactReportDesc)obj;
+		TrackerReport other = (TrackerReport)obj;
 		if (obj == null) {
 			return false;
 		}
@@ -140,14 +140,12 @@ public class ArtifactReportDesc implements java.io.Serializable {
 		__equalsCalc = obj;
 		boolean _equals;
 		_equals = true
-				&& this.report_id == other.getReport_id()
-				&& this.group_artifact_id == other.getGroup_artifact_id()
+				&& this.id == other.getId()
 				&& (this.name == null && other.getName() == null || this.name != null
 						&& this.name.equals(other.getName()))
 				&& (this.description == null && other.getDescription() == null || this.description != null
 						&& this.description.equals(other.getDescription()))
-				&& (this.scope == null && other.getScope() == null || this.scope != null
-						&& this.scope.equals(other.getScope()));
+				&& this.user_id == other.getUser_id() && this.is_default == other.isIs_default();
 		__equalsCalc = null;
 		return _equals;
 	}
@@ -160,36 +158,29 @@ public class ArtifactReportDesc implements java.io.Serializable {
 		}
 		__hashCodeCalc = true;
 		int _hashCode = 1;
-		_hashCode += getReport_id();
-		_hashCode += getGroup_artifact_id();
+		_hashCode += getId();
 		if (getName() != null) {
 			_hashCode += getName().hashCode();
 		}
 		if (getDescription() != null) {
 			_hashCode += getDescription().hashCode();
 		}
-		if (getScope() != null) {
-			_hashCode += getScope().hashCode();
-		}
+		_hashCode += getUser_id();
+		_hashCode += (isIs_default() ? Boolean.TRUE : Boolean.FALSE).hashCode();
 		__hashCodeCalc = false;
 		return _hashCode;
 	}
 
 	// Type metadata
 	private static org.apache.axis.description.TypeDesc typeDesc = new org.apache.axis.description.TypeDesc(
-			ArtifactReportDesc.class, true);
+			TrackerReport.class, true);
 
 	static {
-		typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactReportDesc"));
+		typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap",
+				"TrackerReport"));
 		org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
-		elemField.setFieldName("report_id");
-		elemField.setXmlName(new javax.xml.namespace.QName("", "report_id"));
-		elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
-		elemField.setNillable(false);
-		typeDesc.addFieldDesc(elemField);
-		elemField = new org.apache.axis.description.ElementDesc();
-		elemField.setFieldName("group_artifact_id");
-		elemField.setXmlName(new javax.xml.namespace.QName("", "group_artifact_id"));
+		elemField.setFieldName("id");
+		elemField.setXmlName(new javax.xml.namespace.QName("", "id"));
 		elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
 		elemField.setNillable(false);
 		typeDesc.addFieldDesc(elemField);
@@ -206,9 +197,15 @@ public class ArtifactReportDesc implements java.io.Serializable {
 		elemField.setNillable(false);
 		typeDesc.addFieldDesc(elemField);
 		elemField = new org.apache.axis.description.ElementDesc();
-		elemField.setFieldName("scope");
-		elemField.setXmlName(new javax.xml.namespace.QName("", "scope"));
-		elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+		elemField.setFieldName("user_id");
+		elemField.setXmlName(new javax.xml.namespace.QName("", "user_id"));
+		elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
+		elemField.setNillable(false);
+		typeDesc.addFieldDesc(elemField);
+		elemField = new org.apache.axis.description.ElementDesc();
+		elemField.setFieldName("is_default");
+		elemField.setXmlName(new javax.xml.namespace.QName("", "is_default"));
+		elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"));
 		elemField.setNillable(false);
 		typeDesc.addFieldDesc(elemField);
 	}

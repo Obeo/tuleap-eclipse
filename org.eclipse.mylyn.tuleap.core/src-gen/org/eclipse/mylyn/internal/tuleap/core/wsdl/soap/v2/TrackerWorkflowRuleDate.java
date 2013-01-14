@@ -1,5 +1,5 @@
 /**
- * TrackerFieldBindValue.java
+ * TrackerWorkflowRuleDate.java
  *
  * This file was auto-generated from WSDL
  * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
@@ -8,83 +8,83 @@
 package org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2;
 
 @SuppressWarnings("all")
-public class TrackerFieldBindValue implements java.io.Serializable {
-	private int field_id;
+public class TrackerWorkflowRuleDate implements java.io.Serializable {
+	private int source_field_id;
 
-	private int bind_value_id;
+	private int target_field_id;
 
-	private java.lang.String bind_value_label;
+	private java.lang.String comparator;
 
-	public TrackerFieldBindValue() {
+	public TrackerWorkflowRuleDate() {
 	}
 
-	public TrackerFieldBindValue(int field_id, int bind_value_id, java.lang.String bind_value_label) {
-		this.field_id = field_id;
-		this.bind_value_id = bind_value_id;
-		this.bind_value_label = bind_value_label;
-	}
-
-	/**
-	 * Gets the field_id value for this TrackerFieldBindValue.
-	 * 
-	 * @return field_id
-	 */
-	public int getField_id() {
-		return field_id;
+	public TrackerWorkflowRuleDate(int source_field_id, int target_field_id, java.lang.String comparator) {
+		this.source_field_id = source_field_id;
+		this.target_field_id = target_field_id;
+		this.comparator = comparator;
 	}
 
 	/**
-	 * Sets the field_id value for this TrackerFieldBindValue.
+	 * Gets the source_field_id value for this TrackerWorkflowRuleDate.
 	 * 
-	 * @param field_id
+	 * @return source_field_id
 	 */
-	public void setField_id(int field_id) {
-		this.field_id = field_id;
+	public int getSource_field_id() {
+		return source_field_id;
 	}
 
 	/**
-	 * Gets the bind_value_id value for this TrackerFieldBindValue.
+	 * Sets the source_field_id value for this TrackerWorkflowRuleDate.
 	 * 
-	 * @return bind_value_id
+	 * @param source_field_id
 	 */
-	public int getBind_value_id() {
-		return bind_value_id;
+	public void setSource_field_id(int source_field_id) {
+		this.source_field_id = source_field_id;
 	}
 
 	/**
-	 * Sets the bind_value_id value for this TrackerFieldBindValue.
+	 * Gets the target_field_id value for this TrackerWorkflowRuleDate.
 	 * 
-	 * @param bind_value_id
+	 * @return target_field_id
 	 */
-	public void setBind_value_id(int bind_value_id) {
-		this.bind_value_id = bind_value_id;
+	public int getTarget_field_id() {
+		return target_field_id;
 	}
 
 	/**
-	 * Gets the bind_value_label value for this TrackerFieldBindValue.
+	 * Sets the target_field_id value for this TrackerWorkflowRuleDate.
 	 * 
-	 * @return bind_value_label
+	 * @param target_field_id
 	 */
-	public java.lang.String getBind_value_label() {
-		return bind_value_label;
+	public void setTarget_field_id(int target_field_id) {
+		this.target_field_id = target_field_id;
 	}
 
 	/**
-	 * Sets the bind_value_label value for this TrackerFieldBindValue.
+	 * Gets the comparator value for this TrackerWorkflowRuleDate.
 	 * 
-	 * @param bind_value_label
+	 * @return comparator
 	 */
-	public void setBind_value_label(java.lang.String bind_value_label) {
-		this.bind_value_label = bind_value_label;
+	public java.lang.String getComparator() {
+		return comparator;
+	}
+
+	/**
+	 * Sets the comparator value for this TrackerWorkflowRuleDate.
+	 * 
+	 * @param comparator
+	 */
+	public void setComparator(java.lang.String comparator) {
+		this.comparator = comparator;
 	}
 
 	private java.lang.Object __equalsCalc = null;
 
 	public synchronized boolean equals(java.lang.Object obj) {
-		if (!(obj instanceof TrackerFieldBindValue)) {
+		if (!(obj instanceof TrackerWorkflowRuleDate)) {
 			return false;
 		}
-		TrackerFieldBindValue other = (TrackerFieldBindValue)obj;
+		TrackerWorkflowRuleDate other = (TrackerWorkflowRuleDate)obj;
 		if (obj == null) {
 			return false;
 		}
@@ -97,10 +97,10 @@ public class TrackerFieldBindValue implements java.io.Serializable {
 		__equalsCalc = obj;
 		boolean _equals;
 		_equals = true
-				&& this.field_id == other.getField_id()
-				&& this.bind_value_id == other.getBind_value_id()
-				&& (this.bind_value_label == null && other.getBind_value_label() == null || this.bind_value_label != null
-						&& this.bind_value_label.equals(other.getBind_value_label()));
+				&& this.source_field_id == other.getSource_field_id()
+				&& this.target_field_id == other.getTarget_field_id()
+				&& (this.comparator == null && other.getComparator() == null || this.comparator != null
+						&& this.comparator.equals(other.getComparator()));
 		__equalsCalc = null;
 		return _equals;
 	}
@@ -113,10 +113,10 @@ public class TrackerFieldBindValue implements java.io.Serializable {
 		}
 		__hashCodeCalc = true;
 		int _hashCode = 1;
-		_hashCode += getField_id();
-		_hashCode += getBind_value_id();
-		if (getBind_value_label() != null) {
-			_hashCode += getBind_value_label().hashCode();
+		_hashCode += getSource_field_id();
+		_hashCode += getTarget_field_id();
+		if (getComparator() != null) {
+			_hashCode += getComparator().hashCode();
 		}
 		__hashCodeCalc = false;
 		return _hashCode;
@@ -124,26 +124,26 @@ public class TrackerFieldBindValue implements java.io.Serializable {
 
 	// Type metadata
 	private static org.apache.axis.description.TypeDesc typeDesc = new org.apache.axis.description.TypeDesc(
-			TrackerFieldBindValue.class, true);
+			TrackerWorkflowRuleDate.class, true);
 
 	static {
 		typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap",
-				"TrackerFieldBindValue"));
+				"TrackerWorkflowRuleDate"));
 		org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
-		elemField.setFieldName("field_id");
-		elemField.setXmlName(new javax.xml.namespace.QName("", "field_id"));
+		elemField.setFieldName("source_field_id");
+		elemField.setXmlName(new javax.xml.namespace.QName("", "source_field_id"));
 		elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
 		elemField.setNillable(false);
 		typeDesc.addFieldDesc(elemField);
 		elemField = new org.apache.axis.description.ElementDesc();
-		elemField.setFieldName("bind_value_id");
-		elemField.setXmlName(new javax.xml.namespace.QName("", "bind_value_id"));
+		elemField.setFieldName("target_field_id");
+		elemField.setXmlName(new javax.xml.namespace.QName("", "target_field_id"));
 		elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
 		elemField.setNillable(false);
 		typeDesc.addFieldDesc(elemField);
 		elemField = new org.apache.axis.description.ElementDesc();
-		elemField.setFieldName("bind_value_label");
-		elemField.setXmlName(new javax.xml.namespace.QName("", "bind_value_label"));
+		elemField.setFieldName("comparator");
+		elemField.setXmlName(new javax.xml.namespace.QName("", "comparator"));
 		elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
 		elemField.setNillable(false);
 		typeDesc.addFieldDesc(elemField);
