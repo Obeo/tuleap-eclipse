@@ -43,6 +43,7 @@ import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifactComment;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
+import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerReport;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapArtifactLink;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapDate;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapFileUpload;
@@ -85,6 +86,7 @@ import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.FieldValueFileInfo;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.Tracker;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerField;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerFieldBindValue;
+import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerReport;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerSemantic;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerSemanticContributor;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerSemanticStatus;
@@ -1175,5 +1177,80 @@ public class TuleapSoapConnector {
 		shouldConsider = shouldConsider && !ITuleapConfigurationConstants.SUBBY.equals(trackerFieldType);
 		shouldConsider = shouldConsider && !ITuleapConfigurationConstants.LUD.equals(trackerFieldType);
 		return shouldConsider;
+	}
+
+	/**
+	 * Returns the list of Tuleap tracker reports available for the given tracker id.
+	 * 
+	 * @param trackerId
+	 *            The tracker id
+	 * @param monitor
+	 *            The progress monitor
+	 * @return The list of Tuleap tracker reports available
+	 */
+	public List<TuleapTrackerReport> getReports(int trackerId, IProgressMonitor monitor) {
+		List<TuleapTrackerReport> reports = new ArrayList<TuleapTrackerReport>();
+		monitor.beginTask(VALIDATE_CONNECTION_MESSAGE, 100);
+
+		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
+		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
+
+		String soapv1url = trackerLocation.getUrl();
+		int index = soapv1url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
+		if (index != -1) {
+			soapv1url = soapv1url.substring(0, index);
+			soapv1url = soapv1url + ITuleapConstants.SOAP_V1_URL;
+		}
+
+		String soapv2url = trackerLocation.getUrl();
+		index = soapv2url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
+		if (index != -1) {
+			soapv2url = soapv2url.substring(0, index);
+			soapv2url = soapv2url + ITuleapConstants.SOAP_V2_URL;
+		}
+
+		try {
+			EngineConfiguration config = new FileProvider(getClass().getClassLoader().getResourceAsStream(
+					CONFIG_FILE));
+			TuleapSoapServiceLocator locator = new TuleapSoapServiceLocator(config, this.trackerLocation);
+
+			final int fifty = 50;
+			monitor.worked(fifty);
+			monitor.subTask(LOGIN_MESSAGE);
+
+			URL url = new URL(soapv1url);
+			CodendiAPIPortType codendiAPIPort = locator.getCodendiAPIPort(url);
+			Session session = codendiAPIPort.login(username, password);
+			String sessionHash = session.getSession_hash();
+
+			monitor.worked(5);
+
+			int groupId = TuleapUtil.getGroupId(this.trackerLocation.getUrl());
+
+			config = new FileProvider(getClass().getClassLoader().getResourceAsStream(CONFIG_FILE));
+			TuleapTrackerV5APILocator tuleapLocator = new TuleapTrackerV5APILocatorImpl(config,
+					this.trackerLocation);
+			url = new URL(soapv2url);
+
+			monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.RetrievingTheReports")); //$NON-NLS-1$
+
+			TuleapTrackerV5APIPortType tuleapTrackerV5APIPort = tuleapLocator.getTuleapTrackerV5APIPort(url);
+			TrackerReport[] trackerReports = tuleapTrackerV5APIPort.getTrackerReports(sessionHash, groupId,
+					trackerId);
+			for (TrackerReport trackerReport : trackerReports) {
+				TuleapTrackerReport tuleapTrackerReport = new TuleapTrackerReport(trackerReport.getId(),
+						trackerReport.getName());
+				reports.add(tuleapTrackerReport);
+			}
+
+			codendiAPIPort.logout(sessionHash);
+		} catch (MalformedURLException e) {
+			TuleapCoreActivator.log(e, true);
+		} catch (ServiceException e) {
+			TuleapCoreActivator.log(e, true);
+		} catch (RemoteException e) {
+			TuleapCoreActivator.log(e, true);
+		}
+		return reports;
 	}
 }

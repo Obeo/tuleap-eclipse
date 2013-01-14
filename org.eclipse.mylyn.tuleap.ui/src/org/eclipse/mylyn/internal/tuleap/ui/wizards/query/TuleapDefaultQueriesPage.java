@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.ui.wizards.query;
 
+import java.util.List;
+
 import org.eclipse.mylyn.commons.workbench.forms.SectionComposite;
+import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerReport;
 import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
 import org.eclipse.mylyn.internal.tuleap.ui.TuleapTasksUIPlugin;
 import org.eclipse.mylyn.internal.tuleap.ui.util.ITuleapUIConstants;
@@ -23,6 +26,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
@@ -45,17 +49,41 @@ public class TuleapDefaultQueriesPage extends AbstractRepositoryQueryPage2 {
 	private String tracker;
 
 	/**
+	 * The list of the reports available.
+	 */
+	private Combo reportSelectionCombo;
+
+	/**
+	 * The reports available on the tracker.
+	 */
+	private List<TuleapTrackerReport> trackerReport;
+
+	/**
+	 * The radio button used to select the "download all artifacts from the project" query.
+	 */
+	private Button projectsQueryButton;
+
+	/**
+	 * The radio button used to select the "run the selected report" query.
+	 */
+	private Button reportsButton;
+
+	/**
 	 * The constructor.
 	 * 
 	 * @param taskRepository
 	 *            The task repository
 	 * @param selectedTracker
 	 *            The selected tracker
+	 * @param reports
+	 *            The reports available on the selected tracker.
 	 */
-	public TuleapDefaultQueriesPage(TaskRepository taskRepository, String selectedTracker) {
+	public TuleapDefaultQueriesPage(TaskRepository taskRepository, String selectedTracker,
+			List<TuleapTrackerReport> reports) {
 		super(TuleapMylynTasksUIMessages.getString("TuleapDefaultQueriesPage.Name"), taskRepository, null); //$NON-NLS-1$
 		this.repository = taskRepository;
 		this.tracker = selectedTracker;
+		this.trackerReport = reports;
 		this.setTitle(TuleapMylynTasksUIMessages.getString("TuleapDefaultQueriesPage.Title")); //$NON-NLS-1$
 		this.setDescription(TuleapMylynTasksUIMessages.getString("TuleapDefaultQueriesPage.Description")); //$NON-NLS-1$
 	}
@@ -81,10 +109,22 @@ public class TuleapDefaultQueriesPage extends AbstractRepositoryQueryPage2 {
 		groupComposite.setLayoutData(gridData);
 		groupComposite.setLayout(new GridLayout(2, false));
 
-		Button projectsQueryButton = new Button(groupComposite, SWT.RADIO);
+		// Download all button
+		projectsQueryButton = new Button(groupComposite, SWT.RADIO);
 		projectsQueryButton.setText(TuleapMylynTasksUIMessages
 				.getString("TuleapDefaultQueriesPage.ProjectsQueryButton.Name") + this.tracker); //$NON-NLS-1$
 		projectsQueryButton.setSelection(true);
+		GridData gd = new GridData();
+		gd.horizontalSpan = 2;
+		projectsQueryButton.setLayoutData(gd);
+
+		// Reports
+		reportsButton = new Button(groupComposite, SWT.NONE);
+		reportsButton.setText(TuleapMylynTasksUIMessages.getString("TuleapDefaultQueriesPage.ReportsLabel")); //$NON-NLS-1$
+		reportSelectionCombo = new Combo(defaultQueriesGroup, SWT.SINGLE);
+		for (TuleapTrackerReport tuleapTrackerReport : this.trackerReport) {
+			reportSelectionCombo.add(tuleapTrackerReport.toString());
+		}
 	}
 
 	/**
@@ -130,8 +170,23 @@ public class TuleapDefaultQueriesPage extends AbstractRepositoryQueryPage2 {
 			String id = this.tracker.substring(indexStart
 					+ ITuleapConstants.TRACKER_ID_START_DELIMITER.length(), indexEnd);
 			query.setSummary(this.getQueryTitle());
-			query.setAttribute(ITuleapConstants.QUERY_KIND, ITuleapConstants.QUERY_KIND_ALL_FROM_TRACKER);
 			query.setAttribute(ITuleapConstants.QUERY_TRACKER_ID, id);
+
+			if (this.projectsQueryButton.getSelection()) {
+				query.setAttribute(ITuleapConstants.QUERY_KIND, ITuleapConstants.QUERY_KIND_ALL_FROM_TRACKER);
+			} else if (this.reportsButton.getSelection()) {
+				query.setAttribute(ITuleapConstants.QUERY_KIND, ITuleapConstants.QUERY_KIND_REPORT);
+
+				// Report id?
+				String reportSelected = this.reportSelectionCombo.getText();
+				for (TuleapTrackerReport tuleapTrackerReport : this.trackerReport) {
+					if (reportSelected.equals(tuleapTrackerReport.getName())) {
+						query.setAttribute(ITuleapConstants.QUERY_REPORT_ID, Integer.valueOf(
+								tuleapTrackerReport.getId()).toString());
+						break;
+					}
+				}
+			}
 		}
 	}
 

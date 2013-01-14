@@ -49,10 +49,10 @@ public class Test {
 
 	public static void main(String[] args) {
 		Test test = new Test();
-		test.doStuff();
+		test.doStuff(args[0], args[1]);
 	}
 
-	private void doStuff() {
+	private void doStuff(String login, String password) {
 		String domain = "https://demo.tuleap.net/projects/obeo";
 		AbstractWebLocation location = new WebLocation(domain);
 
@@ -60,12 +60,9 @@ public class Test {
 				CONFIG_FILE));
 		TuleapSoapServiceLocator locator = new TuleapSoapServiceLocator(config, location);
 		try {
-			String loginname = "";
-			String passwd = "";
-
 			URL url = new URL("https://demo.tuleap.net/soap/");
 			CodendiAPIPortType codendiAPIPort = locator.getCodendiAPIPort(url);
-			Session session = codendiAPIPort.login(loginname, passwd);
+			Session session = codendiAPIPort.login(login, password);
 			String session_hash = session.getSession_hash();
 			int user_id = session.getUser_id();
 

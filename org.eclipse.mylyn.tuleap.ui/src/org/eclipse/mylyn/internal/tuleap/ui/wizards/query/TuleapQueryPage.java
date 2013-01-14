@@ -19,8 +19,12 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
+import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerReport;
+import org.eclipse.mylyn.internal.tuleap.core.net.TuleapSoapConnector;
 import org.eclipse.mylyn.internal.tuleap.core.repository.ITuleapRepositoryConnector;
 import org.eclipse.mylyn.internal.tuleap.ui.TuleapTasksUIPlugin;
 import org.eclipse.mylyn.internal.tuleap.ui.util.ITuleapUIConstants;
@@ -167,8 +171,33 @@ public class TuleapQueryPage extends WizardPage {
 	@Override
 	public IWizardPage getNextPage() {
 		if (this.defaultQueriesButton.getSelection()) {
+			final List<TuleapTrackerReport> reports = new ArrayList<TuleapTrackerReport>();
+			IRunnableWithProgress runnable = new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException,
+						InterruptedException {
+					// to stuff that will returns the tracker reports.
+					String text = projectSelectionCombo.getText();
+					int startIndex = text.indexOf('[');
+					int endIndex = text.indexOf(']');
+					if (startIndex != -1 && endIndex != -1 && endIndex > startIndex) {
+						String trackerIdString = text.substring(startIndex, endIndex);
+						int trackerId = Integer.valueOf(trackerIdString).intValue();
+
+						AbstractWebLocation location = new TaskRepositoryLocation(repository);
+						TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(location);
+						reports.addAll(tuleapSoapConnector.getReports(trackerId, monitor));
+					}
+				}
+			};
+			try {
+				PlatformUI.getWorkbench().getProgressService().run(true, false, runnable);
+			} catch (InvocationTargetException e) {
+				TuleapTasksUIPlugin.log(e, true);
+			} catch (InterruptedException e) {
+				TuleapTasksUIPlugin.log(e, true);
+			}
 			this.defaultQueriesPage = new TuleapDefaultQueriesPage(repository, projectSelectionCombo
-					.getText());
+					.getText(), reports);
 			this.defaultQueriesPage.setWizard(this.getWizard());
 			return this.defaultQueriesPage;
 		}
