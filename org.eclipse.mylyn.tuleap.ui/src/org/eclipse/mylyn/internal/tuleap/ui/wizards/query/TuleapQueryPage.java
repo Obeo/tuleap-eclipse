@@ -171,16 +171,16 @@ public class TuleapQueryPage extends WizardPage {
 	@Override
 	public IWizardPage getNextPage() {
 		if (this.defaultQueriesButton.getSelection()) {
+			final String text = projectSelectionCombo.getText();
 			final List<TuleapTrackerReport> reports = new ArrayList<TuleapTrackerReport>();
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException,
 						InterruptedException {
 					// to stuff that will returns the tracker reports.
-					String text = projectSelectionCombo.getText();
 					int startIndex = text.indexOf('[');
 					int endIndex = text.indexOf(']');
 					if (startIndex != -1 && endIndex != -1 && endIndex > startIndex) {
-						String trackerIdString = text.substring(startIndex, endIndex);
+						String trackerIdString = text.substring(startIndex + 1, endIndex);
 						int trackerId = Integer.valueOf(trackerIdString).intValue();
 
 						AbstractWebLocation location = new TaskRepositoryLocation(repository);
@@ -190,7 +190,7 @@ public class TuleapQueryPage extends WizardPage {
 				}
 			};
 			try {
-				PlatformUI.getWorkbench().getProgressService().run(true, false, runnable);
+				this.getContainer().run(true, false, runnable);
 			} catch (InvocationTargetException e) {
 				TuleapTasksUIPlugin.log(e, true);
 			} catch (InterruptedException e) {

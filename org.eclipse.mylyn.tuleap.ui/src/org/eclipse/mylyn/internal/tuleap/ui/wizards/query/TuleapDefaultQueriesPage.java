@@ -109,22 +109,33 @@ public class TuleapDefaultQueriesPage extends AbstractRepositoryQueryPage2 {
 		groupComposite.setLayoutData(gridData);
 		groupComposite.setLayout(new GridLayout(2, false));
 
+		// Reports
+		reportsButton = new Button(groupComposite, SWT.RADIO);
+		reportsButton.setText(TuleapMylynTasksUIMessages.getString("TuleapDefaultQueriesPage.ReportsLabel")); //$NON-NLS-1$
+		reportSelectionCombo = new Combo(groupComposite, SWT.SINGLE);
+		GridData gd = new GridData();
+		gd.grabExcessHorizontalSpace = true;
+		reportSelectionCombo.setLayoutData(gd);
+		for (TuleapTrackerReport tuleapTrackerReport : this.trackerReport) {
+			reportSelectionCombo.add(tuleapTrackerReport.toString());
+		}
+		// Select the first report by default
+		if (this.trackerReport.size() > 0) {
+			reportSelectionCombo.setText(this.trackerReport.get(0).toString());
+		}
+
 		// Download all button
 		projectsQueryButton = new Button(groupComposite, SWT.RADIO);
 		projectsQueryButton.setText(TuleapMylynTasksUIMessages
 				.getString("TuleapDefaultQueriesPage.ProjectsQueryButton.Name") + this.tracker); //$NON-NLS-1$
 		projectsQueryButton.setSelection(true);
-		GridData gd = new GridData();
+		gd = new GridData();
 		gd.horizontalSpan = 2;
 		projectsQueryButton.setLayoutData(gd);
 
-		// Reports
-		reportsButton = new Button(groupComposite, SWT.NONE);
-		reportsButton.setText(TuleapMylynTasksUIMessages.getString("TuleapDefaultQueriesPage.ReportsLabel")); //$NON-NLS-1$
-		reportSelectionCombo = new Combo(defaultQueriesGroup, SWT.SINGLE);
-		for (TuleapTrackerReport tuleapTrackerReport : this.trackerReport) {
-			reportSelectionCombo.add(tuleapTrackerReport.toString());
-		}
+		// Select the report by default
+		projectsQueryButton.setSelection(false);
+		reportsButton.setSelection(true);
 	}
 
 	/**
@@ -180,7 +191,7 @@ public class TuleapDefaultQueriesPage extends AbstractRepositoryQueryPage2 {
 				// Report id?
 				String reportSelected = this.reportSelectionCombo.getText();
 				for (TuleapTrackerReport tuleapTrackerReport : this.trackerReport) {
-					if (reportSelected.equals(tuleapTrackerReport.getName())) {
+					if (reportSelected.equals(tuleapTrackerReport.toString())) {
 						query.setAttribute(ITuleapConstants.QUERY_REPORT_ID, Integer.valueOf(
 								tuleapTrackerReport.getId()).toString());
 						break;

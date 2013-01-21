@@ -40,7 +40,6 @@ import org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClient;
 import org.eclipse.mylyn.internal.tuleap.core.config.ITuleapConfigurationConstants;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact;
-import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifactComment;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerReport;
@@ -75,7 +74,6 @@ import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v1.CodendiAPIPortType;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v1.Group;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v1.Session;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.Artifact;
-import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.ArtifactComments;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.ArtifactFieldValue;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.ArtifactQueryResult;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.Criteria;
@@ -646,43 +644,43 @@ public class TuleapSoapConnector {
 	private TuleapArtifact populateArtifact(TuleapArtifact tuleapArtifact, TrackerField[] trackerFields,
 			Artifact artifact, TuleapTrackerV5APIPortType tuleapTrackerV5APIPort, String sessionHash,
 			IProgressMonitor monitor) {
-		try {
-			// Retrieve comments
-			monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.RetrieveComments")); //$NON-NLS-1$
-			ArtifactComments[] artifactComments = tuleapTrackerV5APIPort.getArtifactComments(sessionHash,
-					artifact.getArtifact_id());
+		// try {
+		// Retrieve comments
+		monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.RetrieveComments")); //$NON-NLS-1$
+		// ArtifactComments[] artifactComments = tuleapTrackerV5APIPort.getArtifactComments(sessionHash,
+		// artifact.getArtifact_id());
 
-			for (TrackerField trackerField : trackerFields) {
-				boolean found = false;
-				for (ArtifactFieldValue artifactFieldValue : artifact.getValue()) {
-					if (artifactFieldValue.getField_name().equals(trackerField.getShort_name())
-							&& artifactFieldValue.getField_label().equals(trackerField.getLabel())) {
-						tuleapArtifact.putValue(artifactFieldValue.getField_name(), artifactFieldValue
-								.getField_value().getValue());
-						monitor.worked(1);
-						found = true;
-					}
-				}
-
-				if (!found) {
-					// The value is not set in the artifact
-					// Let's create an empty entry in the artifact
-
-					tuleapArtifact.putValue(trackerField.getShort_name(), null);
+		for (TrackerField trackerField : trackerFields) {
+			boolean found = false;
+			for (ArtifactFieldValue artifactFieldValue : artifact.getValue()) {
+				if (artifactFieldValue.getField_name().equals(trackerField.getShort_name())
+						&& artifactFieldValue.getField_label().equals(trackerField.getLabel())) {
+					tuleapArtifact.putValue(artifactFieldValue.getField_name(), artifactFieldValue
+							.getField_value().getValue());
 					monitor.worked(1);
+					found = true;
 				}
 			}
-			monitor.worked(5);
 
-			for (ArtifactComments artifactComment : artifactComments) {
-				TuleapArtifactComment comment = new TuleapArtifactComment(artifactComment.getBody(),
-						artifactComment.getEmail(), artifactComment.getSubmitted_by(), artifactComment
-								.getSubmitted_on());
-				tuleapArtifact.addComment(comment);
+			if (!found) {
+				// The value is not set in the artifact
+				// Let's create an empty entry in the artifact
+
+				tuleapArtifact.putValue(trackerField.getShort_name(), null);
+				monitor.worked(1);
 			}
-		} catch (RemoteException e) {
-			TuleapCoreActivator.log(e, true);
 		}
+		monitor.worked(5);
+
+		// for (ArtifactComments artifactComment : artifactComments) {
+		// TuleapArtifactComment comment = new TuleapArtifactComment(artifactComment.getBody(),
+		// artifactComment.getEmail(), artifactComment.getSubmitted_by(), artifactComment
+		// .getSubmitted_on());
+		// tuleapArtifact.addComment(comment);
+		// }
+		// } catch (RemoteException e) {
+		// TuleapCoreActivator.log(e, true);
+		// }
 
 		return tuleapArtifact;
 	}
@@ -837,14 +835,14 @@ public class TuleapSoapConnector {
 
 			// Retrieve comments
 			monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.RetrieveComments")); //$NON-NLS-1$
-			ArtifactComments[] artifactComments = tuleapTrackerV5APIPort.getArtifactComments(sessionHash,
-					artifactId);
-			for (ArtifactComments artifactComment : artifactComments) {
-				TuleapArtifactComment comment = new TuleapArtifactComment(artifactComment.getBody(),
-						artifactComment.getEmail(), artifactComment.getSubmitted_by(), artifactComment
-								.getSubmitted_on());
-				tuleapArtifact.addComment(comment);
-			}
+			// ArtifactComments[] artifactComments = tuleapTrackerV5APIPort.getArtifactComments(sessionHash,
+			// artifactId);
+			// for (ArtifactComments artifactComment : artifactComments) {
+			// TuleapArtifactComment comment = new TuleapArtifactComment(artifactComment.getBody(),
+			// artifactComment.getEmail(), artifactComment.getSubmitted_by(), artifactComment
+			// .getSubmitted_on());
+			// tuleapArtifact.addComment(comment);
+			// }
 
 			monitor.worked(fifty);
 

@@ -668,7 +668,10 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			if (abstractTuleapField instanceof TuleapString
 					&& ((TuleapString)abstractTuleapField).isSemanticTitle()) {
 				// Look for the summary
-				taskMapper.setSummary(tuleapArtifact.getValue(abstractTuleapField.getName()));
+				String value = tuleapArtifact.getValue(abstractTuleapField.getName());
+				if (value != null) {
+					taskMapper.setSummary(value);
+				}
 			} else if (abstractTuleapField instanceof TuleapSelectBox
 					&& ((TuleapSelectBox)abstractTuleapField).isSemanticStatus()) {
 				// Look for the status
