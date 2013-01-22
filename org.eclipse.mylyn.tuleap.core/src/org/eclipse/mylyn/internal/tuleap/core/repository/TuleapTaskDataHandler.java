@@ -738,14 +738,14 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 					}
 				}
 			} else {
-				String value = tuleapArtifact.getValue(abstractTuleapField.getName());
+				List<String> values = tuleapArtifact.getValues(abstractTuleapField.getName());
 
 				TaskAttribute attribute = taskData.getRoot();
 				Map<String, TaskAttribute> attributes = attribute.getAttributes();
 				TaskAttribute taskAttribute = attributes.get(Integer.valueOf(
 						abstractTuleapField.getIdentifier()).toString());
-				if (taskAttribute != null && value != null) {
-					taskAttribute.setValue(value);
+				if (taskAttribute != null && values != null) {
+					taskAttribute.setValues(values);
 				}
 			}
 

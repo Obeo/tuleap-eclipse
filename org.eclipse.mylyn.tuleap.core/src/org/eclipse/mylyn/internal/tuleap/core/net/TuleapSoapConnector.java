@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.StringTokenizer;
 
 import javax.xml.rpc.ServiceException;
 
@@ -755,7 +756,11 @@ public class TuleapSoapConnector {
 						if ("None".equals(value)) { //$NON-NLS-1$
 							tuleapArtifact.putValue(artifactFieldValue.getField_name(), ""); //$NON-NLS-1$
 						} else {
-							tuleapArtifact.putValue(artifactFieldValue.getField_name(), value);
+							StringTokenizer stringTokenizer = new StringTokenizer(value, ","); //$NON-NLS-1$
+							while (stringTokenizer.hasMoreTokens()) {
+								String nextToken = stringTokenizer.nextToken();
+								tuleapArtifact.putValue(artifactFieldValue.getField_name(), nextToken.trim());
+							}
 						}
 						found = true;
 					} else {
@@ -1180,6 +1185,57 @@ public class TuleapSoapConnector {
 				// int date = Long.valueOf(Long.valueOf(value).longValue() / 1000).intValue();
 				// artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField
 				// .getLabel(), Integer.valueOf(date).toString());
+			}
+		} else if (ITuleapConfigurationConstants.SB.equals(trackerField.getType())
+				&& trackerField.getValues().length == 1) {
+			// One value -> potential dynamic binding
+
+			// Let's look if we have a dynamic binding, if that's the case we need to return the "username"
+			// We currently have, as a value the following content "Real Name (username)" or "".
+			String fieldId = Integer.valueOf(trackerField.getField_id()).toString();
+			if (artifact.getValues(fieldId) != null && artifact.getValues(fieldId).size() == 1) {
+				List<String> values = artifact.getValues(fieldId);
+				String value = values.get(0);
+				int startIndex = value.indexOf('(');
+				int endIndex = value.indexOf(')');
+
+				String newValue = value;
+				if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
+					newValue = value.substring(startIndex + 1, endIndex);
+				}
+				FieldValue fieldValue = new FieldValue(newValue, new FieldValueFileInfo[] {});
+				artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField
+						.getLabel(), fieldValue);
+			}
+		} else if (ITuleapConfigurationConstants.MSB.equals(trackerField.getType())
+				&& trackerField.getValues().length == 1) {
+			// One value -> potential dynamic binding
+
+			// Let's look if we have a dynamic binding, if that's the case we need to return the "username"
+			// We currently have, as a value the following content "Real Name (username)" or "".
+			String fieldId = Integer.valueOf(trackerField.getField_id()).toString();
+			if (artifact.getValues(fieldId) != null && !artifact.getValues(fieldId).isEmpty()) {
+				String composedValue = ""; //$NON-NLS-1$
+
+				List<String> values = artifact.getValues(fieldId);
+				for (int i = 0; i < values.size(); i++) {
+					String value = values.get(i);
+
+					int startIndex = value.indexOf('(');
+					int endIndex = value.indexOf(')');
+
+					String newValue = value;
+					if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
+						newValue = value.substring(startIndex + 1, endIndex);
+					}
+					composedValue = composedValue + newValue;
+					if (i < values.size() - 1) {
+						composedValue += ","; //$NON-NLS-1$
+					}
+				}
+				FieldValue fieldValue = new FieldValue(composedValue, new FieldValueFileInfo[] {});
+				artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField
+						.getLabel(), fieldValue);
 			}
 		} else if (this.shouldConsider(trackerField.getType())) {
 			// Any other value
