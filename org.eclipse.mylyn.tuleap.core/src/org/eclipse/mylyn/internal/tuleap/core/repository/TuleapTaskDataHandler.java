@@ -844,6 +844,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			for (TuleapAttachment tuleapAttachment : attachmentsList) {
 				TaskAttribute attribute = taskData.getRoot().createAttribute(
 						TaskAttribute.PREFIX_ATTACHMENT + tuleapFieldName + "---" + tuleapAttachment.getId()); //$NON-NLS-1$
+				attribute.getMetaData().defaults().setType(TaskAttribute.TYPE_ATTACHMENT);
 				TaskAttachmentMapper taskAttachment = TaskAttachmentMapper.createFrom(attribute);
 				taskAttachment.setAttachmentId(tuleapAttachment.getId());
 

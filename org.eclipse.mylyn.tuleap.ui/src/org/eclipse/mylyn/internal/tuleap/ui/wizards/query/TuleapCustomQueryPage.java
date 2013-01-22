@@ -191,7 +191,6 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 	 */
 	@Override
 	protected void createPageContent(SectionComposite parent) {
-		// TODO Creates the custom query page
 		String connectorKind = this.getTaskRepository().getConnectorKind();
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				connectorKind);
