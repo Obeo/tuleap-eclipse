@@ -1177,6 +1177,31 @@ public class TuleapSoapConnector {
 					new FieldValueFileInfo[] {});
 			artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(),
 					trackerField.getLabel(), fieldValue);
+		} else if (trackerStructure.getSemantic() != null
+				&& trackerStructure.getSemantic().getContributor() != null
+				&& trackerField.getShort_name().equals(
+						trackerStructure.getSemantic().getContributor().getField_name())) {
+			// The contributor of the artifact
+			List<String> values = artifact.getValues(TaskAttribute.USER_ASSIGNED);
+			String composedValue = ""; //$NON-NLS-1$
+			for (int i = 0; i < values.size(); i++) {
+				String value = values.get(i);
+
+				int startIndex = value.indexOf('(');
+				int endIndex = value.indexOf(')');
+
+				String newValue = value;
+				if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
+					newValue = value.substring(startIndex + 1, endIndex);
+				}
+				composedValue = composedValue + newValue;
+				if (i < values.size() - 1) {
+					composedValue += ","; //$NON-NLS-1$
+				}
+			}
+			FieldValue fieldValue = new FieldValue(composedValue, new FieldValueFileInfo[] {});
+			artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(),
+					trackerField.getLabel(), fieldValue);
 		} else if (ITuleapConfigurationConstants.DATE.equals(trackerField.getType())) {
 			// Convert the date into a valid timestamp
 			String value = artifact.getValue(Integer.valueOf(trackerField.getField_id()).toString());

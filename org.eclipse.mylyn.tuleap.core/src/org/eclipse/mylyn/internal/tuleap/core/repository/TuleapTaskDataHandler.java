@@ -717,9 +717,41 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			} else if (abstractTuleapField instanceof TuleapSelectBox
 					&& ((TuleapSelectBox)abstractTuleapField).isSemanticContributor()) {
 				TuleapSelectBox tuleapSelectBox = (TuleapSelectBox)abstractTuleapField;
+				TaskAttribute taskAttribute = taskData.getRoot().getAttributes().get(
+						TaskAttribute.USER_ASSIGNED);
+				if (taskAttribute == null) {
+					taskAttribute = taskData.getRoot().createAttribute(TaskAttribute.USER_ASSIGNED);
+					TaskAttributeMetaData metaData = taskAttribute.getMetaData();
+					metaData.setKind(TaskAttribute.KIND_PEOPLE);
+					metaData.setType(TaskAttribute.TYPE_MULTI_SELECT);
+				}
+				// Put the options
+				List<TuleapSelectBoxItem> items = tuleapSelectBox.getItems();
+				for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
+					taskAttribute.putOption(tuleapSelectBoxItem.getLabel(), tuleapSelectBoxItem.getLabel());
+				}
+				// Adds the values from the retrieved artifact
+				List<String> values = tuleapArtifact.getValues(abstractTuleapField.getName());
+				taskAttribute.setValues(values);
 			} else if (abstractTuleapField instanceof TuleapMultiSelectBox
 					&& ((TuleapMultiSelectBox)abstractTuleapField).isSemanticContributor()) {
 				TuleapMultiSelectBox tuleapMultiSelectBox = (TuleapMultiSelectBox)abstractTuleapField;
+				TaskAttribute taskAttribute = taskData.getRoot().getAttributes().get(
+						TaskAttribute.USER_ASSIGNED);
+				if (taskAttribute == null) {
+					taskAttribute = taskData.getRoot().createAttribute(TaskAttribute.USER_ASSIGNED);
+					TaskAttributeMetaData metaData = taskAttribute.getMetaData();
+					metaData.setKind(TaskAttribute.KIND_PEOPLE);
+					metaData.setType(TaskAttribute.TYPE_MULTI_SELECT);
+				}
+				// Put the options
+				List<TuleapSelectBoxItem> items = tuleapMultiSelectBox.getItems();
+				for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
+					taskAttribute.putOption(tuleapSelectBoxItem.getLabel(), tuleapSelectBoxItem.getLabel());
+				}
+				// Adds the values from the retrieved artifact
+				List<String> values = tuleapArtifact.getValues(abstractTuleapField.getName());
+				taskAttribute.setValues(values);
 			} else if (abstractTuleapField instanceof TuleapDate) {
 				// Date need to have their timestamp converted
 				String value = tuleapArtifact.getValue(abstractTuleapField.getName());
