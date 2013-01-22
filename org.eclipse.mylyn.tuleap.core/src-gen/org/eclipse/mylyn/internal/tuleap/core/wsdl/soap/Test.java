@@ -1,5 +1,10 @@
 package org.eclipse.mylyn.internal.tuleap.core.wsdl.soap;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
@@ -8,13 +13,13 @@ import javax.xml.rpc.ServiceException;
 
 import org.apache.axis.EngineConfiguration;
 import org.apache.axis.configuration.FileProvider;
+import org.apache.commons.codec.binary.Base64;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v1.CodendiAPIPortType;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v1.Group;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v1.Session;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.Artifact;
-import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.ArtifactComments;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.ArtifactFieldValue;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.ArtifactQueryResult;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.Criteria;
@@ -49,7 +54,139 @@ public class Test {
 
 	public static void main(String[] args) {
 		Test test = new Test();
-		test.doStuff(args[0], args[1]);
+		// test.doStuff(args[0], args[1]);
+		test.doDownloadUploadStuff(args[0], args[1]);
+	}
+
+	private void doDownloadUploadStuff(String login, String password) {
+		String domain = "https://demo.tuleap.net/projects/obeo";
+		AbstractWebLocation location = new WebLocation(domain);
+
+		EngineConfiguration config = new FileProvider(getClass().getClassLoader().getResourceAsStream(
+				CONFIG_FILE));
+		TuleapSoapServiceLocator locator = new TuleapSoapServiceLocator(config, location);
+		try {
+			URL url = new URL("https://demo.tuleap.net/soap/");
+			CodendiAPIPortType codendiAPIPort = locator.getCodendiAPIPort(url);
+			Session session = codendiAPIPort.login(login, password);
+			String session_hash = session.getSession_hash();
+			int user_id = session.getUser_id();
+
+			System.out.println("Session hash: " + session_hash);
+			System.out.println("User Id: " + user_id);
+
+			int groupId = 141;
+
+			Group group = codendiAPIPort.getGroupById(session_hash, groupId);
+			String group_name = group.getGroup_name();
+			System.out.println(group_name);
+
+			config = new FileProvider(getClass().getClassLoader().getResourceAsStream(CONFIG_FILE));
+			TuleapTrackerV5APILocator tuleapLocator = new TuleapTrackerV5APILocatorImpl(config, location);
+			url = new URL("https://demo.tuleap.net/plugins/tracker/soap/");
+			TuleapTrackerV5APIPortType tuleapTrackerV5APIPort = tuleapLocator.getTuleapTrackerV5APIPort(url);
+			Tracker[] trackers = tuleapTrackerV5APIPort.getTrackerList(session_hash, groupId);
+			System.out.println("Trackers length: " + trackers.length);
+
+			Artifact artifact = tuleapTrackerV5APIPort.getArtifact(session_hash, 141, 484, 739);
+			ArtifactFieldValue[] artifactValue = artifact.getValue();
+			for (ArtifactFieldValue artifactFieldValue : artifactValue) {
+				if ("Attachments".equals(artifactFieldValue.getField_label())) {
+					File file = null;
+					int length2 = -1;
+					int submitted_by = -1;
+					String filetype = "";
+
+					// download
+					FieldValue field_value = artifactFieldValue.getField_value();
+					String value = field_value.getValue();
+					FieldValueFileInfo[] file_info = field_value.getFile_info();
+					for (FieldValueFileInfo fieldValueFileInfo : file_info) {
+						String action = fieldValueFileInfo.getAction();
+						String description = fieldValueFileInfo.getDescription();
+						int filesize = fieldValueFileInfo.getFilesize();
+						filetype = fieldValueFileInfo.getFiletype();
+						String id = fieldValueFileInfo.getId();
+						String filename = fieldValueFileInfo.getFilename();
+						submitted_by = fieldValueFileInfo.getSubmitted_by();
+
+						String fileContent = "";
+
+						int offset = 0;
+						while (offset < filesize) {
+							String artifactAttachmentChunk = tuleapTrackerV5APIPort
+									.getArtifactAttachmentChunk(session_hash, 739, Integer.valueOf(id)
+											.intValue(), offset, filesize);
+							offset = offset + artifactAttachmentChunk.length();
+							fileContent = fileContent + artifactAttachmentChunk;
+						}
+
+						byte[] decodeBase64 = Base64.decodeBase64(fileContent.getBytes());
+						String content = new String(decodeBase64);
+						int length = content.length();
+						length2 = decodeBase64.length;
+						file = new File("/" + filename);
+						String absolutePath = file.getAbsolutePath();
+						try {
+							if (file.exists()) {
+								file.delete();
+							}
+							file.createNewFile();
+							FileOutputStream fileOutputStream = new FileOutputStream(file);
+							fileOutputStream.write(decodeBase64);
+							fileOutputStream.flush();
+							fileOutputStream.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+
+					// Upload
+					if (file != null) {
+						try {
+							tuleapTrackerV5APIPort.purgeAllTemporaryAttachments(session_hash);
+
+							FileInputStream fileInputStream = new FileInputStream(file);
+							byte[] bytes = new byte[length2];
+							fileInputStream.read(bytes);
+							fileInputStream.close();
+
+							int length = bytes.length;
+							byte[] encodeBase64 = Base64.encodeBase64(bytes);
+							String attachmentName = tuleapTrackerV5APIPort
+									.createTemporaryAttachment(session_hash);
+							tuleapTrackerV5APIPort.appendTemporaryAttachmentChunk(session_hash,
+									attachmentName, new String(encodeBase64));
+
+							FieldValueFileInfo fi = new FieldValueFileInfo(attachmentName, submitted_by,
+									"Copy of the previous attachement again", file.getName(), length2,
+									filetype, "");
+							FieldValueFileInfo[] f_i = new FieldValueFileInfo[] {fi };
+							FieldValue f_v = new FieldValue(null, f_i);
+							ArtifactFieldValue fv = new ArtifactFieldValue(
+									artifactFieldValue.getField_name(), artifactFieldValue.getField_label(),
+									f_v);
+							ArtifactFieldValue[] fieldValue = new ArtifactFieldValue[] {fv };
+							tuleapTrackerV5APIPort.updateArtifact(session_hash, 141, 484, 739, fieldValue,
+									"New attachement", "UTF-8");
+						} catch (FileNotFoundException e) {
+							e.printStackTrace();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+
+				}
+			}
+
+			codendiAPIPort.logout(session_hash);
+		} catch (ServiceException e) {
+			e.printStackTrace();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void doStuff(String login, String password) {
@@ -127,20 +264,25 @@ public class Test {
 						System.out.println("Name: " + field_name + " Value: " + field_value.getValue());
 					}
 
-					// Commentaires
-					ArtifactComments[] artifactComments = tuleapTrackerV5APIPort.getArtifactComments(
-							session_hash, artifact_id);
-					for (ArtifactComments artifactComment : artifactComments) {
-						int artifactCommentSubmitted_by = artifactComment.getSubmitted_by();
-						int artifactCommentSubmitted_on = artifactComment.getSubmitted_on();
-						String email = artifactComment.getEmail();
-						String body = artifactComment.getBody();
-						System.out.println("Comment from '" + artifactCommentSubmitted_by
-								+ "', submitted on '" + artifactCommentSubmitted_on + "'");
-						System.out.println("Email: " + email);
-						System.out.println(body);
-						System.out.println();
-					}
+					// Comments
+					// try {
+					// ArtifactComments[] artifactComments = tuleapTrackerV5APIPort.getArtifactComments(
+					// session_hash, artifact_id);
+					// for (ArtifactComments artifactComment : artifactComments) {
+					// int artifactCommentSubmitted_by = artifactComment.getSubmitted_by();
+					// int artifactCommentSubmitted_on = artifactComment.getSubmitted_on();
+					// String email = artifactComment.getEmail();
+					// String body = artifactComment.getBody();
+					// System.out.println("Comment from '" + artifactCommentSubmitted_by
+					// + "', submitted on '" + artifactCommentSubmitted_on + "'");
+					// System.out.println("Email: " + email);
+					// System.out.println(body);
+					// System.out.println();
+					// }
+					// } catch (RemoteException e) {
+					// System.out.println("Comments are not working");
+					// e.printStackTrace();
+					// }
 				}
 
 				// Reports

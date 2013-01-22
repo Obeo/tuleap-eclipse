@@ -10,21 +10,29 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.core.repository;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
 
+import org.apache.commons.codec.binary.Base64;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
 import org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClient;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapFileUpload;
+import org.eclipse.mylyn.internal.tuleap.core.net.TuleapAttachmentDescriptor;
+import org.eclipse.mylyn.internal.tuleap.core.net.TuleapSoapConnector;
+import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
 import org.eclipse.mylyn.internal.tuleap.core.util.TuleapUtil;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
+import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 /**
@@ -86,8 +94,6 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 		String taskId = task.getTaskId();
 		int trackerId = TuleapUtil.getTrackerIdFromTaskDataId(taskId);
 
-		// TODO Check user permissions?
-
 		ITuleapClient client = this.connector.getClientManager().getClient(repository);
 		if (client == null || trackerId == -1) {
 			return false;
@@ -123,7 +129,27 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 	@Override
 	public InputStream getContent(TaskRepository repository, ITask task, TaskAttribute attachmentAttribute,
 			IProgressMonitor monitor) throws CoreException {
-		// TODO Download attachments
+		AbstractWebLocation abstractWebLocation = new TaskRepositoryLocation(repository);
+		TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(abstractWebLocation);
+		String taskId = task.getTaskId();
+		String attachmentAttributeId = attachmentAttribute.getId();
+		int index = attachmentAttributeId.indexOf("---"); //$NON-NLS-1$
+		if (index != -1) {
+			String id = attachmentAttributeId.substring(index + "---".length()); //$NON-NLS-1$
+			int attachmentId = Integer.valueOf(id).intValue();
+
+			int artifactId = TuleapUtil.getArtifactIdFromTaskDataId(taskId);
+
+			TaskAttachmentMapper taskAttachment = TaskAttachmentMapper.createFrom(attachmentAttribute);
+			Long length = taskAttachment.getLength();
+			int size = length.intValue();
+			String filename = taskAttachment.getFileName();
+
+			byte[] content = tuleapSoapConnector.getAttachmentContent(artifactId, attachmentId, filename,
+					size, monitor);
+			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(Base64.decodeBase64(content));
+			return byteArrayInputStream;
+		}
 		return null;
 	}
 
@@ -138,7 +164,28 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 	@Override
 	public void postContent(TaskRepository repository, ITask task, AbstractTaskAttachmentSource source,
 			String comment, TaskAttribute attachmentAttribute, IProgressMonitor monitor) throws CoreException {
-		// TODO Send attachments
+		AbstractWebLocation abstractWebLocation = new TaskRepositoryLocation(repository);
+		TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(abstractWebLocation);
+
+		TaskAttribute attribute = attachmentAttribute.getAttribute(ITuleapConstants.ATTACHMENT_FIELD_NAME);
+		String fieldname = attribute.getValue();
+		attribute = attachmentAttribute.getAttribute(ITuleapConstants.ATTACHMENT_FIELD_LABEL);
+		String fieldlabel = attribute.getValue();
+		attribute = attachmentAttribute.getAttribute(TaskAttribute.ATTACHMENT_DESCRIPTION);
+		String description = attribute.getValue();
+
+		int trackerId = TuleapUtil.getTrackerIdFromTaskDataId(task.getTaskId());
+		int artifactId = TuleapUtil.getArtifactIdFromTaskDataId(task.getTaskId());
+
+		String filename = source.getName();
+		String filetype = source.getContentType();
+		Long size = Long.valueOf(source.getLength());
+		InputStream inputStream = source.createInputStream(monitor);
+
+		TuleapAttachmentDescriptor tuleapAttachmentDescriptor = new TuleapAttachmentDescriptor(fieldname,
+				fieldlabel, filename, filetype, description, size, inputStream);
+		tuleapSoapConnector.uploadAttachment(trackerId, artifactId, tuleapAttachmentDescriptor, comment,
+				monitor);
 	}
 
 }

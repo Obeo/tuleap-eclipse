@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -27,7 +28,9 @@ import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapDynamicField;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifactComment;
+import org.eclipse.mylyn.internal.tuleap.core.model.TuleapAttachment;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration;
+import org.eclipse.mylyn.internal.tuleap.core.model.TuleapPerson;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapDate;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapFileUpload;
@@ -44,12 +47,14 @@ import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
 import org.eclipse.mylyn.internal.tuleap.core.util.TuleapMylynTasksMessages;
 import org.eclipse.mylyn.internal.tuleap.core.util.TuleapUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
+import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
@@ -70,6 +75,11 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 * The Tuleap repository connector.
 	 */
 	private ITuleapRepositoryConnector connector;
+
+	/**
+	 * A cache for the repository persons available.
+	 */
+	private Map<String, IRepositoryPerson> email2person = new HashMap<String, IRepositoryPerson>();
 
 	/**
 	 * The constructor.
@@ -663,6 +673,9 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		// Comments
 		taskData = this.populateComments(tuleapArtifact, taskData);
 
+		// Attachments
+		taskData = this.populateAttachments(tuleapArtifact, taskData);
+
 		List<AbstractTuleapField> fields = trackerConfiguration.getFields();
 		for (AbstractTuleapField abstractTuleapField : fields) {
 			if (abstractTuleapField instanceof TuleapString
@@ -701,6 +714,12 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 					// Remove an existing completion date
 					taskMapper.setCompletionDate(null);
 				}
+			} else if (abstractTuleapField instanceof TuleapSelectBox
+					&& ((TuleapSelectBox)abstractTuleapField).isSemanticContributor()) {
+				TuleapSelectBox tuleapSelectBox = (TuleapSelectBox)abstractTuleapField;
+			} else if (abstractTuleapField instanceof TuleapMultiSelectBox
+					&& ((TuleapMultiSelectBox)abstractTuleapField).isSemanticContributor()) {
+				TuleapMultiSelectBox tuleapMultiSelectBox = (TuleapMultiSelectBox)abstractTuleapField;
 			} else if (abstractTuleapField instanceof TuleapDate) {
 				// Date need to have their timestamp converted
 				String value = tuleapArtifact.getValue(abstractTuleapField.getName());
@@ -772,6 +791,46 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			}
 		}
 
+		return taskData;
+	}
+
+	/**
+	 * Populates the attachments of the task data thanks to the attachments from the Tuleap artifact.
+	 * 
+	 * @param tuleapArtifact
+	 *            The Tuleap artifact
+	 * @param taskData
+	 *            The task data
+	 * @return The task data
+	 */
+	private TaskData populateAttachments(TuleapArtifact tuleapArtifact, TaskData taskData) {
+		Set<Entry<String, List<TuleapAttachment>>> attachments = tuleapArtifact.getAttachments();
+		for (Entry<String, List<TuleapAttachment>> entry : attachments) {
+			String tuleapFieldName = entry.getKey();
+
+			List<TuleapAttachment> attachmentsList = entry.getValue();
+			for (TuleapAttachment tuleapAttachment : attachmentsList) {
+				TaskAttribute attribute = taskData.getRoot().createAttribute(
+						TaskAttribute.PREFIX_ATTACHMENT + tuleapFieldName + "---" + tuleapAttachment.getId()); //$NON-NLS-1$
+				TaskAttachmentMapper taskAttachment = TaskAttachmentMapper.createFrom(attribute);
+				taskAttachment.setAttachmentId(tuleapAttachment.getId());
+
+				TuleapPerson person = tuleapAttachment.getPerson();
+				IRepositoryPerson iRepositoryPerson = email2person.get(person.getId());
+				if (iRepositoryPerson == null) {
+					iRepositoryPerson = taskData.getAttributeMapper().getTaskRepository().createPerson(
+							person.getEmail());
+					iRepositoryPerson.setName(person.getRealName());
+					email2person.put(person.getEmail(), iRepositoryPerson);
+				}
+				taskAttachment.setAuthor(iRepositoryPerson);
+				taskAttachment.setFileName(tuleapAttachment.getFilename());
+				taskAttachment.setLength(tuleapAttachment.getSize());
+				taskAttachment.setDescription(tuleapAttachment.getDescription());
+				taskAttachment.setContentType(tuleapAttachment.getContentType());
+				taskAttachment.applyTo(attribute);
+			}
+		}
 		return taskData;
 	}
 

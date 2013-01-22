@@ -159,4 +159,14 @@ public interface ITuleapConstants {
 	 * The attributes query separator.
 	 */
 	String QUERY_ATTRIBUTES_SEPARATOR = ","; //$NON-NLS-1$
+
+	/**
+	 * The constant used to specify the name of the field to use to upload new files.
+	 */
+	String ATTACHMENT_FIELD_NAME = "tuleap_attachment_field_name"; //$NON-NLS-1$
+
+	/**
+	 * The constant used to specify the label of the field to use to upload new files.
+	 */
+	String ATTACHMENT_FIELD_LABEL = "tuleap_attachment_field_label"; //$NON-NLS-1$
 }

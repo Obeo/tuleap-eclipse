@@ -16,6 +16,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.tuleap.core.util.TuleapUtil;
@@ -73,6 +75,11 @@ public class TuleapArtifact {
 	 * The comments of the artifact.
 	 */
 	private List<TuleapArtifactComment> comments = new ArrayList<TuleapArtifactComment>();
+
+	/**
+	 * The attachments of the artifact.
+	 */
+	private Map<String, List<TuleapAttachment>> fieldname2attachments = new HashMap<String, List<TuleapAttachment>>();
 
 	/**
 	 * The default constructor used to create a new Tuleap artifact locally.
@@ -323,5 +330,31 @@ public class TuleapArtifact {
 	 */
 	public List<TuleapArtifactComment> getComments() {
 		return this.comments;
+	}
+
+	/**
+	 * Adds an attachment to the artifact.
+	 * 
+	 * @param fieldname
+	 *            The name of the field
+	 * @param attachment
+	 *            The attachment to add
+	 */
+	public void putAttachment(String fieldname, TuleapAttachment attachment) {
+		List<TuleapAttachment> list = this.fieldname2attachments.get(fieldname);
+		if (list == null) {
+			list = new ArrayList<TuleapAttachment>();
+		}
+		list.add(attachment);
+		this.fieldname2attachments.put(fieldname, list);
+	}
+
+	/**
+	 * Returns the list of attachments.
+	 * 
+	 * @return the list of attachments.
+	 */
+	public Set<Entry<String, List<TuleapAttachment>>> getAttachments() {
+		return this.fieldname2attachments.entrySet();
 	}
 }

@@ -13,16 +13,19 @@ package org.eclipse.mylyn.internal.tuleap.ui.repository;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
 import org.eclipse.mylyn.internal.tuleap.core.util.TuleapUtil;
 import org.eclipse.mylyn.internal.tuleap.ui.util.TuleapMylynTasksUIMessages;
 import org.eclipse.mylyn.internal.tuleap.ui.wizards.NewTuleapTaskWizard;
+import org.eclipse.mylyn.internal.tuleap.ui.wizards.TuleapTaskAttachmentPage;
 import org.eclipse.mylyn.internal.tuleap.ui.wizards.query.TuleapCustomQueryPage;
 import org.eclipse.mylyn.internal.tuleap.ui.wizards.query.TuleapQueryPage;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskSearchPage;
@@ -157,4 +160,13 @@ public class TuleapConnectorUi extends AbstractRepositoryConnectorUi {
 		return new NewTuleapTaskWizard(taskRepository, selection);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#getTaskAttachmentPage(org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel)
+	 */
+	@Override
+	public IWizardPage getTaskAttachmentPage(TaskAttachmentModel model) {
+		return new TuleapTaskAttachmentPage(model);
+	}
 }
