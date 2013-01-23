@@ -672,7 +672,12 @@ public class TuleapSoapConnector {
 
 					TaskData taskData = taskDataHandler.createTaskDataFromArtifact(tuleapClient, tuleapClient
 							.getTaskRepository(), tuleapArtifact, monitor);
-					collector.accept(taskData);
+					try {
+						collector.accept(taskData);
+					} catch (IllegalArgumentException e) {
+						// Do not log, the query does not exists anymore
+						// org.eclipse.mylyn.internal.tasks.core.TaskList.getValidElement(IRepositoryElement)
+					}
 				}
 			} catch (NumberFormatException e) {
 				TuleapCoreActivator.log(e, true);
@@ -1207,9 +1212,11 @@ public class TuleapSoapConnector {
 			String value = artifact.getValue(Integer.valueOf(trackerField.getField_id()).toString());
 			if (value != null && value.length() > 0) {
 				// FIXME Bug date creation / upload
-				// int date = Long.valueOf(Long.valueOf(value).longValue() / 1000).intValue();
-				// artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField
-				// .getLabel(), Integer.valueOf(date).toString());
+				int date = Long.valueOf(Long.valueOf(value).longValue() / 1000).intValue();
+				FieldValue fieldValue = new FieldValue(Integer.valueOf(date).toString(),
+						new FieldValueFileInfo[] {});
+				artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField
+						.getLabel(), fieldValue);
 			}
 		} else if (ITuleapConfigurationConstants.SB.equals(trackerField.getType())
 				&& trackerField.getValues().length == 1) {
@@ -1496,8 +1503,8 @@ public class TuleapSoapConnector {
 			String artifactAttachmentChunk = ""; //$NON-NLS-1$
 			int downloadedBytes = 0;
 
-			// 500 kilobytes
-			final int bufferSize = 500000;
+			// 5 megabytes
+			final int bufferSize = 5000000;
 			while (downloadedBytes < size) {
 				int bytesToDownload = bufferSize;
 				if (downloadedBytes + bytesToDownload > size) {
