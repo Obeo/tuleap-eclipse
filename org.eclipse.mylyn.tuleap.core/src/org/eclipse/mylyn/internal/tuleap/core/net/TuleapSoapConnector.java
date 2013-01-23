@@ -1503,7 +1503,7 @@ public class TuleapSoapConnector {
 			String artifactAttachmentChunk = ""; //$NON-NLS-1$
 			int downloadedBytes = 0;
 
-			// 5 megabytes
+			// 5 mega
 			final int bufferSize = 5000000;
 			while (downloadedBytes < size) {
 				int bytesToDownload = bufferSize;
@@ -1600,9 +1600,24 @@ public class TuleapSoapConnector {
 
 			int length = bytes.length;
 			byte[] encodeBase64 = Base64.encodeBase64(bytes);
+			String content = new String(encodeBase64);
+			int uploaded = 0;
+			int contentSize = content.length();
+			// 5 mega
+			final int bufferSize = 5000000;
+
 			String attachmentName = tuleapTrackerV5APIPort.createTemporaryAttachment(sessionHash);
-			tuleapTrackerV5APIPort.appendTemporaryAttachmentChunk(sessionHash, attachmentName, new String(
-					encodeBase64));
+			while (uploaded < contentSize) {
+				int toUpload = bufferSize;
+				if (toUpload > contentSize - uploaded) {
+					toUpload = contentSize - uploaded;
+				}
+				String contentToUpload = content.substring(uploaded, toUpload);
+				tuleapTrackerV5APIPort.appendTemporaryAttachmentChunk(sessionHash, attachmentName,
+						contentToUpload);
+
+				uploaded = uploaded + contentToUpload.length();
+			}
 
 			int submittedBy = session.getUser_id();
 
