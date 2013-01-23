@@ -756,7 +756,8 @@ public class TuleapSoapConnector {
 						}
 						found = true;
 					} else if (ITuleapConfigurationConstants.MSB.equals(trackerField.getType())
-							|| ITuleapConfigurationConstants.SB.equals(trackerField.getType())) {
+							|| ITuleapConfigurationConstants.SB.equals(trackerField.getType())
+							|| ITuleapConfigurationConstants.CB.equals(trackerField.getType())) {
 						String value = artifactFieldValue.getField_value().getValue();
 						if ("None".equals(value)) { //$NON-NLS-1$
 							tuleapArtifact.putValue(artifactFieldValue.getField_name(), ""); //$NON-NLS-1$
@@ -1285,8 +1286,9 @@ public class TuleapSoapConnector {
 				value = artifact.getValue(fieldId);
 			}
 
-			if ((ITuleapConfigurationConstants.SB.equals(trackerField.getType()) || ITuleapConfigurationConstants.MSB
-					.equals(trackerField.getType()))
+			if ((ITuleapConfigurationConstants.SB.equals(trackerField.getType())
+					|| ITuleapConfigurationConstants.MSB.equals(trackerField.getType()) || ITuleapConfigurationConstants.CB
+						.equals(trackerField.getType()))
 					&& (value == null || "".equals(value))) { //$NON-NLS-1$
 				value = ITuleapConstants.SELECT_BOX_NONE_VALUE;
 			}
