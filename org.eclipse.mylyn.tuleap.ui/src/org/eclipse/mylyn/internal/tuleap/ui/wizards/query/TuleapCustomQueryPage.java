@@ -10,16 +10,12 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.ui.wizards.query;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.workbench.forms.SectionComposite;
+import org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClient;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
-import org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapDate;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapFloat;
@@ -34,7 +30,6 @@ import org.eclipse.mylyn.internal.tuleap.core.model.field.dynamic.TuleapComputed
 import org.eclipse.mylyn.internal.tuleap.core.model.field.dynamic.TuleapLastUpdateDate;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.dynamic.TuleapSubmittedBy;
 import org.eclipse.mylyn.internal.tuleap.core.model.field.dynamic.TuleapSubmittedOn;
-import org.eclipse.mylyn.internal.tuleap.core.repository.ITuleapRepositoryConnector;
 import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConnector;
 import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
 import org.eclipse.mylyn.internal.tuleap.ui.TuleapTasksUIPlugin;
@@ -145,40 +140,34 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 	 */
 	@Override
 	public void applyTo(IRepositoryQuery query) {
-		String connectorKind = repository.getConnectorKind();
-		final AbstractRepositoryConnector repositoryConnector = TasksUi.getRepositoryManager()
-				.getRepositoryConnector(connectorKind);
-		if (repositoryConnector instanceof ITuleapRepositoryConnector) {
+		int startIndex = this.tracker.indexOf('[');
+		int endIndex = this.tracker.indexOf(']');
 
-			ITuleapRepositoryConnector connector = (ITuleapRepositoryConnector)repositoryConnector;
-			final TuleapInstanceConfiguration instanceConfiguration = connector.getRepositoryConfiguration(
-					repository, true, new NullProgressMonitor());
+		int trackerId = -1;
+		if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
+			String trackerIdStr = this.tracker.substring(startIndex + 1, endIndex);
+			trackerId = Integer.valueOf(trackerIdStr).intValue();
+		}
 
-			List<TuleapTrackerConfiguration> trackerConfigurations = instanceConfiguration
-					.getAllTrackerConfigurations();
-			for (TuleapTrackerConfiguration tuleapTrackerConfiguration : trackerConfigurations) {
-				if (tuleapTrackerConfiguration.getQualifiedName().equals(tracker)) {
-					query.setSummary(this.getQueryTitle());
-					query.setAttribute(ITuleapConstants.QUERY_KIND, ITuleapConstants.QUERY_KIND_CUSTOM);
-					query.setAttribute(ITuleapConstants.QUERY_TRACKER_ID, Integer.valueOf(
-							tuleapTrackerConfiguration.getTrackerId()).toString());
-					// For each field set the query attribute
-					for (TuleapCustomQueryElement element : elements) {
-						String[] values = element.getValue();
-						for (String value : values) {
-							String attributeValue = value;
-							String operation = element.getOperation();
-							if (operation != null) {
-								attributeValue += ITuleapConstants.QUERY_ATTRIBUTES_SEPARATOR + operation;
-							}
-							if (value.length() != 0) {
-								query.setAttribute(String.valueOf(element.getTuleapFieldName()),
-										attributeValue);
-							}
-						}
+		if (trackerId != -1) {
+			query.setSummary(this.getQueryTitle());
+			query.setAttribute(ITuleapConstants.QUERY_KIND, ITuleapConstants.QUERY_KIND_CUSTOM);
+			query.setAttribute(ITuleapConstants.QUERY_TRACKER_ID, Integer.valueOf(trackerId).toString());
+			// For each field set the query attribute
+			for (TuleapCustomQueryElement element : elements) {
+				String[] values = element.getValue();
+				for (String value : values) {
+					String attributeValue = value;
+					if (attributeValue == null) {
+						attributeValue = ""; //$NON-NLS-1$
 					}
-
-					break;
+					String operation = element.getOperation();
+					if (operation != null) {
+						attributeValue += ITuleapConstants.QUERY_ATTRIBUTES_SEPARATOR + operation;
+					}
+					if (value != null && value.length() != 0) {
+						query.setAttribute(String.valueOf(element.getTuleapFieldName()), attributeValue);
+					}
 				}
 			}
 		}
@@ -200,10 +189,21 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 					true);
 			return;
 		}
-		TuleapRepositoryConnector repositoryConnector = (TuleapRepositoryConnector)connector;
-		TuleapInstanceConfiguration repositoryConfiguration = repositoryConnector
-				.getRepositoryConfiguration(this.getTaskRepository().getRepositoryUrl());
-		if (repositoryConfiguration != null) {
+
+		int startIndex = this.tracker.indexOf('[');
+		int endIndex = this.tracker.indexOf(']');
+
+		int trackerId = -1;
+		if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
+			String trackerIdStr = this.tracker.substring(startIndex + 1, endIndex);
+			trackerId = Integer.valueOf(trackerIdStr).intValue();
+		}
+
+		if (trackerId != -1) {
+			TuleapRepositoryConnector repositoryConnector = (TuleapRepositoryConnector)connector;
+			ITuleapClient client = repositoryConnector.getClientManager().getClient(repository);
+			TuleapTrackerConfiguration tuleapTrackerConfiguration = client.getRepositoryConfiguration()
+					.getTrackerConfiguration(trackerId);
 
 			Group group = new Group(parent.getContent(), SWT.NONE);
 			GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
@@ -211,39 +211,32 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 			group.setLayoutData(gridData);
 			group.setLayout(new GridLayout(3, false));
 
-			List<TuleapTrackerConfiguration> trackerConfigurations = repositoryConfiguration
-					.getAllTrackerConfigurations();
-			for (TuleapTrackerConfiguration tuleapTrackerConfiguration : trackerConfigurations) {
-				if (tuleapTrackerConfiguration.getQualifiedName().equals(tracker)) {
-					List<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
-					for (AbstractTuleapField field : fields) {
-						if (field instanceof TuleapString) {
-							this.createGroupContent((TuleapString)field, group);
-						} else if (field instanceof TuleapSelectBox) {
-							this.createGroupContent((TuleapSelectBox)field, group);
-						} else if (field instanceof TuleapMultiSelectBox) {
-							this.createGroupContent((TuleapMultiSelectBox)field, group);
-						} else if (field instanceof TuleapText) {
-							this.createGroupContent((TuleapText)field, group);
-						} else if (field instanceof TuleapArtifactId) {
-							this.createGroupContent((TuleapArtifactId)field, group);
-						} else if (field instanceof TuleapLastUpdateDate) {
-							this.createGroupContent((TuleapLastUpdateDate)field, group);
-						} else if (field instanceof TuleapDate) {
-							this.createGroupContent((TuleapDate)field, group);
-						} else if (field instanceof TuleapSubmittedOn) {
-							this.createGroupContent((TuleapSubmittedOn)field, group);
-						} else if (field instanceof TuleapSubmittedBy) {
-							this.createGroupContent((TuleapSubmittedBy)field, group);
-						} else if (field instanceof TuleapInteger) {
-							this.createGroupContent((TuleapInteger)field, group);
-						} else if (field instanceof TuleapFloat) {
-							this.createGroupContent((TuleapFloat)field, group);
-						} else if (field instanceof TuleapComputedValue) {
-							this.createGroupContent((TuleapComputedValue)field, group);
-						}
-					}
-					break;
+			List<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
+			for (AbstractTuleapField field : fields) {
+				if (field instanceof TuleapString) {
+					this.createGroupContent((TuleapString)field, group);
+				} else if (field instanceof TuleapSelectBox) {
+					this.createGroupContent((TuleapSelectBox)field, group);
+				} else if (field instanceof TuleapMultiSelectBox) {
+					this.createGroupContent((TuleapMultiSelectBox)field, group);
+				} else if (field instanceof TuleapText) {
+					this.createGroupContent((TuleapText)field, group);
+				} else if (field instanceof TuleapArtifactId) {
+					this.createGroupContent((TuleapArtifactId)field, group);
+				} else if (field instanceof TuleapLastUpdateDate) {
+					this.createGroupContent((TuleapLastUpdateDate)field, group);
+				} else if (field instanceof TuleapDate) {
+					this.createGroupContent((TuleapDate)field, group);
+				} else if (field instanceof TuleapSubmittedOn) {
+					this.createGroupContent((TuleapSubmittedOn)field, group);
+				} else if (field instanceof TuleapSubmittedBy) {
+					this.createGroupContent((TuleapSubmittedBy)field, group);
+				} else if (field instanceof TuleapInteger) {
+					this.createGroupContent((TuleapInteger)field, group);
+				} else if (field instanceof TuleapFloat) {
+					this.createGroupContent((TuleapFloat)field, group);
+				} else if (field instanceof TuleapComputedValue) {
+					this.createGroupContent((TuleapComputedValue)field, group);
 				}
 			}
 		}
@@ -398,10 +391,6 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 		Text text = new Text(group, SWT.SINGLE | SWT.BORDER);
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 		text.setLayoutData(gridData);
-		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy"); //$NON-NLS-1$
-		Date date = new Date();
-		// Initialize field with current date
-		text.setText(dateFormat.format(date));
 
 		elements.add(new TuleapCustomQueryElement(text, tuleapField, combo));
 	}
