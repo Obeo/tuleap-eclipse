@@ -206,8 +206,10 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 						// Set the tracker id
 						taskData.getRoot().createAttribute(TaskAttribute.PRODUCT).addValue(product);
 
-						this.createOperations(taskData, trackerConfiguration, taskMapper.getStatus());
+						String status = taskMapper.getStatus();
+						this.createOperations(taskData, trackerConfiguration, status);
 						this.createPersons(taskData, tuleapClient, trackerConfiguration);
+
 						isInitialized = true;
 					}
 				} catch (NumberFormatException e) {
@@ -488,7 +490,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		List<String> tuleapStatus = new ArrayList<String>();
 
 		TuleapWorkflow workflow = statusSelectBox.getWorkflow();
-		if (workflow.getTransitions().size() > 0) {
+		if (workflow.getTransitions().size() > 0 && currentStatus != null && currentStatus.length() > 0) {
 			List<TuleapSelectBoxItem> items = statusSelectBox.getItems();
 			for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
 				if (tuleapSelectBoxItem.getLabel().equals(currentStatus)) {
@@ -689,7 +691,9 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 					&& ((TuleapSelectBox)abstractTuleapField).isSemanticStatus()) {
 				// Look for the status
 				String status = tuleapArtifact.getValue(abstractTuleapField.getName());
-				taskMapper.setStatus(status);
+				if (status != null) {
+					taskMapper.setStatus(status);
+				}
 
 				// If the status matches a "closed" status, set the completion date to the last modification
 				// date or the current date
