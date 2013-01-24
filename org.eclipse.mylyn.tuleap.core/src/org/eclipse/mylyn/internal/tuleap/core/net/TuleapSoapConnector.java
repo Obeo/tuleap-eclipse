@@ -1181,10 +1181,12 @@ public class TuleapSoapConnector {
 				&& trackerField.getShort_name().equals(
 						trackerStructure.getSemantic().getStatus().getField_name())) {
 			// The status of the artifact
-			FieldValue fieldValue = new FieldValue(artifact.getValue(TaskAttribute.STATUS),
-					new FieldValueFileInfo[] {});
-			artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(),
-					trackerField.getLabel(), fieldValue);
+			String value = artifact.getValue(TaskAttribute.STATUS);
+			if (value != null && value.length() > 0) {
+				FieldValue fieldValue = new FieldValue(value, new FieldValueFileInfo[] {});
+				artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField
+						.getLabel(), fieldValue);
+			}
 		} else if (trackerStructure.getSemantic() != null
 				&& trackerStructure.getSemantic().getContributor() != null
 				&& trackerField.getShort_name().equals(
