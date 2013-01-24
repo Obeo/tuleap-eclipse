@@ -43,8 +43,14 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
  */
 public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 
+	/**
+	 * Default description of a valid "mylyn context" attachment. DO NOT CHANGE!!!
+	 */
 	private static final String CONTEXT_DESCRIPTION = "mylyn/context/zip"; //$NON-NLS-1$
 
+	/**
+	 * Default name of a valid "mylyn context" attachment. DO NOT CHANGE!!!
+	 */
 	private static final String CONTEXT_FILENAME = "mylyn-context.zip"; //$NON-NLS-1$
 
 	/**
