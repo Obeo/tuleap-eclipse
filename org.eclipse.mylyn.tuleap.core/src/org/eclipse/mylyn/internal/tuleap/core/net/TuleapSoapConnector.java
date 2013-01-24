@@ -364,6 +364,8 @@ public class TuleapSoapConnector {
 	 * 
 	 * @param codendiAPIPort
 	 *            The common SOAP API
+	 * @param groupId
+	 *            The group ID.
 	 * @param trackerStructure
 	 *            The structure of the tracker
 	 * @param trackerField
