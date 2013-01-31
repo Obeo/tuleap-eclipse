@@ -1172,10 +1172,12 @@ public class TuleapSoapConnector {
 						trackerStructure.getSemantic().getTitle().getField_name())) {
 			// The title of the artifact
 
-			FieldValue fieldValue = new FieldValue(artifact.getValue(TaskAttribute.SUMMARY),
-					new FieldValueFileInfo[] {});
-			artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(),
-					trackerField.getLabel(), fieldValue);
+			String value = artifact.getValue(TaskAttribute.SUMMARY);
+			if (value != null && value.length() > 0) {
+				FieldValue fieldValue = new FieldValue(value, new FieldValueFileInfo[] {});
+				artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField
+						.getLabel(), fieldValue);
+			}
 		} else if (trackerStructure.getSemantic() != null
 				&& trackerStructure.getSemantic().getStatus() != null
 				&& trackerField.getShort_name().equals(
@@ -1193,7 +1195,7 @@ public class TuleapSoapConnector {
 						trackerStructure.getSemantic().getContributor().getField_name())) {
 			// The contributor of the artifact
 			List<String> values = artifact.getValues(TaskAttribute.USER_ASSIGNED);
-			String composedValue = ""; //$NON-NLS-1$
+			String composedValue = ITuleapConstants.SELECT_BOX_NONE_VALUE;
 			for (int i = 0; i < values.size(); i++) {
 				String value = values.get(i);
 
@@ -1240,9 +1242,13 @@ public class TuleapSoapConnector {
 				if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
 					newValue = value.substring(startIndex + 1, endIndex);
 				}
+				if (newValue != null && newValue.length() > 0) {
+					newValue = ITuleapConstants.SELECT_BOX_NONE_VALUE;
+				}
 				FieldValue fieldValue = new FieldValue(newValue, new FieldValueFileInfo[] {});
 				artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField
 						.getLabel(), fieldValue);
+
 			}
 		} else if (ITuleapConfigurationConstants.MSB.equals(trackerField.getType())
 				&& trackerField.getValues().length == 1) {
@@ -1252,7 +1258,7 @@ public class TuleapSoapConnector {
 			// We currently have, as a value the following content "Real Name (username)" or "".
 			String fieldId = Integer.valueOf(trackerField.getField_id()).toString();
 			if (artifact.getValues(fieldId) != null && !artifact.getValues(fieldId).isEmpty()) {
-				String composedValue = ""; //$NON-NLS-1$
+				String composedValue = ITuleapConstants.SELECT_BOX_NONE_VALUE;
 
 				List<String> values = artifact.getValues(fieldId);
 				for (int i = 0; i < values.size(); i++) {
@@ -1299,9 +1305,11 @@ public class TuleapSoapConnector {
 
 			if (Arrays.asList(trackerField.getPermissions()).contains(permission) && hasKey
 					&& canSubmitValue(trackerField.getType(), value)) {
-				FieldValue fieldValue = new FieldValue(value, new FieldValueFileInfo[] {});
-				artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField
-						.getLabel(), fieldValue);
+				if (value != null && value.length() > 0) {
+					FieldValue fieldValue = new FieldValue(value, new FieldValueFileInfo[] {});
+					artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField
+							.getLabel(), fieldValue);
+				}
 			}
 		}
 
