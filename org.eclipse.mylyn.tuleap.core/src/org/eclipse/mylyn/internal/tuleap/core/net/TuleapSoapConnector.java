@@ -43,6 +43,7 @@ import org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClient;
 import org.eclipse.mylyn.internal.tuleap.core.config.ITuleapConfigurationConstants;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact;
+import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifactComment;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapAttachment;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapPerson;
@@ -82,6 +83,7 @@ import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v1.UGroupMember;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v1.Ugroup;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v1.UserInfo;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.Artifact;
+import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.ArtifactComments;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.ArtifactFieldValue;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.ArtifactQueryResult;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.Criteria;
@@ -459,7 +461,6 @@ public class TuleapSoapConnector {
 					for (Ugroup ugroup : projectGroupsAndUsers) {
 						// TODO not bug free!!
 						// FIXME Bug Tuleap -> https://tuleap.net/plugins/tracker/?aid=2234
-						System.out.println("not bug free!!");
 						String uGroupName = ugroup.getName();
 
 						String groupMembers = "group_members";
@@ -726,79 +727,81 @@ public class TuleapSoapConnector {
 			Artifact artifact, CodendiAPIPortType codendiAPIPort,
 			TuleapTrackerV5APIPortType tuleapTrackerV5APIPort, String sessionHash, IProgressMonitor monitor) {
 		// try {
-		// Retrieve comments
-		monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.RetrieveComments")); //$NON-NLS-1$
-		// ArtifactComments[] artifactComments = tuleapTrackerV5APIPort.getArtifactComments(sessionHash,
-		// artifact.getArtifact_id());
+		try {
+			for (TrackerField trackerField : trackerFields) {
+				boolean found = false;
+				for (ArtifactFieldValue artifactFieldValue : artifact.getValue()) {
+					if (artifactFieldValue.getField_name().equals(trackerField.getShort_name())
+							&& artifactFieldValue.getField_label().equals(trackerField.getLabel())) {
+						// Let's handle attachments differently
+						if (ITuleapConfigurationConstants.FILE.equals(trackerField.getType())) {
+							// compute the description of the attachment
+							FieldValue fieldValue = artifactFieldValue.getField_value();
+							FieldValueFileInfo[] fileInfo = fieldValue.getFile_info();
+							for (FieldValueFileInfo fieldValueFileInfo : fileInfo) {
+								int filesize = fieldValueFileInfo.getFilesize();
+								String id = fieldValueFileInfo.getId();
+								String filename = fieldValueFileInfo.getFilename();
+								int submittedBy = fieldValueFileInfo.getSubmitted_by();
+								TuleapPerson uploadedBy = this.getPersonFromId(codendiAPIPort, sessionHash,
+										submittedBy);
+								String description = fieldValueFileInfo.getDescription();
+								String type = fieldValueFileInfo.getFiletype();
 
-		for (TrackerField trackerField : trackerFields) {
-			boolean found = false;
-			for (ArtifactFieldValue artifactFieldValue : artifact.getValue()) {
-				if (artifactFieldValue.getField_name().equals(trackerField.getShort_name())
-						&& artifactFieldValue.getField_label().equals(trackerField.getLabel())) {
-					// Let's handle attachments differently
-					if (ITuleapConfigurationConstants.FILE.equals(trackerField.getType())) {
-						// compute the description of the attachment
-						FieldValue fieldValue = artifactFieldValue.getField_value();
-						FieldValueFileInfo[] fileInfo = fieldValue.getFile_info();
-						for (FieldValueFileInfo fieldValueFileInfo : fileInfo) {
-							int filesize = fieldValueFileInfo.getFilesize();
-							String id = fieldValueFileInfo.getId();
-							String filename = fieldValueFileInfo.getFilename();
-							int submittedBy = fieldValueFileInfo.getSubmitted_by();
-							TuleapPerson uploadedBy = this.getPersonFromId(codendiAPIPort, sessionHash,
-									submittedBy);
-							String description = fieldValueFileInfo.getDescription();
-							String type = fieldValueFileInfo.getFiletype();
-
-							TuleapAttachment tuleapAttachment = new TuleapAttachment(id, filename,
-									uploadedBy, Long.valueOf(filesize), description, type);
-							tuleapArtifact
-									.putAttachment(artifactFieldValue.getField_name(), tuleapAttachment);
-						}
-						found = true;
-					} else if (ITuleapConfigurationConstants.MSB.equals(trackerField.getType())
-							|| ITuleapConfigurationConstants.SB.equals(trackerField.getType())
-							|| ITuleapConfigurationConstants.CB.equals(trackerField.getType())) {
-						String value = artifactFieldValue.getField_value().getValue();
-						if ("None".equals(value)) { //$NON-NLS-1$
-							tuleapArtifact.putValue(artifactFieldValue.getField_name(), ""); //$NON-NLS-1$
-						} else {
-							StringTokenizer stringTokenizer = new StringTokenizer(value, ","); //$NON-NLS-1$
-							while (stringTokenizer.hasMoreTokens()) {
-								String nextToken = stringTokenizer.nextToken();
-								tuleapArtifact.putValue(artifactFieldValue.getField_name(), nextToken.trim());
+								TuleapAttachment tuleapAttachment = new TuleapAttachment(id, filename,
+										uploadedBy, Long.valueOf(filesize), description, type);
+								tuleapArtifact.putAttachment(artifactFieldValue.getField_name(),
+										tuleapAttachment);
 							}
+							found = true;
+						} else if (ITuleapConfigurationConstants.MSB.equals(trackerField.getType())
+								|| ITuleapConfigurationConstants.SB.equals(trackerField.getType())
+								|| ITuleapConfigurationConstants.CB.equals(trackerField.getType())) {
+							String value = artifactFieldValue.getField_value().getValue();
+							if ("None".equals(value)) { //$NON-NLS-1$
+								tuleapArtifact.putValue(artifactFieldValue.getField_name(), ""); //$NON-NLS-1$
+							} else {
+								StringTokenizer stringTokenizer = new StringTokenizer(value, ","); //$NON-NLS-1$
+								while (stringTokenizer.hasMoreTokens()) {
+									String nextToken = stringTokenizer.nextToken();
+									tuleapArtifact.putValue(artifactFieldValue.getField_name(), nextToken
+											.trim());
+								}
+							}
+							found = true;
+						} else {
+							tuleapArtifact.putValue(artifactFieldValue.getField_name(), artifactFieldValue
+									.getField_value().getValue());
+							monitor.worked(1);
+							found = true;
 						}
-						found = true;
-					} else {
-						tuleapArtifact.putValue(artifactFieldValue.getField_name(), artifactFieldValue
-								.getField_value().getValue());
-						monitor.worked(1);
-						found = true;
 					}
 				}
-			}
 
-			if (!found) {
-				// The value is not set in the artifact
-				// Let's create an empty entry in the artifact
+				if (!found) {
+					// The value is not set in the artifact
+					// Let's create an empty entry in the artifact
 
-				tuleapArtifact.putValue(trackerField.getShort_name(), null);
-				monitor.worked(1);
+					tuleapArtifact.putValue(trackerField.getShort_name(), null);
+					monitor.worked(1);
+				}
 			}
+			monitor.worked(5);
+
+			// Retrieve comments
+			monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.RetrieveComments")); //$NON-NLS-1$
+			ArtifactComments[] artifactComments = tuleapTrackerV5APIPort.getArtifactComments(sessionHash,
+					artifact.getArtifact_id());
+			for (ArtifactComments artifactComment : artifactComments) {
+				int submittedBy = artifactComment.getSubmitted_by();
+				TuleapPerson commentedBy = this.getPersonFromId(codendiAPIPort, sessionHash, submittedBy);
+				TuleapArtifactComment comment = new TuleapArtifactComment(artifactComment.getBody(),
+						commentedBy.getEmail(), commentedBy.getRealName(), artifactComment.getSubmitted_on());
+				tuleapArtifact.addComment(comment);
+			}
+		} catch (RemoteException e) {
+			TuleapCoreActivator.log(e, true);
 		}
-		monitor.worked(5);
-
-		// for (ArtifactComments artifactComment : artifactComments) {
-		// TuleapArtifactComment comment = new TuleapArtifactComment(artifactComment.getBody(),
-		// artifactComment.getEmail(), artifactComment.getSubmitted_by(), artifactComment
-		// .getSubmitted_on());
-		// tuleapArtifact.addComment(comment);
-		// }
-		// } catch (RemoteException e) {
-		// TuleapCoreActivator.log(e, true);
-		// }
 
 		return tuleapArtifact;
 	}

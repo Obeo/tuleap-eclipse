@@ -886,14 +886,29 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		for (TuleapArtifactComment tuleapArtifactComment : comments) {
 			TaskAttribute attribute = taskData.getRoot().createAttribute(
 					TaskAttribute.PREFIX_COMMENT + Integer.valueOf(count).toString());
+			attribute.getMetaData().defaults().setReadOnly(true).setType(TaskAttribute.TYPE_COMMENT);
+			attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID,
+					TaskAttribute.COMMENT_TEXT);
 			TaskCommentMapper taskComment = TaskCommentMapper.createFrom(attribute);
 
 			taskComment.setCommentId(Integer.valueOf(count).toString());
+			taskComment.setNumber(Integer.valueOf(count));
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTimeInMillis(Long.valueOf(tuleapArtifactComment.getSubmittedOn()).longValue() * 1000);
 			Date creationDate = calendar.getTime();
 			taskComment.setCreationDate(creationDate);
 			taskComment.setText(tuleapArtifactComment.getBody());
+			if (tuleapArtifactComment.getEmail() != null) {
+				IRepositoryPerson iRepositoryPerson = email2person.get(tuleapArtifactComment.getEmail());
+				if (iRepositoryPerson == null) {
+					iRepositoryPerson = taskData.getAttributeMapper().getTaskRepository().createPerson(
+							tuleapArtifactComment.getEmail());
+					iRepositoryPerson.setName(tuleapArtifactComment.getName());
+					email2person.put(tuleapArtifactComment.getEmail(), iRepositoryPerson);
+				}
+				taskComment.setAuthor(iRepositoryPerson);
+			}
+			taskComment.applyTo(attribute);
 			count++;
 		}
 		return taskData;

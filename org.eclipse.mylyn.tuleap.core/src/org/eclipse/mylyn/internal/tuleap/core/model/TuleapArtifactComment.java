@@ -17,9 +17,9 @@ package org.eclipse.mylyn.internal.tuleap.core.model;
  */
 public class TuleapArtifactComment {
 	/**
-	 * The id of the user who has submitted the comment.
+	 * The name of the person who wrote the comment.
 	 */
-	private int submittedBy;
+	private String name;
 
 	/**
 	 * The email of the user who has submitted the comment.
@@ -43,17 +43,17 @@ public class TuleapArtifactComment {
 	 *            The body of the comment.
 	 * @param userEmail
 	 *            The email of the user who wrote the comment.
-	 * @param submittedById
-	 *            The id of the user who wrote the comment.
+	 * @param realName
+	 *            The name of the person who has commented
 	 * @param submittedOnTimestamp
 	 *            The timestamp of the date when the comment has been submitted.
 	 */
-	public TuleapArtifactComment(String commentBody, String userEmail, int submittedById,
+	public TuleapArtifactComment(String commentBody, String userEmail, String realName,
 			int submittedOnTimestamp) {
 		super();
 		this.body = commentBody;
 		this.email = userEmail;
-		this.submittedBy = submittedById;
+		this.name = realName;
 		this.submittedOn = submittedOnTimestamp;
 	}
 
@@ -76,12 +76,12 @@ public class TuleapArtifactComment {
 	}
 
 	/**
-	 * Returns the id of the user who wrote the comment.
+	 * Returns the name of the person who has commented.
 	 * 
-	 * @return The id of the user who wrote the comment.
+	 * @return The name of the person who has commented
 	 */
-	public int getSubmittedBy() {
-		return this.submittedBy;
+	public String getName() {
+		return this.name;
 	}
 
 	/**
