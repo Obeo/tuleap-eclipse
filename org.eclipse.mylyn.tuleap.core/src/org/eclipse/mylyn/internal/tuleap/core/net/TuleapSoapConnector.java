@@ -770,8 +770,10 @@ public class TuleapSoapConnector {
 							}
 							found = true;
 						} else {
-							tuleapArtifact.putValue(artifactFieldValue.getField_name(), artifactFieldValue
-									.getField_value().getValue());
+							String value = artifactFieldValue.getField_value().getValue();
+							if (value != null) {
+								tuleapArtifact.putValue(artifactFieldValue.getField_name(), value);
+							}
 							monitor.worked(1);
 							found = true;
 						}
@@ -782,7 +784,7 @@ public class TuleapSoapConnector {
 					// The value is not set in the artifact
 					// Let's create an empty entry in the artifact
 
-					tuleapArtifact.putValue(trackerField.getShort_name(), null);
+					// tuleapArtifact.putValue(trackerField.getShort_name(), null);
 					monitor.worked(1);
 				}
 			}
