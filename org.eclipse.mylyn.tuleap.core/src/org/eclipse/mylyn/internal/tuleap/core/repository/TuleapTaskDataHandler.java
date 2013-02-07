@@ -690,90 +690,22 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			} else if (abstractTuleapField instanceof TuleapSelectBox
 					&& ((TuleapSelectBox)abstractTuleapField).isSemanticStatus()) {
 				// Look for the status
-				String status = tuleapArtifact.getValue(abstractTuleapField.getName());
-				if (status != null) {
-					taskMapper.setStatus(status);
-				}
-
-				// If the status matches a "closed" status, set the completion date to the last modification
-				// date or the current date
-				boolean isClosed = false;
-				List<TuleapSelectBoxItem> closedStatus = ((TuleapSelectBox)abstractTuleapField)
-						.getClosedStatus();
-				for (TuleapSelectBoxItem tuleapSelectBoxItem : closedStatus) {
-					if (tuleapSelectBoxItem.getLabel().equals(status)) {
-						isClosed = true;
-						break;
-					}
-				}
-				if (isClosed) {
-					// Sets the completion date
-					Date lastModificationDate = tuleapArtifact.getLastModificationDate();
-					if (lastModificationDate != null) {
-						taskMapper.setCompletionDate(lastModificationDate);
-					} else {
-						taskMapper.setCompletionDate(new Date());
-					}
-				} else {
-					// Remove an existing completion date
-					taskMapper.setCompletionDate(null);
-				}
+				this.createTaskDataStatusFromArtifact(tuleapArtifact, taskMapper, abstractTuleapField);
 			} else if (abstractTuleapField instanceof TuleapSelectBox
 					&& ((TuleapSelectBox)abstractTuleapField).isSemanticContributor()) {
-				TuleapSelectBox tuleapSelectBox = (TuleapSelectBox)abstractTuleapField;
-				TaskAttribute taskAttribute = taskData.getRoot().getAttributes().get(
-						TaskAttribute.USER_ASSIGNED);
-				if (taskAttribute == null) {
-					taskAttribute = taskData.getRoot().createAttribute(TaskAttribute.USER_ASSIGNED);
-					TaskAttributeMetaData metaData = taskAttribute.getMetaData();
-					metaData.setKind(TaskAttribute.KIND_PEOPLE);
-					metaData.setType(TaskAttribute.TYPE_MULTI_SELECT);
-				}
-				// Put the options
-				List<TuleapSelectBoxItem> items = tuleapSelectBox.getItems();
-				for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
-					taskAttribute.putOption(tuleapSelectBoxItem.getLabel(), tuleapSelectBoxItem.getLabel());
-				}
-				// Adds the values from the retrieved artifact
-				List<String> values = tuleapArtifact.getValues(abstractTuleapField.getName());
-				taskAttribute.setValues(values);
+				// Look for the contributors in the select box
+				this.createTaskDataContributorsFromSelectBox(tuleapArtifact, taskData,
+						(TuleapSelectBox)abstractTuleapField);
 			} else if (abstractTuleapField instanceof TuleapMultiSelectBox
 					&& ((TuleapMultiSelectBox)abstractTuleapField).isSemanticContributor()) {
-				TuleapMultiSelectBox tuleapMultiSelectBox = (TuleapMultiSelectBox)abstractTuleapField;
-				TaskAttribute taskAttribute = taskData.getRoot().getAttributes().get(
-						TaskAttribute.USER_ASSIGNED);
-				if (taskAttribute == null) {
-					taskAttribute = taskData.getRoot().createAttribute(TaskAttribute.USER_ASSIGNED);
-					TaskAttributeMetaData metaData = taskAttribute.getMetaData();
-					metaData.setKind(TaskAttribute.KIND_PEOPLE);
-					metaData.setType(TaskAttribute.TYPE_MULTI_SELECT);
-				}
-				// Put the options
-				List<TuleapSelectBoxItem> items = tuleapMultiSelectBox.getItems();
-				for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
-					taskAttribute.putOption(tuleapSelectBoxItem.getLabel(), tuleapSelectBoxItem.getLabel());
-				}
-				// Adds the values from the retrieved artifact
-				List<String> values = tuleapArtifact.getValues(abstractTuleapField.getName());
-				taskAttribute.setValues(values);
+				// Look for the contributors in the multi select box
+				this.createTaskDataContributorsFromMultiSelectbox(tuleapArtifact, taskData,
+						(TuleapMultiSelectBox)abstractTuleapField);
 			} else if (abstractTuleapField instanceof TuleapDate) {
-				// Date need to have their timestamp converted
-				String value = tuleapArtifact.getValue(abstractTuleapField.getName());
-
-				TaskAttribute attribute = taskData.getRoot();
-				Map<String, TaskAttribute> attributes = attribute.getAttributes();
-				TaskAttribute taskAttribute = attributes.get(Integer.valueOf(
-						abstractTuleapField.getIdentifier()).toString());
-				if (taskAttribute != null && value != null) {
-					try {
-						Calendar calendar = Calendar.getInstance();
-						calendar.setTimeInMillis(Long.valueOf(value).longValue() * 1000);
-						taskAttribute.setValue(Long.valueOf(calendar.getTimeInMillis()).toString());
-					} catch (NumberFormatException e) {
-						// The date is empty
-					}
-				}
+				// Look for the date
+				this.createTaskDataDateFromArtifact(tuleapArtifact, taskData, (TuleapDate)abstractTuleapField);
 			} else {
+				// Other fields
 				List<String> values = tuleapArtifact.getValues(abstractTuleapField.getName());
 
 				TaskAttribute attribute = taskData.getRoot();
@@ -785,49 +717,238 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				}
 			}
 
+			// Change the options if the select box has a workflow
 			if (abstractTuleapField instanceof TuleapSelectBox
 					&& ((TuleapSelectBox)abstractTuleapField).getWorkflow().getTransitions().size() > 0) {
-				// The widget has a workflow
-
-				TuleapSelectBox tuleapSelectBox = (TuleapSelectBox)abstractTuleapField;
-				TuleapSelectBoxItem item = null;
-
-				TaskAttribute attribute = null;
-				if (tuleapSelectBox.isSemanticStatus()) {
-					attribute = taskData.getRoot().getAttribute(TaskAttribute.STATUS);
-				} else {
-					attribute = taskData.getRoot().getAttribute(
-							Integer.valueOf(abstractTuleapField.getIdentifier()).toString());
-				}
-
-				String value = attribute.getValue();
-
-				List<TuleapSelectBoxItem> items = tuleapSelectBox.getItems();
-				for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
-					if (value != null && value.equals(tuleapSelectBoxItem.getLabel())) {
-						item = tuleapSelectBoxItem;
-					}
-				}
-
-				if (item != null) {
-					attribute.clearOptions();
-					attribute.putOption(value, value);
-
-					List<Integer> accessibleStates = tuleapSelectBox.getWorkflow().accessibleStates(
-							item.getIdentifier());
-					for (Integer accessibleState : accessibleStates) {
-						for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
-							if (accessibleState.intValue() == tuleapSelectBoxItem.getIdentifier()) {
-								attribute.putOption(tuleapSelectBoxItem.getLabel(), tuleapSelectBoxItem
-										.getLabel());
-							}
-						}
-					}
-				}
+				this.changeOptionsForSelectBoxWorkflow(taskData, (TuleapSelectBox)abstractTuleapField);
+			} else if (abstractTuleapField instanceof TuleapSelectBox
+					&& ((TuleapMultiSelectBox)abstractTuleapField).getWorkflow().getTransitions().size() > 0) {
+				this.changeOptionsForMultiSelectBoxWorkflow(taskData,
+						(TuleapMultiSelectBox)abstractTuleapField);
 			}
 		}
 
 		return taskData;
+	}
+
+	/**
+	 * Creates the status in the task data matching the information retrieved from the Tuleap artifact.
+	 * 
+	 * @param tuleapArtifact
+	 *            The Tuleap artifact
+	 * @param taskMapper
+	 *            The task mapper
+	 * @param abstractTuleapField
+	 *            The Tuleap field representing the status
+	 */
+	private void createTaskDataStatusFromArtifact(TuleapArtifact tuleapArtifact, TaskMapper taskMapper,
+			AbstractTuleapField abstractTuleapField) {
+		// Look for the status
+		String status = tuleapArtifact.getValue(abstractTuleapField.getName());
+		if (status != null) {
+			taskMapper.setStatus(status);
+		}
+
+		// If the status matches a "closed" status, set the completion date to the last modification
+		// date or the current date
+		boolean isClosed = false;
+		List<TuleapSelectBoxItem> closedStatus = ((TuleapSelectBox)abstractTuleapField).getClosedStatus();
+		for (TuleapSelectBoxItem tuleapSelectBoxItem : closedStatus) {
+			if (tuleapSelectBoxItem.getLabel().equals(status)) {
+				isClosed = true;
+				break;
+			}
+		}
+		if (isClosed) {
+			// Sets the completion date
+			Date lastModificationDate = tuleapArtifact.getLastModificationDate();
+			if (lastModificationDate != null) {
+				taskMapper.setCompletionDate(lastModificationDate);
+			} else {
+				taskMapper.setCompletionDate(new Date());
+			}
+		} else {
+			// Remove an existing completion date
+			taskMapper.setCompletionDate(null);
+		}
+	}
+
+	/**
+	 * Creates the contributors in the task data from the information retrieved from the Tuleap artifact.
+	 * 
+	 * @param tuleapArtifact
+	 *            The Tuleap artifact
+	 * @param taskData
+	 *            The task data
+	 * @param tuleapSelectBox
+	 *            The Tuleap field representing the contributor
+	 */
+	private void createTaskDataContributorsFromSelectBox(TuleapArtifact tuleapArtifact, TaskData taskData,
+			TuleapSelectBox tuleapSelectBox) {
+		TaskAttribute taskAttribute = taskData.getRoot().getAttributes().get(TaskAttribute.USER_ASSIGNED);
+		if (taskAttribute == null) {
+			taskAttribute = taskData.getRoot().createAttribute(TaskAttribute.USER_ASSIGNED);
+			TaskAttributeMetaData metaData = taskAttribute.getMetaData();
+			metaData.setKind(TaskAttribute.KIND_PEOPLE);
+			metaData.setType(TaskAttribute.TYPE_MULTI_SELECT);
+		}
+		// Put the options
+		List<TuleapSelectBoxItem> items = tuleapSelectBox.getItems();
+		for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
+			taskAttribute.putOption(tuleapSelectBoxItem.getLabel(), tuleapSelectBoxItem.getLabel());
+		}
+		// Adds the values from the retrieved artifact
+		List<String> values = tuleapArtifact.getValues(tuleapSelectBox.getName());
+		taskAttribute.setValues(values);
+	}
+
+	/**
+	 * Creates the contributors in the task data matching the information retrieved from the Tuleap artifact.
+	 * 
+	 * @param tuleapArtifact
+	 *            The Tuleap artifact
+	 * @param taskData
+	 *            The task data
+	 * @param tuleapMultiSelectBox
+	 *            The Tuleap multi select box
+	 */
+	private void createTaskDataContributorsFromMultiSelectbox(TuleapArtifact tuleapArtifact,
+			TaskData taskData, TuleapMultiSelectBox tuleapMultiSelectBox) {
+		TaskAttribute taskAttribute = taskData.getRoot().getAttributes().get(TaskAttribute.USER_ASSIGNED);
+		if (taskAttribute == null) {
+			taskAttribute = taskData.getRoot().createAttribute(TaskAttribute.USER_ASSIGNED);
+			TaskAttributeMetaData metaData = taskAttribute.getMetaData();
+			metaData.setKind(TaskAttribute.KIND_PEOPLE);
+			metaData.setType(TaskAttribute.TYPE_MULTI_SELECT);
+		}
+		// Put the options
+		List<TuleapSelectBoxItem> items = tuleapMultiSelectBox.getItems();
+		for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
+			taskAttribute.putOption(tuleapSelectBoxItem.getLabel(), tuleapSelectBoxItem.getLabel());
+		}
+		// Adds the values from the retrieved artifact
+		List<String> values = tuleapArtifact.getValues(tuleapMultiSelectBox.getName());
+		taskAttribute.setValues(values);
+	}
+
+	/**
+	 * Creates the date in the task data matching the information retrieved from the Tuleap artifact.
+	 * 
+	 * @param tuleapArtifact
+	 *            The Tuleap artifact
+	 * @param taskData
+	 *            The task data
+	 * @param tuleapDate
+	 *            The Tuleap field representing the date
+	 */
+	private void createTaskDataDateFromArtifact(TuleapArtifact tuleapArtifact, TaskData taskData,
+			TuleapDate tuleapDate) {
+		// Date need to have their timestamp converted
+		String value = tuleapArtifact.getValue(tuleapDate.getName());
+
+		TaskAttribute attribute = taskData.getRoot();
+		Map<String, TaskAttribute> attributes = attribute.getAttributes();
+		TaskAttribute taskAttribute = attributes.get(Integer.valueOf(tuleapDate.getIdentifier()).toString());
+		if (taskAttribute != null && value != null) {
+			try {
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTimeInMillis(Long.valueOf(value).longValue() * 1000);
+				taskAttribute.setValue(Long.valueOf(calendar.getTimeInMillis()).toString());
+			} catch (NumberFormatException e) {
+				// The date is empty
+			}
+		}
+	}
+
+	/**
+	 * Changes the options on the task attribute if the Tuleap select box has a workflow.
+	 * 
+	 * @param taskData
+	 *            the task data
+	 * @param tuleapSelectBox
+	 *            The Tuleap select box
+	 */
+	private void changeOptionsForSelectBoxWorkflow(TaskData taskData, TuleapSelectBox tuleapSelectBox) {
+		// The widget has a workflow
+		TuleapSelectBoxItem item = null;
+
+		TaskAttribute attribute = null;
+		if (tuleapSelectBox.isSemanticStatus()) {
+			attribute = taskData.getRoot().getAttribute(TaskAttribute.STATUS);
+		} else {
+			attribute = taskData.getRoot().getAttribute(
+					Integer.valueOf(tuleapSelectBox.getIdentifier()).toString());
+		}
+
+		String value = attribute.getValue();
+
+		List<TuleapSelectBoxItem> items = tuleapSelectBox.getItems();
+		for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
+			if (value != null && value.equals(tuleapSelectBoxItem.getLabel())) {
+				item = tuleapSelectBoxItem;
+			}
+		}
+
+		if (item != null) {
+			attribute.clearOptions();
+			attribute.putOption(value, value);
+
+			List<Integer> accessibleStates = tuleapSelectBox.getWorkflow().accessibleStates(
+					item.getIdentifier());
+			for (Integer accessibleState : accessibleStates) {
+				for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
+					if (accessibleState.intValue() == tuleapSelectBoxItem.getIdentifier()) {
+						attribute.putOption(tuleapSelectBoxItem.getLabel(), tuleapSelectBoxItem.getLabel());
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Changes the options on the task attribute if the Tuleap multi select box has a workflow.
+	 * 
+	 * @param taskData
+	 *            the task data
+	 * @param tuleapMultiSelectBox
+	 *            The Tuleap multi select box
+	 */
+	private void changeOptionsForMultiSelectBoxWorkflow(TaskData taskData,
+			TuleapMultiSelectBox tuleapMultiSelectBox) {
+		// The widget has a workflow
+		TuleapSelectBoxItem item = null;
+
+		TaskAttribute attribute = null;
+		if (tuleapMultiSelectBox.isSemanticStatus()) {
+			attribute = taskData.getRoot().getAttribute(TaskAttribute.STATUS);
+		} else {
+			attribute = taskData.getRoot().getAttribute(
+					Integer.valueOf(tuleapMultiSelectBox.getIdentifier()).toString());
+		}
+
+		String value = attribute.getValue();
+
+		List<TuleapSelectBoxItem> items = tuleapMultiSelectBox.getItems();
+		for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
+			if (value != null && value.equals(tuleapSelectBoxItem.getLabel())) {
+				item = tuleapSelectBoxItem;
+			}
+		}
+
+		if (item != null) {
+			attribute.clearOptions();
+			attribute.putOption(value, value);
+
+			List<Integer> accessibleStates = tuleapMultiSelectBox.getWorkflow().accessibleStates(
+					item.getIdentifier());
+			for (Integer accessibleState : accessibleStates) {
+				for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
+					if (accessibleState.intValue() == tuleapSelectBoxItem.getIdentifier()) {
+						attribute.putOption(tuleapSelectBoxItem.getLabel(), tuleapSelectBoxItem.getLabel());
+					}
+				}
+			}
+		}
 	}
 
 	/**
