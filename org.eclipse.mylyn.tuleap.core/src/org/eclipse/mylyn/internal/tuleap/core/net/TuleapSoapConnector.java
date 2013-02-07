@@ -387,21 +387,14 @@ public class TuleapSoapConnector {
 				trackerField.getLabel()));
 
 		TrackerSemantic trackerSemantic = trackerStructure.getSemantic();
-		TrackerSemanticTitle trackerSemanticTitle = trackerSemantic.getTitle();
-		String trackerSemanticTitleFieldName = trackerSemanticTitle.getField_name();
-		TrackerSemanticStatus trackerSemanticStatus = trackerSemantic.getStatus();
-		int[] trackerSemanticStatusOpenValues = trackerSemanticStatus.getValues();
-
-		TrackerSemanticContributor trackerSemanticContributor = trackerSemantic.getContributor();
-		String trackerSemanticContributorFieldName = trackerSemanticContributor.getField_name();
-
-		TrackerWorkflow trackerWorkflow = trackerStructure.getWorkflow();
-		TrackerWorkflowTransition[] trackerWorkflowTransitions = trackerWorkflow.getTransitions();
 
 		String type = trackerField.getType();
 		int fieldIdentifier = trackerField.getField_id();
 		if (ITuleapConfigurationConstants.STRING.equals(type)) {
 			tuleapField = new TuleapString(fieldIdentifier);
+
+			TrackerSemanticTitle trackerSemanticTitle = trackerSemantic.getTitle();
+			String trackerSemanticTitleFieldName = trackerSemanticTitle.getField_name();
 			if (trackerSemanticTitleFieldName.equals(trackerField.getShort_name())) {
 				((TuleapString)tuleapField).setSemanticTitle(true);
 			}
@@ -412,111 +405,11 @@ public class TuleapSoapConnector {
 		} else if (ITuleapConfigurationConstants.LUD.equals(type)) {
 			tuleapField = new TuleapLastUpdateDate(fieldIdentifier);
 		} else if (ITuleapConfigurationConstants.SB.equals(type)) {
-			tuleapField = new TuleapSelectBox(fieldIdentifier);
-			if (trackerWorkflow.getField_id() == fieldIdentifier) {
-				// Workflow
-				TuleapWorkflow tuleapWorkflow = ((TuleapSelectBox)tuleapField).getWorkflow();
-				for (TrackerWorkflowTransition trackerTransition : trackerWorkflowTransitions) {
-					TuleapWorkflowTransition tuleapTransition = new TuleapWorkflowTransition();
-					tuleapTransition.setFrom(trackerTransition.getFrom_id());
-					tuleapTransition.setTo(trackerTransition.getTo_id());
-					tuleapWorkflow.getTransitions().add(tuleapTransition);
-				}
-			}
-
-			for (TrackerFieldBindValue trackerFieldBindValue : trackerField.getValues()) {
-				TuleapSelectBoxItem tuleapSelectBoxItem = new TuleapSelectBoxItem(trackerFieldBindValue
-						.getBind_value_id());
-				tuleapSelectBoxItem.setLabel(trackerFieldBindValue.getBind_value_label());
-				((TuleapSelectBox)tuleapField).getItems().add(tuleapSelectBoxItem);
-
-				// Semantic status
-				if (trackerField.getShort_name().equals(trackerSemanticStatus.getField_name())) {
-					if (ArrayUtils.contains(trackerSemanticStatusOpenValues, trackerFieldBindValue
-							.getBind_value_id())) {
-						((TuleapSelectBox)tuleapField).getOpenStatus().add(tuleapSelectBoxItem);
-					}
-				}
-
-				// Contributor
-				if (trackerSemanticContributorFieldName.equals(trackerField.getShort_name())) {
-					((TuleapSelectBox)tuleapField).setSemanticContributor(true);
-				}
-			}
+			tuleapField = this.getTuleapSelectBox(trackerStructure, trackerField);
 		} else if (ITuleapConfigurationConstants.MSB.equals(type)
 				|| ITuleapConfigurationConstants.CB.equals(type)) {
-			tuleapField = new TuleapMultiSelectBox(fieldIdentifier);
-
-			// Is semantic contributor?
-			if (trackerSemanticContributorFieldName.equals(trackerField.getShort_name())) {
-				((TuleapMultiSelectBox)tuleapField).setSemanticContributor(true);
-			}
-
-			// If one binding, let's check if it's a dynamic one
-			if (trackerField.getValues().length == 1) {
-				TrackerFieldBindValue trackerFieldBindValue = trackerField.getValues()[0];
-				try {
-					Ugroup[] projectGroupsAndUsers = codendiAPIPort.getProjectGroupsAndUsers(sessionHash,
-							groupId);
-					for (Ugroup ugroup : projectGroupsAndUsers) {
-						// TODO not bug free!!
-						// FIXME Bug Tuleap -> https://tuleap.net/plugins/tracker/?aid=2234
-						String uGroupName = ugroup.getName();
-
-						String groupMembers = "group_members";
-						String groupAdmin = "group_admins";
-						if ("project_members".equals(uGroupName)
-								&& (trackerFieldBindValue.getBind_value_label().contains(uGroupName) || trackerFieldBindValue
-										.getBind_value_label().contains(groupMembers))) {
-							UGroupMember[] members = ugroup.getMembers();
-							for (UGroupMember uGroupMember : members) {
-								int userId = uGroupMember.getUser_id();
-								UserInfo userInfo = codendiAPIPort.getUserInfo(sessionHash, userId);
-								String label = userInfo.getReal_name() + " (" + userInfo.getUsername() + ")";
-								TuleapSelectBoxItem tuleapSelectBoxItem = new TuleapSelectBoxItem(userId);
-								tuleapSelectBoxItem.setLabel(label);
-								((TuleapMultiSelectBox)tuleapField).getItems().add(tuleapSelectBoxItem);
-							}
-						} else if ("project_admins".equals(uGroupName)
-								&& (trackerFieldBindValue.getBind_value_label().contains(uGroupName) || trackerFieldBindValue
-										.getBind_value_label().contains(groupAdmin))) {
-							UGroupMember[] members = ugroup.getMembers();
-							for (UGroupMember uGroupMember : members) {
-								int userId = uGroupMember.getUser_id();
-								UserInfo userInfo = codendiAPIPort.getUserInfo(sessionHash, userId);
-								String label = userInfo.getReal_name() + " (" + userInfo.getUsername() + ")";
-								TuleapSelectBoxItem tuleapSelectBoxItem = new TuleapSelectBoxItem(userId);
-								tuleapSelectBoxItem.setLabel(label);
-								((TuleapMultiSelectBox)tuleapField).getItems().add(tuleapSelectBoxItem);
-							}
-						} else if (trackerFieldBindValue.getBind_value_label().contains(uGroupName)) {
-							UGroupMember[] members = ugroup.getMembers();
-							for (UGroupMember uGroupMember : members) {
-								int userId = uGroupMember.getUser_id();
-								UserInfo userInfo = codendiAPIPort.getUserInfo(sessionHash, userId);
-								String label = userInfo.getReal_name() + " (" + userInfo.getUsername() + ")";
-								TuleapSelectBoxItem tuleapSelectBoxItem = new TuleapSelectBoxItem(userId);
-								tuleapSelectBoxItem.setLabel(label);
-								((TuleapMultiSelectBox)tuleapField).getItems().add(tuleapSelectBoxItem);
-							}
-						}
-					}
-				} catch (RemoteException e) {
-					TuleapCoreActivator.log(e, true);
-				}
-			} else {
-				// More than one binding -> not dynamic
-				for (TrackerFieldBindValue trackerFieldBindValue : trackerField.getValues()) {
-					TuleapSelectBoxItem tuleapSelectBoxItem = new TuleapSelectBoxItem(trackerFieldBindValue
-							.getBind_value_id());
-					tuleapSelectBoxItem.setLabel(trackerFieldBindValue.getBind_value_label());
-					((TuleapMultiSelectBox)tuleapField).getItems().add(tuleapSelectBoxItem);
-					if (ArrayUtils.contains(trackerSemanticStatusOpenValues, trackerFieldBindValue
-							.getBind_value_id())) {
-						((TuleapMultiSelectBox)tuleapField).getOpenStatus().add(tuleapSelectBoxItem);
-					}
-				}
-			}
+			tuleapField = this.getTuleapMultiSelectBox(codendiAPIPort, sessionHash, groupId,
+					trackerStructure, trackerField);
 		} else if (ITuleapConfigurationConstants.DATE.equals(type)) {
 			tuleapField = new TuleapDate(fieldIdentifier);
 		} else if (ITuleapConfigurationConstants.FILE.equals(type)) {
@@ -548,6 +441,157 @@ public class TuleapSoapConnector {
 
 		monitor.worked(1);
 
+		return tuleapField;
+	}
+
+	/**
+	 * Creates a Tuleap Multi select box from the description of the tracker field.
+	 * 
+	 * @param codendiAPIPort
+	 *            The SOAP API
+	 * @param sessionHash
+	 *            The session hash
+	 * @param groupId
+	 *            The identifier of the group
+	 * @param trackerStructure
+	 *            The structure of the tracker
+	 * @param trackerField
+	 *            The description of the tracker field
+	 * @return The newly created Tuleap Multi select box
+	 */
+	private TuleapMultiSelectBox getTuleapMultiSelectBox(CodendiAPIPortType codendiAPIPort,
+			String sessionHash, int groupId, TrackerStructure trackerStructure, TrackerField trackerField) {
+		TuleapMultiSelectBox tuleapField = new TuleapMultiSelectBox(trackerField.getField_id());
+		// Is semantic contributor?
+		TrackerSemantic trackerSemantic = trackerStructure.getSemantic();
+		TrackerSemanticStatus trackerSemanticStatus = trackerSemantic.getStatus();
+		int[] trackerSemanticStatusOpenValues = trackerSemanticStatus.getValues();
+
+		TrackerSemanticContributor trackerSemanticContributor = trackerSemantic.getContributor();
+		String trackerSemanticContributorFieldName = trackerSemanticContributor.getField_name();
+		if (trackerSemanticContributorFieldName.equals(trackerField.getShort_name())) {
+			tuleapField.setSemanticContributor(true);
+		}
+
+		// If one binding, let's check if it's a dynamic one
+		if (trackerField.getValues().length == 1) {
+			TrackerFieldBindValue trackerFieldBindValue = trackerField.getValues()[0];
+			try {
+				Ugroup[] projectGroupsAndUsers = codendiAPIPort
+						.getProjectGroupsAndUsers(sessionHash, groupId);
+				for (Ugroup ugroup : projectGroupsAndUsers) {
+					// FIXME Waiting for a fix from Tuleap -> https://tuleap.net/plugins/tracker/?aid=2234
+					String uGroupName = ugroup.getName();
+					String groupMembers = "group_members"; //$NON-NLS-1$
+					String groupAdmin = "group_admins"; //$NON-NLS-1$
+					if ("project_members".equals(uGroupName) //$NON-NLS-1$
+							&& (trackerFieldBindValue.getBind_value_label().contains(uGroupName) || trackerFieldBindValue
+									.getBind_value_label().contains(groupMembers))) {
+						addUsersToMultiSelectBox(codendiAPIPort, sessionHash, tuleapField, ugroup);
+					} else if ("project_admins".equals(uGroupName) //$NON-NLS-1$
+							&& (trackerFieldBindValue.getBind_value_label().contains(uGroupName) || trackerFieldBindValue
+									.getBind_value_label().contains(groupAdmin))) {
+						addUsersToMultiSelectBox(codendiAPIPort, sessionHash, tuleapField, ugroup);
+					} else if (trackerFieldBindValue.getBind_value_label().contains(uGroupName)) {
+						addUsersToMultiSelectBox(codendiAPIPort, sessionHash, tuleapField, ugroup);
+					}
+				}
+			} catch (RemoteException e) {
+				TuleapCoreActivator.log(e, true);
+			}
+		} else {
+			// More than one binding -> not dynamic
+			for (TrackerFieldBindValue trackerFieldBindValue : trackerField.getValues()) {
+				TuleapSelectBoxItem tuleapSelectBoxItem = new TuleapSelectBoxItem(trackerFieldBindValue
+						.getBind_value_id());
+				tuleapSelectBoxItem.setLabel(trackerFieldBindValue.getBind_value_label());
+				tuleapField.getItems().add(tuleapSelectBoxItem);
+				if (ArrayUtils.contains(trackerSemanticStatusOpenValues, trackerFieldBindValue
+						.getBind_value_id())) {
+					tuleapField.getOpenStatus().add(tuleapSelectBoxItem);
+				}
+			}
+		}
+		return tuleapField;
+	}
+
+	/**
+	 * Iterates on the content of the ugroup to add all the elements as items in the multi select box.
+	 * 
+	 * @param codendiAPIPort
+	 *            The API used to retrieve the information
+	 * @param sessionHash
+	 *            The session hash
+	 * @param tuleapSelectBox
+	 *            The Tuleap multi select box in which we will add the new items.
+	 * @param ugroup
+	 *            The group from which we should retrieve the members.
+	 * @throws RemoteException
+	 *             In case of problems with the connection
+	 */
+	private void addUsersToMultiSelectBox(CodendiAPIPortType codendiAPIPort, String sessionHash,
+			TuleapMultiSelectBox tuleapSelectBox, Ugroup ugroup) throws RemoteException {
+		UGroupMember[] members = ugroup.getMembers();
+		for (UGroupMember uGroupMember : members) {
+			int userId = uGroupMember.getUser_id();
+			UserInfo userInfo = codendiAPIPort.getUserInfo(sessionHash, userId);
+			String label = userInfo.getReal_name() + " (" + userInfo.getUsername() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+			TuleapSelectBoxItem tuleapSelectBoxItem = new TuleapSelectBoxItem(userId);
+			tuleapSelectBoxItem.setLabel(label);
+			tuleapSelectBox.getItems().add(tuleapSelectBoxItem);
+		}
+	}
+
+	/**
+	 * Creates a Tuleap select box from the description of the tracker field.
+	 * 
+	 * @param trackerStructure
+	 *            The structure of the tracker
+	 * @param trackerField
+	 *            The description of the tracker field
+	 * @return The newly created Tuleap select box
+	 */
+	private TuleapSelectBox getTuleapSelectBox(TrackerStructure trackerStructure, TrackerField trackerField) {
+		TuleapSelectBox tuleapField = new TuleapSelectBox(trackerField.getField_id());
+
+		TrackerWorkflow trackerWorkflow = trackerStructure.getWorkflow();
+		if (trackerWorkflow.getField_id() == trackerField.getField_id()) {
+			// Workflow
+			TrackerWorkflowTransition[] trackerWorkflowTransitions = trackerWorkflow.getTransitions();
+			TuleapWorkflow tuleapWorkflow = tuleapField.getWorkflow();
+			for (TrackerWorkflowTransition trackerTransition : trackerWorkflowTransitions) {
+				TuleapWorkflowTransition tuleapTransition = new TuleapWorkflowTransition();
+				tuleapTransition.setFrom(trackerTransition.getFrom_id());
+				tuleapTransition.setTo(trackerTransition.getTo_id());
+				tuleapWorkflow.getTransitions().add(tuleapTransition);
+			}
+		}
+
+		TrackerSemanticStatus trackerSemanticStatus = trackerStructure.getSemantic().getStatus();
+		int[] trackerSemanticStatusOpenValues = trackerSemanticStatus.getValues();
+
+		TrackerSemanticContributor trackerSemanticContributor = trackerStructure.getSemantic()
+				.getContributor();
+		String trackerSemanticContributorFieldName = trackerSemanticContributor.getField_name();
+		for (TrackerFieldBindValue trackerFieldBindValue : trackerField.getValues()) {
+			TuleapSelectBoxItem tuleapSelectBoxItem = new TuleapSelectBoxItem(trackerFieldBindValue
+					.getBind_value_id());
+			tuleapSelectBoxItem.setLabel(trackerFieldBindValue.getBind_value_label());
+			tuleapField.getItems().add(tuleapSelectBoxItem);
+
+			// Semantic status
+			if (trackerField.getShort_name().equals(trackerSemanticStatus.getField_name())) {
+				if (ArrayUtils.contains(trackerSemanticStatusOpenValues, trackerFieldBindValue
+						.getBind_value_id())) {
+					tuleapField.getOpenStatus().add(tuleapSelectBoxItem);
+				}
+			}
+
+			// Contributor
+			if (trackerSemanticContributorFieldName.equals(trackerField.getShort_name())) {
+				tuleapField.setSemanticContributor(true);
+			}
+		}
 		return tuleapField;
 	}
 
