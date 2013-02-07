@@ -722,7 +722,7 @@ public class TuleapSoapConnector {
 					try {
 						collector.accept(taskData);
 					} catch (IllegalArgumentException e) {
-						// Do not log, the query does not exists anymore
+						// Do not log, the query does not exists anymore, see
 						// org.eclipse.mylyn.internal.tasks.core.TaskList.getValidElement(IRepositoryElement)
 					}
 				}
