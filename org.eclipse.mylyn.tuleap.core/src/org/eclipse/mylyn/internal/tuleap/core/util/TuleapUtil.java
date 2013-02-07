@@ -287,4 +287,15 @@ public final class TuleapUtil {
 		}
 		return taskId;
 	}
+
+	/**
+	 * Indicates if the URL is valid.
+	 * 
+	 * @param url
+	 *            The URL
+	 * @return <code>true</code> if the url is valid, <code>false</code> otherwise.
+	 */
+	public static boolean isValidUrl(String url) {
+		return url.matches("https://.*/plugins/tracker/\\?group_id=[0-9]*"); //$NON-NLS-1$
+	}
 }

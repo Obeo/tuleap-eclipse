@@ -17,6 +17,7 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
+import org.eclipse.mylyn.internal.tuleap.core.util.TuleapUtil;
 import org.eclipse.mylyn.internal.tuleap.ui.util.TuleapMylynTasksUIMessages;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
@@ -73,9 +74,9 @@ public class TuleapRepositorySettingsPage extends AbstractRepositorySettingsPage
 	@Override
 	protected boolean isValidUrl(String url) {
 		// The Tuleap tracker that the repository will respect the following pattern
-		// "https://<domainName>/plugins/tracker/?group_id=<trackerId>"
+		// "https://<domainName>/plugins/tracker/?group_id=<groupId>"
 		boolean isValid = super.isValidUrl(url);
-		return isValid && url.matches("https://.*/plugins/tracker/\\?group_id=[0-9]*"); //$NON-NLS-1$
+		return isValid && TuleapUtil.isValidUrl(url);
 	}
 
 	/**
