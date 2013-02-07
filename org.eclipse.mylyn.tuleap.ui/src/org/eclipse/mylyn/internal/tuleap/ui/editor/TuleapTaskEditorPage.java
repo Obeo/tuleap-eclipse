@@ -27,11 +27,6 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
 public class TuleapTaskEditorPage extends AbstractTaskEditorPage {
 
 	/**
-	 * The Tuleap rendering engine.
-	 */
-	private TuleapRenderingEngine renderingEngine;
-
-	/**
 	 * The constructor.
 	 * 
 	 * @param editor
@@ -76,19 +71,5 @@ public class TuleapTaskEditorPage extends AbstractTaskEditorPage {
 				iterator.remove();
 			}
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage#createParts()
-	 */
-	@Override
-	protected void createParts() {
-		if (this.renderingEngine == null) {
-			this.renderingEngine = new TuleapRenderingEngine();
-		}
-		this.getAttributeEditorToolkit().setRenderingEngine(this.renderingEngine);
-		super.createParts();
 	}
 }
