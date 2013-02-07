@@ -21,9 +21,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebLocation;
-import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
-import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClient;
 import org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClientManager;
@@ -143,8 +141,8 @@ public class TuleapFixture extends TestFixture {
 	 *             In case of problems
 	 */
 	public ITuleapClient client() throws CoreException, IOException {
-		UserCredentials credentials = CommonTestUtil.getCredentials(PrivilegeLevel.USER);
-		return client(getRepositoryUrl(), "begaudeaus", "n9Um4sq074ccAIR", "", "", "UTF-8"); //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
+		// UserCredentials credentials = CommonTestUtil.getCredentials(PrivilegeLevel.USER);
+		return client(getRepositoryUrl(), "userName", "password", "", "", "UTF-8"); //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 	}
 
 	/**

@@ -13,10 +13,10 @@ package org.eclipse.mylyn.internal.tuleap.core.client;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
 import org.eclipse.mylyn.internal.tuleap.core.repository.ITuleapRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 
 /**
  * The Tuleap client manager will create new clients for a given Mylyn tasks repository or find existing ones.
@@ -69,7 +69,8 @@ public class TuleapClientManager implements ITuleapClientManager, IRepositoryLis
 	 */
 	protected ITuleapClient createClient(TaskRepository taskRepository) {
 		return TuleapClientFactory.getDefault().createClient(taskRepository,
-				new TaskRepositoryLocation(taskRepository), this.repositoryConnector);
+				new TaskRepositoryLocationFactory().createWebLocation(taskRepository),
+				this.repositoryConnector);
 	}
 
 	/**

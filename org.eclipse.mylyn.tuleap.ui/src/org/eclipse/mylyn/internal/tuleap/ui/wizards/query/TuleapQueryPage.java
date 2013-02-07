@@ -20,7 +20,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerReport;
@@ -31,6 +30,7 @@ import org.eclipse.mylyn.internal.tuleap.ui.util.ITuleapUIConstants;
 import org.eclipse.mylyn.internal.tuleap.ui.util.TuleapMylynTasksUIMessages;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -183,7 +183,8 @@ public class TuleapQueryPage extends WizardPage {
 						String trackerIdString = text.substring(startIndex + 1, endIndex);
 						int trackerId = Integer.valueOf(trackerIdString).intValue();
 
-						AbstractWebLocation location = new TaskRepositoryLocation(repository);
+						AbstractWebLocation location = new TaskRepositoryLocationFactory()
+								.createWebLocation(repository);
 						TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(location);
 						reports.addAll(tuleapSoapConnector.getReports(trackerId, monitor));
 					}

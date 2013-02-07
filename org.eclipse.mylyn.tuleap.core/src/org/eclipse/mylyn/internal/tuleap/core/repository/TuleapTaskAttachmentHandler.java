@@ -18,7 +18,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
 import org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClient;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration;
@@ -30,6 +29,7 @@ import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
 import org.eclipse.mylyn.internal.tuleap.core.util.TuleapUtil;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
@@ -139,7 +139,8 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 	@Override
 	public InputStream getContent(TaskRepository repository, ITask task, TaskAttribute attachmentAttribute,
 			IProgressMonitor monitor) throws CoreException {
-		AbstractWebLocation abstractWebLocation = new TaskRepositoryLocation(repository);
+		AbstractWebLocation abstractWebLocation = new TaskRepositoryLocationFactory()
+				.createWebLocation(repository);
 		TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(abstractWebLocation);
 		String taskId = task.getTaskId();
 		String attachmentAttributeId = attachmentAttribute.getId();
@@ -174,7 +175,8 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 	@Override
 	public void postContent(TaskRepository repository, ITask task, AbstractTaskAttachmentSource source,
 			String comment, TaskAttribute attachmentAttribute, IProgressMonitor monitor) throws CoreException {
-		AbstractWebLocation abstractWebLocation = new TaskRepositoryLocation(repository);
+		AbstractWebLocation abstractWebLocation = new TaskRepositoryLocationFactory()
+				.createWebLocation(repository);
 		TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(abstractWebLocation);
 
 		// Field name (for context, let's take the first one available)

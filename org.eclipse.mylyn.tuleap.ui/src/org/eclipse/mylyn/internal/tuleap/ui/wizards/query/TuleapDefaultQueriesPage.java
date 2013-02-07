@@ -39,11 +39,6 @@ import org.eclipse.swt.widgets.Group;
 public class TuleapDefaultQueriesPage extends AbstractRepositoryQueryPage2 {
 
 	/**
-	 * The task repository.
-	 */
-	private TaskRepository repository;
-
-	/**
 	 * The tracker.
 	 */
 	private String tracker;
@@ -81,7 +76,6 @@ public class TuleapDefaultQueriesPage extends AbstractRepositoryQueryPage2 {
 	public TuleapDefaultQueriesPage(TaskRepository taskRepository, String selectedTracker,
 			List<TuleapTrackerReport> reports) {
 		super(TuleapMylynTasksUIMessages.getString("TuleapDefaultQueriesPage.Name"), taskRepository, null); //$NON-NLS-1$
-		this.repository = taskRepository;
 		this.tracker = selectedTracker;
 		this.trackerReport = reports;
 		this.setTitle(TuleapMylynTasksUIMessages.getString("TuleapDefaultQueriesPage.Title")); //$NON-NLS-1$

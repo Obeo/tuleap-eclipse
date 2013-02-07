@@ -20,7 +20,7 @@ Require-Bundle: javax.xml.rpc;bundle-version="1.1.0",
  org.eclipse.mylyn.tasks.core;bundle-version="3.7.0",
  org.apache.httpcomponents.httpclient,
  org.apache.httpcomponents.httpcore
-Export-Package: org.eclipse.mylyn.internal.tuleap.core;x-internal:=true,
+Export-Package: org.eclipse.mylyn.internal.tuleap.core;x-friends:="org.eclipse.mylyn.tuleap.tests",
  org.eclipse.mylyn.internal.tuleap.core.client;x-friends:="org.eclipse.mylyn.tuleap.tests,org.eclipse.mylyn.tuleap.ui",
  org.eclipse.mylyn.internal.tuleap.core.config;x-friends:="org.eclipse.mylyn.tuleap.tests",
  org.eclipse.mylyn.internal.tuleap.core.model;x-friends:="org.eclipse.mylyn.tuleap.ui,org.eclipse.mylyn.tuleap.tests",
