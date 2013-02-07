@@ -115,8 +115,8 @@ public class TuleapRepositorySettingsPageTests extends TestCase {
 		assertFalse(page.isValidUrl("https://my.demo.domain/plugins/tracker/?tracker=aa")); //$NON-NLS-1$
 		assertFalse(page.isValidUrl("https://my.demo.domain /plugins/tracker/?tracker=42")); //$NON-NLS-1$
 		assertFalse(page.isValidUrl("https://my.demo.domain/plugins/tracker/?tracker=42x")); //$NON-NLS-1$
-		assertTrue(page.isValidUrl("https://my.demo.domain/subdomain/plugins/tracker/?tracker=42")); //$NON-NLS-1$
-		assertTrue(page.isValidUrl("https://my.demo.domain/plugins/tracker/?tracker=42")); //$NON-NLS-1$
+		assertTrue(page.isValidUrl("https://my.demo.domain/subdomain/plugins/tracker/?group_id=42")); //$NON-NLS-1$
+		assertTrue(page.isValidUrl("https://my.demo.domain/plugins/tracker/?group_id=42")); //$NON-NLS-1$
 	}
 
 }

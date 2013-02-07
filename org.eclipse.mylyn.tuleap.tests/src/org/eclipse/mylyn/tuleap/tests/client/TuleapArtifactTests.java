@@ -51,18 +51,22 @@ public class TuleapArtifactTests extends TestCase {
 
 		TuleapArtifact artifact = new TuleapArtifact();
 		artifact.putValue(key, value);
-		assertEquals(value, artifact.getValue(key));
-		assertEquals(null, artifact.getValue(key2));
-		assertEquals(null, artifact.getValue(value));
+		assertEquals(1, artifact.getValues(key).size());
+		assertEquals(value, artifact.getValues(key).get(0));
+		assertEquals(null, artifact.getValues(key2));
+		assertEquals(null, artifact.getValues(value));
 
 		artifact.putValue(key, value2);
-		assertEquals(value2, artifact.getValue(key));
-		assertEquals(null, artifact.getValue(value));
+		assertEquals(2, artifact.getValues(key).size());
+		assertEquals(value, artifact.getValues(key).get(0));
+		assertEquals(value2, artifact.getValues(key).get(1));
+		assertEquals(null, artifact.getValues(value));
 
 		artifact.putValue(key2, value2);
-		assertEquals(value2, artifact.getValue(key2));
-		assertEquals(null, artifact.getValue(value));
-		assertEquals(null, artifact.getValue(value2));
+		assertEquals(1, artifact.getValues(key2).size());
+		assertEquals(value2, artifact.getValues(key2).get(0));
+		assertEquals(null, artifact.getValues(value));
+		assertEquals(null, artifact.getValues(value2));
 	}
 
 	/**
