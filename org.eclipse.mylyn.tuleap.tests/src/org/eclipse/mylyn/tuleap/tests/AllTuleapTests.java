@@ -74,25 +74,12 @@ public final class AllTuleapTests {
 		// Standalone tests (Don't require an instance of Eclipse)
 		suite.addTest(AllTuleapHeadlessStandaloneTests.suite(configuration));
 
-		// Tests that only need to run once (i.e. no network io so doesn't matter which repository)
-		// suite.addTestSuite(BugzillaHyperlinkDetectorTest.class);
-
 		// network tests
 		suite.addTestSuite(TuleapValidatorTests.class);
 
 		// local tests
 		if (!configuration.isLocalOnly()) {
 			suite.addTestSuite(TuleapRepositorySettingsPageTests.class);
-			// suite.addTestSuite(BugzillaTaskEditorTest.class);
-			// suite.addTestSuite(BugzillaSearchPageTest.class);
-			// suite.addTestSuite(BugzillaRepositorySettingsPageTest.class);
-			// if (configuration.isDefaultOnly()) {
-			// addTests(suite, BugzillaFixture.DEFAULT);
-			// } else {
-			// for (BugzillaFixture fixture : BugzillaFixture.ALL) {
-			// addTests(suite, fixture);
-			// }
-			// }
 		}
 	}
 
@@ -110,8 +97,6 @@ public final class AllTuleapTests {
 		}
 
 		fixture.createSuite(suite);
-		// fixture.add(BugzillaAttachmentHandlerTest.class);
-
 		fixture.done();
 	}
 }

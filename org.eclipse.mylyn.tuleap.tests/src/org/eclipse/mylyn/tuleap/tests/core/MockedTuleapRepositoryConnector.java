@@ -33,6 +33,21 @@ import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 public class MockedTuleapRepositoryConnector extends AbstractRepositoryConnector implements ITuleapRepositoryConnector {
 
 	/**
+	 * The configuration to be returned.
+	 */
+	private TuleapInstanceConfiguration configuration;
+
+	/**
+	 * The constructor.
+	 * 
+	 * @param tuleapInstanceConfiguration
+	 *            The configuration that will be returned for the unit test.
+	 */
+	public MockedTuleapRepositoryConnector(TuleapInstanceConfiguration tuleapInstanceConfiguration) {
+		this.configuration = tuleapInstanceConfiguration;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.mylyn.internal.tuleap.core.repository.ITuleapRepositoryConnector#getClientManager()
@@ -49,7 +64,7 @@ public class MockedTuleapRepositoryConnector extends AbstractRepositoryConnector
 	 */
 	public TuleapInstanceConfiguration getRepositoryConfiguration(TaskRepository taskRepository,
 			boolean forceRefresh, IProgressMonitor monitor) {
-		return null;
+		return this.configuration;
 	}
 
 	/**
@@ -58,7 +73,7 @@ public class MockedTuleapRepositoryConnector extends AbstractRepositoryConnector
 	 * @see org.eclipse.mylyn.internal.tuleap.core.repository.ITuleapRepositoryConnector#putRepositoryConfiguration(java.lang.String,
 	 *      org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration)
 	 */
-	public void putRepositoryConfiguration(String repositoryUrl, TuleapInstanceConfiguration configuration) {
+	public void putRepositoryConfiguration(String repositoryUrl, TuleapInstanceConfiguration tuleapInstanceConfiguration) {
 		// do nothing
 	}
 

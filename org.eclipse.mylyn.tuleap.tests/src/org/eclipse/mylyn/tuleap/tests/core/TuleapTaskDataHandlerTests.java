@@ -14,12 +14,16 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration;
+import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
+import org.eclipse.mylyn.internal.tuleap.core.model.field.TuleapString;
 import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapAttributeMapper;
 import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapTaskDataHandler;
 import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
+import org.eclipse.mylyn.tasks.core.ITaskMapping;
+import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 
 /**
  * The tests class for the Tuleap task data handler.
@@ -30,85 +34,54 @@ import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 public class TuleapTaskDataHandlerTests extends TestCase {
 
 	/**
-	 * A mocked Tuleap repository connector.
-	 */
-	private MockedTuleapRepositoryConnector repositoryConnector;
-
-	/**
 	 * Test the initialization of the task data.
 	 */
-	public void testInitializeTaskData() {
-		String repositoryUrl = "https://demo.tuleap.net/plugins/tracker/?tracker=871"; //$NON-NLS-1$
+	public void testInitializeTaskDataString() {
+		String repositoryUrl = "https://demo.tuleap.net/plugins/tracker/?groupdId=871"; //$NON-NLS-1$
 		String connectorKind = ITuleapConstants.CONNECTOR_KIND;
 		String taskId = ""; //$NON-NLS-1$
 
-		TaskRepository repository = new TaskRepository(connectorKind, repositoryUrl);
+		String configurationName = "Tracker Name"; //$NON-NLS-1$
+		String repositoryDescription = "Tracker Description"; //$NON-NLS-1$
 
+		TaskRepository repository = new TaskRepository(connectorKind, repositoryUrl);
+		TuleapTrackerConfiguration tuleapTrackerConfiguration = new TuleapTrackerConfiguration(217,
+				repositoryUrl);
+		tuleapTrackerConfiguration.setName(configurationName);
+		tuleapTrackerConfiguration.setDescription(repositoryDescription);
+		TuleapString tuleapString = new TuleapString(1);
+		tuleapTrackerConfiguration.getFields().add(tuleapString);
+
+		TuleapInstanceConfiguration tuleapInstanceConfiguration = new TuleapInstanceConfiguration(
+				repositoryUrl);
+		tuleapInstanceConfiguration.addTracker(Integer.valueOf(217), tuleapTrackerConfiguration);
+
+		MockedTuleapRepositoryConnector repositoryConnector = new MockedTuleapRepositoryConnector(
+				tuleapInstanceConfiguration);
 		TuleapTaskDataHandler tuleapTaskDataHandler = new TuleapTaskDataHandler(repositoryConnector);
 		TaskData taskData = new TaskData(new TuleapAttributeMapper(repository, repositoryConnector),
 				repositoryUrl, connectorKind, taskId);
 		try {
+			// Used to specify the tracker to use in the group
+			ITaskMapping taskMapping = new TaskMapping() {
+				/**
+				 * {@inheritDoc}
+				 * 
+				 * @see org.eclipse.mylyn.tasks.core.TaskMapping#getProduct()
+				 */
+				@Override
+				public String getProduct() {
+					return "217"; //$NON-NLS-1$
+				}
+			};
+
 			boolean isInitialized = tuleapTaskDataHandler.initializeTaskData(repository, taskData,
-					new TaskMapper(taskData), new NullProgressMonitor());
+					taskMapping, new NullProgressMonitor());
 			assertTrue(isInitialized);
+
+			// Check that the attribute representing the Tuleap string does exists
 		} catch (CoreException e) {
 			fail(e.getMessage());
 		}
-	}
-
-	/**
-	 * Test the creation of the task data.
-	 */
-	public void testCreateTaskData() {
-		fail();
-	}
-
-	/**
-	 * Test the retrieval of the task data for a basic task.
-	 */
-	public void testGetTaskData() {
-		fail();
-	}
-
-	/**
-	 * Test the update of the task data.
-	 */
-	public void testUpdateTaskData() {
-		fail();
-	}
-
-	/**
-	 * Test the post of the task data.
-	 */
-	public void testPostTaskData() {
-		fail();
-	}
-
-	/**
-	 * Test the use of semantic fields in the task data.
-	 */
-	public void testSemantic() {
-		fail();
-	}
-
-	/**
-	 * Test the use of the workflow in the task data.
-	 */
-	public void testWorkflow() {
-		fail();
-	}
-
-	/**
-	 * Test the fact that a closed artifact cannot be edited anymore, except for its status.
-	 */
-	public void testClosedArtifactNotEditable() {
-		fail();
-	}
-
-	/**
-	 * Test reopening and closing an artifact.
-	 */
-	public void testReopenClosedArtifact() {
-		fail();
 	}
 }
