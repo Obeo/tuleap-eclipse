@@ -49,7 +49,7 @@ import org.eclipse.ui.dialogs.PatternFilter;
  * task will be created.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public class TuleapTrackerPage extends WizardPage {
 

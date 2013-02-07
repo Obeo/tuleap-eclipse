@@ -25,7 +25,7 @@ import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v1.CodendiAPILocator;
  * Subclass of the locator to set the location of the call.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 @SuppressWarnings("all")
 public class TuleapSoapServiceLocator extends CodendiAPILocator {

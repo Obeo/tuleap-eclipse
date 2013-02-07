@@ -24,7 +24,7 @@ import org.eclipse.mylyn.internal.tuleap.core.util.TuleapUtil;
  * This class will test Tuleap artifacts.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public class TuleapArtifactTests extends TestCase {
 	/**

@@ -39,7 +39,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
  * The Tuleap task attachement handler will be in charge of manipulating the task attachments.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 

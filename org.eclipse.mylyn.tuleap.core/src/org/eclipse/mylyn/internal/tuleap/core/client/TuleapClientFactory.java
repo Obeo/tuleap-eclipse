@@ -18,7 +18,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * The Tuleap client factory is in charge of the creation of the client.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public final class TuleapClientFactory {
 

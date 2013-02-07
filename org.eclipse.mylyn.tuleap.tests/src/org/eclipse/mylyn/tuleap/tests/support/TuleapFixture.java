@@ -35,7 +35,7 @@ import org.eclipse.osgi.util.NLS;
  * The Tuleap fixture.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 // Mylyn test util
 @SuppressWarnings("restriction")

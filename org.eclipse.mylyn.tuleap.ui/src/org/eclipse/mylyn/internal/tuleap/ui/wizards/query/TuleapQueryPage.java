@@ -47,7 +47,7 @@ import org.eclipse.ui.PlatformUI;
  * The first page of the Tuleap query wizard.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public class TuleapQueryPage extends WizardPage {
 	/**

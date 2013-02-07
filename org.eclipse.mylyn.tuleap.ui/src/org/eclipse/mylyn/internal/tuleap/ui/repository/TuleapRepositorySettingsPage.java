@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Composite;
  * The wizard page displaying the settings of the Tuleap repository.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 // IRepositoryConstants
 @SuppressWarnings("restriction")
@@ -146,7 +146,7 @@ public class TuleapRepositorySettingsPage extends AbstractRepositorySettingsPage
 	 * The validator used to check the configuration of the repository.
 	 * 
 	 * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
-	 * @since 1.0
+	 * @since 0.7
 	 */
 	private class TuleapRepositoryValidator extends Validator {
 

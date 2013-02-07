@@ -27,7 +27,7 @@ import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.Artifact;
  * This class represents a Tuleap artifact obtained from the Tuleap tracker.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public class TuleapArtifact {
 

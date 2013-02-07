@@ -36,7 +36,7 @@ import org.eclipse.mylyn.tuleap.tests.support.TuleapFixture;
  * Utility parent class for all Mylyn Tuleap unit tests.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 // TasksUi plugin
 @SuppressWarnings("restriction")

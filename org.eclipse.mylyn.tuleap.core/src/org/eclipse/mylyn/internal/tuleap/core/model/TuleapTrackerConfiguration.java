@@ -19,7 +19,7 @@ import java.util.List;
  * configuration can dramatically evolve over time and it should be refreshed automatically or manually.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public class TuleapTrackerConfiguration implements Serializable {
 	/**

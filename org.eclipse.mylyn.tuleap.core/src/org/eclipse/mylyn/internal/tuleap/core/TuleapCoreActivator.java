@@ -24,7 +24,7 @@ import org.osgi.framework.BundleContext;
  * The activator in charge of managing the lifecycle of the bundle.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public class TuleapCoreActivator extends Plugin {
 

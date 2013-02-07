@@ -18,7 +18,7 @@ import java.util.ResourceBundle;
  * Utility class for internationalization.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public final class TuleapMylynTasksMessages {
 	/** Qualified path to the properties file in which to seek the keys. */

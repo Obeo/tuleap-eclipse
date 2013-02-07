@@ -17,7 +17,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
  * The Tuleap artifact link field.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public class TuleapArtifactLink extends AbstractTuleapField {
 

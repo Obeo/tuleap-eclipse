@@ -22,7 +22,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
  * The Tuleap client manager will create new clients for a given Mylyn tasks repository or find existing ones.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public class TuleapClientManager implements ITuleapClientManager, IRepositoryListener {
 

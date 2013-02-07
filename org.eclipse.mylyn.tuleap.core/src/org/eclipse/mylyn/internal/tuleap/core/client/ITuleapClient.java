@@ -22,7 +22,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
  * this interface represents a tuleap client.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public interface ITuleapClient {
 

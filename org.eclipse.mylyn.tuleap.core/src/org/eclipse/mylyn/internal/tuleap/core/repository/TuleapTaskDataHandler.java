@@ -67,7 +67,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskOperation;
  * This class is in charge of the publication and retrieval of the tasks data to and from the repository.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 

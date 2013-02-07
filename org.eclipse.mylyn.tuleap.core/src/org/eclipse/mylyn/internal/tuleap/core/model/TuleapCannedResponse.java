@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.tuleap.core.model;
  * The canned response.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public class TuleapCannedResponse {
 	/**

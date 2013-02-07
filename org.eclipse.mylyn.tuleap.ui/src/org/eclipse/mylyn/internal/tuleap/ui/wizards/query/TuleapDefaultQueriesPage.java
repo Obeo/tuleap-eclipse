@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Group;
  * The default queries page.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public class TuleapDefaultQueriesPage extends AbstractRepositoryQueryPage2 {
 

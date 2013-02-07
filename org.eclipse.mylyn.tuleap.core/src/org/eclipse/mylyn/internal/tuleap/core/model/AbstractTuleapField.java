@@ -17,7 +17,7 @@ import java.util.Map;
  * Tuleap fields represents date, textfield or combo box.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public abstract class AbstractTuleapField extends AbstractTuleapFormElement {
 

@@ -20,7 +20,7 @@ import org.eclipse.jface.viewers.Viewer;
  * entry in the tree viewer for each tracker.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public class TuleapTrackerContentProvider implements ITreeContentProvider {
 

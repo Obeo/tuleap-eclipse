@@ -25,7 +25,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskMapper;
  * The tests class for the Tuleap task data handler.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public class TuleapTaskDataHandlerTests extends TestCase {
 

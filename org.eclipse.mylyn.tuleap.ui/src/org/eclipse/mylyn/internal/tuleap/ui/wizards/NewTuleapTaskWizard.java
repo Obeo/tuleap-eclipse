@@ -21,7 +21,7 @@ import org.eclipse.ui.INewWizard;
  * The wizard used to customize the Tuleap tasks editor.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public class NewTuleapTaskWizard extends NewTaskWizard implements INewWizard {
 

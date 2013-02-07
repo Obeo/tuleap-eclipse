@@ -18,7 +18,7 @@ import java.util.List;
  * This class contains the details of the Tuleap workflow of a specific field.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public class TuleapWorkflow implements Serializable {
 	/**

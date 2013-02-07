@@ -24,7 +24,7 @@ import org.eclipse.mylyn.tuleap.tests.support.TuleapFixture;
  * The stand alone unit tests suite.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 // Test configuration
 @SuppressWarnings("restriction")

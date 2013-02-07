@@ -23,7 +23,7 @@ import org.eclipse.mylyn.tuleap.tests.ui.TuleapValidatorTests;
  * This class should be used to launch all Tuleap unit tests.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 // Test configuration
 @SuppressWarnings("restriction")

@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Text;
  * The elements used to store the query.
  * 
  * @author <a href="mailto:melanie.bats@obeo.fr">Melanie Bats</a>
- * @since 1.0
+ * @since 0.7
  */
 public class TuleapCustomQueryElement {
 

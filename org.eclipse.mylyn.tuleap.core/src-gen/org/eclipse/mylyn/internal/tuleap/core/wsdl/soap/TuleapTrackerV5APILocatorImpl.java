@@ -25,7 +25,7 @@ import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TuleapTrackerV5APILoc
  * This subclass of the TuleapTrackerV5APILocatorImpl is used to configure the Mylyn SOAP API.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 @SuppressWarnings("all")
 public class TuleapTrackerV5APILocatorImpl extends TuleapTrackerV5APILocator {

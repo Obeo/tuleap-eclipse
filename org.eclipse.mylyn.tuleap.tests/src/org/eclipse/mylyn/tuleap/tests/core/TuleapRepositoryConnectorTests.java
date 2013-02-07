@@ -18,7 +18,7 @@ import org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConnect
  * Tests for the {@link TuleapRepositoryConnector}.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public class TuleapRepositoryConnectorTests extends TestCase {
 

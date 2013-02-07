@@ -25,7 +25,7 @@ import org.eclipse.ui.forms.editor.IFormPage;
  * The editor page factory will instantiate the editor page for Tuleap related content.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public class TuleapTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 

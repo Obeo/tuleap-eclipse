@@ -30,7 +30,7 @@ import org.eclipse.mylyn.internal.tuleap.core.TuleapCoreActivator;
  * Utility class containing various simple static utility methods.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public final class TuleapUtil {
 	/**

@@ -16,7 +16,7 @@ import java.io.Serializable;
  * This class represents an item of a Tuleap (multi) select box field.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public class TuleapSelectBoxItem implements Serializable {
 	/**

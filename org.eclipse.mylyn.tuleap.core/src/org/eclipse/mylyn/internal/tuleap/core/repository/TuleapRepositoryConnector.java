@@ -56,7 +56,7 @@ import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
  * This class encapsulates common operation realized on the Tuleap repository.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public class TuleapRepositoryConnector extends AbstractRepositoryConnector implements ITuleapRepositoryConnector {
 

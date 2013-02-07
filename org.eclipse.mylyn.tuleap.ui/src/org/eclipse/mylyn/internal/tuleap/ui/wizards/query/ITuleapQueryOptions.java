@@ -18,7 +18,7 @@ import org.eclipse.mylyn.internal.tuleap.ui.util.TuleapMylynTasksUIMessages;
  * @noextend This class is not intended to be subclassed by clients.
  * @noinstantiate This class is not intended to be instantiated by clients.
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public interface ITuleapQueryOptions {
 	/**
@@ -27,7 +27,7 @@ public interface ITuleapQueryOptions {
 	 * @noextend This class is not intended to be subclassed by clients.
 	 * @noinstantiate This class is not intended to be instantiated by clients.
 	 * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
-	 * @since 1.0
+	 * @since 0.7
 	 */
 	public interface StringOptions {
 		/**

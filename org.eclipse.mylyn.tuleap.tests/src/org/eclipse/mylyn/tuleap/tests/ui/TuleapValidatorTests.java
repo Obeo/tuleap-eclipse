@@ -19,7 +19,7 @@ import org.eclipse.mylyn.tuleap.tests.AbstractTuleapTests;
  * This test class will be used to validate the settings of a task repository.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public class TuleapValidatorTests extends AbstractTuleapTests {
 

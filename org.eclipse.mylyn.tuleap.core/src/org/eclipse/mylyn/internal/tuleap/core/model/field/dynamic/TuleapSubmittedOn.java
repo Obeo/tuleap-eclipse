@@ -19,7 +19,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
  * The submitted on Tuleap dynamic field.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public class TuleapSubmittedOn extends AbstractTuleapDynamicField {
 

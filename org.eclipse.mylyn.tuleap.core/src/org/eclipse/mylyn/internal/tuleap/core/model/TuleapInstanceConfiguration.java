@@ -20,7 +20,7 @@ import java.util.Map;
  * This class will hold the configuration of a Tuleap instance.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public class TuleapInstanceConfiguration implements Serializable {
 

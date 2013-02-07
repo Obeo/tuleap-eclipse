@@ -20,7 +20,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
  * This class is used for collecting tasks, e.g. when performing queries on a repository.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
- * @since 1.0
+ * @since 0.7
  */
 public class TuleapTaskDataCollector extends TaskDataCollector {
 
