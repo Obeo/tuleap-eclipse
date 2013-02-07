@@ -1219,143 +1219,55 @@ public class TuleapSoapConnector {
 				&& trackerStructure.getSemantic().getTitle() != null
 				&& trackerField.getShort_name().equals(
 						trackerStructure.getSemantic().getTitle().getField_name())) {
-			// The title of the artifact
-
-			String value = artifact.getValue(TaskAttribute.SUMMARY);
-			if (value != null && value.length() > 0) {
-				FieldValue fieldValue = new FieldValue(value, new FieldValueFileInfo[] {});
-				artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField
-						.getLabel(), fieldValue);
-			}
+			// Title
+			artifactFieldValue = this.getArtifactTitle(trackerField, artifact);
 		} else if (trackerStructure.getSemantic() != null
 				&& trackerStructure.getSemantic().getStatus() != null
 				&& trackerField.getShort_name().equals(
 						trackerStructure.getSemantic().getStatus().getField_name())) {
-			// The status of the artifact
-			String value = artifact.getValue(TaskAttribute.STATUS);
-			if (value != null && value.length() > 0) {
-				FieldValue fieldValue = new FieldValue(value, new FieldValueFileInfo[] {});
-				artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField
-						.getLabel(), fieldValue);
-			}
+			// Status
+			artifactFieldValue = this.getArtifactStatus(trackerField, artifact);
 		} else if (trackerStructure.getSemantic() != null
 				&& trackerStructure.getSemantic().getContributor() != null
 				&& trackerField.getShort_name().equals(
 						trackerStructure.getSemantic().getContributor().getField_name())) {
-			// The contributor of the artifact
-			List<String> values = artifact.getValues(TaskAttribute.USER_ASSIGNED);
-			String composedValue = ITuleapConstants.SELECT_BOX_NONE_VALUE;
-			for (int i = 0; i < values.size(); i++) {
-				String value = values.get(i);
-
-				int startIndex = value.indexOf('(');
-				int endIndex = value.indexOf(')');
-
-				String newValue = value;
-				if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
-					newValue = value.substring(startIndex + 1, endIndex);
-				}
-				composedValue = composedValue + newValue;
-				if (i < values.size() - 1) {
-					composedValue += ","; //$NON-NLS-1$
-				}
-			}
-			FieldValue fieldValue = new FieldValue(composedValue, new FieldValueFileInfo[] {});
-			artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(),
-					trackerField.getLabel(), fieldValue);
+			// Contributors
+			artifactFieldValue = this.getArtifactContributors(trackerField, artifact);
 		} else if (ITuleapConfigurationConstants.DATE.equals(trackerField.getType())) {
-			// Convert the date into a valid timestamp
-			String value = artifact.getValue(Integer.valueOf(trackerField.getField_id()).toString());
-			if (value != null && value.length() > 0) {
-				// FIXME Bug date creation / upload
-				int date = Long.valueOf(Long.valueOf(value).longValue() / 1000).intValue();
-				FieldValue fieldValue = new FieldValue(Integer.valueOf(date).toString(),
-						new FieldValueFileInfo[] {});
-				artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField
-						.getLabel(), fieldValue);
-			}
+			// Date
+			artifactFieldValue = this.getArtifactDate(trackerField, artifact);
 		} else if (ITuleapConfigurationConstants.SB.equals(trackerField.getType())
 				&& trackerField.getValues().length == 1) {
-			// One value -> potential dynamic binding
-
-			// Let's look if we have a dynamic binding, if that's the case we need to return the "username"
-			// We currently have, as a value the following content "Real Name (username)" or "".
-			String fieldId = Integer.valueOf(trackerField.getField_id()).toString();
-			if (artifact.getValues(fieldId) != null && artifact.getValues(fieldId).size() == 1) {
-				List<String> values = artifact.getValues(fieldId);
-				String value = values.get(0);
-				int startIndex = value.indexOf('(');
-				int endIndex = value.indexOf(')');
-
-				String newValue = value;
-				if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
-					newValue = value.substring(startIndex + 1, endIndex);
-				}
-				if (newValue != null && newValue.length() > 0) {
-					newValue = ITuleapConstants.SELECT_BOX_NONE_VALUE;
-				}
-				FieldValue fieldValue = new FieldValue(newValue, new FieldValueFileInfo[] {});
-				artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField
-						.getLabel(), fieldValue);
-
-			}
+			// One value -> dynamic binding
+			artifactFieldValue = this.getArtifactSelectBoxWithDynamicBinding(trackerField, artifact);
 		} else if (ITuleapConfigurationConstants.MSB.equals(trackerField.getType())
 				&& trackerField.getValues().length == 1) {
-			// One value -> potential dynamic binding
-
-			// Let's look if we have a dynamic binding, if that's the case we need to return the "username"
-			// We currently have, as a value the following content "Real Name (username)" or "".
-			String fieldId = Integer.valueOf(trackerField.getField_id()).toString();
-			if (artifact.getValues(fieldId) != null && !artifact.getValues(fieldId).isEmpty()) {
-				String composedValue = ITuleapConstants.SELECT_BOX_NONE_VALUE;
-
-				List<String> values = artifact.getValues(fieldId);
-				for (int i = 0; i < values.size(); i++) {
-					String value = values.get(i);
-
-					int startIndex = value.indexOf('(');
-					int endIndex = value.indexOf(')');
-
-					String newValue = value;
-					if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
-						newValue = value.substring(startIndex + 1, endIndex);
-					}
-					composedValue = composedValue + newValue;
-					if (i < values.size() - 1) {
-						composedValue += ","; //$NON-NLS-1$
-					}
-				}
-				FieldValue fieldValue = new FieldValue(composedValue, new FieldValueFileInfo[] {});
-				artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField
-						.getLabel(), fieldValue);
-			}
+			// One value -> dynamic binding
+			artifactFieldValue = this.getArtifactMultiSelectBoxWithDynamicBinding(trackerField, artifact);
 		} else if (this.shouldConsider(trackerField.getType())) {
 			// Any other value
 			String fieldId = Integer.valueOf(trackerField.getField_id()).toString();
 			boolean hasKey = artifact.getKeys().contains(fieldId);
-			String value = ""; //$NON-NLS-1$
-			if (artifact.getValues(fieldId) != null && !artifact.getValues(fieldId).isEmpty()) {
-				for (int i = 0; i < artifact.getValues(fieldId).size(); i++) {
-					value += artifact.getValues(fieldId).get(i);
-					if (i < artifact.getValues(fieldId).size() - 1) {
-						value += ","; //$NON-NLS-1$
-					}
-				}
-			} else {
-				value = artifact.getValue(fieldId);
-			}
+			List<String> values = artifact.getValues(fieldId);
+			String composedValue = this.sanitizeMultipleValues(values);
 
-			if ((ITuleapConfigurationConstants.SB.equals(trackerField.getType())
-					|| ITuleapConfigurationConstants.MSB.equals(trackerField.getType()) || ITuleapConfigurationConstants.CB
-						.equals(trackerField.getType()))
-					&& (value == null || "".equals(value))) { //$NON-NLS-1$
-				value = ITuleapConstants.SELECT_BOX_NONE_VALUE;
+			// If we have a multi select box, a select box or a checkbox, the default value needs to be
+			// converted
+			boolean shouldConvertDefaultValue = false;
+			shouldConvertDefaultValue = shouldConvertDefaultValue
+					|| ITuleapConfigurationConstants.SB.equals(trackerField.getType());
+			shouldConvertDefaultValue = shouldConvertDefaultValue
+					|| ITuleapConfigurationConstants.MSB.equals(trackerField.getType());
+			shouldConvertDefaultValue = shouldConvertDefaultValue
+					|| ITuleapConfigurationConstants.CB.equals(trackerField.getType());
+			if (shouldConvertDefaultValue && (composedValue == null || "".equals(composedValue))) { //$NON-NLS-1$
+				composedValue = ITuleapConstants.SELECT_BOX_NONE_VALUE;
 			}
 
 			if (Arrays.asList(trackerField.getPermissions()).contains(permission) && hasKey
-					&& canSubmitValue(trackerField.getType(), value)) {
-				if (value != null && value.length() > 0) {
-					FieldValue fieldValue = new FieldValue(value, new FieldValueFileInfo[] {});
+					&& canSubmitValue(trackerField.getType(), composedValue)) {
+				if (composedValue != null && composedValue.length() > 0) {
+					FieldValue fieldValue = new FieldValue(composedValue, new FieldValueFileInfo[] {});
 					artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField
 							.getLabel(), fieldValue);
 				}
@@ -1363,6 +1275,170 @@ public class TuleapSoapConnector {
 		}
 
 		return artifactFieldValue;
+	}
+
+	/**
+	 * Returns the artifact field value matching the title of the artifact.
+	 * 
+	 * @param trackerField
+	 *            The tracker field
+	 * @param artifact
+	 *            The Tuleap artifact
+	 * @return The artifact field value matching the title of the artifact
+	 */
+	private ArtifactFieldValue getArtifactTitle(TrackerField trackerField, TuleapArtifact artifact) {
+		// The title of the artifact
+		ArtifactFieldValue artifactFieldValue = null;
+		String value = artifact.getValue(TaskAttribute.SUMMARY);
+		if (value != null && value.length() > 0) {
+			FieldValue fieldValue = new FieldValue(value, new FieldValueFileInfo[] {});
+			artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(),
+					trackerField.getLabel(), fieldValue);
+		}
+		return artifactFieldValue;
+	}
+
+	/**
+	 * Returns the artifact field value matching the status of the artifact.
+	 * 
+	 * @param trackerField
+	 *            The tracker field
+	 * @param artifact
+	 *            The Tuleap artifact
+	 * @return The artifact field value matching the status of the artifact
+	 */
+	private ArtifactFieldValue getArtifactStatus(TrackerField trackerField, TuleapArtifact artifact) {
+		// The status of the artifact
+		ArtifactFieldValue artifactFieldValue = null;
+		String value = artifact.getValue(TaskAttribute.STATUS);
+		if (value != null && value.length() > 0) {
+			FieldValue fieldValue = new FieldValue(value, new FieldValueFileInfo[] {});
+			artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(),
+					trackerField.getLabel(), fieldValue);
+		}
+		return artifactFieldValue;
+	}
+
+	/**
+	 * Returns the artifact field value matching the contributors of the artifact.
+	 * 
+	 * @param trackerField
+	 *            The tracker field
+	 * @param artifact
+	 *            The Tuleap artifact
+	 * @return The artifact field value matching the contributors of the artifact
+	 */
+	private ArtifactFieldValue getArtifactContributors(TrackerField trackerField, TuleapArtifact artifact) {
+		ArtifactFieldValue artifactFieldValue;
+		// The contributor of the artifact
+		List<String> values = artifact.getValues(TaskAttribute.USER_ASSIGNED);
+		String composedValue = this.sanitizeMultipleValues(values);
+		FieldValue fieldValue = new FieldValue(composedValue, new FieldValueFileInfo[] {});
+		artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField.getLabel(),
+				fieldValue);
+		return artifactFieldValue;
+	}
+
+	/**
+	 * Returns the artifact field value matching a date in the artifact.
+	 * 
+	 * @param trackerField
+	 *            The tracker field
+	 * @param artifact
+	 *            The Tuleap artifact
+	 * @return The artifact field value matching a date in the artifact
+	 */
+	private ArtifactFieldValue getArtifactDate(TrackerField trackerField, TuleapArtifact artifact) {
+		ArtifactFieldValue artifactFieldValue = null;
+		// Convert the date into a valid timestamp
+		String value = artifact.getValue(Integer.valueOf(trackerField.getField_id()).toString());
+		if (value != null && value.length() > 0) {
+			// FIXME Bug date creation / upload
+			int date = Long.valueOf(Long.valueOf(value).longValue() / 1000).intValue();
+			FieldValue fieldValue = new FieldValue(Integer.valueOf(date).toString(),
+					new FieldValueFileInfo[] {});
+			artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(),
+					trackerField.getLabel(), fieldValue);
+		}
+		return artifactFieldValue;
+	}
+
+	/**
+	 * Returns the artifact field value matching a select box of the artifact.
+	 * 
+	 * @param trackerField
+	 *            The tracker field
+	 * @param artifact
+	 *            The Tuleap artifact
+	 * @return The artifact field value matching a select box of the artifact
+	 */
+	private ArtifactFieldValue getArtifactSelectBoxWithDynamicBinding(TrackerField trackerField,
+			TuleapArtifact artifact) {
+		// Let's look if we have a dynamic binding, if that's the case we need to return the "username"
+		// We currently have, as a value the following content "Real Name (username)" or "".
+		ArtifactFieldValue artifactFieldValue = null;
+		String fieldId = Integer.valueOf(trackerField.getField_id()).toString();
+		if (artifact.getValues(fieldId) != null && artifact.getValues(fieldId).size() == 1) {
+			List<String> values = artifact.getValues(fieldId);
+			String composedValue = this.sanitizeMultipleValues(values);
+			FieldValue fieldValue = new FieldValue(composedValue, new FieldValueFileInfo[] {});
+			artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(),
+					trackerField.getLabel(), fieldValue);
+
+		}
+		return artifactFieldValue;
+	}
+
+	/**
+	 * Returns the artifact field value matching a multi select box with a dynamic binding in the artifact.
+	 * 
+	 * @param trackerField
+	 *            The tracker field
+	 * @param artifact
+	 *            The Tuleap artifact
+	 * @return The artifact field value matching a multi select box with a dynamic binding in the artifact
+	 */
+	private ArtifactFieldValue getArtifactMultiSelectBoxWithDynamicBinding(TrackerField trackerField,
+			TuleapArtifact artifact) {
+		ArtifactFieldValue artifactFieldValue = null;
+		// Let's look if we have a dynamic binding, if that's the case we need to return the "username"
+		// We currently have, as a value the following content "Real Name (username)" or "".
+		String fieldId = Integer.valueOf(trackerField.getField_id()).toString();
+		if (artifact.getValues(fieldId) != null && !artifact.getValues(fieldId).isEmpty()) {
+			List<String> values = artifact.getValues(fieldId);
+			String composedValue = this.sanitizeMultipleValues(values);
+			FieldValue fieldValue = new FieldValue(composedValue, new FieldValueFileInfo[] {});
+			artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(),
+					trackerField.getLabel(), fieldValue);
+		}
+		return artifactFieldValue;
+	}
+
+	/**
+	 * Returns a sanitized version of the multiple values.
+	 * 
+	 * @param values
+	 *            The list of values
+	 * @return The sanitized version of the multiple svalues
+	 */
+	private String sanitizeMultipleValues(List<String> values) {
+		String composedValue = ITuleapConstants.SELECT_BOX_NONE_VALUE;
+		for (int i = 0; i < values.size(); i++) {
+			String value = values.get(i);
+
+			int startIndex = value.indexOf('(');
+			int endIndex = value.indexOf(')');
+
+			String newValue = value;
+			if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
+				newValue = value.substring(startIndex + 1, endIndex);
+			}
+			composedValue = composedValue + newValue;
+			if (i < values.size() - 1) {
+				composedValue += ","; //$NON-NLS-1$
+			}
+		}
+		return composedValue;
 	}
 
 	/**
