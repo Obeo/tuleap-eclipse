@@ -13,8 +13,6 @@ package org.eclipse.mylyn.tuleap.tests.ui;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.tuleap.ui.repository.TuleapRepositorySettingsPage;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
@@ -31,11 +29,6 @@ public class TuleapRepositorySettingsPageTests extends TestCase {
 	private MyTuleapRepositorySettingsPage page;
 
 	/**
-	 * Wizard.
-	 */
-	private WizardDialog dialog;
-
-	/**
 	 * Tuleap repository settings page test.
 	 */
 	public TuleapRepositorySettingsPageTests() {
@@ -43,27 +36,7 @@ public class TuleapRepositorySettingsPageTests extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		super.setUp();
-
 		page = new MyTuleapRepositorySettingsPage(null);
-
-		// stub wizard and dialog
-		Wizard wizard = new Wizard() {
-			@Override
-			public boolean performFinish() {
-				return true;
-			}
-		};
-		wizard.addPage(page);
-		dialog = new WizardDialog(null, wizard);
-		dialog.create();
-	}
-
-	@Override
-	protected void tearDown() throws Exception {
-		if (dialog != null) {
-			dialog.close();
-		}
 	}
 
 	/**
