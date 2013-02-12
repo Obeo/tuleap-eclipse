@@ -813,7 +813,8 @@ public class TuleapSoapConnector {
 								}
 							}
 							found = true;
-						} else {
+						} else if (!ITuleapConfigurationConstants.BURNDOWN.equals(trackerField.getType())) {
+							// We can't display the burndown chart
 							String value = artifactFieldValue.getField_value().getValue();
 							if (value != null) {
 								tuleapArtifact.putValue(artifactFieldValue.getField_name(), value);
