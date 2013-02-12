@@ -148,8 +148,11 @@ public class TuleapClient implements ITuleapClient {
 		TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(this.location);
 		int trackerId = TuleapUtil.getTrackerIdFromTaskDataId(taskId);
 		int artifactId = TuleapUtil.getArtifactIdFromTaskDataId(taskId);
-		TuleapArtifact tuleapArtifact = tuleapSoapConnector.getArtifact(trackerId, artifactId, monitor);
-		return tuleapArtifact;
+		if (trackerId != -1 && artifactId != -1) {
+			TuleapArtifact tuleapArtifact = tuleapSoapConnector.getArtifact(trackerId, artifactId, monitor);
+			return tuleapArtifact;
+		}
+		return null;
 	}
 
 	/**
