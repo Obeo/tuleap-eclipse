@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -142,6 +143,30 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		for (TaskAttribute taskAttribute : attributes) {
 			if (taskAttribute.getId().startsWith(TaskAttribute.PREFIX_COMMENT)) {
 				// Ignore comments since we won't resubmit old comments
+			} else if (TaskAttribute.TYPE_TASK_DEPENDENCY.equals(taskAttribute.getMetaData().getType())) {
+				// We need to convert the list of task dependencies to use only the id of the task.
+				for (String value : taskAttribute.getValues()) {
+					/*
+					 * /!\HACKISH/!\ We may have, as the id of the task, an identifier (ie: 917) or a complex
+					 * identifier (ie: MyRepository:MyProject[116] #917 - My Task Name). We will try to parse
+					 * the value as an integer, if it fails, then we know that we have a complex identifier,
+					 * in that case, we will parse the identifier from this complex identifier and use it.
+					 */
+					StringTokenizer stringTokenizer = new StringTokenizer(value, ","); //$NON-NLS-1$
+					while (stringTokenizer.hasMoreTokens()) {
+						String nextToken = stringTokenizer.nextToken().trim();
+						try {
+							Integer.valueOf(nextToken);
+
+							// No exception raised -> we have an integer
+							artifact.putValue(taskAttribute.getId(), nextToken);
+						} catch (NumberFormatException e) {
+							// We have a complex URL, that's what we are looking for! Let's convert it
+							int artifactId = TuleapUtil.getArtifactIdFromTaskDataId(nextToken);
+							artifact.putValue(taskAttribute.getId(), Integer.valueOf(artifactId).toString());
+						}
+					}
+				}
 			} else if (!TuleapAttributeMapper.isInternalAttribute(taskAttribute)) {
 				// Ignore Tuleap internal attributes
 				if (taskAttribute.getValues().size() > 1) {
@@ -633,10 +658,12 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 		tuleapClient.updateAttributes(monitor, false);
 		TuleapArtifact tuleapArtifact = tuleapClient.getArtifact(taskId, monitor);
-		TaskData taskData = this.createTaskDataFromArtifact(tuleapClient, taskRepository, tuleapArtifact,
-				monitor);
-
-		return taskData;
+		if (tuleapArtifact != null) {
+			TaskData taskData = this.createTaskDataFromArtifact(tuleapClient, taskRepository, tuleapArtifact,
+					monitor);
+			return taskData;
+		}
+		return null;
 	}
 
 	/**
@@ -671,6 +698,17 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		TaskMapper taskMapper = new TaskMapper(taskData);
 		taskMapper.setCreationDate(tuleapArtifact.getCreationDate());
 		taskMapper.setModificationDate(tuleapArtifact.getLastModificationDate());
+
+		// URL
+		if (this.connector instanceof AbstractRepositoryConnector) {
+			AbstractRepositoryConnector abstractRepositoryConnector = (AbstractRepositoryConnector)this.connector;
+			String taskUrl = abstractRepositoryConnector.getTaskUrl(taskRepository.getRepositoryUrl(),
+					Integer.valueOf(tuleapArtifact.getId()).toString());
+			taskMapper.setTaskUrl(taskUrl);
+		}
+
+		// Task key
+		taskMapper.setTaskKey(Integer.valueOf(tuleapArtifact.getId()).toString());
 
 		// Comments
 		taskData = this.populateComments(tuleapArtifact, taskData);
