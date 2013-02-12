@@ -234,11 +234,28 @@ public final class TuleapUtil {
 	 *            The id of the tracker
 	 * @return The string representing the id of the tracker
 	 */
-	public static String getTrackerId(String trackerName, int id) {
-		String trackerId = trackerName;
-		trackerId = trackerId + ITuleapConstants.TRACKER_ID_START_DELIMITER + Integer.valueOf(id).intValue()
+	public static String getTuleapTrackerId(String trackerName, int id) {
+		return trackerName + ITuleapConstants.TRACKER_ID_START_DELIMITER + Integer.valueOf(id).intValue()
 				+ ITuleapConstants.TRACKER_ID_END_DELIMITER;
-		return trackerId;
+	}
+
+	/**
+	 * Get the tracker id.
+	 * 
+	 * @param tuleapTrackerId
+	 *            Name of the tracker i.e "MyTracker [42]". The identifier will be defined between '[' and
+	 *            ']'.
+	 * @return Tracker identifier
+	 */
+	public static int getTrackerId(String tuleapTrackerId) {
+		int startIndex = tuleapTrackerId.indexOf(ITuleapConstants.TRACKER_ID_START_DELIMITER);
+		int endIndex = tuleapTrackerId.indexOf(ITuleapConstants.TRACKER_ID_END_DELIMITER);
+
+		if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
+			String trackerIdStr = tuleapTrackerId.substring(startIndex + 1, endIndex);
+			return Integer.valueOf(trackerIdStr).intValue();
+		}
+		return -1;
 	}
 
 	/**

@@ -1087,7 +1087,7 @@ public class TuleapSoapConnector {
 					break;
 				}
 			}
-			String trackerId = TuleapUtil.getTrackerId(trackerName, artifact.getTrackerId());
+			String trackerId = TuleapUtil.getTuleapTrackerId(trackerName, artifact.getTrackerId());
 			taskDataId = TuleapUtil.getTaskDataId(projectName, trackerId, artifactId);
 
 			monitor.worked(fifty);

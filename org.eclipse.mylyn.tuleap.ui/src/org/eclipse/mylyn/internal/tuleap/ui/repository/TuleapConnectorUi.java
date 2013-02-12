@@ -140,8 +140,14 @@ public class TuleapConnectorUi extends AbstractRepositoryConnectorUi {
 		wizard.setNeedsProgressMonitor(true);
 
 		if (queryToEdit != null) {
-			// edit an existing query
-			wizard.addPage(new TuleapCustomQueryPage(taskRepository, queryToEdit));
+			String queryKind = queryToEdit.getAttribute(ITuleapConstants.QUERY_KIND);
+			if (ITuleapConstants.QUERY_KIND_CUSTOM.equals(queryKind)) {
+				// edit an existing custom query
+				wizard.addPage(new TuleapCustomQueryPage(taskRepository, queryToEdit));
+			} else {
+				// edit an exiting default query
+				wizard.addPage(new TuleapQueryPage(taskRepository).getDefaultQueriesPage(queryToEdit));
+			}
 		} else {
 			// new query
 			wizard.addPage(new TuleapQueryPage(taskRepository));

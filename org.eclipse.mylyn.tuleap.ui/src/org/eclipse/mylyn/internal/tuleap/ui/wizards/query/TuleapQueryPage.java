@@ -25,10 +25,13 @@ import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapTrackerReport;
 import org.eclipse.mylyn.internal.tuleap.core.net.TuleapSoapConnector;
 import org.eclipse.mylyn.internal.tuleap.core.repository.ITuleapRepositoryConnector;
+import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
+import org.eclipse.mylyn.internal.tuleap.core.util.TuleapUtil;
 import org.eclipse.mylyn.internal.tuleap.ui.TuleapTasksUIPlugin;
 import org.eclipse.mylyn.internal.tuleap.ui.util.ITuleapUIConstants;
 import org.eclipse.mylyn.internal.tuleap.ui.util.TuleapMylynTasksUIMessages;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -171,40 +174,71 @@ public class TuleapQueryPage extends WizardPage {
 	@Override
 	public IWizardPage getNextPage() {
 		if (this.defaultQueriesButton.getSelection()) {
-			final String text = projectSelectionCombo.getText();
-			final List<TuleapTrackerReport> reports = new ArrayList<TuleapTrackerReport>();
-			IRunnableWithProgress runnable = new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException,
-						InterruptedException {
-					// to stuff that will returns the tracker reports.
-					int startIndex = text.indexOf('[');
-					int endIndex = text.indexOf(']');
-					if (startIndex != -1 && endIndex != -1 && endIndex > startIndex) {
-						String trackerIdString = text.substring(startIndex + 1, endIndex);
-						int trackerId = Integer.valueOf(trackerIdString).intValue();
-
-						AbstractWebLocation location = new TaskRepositoryLocationFactory()
-								.createWebLocation(repository);
-						TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(location);
-						reports.addAll(tuleapSoapConnector.getReports(trackerId, monitor));
-					}
-				}
-			};
-			try {
-				this.getContainer().run(true, false, runnable);
-			} catch (InvocationTargetException e) {
-				TuleapTasksUIPlugin.log(e, true);
-			} catch (InterruptedException e) {
-				TuleapTasksUIPlugin.log(e, true);
-			}
-			this.defaultQueriesPage = new TuleapDefaultQueriesPage(repository, projectSelectionCombo
-					.getText(), reports);
-			this.defaultQueriesPage.setWizard(this.getWizard());
-			return this.defaultQueriesPage;
+			int trackerId = TuleapUtil.getTrackerId(projectSelectionCombo.getText());
+			return getDefaultQueriesPage(trackerId, null);
 		}
 		this.customQueryPage = new TuleapCustomQueryPage(repository, null, projectSelectionCombo.getText());
 		this.customQueryPage.setWizard(this.getWizard());
 		return this.customQueryPage;
+	}
+
+	/**
+	 * Get the default queries page.
+	 * 
+	 * @param queryToEdit
+	 *            The query that is updated, null in case of new query
+	 * @return Page to select the default queries
+	 */
+	public IWizardPage getDefaultQueriesPage(IRepositoryQuery queryToEdit) {
+		String queryTrackerId = queryToEdit.getAttribute(ITuleapConstants.QUERY_TRACKER_ID);
+		int trackerId = Integer.valueOf(queryTrackerId).intValue();
+		return getDefaultQueriesPage(trackerId, queryToEdit);
+	}
+
+	/**
+	 * Get the default queries page.
+	 * 
+	 * @param trackerId
+	 *            Tracker identifier
+	 * @param queryToEdit
+	 *            The query that is updated, null in case of new query
+	 * @return Page to select the default queries
+	 */
+	private IWizardPage getDefaultQueriesPage(final int trackerId, IRepositoryQuery queryToEdit) {
+		final List<TuleapTrackerReport> reports = new ArrayList<TuleapTrackerReport>();
+		IRunnableWithProgress runnable = new IRunnableWithProgress() {
+			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+				// to stuff that will returns the tracker reports.
+				AbstractWebLocation location = new TaskRepositoryLocationFactory()
+						.createWebLocation(repository);
+				TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(location);
+				reports.addAll(tuleapSoapConnector.getReports(trackerId, monitor));
+			}
+		};
+		try {
+			if (this.getContainer() != null) {
+				// Case creating a new default query, it is the second page of the new query wizard, so the
+				// progress bar will be shown inside the wizard
+				this.getContainer().run(true, false, runnable);
+			} else {
+				// Case editing an existing default query, it is the first page of the editing query wizard,
+				// so show a progress bar
+				try {
+					PlatformUI.getWorkbench().getProgressService().run(true, false, runnable);
+				} catch (InvocationTargetException e) {
+					TuleapTasksUIPlugin.log(e, true);
+				} catch (InterruptedException e) {
+					TuleapTasksUIPlugin.log(e, true);
+				}
+			}
+		} catch (InvocationTargetException e) {
+			TuleapTasksUIPlugin.log(e, true);
+		} catch (InterruptedException e) {
+			TuleapTasksUIPlugin.log(e, true);
+		}
+		this.defaultQueriesPage = new TuleapDefaultQueriesPage(repository, trackerId, reports, queryToEdit);
+		this.defaultQueriesPage.setWizard(this.getWizard());
+		return this.defaultQueriesPage;
 	}
 
 	/**
