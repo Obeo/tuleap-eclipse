@@ -868,22 +868,28 @@ public class TuleapSoapConnector {
 				String[] attributes = this.getAttributes(entry.getValue());
 				CriteriaValueDate criteriaValueDate = null;
 				// First attribute is the value
-				String value = attributes[0];
-
-				// If it exists a second attribute it means that we have to do a query on date and have
-				// to get the operation
-				if (attributes.length == 2) {
-					String operation = attributes[1];
-					DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy"); //$NON-NLS-1$
-					try {
-						criteriaValueDate = new CriteriaValueDate(operation, Long.valueOf(
-								TuleapUtil.parseDate(dateFormat.parse(value))).intValue());
-					} catch (ParseException e) {
-						TuleapCoreActivator.log(e, true);
+				String values = attributes[0];
+				if (attributes.length > 1) {
+					// If it exists a second attribute it means that we have to do a query on date and have
+					// to get the operation
+					// Check if value is a date
+					if (values.matches("[0-9]*-[0-9]*-[0-9]*")) { //$NON-NLS-1$
+						String operation = attributes[1];
+						DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy"); //$NON-NLS-1$
+						try {
+							criteriaValueDate = new CriteriaValueDate(operation, Long.valueOf(
+									TuleapUtil.parseDate(dateFormat.parse(values))).intValue());
+						} catch (ParseException e) {
+							TuleapCoreActivator.log(e, true);
+						}
+					} else {
+						for (int i = 1; i < attributes.length; i++) {
+							values += ITuleapConstants.QUERY_ATTRIBUTES_SEPARATOR + attributes[i];
+						}
 					}
 				}
 
-				CriteriaValue attributeValue = new CriteriaValue(value, criteriaValueDate, null);
+				CriteriaValue attributeValue = new CriteriaValue(values, criteriaValueDate, null);
 				Criteria criteria = new Criteria(entry.getKey(), attributeValue);
 				criterias.add(criteria);
 			}
