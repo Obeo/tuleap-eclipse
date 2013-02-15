@@ -1260,16 +1260,7 @@ public class TuleapSoapConnector {
 
 			// If we have a multi select box, a select box or a checkbox, the default value needs to be
 			// converted
-			boolean shouldConvertDefaultValue = false;
-			shouldConvertDefaultValue = shouldConvertDefaultValue
-					|| ITuleapConfigurationConstants.SB.equals(trackerField.getType());
-			shouldConvertDefaultValue = shouldConvertDefaultValue
-					|| ITuleapConfigurationConstants.MSB.equals(trackerField.getType());
-			shouldConvertDefaultValue = shouldConvertDefaultValue
-					|| ITuleapConfigurationConstants.CB.equals(trackerField.getType());
-			if (shouldConvertDefaultValue && (composedValue == null || "".equals(composedValue))) { //$NON-NLS-1$
-				composedValue = ITuleapConstants.SELECT_BOX_NONE_VALUE;
-			}
+			composedValue = this.shouldConvertDefaultValue(trackerField.getType(), composedValue);
 
 			if (Arrays.asList(trackerField.getPermissions()).contains(permission) && hasKey
 					&& canSubmitValue(trackerField.getType(), composedValue)) {
@@ -1282,6 +1273,32 @@ public class TuleapSoapConnector {
 		}
 
 		return artifactFieldValue;
+	}
+
+	/**
+	 * Thie will convert the default value from "" to None for the needed fields.
+	 * 
+	 * @param trackerFieldType
+	 *            The type of the field
+	 * @param value
+	 *            The value to potentially convert
+	 * @return The converted (or not) value.
+	 */
+	private String shouldConvertDefaultValue(String trackerFieldType, String value) {
+		String composedValue = value;
+
+		boolean shouldConvertDefaultValue = false;
+		shouldConvertDefaultValue = shouldConvertDefaultValue
+				|| ITuleapConfigurationConstants.SB.equals(trackerFieldType);
+		shouldConvertDefaultValue = shouldConvertDefaultValue
+				|| ITuleapConfigurationConstants.MSB.equals(trackerFieldType);
+		shouldConvertDefaultValue = shouldConvertDefaultValue
+				|| ITuleapConfigurationConstants.CB.equals(trackerFieldType);
+		if (shouldConvertDefaultValue && (composedValue == null || "".equals(composedValue))) { //$NON-NLS-1$
+			composedValue = ITuleapConstants.SELECT_BOX_NONE_VALUE;
+		}
+
+		return composedValue;
 	}
 
 	/**
@@ -1340,6 +1357,7 @@ public class TuleapSoapConnector {
 		// The contributor of the artifact
 		List<String> values = artifact.getValues(TaskAttribute.USER_ASSIGNED);
 		String composedValue = this.sanitizeMultipleValues(values);
+		composedValue = this.shouldConvertDefaultValue(trackerField.getType(), composedValue);
 		FieldValue fieldValue = new FieldValue(composedValue, new FieldValueFileInfo[] {});
 		artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField.getLabel(),
 				fieldValue);
@@ -1388,6 +1406,7 @@ public class TuleapSoapConnector {
 		if (artifact.getValues(fieldId) != null && artifact.getValues(fieldId).size() == 1) {
 			List<String> values = artifact.getValues(fieldId);
 			String composedValue = this.sanitizeMultipleValues(values);
+			composedValue = this.shouldConvertDefaultValue(trackerField.getType(), composedValue);
 			FieldValue fieldValue = new FieldValue(composedValue, new FieldValueFileInfo[] {});
 			artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(),
 					trackerField.getLabel(), fieldValue);
@@ -1414,6 +1433,7 @@ public class TuleapSoapConnector {
 		if (artifact.getValues(fieldId) != null && !artifact.getValues(fieldId).isEmpty()) {
 			List<String> values = artifact.getValues(fieldId);
 			String composedValue = this.sanitizeMultipleValues(values);
+			composedValue = this.shouldConvertDefaultValue(trackerField.getType(), composedValue);
 			FieldValue fieldValue = new FieldValue(composedValue, new FieldValueFileInfo[] {});
 			artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(),
 					trackerField.getLabel(), fieldValue);
@@ -1429,7 +1449,11 @@ public class TuleapSoapConnector {
 	 * @return The sanitized version of the multiple svalues
 	 */
 	private String sanitizeMultipleValues(List<String> values) {
-		String composedValue = ITuleapConstants.SELECT_BOX_NONE_VALUE;
+		if (values == null) {
+			return null;
+		}
+
+		String composedValue = ""; //$NON-NLS-1$
 		for (int i = 0; i < values.size(); i++) {
 			String value = values.get(i);
 
@@ -1445,6 +1469,7 @@ public class TuleapSoapConnector {
 				composedValue += ","; //$NON-NLS-1$
 			}
 		}
+
 		return composedValue;
 	}
 
