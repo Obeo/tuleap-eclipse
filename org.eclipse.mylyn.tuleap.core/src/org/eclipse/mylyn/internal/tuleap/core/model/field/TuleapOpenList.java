@@ -53,7 +53,7 @@ public class TuleapOpenList extends AbstractTuleapField {
 	 */
 	@Override
 	public String getMetadataType() {
-		return TaskAttribute.TYPE_SINGLE_SELECT;
+		return TaskAttribute.TYPE_SHORT_RICH_TEXT;
 	}
 
 	/**
@@ -63,6 +63,6 @@ public class TuleapOpenList extends AbstractTuleapField {
 	 */
 	@Override
 	public Object getDefaultValue() {
-		return null;
+		return ""; //$NON-NLS-1$
 	}
 }

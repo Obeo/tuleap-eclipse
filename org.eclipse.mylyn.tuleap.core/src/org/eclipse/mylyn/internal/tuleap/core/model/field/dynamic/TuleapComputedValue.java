@@ -53,7 +53,7 @@ public class TuleapComputedValue extends AbstractTuleapDynamicField {
 	 */
 	@Override
 	public String getMetadataType() {
-		return TaskAttribute.TYPE_LONG_RICH_TEXT;
+		return TaskAttribute.TYPE_INTEGER;
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class TuleapComputedValue extends AbstractTuleapDynamicField {
 	 */
 	@Override
 	public Object getDefaultValue() {
-		return null;
+		return ""; //$NON-NLS-1$
 	}
 
 }

@@ -126,7 +126,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 *            The Mylyn task data
 	 * @return A Tuleap artifact representing the given Mylyn task data.
 	 */
-	private static TuleapArtifact getTuleapArtifact(TaskRepository repository, TaskData taskData) {
+	public static TuleapArtifact getTuleapArtifact(TaskRepository repository, TaskData taskData) {
 		// Create the artifact
 		TuleapArtifact artifact = null;
 		if (taskData.isNew()) {
