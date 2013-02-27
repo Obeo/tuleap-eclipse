@@ -136,9 +136,24 @@ public class TuleapSoapConnector {
 			.getString("TuleapSoapConnector.ValidateConnection"); //$NON-NLS-1$
 
 	/**
+	 * Default session hash.
+	 */
+	private static final String DEFAULT_SESSION_HASH = "dummy"; //$NON-NLS-1$
+
+	/**
 	 * The location of the tracker.
 	 */
 	private AbstractWebLocation trackerLocation;
+
+	/**
+	 * The common SOAP API.
+	 */
+	private CodendiAPIPortType codendiAPIPort;
+
+	/**
+	 * The SOAP entry point.
+	 */
+	private TuleapTrackerV5APIPortType tuleapTrackerV5APIPort;
 
 	/**
 	 * The constructor.
@@ -147,6 +162,73 @@ public class TuleapSoapConnector {
 	 *            The location of the tracker.
 	 */
 	public TuleapSoapConnector(AbstractWebLocation location) {
+		this.trackerLocation = location;
+		EngineConfiguration config = new FileProvider(getClass().getClassLoader().getResourceAsStream(
+				CONFIG_FILE));
+		TuleapSoapServiceLocator locator = new TuleapSoapServiceLocator(config, this.trackerLocation);
+		String soapv1url = trackerLocation.getUrl();
+		int index = soapv1url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
+		if (index != -1) {
+			soapv1url = soapv1url.substring(0, index);
+			soapv1url = soapv1url + ITuleapConstants.SOAP_V1_URL;
+		}
+
+		String soapv2url = trackerLocation.getUrl();
+		index = soapv2url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
+		if (index != -1) {
+			soapv2url = soapv2url.substring(0, index);
+			soapv2url = soapv2url + ITuleapConstants.SOAP_V2_URL;
+		}
+
+		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
+		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
+
+		String sessionHash = DEFAULT_SESSION_HASH;
+		try {
+			URL url = new URL(soapv1url);
+
+			codendiAPIPort = locator.getCodendiAPIPort(url);
+
+			Session session = codendiAPIPort.login(username, password);
+			sessionHash = session.getSession_hash();
+
+			config = new FileProvider(getClass().getClassLoader().getResourceAsStream(CONFIG_FILE));
+
+			TuleapTrackerV5APILocator tuleapLocator = new TuleapTrackerV5APILocatorImpl(config,
+					this.trackerLocation);
+			url = new URL(soapv2url);
+			tuleapTrackerV5APIPort = tuleapLocator.getTuleapTrackerV5APIPort(url);
+		} catch (MalformedURLException e) {
+			TuleapCoreActivator.log(e, true);
+		} catch (ServiceException e) {
+			TuleapCoreActivator.log(e, true);
+		} catch (RemoteException e) {
+			TuleapCoreActivator.log(e, true);
+		} finally {
+			if (!DEFAULT_SESSION_HASH.equals(sessionHash)) {
+				try {
+					codendiAPIPort.logout(sessionHash);
+				} catch (RemoteException e) {
+					TuleapCoreActivator.log(e, true);
+				}
+			}
+		}
+	}
+
+	/**
+	 * The constructor.
+	 * 
+	 * @param location
+	 *            The location of the tracker.
+	 * @param codendiAPIPortType
+	 *            The Tuleap Codendi API.
+	 * @param tuleapTrackerAPI
+	 *            The Tuleap tracker API.
+	 */
+	public TuleapSoapConnector(AbstractWebLocation location, CodendiAPIPortType codendiAPIPortType,
+			TuleapTrackerV5APIPortType tuleapTrackerAPI) {
+		this.codendiAPIPort = codendiAPIPortType;
+		this.tuleapTrackerV5APIPort = tuleapTrackerAPI;
 		this.trackerLocation = location;
 	}
 
@@ -165,40 +247,27 @@ public class TuleapSoapConnector {
 		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
 
 		this.ensureProxySettingsRegistration();
-
-		String soapv1url = trackerLocation.getUrl();
-		int index = soapv1url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
-		if (index != -1) {
-			soapv1url = soapv1url.substring(0, index);
-			soapv1url = soapv1url + ITuleapConstants.SOAP_V1_URL;
-		}
-
+		String sessionHash = DEFAULT_SESSION_HASH;
 		try {
-			EngineConfiguration config = new FileProvider(getClass().getClassLoader().getResourceAsStream(
-					CONFIG_FILE));
-			TuleapSoapServiceLocator locator = new TuleapSoapServiceLocator(config, this.trackerLocation);
-
 			final int fifty = 50;
 			monitor.worked(fifty);
 			monitor.subTask(LOGIN_MESSAGE);
 
-			URL url = new URL(soapv1url);
-			CodendiAPIPortType codendiAPIPort = locator.getCodendiAPIPort(url);
 			Session session = codendiAPIPort.login(username, password);
-			String sessionHash = session.getSession_hash();
+			sessionHash = session.getSession_hash();
 
 			monitor.worked(fifty);
-
-			codendiAPIPort.logout(sessionHash);
-		} catch (MalformedURLException e) {
-			TuleapCoreActivator.log(e, true);
-			status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
-		} catch (ServiceException e) {
-			TuleapCoreActivator.log(e, true);
-			status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
 		} catch (RemoteException e) {
 			TuleapCoreActivator.log(e, true);
 			status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
+		} finally {
+			if (!DEFAULT_SESSION_HASH.equals(sessionHash)) {
+				try {
+					codendiAPIPort.logout(sessionHash);
+				} catch (RemoteException e) {
+					TuleapCoreActivator.log(e, true);
+				}
+			}
 		}
 
 		return status;
@@ -243,42 +312,16 @@ public class TuleapSoapConnector {
 		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
 		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
 
-		String soapv1url = trackerLocation.getUrl();
-		int index = soapv1url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
-		if (index != -1) {
-			soapv1url = soapv1url.substring(0, index);
-			soapv1url = soapv1url + ITuleapConstants.SOAP_V1_URL;
-		}
-
-		String soapv2url = trackerLocation.getUrl();
-		index = soapv2url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
-		if (index != -1) {
-			soapv2url = soapv2url.substring(0, index);
-			soapv2url = soapv2url + ITuleapConstants.SOAP_V2_URL;
-		}
-
+		String sessionHash = DEFAULT_SESSION_HASH;
 		try {
-			EngineConfiguration config = new FileProvider(getClass().getClassLoader().getResourceAsStream(
-					CONFIG_FILE));
-			TuleapSoapServiceLocator locator = new TuleapSoapServiceLocator(config, this.trackerLocation);
-
 			monitor.worked(1);
 			monitor.subTask(LOGIN_MESSAGE);
 
-			URL url = new URL(soapv1url);
-			CodendiAPIPortType codendiAPIPort = locator.getCodendiAPIPort(url);
 			Session session = codendiAPIPort.login(username, password);
-			String sessionHash = session.getSession_hash();
+			sessionHash = session.getSession_hash();
 			monitor.worked(5);
 
 			int groupId = TuleapUtil.getGroupId(this.trackerLocation.getUrl());
-
-			config = new FileProvider(getClass().getClassLoader().getResourceAsStream(CONFIG_FILE));
-			TuleapTrackerV5APILocator tuleapLocator = new TuleapTrackerV5APILocatorImpl(config,
-					this.trackerLocation);
-			url = new URL(soapv2url);
-
-			TuleapTrackerV5APIPortType tuleapTrackerV5APIPort = tuleapLocator.getTuleapTrackerV5APIPort(url);
 
 			monitor.worked(1);
 			monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.RetrievingTrackersList")); //$NON-NLS-1$
@@ -289,18 +332,20 @@ public class TuleapSoapConnector {
 				monitor.setTaskName(TuleapMylynTasksMessages.getString(
 						"TuleapSoapConnector.AnalyzingTracker", tracker.getName())); //$NON-NLS-1$
 				TuleapTrackerConfiguration tuleapTrackerConfiguration = this.getTuleapTrackerConfiguration(
-						codendiAPIPort, tuleapTrackerV5APIPort, sessionHash, tracker, monitor);
+						sessionHash, tracker, monitor);
 				tuleapInstanceConfiguration.addTracker(Integer.valueOf(tracker.getTracker_id()),
 						tuleapTrackerConfiguration);
 			}
-
-			codendiAPIPort.logout(sessionHash);
-		} catch (MalformedURLException e) {
-			TuleapCoreActivator.log(e, true);
-		} catch (ServiceException e) {
-			TuleapCoreActivator.log(e, true);
 		} catch (RemoteException e) {
 			TuleapCoreActivator.log(e, true);
+		} finally {
+			if (!DEFAULT_SESSION_HASH.equals(sessionHash)) {
+				try {
+					codendiAPIPort.logout(sessionHash);
+				} catch (RemoteException e) {
+					TuleapCoreActivator.log(e, true);
+				}
+			}
 		}
 		return tuleapInstanceConfiguration;
 	}
@@ -308,10 +353,6 @@ public class TuleapSoapConnector {
 	/**
 	 * Returns the configuration of the given tracker.
 	 * 
-	 * @param codendiAPIPort
-	 *            The common SOAP API
-	 * @param tuleapTrackerV5APIPort
-	 *            The SOAP entry point
 	 * @param sessionHash
 	 *            The hash of the current session
 	 * @param tracker
@@ -320,8 +361,7 @@ public class TuleapSoapConnector {
 	 *            The progress monitor
 	 * @return The configuration of the Tuleap tracker.
 	 */
-	private TuleapTrackerConfiguration getTuleapTrackerConfiguration(CodendiAPIPortType codendiAPIPort,
-			TuleapTrackerV5APIPortType tuleapTrackerV5APIPort, String sessionHash, Tracker tracker,
+	private TuleapTrackerConfiguration getTuleapTrackerConfiguration(String sessionHash, Tracker tracker,
 			IProgressMonitor monitor) {
 		String trackerURL = this.trackerLocation.getUrl() + ITuleapConstants.REPOSITORY_TRACKER_URL_SEPARATOR
 				+ Integer.valueOf(tracker.getTracker_id()).toString();
@@ -344,8 +384,8 @@ public class TuleapSoapConnector {
 			TrackerStructure trackerStructure = tuleapTrackerV5APIPort.getTrackerStructure(sessionHash,
 					tracker.getGroup_id(), tracker.getTracker_id());
 			for (TrackerField trackerField : trackerFields) {
-				AbstractTuleapField tuleapField = getTuleapTrackerField(codendiAPIPort,
-						tracker.getGroup_id(), trackerStructure, trackerField, sessionHash, monitor);
+				AbstractTuleapField tuleapField = getTuleapTrackerField(tracker.getGroup_id(),
+						trackerStructure, trackerField, sessionHash, monitor);
 				monitor.worked(1);
 				if (tuleapField != null) {
 					tuleapField.setName(trackerField.getShort_name());
@@ -364,8 +404,6 @@ public class TuleapSoapConnector {
 	/**
 	 * Returns the tuleap tracker field for the given tracker field.
 	 * 
-	 * @param codendiAPIPort
-	 *            The common SOAP API
 	 * @param groupId
 	 *            The group ID.
 	 * @param trackerStructure
@@ -378,9 +416,8 @@ public class TuleapSoapConnector {
 	 *            The progress monitor
 	 * @return The tuleap tracker field
 	 */
-	private AbstractTuleapField getTuleapTrackerField(CodendiAPIPortType codendiAPIPort, int groupId,
-			TrackerStructure trackerStructure, TrackerField trackerField, String sessionHash,
-			IProgressMonitor monitor) {
+	private AbstractTuleapField getTuleapTrackerField(int groupId, TrackerStructure trackerStructure,
+			TrackerField trackerField, String sessionHash, IProgressMonitor monitor) {
 		AbstractTuleapField tuleapField = null;
 
 		monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.AnalyzeTuleapTrackerField", //$NON-NLS-1$
@@ -408,8 +445,7 @@ public class TuleapSoapConnector {
 			tuleapField = this.getTuleapSelectBox(trackerStructure, trackerField);
 		} else if (ITuleapConfigurationConstants.MSB.equals(type)
 				|| ITuleapConfigurationConstants.CB.equals(type)) {
-			tuleapField = this.getTuleapMultiSelectBox(codendiAPIPort, sessionHash, groupId,
-					trackerStructure, trackerField);
+			tuleapField = this.getTuleapMultiSelectBox(sessionHash, groupId, trackerStructure, trackerField);
 		} else if (ITuleapConfigurationConstants.DATE.equals(type)) {
 			tuleapField = new TuleapDate(fieldIdentifier);
 		} else if (ITuleapConfigurationConstants.FILE.equals(type)) {
@@ -447,8 +483,6 @@ public class TuleapSoapConnector {
 	/**
 	 * Creates a Tuleap Multi select box from the description of the tracker field.
 	 * 
-	 * @param codendiAPIPort
-	 *            The SOAP API
 	 * @param sessionHash
 	 *            The session hash
 	 * @param groupId
@@ -459,8 +493,8 @@ public class TuleapSoapConnector {
 	 *            The description of the tracker field
 	 * @return The newly created Tuleap Multi select box
 	 */
-	private TuleapMultiSelectBox getTuleapMultiSelectBox(CodendiAPIPortType codendiAPIPort,
-			String sessionHash, int groupId, TrackerStructure trackerStructure, TrackerField trackerField) {
+	private TuleapMultiSelectBox getTuleapMultiSelectBox(String sessionHash, int groupId,
+			TrackerStructure trackerStructure, TrackerField trackerField) {
 		TuleapMultiSelectBox tuleapField = new TuleapMultiSelectBox(trackerField.getField_id());
 		// Is semantic contributor?
 		TrackerSemantic trackerSemantic = trackerStructure.getSemantic();
@@ -487,13 +521,13 @@ public class TuleapSoapConnector {
 					if ("project_members".equals(uGroupName) //$NON-NLS-1$
 							&& (trackerFieldBindValue.getBind_value_label().contains(uGroupName) || trackerFieldBindValue
 									.getBind_value_label().contains(groupMembers))) {
-						addUsersToMultiSelectBox(codendiAPIPort, sessionHash, tuleapField, ugroup);
+						addUsersToMultiSelectBox(sessionHash, tuleapField, ugroup);
 					} else if ("project_admins".equals(uGroupName) //$NON-NLS-1$
 							&& (trackerFieldBindValue.getBind_value_label().contains(uGroupName) || trackerFieldBindValue
 									.getBind_value_label().contains(groupAdmin))) {
-						addUsersToMultiSelectBox(codendiAPIPort, sessionHash, tuleapField, ugroup);
+						addUsersToMultiSelectBox(sessionHash, tuleapField, ugroup);
 					} else if (trackerFieldBindValue.getBind_value_label().contains(uGroupName)) {
-						addUsersToMultiSelectBox(codendiAPIPort, sessionHash, tuleapField, ugroup);
+						addUsersToMultiSelectBox(sessionHash, tuleapField, ugroup);
 					}
 				}
 			} catch (RemoteException e) {
@@ -518,8 +552,6 @@ public class TuleapSoapConnector {
 	/**
 	 * Iterates on the content of the ugroup to add all the elements as items in the multi select box.
 	 * 
-	 * @param codendiAPIPort
-	 *            The API used to retrieve the information
 	 * @param sessionHash
 	 *            The session hash
 	 * @param tuleapSelectBox
@@ -529,8 +561,8 @@ public class TuleapSoapConnector {
 	 * @throws RemoteException
 	 *             In case of problems with the connection
 	 */
-	private void addUsersToMultiSelectBox(CodendiAPIPortType codendiAPIPort, String sessionHash,
-			TuleapMultiSelectBox tuleapSelectBox, Ugroup ugroup) throws RemoteException {
+	private void addUsersToMultiSelectBox(String sessionHash, TuleapMultiSelectBox tuleapSelectBox,
+			Ugroup ugroup) throws RemoteException {
 		UGroupMember[] members = ugroup.getMembers();
 		for (UGroupMember uGroupMember : members) {
 			int userId = uGroupMember.getUser_id();
@@ -626,45 +658,20 @@ public class TuleapSoapConnector {
 		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
 		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
 
-		String soapv1url = trackerLocation.getUrl();
-		int index = soapv1url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
-		if (index != -1) {
-			soapv1url = soapv1url.substring(0, index);
-			soapv1url = soapv1url + ITuleapConstants.SOAP_V1_URL;
-		}
-
-		String soapv2url = trackerLocation.getUrl();
-		index = soapv2url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
-		if (index != -1) {
-			soapv2url = soapv2url.substring(0, index);
-			soapv2url = soapv2url + ITuleapConstants.SOAP_V2_URL;
-		}
-
+		String sessionHash = DEFAULT_SESSION_HASH;
 		try {
-			EngineConfiguration config = new FileProvider(getClass().getClassLoader().getResourceAsStream(
-					CONFIG_FILE));
-			TuleapSoapServiceLocator locator = new TuleapSoapServiceLocator(config, this.trackerLocation);
-
 			final int fifty = 50;
 			monitor.worked(fifty);
 			monitor.subTask(LOGIN_MESSAGE);
 
-			URL url = new URL(soapv1url);
-			CodendiAPIPortType codendiAPIPort = locator.getCodendiAPIPort(url);
 			Session session = codendiAPIPort.login(username, password);
-			String sessionHash = session.getSession_hash();
+			sessionHash = session.getSession_hash();
 
 			monitor.worked(5);
 
 			int groupId = TuleapUtil.getGroupId(this.trackerLocation.getUrl());
 
-			config = new FileProvider(getClass().getClassLoader().getResourceAsStream(CONFIG_FILE));
-			TuleapTrackerV5APILocator tuleapLocator = new TuleapTrackerV5APILocatorImpl(config,
-					this.trackerLocation);
-			url = new URL(soapv2url);
-
 			monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.ExecutingQuery")); //$NON-NLS-1$
-			TuleapTrackerV5APIPortType tuleapTrackerV5APIPort = tuleapLocator.getTuleapTrackerV5APIPort(url);
 
 			String queryTrackerId = query.getAttribute(ITuleapConstants.QUERY_TRACKER_ID);
 			trackerId = Integer.valueOf(queryTrackerId).intValue();
@@ -715,7 +722,7 @@ public class TuleapSoapConnector {
 					TuleapArtifact tuleapArtifact = new TuleapArtifact(artifact, trackerName, projectName);
 
 					tuleapArtifact = this.populateArtifact(tuleapArtifact, trackerFields, artifact,
-							codendiAPIPort, tuleapTrackerV5APIPort, sessionHash, monitor);
+							sessionHash, monitor);
 
 					TaskData taskData = taskDataHandler.createTaskDataFromArtifact(tuleapClient, tuleapClient
 							.getTaskRepository(), tuleapArtifact, monitor);
@@ -731,14 +738,16 @@ public class TuleapSoapConnector {
 			}
 
 			monitor.worked(fifty);
-
-			codendiAPIPort.logout(sessionHash);
-		} catch (MalformedURLException e) {
-			TuleapCoreActivator.log(e, true);
-		} catch (ServiceException e) {
-			TuleapCoreActivator.log(e, true);
 		} catch (RemoteException e) {
 			TuleapCoreActivator.log(e, true);
+		} finally {
+			if (!DEFAULT_SESSION_HASH.equals(sessionHash)) {
+				try {
+					codendiAPIPort.logout(sessionHash);
+				} catch (RemoteException e) {
+					TuleapCoreActivator.log(e, true);
+				}
+			}
 		}
 
 		if (artifactQueryResult != null) {
@@ -757,10 +766,6 @@ public class TuleapSoapConnector {
 	 *            The fields to populate in the Tuleap artifact.
 	 * @param artifact
 	 *            The artifact downloaded containing the data.
-	 * @param codendiAPIPort
-	 *            The common SOAP API
-	 * @param tuleapTrackerV5APIPort
-	 *            The API of the tracker.
 	 * @param sessionHash
 	 *            The hash of the session.
 	 * @param monitor
@@ -768,8 +773,7 @@ public class TuleapSoapConnector {
 	 * @return The Tuleap artifact populated.
 	 */
 	private TuleapArtifact populateArtifact(TuleapArtifact tuleapArtifact, TrackerField[] trackerFields,
-			Artifact artifact, CodendiAPIPortType codendiAPIPort,
-			TuleapTrackerV5APIPortType tuleapTrackerV5APIPort, String sessionHash, IProgressMonitor monitor) {
+			Artifact artifact, String sessionHash, IProgressMonitor monitor) {
 		// try {
 		try {
 			for (TrackerField trackerField : trackerFields) {
@@ -787,8 +791,7 @@ public class TuleapSoapConnector {
 								String id = fieldValueFileInfo.getId();
 								String filename = fieldValueFileInfo.getFilename();
 								int submittedBy = fieldValueFileInfo.getSubmitted_by();
-								TuleapPerson uploadedBy = this.getPersonFromId(codendiAPIPort, sessionHash,
-										submittedBy);
+								TuleapPerson uploadedBy = this.getPersonFromId(sessionHash, submittedBy);
 								String description = fieldValueFileInfo.getDescription();
 								String type = fieldValueFileInfo.getFiletype();
 
@@ -841,7 +844,7 @@ public class TuleapSoapConnector {
 					artifact.getArtifact_id());
 			for (ArtifactComments artifactComment : artifactComments) {
 				int submittedBy = artifactComment.getSubmitted_by();
-				TuleapPerson commentedBy = this.getPersonFromId(codendiAPIPort, sessionHash, submittedBy);
+				TuleapPerson commentedBy = this.getPersonFromId(sessionHash, submittedBy);
 				TuleapArtifactComment comment = new TuleapArtifactComment(artifactComment.getBody(),
 						commentedBy.getEmail(), commentedBy.getRealName(), artifactComment.getSubmitted_on());
 				tuleapArtifact.addComment(comment);
@@ -927,44 +930,19 @@ public class TuleapSoapConnector {
 		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
 		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
 
-		String soapv1url = trackerLocation.getUrl();
-		int index = soapv1url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
-		if (index != -1) {
-			soapv1url = soapv1url.substring(0, index);
-			soapv1url = soapv1url + ITuleapConstants.SOAP_V1_URL;
-		}
-
-		String soapv2url = trackerLocation.getUrl();
-		index = soapv2url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
-		if (index != -1) {
-			soapv2url = soapv2url.substring(0, index);
-			soapv2url = soapv2url + ITuleapConstants.SOAP_V2_URL;
-		}
-
+		String sessionHash = DEFAULT_SESSION_HASH;
 		try {
-			EngineConfiguration config = new FileProvider(getClass().getClassLoader().getResourceAsStream(
-					CONFIG_FILE));
-			TuleapSoapServiceLocator locator = new TuleapSoapServiceLocator(config, this.trackerLocation);
-
 			final int fifty = 50;
 			monitor.worked(fifty);
 			monitor.subTask(LOGIN_MESSAGE);
 
-			URL url = new URL(soapv1url);
-			CodendiAPIPortType codendiAPIPort = locator.getCodendiAPIPort(url);
 			Session session = codendiAPIPort.login(username, password);
-			String sessionHash = session.getSession_hash();
+			sessionHash = session.getSession_hash();
 
 			monitor.worked(5);
 
 			int groupId = TuleapUtil.getGroupId(this.trackerLocation.getUrl());
 
-			config = new FileProvider(getClass().getClassLoader().getResourceAsStream(CONFIG_FILE));
-			TuleapTrackerV5APILocator tuleapLocator = new TuleapTrackerV5APILocatorImpl(config,
-					this.trackerLocation);
-			url = new URL(soapv2url);
-
-			TuleapTrackerV5APIPortType tuleapTrackerV5APIPort = tuleapLocator.getTuleapTrackerV5APIPort(url);
 			Artifact artifact = tuleapTrackerV5APIPort.getArtifact(sessionHash, groupId, trackerId,
 					artifactId);
 
@@ -984,18 +962,21 @@ public class TuleapSoapConnector {
 
 			TrackerField[] trackerFields = tuleapTrackerV5APIPort.getTrackerFields(sessionHash, groupId,
 					trackerId);
-			tuleapArtifact = this.populateArtifact(tuleapArtifact, trackerFields, artifact, codendiAPIPort,
-					tuleapTrackerV5APIPort, sessionHash, monitor);
+			tuleapArtifact = this.populateArtifact(tuleapArtifact, trackerFields, artifact, sessionHash,
+					monitor);
 
 			monitor.worked(fifty);
 
-			codendiAPIPort.logout(sessionHash);
-		} catch (MalformedURLException e) {
-			TuleapCoreActivator.log(e, true);
-		} catch (ServiceException e) {
-			TuleapCoreActivator.log(e, true);
 		} catch (RemoteException e) {
 			TuleapCoreActivator.log(e, true);
+		} finally {
+			if (!DEFAULT_SESSION_HASH.equals(sessionHash)) {
+				try {
+					codendiAPIPort.logout(sessionHash);
+				} catch (RemoteException e) {
+					TuleapCoreActivator.log(e, true);
+				}
+			}
 		}
 
 		return tuleapArtifact;
@@ -1018,33 +999,14 @@ public class TuleapSoapConnector {
 		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
 		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
 
-		String soapv1url = trackerLocation.getUrl();
-		int index = soapv1url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
-		if (index != -1) {
-			soapv1url = soapv1url.substring(0, index);
-			soapv1url = soapv1url + ITuleapConstants.SOAP_V1_URL;
-		}
-
-		String soapv2url = trackerLocation.getUrl();
-		index = soapv2url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
-		if (index != -1) {
-			soapv2url = soapv2url.substring(0, index);
-			soapv2url = soapv2url + ITuleapConstants.SOAP_V2_URL;
-		}
-
+		String sessionHash = DEFAULT_SESSION_HASH;
 		try {
-			EngineConfiguration config = new FileProvider(getClass().getClassLoader().getResourceAsStream(
-					CONFIG_FILE));
-			TuleapSoapServiceLocator locator = new TuleapSoapServiceLocator(config, this.trackerLocation);
-
 			final int fifty = 50;
 			monitor.worked(fifty);
 			monitor.subTask(LOGIN_MESSAGE);
 
-			URL url = new URL(soapv1url);
-			CodendiAPIPortType codendiAPIPort = locator.getCodendiAPIPort(url);
 			Session session = codendiAPIPort.login(username, password);
-			String sessionHash = session.getSession_hash();
+			sessionHash = session.getSession_hash();
 
 			monitor.worked(5);
 
@@ -1052,13 +1014,6 @@ public class TuleapSoapConnector {
 
 			Group group = codendiAPIPort.getGroupById(sessionHash, groupId);
 			String projectName = group.getGroup_name();
-
-			config = new FileProvider(getClass().getClassLoader().getResourceAsStream(CONFIG_FILE));
-			TuleapTrackerV5APILocator tuleapLocator = new TuleapTrackerV5APILocatorImpl(config,
-					this.trackerLocation);
-			url = new URL(soapv2url);
-
-			TuleapTrackerV5APIPortType tuleapTrackerV5APIPort = tuleapLocator.getTuleapTrackerV5APIPort(url);
 
 			monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.RetrievingTrackerFields")); //$NON-NLS-1$
 
@@ -1098,13 +1053,16 @@ public class TuleapSoapConnector {
 
 			monitor.worked(fifty);
 
-			codendiAPIPort.logout(sessionHash);
-		} catch (MalformedURLException e) {
-			TuleapCoreActivator.log(e, true);
-		} catch (ServiceException e) {
-			TuleapCoreActivator.log(e, true);
 		} catch (RemoteException e) {
 			TuleapCoreActivator.log(e, true);
+		} finally {
+			if (!DEFAULT_SESSION_HASH.equals(sessionHash)) {
+				try {
+					codendiAPIPort.logout(sessionHash);
+				} catch (RemoteException e) {
+					TuleapCoreActivator.log(e, true);
+				}
+			}
 		}
 
 		return taskDataId;
@@ -1124,44 +1082,18 @@ public class TuleapSoapConnector {
 		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
 		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
 
-		String soapv1url = trackerLocation.getUrl();
-		int index = soapv1url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
-		if (index != -1) {
-			soapv1url = soapv1url.substring(0, index);
-			soapv1url = soapv1url + ITuleapConstants.SOAP_V1_URL;
-		}
-
-		String soapv2url = trackerLocation.getUrl();
-		index = soapv2url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
-		if (index != -1) {
-			soapv2url = soapv2url.substring(0, index);
-			soapv2url = soapv2url + ITuleapConstants.SOAP_V2_URL;
-		}
-
+		String sessionHash = DEFAULT_SESSION_HASH;
 		try {
-			EngineConfiguration config = new FileProvider(getClass().getClassLoader().getResourceAsStream(
-					CONFIG_FILE));
-			TuleapSoapServiceLocator locator = new TuleapSoapServiceLocator(config, this.trackerLocation);
-
 			final int fifty = 50;
 			monitor.worked(fifty);
 			monitor.subTask(LOGIN_MESSAGE);
 
-			URL url = new URL(soapv1url);
-			CodendiAPIPortType codendiAPIPort = locator.getCodendiAPIPort(url);
 			Session session = codendiAPIPort.login(username, password);
-			String sessionHash = session.getSession_hash();
+			sessionHash = session.getSession_hash();
 
 			monitor.worked(5);
 
 			int groupId = TuleapUtil.getGroupId(this.trackerLocation.getUrl());
-
-			config = new FileProvider(getClass().getClassLoader().getResourceAsStream(CONFIG_FILE));
-			TuleapTrackerV5APILocator tuleapLocator = new TuleapTrackerV5APILocatorImpl(config,
-					this.trackerLocation);
-			url = new URL(soapv2url);
-
-			TuleapTrackerV5APIPortType tuleapTrackerV5APIPort = tuleapLocator.getTuleapTrackerV5APIPort(url);
 
 			monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.RetrievingTrackerFields")); //$NON-NLS-1$
 			List<ArtifactFieldValue> valuesList = new ArrayList<ArtifactFieldValue>();
@@ -1195,13 +1127,16 @@ public class TuleapSoapConnector {
 
 			monitor.worked(fifty);
 
-			codendiAPIPort.logout(sessionHash);
-		} catch (MalformedURLException e) {
-			TuleapCoreActivator.log(e, true);
-		} catch (ServiceException e) {
-			TuleapCoreActivator.log(e, true);
 		} catch (RemoteException e) {
 			TuleapCoreActivator.log(e, true);
+		} finally {
+			if (!DEFAULT_SESSION_HASH.equals(sessionHash)) {
+				try {
+					codendiAPIPort.logout(sessionHash);
+				} catch (RemoteException e) {
+					TuleapCoreActivator.log(e, true);
+				}
+			}
 		}
 	}
 
@@ -1526,46 +1461,21 @@ public class TuleapSoapConnector {
 		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
 		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
 
-		String soapv1url = trackerLocation.getUrl();
-		int index = soapv1url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
-		if (index != -1) {
-			soapv1url = soapv1url.substring(0, index);
-			soapv1url = soapv1url + ITuleapConstants.SOAP_V1_URL;
-		}
-
-		String soapv2url = trackerLocation.getUrl();
-		index = soapv2url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
-		if (index != -1) {
-			soapv2url = soapv2url.substring(0, index);
-			soapv2url = soapv2url + ITuleapConstants.SOAP_V2_URL;
-		}
-
+		String sessionHash = DEFAULT_SESSION_HASH;
 		try {
-			EngineConfiguration config = new FileProvider(getClass().getClassLoader().getResourceAsStream(
-					CONFIG_FILE));
-			TuleapSoapServiceLocator locator = new TuleapSoapServiceLocator(config, this.trackerLocation);
-
 			final int fifty = 50;
 			monitor.worked(fifty);
 			monitor.subTask(LOGIN_MESSAGE);
 
-			URL url = new URL(soapv1url);
-			CodendiAPIPortType codendiAPIPort = locator.getCodendiAPIPort(url);
 			Session session = codendiAPIPort.login(username, password);
-			String sessionHash = session.getSession_hash();
+			sessionHash = session.getSession_hash();
 
 			monitor.worked(5);
 
 			int groupId = TuleapUtil.getGroupId(this.trackerLocation.getUrl());
 
-			config = new FileProvider(getClass().getClassLoader().getResourceAsStream(CONFIG_FILE));
-			TuleapTrackerV5APILocator tuleapLocator = new TuleapTrackerV5APILocatorImpl(config,
-					this.trackerLocation);
-			url = new URL(soapv2url);
-
 			monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.RetrievingTheReports")); //$NON-NLS-1$
 
-			TuleapTrackerV5APIPortType tuleapTrackerV5APIPort = tuleapLocator.getTuleapTrackerV5APIPort(url);
 			TrackerReport[] trackerReports = tuleapTrackerV5APIPort.getTrackerReports(sessionHash, groupId,
 					trackerId);
 			for (TrackerReport trackerReport : trackerReports) {
@@ -1574,13 +1484,16 @@ public class TuleapSoapConnector {
 				reports.add(tuleapTrackerReport);
 			}
 
-			codendiAPIPort.logout(sessionHash);
-		} catch (MalformedURLException e) {
-			TuleapCoreActivator.log(e, true);
-		} catch (ServiceException e) {
-			TuleapCoreActivator.log(e, true);
 		} catch (RemoteException e) {
 			TuleapCoreActivator.log(e, true);
+		} finally {
+			if (!DEFAULT_SESSION_HASH.equals(sessionHash)) {
+				try {
+					codendiAPIPort.logout(sessionHash);
+				} catch (RemoteException e) {
+					TuleapCoreActivator.log(e, true);
+				}
+			}
 		}
 		return reports;
 	}
@@ -1588,15 +1501,13 @@ public class TuleapSoapConnector {
 	/**
 	 * Returns the user information from the given identifier.
 	 * 
-	 * @param codendiAPIPort
-	 *            The soap api
 	 * @param sessionHash
 	 *            The session hash
 	 * @param identifier
 	 *            The identifier
 	 * @return The user information from the given identifier
 	 */
-	private TuleapPerson getPersonFromId(CodendiAPIPortType codendiAPIPort, String sessionHash, int identifier) {
+	private TuleapPerson getPersonFromId(String sessionHash, int identifier) {
 		try {
 			UserInfo userInfo = codendiAPIPort.getUserInfo(sessionHash, identifier);
 			return new TuleapPerson(userInfo.getUsername(), userInfo.getReal_name(), userInfo.getId(),
@@ -1628,48 +1539,24 @@ public class TuleapSoapConnector {
 		monitor.beginTask(TuleapMylynTasksMessages.getString(
 				"TuleapSoapConnector.RetrievingAttachmentContentFor", filename), 100); //$NON-NLS-1$
 
+		byte[] attachmentContent = new byte[] {};
+
 		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
 		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
 
-		String soapv1url = trackerLocation.getUrl();
-		int index = soapv1url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
-		if (index != -1) {
-			soapv1url = soapv1url.substring(0, index);
-			soapv1url = soapv1url + ITuleapConstants.SOAP_V1_URL;
-		}
-
-		String soapv2url = trackerLocation.getUrl();
-		index = soapv2url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
-		if (index != -1) {
-			soapv2url = soapv2url.substring(0, index);
-			soapv2url = soapv2url + ITuleapConstants.SOAP_V2_URL;
-		}
-
+		String sessionHash = DEFAULT_SESSION_HASH;
 		try {
-			EngineConfiguration config = new FileProvider(getClass().getClassLoader().getResourceAsStream(
-					CONFIG_FILE));
-			TuleapSoapServiceLocator locator = new TuleapSoapServiceLocator(config, this.trackerLocation);
-
 			final int fifty = 50;
 			monitor.worked(fifty);
 			monitor.subTask(LOGIN_MESSAGE);
 
-			URL url = new URL(soapv1url);
-			CodendiAPIPortType codendiAPIPort = locator.getCodendiAPIPort(url);
 			Session session = codendiAPIPort.login(username, password);
-			String sessionHash = session.getSession_hash();
+			sessionHash = session.getSession_hash();
 
 			monitor.worked(5);
 
-			config = new FileProvider(getClass().getClassLoader().getResourceAsStream(CONFIG_FILE));
-			TuleapTrackerV5APILocator tuleapLocator = new TuleapTrackerV5APILocatorImpl(config,
-					this.trackerLocation);
-			url = new URL(soapv2url);
-
 			monitor.subTask(TuleapMylynTasksMessages
 					.getString("TuleapSoapConnector.RetrievingAttachmentContent")); //$NON-NLS-1$
-
-			TuleapTrackerV5APIPortType tuleapTrackerV5APIPort = tuleapLocator.getTuleapTrackerV5APIPort(url);
 
 			String artifactAttachmentChunk = ""; //$NON-NLS-1$
 			int downloadedBytes = 0;
@@ -1686,15 +1573,21 @@ public class TuleapSoapConnector {
 						artifactId, attachmentId, downloadedBytes, bytesToDownload);
 				downloadedBytes = downloadedBytes + bytesToDownload;
 			}
-			return artifactAttachmentChunk.getBytes();
-		} catch (MalformedURLException e) {
-			TuleapCoreActivator.log(e, true);
-		} catch (ServiceException e) {
-			TuleapCoreActivator.log(e, true);
+			attachmentContent = artifactAttachmentChunk.getBytes();
+
 		} catch (RemoteException e) {
 			TuleapCoreActivator.log(e, true);
+		} finally {
+			if (!DEFAULT_SESSION_HASH.equals(sessionHash)) {
+				try {
+					codendiAPIPort.logout(sessionHash);
+				} catch (RemoteException e) {
+					TuleapCoreActivator.log(e, true);
+				}
+			}
 		}
-		return new byte[] {};
+
+		return attachmentContent;
 	}
 
 	/**
@@ -1720,45 +1613,20 @@ public class TuleapSoapConnector {
 		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
 		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
 
-		String soapv1url = trackerLocation.getUrl();
-		int index = soapv1url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
-		if (index != -1) {
-			soapv1url = soapv1url.substring(0, index);
-			soapv1url = soapv1url + ITuleapConstants.SOAP_V1_URL;
-		}
-
-		String soapv2url = trackerLocation.getUrl();
-		index = soapv2url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
-		if (index != -1) {
-			soapv2url = soapv2url.substring(0, index);
-			soapv2url = soapv2url + ITuleapConstants.SOAP_V2_URL;
-		}
-
+		String sessionHash = DEFAULT_SESSION_HASH;
 		try {
-			EngineConfiguration config = new FileProvider(getClass().getClassLoader().getResourceAsStream(
-					CONFIG_FILE));
-			TuleapSoapServiceLocator locator = new TuleapSoapServiceLocator(config, this.trackerLocation);
-
 			final int fifty = 50;
 			monitor.worked(fifty);
 			monitor.subTask(LOGIN_MESSAGE);
 
-			URL url = new URL(soapv1url);
-			CodendiAPIPortType codendiAPIPort = locator.getCodendiAPIPort(url);
 			Session session = codendiAPIPort.login(username, password);
-			String sessionHash = session.getSession_hash();
+			sessionHash = session.getSession_hash();
 
 			monitor.worked(5);
-
-			config = new FileProvider(getClass().getClassLoader().getResourceAsStream(CONFIG_FILE));
-			TuleapTrackerV5APILocator tuleapLocator = new TuleapTrackerV5APILocatorImpl(config,
-					this.trackerLocation);
-			url = new URL(soapv2url);
 
 			monitor.subTask(TuleapMylynTasksMessages
 					.getString("TuleapSoapConnector.RetrievingAttachmentContent")); //$NON-NLS-1$
 
-			TuleapTrackerV5APIPortType tuleapTrackerV5APIPort = tuleapLocator.getTuleapTrackerV5APIPort(url);
 			int groupId = TuleapUtil.getGroupId(this.trackerLocation.getUrl());
 
 			tuleapTrackerV5APIPort.purgeAllTemporaryAttachments(sessionHash);
@@ -1802,15 +1670,18 @@ public class TuleapSoapConnector {
 			ArtifactFieldValue[] fieldValues = new ArtifactFieldValue[] {fv };
 			tuleapTrackerV5APIPort.updateArtifact(sessionHash, groupId, trackerId, artifactId, fieldValues,
 					comment, "UTF-8"); //$NON-NLS-1$
-
-		} catch (MalformedURLException e) {
-			TuleapCoreActivator.log(e, true);
-		} catch (ServiceException e) {
-			TuleapCoreActivator.log(e, true);
 		} catch (RemoteException e) {
 			TuleapCoreActivator.log(e, true);
 		} catch (IOException e) {
 			TuleapCoreActivator.log(e, true);
+		} finally {
+			if (!DEFAULT_SESSION_HASH.equals(sessionHash)) {
+				try {
+					codendiAPIPort.logout(sessionHash);
+				} catch (RemoteException e) {
+					TuleapCoreActivator.log(e, true);
+				}
+			}
 		}
 	}
 }
