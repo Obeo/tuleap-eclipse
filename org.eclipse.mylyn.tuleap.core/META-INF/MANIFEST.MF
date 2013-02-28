@@ -26,5 +26,7 @@ Export-Package: org.eclipse.mylyn.internal.tuleap.core;x-friends:="org.eclipse.m
  org.eclipse.mylyn.internal.tuleap.core.model.workflow;x-friends:="org.eclipse.mylyn.tuleap.tests",
  org.eclipse.mylyn.internal.tuleap.core.net;x-friends:="org.eclipse.mylyn.tuleap.tests,org.eclipse.mylyn.tuleap.ui",
  org.eclipse.mylyn.internal.tuleap.core.repository;x-friends:="org.eclipse.mylyn.tuleap.tests,org.eclipse.mylyn.tuleap.ui",
- org.eclipse.mylyn.internal.tuleap.core.util;x-friends:="org.eclipse.mylyn.tuleap.ui,org.eclipse.mylyn.tuleap.tests"
+ org.eclipse.mylyn.internal.tuleap.core.util;x-friends:="org.eclipse.mylyn.tuleap.ui,org.eclipse.mylyn.tuleap.tests",
+ org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v1;x-friends:="org.eclipse.mylyn.tuleap.tests",
+ org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2;x-friends:="org.eclipse.mylyn.tuleap.tests"
 Bundle-Activator: org.eclipse.mylyn.internal.tuleap.core.TuleapCoreActivator
