@@ -50,6 +50,11 @@ public class MockedTuleapTrackerV5APIPortType implements TuleapTrackerV5APIPortT
 	private List<TrackerReport> reports = new ArrayList<TrackerReport>();
 
 	/**
+	 * Tracker structure.
+	 */
+	private TrackerStructure structure;
+
+	/**
 	 * Constructor.
 	 */
 	public MockedTuleapTrackerV5APIPortType() {
@@ -195,7 +200,10 @@ public class MockedTuleapTrackerV5APIPortType implements TuleapTrackerV5APIPortT
 	 */
 	public TrackerStructure getTrackerStructure(String sessionKey, int group_id, int tracker_id)
 			throws RemoteException {
-		return new TrackerStructure();
+		if (structure == null) {
+			structure = new TrackerStructure();
+		}
+		return structure;
 	}
 
 	/**

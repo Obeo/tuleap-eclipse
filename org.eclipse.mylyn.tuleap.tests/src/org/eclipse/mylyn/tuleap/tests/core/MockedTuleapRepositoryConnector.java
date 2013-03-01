@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClientManager;
+import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.repository.ITuleapRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -31,11 +32,29 @@ import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
  * @since 0.7
  */
 public class MockedTuleapRepositoryConnector extends AbstractRepositoryConnector implements ITuleapRepositoryConnector {
+	/**
+	 * Tuleap artifact.
+	 */
+	private TuleapArtifact tuleapArtifact;
 
 	/**
 	 * The configuration to be returned.
 	 */
 	private TuleapInstanceConfiguration configuration;
+
+	/**
+	 * The constructor.
+	 * 
+	 * @param tuleapInstanceConfiguration
+	 *            The configuration that will be returned for the unit test.
+	 * @param artifact
+	 *            Tuleap Artifact
+	 */
+	public MockedTuleapRepositoryConnector(TuleapInstanceConfiguration tuleapInstanceConfiguration,
+			TuleapArtifact artifact) {
+		this.configuration = tuleapInstanceConfiguration;
+		this.tuleapArtifact = artifact;
+	}
 
 	/**
 	 * The constructor.
@@ -53,7 +72,7 @@ public class MockedTuleapRepositoryConnector extends AbstractRepositoryConnector
 	 * @see org.eclipse.mylyn.internal.tuleap.core.repository.ITuleapRepositoryConnector#getClientManager()
 	 */
 	public ITuleapClientManager getClientManager() {
-		return null;
+		return new MockedTuleapClientManager(tuleapArtifact, configuration);
 	}
 
 	/**
@@ -73,7 +92,8 @@ public class MockedTuleapRepositoryConnector extends AbstractRepositoryConnector
 	 * @see org.eclipse.mylyn.internal.tuleap.core.repository.ITuleapRepositoryConnector#putRepositoryConfiguration(java.lang.String,
 	 *      org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration)
 	 */
-	public void putRepositoryConfiguration(String repositoryUrl, TuleapInstanceConfiguration tuleapInstanceConfiguration) {
+	public void putRepositoryConfiguration(String repositoryUrl,
+			TuleapInstanceConfiguration tuleapInstanceConfiguration) {
 		// do nothing
 	}
 
