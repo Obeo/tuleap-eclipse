@@ -1438,7 +1438,6 @@ public class TuleapSoapConnector {
 	private boolean shouldConsider(String trackerFieldType) {
 		boolean shouldConsider = true;
 		shouldConsider = shouldConsider && !ITuleapConfigurationConstants.AID.equals(trackerFieldType);
-		shouldConsider = shouldConsider && !ITuleapConfigurationConstants.ARTLINK.equals(trackerFieldType);
 		shouldConsider = shouldConsider && !ITuleapConfigurationConstants.SUBON.equals(trackerFieldType);
 		shouldConsider = shouldConsider && !ITuleapConfigurationConstants.SUBBY.equals(trackerFieldType);
 		shouldConsider = shouldConsider && !ITuleapConfigurationConstants.LUD.equals(trackerFieldType);
