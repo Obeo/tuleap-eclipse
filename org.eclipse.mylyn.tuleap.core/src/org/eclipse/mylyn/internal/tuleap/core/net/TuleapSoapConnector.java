@@ -130,12 +130,6 @@ public class TuleapSoapConnector {
 			.getString("TuleapSoapConnector.Login"); //$NON-NLS-1$
 
 	/**
-	 * The validate connection message.
-	 */
-	private static final String VALIDATE_CONNECTION_MESSAGE = TuleapMylynTasksMessages
-			.getString("TuleapSoapConnector.ValidateConnection"); //$NON-NLS-1$
-
-	/**
 	 * Default session hash.
 	 */
 	private static final String DEFAULT_SESSION_HASH = "dummy"; //$NON-NLS-1$
@@ -156,6 +150,16 @@ public class TuleapSoapConnector {
 	private TuleapTrackerV5APIPortType tuleapTrackerV5APIPort;
 
 	/**
+	 * The session hash.
+	 */
+	private String sessionHash = DEFAULT_SESSION_HASH;
+
+	/**
+	 * The session.
+	 */
+	private Session session;
+
+	/**
 	 * The constructor.
 	 * 
 	 * @param location
@@ -163,6 +167,42 @@ public class TuleapSoapConnector {
 	 */
 	public TuleapSoapConnector(AbstractWebLocation location) {
 		this.trackerLocation = location;
+		this.ensureProxySettingsRegistration();
+	}
+
+	/**
+	 * The constructor.
+	 * 
+	 * @param location
+	 *            The location of the tracker.
+	 * @param codendiAPIPortType
+	 *            The Tuleap Codendi API.
+	 * @param tuleapTrackerAPI
+	 *            The Tuleap tracker API.
+	 */
+	public TuleapSoapConnector(AbstractWebLocation location, CodendiAPIPortType codendiAPIPortType,
+			TuleapTrackerV5APIPortType tuleapTrackerAPI) {
+		this.codendiAPIPort = codendiAPIPortType;
+		this.tuleapTrackerV5APIPort = tuleapTrackerAPI;
+		this.trackerLocation = location;
+		this.ensureProxySettingsRegistration();
+	}
+
+	/**
+	 * Logs the user in the Tuleap server.
+	 * 
+	 * @param monitor
+	 *            The progress monitor
+	 * @return A status indicating if everything went right.
+	 */
+	private IStatus login(IProgressMonitor monitor) {
+		IStatus status = Status.OK_STATUS;
+
+		// Shortcut for the unit test
+		if (this.codendiAPIPort != null && this.tuleapTrackerV5APIPort != null && this.sessionHash != null) {
+			return status;
+		}
+
 		EngineConfiguration config = new FileProvider(getClass().getClassLoader().getResourceAsStream(
 				CONFIG_FILE));
 		TuleapSoapServiceLocator locator = new TuleapSoapServiceLocator(config, this.trackerLocation);
@@ -183,17 +223,18 @@ public class TuleapSoapConnector {
 		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
 		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
 
-		String sessionHash = DEFAULT_SESSION_HASH;
 		try {
 			URL url = new URL(soapv1url);
-
 			codendiAPIPort = locator.getCodendiAPIPort(url);
 
-			Session session = codendiAPIPort.login(username, password);
+			monitor.subTask(LOGIN_MESSAGE);
+
+			session = codendiAPIPort.login(username, password);
 			sessionHash = session.getSession_hash();
 
-			config = new FileProvider(getClass().getClassLoader().getResourceAsStream(CONFIG_FILE));
+			monitor.worked(10);
 
+			config = new FileProvider(getClass().getClassLoader().getResourceAsStream(CONFIG_FILE));
 			TuleapTrackerV5APILocator tuleapLocator = new TuleapTrackerV5APILocatorImpl(config,
 					this.trackerLocation);
 			url = new URL(soapv2url);
@@ -204,72 +245,30 @@ public class TuleapSoapConnector {
 			TuleapCoreActivator.log(e, true);
 		} catch (RemoteException e) {
 			TuleapCoreActivator.log(e, true);
-		} finally {
-			if (!DEFAULT_SESSION_HASH.equals(sessionHash)) {
-				try {
-					codendiAPIPort.logout(sessionHash);
-				} catch (RemoteException e) {
-					TuleapCoreActivator.log(e, true);
-				}
-			}
 		}
+
+		return status;
 	}
 
 	/**
-	 * The constructor.
+	 * Logs the user out of the Tuleap server.
 	 * 
-	 * @param location
-	 *            The location of the tracker.
-	 * @param codendiAPIPortType
-	 *            The Tuleap Codendi API.
-	 * @param tuleapTrackerAPI
-	 *            The Tuleap tracker API.
+	 * @return A status indicating if everything went right.
 	 */
-	public TuleapSoapConnector(AbstractWebLocation location, CodendiAPIPortType codendiAPIPortType,
-			TuleapTrackerV5APIPortType tuleapTrackerAPI) {
-		this.codendiAPIPort = codendiAPIPortType;
-		this.tuleapTrackerV5APIPort = tuleapTrackerAPI;
-		this.trackerLocation = location;
-	}
-
-	/**
-	 * Validates the connection to the repository.
-	 * 
-	 * @param monitor
-	 *            The progress monitor
-	 * @return A status indicating if the connection has been successfully tested.
-	 */
-	public IStatus validateConnection(IProgressMonitor monitor) {
-		monitor.beginTask(VALIDATE_CONNECTION_MESSAGE, 100);
+	private IStatus logout() {
 		IStatus status = Status.OK_STATUS;
-
-		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
-		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
-
-		this.ensureProxySettingsRegistration();
-		String sessionHash = DEFAULT_SESSION_HASH;
-		try {
-			final int fifty = 50;
-			monitor.worked(fifty);
-			monitor.subTask(LOGIN_MESSAGE);
-
-			Session session = codendiAPIPort.login(username, password);
-			sessionHash = session.getSession_hash();
-
-			monitor.worked(fifty);
-		} catch (RemoteException e) {
-			TuleapCoreActivator.log(e, true);
-			status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
-		} finally {
-			if (!DEFAULT_SESSION_HASH.equals(sessionHash)) {
-				try {
-					codendiAPIPort.logout(sessionHash);
-				} catch (RemoteException e) {
-					TuleapCoreActivator.log(e, true);
-				}
+		if (!DEFAULT_SESSION_HASH.equals(sessionHash)) {
+			try {
+				codendiAPIPort.logout(sessionHash);
+			} catch (RemoteException e) {
+				TuleapCoreActivator.log(e, true);
 			}
-		}
 
+			// Reinitializing everything
+			this.codendiAPIPort = null;
+			this.tuleapTrackerV5APIPort = null;
+			this.sessionHash = null;
+		}
 		return status;
 	}
 
@@ -277,8 +276,6 @@ public class TuleapSoapConnector {
 	 * Ensures that the settings of the proxy are correctly registered in the Axis properties.
 	 */
 	private void ensureProxySettingsRegistration() {
-		// FIXME Register the setting of the proxy
-
 		String url = this.trackerLocation.getUrl();
 		Proxy proxy = this.trackerLocation.getProxyForHost(url, "HTTP"); //$NON-NLS-1$
 		if (proxy == null) {
@@ -297,6 +294,19 @@ public class TuleapSoapConnector {
 	}
 
 	/**
+	 * Validates the connection.
+	 * 
+	 * @param monitor
+	 *            The progress monitor
+	 * @return A status indicating if everything went well
+	 */
+	public IStatus validateConnection(IProgressMonitor monitor) {
+		IStatus status = this.login(monitor);
+		this.logout();
+		return status;
+	}
+
+	/**
 	 * Returns the configuration of the Tuleap instance.
 	 * 
 	 * @param monitor
@@ -304,23 +314,14 @@ public class TuleapSoapConnector {
 	 * @return The configuration of the Tuleap instance.
 	 */
 	public TuleapInstanceConfiguration getTuleapInstanceConfiguration(IProgressMonitor monitor) {
+		this.login(monitor);
+
 		TuleapInstanceConfiguration tuleapInstanceConfiguration = new TuleapInstanceConfiguration(
 				this.trackerLocation.getUrl());
 		monitor.beginTask(TuleapMylynTasksMessages
 				.getString("TuleapSoapConnector.RetrieveTuleapInstanceConfiguration"), 100); //$NON-NLS-1$
 
-		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
-		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
-
-		String sessionHash = DEFAULT_SESSION_HASH;
 		try {
-			monitor.worked(1);
-			monitor.subTask(LOGIN_MESSAGE);
-
-			Session session = codendiAPIPort.login(username, password);
-			sessionHash = session.getSession_hash();
-			monitor.worked(5);
-
 			int groupId = TuleapUtil.getGroupId(this.trackerLocation.getUrl());
 
 			monitor.worked(1);
@@ -332,37 +333,28 @@ public class TuleapSoapConnector {
 				monitor.setTaskName(TuleapMylynTasksMessages.getString(
 						"TuleapSoapConnector.AnalyzingTracker", tracker.getName())); //$NON-NLS-1$
 				TuleapTrackerConfiguration tuleapTrackerConfiguration = this.getTuleapTrackerConfiguration(
-						sessionHash, tracker, monitor);
+						tracker, monitor);
 				tuleapInstanceConfiguration.addTracker(Integer.valueOf(tracker.getTracker_id()),
 						tuleapTrackerConfiguration);
 			}
 		} catch (RemoteException e) {
 			TuleapCoreActivator.log(e, true);
-		} finally {
-			if (!DEFAULT_SESSION_HASH.equals(sessionHash)) {
-				try {
-					codendiAPIPort.logout(sessionHash);
-				} catch (RemoteException e) {
-					TuleapCoreActivator.log(e, true);
-				}
-			}
 		}
+
+		this.logout();
 		return tuleapInstanceConfiguration;
 	}
 
 	/**
 	 * Returns the configuration of the given tracker.
 	 * 
-	 * @param sessionHash
-	 *            The hash of the current session
 	 * @param tracker
 	 *            The Tuleap tracker
 	 * @param monitor
 	 *            The progress monitor
 	 * @return The configuration of the Tuleap tracker.
 	 */
-	private TuleapTrackerConfiguration getTuleapTrackerConfiguration(String sessionHash, Tracker tracker,
-			IProgressMonitor monitor) {
+	private TuleapTrackerConfiguration getTuleapTrackerConfiguration(Tracker tracker, IProgressMonitor monitor) {
 		String trackerURL = this.trackerLocation.getUrl() + ITuleapConstants.REPOSITORY_TRACKER_URL_SEPARATOR
 				+ Integer.valueOf(tracker.getTracker_id()).toString();
 		TuleapTrackerConfiguration tuleapTrackerConfiguration = new TuleapTrackerConfiguration(tracker
@@ -385,7 +377,7 @@ public class TuleapSoapConnector {
 					tracker.getGroup_id(), tracker.getTracker_id());
 			for (TrackerField trackerField : trackerFields) {
 				AbstractTuleapField tuleapField = getTuleapTrackerField(tracker.getGroup_id(),
-						trackerStructure, trackerField, sessionHash, monitor);
+						trackerStructure, trackerField, monitor);
 				monitor.worked(1);
 				if (tuleapField != null) {
 					tuleapField.setName(trackerField.getShort_name());
@@ -410,14 +402,12 @@ public class TuleapSoapConnector {
 	 *            The structure of the tracker
 	 * @param trackerField
 	 *            The tracker field
-	 * @param sessionHash
-	 *            The session hash
 	 * @param monitor
 	 *            The progress monitor
 	 * @return The tuleap tracker field
 	 */
 	private AbstractTuleapField getTuleapTrackerField(int groupId, TrackerStructure trackerStructure,
-			TrackerField trackerField, String sessionHash, IProgressMonitor monitor) {
+			TrackerField trackerField, IProgressMonitor monitor) {
 		AbstractTuleapField tuleapField = null;
 
 		monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.AnalyzeTuleapTrackerField", //$NON-NLS-1$
@@ -445,7 +435,7 @@ public class TuleapSoapConnector {
 			tuleapField = this.getTuleapSelectBox(trackerStructure, trackerField);
 		} else if (ITuleapConfigurationConstants.MSB.equals(type)
 				|| ITuleapConfigurationConstants.CB.equals(type)) {
-			tuleapField = this.getTuleapMultiSelectBox(sessionHash, groupId, trackerStructure, trackerField);
+			tuleapField = this.getTuleapMultiSelectBox(groupId, trackerStructure, trackerField);
 		} else if (ITuleapConfigurationConstants.DATE.equals(type)) {
 			tuleapField = new TuleapDate(fieldIdentifier);
 		} else if (ITuleapConfigurationConstants.FILE.equals(type)) {
@@ -483,8 +473,6 @@ public class TuleapSoapConnector {
 	/**
 	 * Creates a Tuleap Multi select box from the description of the tracker field.
 	 * 
-	 * @param sessionHash
-	 *            The session hash
 	 * @param groupId
 	 *            The identifier of the group
 	 * @param trackerStructure
@@ -493,8 +481,8 @@ public class TuleapSoapConnector {
 	 *            The description of the tracker field
 	 * @return The newly created Tuleap Multi select box
 	 */
-	private TuleapMultiSelectBox getTuleapMultiSelectBox(String sessionHash, int groupId,
-			TrackerStructure trackerStructure, TrackerField trackerField) {
+	private TuleapMultiSelectBox getTuleapMultiSelectBox(int groupId, TrackerStructure trackerStructure,
+			TrackerField trackerField) {
 		TuleapMultiSelectBox tuleapField = new TuleapMultiSelectBox(trackerField.getField_id());
 		// Is semantic contributor?
 		TrackerSemantic trackerSemantic = trackerStructure.getSemantic();
@@ -521,13 +509,13 @@ public class TuleapSoapConnector {
 					if ("project_members".equals(uGroupName) //$NON-NLS-1$
 							&& (trackerFieldBindValue.getBind_value_label().contains(uGroupName) || trackerFieldBindValue
 									.getBind_value_label().contains(groupMembers))) {
-						addUsersToMultiSelectBox(sessionHash, tuleapField, ugroup);
+						addUsersToMultiSelectBox(tuleapField, ugroup);
 					} else if ("project_admins".equals(uGroupName) //$NON-NLS-1$
 							&& (trackerFieldBindValue.getBind_value_label().contains(uGroupName) || trackerFieldBindValue
 									.getBind_value_label().contains(groupAdmin))) {
-						addUsersToMultiSelectBox(sessionHash, tuleapField, ugroup);
+						addUsersToMultiSelectBox(tuleapField, ugroup);
 					} else if (trackerFieldBindValue.getBind_value_label().contains(uGroupName)) {
-						addUsersToMultiSelectBox(sessionHash, tuleapField, ugroup);
+						addUsersToMultiSelectBox(tuleapField, ugroup);
 					}
 				}
 			} catch (RemoteException e) {
@@ -552,8 +540,6 @@ public class TuleapSoapConnector {
 	/**
 	 * Iterates on the content of the ugroup to add all the elements as items in the multi select box.
 	 * 
-	 * @param sessionHash
-	 *            The session hash
 	 * @param tuleapSelectBox
 	 *            The Tuleap multi select box in which we will add the new items.
 	 * @param ugroup
@@ -561,8 +547,8 @@ public class TuleapSoapConnector {
 	 * @throws RemoteException
 	 *             In case of problems with the connection
 	 */
-	private void addUsersToMultiSelectBox(String sessionHash, TuleapMultiSelectBox tuleapSelectBox,
-			Ugroup ugroup) throws RemoteException {
+	private void addUsersToMultiSelectBox(TuleapMultiSelectBox tuleapSelectBox, Ugroup ugroup)
+			throws RemoteException {
 		UGroupMember[] members = ugroup.getMembers();
 		for (UGroupMember uGroupMember : members) {
 			int userId = uGroupMember.getUser_id();
@@ -650,25 +636,12 @@ public class TuleapSoapConnector {
 	public int performQuery(IRepositoryQuery query, TaskDataCollector collector, TaskAttributeMapper mapper,
 			TuleapTaskDataHandler taskDataHandler, ITuleapClient tuleapClient, int maxHits,
 			IProgressMonitor monitor) {
+		this.login(monitor);
+
 		ArtifactQueryResult artifactQueryResult = null;
 		int trackerId = -1;
 
-		monitor.beginTask(VALIDATE_CONNECTION_MESSAGE, 100);
-
-		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
-		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
-
-		String sessionHash = DEFAULT_SESSION_HASH;
 		try {
-			final int fifty = 50;
-			monitor.worked(fifty);
-			monitor.subTask(LOGIN_MESSAGE);
-
-			Session session = codendiAPIPort.login(username, password);
-			sessionHash = session.getSession_hash();
-
-			monitor.worked(5);
-
 			int groupId = TuleapUtil.getGroupId(this.trackerLocation.getUrl());
 
 			monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.ExecutingQuery")); //$NON-NLS-1$
@@ -702,6 +675,7 @@ public class TuleapSoapConnector {
 			try {
 				Artifact[] artifacts = artifactQueryResult.getArtifacts();
 
+				final int fifty = 50;
 				monitor.worked(fifty);
 
 				TrackerField[] trackerFields = tuleapTrackerV5APIPort.getTrackerFields(sessionHash, groupId,
@@ -721,8 +695,7 @@ public class TuleapSoapConnector {
 				for (Artifact artifact : artifacts) {
 					TuleapArtifact tuleapArtifact = new TuleapArtifact(artifact, trackerName, projectName);
 
-					tuleapArtifact = this.populateArtifact(tuleapArtifact, trackerFields, artifact,
-							sessionHash, monitor);
+					tuleapArtifact = this.populateArtifact(tuleapArtifact, trackerFields, artifact, monitor);
 
 					TaskData taskData = taskDataHandler.createTaskDataFromArtifact(tuleapClient, tuleapClient
 							.getTaskRepository(), tuleapArtifact, monitor);
@@ -737,18 +710,13 @@ public class TuleapSoapConnector {
 				TuleapCoreActivator.log(e, true);
 			}
 
+			final int fifty = 50;
 			monitor.worked(fifty);
 		} catch (RemoteException e) {
 			TuleapCoreActivator.log(e, true);
-		} finally {
-			if (!DEFAULT_SESSION_HASH.equals(sessionHash)) {
-				try {
-					codendiAPIPort.logout(sessionHash);
-				} catch (RemoteException e) {
-					TuleapCoreActivator.log(e, true);
-				}
-			}
 		}
+
+		this.logout();
 
 		if (artifactQueryResult != null) {
 			return artifactQueryResult.getTotal_artifacts_number();
@@ -766,14 +734,12 @@ public class TuleapSoapConnector {
 	 *            The fields to populate in the Tuleap artifact.
 	 * @param artifact
 	 *            The artifact downloaded containing the data.
-	 * @param sessionHash
-	 *            The hash of the session.
 	 * @param monitor
 	 *            The progress monitor.
 	 * @return The Tuleap artifact populated.
 	 */
 	private TuleapArtifact populateArtifact(TuleapArtifact tuleapArtifact, TrackerField[] trackerFields,
-			Artifact artifact, String sessionHash, IProgressMonitor monitor) {
+			Artifact artifact, IProgressMonitor monitor) {
 		// try {
 		try {
 			for (TrackerField trackerField : trackerFields) {
@@ -791,7 +757,7 @@ public class TuleapSoapConnector {
 								String id = fieldValueFileInfo.getId();
 								String filename = fieldValueFileInfo.getFilename();
 								int submittedBy = fieldValueFileInfo.getSubmitted_by();
-								TuleapPerson uploadedBy = this.getPersonFromId(sessionHash, submittedBy);
+								TuleapPerson uploadedBy = this.getPersonFromId(submittedBy);
 								String description = fieldValueFileInfo.getDescription();
 								String type = fieldValueFileInfo.getFiletype();
 
@@ -844,7 +810,7 @@ public class TuleapSoapConnector {
 					artifact.getArtifact_id());
 			for (ArtifactComments artifactComment : artifactComments) {
 				int submittedBy = artifactComment.getSubmitted_by();
-				TuleapPerson commentedBy = this.getPersonFromId(sessionHash, submittedBy);
+				TuleapPerson commentedBy = this.getPersonFromId(submittedBy);
 				TuleapArtifactComment comment = new TuleapArtifactComment(artifactComment.getBody(),
 						commentedBy.getEmail(), commentedBy.getRealName(), artifactComment.getSubmitted_on());
 				tuleapArtifact.addComment(comment);
@@ -923,23 +889,11 @@ public class TuleapSoapConnector {
 	 * @return The Tuleap Artifact
 	 */
 	public TuleapArtifact getArtifact(int trackerId, int artifactId, IProgressMonitor monitor) {
+		this.login(monitor);
+
 		TuleapArtifact tuleapArtifact = null;
-
-		monitor.beginTask(VALIDATE_CONNECTION_MESSAGE, 100);
-
-		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
-		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
-
-		String sessionHash = DEFAULT_SESSION_HASH;
 		try {
 			final int fifty = 50;
-			monitor.worked(fifty);
-			monitor.subTask(LOGIN_MESSAGE);
-
-			Session session = codendiAPIPort.login(username, password);
-			sessionHash = session.getSession_hash();
-
-			monitor.worked(5);
 
 			int groupId = TuleapUtil.getGroupId(this.trackerLocation.getUrl());
 
@@ -962,22 +916,15 @@ public class TuleapSoapConnector {
 
 			TrackerField[] trackerFields = tuleapTrackerV5APIPort.getTrackerFields(sessionHash, groupId,
 					trackerId);
-			tuleapArtifact = this.populateArtifact(tuleapArtifact, trackerFields, artifact, sessionHash,
-					monitor);
+			tuleapArtifact = this.populateArtifact(tuleapArtifact, trackerFields, artifact, monitor);
 
 			monitor.worked(fifty);
 
 		} catch (RemoteException e) {
 			TuleapCoreActivator.log(e, true);
-		} finally {
-			if (!DEFAULT_SESSION_HASH.equals(sessionHash)) {
-				try {
-					codendiAPIPort.logout(sessionHash);
-				} catch (RemoteException e) {
-					TuleapCoreActivator.log(e, true);
-				}
-			}
 		}
+
+		this.logout();
 
 		return tuleapArtifact;
 	}
@@ -992,23 +939,11 @@ public class TuleapSoapConnector {
 	 * @return The id of the task data that will represent the Tuleap artifact created
 	 */
 	public String createArtifact(TuleapArtifact artifact, IProgressMonitor monitor) {
+		this.login(monitor);
+
 		String taskDataId = null;
-
-		monitor.beginTask(VALIDATE_CONNECTION_MESSAGE, 100);
-
-		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
-		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
-
-		String sessionHash = DEFAULT_SESSION_HASH;
 		try {
 			final int fifty = 50;
-			monitor.worked(fifty);
-			monitor.subTask(LOGIN_MESSAGE);
-
-			Session session = codendiAPIPort.login(username, password);
-			sessionHash = session.getSession_hash();
-
-			monitor.worked(5);
 
 			int groupId = TuleapUtil.getGroupId(this.trackerLocation.getUrl());
 
@@ -1055,15 +990,9 @@ public class TuleapSoapConnector {
 
 		} catch (RemoteException e) {
 			TuleapCoreActivator.log(e, true);
-		} finally {
-			if (!DEFAULT_SESSION_HASH.equals(sessionHash)) {
-				try {
-					codendiAPIPort.logout(sessionHash);
-				} catch (RemoteException e) {
-					TuleapCoreActivator.log(e, true);
-				}
-			}
 		}
+
+		this.logout();
 
 		return taskDataId;
 	}
@@ -1077,22 +1006,10 @@ public class TuleapSoapConnector {
 	 *            the progress monitor
 	 */
 	public void updateArtifact(TuleapArtifact artifact, IProgressMonitor monitor) {
-		monitor.beginTask(VALIDATE_CONNECTION_MESSAGE, 100);
+		this.login(monitor);
 
-		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
-		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
-
-		String sessionHash = DEFAULT_SESSION_HASH;
 		try {
 			final int fifty = 50;
-			monitor.worked(fifty);
-			monitor.subTask(LOGIN_MESSAGE);
-
-			Session session = codendiAPIPort.login(username, password);
-			sessionHash = session.getSession_hash();
-
-			monitor.worked(5);
-
 			int groupId = TuleapUtil.getGroupId(this.trackerLocation.getUrl());
 
 			monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.RetrievingTrackerFields")); //$NON-NLS-1$
@@ -1129,15 +1046,9 @@ public class TuleapSoapConnector {
 
 		} catch (RemoteException e) {
 			TuleapCoreActivator.log(e, true);
-		} finally {
-			if (!DEFAULT_SESSION_HASH.equals(sessionHash)) {
-				try {
-					codendiAPIPort.logout(sessionHash);
-				} catch (RemoteException e) {
-					TuleapCoreActivator.log(e, true);
-				}
-			}
 		}
+
+		this.logout();
 	}
 
 	/**
@@ -1211,7 +1122,7 @@ public class TuleapSoapConnector {
 	}
 
 	/**
-	 * Thie will convert the default value from "" to None for the needed fields.
+	 * The will convert the default value from "" to None for the needed fields.
 	 * 
 	 * @param trackerFieldType
 	 *            The type of the field
@@ -1454,23 +1365,10 @@ public class TuleapSoapConnector {
 	 * @return The list of Tuleap tracker reports available
 	 */
 	public List<TuleapTrackerReport> getReports(int trackerId, IProgressMonitor monitor) {
+		this.login(monitor);
+
 		List<TuleapTrackerReport> reports = new ArrayList<TuleapTrackerReport>();
-		monitor.beginTask(VALIDATE_CONNECTION_MESSAGE, 100);
-
-		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
-		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
-
-		String sessionHash = DEFAULT_SESSION_HASH;
 		try {
-			final int fifty = 50;
-			monitor.worked(fifty);
-			monitor.subTask(LOGIN_MESSAGE);
-
-			Session session = codendiAPIPort.login(username, password);
-			sessionHash = session.getSession_hash();
-
-			monitor.worked(5);
-
 			int groupId = TuleapUtil.getGroupId(this.trackerLocation.getUrl());
 
 			monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.RetrievingTheReports")); //$NON-NLS-1$
@@ -1485,28 +1383,21 @@ public class TuleapSoapConnector {
 
 		} catch (RemoteException e) {
 			TuleapCoreActivator.log(e, true);
-		} finally {
-			if (!DEFAULT_SESSION_HASH.equals(sessionHash)) {
-				try {
-					codendiAPIPort.logout(sessionHash);
-				} catch (RemoteException e) {
-					TuleapCoreActivator.log(e, true);
-				}
-			}
 		}
+
+		this.logout();
+
 		return reports;
 	}
 
 	/**
 	 * Returns the user information from the given identifier.
 	 * 
-	 * @param sessionHash
-	 *            The session hash
 	 * @param identifier
 	 *            The identifier
 	 * @return The user information from the given identifier
 	 */
-	private TuleapPerson getPersonFromId(String sessionHash, int identifier) {
+	private TuleapPerson getPersonFromId(int identifier) {
 		try {
 			UserInfo userInfo = codendiAPIPort.getUserInfo(sessionHash, identifier);
 			return new TuleapPerson(userInfo.getUsername(), userInfo.getReal_name(), userInfo.getId(),
@@ -1535,25 +1426,13 @@ public class TuleapSoapConnector {
 	 */
 	public byte[] getAttachmentContent(int artifactId, int attachmentId, String filename, int size,
 			IProgressMonitor monitor) {
-		monitor.beginTask(TuleapMylynTasksMessages.getString(
-				"TuleapSoapConnector.RetrievingAttachmentContentFor", filename), 100); //$NON-NLS-1$
+		this.login(monitor);
+
+		monitor.subTask(TuleapMylynTasksMessages.getString(
+				"TuleapSoapConnector.RetrievingAttachmentContentFor", filename)); //$NON-NLS-1$
 
 		byte[] attachmentContent = new byte[] {};
-
-		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
-		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
-
-		String sessionHash = DEFAULT_SESSION_HASH;
 		try {
-			final int fifty = 50;
-			monitor.worked(fifty);
-			monitor.subTask(LOGIN_MESSAGE);
-
-			Session session = codendiAPIPort.login(username, password);
-			sessionHash = session.getSession_hash();
-
-			monitor.worked(5);
-
 			monitor.subTask(TuleapMylynTasksMessages
 					.getString("TuleapSoapConnector.RetrievingAttachmentContent")); //$NON-NLS-1$
 
@@ -1576,15 +1455,9 @@ public class TuleapSoapConnector {
 
 		} catch (RemoteException e) {
 			TuleapCoreActivator.log(e, true);
-		} finally {
-			if (!DEFAULT_SESSION_HASH.equals(sessionHash)) {
-				try {
-					codendiAPIPort.logout(sessionHash);
-				} catch (RemoteException e) {
-					TuleapCoreActivator.log(e, true);
-				}
-			}
 		}
+
+		this.logout();
 
 		return attachmentContent;
 	}
@@ -1605,24 +1478,11 @@ public class TuleapSoapConnector {
 	 */
 	public void uploadAttachment(int trackerId, int artifactId,
 			TuleapAttachmentDescriptor tuleapAttachmentDescriptor, String comment, IProgressMonitor monitor) {
-		monitor.beginTask(TuleapMylynTasksMessages.getString(
-				"TuleapSoapConnector.UploadingAttachmentContent", tuleapAttachmentDescriptor.getFileName()), //$NON-NLS-1$
-				100);
+		this.login(monitor);
 
-		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
-		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
-
-		String sessionHash = DEFAULT_SESSION_HASH;
+		monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.UploadingAttachmentContent", //$NON-NLS-1$
+				tuleapAttachmentDescriptor.getFileName()));
 		try {
-			final int fifty = 50;
-			monitor.worked(fifty);
-			monitor.subTask(LOGIN_MESSAGE);
-
-			Session session = codendiAPIPort.login(username, password);
-			sessionHash = session.getSession_hash();
-
-			monitor.worked(5);
-
 			monitor.subTask(TuleapMylynTasksMessages
 					.getString("TuleapSoapConnector.RetrievingAttachmentContent")); //$NON-NLS-1$
 
@@ -1673,14 +1533,8 @@ public class TuleapSoapConnector {
 			TuleapCoreActivator.log(e, true);
 		} catch (IOException e) {
 			TuleapCoreActivator.log(e, true);
-		} finally {
-			if (!DEFAULT_SESSION_HASH.equals(sessionHash)) {
-				try {
-					codendiAPIPort.logout(sessionHash);
-				} catch (RemoteException e) {
-					TuleapCoreActivator.log(e, true);
-				}
-			}
 		}
+
+		this.logout();
 	}
 }

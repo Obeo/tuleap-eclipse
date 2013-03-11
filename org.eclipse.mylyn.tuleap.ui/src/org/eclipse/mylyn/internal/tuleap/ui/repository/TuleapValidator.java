@@ -64,6 +64,8 @@ public class TuleapValidator {
 		if (repositoryConnector instanceof TuleapRepositoryConnector) {
 			AbstractWebLocation location = new TaskRepositoryLocationFactory()
 					.createWebLocation(taskRepository);
+			monitor.beginTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.ValidateConnection"), //$NON-NLS-1$
+					10);
 			TuleapSoapConnector trackerSoapConnector = new TuleapSoapConnector(location);
 			return trackerSoapConnector.validateConnection(monitor);
 		}
