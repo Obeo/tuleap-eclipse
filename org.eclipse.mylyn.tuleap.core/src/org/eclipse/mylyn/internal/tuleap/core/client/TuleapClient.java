@@ -10,7 +10,15 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.core.client;
 
+import java.net.MalformedURLException;
+import java.rmi.RemoteException;
+
+import javax.xml.rpc.ServiceException;
+
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.internal.tuleap.core.TuleapCoreActivator;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact;
@@ -144,12 +152,24 @@ public class TuleapClient implements ITuleapClient {
 	 * @see org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClient#getArtifact(int,
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public TuleapArtifact getArtifact(String taskId, IProgressMonitor monitor) {
+	public TuleapArtifact getArtifact(String taskId, IProgressMonitor monitor) throws CoreException {
 		TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(this.location);
 		int trackerId = TuleapUtil.getTrackerIdFromTaskDataId(taskId);
 		int artifactId = TuleapUtil.getArtifactIdFromTaskDataId(taskId);
 		if (trackerId != -1 && artifactId != -1) {
-			TuleapArtifact tuleapArtifact = tuleapSoapConnector.getArtifact(trackerId, artifactId, monitor);
+			TuleapArtifact tuleapArtifact;
+			try {
+				tuleapArtifact = tuleapSoapConnector.getArtifact(trackerId, artifactId, monitor);
+			} catch (MalformedURLException e) {
+				IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
+				throw new CoreException(status);
+			} catch (RemoteException e) {
+				IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
+				throw new CoreException(status);
+			} catch (ServiceException e) {
+				IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
+				throw new CoreException(status);
+			}
 			return tuleapArtifact;
 		}
 		return null;
@@ -161,9 +181,21 @@ public class TuleapClient implements ITuleapClient {
 	 * @see org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClient#createArtifact(org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact,
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public String createArtifact(TuleapArtifact artifact, IProgressMonitor monitor) {
+	public String createArtifact(TuleapArtifact artifact, IProgressMonitor monitor) throws CoreException {
 		TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(this.location);
-		String taskDataId = tuleapSoapConnector.createArtifact(artifact, monitor);
+		String taskDataId;
+		try {
+			taskDataId = tuleapSoapConnector.createArtifact(artifact, monitor);
+		} catch (RemoteException e) {
+			IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
+			throw new CoreException(status);
+		} catch (MalformedURLException e) {
+			IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
+			throw new CoreException(status);
+		} catch (ServiceException e) {
+			IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
+			throw new CoreException(status);
+		}
 		return taskDataId;
 	}
 
@@ -173,9 +205,20 @@ public class TuleapClient implements ITuleapClient {
 	 * @see org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClient#updateArtifact(org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact,
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public void updateArtifact(TuleapArtifact artifact, IProgressMonitor monitor) {
+	public void updateArtifact(TuleapArtifact artifact, IProgressMonitor monitor) throws CoreException {
 		TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(this.location);
-		tuleapSoapConnector.updateArtifact(artifact, monitor);
+		try {
+			tuleapSoapConnector.updateArtifact(artifact, monitor);
+		} catch (MalformedURLException e) {
+			IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
+			throw new CoreException(status);
+		} catch (RemoteException e) {
+			IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
+			throw new CoreException(status);
+		} catch (ServiceException e) {
+			IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
+			throw new CoreException(status);
+		}
 	}
 
 	/**

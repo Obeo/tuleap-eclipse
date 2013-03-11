@@ -11,13 +11,21 @@
 package org.eclipse.mylyn.internal.tuleap.core.repository;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.rmi.RemoteException;
 import java.util.List;
+
+import javax.xml.rpc.ServiceException;
 
 import org.apache.commons.codec.binary.Base64;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.internal.tuleap.core.TuleapCoreActivator;
 import org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClient;
 import org.eclipse.mylyn.internal.tuleap.core.model.AbstractTuleapField;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration;
@@ -156,8 +164,20 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 			int size = length.intValue();
 			String filename = taskAttachment.getFileName();
 
-			byte[] content = tuleapSoapConnector.getAttachmentContent(artifactId, attachmentId, filename,
-					size, monitor);
+			byte[] content = new byte[] {};
+			try {
+				content = tuleapSoapConnector.getAttachmentContent(artifactId, attachmentId, filename, size,
+						monitor);
+			} catch (MalformedURLException e) {
+				IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
+				throw new CoreException(status);
+			} catch (RemoteException e) {
+				IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
+				throw new CoreException(status);
+			} catch (ServiceException e) {
+				IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
+				throw new CoreException(status);
+			}
 			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(Base64.decodeBase64(content));
 			return byteArrayInputStream;
 		}
@@ -242,8 +262,16 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 
 		TuleapAttachmentDescriptor tuleapAttachmentDescriptor = new TuleapAttachmentDescriptor(fieldname,
 				fieldlabel, filename, filetype, description, size, inputStream);
-		tuleapSoapConnector.uploadAttachment(trackerId, artifactId, tuleapAttachmentDescriptor, comment,
-				monitor);
+		try {
+			tuleapSoapConnector.uploadAttachment(trackerId, artifactId, tuleapAttachmentDescriptor, comment,
+					monitor);
+		} catch (ServiceException e) {
+			IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
+			throw new CoreException(status);
+		} catch (IOException e) {
+			IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
+			throw new CoreException(status);
+		}
 	}
 
 }

@@ -10,6 +10,11 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.ui.repository;
 
+import java.net.MalformedURLException;
+import java.rmi.RemoteException;
+
+import javax.xml.rpc.ServiceException;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -59,6 +64,8 @@ public class TuleapValidator {
 	 * @return A status indicating if the validation went well.
 	 */
 	public IStatus validate(IProgressMonitor monitor) throws CoreException {
+		IStatus status = new Status(IStatus.ERROR, TuleapTasksUIPlugin.PLUGIN_ID, TuleapMylynTasksMessages
+				.getString("TuleapValidator.InvalidRepositoryConnector")); //$NON-NLS-1$ 
 		AbstractRepositoryConnector repositoryConnector = TasksUi.getRepositoryManager()
 				.getRepositoryConnector(ITuleapConstants.CONNECTOR_KIND);
 		if (repositoryConnector instanceof TuleapRepositoryConnector) {
@@ -67,9 +74,16 @@ public class TuleapValidator {
 			monitor.beginTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.ValidateConnection"), //$NON-NLS-1$
 					10);
 			TuleapSoapConnector trackerSoapConnector = new TuleapSoapConnector(location);
-			return trackerSoapConnector.validateConnection(monitor);
+			try {
+				status = trackerSoapConnector.validateConnection(monitor);
+			} catch (MalformedURLException e) {
+				status = new Status(IStatus.ERROR, TuleapTasksUIPlugin.PLUGIN_ID, e.getMessage(), e);
+			} catch (RemoteException e) {
+				status = new Status(IStatus.ERROR, TuleapTasksUIPlugin.PLUGIN_ID, e.getMessage(), e);
+			} catch (ServiceException e) {
+				status = new Status(IStatus.ERROR, TuleapTasksUIPlugin.PLUGIN_ID, e.getMessage(), e);
+			}
 		}
-		return new Status(IStatus.ERROR, TuleapTasksUIPlugin.PLUGIN_ID, TuleapMylynTasksMessages
-				.getString("TuleapValidator.InvalidRepositoryConnector")); //$NON-NLS-1$
+		return status;
 	}
 }

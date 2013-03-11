@@ -10,7 +10,11 @@
  *******************************************************************************/
 package org.eclipse.mylyn.tuleap.tests.core;
 
+import java.net.MalformedURLException;
+import java.rmi.RemoteException;
 import java.util.List;
+
+import javax.xml.rpc.ServiceException;
 
 import junit.framework.TestCase;
 
@@ -110,10 +114,19 @@ public class TuleapSoapConnectorTests extends TestCase {
 	public void testGetArtifact() {
 		MockedArtifact artifact1 = createAMockedTrackerWithOneArtifact();
 
-		TuleapArtifact tuleapArtifact = tuleapSoapConnector.getArtifact(1, 1, new NullProgressMonitor());
-		assertNotNull(tuleapArtifact);
-		assertEquals(artifact1.getArtifact_id(), tuleapArtifact.getId());
-		assertEquals(artifact1.getTracker_id(), tuleapArtifact.getTrackerId());
+		TuleapArtifact tuleapArtifact;
+		try {
+			tuleapArtifact = tuleapSoapConnector.getArtifact(1, 1, new NullProgressMonitor());
+			assertNotNull(tuleapArtifact);
+			assertEquals(artifact1.getArtifact_id(), tuleapArtifact.getId());
+			assertEquals(artifact1.getTracker_id(), tuleapArtifact.getTrackerId());
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} catch (ServiceException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -164,22 +177,31 @@ public class TuleapSoapConnectorTests extends TestCase {
 		TrackerField tracker1Field1 = tracker.getTrackerFields()[0];
 
 		// Check the existing value
-		TuleapArtifact oldArtifact = tuleapSoapConnector.getArtifact(trackerId, artifactId,
-				new NullProgressMonitor());
-		assertNotNull(oldArtifact);
-		assertEquals(DEFAULT_VALUE, oldArtifact.getValue(String.valueOf(tracker1Field1.getShort_name())));
+		try {
+			TuleapArtifact oldArtifact = tuleapSoapConnector.getArtifact(trackerId, artifactId,
+					new NullProgressMonitor());
+			assertNotNull(oldArtifact);
+			assertEquals(DEFAULT_VALUE, oldArtifact.getValue(String.valueOf(tracker1Field1.getShort_name())));
 
-		// Create a mocked tuleap artifact
-		TuleapArtifact tuleapArtifact = new TuleapArtifact(artifactId, trackerId, trackerName, projectName);
-		String newValue = "newValue"; //$NON-NLS-1$
-		tuleapArtifact.putValue(String.valueOf(tracker1Field1.getField_id()), newValue);
+			// Create a mocked tuleap artifact
+			TuleapArtifact tuleapArtifact = new TuleapArtifact(artifactId, trackerId, trackerName,
+					projectName);
+			String newValue = "newValue"; //$NON-NLS-1$
+			tuleapArtifact.putValue(String.valueOf(tracker1Field1.getField_id()), newValue);
 
-		tuleapSoapConnector.updateArtifact(tuleapArtifact, new NullProgressMonitor());
+			tuleapSoapConnector.updateArtifact(tuleapArtifact, new NullProgressMonitor());
 
-		TuleapArtifact newArtifact = tuleapSoapConnector.getArtifact(trackerId, artifactId,
-				new NullProgressMonitor());
-		assertNotNull(newArtifact);
-		assertEquals(newValue, newArtifact.getValue(String.valueOf(tracker1Field1.getShort_name())));
+			TuleapArtifact newArtifact = tuleapSoapConnector.getArtifact(trackerId, artifactId,
+					new NullProgressMonitor());
+			assertNotNull(newArtifact);
+			assertEquals(newValue, newArtifact.getValue(String.valueOf(tracker1Field1.getShort_name())));
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} catch (ServiceException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tuleap.core.client;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration;
@@ -34,8 +35,10 @@ public interface ITuleapClient {
 	 * @param monitor
 	 *            The progress monitor
 	 * @return The ID of the newly created artifact, computed by the tracker
+	 * @throws CoreException
+	 *             In case of issues during the creation of the artifact
 	 */
-	String createArtifact(TuleapArtifact artifact, IProgressMonitor monitor);
+	String createArtifact(TuleapArtifact artifact, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Updates the Tuleap artifact located on the tracker.
@@ -44,8 +47,10 @@ public interface ITuleapClient {
 	 *            The Tuleap artifact to update
 	 * @param monitor
 	 *            The progress monitor
+	 * @throws CoreException
+	 *             In case of issues during the update of the artifact
 	 */
-	void updateArtifact(TuleapArtifact artifact, IProgressMonitor monitor);
+	void updateArtifact(TuleapArtifact artifact, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Asks the Tuleap tracker for the artifact matching the given ID and return the Tuleap Artifact.
@@ -55,8 +60,10 @@ public interface ITuleapClient {
 	 * @param monitor
 	 *            The progress monitor
 	 * @return The Tuleap artifact matching the given task ID.
+	 * @throws CoreException
+	 *             In case of issues during the retrieval of the artifact
 	 */
-	TuleapArtifact getArtifact(String taskId, IProgressMonitor monitor);
+	TuleapArtifact getArtifact(String taskId, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Updates the attributes handled by the Tuleap client.

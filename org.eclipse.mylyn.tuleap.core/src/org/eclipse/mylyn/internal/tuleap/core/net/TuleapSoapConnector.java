@@ -194,8 +194,15 @@ public class TuleapSoapConnector {
 	 * @param monitor
 	 *            The progress monitor
 	 * @return A status indicating if everything went right.
+	 * @throws MalformedURLException
+	 *             If the URL is invalid
+	 * @throws ServiceException
+	 *             If an error appears with the SOAP API
+	 * @throws RemoteException
+	 *             If the server returns an error
 	 */
-	private IStatus login(IProgressMonitor monitor) {
+	private IStatus login(IProgressMonitor monitor) throws MalformedURLException, ServiceException,
+			RemoteException {
 		IStatus status = Status.OK_STATUS;
 
 		// Shortcut for the unit test
@@ -223,29 +230,21 @@ public class TuleapSoapConnector {
 		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
 		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
 
-		try {
-			URL url = new URL(soapv1url);
-			codendiAPIPort = locator.getCodendiAPIPort(url);
+		URL url = new URL(soapv1url);
+		codendiAPIPort = locator.getCodendiAPIPort(url);
 
-			monitor.subTask(LOGIN_MESSAGE);
+		monitor.subTask(LOGIN_MESSAGE);
 
-			session = codendiAPIPort.login(username, password);
-			sessionHash = session.getSession_hash();
+		session = codendiAPIPort.login(username, password);
+		sessionHash = session.getSession_hash();
 
-			monitor.worked(10);
+		monitor.worked(10);
 
-			config = new FileProvider(getClass().getClassLoader().getResourceAsStream(CONFIG_FILE));
-			TuleapTrackerV5APILocator tuleapLocator = new TuleapTrackerV5APILocatorImpl(config,
-					this.trackerLocation);
-			url = new URL(soapv2url);
-			tuleapTrackerV5APIPort = tuleapLocator.getTuleapTrackerV5APIPort(url);
-		} catch (MalformedURLException e) {
-			TuleapCoreActivator.log(e, true);
-		} catch (ServiceException e) {
-			TuleapCoreActivator.log(e, true);
-		} catch (RemoteException e) {
-			TuleapCoreActivator.log(e, true);
-		}
+		config = new FileProvider(getClass().getClassLoader().getResourceAsStream(CONFIG_FILE));
+		TuleapTrackerV5APILocator tuleapLocator = new TuleapTrackerV5APILocatorImpl(config,
+				this.trackerLocation);
+		url = new URL(soapv2url);
+		tuleapTrackerV5APIPort = tuleapLocator.getTuleapTrackerV5APIPort(url);
 
 		return status;
 	}
@@ -299,8 +298,15 @@ public class TuleapSoapConnector {
 	 * @param monitor
 	 *            The progress monitor
 	 * @return A status indicating if everything went well
+	 * @throws ServiceException
+	 *             If a problem appears with the client
+	 * @throws RemoteException
+	 *             If a problem appears with the server
+	 * @throws MalformedURLException
+	 *             If the URL is invalid
 	 */
-	public IStatus validateConnection(IProgressMonitor monitor) {
+	public IStatus validateConnection(IProgressMonitor monitor) throws MalformedURLException,
+			RemoteException, ServiceException {
 		IStatus status = this.login(monitor);
 		this.logout();
 		return status;
@@ -314,14 +320,13 @@ public class TuleapSoapConnector {
 	 * @return The configuration of the Tuleap instance.
 	 */
 	public TuleapInstanceConfiguration getTuleapInstanceConfiguration(IProgressMonitor monitor) {
-		this.login(monitor);
-
 		TuleapInstanceConfiguration tuleapInstanceConfiguration = new TuleapInstanceConfiguration(
 				this.trackerLocation.getUrl());
-		monitor.beginTask(TuleapMylynTasksMessages
-				.getString("TuleapSoapConnector.RetrieveTuleapInstanceConfiguration"), 100); //$NON-NLS-1$
-
 		try {
+			this.login(monitor);
+
+			monitor.beginTask(TuleapMylynTasksMessages
+					.getString("TuleapSoapConnector.RetrieveTuleapInstanceConfiguration"), 100); //$NON-NLS-1$
 			int groupId = TuleapUtil.getGroupId(this.trackerLocation.getUrl());
 
 			monitor.worked(1);
@@ -338,6 +343,10 @@ public class TuleapSoapConnector {
 						tuleapTrackerConfiguration);
 			}
 		} catch (RemoteException e) {
+			TuleapCoreActivator.log(e, true);
+		} catch (MalformedURLException e) {
+			TuleapCoreActivator.log(e, true);
+		} catch (ServiceException e) {
 			TuleapCoreActivator.log(e, true);
 		}
 
@@ -636,12 +645,11 @@ public class TuleapSoapConnector {
 	public int performQuery(IRepositoryQuery query, TaskDataCollector collector, TaskAttributeMapper mapper,
 			TuleapTaskDataHandler taskDataHandler, ITuleapClient tuleapClient, int maxHits,
 			IProgressMonitor monitor) {
-		this.login(monitor);
-
 		ArtifactQueryResult artifactQueryResult = null;
 		int trackerId = -1;
 
 		try {
+			this.login(monitor);
 			int groupId = TuleapUtil.getGroupId(this.trackerLocation.getUrl());
 
 			monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.ExecutingQuery")); //$NON-NLS-1$
@@ -713,6 +721,10 @@ public class TuleapSoapConnector {
 			final int fifty = 50;
 			monitor.worked(fifty);
 		} catch (RemoteException e) {
+			TuleapCoreActivator.log(e, true);
+		} catch (MalformedURLException e) {
+			TuleapCoreActivator.log(e, true);
+		} catch (ServiceException e) {
 			TuleapCoreActivator.log(e, true);
 		}
 
@@ -887,42 +899,42 @@ public class TuleapSoapConnector {
 	 * @param monitor
 	 *            The progress monitor
 	 * @return The Tuleap Artifact
+	 * @throws ServiceException
+	 *             If a problem appears with the client
+	 * @throws RemoteException
+	 *             If a problem appears with the server
+	 * @throws MalformedURLException
+	 *             If the URL is invalid
 	 */
-	public TuleapArtifact getArtifact(int trackerId, int artifactId, IProgressMonitor monitor) {
-		this.login(monitor);
-
+	public TuleapArtifact getArtifact(int trackerId, int artifactId, IProgressMonitor monitor)
+			throws MalformedURLException, RemoteException, ServiceException {
 		TuleapArtifact tuleapArtifact = null;
-		try {
-			final int fifty = 50;
+		this.login(monitor);
+		final int fifty = 50;
 
-			int groupId = TuleapUtil.getGroupId(this.trackerLocation.getUrl());
+		int groupId = TuleapUtil.getGroupId(this.trackerLocation.getUrl());
 
-			Artifact artifact = tuleapTrackerV5APIPort.getArtifact(sessionHash, groupId, trackerId,
-					artifactId);
+		Artifact artifact = tuleapTrackerV5APIPort.getArtifact(sessionHash, groupId, trackerId, artifactId);
 
-			Group group = codendiAPIPort.getGroupById(sessionHash, groupId);
-			String projectName = group.getGroup_name();
+		Group group = codendiAPIPort.getGroupById(sessionHash, groupId);
+		String projectName = group.getGroup_name();
 
-			String trackerName = null;
-			Tracker[] trackers = tuleapTrackerV5APIPort.getTrackerList(sessionHash, groupId);
-			for (Tracker tracker : trackers) {
-				if (trackerId == tracker.getTracker_id()) {
-					trackerName = tracker.getName();
-					break;
-				}
+		String trackerName = null;
+		Tracker[] trackers = tuleapTrackerV5APIPort.getTrackerList(sessionHash, groupId);
+		for (Tracker tracker : trackers) {
+			if (trackerId == tracker.getTracker_id()) {
+				trackerName = tracker.getName();
+				break;
 			}
-
-			tuleapArtifact = new TuleapArtifact(artifact, trackerName, projectName);
-
-			TrackerField[] trackerFields = tuleapTrackerV5APIPort.getTrackerFields(sessionHash, groupId,
-					trackerId);
-			tuleapArtifact = this.populateArtifact(tuleapArtifact, trackerFields, artifact, monitor);
-
-			monitor.worked(fifty);
-
-		} catch (RemoteException e) {
-			TuleapCoreActivator.log(e, true);
 		}
+
+		tuleapArtifact = new TuleapArtifact(artifact, trackerName, projectName);
+
+		TrackerField[] trackerFields = tuleapTrackerV5APIPort.getTrackerFields(sessionHash, groupId,
+				trackerId);
+		tuleapArtifact = this.populateArtifact(tuleapArtifact, trackerFields, artifact, monitor);
+
+		monitor.worked(fifty);
 
 		this.logout();
 
@@ -937,60 +949,61 @@ public class TuleapSoapConnector {
 	 * @param monitor
 	 *            The progress monitor
 	 * @return The id of the task data that will represent the Tuleap artifact created
+	 * @throws RemoteException
+	 *             In case of connection problems
+	 * @throws ServiceException
+	 *             In case of errors from the client
+	 * @throws MalformedURLException
+	 *             If the URL is invalid
 	 */
-	public String createArtifact(TuleapArtifact artifact, IProgressMonitor monitor) {
+	public String createArtifact(TuleapArtifact artifact, IProgressMonitor monitor) throws RemoteException,
+			MalformedURLException, ServiceException {
 		this.login(monitor);
 
 		String taskDataId = null;
-		try {
-			final int fifty = 50;
+		final int fifty = 50;
 
-			int groupId = TuleapUtil.getGroupId(this.trackerLocation.getUrl());
+		int groupId = TuleapUtil.getGroupId(this.trackerLocation.getUrl());
 
-			Group group = codendiAPIPort.getGroupById(sessionHash, groupId);
-			String projectName = group.getGroup_name();
+		Group group = codendiAPIPort.getGroupById(sessionHash, groupId);
+		String projectName = group.getGroup_name();
 
-			monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.RetrievingTrackerFields")); //$NON-NLS-1$
+		monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.RetrievingTrackerFields")); //$NON-NLS-1$
 
-			List<ArtifactFieldValue> valuesList = new ArrayList<ArtifactFieldValue>();
-			TrackerField[] trackerFields = tuleapTrackerV5APIPort.getTrackerFields(sessionHash, groupId,
-					artifact.getTrackerId());
-			monitor.worked(10);
+		List<ArtifactFieldValue> valuesList = new ArrayList<ArtifactFieldValue>();
+		TrackerField[] trackerFields = tuleapTrackerV5APIPort.getTrackerFields(sessionHash, groupId, artifact
+				.getTrackerId());
+		monitor.worked(10);
 
-			monitor.subTask(TuleapMylynTasksMessages
-					.getString("TuleapSoapConnector.RetrievingTrackerSemantic")); //$NON-NLS-1$
-			TrackerStructure trackerStructure = tuleapTrackerV5APIPort.getTrackerStructure(sessionHash,
-					groupId, artifact.getTrackerId());
-			monitor.worked(10);
-			for (TrackerField trackerField : trackerFields) {
-				if (trackerStructure != null) {
-					ArtifactFieldValue artifactFieldValue = getArtifactFieldValue(trackerStructure,
-							trackerField, artifact, ITuleapConstants.PERMISSION_SUBMIT);
-					if (artifactFieldValue != null) {
-						valuesList.add(artifactFieldValue);
-					}
-				}
-				monitor.worked(1);
-			}
-			int artifactId = tuleapTrackerV5APIPort.addArtifact(sessionHash, groupId,
-					artifact.getTrackerId(), valuesList.toArray(new ArtifactFieldValue[valuesList.size()]));
-
-			String trackerName = ""; //$NON-NLS-1$
-			Tracker[] trackerList = tuleapTrackerV5APIPort.getTrackerList(sessionHash, groupId);
-			for (Tracker tracker : trackerList) {
-				if (tracker.getTracker_id() == artifact.getTrackerId()) {
-					trackerName = tracker.getName();
-					break;
+		monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.RetrievingTrackerSemantic")); //$NON-NLS-1$
+		TrackerStructure trackerStructure = tuleapTrackerV5APIPort.getTrackerStructure(sessionHash, groupId,
+				artifact.getTrackerId());
+		monitor.worked(10);
+		for (TrackerField trackerField : trackerFields) {
+			if (trackerStructure != null) {
+				ArtifactFieldValue artifactFieldValue = getArtifactFieldValue(trackerStructure, trackerField,
+						artifact, ITuleapConstants.PERMISSION_SUBMIT);
+				if (artifactFieldValue != null) {
+					valuesList.add(artifactFieldValue);
 				}
 			}
-			String trackerId = TuleapUtil.getTuleapTrackerId(trackerName, artifact.getTrackerId());
-			taskDataId = TuleapUtil.getTaskDataId(projectName, trackerId, artifactId);
-
-			monitor.worked(fifty);
-
-		} catch (RemoteException e) {
-			TuleapCoreActivator.log(e, true);
+			monitor.worked(1);
 		}
+		int artifactId = tuleapTrackerV5APIPort.addArtifact(sessionHash, groupId, artifact.getTrackerId(),
+				valuesList.toArray(new ArtifactFieldValue[valuesList.size()]));
+
+		String trackerName = ""; //$NON-NLS-1$
+		Tracker[] trackerList = tuleapTrackerV5APIPort.getTrackerList(sessionHash, groupId);
+		for (Tracker tracker : trackerList) {
+			if (tracker.getTracker_id() == artifact.getTrackerId()) {
+				trackerName = tracker.getName();
+				break;
+			}
+		}
+		String trackerId = TuleapUtil.getTuleapTrackerId(trackerName, artifact.getTrackerId());
+		taskDataId = TuleapUtil.getTaskDataId(projectName, trackerId, artifactId);
+
+		monitor.worked(fifty);
 
 		this.logout();
 
@@ -1004,49 +1017,50 @@ public class TuleapSoapConnector {
 	 *            The Tuleap artifact
 	 * @param monitor
 	 *            the progress monitor
+	 * @throws ServiceException
+	 *             If the client has a problem
+	 * @throws RemoteException
+	 *             If the server returns an error
+	 * @throws MalformedURLException
+	 *             If the URL if invalid
 	 */
-	public void updateArtifact(TuleapArtifact artifact, IProgressMonitor monitor) {
+	public void updateArtifact(TuleapArtifact artifact, IProgressMonitor monitor)
+			throws MalformedURLException, RemoteException, ServiceException {
 		this.login(monitor);
 
-		try {
-			final int fifty = 50;
-			int groupId = TuleapUtil.getGroupId(this.trackerLocation.getUrl());
+		final int fifty = 50;
+		int groupId = TuleapUtil.getGroupId(this.trackerLocation.getUrl());
 
-			monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.RetrievingTrackerFields")); //$NON-NLS-1$
-			List<ArtifactFieldValue> valuesList = new ArrayList<ArtifactFieldValue>();
-			TrackerField[] trackerFields = tuleapTrackerV5APIPort.getTrackerFields(sessionHash, groupId,
-					artifact.getTrackerId());
-			monitor.worked(10);
+		monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.RetrievingTrackerFields")); //$NON-NLS-1$
+		List<ArtifactFieldValue> valuesList = new ArrayList<ArtifactFieldValue>();
+		TrackerField[] trackerFields = tuleapTrackerV5APIPort.getTrackerFields(sessionHash, groupId, artifact
+				.getTrackerId());
+		monitor.worked(10);
 
-			monitor.subTask(TuleapMylynTasksMessages
-					.getString("TuleapSoapConnector.RetrievingTrackerSemantic")); //$NON-NLS-1$
-			TrackerStructure trackerStructure = tuleapTrackerV5APIPort.getTrackerStructure(sessionHash,
-					groupId, artifact.getTrackerId());
-			monitor.worked(10);
-			for (TrackerField trackerField : trackerFields) {
-				if (trackerStructure != null) {
-					ArtifactFieldValue artifactFieldValue = getArtifactFieldValue(trackerStructure,
-							trackerField, artifact, ITuleapConstants.PERMISSION_UPDATE);
-					if (artifactFieldValue != null) {
-						valuesList.add(artifactFieldValue);
-					}
+		monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.RetrievingTrackerSemantic")); //$NON-NLS-1$
+		TrackerStructure trackerStructure = tuleapTrackerV5APIPort.getTrackerStructure(sessionHash, groupId,
+				artifact.getTrackerId());
+		monitor.worked(10);
+		for (TrackerField trackerField : trackerFields) {
+			if (trackerStructure != null) {
+				ArtifactFieldValue artifactFieldValue = getArtifactFieldValue(trackerStructure, trackerField,
+						artifact, ITuleapConstants.PERMISSION_UPDATE);
+				if (artifactFieldValue != null) {
+					valuesList.add(artifactFieldValue);
 				}
-				monitor.worked(1);
 			}
-
-			String newComment = artifact.getValue(TaskAttribute.COMMENT_NEW);
-			if (newComment == null) {
-				newComment = TuleapMylynTasksMessages.getString("TuleapSoapConnector.DefaultComment"); //$NON-NLS-1$
-			}
-			tuleapTrackerV5APIPort.updateArtifact(sessionHash, groupId, artifact.getTrackerId(), artifact
-					.getId(), valuesList.toArray(new ArtifactFieldValue[valuesList.size()]), newComment,
-					ITuleapConstants.UTF8);
-
-			monitor.worked(fifty);
-
-		} catch (RemoteException e) {
-			TuleapCoreActivator.log(e, true);
+			monitor.worked(1);
 		}
+
+		String newComment = artifact.getValue(TaskAttribute.COMMENT_NEW);
+		if (newComment == null) {
+			newComment = TuleapMylynTasksMessages.getString("TuleapSoapConnector.DefaultComment"); //$NON-NLS-1$
+		}
+		tuleapTrackerV5APIPort.updateArtifact(sessionHash, groupId, artifact.getTrackerId(),
+				artifact.getId(), valuesList.toArray(new ArtifactFieldValue[valuesList.size()]), newComment,
+				ITuleapConstants.UTF8);
+
+		monitor.worked(fifty);
 
 		this.logout();
 	}
@@ -1365,10 +1379,9 @@ public class TuleapSoapConnector {
 	 * @return The list of Tuleap tracker reports available
 	 */
 	public List<TuleapTrackerReport> getReports(int trackerId, IProgressMonitor monitor) {
-		this.login(monitor);
-
 		List<TuleapTrackerReport> reports = new ArrayList<TuleapTrackerReport>();
 		try {
+			this.login(monitor);
 			int groupId = TuleapUtil.getGroupId(this.trackerLocation.getUrl());
 
 			monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.RetrievingTheReports")); //$NON-NLS-1$
@@ -1382,6 +1395,10 @@ public class TuleapSoapConnector {
 			}
 
 		} catch (RemoteException e) {
+			TuleapCoreActivator.log(e, true);
+		} catch (MalformedURLException e) {
+			TuleapCoreActivator.log(e, true);
+		} catch (ServiceException e) {
 			TuleapCoreActivator.log(e, true);
 		}
 
@@ -1423,39 +1440,38 @@ public class TuleapSoapConnector {
 	 * @param monitor
 	 *            The progress monitor
 	 * @return The content of the attachment.
+	 * @throws ServiceException
+	 *             If a problem appears with the client
+	 * @throws RemoteException
+	 *             If a problem appears with the server
+	 * @throws MalformedURLException
+	 *             If the URL is invalid
 	 */
 	public byte[] getAttachmentContent(int artifactId, int attachmentId, String filename, int size,
-			IProgressMonitor monitor) {
-		this.login(monitor);
-
+			IProgressMonitor monitor) throws MalformedURLException, RemoteException, ServiceException {
 		monitor.subTask(TuleapMylynTasksMessages.getString(
 				"TuleapSoapConnector.RetrievingAttachmentContentFor", filename)); //$NON-NLS-1$
 
 		byte[] attachmentContent = new byte[] {};
-		try {
-			monitor.subTask(TuleapMylynTasksMessages
-					.getString("TuleapSoapConnector.RetrievingAttachmentContent")); //$NON-NLS-1$
+		this.login(monitor);
+		monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.RetrievingAttachmentContent")); //$NON-NLS-1$
 
-			String artifactAttachmentChunk = ""; //$NON-NLS-1$
-			int downloadedBytes = 0;
+		String artifactAttachmentChunk = ""; //$NON-NLS-1$
+		int downloadedBytes = 0;
 
-			// 5 mega
-			final int bufferSize = 5000000;
-			while (downloadedBytes < size) {
-				int bytesToDownload = bufferSize;
-				if (downloadedBytes + bytesToDownload > size) {
-					// The buffer is to big, let's scale down
-					bytesToDownload = size - downloadedBytes;
-				}
-				artifactAttachmentChunk += tuleapTrackerV5APIPort.getArtifactAttachmentChunk(sessionHash,
-						artifactId, attachmentId, downloadedBytes, bytesToDownload);
-				downloadedBytes = downloadedBytes + bytesToDownload;
+		// 5 mega
+		final int bufferSize = 5000000;
+		while (downloadedBytes < size) {
+			int bytesToDownload = bufferSize;
+			if (downloadedBytes + bytesToDownload > size) {
+				// The buffer is to big, let's scale down
+				bytesToDownload = size - downloadedBytes;
 			}
-			attachmentContent = artifactAttachmentChunk.getBytes();
-
-		} catch (RemoteException e) {
-			TuleapCoreActivator.log(e, true);
+			artifactAttachmentChunk += tuleapTrackerV5APIPort.getArtifactAttachmentChunk(sessionHash,
+					artifactId, attachmentId, downloadedBytes, bytesToDownload);
+			downloadedBytes = downloadedBytes + bytesToDownload;
 		}
+		attachmentContent = artifactAttachmentChunk.getBytes();
 
 		this.logout();
 
@@ -1475,65 +1491,63 @@ public class TuleapSoapConnector {
 	 *            The comment
 	 * @param monitor
 	 *            The progress monitor
+	 * @throws ServiceException
+	 *             If a problem appears with the client
+	 * @throws IOException
+	 *             If a problem appears with the read of the file.
 	 */
 	public void uploadAttachment(int trackerId, int artifactId,
-			TuleapAttachmentDescriptor tuleapAttachmentDescriptor, String comment, IProgressMonitor monitor) {
+			TuleapAttachmentDescriptor tuleapAttachmentDescriptor, String comment, IProgressMonitor monitor)
+			throws ServiceException, IOException {
 		this.login(monitor);
 
 		monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.UploadingAttachmentContent", //$NON-NLS-1$
 				tuleapAttachmentDescriptor.getFileName()));
-		try {
-			monitor.subTask(TuleapMylynTasksMessages
-					.getString("TuleapSoapConnector.RetrievingAttachmentContent")); //$NON-NLS-1$
+		monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.RetrievingAttachmentContent")); //$NON-NLS-1$
 
-			int groupId = TuleapUtil.getGroupId(this.trackerLocation.getUrl());
+		int groupId = TuleapUtil.getGroupId(this.trackerLocation.getUrl());
 
-			tuleapTrackerV5APIPort.purgeAllTemporaryAttachments(sessionHash);
+		tuleapTrackerV5APIPort.purgeAllTemporaryAttachments(sessionHash);
 
-			int size = tuleapAttachmentDescriptor.getLength().intValue();
+		int size = tuleapAttachmentDescriptor.getLength().intValue();
 
-			byte[] bytes = new byte[size];
-			tuleapAttachmentDescriptor.getInputStream().read(bytes);
-			tuleapAttachmentDescriptor.getInputStream().close();
+		byte[] bytes = new byte[size];
+		tuleapAttachmentDescriptor.getInputStream().read(bytes);
+		tuleapAttachmentDescriptor.getInputStream().close();
 
-			int length = bytes.length;
-			byte[] encodeBase64 = Base64.encodeBase64(bytes);
-			String content = new String(encodeBase64);
-			int uploaded = 0;
-			int contentSize = content.length();
-			// 5 mega
-			final int bufferSize = 5000000;
+		int length = bytes.length;
+		byte[] encodeBase64 = Base64.encodeBase64(bytes);
+		String content = new String(encodeBase64);
+		int uploaded = 0;
+		int contentSize = content.length();
+		// 5 mega
+		final int bufferSize = 5000000;
 
-			String attachmentName = tuleapTrackerV5APIPort.createTemporaryAttachment(sessionHash);
-			while (uploaded < contentSize) {
-				int toUpload = bufferSize;
-				if (toUpload > contentSize - uploaded) {
-					toUpload = contentSize - uploaded;
-				}
-				String contentToUpload = content.substring(uploaded, toUpload);
-				tuleapTrackerV5APIPort.appendTemporaryAttachmentChunk(sessionHash, attachmentName,
-						contentToUpload);
-
-				uploaded = uploaded + contentToUpload.length();
+		String attachmentName = tuleapTrackerV5APIPort.createTemporaryAttachment(sessionHash);
+		while (uploaded < contentSize) {
+			int toUpload = bufferSize;
+			if (toUpload > contentSize - uploaded) {
+				toUpload = contentSize - uploaded;
 			}
+			String contentToUpload = content.substring(uploaded, toUpload);
+			tuleapTrackerV5APIPort.appendTemporaryAttachmentChunk(sessionHash, attachmentName,
+					contentToUpload);
 
-			int submittedBy = session.getUser_id();
-
-			FieldValueFileInfo fi = new FieldValueFileInfo(attachmentName, submittedBy,
-					tuleapAttachmentDescriptor.getDescription(), tuleapAttachmentDescriptor.getFileName(),
-					length, tuleapAttachmentDescriptor.getFileType(), ""); //$NON-NLS-1$
-			FieldValueFileInfo[] fieldValueFileInfos = new FieldValueFileInfo[] {fi };
-			FieldValue fieldValue = new FieldValue(null, fieldValueFileInfos);
-			ArtifactFieldValue fv = new ArtifactFieldValue(tuleapAttachmentDescriptor.getFieldName(),
-					tuleapAttachmentDescriptor.getFieldLabel(), fieldValue);
-			ArtifactFieldValue[] fieldValues = new ArtifactFieldValue[] {fv };
-			tuleapTrackerV5APIPort.updateArtifact(sessionHash, groupId, trackerId, artifactId, fieldValues,
-					comment, "UTF-8"); //$NON-NLS-1$
-		} catch (RemoteException e) {
-			TuleapCoreActivator.log(e, true);
-		} catch (IOException e) {
-			TuleapCoreActivator.log(e, true);
+			uploaded = uploaded + contentToUpload.length();
 		}
+
+		int submittedBy = session.getUser_id();
+
+		FieldValueFileInfo fi = new FieldValueFileInfo(attachmentName, submittedBy,
+				tuleapAttachmentDescriptor.getDescription(), tuleapAttachmentDescriptor.getFileName(),
+				length, tuleapAttachmentDescriptor.getFileType(), ""); //$NON-NLS-1$
+		FieldValueFileInfo[] fieldValueFileInfos = new FieldValueFileInfo[] {fi };
+		FieldValue fieldValue = new FieldValue(null, fieldValueFileInfos);
+		ArtifactFieldValue fv = new ArtifactFieldValue(tuleapAttachmentDescriptor.getFieldName(),
+				tuleapAttachmentDescriptor.getFieldLabel(), fieldValue);
+		ArtifactFieldValue[] fieldValues = new ArtifactFieldValue[] {fv };
+		tuleapTrackerV5APIPort.updateArtifact(sessionHash, groupId, trackerId, artifactId, fieldValues,
+				comment, "UTF-8"); //$NON-NLS-1$
 
 		this.logout();
 	}
