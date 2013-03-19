@@ -151,9 +151,9 @@ public interface ITuleapConstants {
 	String TRACKER_ID_END_DELIMITER = "]"; //$NON-NLS-1$
 
 	/**
-	 * The select box "none" value.
+	 * The identifier of the none binding.
 	 */
-	String SELECT_BOX_NONE_VALUE = "None"; //$NON-NLS-1$
+	int TRACKER_FIELD_NONE_BINDING_ID = 100;
 
 	/**
 	 * The attributes query separator.

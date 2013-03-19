@@ -62,26 +62,23 @@ public class TrackerWorkflowRuleArray implements java.io.Serializable {
 	private java.lang.Object __equalsCalc = null;
 
 	public synchronized boolean equals(java.lang.Object obj) {
-		if (!(obj instanceof TrackerWorkflowRuleArray)) {
+		if (!(obj instanceof TrackerWorkflowRuleArray))
 			return false;
-		}
 		TrackerWorkflowRuleArray other = (TrackerWorkflowRuleArray)obj;
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
 		if (__equalsCalc != null) {
-			return __equalsCalc == obj;
+			return (__equalsCalc == obj);
 		}
 		__equalsCalc = obj;
 		boolean _equals;
 		_equals = true
-				&& (this.date == null && other.getDate() == null || this.date != null
-						&& java.util.Arrays.equals(this.date, other.getDate()))
-				&& (this.list == null && other.getList() == null || this.list != null
-						&& java.util.Arrays.equals(this.list, other.getList()));
+				&& ((this.date == null && other.getDate() == null) || (this.date != null && java.util.Arrays
+						.equals(this.date, other.getDate())))
+				&& ((this.list == null && other.getList() == null) || (this.list != null && java.util.Arrays
+						.equals(this.list, other.getList())));
 		__equalsCalc = null;
 		return _equals;
 	}

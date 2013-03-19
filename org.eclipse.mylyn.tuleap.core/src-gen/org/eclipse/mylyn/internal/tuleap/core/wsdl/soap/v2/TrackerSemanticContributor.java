@@ -39,23 +39,20 @@ public class TrackerSemanticContributor implements java.io.Serializable {
 	private java.lang.Object __equalsCalc = null;
 
 	public synchronized boolean equals(java.lang.Object obj) {
-		if (!(obj instanceof TrackerSemanticContributor)) {
+		if (!(obj instanceof TrackerSemanticContributor))
 			return false;
-		}
 		TrackerSemanticContributor other = (TrackerSemanticContributor)obj;
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
 		if (__equalsCalc != null) {
-			return __equalsCalc == obj;
+			return (__equalsCalc == obj);
 		}
 		__equalsCalc = obj;
 		boolean _equals;
-		_equals = true && (this.field_name == null && other.getField_name() == null || this.field_name != null
-				&& this.field_name.equals(other.getField_name()));
+		_equals = true && ((this.field_name == null && other.getField_name() == null) || (this.field_name != null && this.field_name
+				.equals(other.getField_name())));
 		__equalsCalc = null;
 		return _equals;
 	}

@@ -81,26 +81,23 @@ public class TrackerWorkflowRuleDate implements java.io.Serializable {
 	private java.lang.Object __equalsCalc = null;
 
 	public synchronized boolean equals(java.lang.Object obj) {
-		if (!(obj instanceof TrackerWorkflowRuleDate)) {
+		if (!(obj instanceof TrackerWorkflowRuleDate))
 			return false;
-		}
 		TrackerWorkflowRuleDate other = (TrackerWorkflowRuleDate)obj;
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
 		if (__equalsCalc != null) {
-			return __equalsCalc == obj;
+			return (__equalsCalc == obj);
 		}
 		__equalsCalc = obj;
 		boolean _equals;
 		_equals = true
 				&& this.source_field_id == other.getSource_field_id()
 				&& this.target_field_id == other.getTarget_field_id()
-				&& (this.comparator == null && other.getComparator() == null || this.comparator != null
-						&& this.comparator.equals(other.getComparator()));
+				&& ((this.comparator == null && other.getComparator() == null) || (this.comparator != null && this.comparator
+						.equals(other.getComparator())));
 		__equalsCalc = null;
 		return _equals;
 	}

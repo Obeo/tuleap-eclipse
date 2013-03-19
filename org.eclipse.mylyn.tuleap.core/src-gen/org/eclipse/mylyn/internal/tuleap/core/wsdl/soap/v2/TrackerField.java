@@ -168,34 +168,31 @@ public class TrackerField implements java.io.Serializable {
 	private java.lang.Object __equalsCalc = null;
 
 	public synchronized boolean equals(java.lang.Object obj) {
-		if (!(obj instanceof TrackerField)) {
+		if (!(obj instanceof TrackerField))
 			return false;
-		}
 		TrackerField other = (TrackerField)obj;
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
 		if (__equalsCalc != null) {
-			return __equalsCalc == obj;
+			return (__equalsCalc == obj);
 		}
 		__equalsCalc = obj;
 		boolean _equals;
 		_equals = true
 				&& this.tracker_id == other.getTracker_id()
 				&& this.field_id == other.getField_id()
-				&& (this.short_name == null && other.getShort_name() == null || this.short_name != null
-						&& this.short_name.equals(other.getShort_name()))
-				&& (this.label == null && other.getLabel() == null || this.label != null
-						&& this.label.equals(other.getLabel()))
-				&& (this.type == null && other.getType() == null || this.type != null
-						&& this.type.equals(other.getType()))
-				&& (this.values == null && other.getValues() == null || this.values != null
-						&& java.util.Arrays.equals(this.values, other.getValues()))
-				&& (this.permissions == null && other.getPermissions() == null || this.permissions != null
-						&& java.util.Arrays.equals(this.permissions, other.getPermissions()));
+				&& ((this.short_name == null && other.getShort_name() == null) || (this.short_name != null && this.short_name
+						.equals(other.getShort_name())))
+				&& ((this.label == null && other.getLabel() == null) || (this.label != null && this.label
+						.equals(other.getLabel())))
+				&& ((this.type == null && other.getType() == null) || (this.type != null && this.type
+						.equals(other.getType())))
+				&& ((this.values == null && other.getValues() == null) || (this.values != null && java.util.Arrays
+						.equals(this.values, other.getValues())))
+				&& ((this.permissions == null && other.getPermissions() == null) || (this.permissions != null && java.util.Arrays
+						.equals(this.permissions, other.getPermissions())));
 		__equalsCalc = null;
 		return _equals;
 	}

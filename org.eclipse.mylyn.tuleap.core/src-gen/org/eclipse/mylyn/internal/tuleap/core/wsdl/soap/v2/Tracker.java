@@ -124,30 +124,27 @@ public class Tracker implements java.io.Serializable {
 	private java.lang.Object __equalsCalc = null;
 
 	public synchronized boolean equals(java.lang.Object obj) {
-		if (!(obj instanceof Tracker)) {
+		if (!(obj instanceof Tracker))
 			return false;
-		}
 		Tracker other = (Tracker)obj;
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
 		if (__equalsCalc != null) {
-			return __equalsCalc == obj;
+			return (__equalsCalc == obj);
 		}
 		__equalsCalc = obj;
 		boolean _equals;
 		_equals = true
 				&& this.tracker_id == other.getTracker_id()
 				&& this.group_id == other.getGroup_id()
-				&& (this.name == null && other.getName() == null || this.name != null
-						&& this.name.equals(other.getName()))
-				&& (this.description == null && other.getDescription() == null || this.description != null
-						&& this.description.equals(other.getDescription()))
-				&& (this.item_name == null && other.getItem_name() == null || this.item_name != null
-						&& this.item_name.equals(other.getItem_name()));
+				&& ((this.name == null && other.getName() == null) || (this.name != null && this.name
+						.equals(other.getName())))
+				&& ((this.description == null && other.getDescription() == null) || (this.description != null && this.description
+						.equals(other.getDescription())))
+				&& ((this.item_name == null && other.getItem_name() == null) || (this.item_name != null && this.item_name
+						.equals(other.getItem_name())));
 		__equalsCalc = null;
 		return _equals;
 	}

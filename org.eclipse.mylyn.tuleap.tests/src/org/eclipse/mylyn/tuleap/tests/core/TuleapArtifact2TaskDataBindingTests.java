@@ -173,8 +173,7 @@ public class TuleapArtifact2TaskDataBindingTests extends TestCase {
 	private MockedTuleapArtifact createMockedTuleapArtifact(MockedField field, TrackerWorkflow workflow,
 			TrackerSemantic semantic) {
 		final int trackerID = 42;
-		final int bindValudID = 42;
-		TrackerFieldBindValue trackerFieldBindValue = new TrackerFieldBindValue(field.getId(), bindValudID,
+		TrackerFieldBindValue trackerFieldBindValue = new TrackerFieldBindValue(field.getId(),
 				"bind_value_label"); //$NON-NLS-1$
 		TrackerField trackerField = new TrackerField(trackerID, field.getId(), field.getName(), field
 				.getName(), field.getType(), new TrackerFieldBindValue[] {trackerFieldBindValue },

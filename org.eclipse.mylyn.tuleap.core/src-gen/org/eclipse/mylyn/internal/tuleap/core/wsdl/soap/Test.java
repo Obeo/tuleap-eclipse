@@ -27,6 +27,7 @@ import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.FieldValue;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.FieldValueFileInfo;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.Tracker;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerField;
+import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerFieldBindValue;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerReport;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerSemantic;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerStructure;
@@ -54,8 +55,8 @@ public class Test {
 
 	public static void main(String[] args) {
 		Test test = new Test();
-		// test.doStuff(args[0], args[1]);
-		test.doDownloadUploadStuff(args[0], args[1]);
+		test.doStuff(args[0], args[1]);
+		// test.doDownloadUploadStuff(args[0], args[1]);
 	}
 
 	private void doDownloadUploadStuff(String login, String password) {
@@ -88,7 +89,7 @@ public class Test {
 			Tracker[] trackers = tuleapTrackerV5APIPort.getTrackerList(session_hash, groupId);
 			System.out.println("Trackers length: " + trackers.length);
 
-			Artifact artifact = tuleapTrackerV5APIPort.getArtifact(session_hash, 141, 484, 739);
+			Artifact artifact = tuleapTrackerV5APIPort.getArtifact(session_hash, 0, 0, 739);
 			ArtifactFieldValue[] artifactValue = artifact.getValue();
 			for (ArtifactFieldValue artifactFieldValue : artifactValue) {
 				if ("Attachments".equals(artifactFieldValue.getField_label())) {
@@ -162,7 +163,8 @@ public class Test {
 									"Copy of the previous attachement again", file.getName(), length2,
 									filetype, "");
 							FieldValueFileInfo[] f_i = new FieldValueFileInfo[] {fi };
-							FieldValue f_v = new FieldValue(null, f_i);
+							TrackerFieldBindValue[] trackerFieldBindValue = new TrackerFieldBindValue[] {};
+							FieldValue f_v = new FieldValue(null, f_i, trackerFieldBindValue);
 							ArtifactFieldValue fv = new ArtifactFieldValue(
 									artifactFieldValue.getField_name(), artifactFieldValue.getField_label(),
 									f_v);
@@ -313,16 +315,16 @@ public class Test {
 					}
 				}
 
-				if (tracker_id == 484) {
-					// ArtifactFieldValue[] value = new ArtifactFieldValue[] {new ArtifactFieldValue("String",
-					// "string", "New Artifact " + System.currentTimeMillis()) };
-					// int artifact_id = tuleapTrackerV5APIPort.addArtifact(session_hash, groupId, tracker_id,
-					// value);
-					// System.out.println("Id of the newly created artifact: " + artifact_id);
-					//
-					// int updatedArtifactId = tuleapTrackerV5APIPort.updateArtifact(session_hash, groupId,
-					// tracker_id, artifact_id, value, "Updated without changes", "UTF-8");
-					// System.out.println("Updated artifact id: " + updatedArtifactId);
+				if (tracker_id == 524) {
+					TrackerFieldBindValue trackerFieldBindValue = new TrackerFieldBindValue(100, "");
+					FieldValue field_value = new FieldValue("100", new FieldValueFileInfo[] {},
+							new TrackerFieldBindValue[] {trackerFieldBindValue });
+					ArtifactFieldValue artifactFieldValue = new ArtifactFieldValue("components_affected",
+							"Components Affected", field_value);
+					ArtifactFieldValue[] value = new ArtifactFieldValue[] {artifactFieldValue };
+					int updatedArtifactId = tuleapTrackerV5APIPort.updateArtifact(session_hash, groupId,
+							tracker_id, 896, value, "Updated without changes", "UTF-8");
+					System.out.println("Updated artifact id: " + updatedArtifactId);
 				}
 			}
 

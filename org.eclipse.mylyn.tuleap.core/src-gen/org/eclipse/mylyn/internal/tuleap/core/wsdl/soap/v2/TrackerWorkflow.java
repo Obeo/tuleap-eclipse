@@ -105,28 +105,25 @@ public class TrackerWorkflow implements java.io.Serializable {
 	private java.lang.Object __equalsCalc = null;
 
 	public synchronized boolean equals(java.lang.Object obj) {
-		if (!(obj instanceof TrackerWorkflow)) {
+		if (!(obj instanceof TrackerWorkflow))
 			return false;
-		}
 		TrackerWorkflow other = (TrackerWorkflow)obj;
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
 		if (__equalsCalc != null) {
-			return __equalsCalc == obj;
+			return (__equalsCalc == obj);
 		}
 		__equalsCalc = obj;
 		boolean _equals;
 		_equals = true
 				&& this.field_id == other.getField_id()
 				&& this.is_used == other.getIs_used()
-				&& (this.rules == null && other.getRules() == null || this.rules != null
-						&& this.rules.equals(other.getRules()))
-				&& (this.transitions == null && other.getTransitions() == null || this.transitions != null
-						&& java.util.Arrays.equals(this.transitions, other.getTransitions()));
+				&& ((this.rules == null && other.getRules() == null) || (this.rules != null && this.rules
+						.equals(other.getRules())))
+				&& ((this.transitions == null && other.getTransitions() == null) || (this.transitions != null && java.util.Arrays
+						.equals(this.transitions, other.getTransitions())));
 		__equalsCalc = null;
 		return _equals;
 	}

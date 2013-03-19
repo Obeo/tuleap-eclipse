@@ -13,13 +13,17 @@ public class FieldValue implements java.io.Serializable {
 
 	private org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.FieldValueFileInfo[] file_info;
 
+	private org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerFieldBindValue[] bind_value;
+
 	public FieldValue() {
 	}
 
 	public FieldValue(java.lang.String value,
-			org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.FieldValueFileInfo[] file_info) {
+			org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.FieldValueFileInfo[] file_info,
+			org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerFieldBindValue[] bind_value) {
 		this.value = value;
 		this.file_info = file_info;
+		this.bind_value = bind_value;
 	}
 
 	/**
@@ -59,6 +63,25 @@ public class FieldValue implements java.io.Serializable {
 		this.file_info = file_info;
 	}
 
+	/**
+	 * Gets the bind_value value for this FieldValue.
+	 * 
+	 * @return bind_value
+	 */
+	public org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerFieldBindValue[] getBind_value() {
+		return bind_value;
+	}
+
+	/**
+	 * Sets the bind_value value for this FieldValue.
+	 * 
+	 * @param bind_value
+	 */
+	public void setBind_value(
+			org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerFieldBindValue[] bind_value) {
+		this.bind_value = bind_value;
+	}
+
 	private java.lang.Object __equalsCalc = null;
 
 	public synchronized boolean equals(java.lang.Object obj) {
@@ -81,7 +104,9 @@ public class FieldValue implements java.io.Serializable {
 				&& (this.value == null && other.getValue() == null || this.value != null
 						&& this.value.equals(other.getValue()))
 				&& (this.file_info == null && other.getFile_info() == null || this.file_info != null
-						&& java.util.Arrays.equals(this.file_info, other.getFile_info()));
+						&& java.util.Arrays.equals(this.file_info, other.getFile_info()))
+				&& (this.bind_value == null && other.getBind_value() == null || this.bind_value != null
+						&& java.util.Arrays.equals(this.bind_value, other.getBind_value()));
 		__equalsCalc = null;
 		return _equals;
 	}
@@ -100,6 +125,14 @@ public class FieldValue implements java.io.Serializable {
 		if (getFile_info() != null) {
 			for (int i = 0; i < java.lang.reflect.Array.getLength(getFile_info()); i++) {
 				java.lang.Object obj = java.lang.reflect.Array.get(getFile_info(), i);
+				if (obj != null && !obj.getClass().isArray()) {
+					_hashCode += obj.hashCode();
+				}
+			}
+		}
+		if (getBind_value() != null) {
+			for (int i = 0; i < java.lang.reflect.Array.getLength(getBind_value()); i++) {
+				java.lang.Object obj = java.lang.reflect.Array.get(getBind_value(), i);
 				if (obj != null && !obj.getClass().isArray()) {
 					_hashCode += obj.hashCode();
 				}
@@ -128,6 +161,14 @@ public class FieldValue implements java.io.Serializable {
 		elemField.setXmlName(new javax.xml.namespace.QName("", "file_info"));
 		elemField.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap",
 				"FieldValueFileInfo"));
+		elemField.setMinOccurs(0);
+		elemField.setNillable(false);
+		typeDesc.addFieldDesc(elemField);
+		elemField = new org.apache.axis.description.ElementDesc();
+		elemField.setFieldName("bind_value");
+		elemField.setXmlName(new javax.xml.namespace.QName("", "bind_value"));
+		elemField.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap",
+				"TrackerFieldBindValue"));
 		elemField.setMinOccurs(0);
 		elemField.setNillable(false);
 		typeDesc.addFieldDesc(elemField);

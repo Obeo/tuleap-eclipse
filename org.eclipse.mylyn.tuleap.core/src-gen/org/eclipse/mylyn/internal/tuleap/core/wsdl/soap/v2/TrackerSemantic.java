@@ -84,28 +84,25 @@ public class TrackerSemantic implements java.io.Serializable {
 	private java.lang.Object __equalsCalc = null;
 
 	public synchronized boolean equals(java.lang.Object obj) {
-		if (!(obj instanceof TrackerSemantic)) {
+		if (!(obj instanceof TrackerSemantic))
 			return false;
-		}
 		TrackerSemantic other = (TrackerSemantic)obj;
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
 		if (__equalsCalc != null) {
-			return __equalsCalc == obj;
+			return (__equalsCalc == obj);
 		}
 		__equalsCalc = obj;
 		boolean _equals;
 		_equals = true
-				&& (this.title == null && other.getTitle() == null || this.title != null
-						&& this.title.equals(other.getTitle()))
-				&& (this.status == null && other.getStatus() == null || this.status != null
-						&& this.status.equals(other.getStatus()))
-				&& (this.contributor == null && other.getContributor() == null || this.contributor != null
-						&& this.contributor.equals(other.getContributor()));
+				&& ((this.title == null && other.getTitle() == null) || (this.title != null && this.title
+						.equals(other.getTitle())))
+				&& ((this.status == null && other.getStatus() == null) || (this.status != null && this.status
+						.equals(other.getStatus())))
+				&& ((this.contributor == null && other.getContributor() == null) || (this.contributor != null && this.contributor
+						.equals(other.getContributor())));
 		__equalsCalc = null;
 		return _equals;
 	}

@@ -417,6 +417,9 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			for (Entry<String, String> entry : options.entrySet()) {
 				attribute.putOption(entry.getKey(), entry.getValue());
 			}
+			if (tuleapField.getOptions().size() > 0) {
+				attribute.putOption("", ""); //$NON-NLS-1$//$NON-NLS-2$
+			}
 		}
 	}
 

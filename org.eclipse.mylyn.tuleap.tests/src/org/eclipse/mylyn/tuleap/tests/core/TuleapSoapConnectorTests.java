@@ -145,7 +145,7 @@ public class TuleapSoapConnectorTests extends TestCase {
 		int artifactId1 = 1;
 		MockedArtifact artifact1 = new MockedArtifact(artifactId1, tracker1);
 
-		FieldValue fieldValue = new FieldValue(DEFAULT_VALUE, null);
+		FieldValue fieldValue = new FieldValue(DEFAULT_VALUE, null, null);
 
 		TrackerField tracker1Field1 = tracker1.getTrackerFields()[0];
 		ArtifactFieldValue artifactFieldValue = new ArtifactFieldValue(tracker1Field1.getShort_name(),
@@ -249,8 +249,7 @@ public class TuleapSoapConnectorTests extends TestCase {
 	 * @return Mocked tracker
 	 */
 	private MockedTracker createMockedTracker(int index) {
-		TrackerFieldBindValue trackerFieldBindValue = new TrackerFieldBindValue(index, index,
-				"bind_value_label"); //$NON-NLS-1$
+		TrackerFieldBindValue trackerFieldBindValue = new TrackerFieldBindValue(index, "bind_value_label"); //$NON-NLS-1$
 		TrackerField trackerField = new TrackerField(index, index,
 				"Tkr" + index + "Fld" + index, //$NON-NLS-1$ //$NON-NLS-2$
 				"Tracker" + index + " Field" + index, ITuleapConfigurationConstants.TEXT, //$NON-NLS-1$ //$NON-NLS-2$
