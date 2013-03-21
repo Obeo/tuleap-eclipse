@@ -761,60 +761,15 @@ public class TuleapSoapConnector {
 							&& artifactFieldValue.getField_label().equals(trackerField.getLabel())) {
 						// Let's handle attachments differently
 						if (ITuleapConfigurationConstants.FILE.equals(trackerField.getType())) {
-							// compute the description of the attachment
-							FieldValue fieldValue = artifactFieldValue.getField_value();
-							FieldValueFileInfo[] fileInfo = fieldValue.getFile_info();
-							for (FieldValueFileInfo fieldValueFileInfo : fileInfo) {
-								int filesize = fieldValueFileInfo.getFilesize();
-								String id = fieldValueFileInfo.getId();
-								String filename = fieldValueFileInfo.getFilename();
-								int submittedBy = fieldValueFileInfo.getSubmitted_by();
-								TuleapPerson uploadedBy = this.getPersonFromId(submittedBy);
-								String description = fieldValueFileInfo.getDescription();
-								String type = fieldValueFileInfo.getFiletype();
-
-								TuleapAttachment tuleapAttachment = new TuleapAttachment(id, filename,
-										uploadedBy, Long.valueOf(filesize), description, type);
-								tuleapArtifact.putAttachment(artifactFieldValue.getField_name(),
-										tuleapAttachment);
-							}
+							this.populateArtifactForFileField(tuleapArtifact, artifactFieldValue);
 							found = true;
 						} else if (ITuleapConfigurationConstants.MSB.equals(trackerField.getType())
 								|| ITuleapConfigurationConstants.SB.equals(trackerField.getType())
 								|| ITuleapConfigurationConstants.CB.equals(trackerField.getType())) {
-							FieldValue fieldValue = artifactFieldValue.getField_value();
-							TrackerFieldBindValue[] bindValues = fieldValue.getBind_value();
-							if (bindValues.length == 0) {
-								tuleapArtifact.putValue(artifactFieldValue.getField_name(), ""); //$NON-NLS-1$
-							} else {
-								for (TrackerFieldBindValue bindValue : bindValues) {
-									// If the bind value id is "100", we have an empty value
-									if (ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID == bindValue
-											.getBind_value_id()) {
-										tuleapArtifact.putValue(artifactFieldValue.getField_name(), ""); //$NON-NLS-1$
-									} else {
-										tuleapArtifact.putValue(artifactFieldValue.getField_name(), bindValue
-												.getBind_value_label());
-									}
-								}
-							}
+							this.populateArtifactForBindedField(tuleapArtifact, artifactFieldValue);
 							found = true;
 						} else if (ITuleapConfigurationConstants.TBL.equals(trackerField.getType())) {
-							String value = ""; //$NON-NLS-1$
-							int cpt = 0;
-
-							TrackerFieldBindValue[] bindValues = artifactFieldValue.getField_value()
-									.getBind_value();
-							for (TrackerFieldBindValue trackerFieldBindValue : bindValues) {
-								if (cpt < bindValues.length - 1) {
-									value = value + trackerFieldBindValue.getBind_value_label() + ", "; //$NON-NLS-1$
-								} else {
-									value = value + trackerFieldBindValue.getBind_value_label();
-								}
-								cpt++;
-							}
-							tuleapArtifact.putValue(artifactFieldValue.getField_name(), value);
-							monitor.worked(1);
+							this.populateArtifactForOpenList(tuleapArtifact, artifactFieldValue);
 							found = true;
 						} else if (!ITuleapConfigurationConstants.BURNDOWN.equals(trackerField.getType())) {
 							// We can't display the burndown chart
@@ -822,9 +777,9 @@ public class TuleapSoapConnector {
 							if (value != null) {
 								tuleapArtifact.putValue(artifactFieldValue.getField_name(), value);
 							}
-							monitor.worked(1);
 							found = true;
 						}
+						monitor.worked(1);
 					}
 				}
 
@@ -851,6 +806,86 @@ public class TuleapSoapConnector {
 		}
 
 		return tuleapArtifact;
+	}
+
+	/**
+	 * Populates the tuleap artifact for the artifact field value of an open list field.
+	 * 
+	 * @param tuleapArtifact
+	 *            The Tuleap Artifact
+	 * @param artifactFieldValue
+	 *            The artifact field value of an open list field.
+	 */
+	private void populateArtifactForOpenList(TuleapArtifact tuleapArtifact,
+			ArtifactFieldValue artifactFieldValue) {
+		String value = ""; //$NON-NLS-1$
+		int cpt = 0;
+
+		TrackerFieldBindValue[] bindValues = artifactFieldValue.getField_value().getBind_value();
+		for (TrackerFieldBindValue trackerFieldBindValue : bindValues) {
+			if (cpt < bindValues.length - 1) {
+				value = value + trackerFieldBindValue.getBind_value_label() + ", "; //$NON-NLS-1$
+			} else {
+				value = value + trackerFieldBindValue.getBind_value_label();
+			}
+			cpt++;
+		}
+		tuleapArtifact.putValue(artifactFieldValue.getField_name(), value);
+	}
+
+	/**
+	 * Populates the tuleap artifact for the artifact field value of a binded field.
+	 * 
+	 * @param tuleapArtifact
+	 *            The Tuleap Artifact
+	 * @param artifactFieldValue
+	 *            The artifact field value of a binded field.
+	 */
+	private void populateArtifactForBindedField(TuleapArtifact tuleapArtifact,
+			ArtifactFieldValue artifactFieldValue) {
+		FieldValue fieldValue = artifactFieldValue.getField_value();
+		TrackerFieldBindValue[] bindValues = fieldValue.getBind_value();
+		if (bindValues.length == 0) {
+			tuleapArtifact.putValue(artifactFieldValue.getField_name(), ""); //$NON-NLS-1$
+		} else {
+			for (TrackerFieldBindValue bindValue : bindValues) {
+				// If the bind value id is "100", we have an empty value
+				if (ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID == bindValue.getBind_value_id()) {
+					tuleapArtifact.putValue(artifactFieldValue.getField_name(), ""); //$NON-NLS-1$
+				} else {
+					tuleapArtifact.putValue(artifactFieldValue.getField_name(), bindValue
+							.getBind_value_label());
+				}
+			}
+		}
+	}
+
+	/**
+	 * Populates the tuleap artifact for the artifact field value of a file field.
+	 * 
+	 * @param tuleapArtifact
+	 *            The Tuleap Artifact
+	 * @param artifactFieldValue
+	 *            The artifact field value of a file field.
+	 */
+	private void populateArtifactForFileField(TuleapArtifact tuleapArtifact,
+			ArtifactFieldValue artifactFieldValue) {
+		// compute the description of the attachment
+		FieldValue fieldValue = artifactFieldValue.getField_value();
+		FieldValueFileInfo[] fileInfo = fieldValue.getFile_info();
+		for (FieldValueFileInfo fieldValueFileInfo : fileInfo) {
+			int filesize = fieldValueFileInfo.getFilesize();
+			String id = fieldValueFileInfo.getId();
+			String filename = fieldValueFileInfo.getFilename();
+			int submittedBy = fieldValueFileInfo.getSubmitted_by();
+			TuleapPerson uploadedBy = this.getPersonFromId(submittedBy);
+			String description = fieldValueFileInfo.getDescription();
+			String type = fieldValueFileInfo.getFiletype();
+
+			TuleapAttachment tuleapAttachment = new TuleapAttachment(id, filename, uploadedBy, Long
+					.valueOf(filesize), description, type);
+			tuleapArtifact.putAttachment(artifactFieldValue.getField_name(), tuleapAttachment);
+		}
 	}
 
 	/**
@@ -1045,6 +1080,7 @@ public class TuleapSoapConnector {
 	 */
 	public void updateArtifact(TuleapArtifact artifact, IProgressMonitor monitor)
 			throws MalformedURLException, RemoteException, ServiceException {
+
 		this.login(monitor);
 
 		final int fifty = 50;
