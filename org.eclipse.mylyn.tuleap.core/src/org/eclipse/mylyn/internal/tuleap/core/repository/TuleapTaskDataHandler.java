@@ -73,6 +73,12 @@ import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 	/**
+	 * The label "contributors".
+	 */
+	private final String personContributorsLabel = TuleapMylynTasksMessages
+			.getString("TuleapTaskDataHandler.Contributors"); //$NON-NLS-1$
+
+	/**
 	 * The Tuleap repository connector.
 	 */
 	private ITuleapRepositoryConnector connector;
@@ -592,6 +598,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			TaskAttributeMetaData metaData = attribute.getMetaData();
 			metaData.setKind(TaskAttribute.KIND_PEOPLE);
 			metaData.setType(TaskAttribute.TYPE_SINGLE_SELECT);
+			metaData.setLabel(personContributorsLabel);
 
 			List<TuleapSelectBoxItem> items = tuleapSelectBox.getItems();
 			for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
@@ -605,6 +612,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			TaskAttributeMetaData metaData = attribute.getMetaData();
 			metaData.setKind(TaskAttribute.KIND_PEOPLE);
 			metaData.setType(TaskAttribute.TYPE_MULTI_SELECT);
+			metaData.setLabel(personContributorsLabel);
 
 			List<TuleapSelectBoxItem> items = tuleapSelectBox.getItems();
 			for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
@@ -832,6 +840,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 			metaData.setKind(TaskAttribute.KIND_PEOPLE);
 			metaData.setType(TaskAttribute.TYPE_MULTI_SELECT);
+			metaData.setLabel(personContributorsLabel);
 		}
 		// Put the options
 		List<TuleapSelectBoxItem> items = tuleapSelectBox.getItems();
@@ -861,6 +870,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 			metaData.setKind(TaskAttribute.KIND_PEOPLE);
 			metaData.setType(TaskAttribute.TYPE_MULTI_SELECT);
+			metaData.setLabel(personContributorsLabel);
 		}
 		// Put the options
 		List<TuleapSelectBoxItem> items = tuleapMultiSelectBox.getItems();
