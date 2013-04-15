@@ -36,8 +36,8 @@
           <includes>
           	<include>**/*.java</include>
           </includes>
-          <useUIHarness>false</useUIHarness>
-          <useUIThread>false</useUIThread>
+          <useUIHarness>true</useUIHarness>
+          <useUIThread>true</useUIThread>
         </configuration>
       </plugin>
       <plugin>
