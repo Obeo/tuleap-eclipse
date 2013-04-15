@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.tuleap.tests.core;
+package org.eclipse.mylyn.tuleap.tests.mocks;
 
 import java.net.Proxy;
 
@@ -52,7 +52,7 @@ public class MockedAbstractWebLocation extends AbstractWebLocation {
 	 */
 	@Override
 	public Proxy getProxyForHost(String host, String proxyType) {
-		throw new UnsupportedOperationException();
+		return null;
 	}
 
 }

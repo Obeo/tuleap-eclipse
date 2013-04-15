@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.tuleap.tests.core;
+package org.eclipse.mylyn.tuleap.tests.client;
 
 import java.net.MalformedURLException;
 import java.rmi.RemoteException;
@@ -32,6 +32,12 @@ import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.FieldValue;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerField;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerFieldBindValue;
 import org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerReport;
+import org.eclipse.mylyn.tuleap.tests.mocks.MockedAbstractWebLocation;
+import org.eclipse.mylyn.tuleap.tests.mocks.MockedArtifact;
+import org.eclipse.mylyn.tuleap.tests.mocks.MockedCodendiAPIPortType;
+import org.eclipse.mylyn.tuleap.tests.mocks.MockedTracker;
+import org.eclipse.mylyn.tuleap.tests.mocks.MockedTuleapTrackerV5APIPortType;
+import org.eclipse.mylyn.tuleap.tests.mocks.MockedUserInfo;
 
 /**
  * The tests class for the Tuleap SOAP connector.
@@ -43,7 +49,7 @@ public class TuleapSoapConnectorTests extends TestCase {
 	/**
 	 * Mocked server URL.
 	 */
-	private static final String URL = "https://demo.tuleap.net/"; //$NON-NLS-1$
+	private static final String URL = "http://demo.tuleap.net/"; //$NON-NLS-1$
 
 	/**
 	 * Default value used in field initialization.
@@ -253,7 +259,7 @@ public class TuleapSoapConnectorTests extends TestCase {
 		TrackerField trackerField = new TrackerField(index, index,
 				"Tkr" + index + "Fld" + index, //$NON-NLS-1$ //$NON-NLS-2$
 				"Tracker" + index + " Field" + index, ITuleapConfigurationConstants.TEXT, //$NON-NLS-1$ //$NON-NLS-2$
-				new TrackerFieldBindValue[] {trackerFieldBindValue },
+				new TrackerFieldBindValue[] {trackerFieldBindValue }, null,
 				new String[] {ITuleapConstants.PERMISSION_UPDATE });
 		TrackerField[] trackerFields = new TrackerField[] {trackerField };
 		return new MockedTracker(index, "Tracker" + index, trackerFields); //$NON-NLS-1$

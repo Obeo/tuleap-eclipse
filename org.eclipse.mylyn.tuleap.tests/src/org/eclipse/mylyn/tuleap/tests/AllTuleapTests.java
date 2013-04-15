@@ -16,6 +16,7 @@ import junit.framework.TestSuite;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.tuleap.tests.support.TuleapFixture;
+import org.eclipse.mylyn.tuleap.tests.ui.TuleapValidatorTests;
 
 /**
  * This class should be used to launch all Tuleap unit tests.
@@ -72,8 +73,10 @@ public final class AllTuleapTests {
 		// Standalone tests (Don't require an instance of Eclipse)
 		suite.addTest(AllTuleapHeadlessStandaloneTests.suite(configuration));
 
+		// Plug-in tests
+		suite.addTestSuite(TuleapValidatorTests.class);
+
 		// Network tests
-		// suite.addTestSuite(TuleapValidatorTests.class);
 	}
 
 	/**

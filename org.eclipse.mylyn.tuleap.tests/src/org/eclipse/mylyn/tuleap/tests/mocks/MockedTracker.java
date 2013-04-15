@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.tuleap.tests.core;
+package org.eclipse.mylyn.tuleap.tests.mocks;
 
 import java.util.HashMap;
 import java.util.Map;

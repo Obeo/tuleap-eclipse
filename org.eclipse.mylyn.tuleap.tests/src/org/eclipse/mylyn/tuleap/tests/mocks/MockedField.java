@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.tuleap.tests.core;
+package org.eclipse.mylyn.tuleap.tests.mocks;
 
 /**
  * Mock of field.

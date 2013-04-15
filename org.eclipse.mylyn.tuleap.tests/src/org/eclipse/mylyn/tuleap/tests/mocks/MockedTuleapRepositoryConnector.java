@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.tuleap.tests.core;
+package org.eclipse.mylyn.tuleap.tests.mocks;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -21,6 +21,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
@@ -41,6 +42,11 @@ public class MockedTuleapRepositoryConnector extends AbstractRepositoryConnector
 	 * The configuration to be returned.
 	 */
 	private TuleapInstanceConfiguration configuration;
+
+	/**
+	 * The attachement handler.
+	 */
+	private AbstractTaskAttachmentHandler attachmentHandler;
 
 	/**
 	 * The constructor.
@@ -227,6 +233,26 @@ public class MockedTuleapRepositoryConnector extends AbstractRepositoryConnector
 	@Override
 	public void updateTaskFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData) {
 		// do nothing
+	}
+
+	/**
+	 * Sets the attachment handler.
+	 * 
+	 * @param taskAttachmentHandler
+	 *            The attachment handler
+	 */
+	public void setAttachementHandler(AbstractTaskAttachmentHandler taskAttachmentHandler) {
+		this.attachmentHandler = taskAttachmentHandler;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getTaskAttachmentHandler()
+	 */
+	@Override
+	public AbstractTaskAttachmentHandler getTaskAttachmentHandler() {
+		return this.attachmentHandler;
 	}
 
 }

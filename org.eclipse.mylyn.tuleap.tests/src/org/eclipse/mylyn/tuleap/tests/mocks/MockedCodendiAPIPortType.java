@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.tuleap.tests.core;
+package org.eclipse.mylyn.tuleap.tests.mocks;
 
 import java.math.BigInteger;
 import java.rmi.RemoteException;
@@ -55,7 +55,7 @@ public class MockedCodendiAPIPortType implements CodendiAPIPortType {
 	/**
 	 * Mocks of users.
 	 */
-	private Map<String, MockedUserInfo> users = new HashMap<String, MockedUserInfo>();
+	private Map<String, MockedUserInfo> usersMap = new HashMap<String, MockedUserInfo>();
 
 	// CHECKSTYLE:OFF
 	/**
@@ -171,7 +171,7 @@ public class MockedCodendiAPIPortType implements CodendiAPIPortType {
 	 *      int)
 	 */
 	public UserInfo getUserInfo(String sessionKey, int user_id) throws RemoteException {
-		return users.get(String.valueOf(user_id));
+		return usersMap.get(String.valueOf(user_id));
 	}
 
 	/**
@@ -1033,6 +1033,6 @@ public class MockedCodendiAPIPortType implements CodendiAPIPortType {
 	 *            User
 	 */
 	public void setUser(MockedUserInfo user) {
-		users.put(user.getId(), user);
+		usersMap.put(user.getId(), user);
 	}
 }
