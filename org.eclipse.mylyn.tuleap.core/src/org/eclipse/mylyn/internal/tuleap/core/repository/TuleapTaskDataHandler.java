@@ -604,6 +604,9 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
 				attribute.putOption(tuleapSelectBoxItem.getLabel(), tuleapSelectBoxItem.getLabel());
 			}
+			if (attribute.getOptions().size() > 0) {
+				attribute.putOption("", ""); //$NON-NLS-1$//$NON-NLS-2$
+			}
 		} else if (personsSelectBox instanceof TuleapMultiSelectBox) {
 			// Multiple assignee supported
 			TuleapMultiSelectBox tuleapSelectBox = (TuleapMultiSelectBox)personsSelectBox;
@@ -617,6 +620,9 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			List<TuleapSelectBoxItem> items = tuleapSelectBox.getItems();
 			for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
 				attribute.putOption(tuleapSelectBoxItem.getLabel(), tuleapSelectBoxItem.getLabel());
+			}
+			if (attribute.getOptions().size() > 0) {
+				attribute.putOption("", ""); //$NON-NLS-1$//$NON-NLS-2$
 			}
 		}
 	}
