@@ -400,6 +400,15 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
+            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArrayOfUgroup");
+            cachedSerQNames.add(qName);
+            cls = org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.UGroup[].class;
+            cachedSerClasses.add(cls);
+            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "UGroup");
+            qName2 = null;
+            cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
+            cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
+
             qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "Artifact");
             cachedSerQNames.add(qName);
             cls = org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.Artifact.class;
@@ -487,6 +496,13 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
             qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerField");
             cachedSerQNames.add(qName);
             cls = org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerField.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerFieldBindType");
+            cachedSerQNames.add(qName);
+            cls = org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.TrackerFieldBindType.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
@@ -601,6 +617,13 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
+
+            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "UGroup");
+            cachedSerQNames.add(qName);
+            cls = org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.UGroup.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
 
     }
 

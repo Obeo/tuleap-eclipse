@@ -1,5 +1,5 @@
 /**
- * TrackerSemanticStatus.java
+ * TrackerFieldBindType.java
  *
  * This file was auto-generated from WSDL
  * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
@@ -8,65 +8,65 @@
 package org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2;
 
 @SuppressWarnings("all")
-public class TrackerSemanticStatus  implements java.io.Serializable {
-    private java.lang.String field_name;
+public class TrackerFieldBindType  implements java.io.Serializable {
+    private java.lang.String bind_type;
 
-    private int[] values;
+    private org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.UGroup[] bind_list;
 
-    public TrackerSemanticStatus() {
+    public TrackerFieldBindType() {
     }
 
-    public TrackerSemanticStatus(
-           java.lang.String field_name,
-           int[] values) {
-           this.field_name = field_name;
-           this.values = values;
-    }
-
-
-    /**
-     * Gets the field_name value for this TrackerSemanticStatus.
-     * 
-     * @return field_name
-     */
-    public java.lang.String getField_name() {
-        return field_name;
+    public TrackerFieldBindType(
+           java.lang.String bind_type,
+           org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.UGroup[] bind_list) {
+           this.bind_type = bind_type;
+           this.bind_list = bind_list;
     }
 
 
     /**
-     * Sets the field_name value for this TrackerSemanticStatus.
+     * Gets the bind_type value for this TrackerFieldBindType.
      * 
-     * @param field_name
+     * @return bind_type
      */
-    public void setField_name(java.lang.String field_name) {
-        this.field_name = field_name;
+    public java.lang.String getBind_type() {
+        return bind_type;
     }
 
 
     /**
-     * Gets the values value for this TrackerSemanticStatus.
+     * Sets the bind_type value for this TrackerFieldBindType.
      * 
-     * @return values
+     * @param bind_type
      */
-    public int[] getValues() {
-        return values;
+    public void setBind_type(java.lang.String bind_type) {
+        this.bind_type = bind_type;
     }
 
 
     /**
-     * Sets the values value for this TrackerSemanticStatus.
+     * Gets the bind_list value for this TrackerFieldBindType.
      * 
-     * @param values
+     * @return bind_list
      */
-    public void setValues(int[] values) {
-        this.values = values;
+    public org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.UGroup[] getBind_list() {
+        return bind_list;
+    }
+
+
+    /**
+     * Sets the bind_list value for this TrackerFieldBindType.
+     * 
+     * @param bind_list
+     */
+    public void setBind_list(org.eclipse.mylyn.internal.tuleap.core.wsdl.soap.v2.UGroup[] bind_list) {
+        this.bind_list = bind_list;
     }
 
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
-        if (!(obj instanceof TrackerSemanticStatus)) return false;
-        TrackerSemanticStatus other = (TrackerSemanticStatus) obj;
+        if (!(obj instanceof TrackerFieldBindType)) return false;
+        TrackerFieldBindType other = (TrackerFieldBindType) obj;
         if (obj == null) return false;
         if (this == obj) return true;
         if (__equalsCalc != null) {
@@ -75,12 +75,12 @@ public class TrackerSemanticStatus  implements java.io.Serializable {
         __equalsCalc = obj;
         boolean _equals;
         _equals = true && 
-            ((this.field_name==null && other.getField_name()==null) || 
-             (this.field_name!=null &&
-              this.field_name.equals(other.getField_name()))) &&
-            ((this.values==null && other.getValues()==null) || 
-             (this.values!=null &&
-              java.util.Arrays.equals(this.values, other.getValues())));
+            ((this.bind_type==null && other.getBind_type()==null) || 
+             (this.bind_type!=null &&
+              this.bind_type.equals(other.getBind_type()))) &&
+            ((this.bind_list==null && other.getBind_list()==null) || 
+             (this.bind_list!=null &&
+              java.util.Arrays.equals(this.bind_list, other.getBind_list())));
         __equalsCalc = null;
         return _equals;
     }
@@ -92,14 +92,14 @@ public class TrackerSemanticStatus  implements java.io.Serializable {
         }
         __hashCodeCalc = true;
         int _hashCode = 1;
-        if (getField_name() != null) {
-            _hashCode += getField_name().hashCode();
+        if (getBind_type() != null) {
+            _hashCode += getBind_type().hashCode();
         }
-        if (getValues() != null) {
+        if (getBind_list() != null) {
             for (int i=0;
-                 i<java.lang.reflect.Array.getLength(getValues());
+                 i<java.lang.reflect.Array.getLength(getBind_list());
                  i++) {
-                java.lang.Object obj = java.lang.reflect.Array.get(getValues(), i);
+                java.lang.Object obj = java.lang.reflect.Array.get(getBind_list(), i);
                 if (obj != null &&
                     !obj.getClass().isArray()) {
                     _hashCode += obj.hashCode();
@@ -112,20 +112,20 @@ public class TrackerSemanticStatus  implements java.io.Serializable {
 
     // Type metadata
     private static org.apache.axis.description.TypeDesc typeDesc =
-        new org.apache.axis.description.TypeDesc(TrackerSemanticStatus.class, true);
+        new org.apache.axis.description.TypeDesc(TrackerFieldBindType.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerSemanticStatus"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerFieldBindType"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("field_name");
-        elemField.setXmlName(new javax.xml.namespace.QName("", "field_name"));
+        elemField.setFieldName("bind_type");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "bind_type"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("values");
-        elemField.setXmlName(new javax.xml.namespace.QName("", "values"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
+        elemField.setFieldName("bind_list");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "bind_list"));
+        elemField.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "UGroup"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
     }

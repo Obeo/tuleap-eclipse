@@ -316,15 +316,15 @@ public class Test {
 				}
 
 				if (tracker_id == 524) {
-					TrackerFieldBindValue trackerFieldBindValue = new TrackerFieldBindValue(100, "");
-					FieldValue field_value = new FieldValue("100", new FieldValueFileInfo[] {},
-							new TrackerFieldBindValue[] {trackerFieldBindValue });
-					ArtifactFieldValue artifactFieldValue = new ArtifactFieldValue("components_affected",
-							"Components Affected", field_value);
-					ArtifactFieldValue[] value = new ArtifactFieldValue[] {artifactFieldValue };
-					int updatedArtifactId = tuleapTrackerV5APIPort.updateArtifact(session_hash, groupId,
-							tracker_id, 896, value, "Updated without changes", "UTF-8");
-					System.out.println("Updated artifact id: " + updatedArtifactId);
+					// TrackerFieldBindValue trackerFieldBindValue = new TrackerFieldBindValue(100, "");
+					// FieldValue field_value = new FieldValue("100", new FieldValueFileInfo[] {},
+					// new TrackerFieldBindValue[] {trackerFieldBindValue });
+					// ArtifactFieldValue artifactFieldValue = new ArtifactFieldValue("components_affected",
+					// "Components Affected", field_value);
+					// ArtifactFieldValue[] value = new ArtifactFieldValue[] {artifactFieldValue };
+					// int updatedArtifactId = tuleapTrackerV5APIPort.updateArtifact(session_hash, groupId,
+					// tracker_id, 896, value, "Updated without changes", "UTF-8");
+					// System.out.println("Updated artifact id: " + updatedArtifactId);
 				}
 			}
 
