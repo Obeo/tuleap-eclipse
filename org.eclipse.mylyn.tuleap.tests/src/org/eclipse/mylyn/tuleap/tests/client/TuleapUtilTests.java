@@ -82,4 +82,25 @@ public class TuleapUtilTests extends TestCase {
 		String taskDataId = TuleapUtil.getTaskDataId("Mylyn", "Bugs[185]", 134); //$NON-NLS-1$ //$NON-NLS-2$
 		assertEquals("Mylyn:Bugs[185] #134", taskDataId); //$NON-NLS-1$
 	}
+
+	/**
+	 * Test if an URL is valid.
+	 */
+	public void testValidUrl() {
+		assertFalse(TuleapUtil.isValidUrl("")); //$NON-NLS-1$
+		assertFalse(TuleapUtil.isValidUrl("http:/google.com")); //$NON-NLS-1$
+		assertFalse(TuleapUtil.isValidUrl("http:/google.com/")); //$NON-NLS-1$
+		assertFalse(TuleapUtil.isValidUrl("http://google.com/")); //$NON-NLS-1$
+		assertFalse(TuleapUtil.isValidUrl("http://google.com/foo /space")); //$NON-NLS-1$
+		assertFalse(TuleapUtil.isValidUrl("http://google.com")); //$NON-NLS-1$
+		assertFalse(TuleapUtil.isValidUrl("https://google.com")); //$NON-NLS-1$
+		assertFalse(TuleapUtil.isValidUrl("http://mylyn.org/trac30")); //$NON-NLS-1$
+		assertFalse(TuleapUtil.isValidUrl("http://www.mylyn.org/trac30")); //$NON-NLS-1$
+		assertFalse(TuleapUtil.isValidUrl("https://plugins/tracker/?tracker=42")); //$NON-NLS-1$
+		assertFalse(TuleapUtil.isValidUrl("https://my.demo.domain/plugins/tracker/?tracker=aa")); //$NON-NLS-1$
+		assertFalse(TuleapUtil.isValidUrl("https://my.demo.domain /plugins/tracker/?tracker=42")); //$NON-NLS-1$
+		assertFalse(TuleapUtil.isValidUrl("https://my.demo.domain/plugins/tracker/?tracker=42x")); //$NON-NLS-1$
+		assertTrue(TuleapUtil.isValidUrl("https://my.demo.domain/subdomain/plugins/tracker/?group_id=42")); //$NON-NLS-1$
+		assertTrue(TuleapUtil.isValidUrl("https://my.demo.domain/plugins/tracker/?group_id=42")); //$NON-NLS-1$
+	}
 }
