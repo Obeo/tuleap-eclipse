@@ -125,6 +125,11 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	private TuleapInstanceConfiguration tuleapInstanceConfiguration;
 
 	/**
+	 * The name of the items.
+	 */
+	private String itemName;
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see junit.framework.TestCase#setUp()
@@ -136,11 +141,13 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		this.trackerName = "Tracker Name"; //$NON-NLS-1$
 		String repositoryDescription = "Tracker Description"; //$NON-NLS-1$
+		this.itemName = "Bugs"; //$NON-NLS-1$
 
 		this.repository = new TaskRepository(connectorKind, repositoryUrl);
 		this.tuleapTrackerConfiguration = new TuleapTrackerConfiguration(trackerId, repositoryUrl);
 		tuleapTrackerConfiguration.setName(trackerName);
 		tuleapTrackerConfiguration.setDescription(repositoryDescription);
+		tuleapTrackerConfiguration.setItemName(itemName);
 
 		this.tuleapInstanceConfiguration = new TuleapInstanceConfiguration(repositoryUrl);
 		tuleapInstanceConfiguration.addTracker(Integer.valueOf(trackerId), tuleapTrackerConfiguration);
@@ -597,6 +604,44 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(true)));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_SHORT_RICH_TEXT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
+	}
+
+	/**
+	 * Test the initialization of the task data with a tuleap string as a title.
+	 */
+	public void testInitializeTaskDataStringTitle() {
+		int id = 892;
+		String name = "TuleapStringTitleName"; //$NON-NLS-1$
+		String label = "TuleapStringTitleLabel"; //$NON-NLS-1$
+		String description = "TuleapStringTitleDescription"; //$NON-NLS-1$
+		int maximumSize = 20;
+		boolean isTitle = true;
+		boolean isRequired = false;
+		int rank = 0;
+		String[] permissions = new String[] {ITuleapConstants.PERMISSION_READ,
+				ITuleapConstants.PERMISSION_SUBMIT, ITuleapConstants.PERMISSION_UPDATE, };
+
+		TuleapString tuleapString = this.createTuleapString(id, name, label, description, maximumSize,
+				isTitle, isRequired, rank, permissions);
+		tuleapTrackerConfiguration.getFields().add(tuleapString);
+
+		TaskData taskData = this.initialize();
+
+		// Check attributes
+		List<TaskAttribute> attributesByType = taskData.getAttributeMapper().getAttributesByType(taskData,
+				TaskAttribute.TYPE_SHORT_RICH_TEXT);
+		assertThat(Integer.valueOf(attributesByType.size()), is(Integer.valueOf(1)));
+
+		TaskAttribute taskAttribute = attributesByType.get(0);
+		assertThat(taskAttribute.getId(), is(TaskAttribute.SUMMARY));
+		assertThat(taskAttribute.getOptions(), is((Map<String, String>)new HashMap<String, String>()));
+		assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(1)));
+		assertThat(taskAttribute.getValue(), is("New " + this.itemName)); //$NON-NLS-1$
+
+		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
+		assertThat(metaData.getLabel(), is(label));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(metaData.getType(), is(TaskAttribute.TYPE_SHORT_RICH_TEXT));
 	}
 
 	/**
