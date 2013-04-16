@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.tuleap.tests.client;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,6 +63,21 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	 * The label used for contributors.
 	 */
 	private static final String CONTRIBUTORS_LABEL = "Contributors"; //$NON-NLS-1$
+
+	/**
+	 * The label of the completed date.
+	 */
+	private static final String COMPLETED_DATE_LABEL = "Completed"; //$NON-NLS-1$
+
+	/**
+	 * The label of the modified date.
+	 */
+	private static final String MODIFIED_DATE_LABEL = "Modified"; //$NON-NLS-1$
+
+	/**
+	 * The label of the created date.
+	 */
+	private static final String CREATED_DATE_LABEL = "Created"; //$NON-NLS-1$
 
 	/**
 	 * The task repository.
@@ -932,7 +949,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 				assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(0)));
 
 				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
-				assertThat(metaData.getLabel(), is("Completed")); //$NON-NLS-1$
+				assertThat(metaData.getLabel(), is(COMPLETED_DATE_LABEL));
 				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
 				assertThat(metaData.getType(), is(TaskAttribute.TYPE_DATE));
 			} else if (taskAttribute.getId().equals(TaskAttribute.DATE_CREATION)) {
@@ -941,7 +958,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 				assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(1)));
 
 				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
-				assertThat(metaData.getLabel(), is("Created")); //$NON-NLS-1$
+				assertThat(metaData.getLabel(), is(CREATED_DATE_LABEL));
 				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
 				assertThat(metaData.getType(), is(TaskAttribute.TYPE_DATE));
 			} else if (taskAttribute.getId().equals(TaskAttribute.DATE_MODIFICATION)) {
@@ -950,7 +967,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 				assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(1)));
 
 				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
-				assertThat(metaData.getLabel(), is("Modified")); //$NON-NLS-1$
+				assertThat(metaData.getLabel(), is(MODIFIED_DATE_LABEL));
 				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
 				assertThat(metaData.getType(), is(TaskAttribute.TYPE_DATE));
 			}
@@ -996,7 +1013,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 				assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(0)));
 
 				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
-				assertThat(metaData.getLabel(), is("Completed")); //$NON-NLS-1$
+				assertThat(metaData.getLabel(), is(COMPLETED_DATE_LABEL));
 				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
 				assertThat(metaData.getType(), is(TaskAttribute.TYPE_DATE));
 			} else if (taskAttribute.getId().equals(TaskAttribute.DATE_CREATION)) {
@@ -1005,7 +1022,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 				assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(1)));
 
 				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
-				assertThat(metaData.getLabel(), is("Created")); //$NON-NLS-1$
+				assertThat(metaData.getLabel(), is(CREATED_DATE_LABEL));
 				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
 				assertThat(metaData.getType(), is(TaskAttribute.TYPE_DATE));
 			} else if (taskAttribute.getId().equals(TaskAttribute.DATE_MODIFICATION)) {
@@ -1014,7 +1031,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 				assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(1)));
 
 				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
-				assertThat(metaData.getLabel(), is("Modified")); //$NON-NLS-1$
+				assertThat(metaData.getLabel(), is(MODIFIED_DATE_LABEL));
 				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
 				assertThat(metaData.getType(), is(TaskAttribute.TYPE_DATE));
 			}
@@ -1627,7 +1644,71 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	}
 
 	/**
-	 * Test the initialization of the task data with a tuleap string.
+	 * Test the creation of the task data from an empty tuleap artifact.
+	 */
+	public void testCreateTaskDataFromArtifactEmpty() {
+		int id = 892;
+		String projectName = "Project Name"; //$NON-NLS-1$
+		Date creationDate = new Date();
+		Date modifiedDate = new Date();
+
+		TuleapArtifact tuleapArtifact = new TuleapArtifact(id, trackerId, trackerName, projectName);
+		tuleapArtifact.setCreationDate(creationDate);
+		tuleapArtifact.setLastModificationDate(modifiedDate);
+
+		TaskData taskData = this.createTaskDataFromArtifact(tuleapArtifact);
+
+		// Check the url of the task
+		String taskId = taskData.getTaskId();
+		assertThat(taskId, is(projectName + ITuleapConstants.TRACKER_ID_SEPARATOR + this.trackerName + '['
+				+ this.trackerId + "] #" + id)); //$NON-NLS-1$
+
+		// Check the dates
+		List<TaskAttribute> attributesByType = taskData.getAttributeMapper().getAttributesByType(taskData,
+				TaskAttribute.TYPE_DATE);
+		assertThat(Integer.valueOf(attributesByType.size()), is(Integer.valueOf(3)));
+		for (TaskAttribute taskAttribute : attributesByType) {
+			if (taskAttribute.getId().equals(TaskAttribute.DATE_COMPLETION)) {
+				assertThat(taskAttribute.getId(), is(TaskAttribute.DATE_COMPLETION));
+				assertThat(taskAttribute.getOptions(), is((Map<String, String>)new HashMap<String, String>()));
+				assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(0)));
+
+				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
+				assertThat(metaData.getLabel(), is(COMPLETED_DATE_LABEL));
+				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+				assertThat(metaData.getType(), is(TaskAttribute.TYPE_DATE));
+			} else if (taskAttribute.getId().equals(TaskAttribute.DATE_CREATION)) {
+				assertThat(taskAttribute.getId(), is(TaskAttribute.DATE_CREATION));
+				assertThat(taskAttribute.getOptions(), is((Map<String, String>)new HashMap<String, String>()));
+				assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(1)));
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(creationDate);
+				assertThat(Long.valueOf(taskAttribute.getValues().get(0)), is(Long.valueOf(calendar
+						.getTimeInMillis())));
+
+				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
+				assertThat(metaData.getLabel(), is(CREATED_DATE_LABEL));
+				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+				assertThat(metaData.getType(), is(TaskAttribute.TYPE_DATE));
+			} else if (taskAttribute.getId().equals(TaskAttribute.DATE_MODIFICATION)) {
+				assertThat(taskAttribute.getId(), is(TaskAttribute.DATE_MODIFICATION));
+				assertThat(taskAttribute.getOptions(), is((Map<String, String>)new HashMap<String, String>()));
+				assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(1)));
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(modifiedDate);
+				assertThat(Long.valueOf(taskAttribute.getValues().get(0)), is(Long.valueOf(calendar
+						.getTimeInMillis())));
+
+				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
+				assertThat(metaData.getLabel(), is(MODIFIED_DATE_LABEL));
+				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+				assertThat(metaData.getType(), is(TaskAttribute.TYPE_DATE));
+			}
+		}
+	}
+
+	/**
+	 * Test the creation of the task data from a tuleap artifact with a tuleap string.
 	 */
 	public void testCreateTaskDataFromArtifactString() {
 		int id = 892;
