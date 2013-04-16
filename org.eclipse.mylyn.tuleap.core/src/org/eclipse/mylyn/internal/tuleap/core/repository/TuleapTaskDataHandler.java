@@ -477,7 +477,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				attribute = taskData.getRoot().createAttribute(TaskAttribute.STATUS);
 				TaskAttributeMetaData metaData = attribute.getMetaData();
 				metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.Status")); //$NON-NLS-1$
-				metaData.setType(TaskAttribute.TYPE_SINGLE_SELECT);
+				metaData.setType(TaskAttribute.TYPE_MULTI_SELECT);
 			} else if (tuleapMultiSelectBox.isSemanticContributor()) {
 				// Create an attribute for the assigned person
 				attribute = taskData.getRoot().createAttribute(TaskAttribute.USER_ASSIGNED);
@@ -517,7 +517,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 */
 	private void createOperations(TaskData taskData, TuleapTrackerConfiguration configuration,
 			String currentStatus) {
-		TuleapSelectBox statusSelectBox = null;
+		AbstractTuleapField statusSelectBox = null;
 
 		// Create operations from the status semantic
 		List<AbstractTuleapField> fields = configuration.getFields();
@@ -526,6 +526,11 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				TuleapSelectBox selectBox = (TuleapSelectBox)abstractTuleapField;
 				if (selectBox.isSemanticStatus()) {
 					statusSelectBox = selectBox;
+				}
+			} else if (abstractTuleapField instanceof TuleapMultiSelectBox) {
+				TuleapMultiSelectBox multiSelectBox = (TuleapMultiSelectBox)abstractTuleapField;
+				if (multiSelectBox.isSemanticStatus()) {
+					statusSelectBox = multiSelectBox;
 				}
 			}
 		}
@@ -545,16 +550,24 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 		List<String> tuleapStatus = new ArrayList<String>();
 
-		TuleapWorkflow workflow = statusSelectBox.getWorkflow();
-		if (workflow.getTransitions().size() > 0 && currentStatus != null && currentStatus.length() > 0) {
-			List<TuleapSelectBoxItem> items = statusSelectBox.getItems();
+		TuleapWorkflow workflow = null;
+		List<TuleapSelectBoxItem> items = new ArrayList<TuleapSelectBoxItem>();
+		if (statusSelectBox instanceof TuleapSelectBox) {
+			workflow = ((TuleapSelectBox)statusSelectBox).getWorkflow();
+			items.addAll(((TuleapSelectBox)statusSelectBox).getItems());
+		} else if (statusSelectBox instanceof TuleapMultiSelectBox) {
+			workflow = ((TuleapMultiSelectBox)statusSelectBox).getWorkflow();
+			items.addAll(((TuleapMultiSelectBox)statusSelectBox).getItems());
+		}
+		if (workflow != null && workflow.getTransitions().size() > 0 && currentStatus != null
+				&& currentStatus.length() > 0) {
 			for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
 				if (tuleapSelectBoxItem.getLabel().equals(currentStatus)) {
 					// Only support the reachable state from the current status
 					List<Integer> accessibleStates = workflow.accessibleStates(tuleapSelectBoxItem
 							.getIdentifier());
 					for (Integer accessibleState : accessibleStates) {
-						for (TuleapSelectBoxItem item : statusSelectBox.getItems()) {
+						for (TuleapSelectBoxItem item : items) {
 							if (item.getIdentifier() == accessibleState.intValue()) {
 								tuleapStatus.add(item.getLabel());
 							}
@@ -563,7 +576,6 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				}
 			}
 		} else {
-			List<TuleapSelectBoxItem> items = statusSelectBox.getItems();
 			for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
 				tuleapStatus.add(tuleapSelectBoxItem.getLabel());
 			}
@@ -571,7 +583,11 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 		TaskAttribute attrResolvedInput = taskData.getRoot().createAttribute(
 				TaskAttribute.PREFIX_OPERATION + TaskAttribute.STATUS);
-		attrResolvedInput.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+		if (statusSelectBox instanceof TuleapSelectBox) {
+			attrResolvedInput.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+		} else if (statusSelectBox instanceof TuleapMultiSelectBox) {
+			attrResolvedInput.getMetaData().setType(TaskAttribute.TYPE_MULTI_SELECT);
+		}
 		attrResolvedInput.getMetaData().setKind(TaskAttribute.KIND_OPERATION);
 		for (String status : tuleapStatus) {
 			attrResolvedInput.putOption(status, status);
@@ -774,6 +790,9 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				this.createTaskDataContributorsFromSelectBox(tuleapArtifact, taskData,
 						(TuleapSelectBox)abstractTuleapField);
 			} else if (abstractTuleapField instanceof TuleapMultiSelectBox
+					&& ((TuleapMultiSelectBox)abstractTuleapField).isSemanticStatus()) {
+				this.createTaskDataStatusFromArtifact(tuleapArtifact, taskMapper, abstractTuleapField);
+			} else if (abstractTuleapField instanceof TuleapMultiSelectBox
 					&& ((TuleapMultiSelectBox)abstractTuleapField).isSemanticContributor()) {
 				// Look for the contributors in the multi select box
 				this.createTaskDataContributorsFromMultiSelectbox(tuleapArtifact, taskData,
@@ -829,7 +848,12 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		// If the status matches a "closed" status, set the completion date to the last modification
 		// date or the current date
 		boolean isClosed = false;
-		List<TuleapSelectBoxItem> closedStatus = ((TuleapSelectBox)abstractTuleapField).getClosedStatus();
+		List<TuleapSelectBoxItem> closedStatus = new ArrayList<TuleapSelectBoxItem>();
+		if (abstractTuleapField instanceof TuleapSelectBox) {
+			closedStatus.addAll(((TuleapSelectBox)abstractTuleapField).getClosedStatus());
+		} else {
+			closedStatus.addAll(((TuleapMultiSelectBox)abstractTuleapField).getClosedStatus());
+		}
 		for (TuleapSelectBoxItem tuleapSelectBoxItem : closedStatus) {
 			if (tuleapSelectBoxItem.getLabel().equals(status)) {
 				isClosed = true;

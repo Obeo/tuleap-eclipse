@@ -87,6 +87,17 @@ public class TuleapMultiSelectBox extends AbstractTuleapField {
 	}
 
 	/**
+	 * Returns the list of items that should be considered as closed status semantically.
+	 * 
+	 * @return The list of items that should be considered as closed status semantically.
+	 */
+	public List<TuleapSelectBoxItem> getClosedStatus() {
+		ArrayList<TuleapSelectBoxItem> closedStatus = new ArrayList<TuleapSelectBoxItem>(this.items);
+		closedStatus.removeAll(this.openStatus);
+		return closedStatus;
+	}
+
+	/**
 	 * Returns <code>true</code> if this field is to be considered as the status of the artifact semantically,
 	 * <code>false</code> otherwise.
 	 * 
