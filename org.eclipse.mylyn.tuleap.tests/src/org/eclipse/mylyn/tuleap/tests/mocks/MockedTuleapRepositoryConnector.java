@@ -17,6 +17,7 @@ import org.eclipse.mylyn.internal.tuleap.core.client.ITuleapClientManager;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapArtifact;
 import org.eclipse.mylyn.internal.tuleap.core.model.TuleapInstanceConfiguration;
 import org.eclipse.mylyn.internal.tuleap.core.repository.ITuleapRepositoryConnector;
+import org.eclipse.mylyn.internal.tuleap.core.util.ITuleapConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -183,7 +184,7 @@ public class MockedTuleapRepositoryConnector extends AbstractRepositoryConnector
 	 */
 	@Override
 	public String getTaskUrl(String repositoryUrl, String taskId) {
-		return null;
+		return repositoryUrl + ITuleapConstants.REPOSITORY_TASK_URL_SEPARATOR + taskId;
 	}
 
 	/**

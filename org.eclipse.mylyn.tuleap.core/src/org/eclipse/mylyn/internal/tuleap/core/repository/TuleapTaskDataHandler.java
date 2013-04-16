@@ -470,6 +470,28 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				attributeMetadata.setType(tuleapField.getMetadataType());
 				attributeMetadata.setLabel(tuleapField.getLabel());
 			}
+		} else if (tuleapField instanceof TuleapMultiSelectBox) {
+			TuleapMultiSelectBox tuleapMultiSelectBox = (TuleapMultiSelectBox)tuleapField;
+			if (tuleapMultiSelectBox.isSemanticStatus()) {
+				// Create an attribute for the assigned person
+				attribute = taskData.getRoot().createAttribute(TaskAttribute.STATUS);
+				TaskAttributeMetaData metaData = attribute.getMetaData();
+				metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.Status")); //$NON-NLS-1$
+				metaData.setType(TaskAttribute.TYPE_SINGLE_SELECT);
+			} else if (tuleapMultiSelectBox.isSemanticContributor()) {
+				// Create an attribute for the assigned person
+				attribute = taskData.getRoot().createAttribute(TaskAttribute.USER_ASSIGNED);
+				TaskAttributeMetaData metaData = attribute.getMetaData();
+				metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.AssignedToLabel")); //$NON-NLS-1$
+				metaData.setType(TaskAttribute.TYPE_PERSON);
+			} else {
+				attribute = taskData.getRoot().createAttribute(
+						Integer.valueOf(tuleapField.getIdentifier()).toString());
+				// Attributes
+				TaskAttributeMetaData attributeMetadata = attribute.getMetaData();
+				attributeMetadata.setType(tuleapField.getMetadataType());
+				attributeMetadata.setLabel(tuleapField.getLabel());
+			}
 		} else {
 			attribute = taskData.getRoot().createAttribute(
 					Integer.valueOf(tuleapField.getIdentifier()).toString());

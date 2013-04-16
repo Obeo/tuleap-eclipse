@@ -59,11 +59,6 @@ public class TuleapMultiSelectBox extends AbstractTuleapField {
 	private boolean isSemanticContributor;
 
 	/**
-	 * Indicate that this field is binded dynamically.
-	 */
-	private boolean isDynamicallyBinded;
-
-	/**
 	 * The constructor.
 	 * 
 	 * @param formElementIdentifier
@@ -123,26 +118,6 @@ public class TuleapMultiSelectBox extends AbstractTuleapField {
 	 */
 	public void setSemanticContributor(boolean isContributor) {
 		this.isSemanticContributor = isContributor;
-	}
-
-	/**
-	 * Sets to indicates that this field is binded dynamically to a set of users.
-	 * 
-	 * @param isDynamic
-	 *            <code>true</code> to indicate that this field is binded dynamically, <code>false</code>
-	 *            otherwise.
-	 */
-	public void setDynamicallyBinded(boolean isDynamic) {
-		this.isDynamicallyBinded = isDynamic;
-	}
-
-	/**
-	 * Returns <code>true</code> if the field is dynamically binded, <code>false</code> otherwise.
-	 * 
-	 * @return <code>true</code> if the field is dynamically binded, <code>false</code> otherwise.
-	 */
-	public boolean isDynamicallyBinded() {
-		return this.isDynamicallyBinded;
 	}
 
 	/**
