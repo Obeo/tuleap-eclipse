@@ -1556,7 +1556,6 @@ public class TuleapSoapConnector {
 		monitor.subTask(TuleapMylynTasksMessages.getString(
 				"TuleapSoapConnector.RetrievingAttachmentContentFor", filename)); //$NON-NLS-1$
 
-		byte[] attachmentContent = new byte[] {};
 		this.login(monitor);
 		monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.RetrievingAttachmentContent")); //$NON-NLS-1$
 
@@ -1575,7 +1574,7 @@ public class TuleapSoapConnector {
 					artifactId, attachmentId, downloadedBytes, bytesToDownload);
 			downloadedBytes = downloadedBytes + bytesToDownload;
 		}
-		attachmentContent = artifactAttachmentChunk.getBytes();
+		byte[] attachmentContent = artifactAttachmentChunk.getBytes();
 
 		this.logout();
 

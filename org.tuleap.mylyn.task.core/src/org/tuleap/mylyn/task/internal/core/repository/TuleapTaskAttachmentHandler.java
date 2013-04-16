@@ -164,7 +164,7 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 			int size = length.intValue();
 			String filename = taskAttachment.getFileName();
 
-			byte[] content = new byte[] {};
+			byte[] content;
 			try {
 				content = tuleapSoapConnector.getAttachmentContent(artifactId, attachmentId, filename, size,
 						monitor);
@@ -177,6 +177,10 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 			} catch (ServiceException e) {
 				IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
 				throw new CoreException(status);
+			}
+
+			if (content == null) {
+				content = new byte[] {};
 			}
 			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(Base64.decodeBase64(content));
 			return byteArrayInputStream;

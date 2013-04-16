@@ -817,8 +817,8 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			if (abstractTuleapField instanceof TuleapSelectBox
 					&& ((TuleapSelectBox)abstractTuleapField).getWorkflow().getTransitions().size() > 0) {
 				this.changeOptionsForSelectBoxWorkflow(taskData, (TuleapSelectBox)abstractTuleapField);
-			} else if (abstractTuleapField instanceof TuleapSelectBox
-					&& ((TuleapSelectBox)abstractTuleapField).getWorkflow().getTransitions().size() > 0) {
+			} else if (abstractTuleapField instanceof TuleapMultiSelectBox
+					&& ((TuleapMultiSelectBox)abstractTuleapField).getWorkflow().getTransitions().size() > 0) {
 				this.changeOptionsForMultiSelectBoxWorkflow(taskData,
 						(TuleapMultiSelectBox)abstractTuleapField);
 			}

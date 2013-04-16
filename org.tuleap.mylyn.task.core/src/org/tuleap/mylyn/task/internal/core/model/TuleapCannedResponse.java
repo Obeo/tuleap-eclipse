@@ -10,13 +10,20 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model;
 
+import java.io.Serializable;
+
 /**
  * The canned response.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
-public class TuleapCannedResponse {
+public class TuleapCannedResponse implements Serializable {
+	/**
+	 * The generated serial id.
+	 */
+	private static final long serialVersionUID = -1216066669186379870L;
+
 	/**
 	 * The title of the response.
 	 */
