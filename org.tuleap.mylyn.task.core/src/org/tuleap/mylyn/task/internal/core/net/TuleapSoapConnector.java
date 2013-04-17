@@ -121,7 +121,7 @@ public class TuleapSoapConnector {
 	/**
 	 * The location of the configuration file.
 	 */
-	private static final String CONFIG_FILE = "org/eclipse/mylyn/internal/tuleap/core/wsdl/soap/client-config.wsdd"; //$NON-NLS-1$
+	private static final String CONFIG_FILE = "org/tuleap/mylyn/task/internal/core/wsdl/soap/client-config.wsdd"; //$NON-NLS-1$
 
 	/**
 	 * The login message.
