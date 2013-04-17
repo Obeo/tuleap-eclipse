@@ -76,7 +76,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 * The label "contributors".
 	 */
 	private final String personContributorsLabel = TuleapMylynTasksMessages
-			.getString("TuleapTaskDataHandler.Contributors"); //$NON-NLS-1$
+			.getString("TuleapTaskDataHandler.AssignedToLabel"); //$NON-NLS-1$
 
 	/**
 	 * The Tuleap repository connector.
@@ -451,7 +451,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		} else if (tuleapField instanceof TuleapSelectBox) {
 			TuleapSelectBox selectBox = (TuleapSelectBox)tuleapField;
 			if (selectBox.isSemanticStatus()) {
-				// Create an attribute for the assigned person
+				// Create an attribute for the status
 				attribute = taskData.getRoot().createAttribute(TaskAttribute.STATUS);
 				TaskAttributeMetaData metaData = attribute.getMetaData();
 				metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.Status")); //$NON-NLS-1$
@@ -460,8 +460,9 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				// Create an attribute for the assigned person
 				attribute = taskData.getRoot().createAttribute(TaskAttribute.USER_ASSIGNED);
 				TaskAttributeMetaData metaData = attribute.getMetaData();
-				metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.AssignedToLabel")); //$NON-NLS-1$
-				metaData.setType(TaskAttribute.TYPE_PERSON);
+				metaData.setLabel(personContributorsLabel);
+				metaData.setType(TaskAttribute.TYPE_SINGLE_SELECT);
+				metaData.setKind(TaskAttribute.KIND_PEOPLE);
 			} else {
 				attribute = taskData.getRoot().createAttribute(
 						Integer.valueOf(tuleapField.getIdentifier()).toString());
@@ -482,8 +483,9 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				// Create an attribute for the assigned person
 				attribute = taskData.getRoot().createAttribute(TaskAttribute.USER_ASSIGNED);
 				TaskAttributeMetaData metaData = attribute.getMetaData();
-				metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.AssignedToLabel")); //$NON-NLS-1$
-				metaData.setType(TaskAttribute.TYPE_PERSON);
+				metaData.setLabel(personContributorsLabel);
+				metaData.setType(TaskAttribute.TYPE_MULTI_SELECT);
+				metaData.setKind(TaskAttribute.KIND_PEOPLE);
 			} else {
 				attribute = taskData.getRoot().createAttribute(
 						Integer.valueOf(tuleapField.getIdentifier()).toString());
