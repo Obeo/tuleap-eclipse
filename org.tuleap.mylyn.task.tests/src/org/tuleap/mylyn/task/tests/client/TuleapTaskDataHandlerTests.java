@@ -28,6 +28,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.internal.core.model.TuleapArtifact;
+import org.tuleap.mylyn.task.internal.core.model.TuleapArtifactComment;
 import org.tuleap.mylyn.task.internal.core.model.TuleapAttachment;
 import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
@@ -780,7 +781,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(taskAttribute.getId(), is(Integer.valueOf(id).toString()));
 		assertThat(taskAttribute.getOptions(), is((Map<String, String>)new HashMap<String, String>()));
 		assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(1)));
-		assertThat(taskAttribute.getValue(), is("0")); //$NON-NLS-1$
+		assertThat(taskAttribute.getValue(), is(Integer.valueOf(0).toString()));
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
@@ -816,7 +817,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(taskAttribute.getId(), is(Integer.valueOf(id).toString()));
 		assertThat(taskAttribute.getOptions(), is((Map<String, String>)new HashMap<String, String>()));
 		assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(1)));
-		assertThat(taskAttribute.getValue(), is("0")); //$NON-NLS-1$
+		assertThat(taskAttribute.getValue(), is(Integer.valueOf(0).toString()));
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
@@ -1805,16 +1806,16 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		int firstSelectBoxItemId = 84865746;
 		TuleapSelectBoxItem firstItem = new TuleapSelectBoxItem(firstSelectBoxItemId);
-		String firstItemLabel = "first item label"; //$NON-NLS-1$
-		String firstItemDescription = "first item description"; //$NON-NLS-1$
+		String firstItemLabel = "first item label multi select box status with options"; //$NON-NLS-1$
+		String firstItemDescription = "first item description multi select box status with options"; //$NON-NLS-1$
 		firstItem.setLabel(firstItemLabel);
 		firstItem.setDescription(firstItemDescription);
 		tuleapMultiSelectBox.getItems().add(firstItem);
 
 		int secondSelectBoxItemId = 84865746;
 		TuleapSelectBoxItem secondItem = new TuleapSelectBoxItem(secondSelectBoxItemId);
-		String secondItemLabel = "second item label"; //$NON-NLS-1$
-		String secondItemDescription = "second item description"; //$NON-NLS-1$
+		String secondItemLabel = "second item label multi select box status with options"; //$NON-NLS-1$
+		String secondItemDescription = "second item description multi select box status with options"; //$NON-NLS-1$
 		secondItem.setLabel(secondItemLabel);
 		secondItem.setDescription(secondItemDescription);
 		tuleapMultiSelectBox.getItems().add(secondItem);
@@ -1910,16 +1911,16 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		int firstSelectBoxItemId = 84865746;
 		TuleapSelectBoxItem firstItem = new TuleapSelectBoxItem(firstSelectBoxItemId);
-		String firstItemLabel = "first item label"; //$NON-NLS-1$
-		String firstItemDescription = "first item description"; //$NON-NLS-1$
+		String firstItemLabel = "first item label multi select box semantic contributors with options"; //$NON-NLS-1$
+		String firstItemDescription = "first item description multi select box semantic contributors with options"; //$NON-NLS-1$
 		firstItem.setLabel(firstItemLabel);
 		firstItem.setDescription(firstItemDescription);
 		tuleapMultiSelectBox.getItems().add(firstItem);
 
 		int secondSelectBoxItemId = 84865746;
 		TuleapSelectBoxItem secondItem = new TuleapSelectBoxItem(secondSelectBoxItemId);
-		String secondItemLabel = "second item label"; //$NON-NLS-1$
-		String secondItemDescription = "second item description"; //$NON-NLS-1$
+		String secondItemLabel = "second item label multi select box semantic contributors with options"; //$NON-NLS-1$
+		String secondItemDescription = "second item description multi select box semantic contributors with options"; //$NON-NLS-1$
 		secondItem.setLabel(secondItemLabel);
 		secondItem.setDescription(secondItemDescription);
 		tuleapMultiSelectBox.getItems().add(secondItem);
@@ -2032,6 +2033,48 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 				assertThat(metaData.getType(), is(TaskAttribute.TYPE_DATE));
 			}
 		}
+	}
+
+	/**
+	 * Test the creation of the task data from a tuleap artifact with comments.
+	 */
+	public void testCreateTaskDataFromArtifactComments() {
+		int id = 892;
+
+		TuleapArtifact tuleapArtifact = new TuleapArtifact(id, trackerId, trackerName, projectName);
+		String commentBody = "Comment body"; //$NON-NLS-1$
+		String userEmail = "user.email@company.com"; //$NON-NLS-1$
+		String realName = "User Email"; //$NON-NLS-1$
+		int submittedOnTimestamp = 1234;
+		TuleapArtifactComment artifactComment = new TuleapArtifactComment(commentBody, userEmail, realName,
+				submittedOnTimestamp);
+		tuleapArtifact.addComment(artifactComment);
+		TaskData taskData = this.createTaskDataFromArtifact(tuleapArtifact);
+
+		List<TaskAttribute> attributesByType = taskData.getAttributeMapper().getAttributesByType(taskData,
+				TaskAttribute.TYPE_COMMENT);
+		assertThat(Integer.valueOf(attributesByType.size()), is(Integer.valueOf(1)));
+
+		TaskAttribute taskAttribute = attributesByType.get(0);
+		assertThat(taskAttribute.getId(), is(TaskAttribute.PREFIX_COMMENT + Integer.valueOf(0).toString()));
+		assertThat(taskAttribute.getOptions(), is((Map<String, String>)new HashMap<String, String>()));
+		assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(1)));
+		assertThat(taskAttribute.getValue(), is(Integer.valueOf(0).toString()));
+
+		TaskAttribute textAttribute = taskAttribute.getAttribute(TaskAttribute.COMMENT_TEXT);
+		assertThat(textAttribute, notNullValue());
+		assertThat(textAttribute.getValue(), is(commentBody));
+
+		TaskAttribute commentAttribute = taskAttribute.getAttribute(TaskAttribute.COMMENT_AUTHOR);
+		assertThat(commentAttribute, notNullValue());
+		assertThat(commentAttribute.getValue(), is(userEmail));
+
+		TaskAttribute dateAttribute = taskAttribute.getAttribute(TaskAttribute.COMMENT_DATE);
+		assertThat(dateAttribute, notNullValue());
+		assertThat(dateAttribute.getValue(), is(Integer.valueOf(submittedOnTimestamp * 1000).toString()));
+
+		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(true)));
 	}
 
 	/**
@@ -2845,7 +2888,8 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	}
 
 	/**
-	 * Test the initialization of the task data with a tuleap multi select box with options and workflow.
+	 * Test the creation of the task data from a tuleap artifact with a tuleap multi select box with options
+	 * and workflow.
 	 */
 	public void testCreateTaskDataFromArtifactMultiSelectBoxWithOptionsAndWorkflow() {
 		int id = 892;
@@ -2923,5 +2967,145 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_MULTI_SELECT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
+	}
+
+	/**
+	 * Test the creation of the task data from a tuleap artifact with a tuleap multi select box with options
+	 * as a status.
+	 */
+	public void testCreateTaskDataFromArtifactMultiSelectBoxStatusWithOptions() {
+		int id = 892;
+		String name = "TuleapMultiSelectBoxStatusWithOptionsName"; //$NON-NLS-1$
+		String label = "TuleapMukltiSelectBoxStatusWithOptionsLabel"; //$NON-NLS-1$
+		String description = "TuleapMultiSelectBoxStatusWithOptionsDescription"; //$NON-NLS-1$
+		boolean isRequired = false;
+		boolean isSemanticContributor = false;
+		String binding = ITuleapConstants.TULEAP_STATIC_BINDING_ID;
+		int rank = 0;
+		String[] permissions = new String[] {ITuleapConstants.PERMISSION_READ,
+				ITuleapConstants.PERMISSION_SUBMIT, ITuleapConstants.PERMISSION_UPDATE, };
+
+		TuleapMultiSelectBox tuleapMultiSelectBox = this.createTuleapMultiSelectBox(id, name, label,
+				description, isRequired, isSemanticContributor, binding, rank, permissions);
+
+		int firstSelectBoxItemId = 84865746;
+		TuleapSelectBoxItem firstItem = new TuleapSelectBoxItem(firstSelectBoxItemId);
+		String firstItemLabel = "first item label"; //$NON-NLS-1$
+		String firstItemDescription = "first item description"; //$NON-NLS-1$
+		firstItem.setLabel(firstItemLabel);
+		firstItem.setDescription(firstItemDescription);
+		tuleapMultiSelectBox.getItems().add(firstItem);
+
+		int secondSelectBoxItemId = 84865746;
+		TuleapSelectBoxItem secondItem = new TuleapSelectBoxItem(secondSelectBoxItemId);
+		String secondItemLabel = "second item label"; //$NON-NLS-1$
+		String secondItemDescription = "second item description"; //$NON-NLS-1$
+		secondItem.setLabel(secondItemLabel);
+		secondItem.setDescription(secondItemDescription);
+		tuleapMultiSelectBox.getItems().add(secondItem);
+
+		tuleapMultiSelectBox.getOpenStatus().add(firstItem);
+
+		tuleapTrackerConfiguration.getFields().add(tuleapMultiSelectBox);
+
+		TuleapArtifact tuleapArtifact = new TuleapArtifact(id, trackerId, trackerName, projectName);
+		tuleapArtifact.putValue(name, firstItemLabel);
+		TaskData taskData = this.createTaskDataFromArtifact(tuleapArtifact);
+
+		// Check attributes
+		List<TaskAttribute> attributesByType = taskData.getAttributeMapper().getAttributesByType(taskData,
+				TaskAttribute.TYPE_MULTI_SELECT);
+		assertThat(Integer.valueOf(attributesByType.size()), is(Integer.valueOf(1)));
+
+		TaskAttribute taskAttribute = attributesByType.get(0);
+		assertThat(taskAttribute.getId(), is(TaskAttribute.STATUS));
+		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(3)));
+		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
+		for (Entry<String, String> entry : entrySet) {
+			if ("".equals(entry.getKey())) { //$NON-NLS-1$
+				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
+			} else if (firstItemLabel.equals(entry.getKey())) {
+				assertThat(entry.getValue(), is(firstItemLabel));
+			} else if (secondItemLabel.equals(entry.getKey())) {
+				assertThat(entry.getValue(), is(secondItemLabel));
+			}
+		}
+
+		assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(1)));
+		assertThat(taskAttribute.getValue(), is(firstItemLabel));
+
+		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
+		assertThat(metaData.getLabel(), is(STATUS_LABEL));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(metaData.getType(), is(TaskAttribute.TYPE_MULTI_SELECT));
+	}
+
+	/**
+	 * Test the creation of the task data from a tuleap artifact with a tuleap multi select box with options.
+	 */
+	public void testCreateTaskDataFromArtifactMultiSelectBoxSemanticContributorsWithOptions() {
+		int id = 892;
+		String name = "TuleapMultiSelectBoxSemanticContributorsWithOptionsName"; //$NON-NLS-1$
+		String label = "TuleapMultiSelectBoxSemanticContributorsWithOptionsLabel"; //$NON-NLS-1$
+		String description = "TuleapMultiSelectBoxSemanticContributorsWithOptionsDescription"; //$NON-NLS-1$
+		boolean isRequired = false;
+		boolean isSemanticContributor = true;
+		String binding = ITuleapConstants.TULEAP_DYNAMIC_BINDING_USERS;
+		int rank = 0;
+		String[] permissions = new String[] {ITuleapConstants.PERMISSION_READ,
+				ITuleapConstants.PERMISSION_SUBMIT, ITuleapConstants.PERMISSION_UPDATE, };
+
+		TuleapMultiSelectBox tuleapMultiSelectBox = this.createTuleapMultiSelectBox(id, name, label,
+				description, isRequired, isSemanticContributor, binding, rank, permissions);
+
+		int firstSelectBoxItemId = 84865746;
+		TuleapSelectBoxItem firstItem = new TuleapSelectBoxItem(firstSelectBoxItemId);
+		String firstItemLabel = "first item label"; //$NON-NLS-1$
+		String firstItemDescription = "first item description"; //$NON-NLS-1$
+		firstItem.setLabel(firstItemLabel);
+		firstItem.setDescription(firstItemDescription);
+		tuleapMultiSelectBox.getItems().add(firstItem);
+
+		int secondSelectBoxItemId = 84865746;
+		TuleapSelectBoxItem secondItem = new TuleapSelectBoxItem(secondSelectBoxItemId);
+		String secondItemLabel = "second item label"; //$NON-NLS-1$
+		String secondItemDescription = "second item description"; //$NON-NLS-1$
+		secondItem.setLabel(secondItemLabel);
+		secondItem.setDescription(secondItemDescription);
+		tuleapMultiSelectBox.getItems().add(secondItem);
+
+		tuleapTrackerConfiguration.getFields().add(tuleapMultiSelectBox);
+
+		TuleapArtifact tuleapArtifact = new TuleapArtifact(id, trackerId, trackerName, projectName);
+		tuleapArtifact.putValue(name, firstItemLabel);
+		TaskData taskData = this.createTaskDataFromArtifact(tuleapArtifact);
+
+		// Check attributes
+		List<TaskAttribute> attributesByType = taskData.getAttributeMapper().getAttributesByType(taskData,
+				TaskAttribute.TYPE_MULTI_SELECT);
+		assertThat(Integer.valueOf(attributesByType.size()), is(Integer.valueOf(1)));
+
+		TaskAttribute taskAttribute = attributesByType.get(0);
+		assertThat(taskAttribute.getId(), is(TaskAttribute.USER_ASSIGNED));
+		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(3)));
+		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
+		for (Entry<String, String> entry : entrySet) {
+			if ("".equals(entry.getKey())) { //$NON-NLS-1$
+				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
+			} else if (firstItemLabel.equals(entry.getKey())) {
+				assertThat(entry.getValue(), is(firstItemLabel));
+			} else if (secondItemLabel.equals(entry.getKey())) {
+				assertThat(entry.getValue(), is(secondItemLabel));
+			}
+		}
+
+		assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(1)));
+		assertThat(taskAttribute.getValue(), is(firstItemLabel));
+
+		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
+		assertThat(metaData.getLabel(), is(CONTRIBUTORS_LABEL));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(metaData.getType(), is(TaskAttribute.TYPE_MULTI_SELECT));
+		assertThat(metaData.getKind(), is(TaskAttribute.KIND_PEOPLE));
 	}
 }
