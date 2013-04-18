@@ -853,7 +853,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		List<TuleapSelectBoxItem> closedStatus = new ArrayList<TuleapSelectBoxItem>();
 		if (abstractTuleapField instanceof TuleapSelectBox) {
 			closedStatus.addAll(((TuleapSelectBox)abstractTuleapField).getClosedStatus());
-		} else {
+		} else if (abstractTuleapField instanceof TuleapMultiSelectBox) {
 			closedStatus.addAll(((TuleapMultiSelectBox)abstractTuleapField).getClosedStatus());
 		}
 		for (TuleapSelectBoxItem tuleapSelectBoxItem : closedStatus) {
