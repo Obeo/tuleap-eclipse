@@ -334,7 +334,7 @@ Tuleap Checkstyle Configuration
   </module>
   <module name="FileLength">
     <property name="severity" value="error"/>
-    <property name="max" value="3000"/>
+    <property name="max" value="6000"/>
   </module>
   <module name="SuppressionCommentFilter"/>
 </module>
