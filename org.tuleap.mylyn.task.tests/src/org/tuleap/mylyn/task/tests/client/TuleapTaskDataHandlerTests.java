@@ -3108,4 +3108,51 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_MULTI_SELECT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_PEOPLE));
 	}
+
+	/**
+	 * Test the creation of a Tuleap artifact from a task data containing a string.
+	 */
+	public void testGetTuleapArtifactFromTaskDataString() {
+		TuleapAttributeMapper mapper = new TuleapAttributeMapper(repository, this.repositoryConnector);
+		String taskId = "TaskId"; //$NON-NLS-1$
+		TaskData taskData = new TaskData(mapper, connectorKind, repositoryUrl, taskId);
+		String attributeId = "attributeId"; //$NON-NLS-1$
+		TaskAttribute taskAttribute = taskData.getRoot().createAttribute(attributeId);
+		String stringValue = "A string Value"; //$NON-NLS-1$
+		taskAttribute.setValue(stringValue);
+
+		TuleapArtifact tuleapArtifact = TuleapTaskDataHandler.getTuleapArtifact(repository, taskData);
+		assertThat(tuleapArtifact, notNullValue());
+		assertThat(tuleapArtifact.getValue(attributeId), is(stringValue));
+	}
+
+	/**
+	 * Test the creation of a Tuleap artifact from a task data containing an artifact link.
+	 */
+	public void testGetTuleapArtifactFromTaskDataArtifactLink() {
+		TuleapAttributeMapper mapper = new TuleapAttributeMapper(repository, this.repositoryConnector);
+		String taskId = "TaskId"; //$NON-NLS-1$
+		TaskData taskData = new TaskData(mapper, connectorKind, repositoryUrl, taskId);
+		String attributeId = "attributeId"; //$NON-NLS-1$
+		TaskAttribute taskAttribute = taskData.getRoot().createAttribute(attributeId);
+		String artifactLinkValue = "917"; //$NON-NLS-1$
+		taskAttribute.setValue(artifactLinkValue);
+		taskAttribute.getMetaData().setType(TaskAttribute.TYPE_TASK_DEPENDENCY);
+
+		TuleapArtifact tuleapArtifact = TuleapTaskDataHandler.getTuleapArtifact(repository, taskData);
+		assertThat(tuleapArtifact, notNullValue());
+		assertThat(tuleapArtifact.getValue(attributeId), is(artifactLinkValue));
+
+		// Artifact id from the code completion
+		taskData = new TaskData(mapper, connectorKind, repositoryUrl, taskId);
+		taskAttribute = taskData.getRoot().createAttribute(attributeId);
+		artifactLinkValue = "MyRepository:MyProject[116] #917"; //$NON-NLS-1$
+		String shortArtifactLinkValue = "917"; //$NON-NLS-1$
+		taskAttribute.setValue(artifactLinkValue);
+		taskAttribute.getMetaData().setType(TaskAttribute.TYPE_TASK_DEPENDENCY);
+
+		tuleapArtifact = TuleapTaskDataHandler.getTuleapArtifact(repository, taskData);
+		assertThat(tuleapArtifact, notNullValue());
+		assertThat(tuleapArtifact.getValue(attributeId), is(shortArtifactLinkValue));
+	}
 }
