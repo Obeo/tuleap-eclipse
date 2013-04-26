@@ -845,7 +845,7 @@ public class TuleapSoapConnector {
 			ArtifactFieldValue artifactFieldValue) {
 		FieldValue fieldValue = artifactFieldValue.getField_value();
 		TrackerFieldBindValue[] bindValues = fieldValue.getBind_value();
-		if (bindValues.length == 0) {
+		if (bindValues == null || bindValues.length == 0) {
 			tuleapArtifact.putValue(artifactFieldValue.getField_name(), ""); //$NON-NLS-1$
 		} else {
 			for (TrackerFieldBindValue bindValue : bindValues) {
@@ -873,18 +873,20 @@ public class TuleapSoapConnector {
 		// compute the description of the attachment
 		FieldValue fieldValue = artifactFieldValue.getField_value();
 		FieldValueFileInfo[] fileInfo = fieldValue.getFile_info();
-		for (FieldValueFileInfo fieldValueFileInfo : fileInfo) {
-			int filesize = fieldValueFileInfo.getFilesize();
-			String id = fieldValueFileInfo.getId();
-			String filename = fieldValueFileInfo.getFilename();
-			int submittedBy = fieldValueFileInfo.getSubmitted_by();
-			TuleapPerson uploadedBy = this.getPersonFromId(submittedBy);
-			String description = fieldValueFileInfo.getDescription();
-			String type = fieldValueFileInfo.getFiletype();
+		if (fileInfo != null) {
+			for (FieldValueFileInfo fieldValueFileInfo : fileInfo) {
+				int filesize = fieldValueFileInfo.getFilesize();
+				String id = fieldValueFileInfo.getId();
+				String filename = fieldValueFileInfo.getFilename();
+				int submittedBy = fieldValueFileInfo.getSubmitted_by();
+				TuleapPerson uploadedBy = this.getPersonFromId(submittedBy);
+				String description = fieldValueFileInfo.getDescription();
+				String type = fieldValueFileInfo.getFiletype();
 
-			TuleapAttachment tuleapAttachment = new TuleapAttachment(id, filename, uploadedBy, Long
-					.valueOf(filesize), description, type);
-			tuleapArtifact.putAttachment(artifactFieldValue.getField_name(), tuleapAttachment);
+				TuleapAttachment tuleapAttachment = new TuleapAttachment(id, filename, uploadedBy, Long
+						.valueOf(filesize), description, type);
+				tuleapArtifact.putAttachment(artifactFieldValue.getField_name(), tuleapAttachment);
+			}
 		}
 	}
 
