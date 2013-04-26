@@ -37,10 +37,12 @@ import org.tuleap.mylyn.task.internal.core.client.ITuleapClient;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.field.TuleapArtifactLink;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapDate;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapFloat;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapInteger;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapMultiSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.field.TuleapOpenList;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
@@ -270,6 +272,10 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 					this.createGroupContent((TuleapFloat)field, group);
 				} else if (field instanceof TuleapComputedValue) {
 					this.createGroupContent((TuleapComputedValue)field, group);
+				} else if (field instanceof TuleapOpenList) {
+					this.createGroupContent((TuleapOpenList)field, group);
+				} else if (field instanceof TuleapArtifactLink) {
+					this.createGroupContent((TuleapArtifactLink)field, group);
 				}
 			}
 		}
@@ -565,6 +571,32 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 		}
 
 		elements.add(new TuleapCustomQueryElement(list, tuleapMultiSelectBox));
+	}
+
+	/**
+	 * Creates the dedicated type of widget for the Tuleap open list field.
+	 * 
+	 * @param tuleapOpenList
+	 *            The Tuleap open list field
+	 * @param group
+	 *            The group in which the widget should be created
+	 */
+	private void createGroupContent(TuleapOpenList tuleapOpenList, Group group) {
+		// Create a single line text field for each Tuleap string
+		createGroupContentForString(tuleapOpenList.getLabel(), group, tuleapOpenList);
+	}
+
+	/**
+	 * Creates the dedicated type of widget for the Tuleap artifact link field.
+	 * 
+	 * @param tuleapArtifactLink
+	 *            The Tuleap string field
+	 * @param group
+	 *            The group in which the widget should be created
+	 */
+	private void createGroupContent(TuleapArtifactLink tuleapArtifactLink, Group group) {
+		// Create a single line text field for each Tuleap string
+		createGroupContentForString(tuleapArtifactLink.getLabel(), group, tuleapArtifactLink);
 	}
 
 	/**
