@@ -561,7 +561,18 @@ public class TuleapSoapConnector {
 		UGroupMember[] members = ugroup.getMembers();
 		for (UGroupMember uGroupMember : members) {
 			int userId = uGroupMember.getUser_id();
-			UserInfo userInfo = codendiAPIPort.getUserInfo(sessionHash, userId);
+			UserInfo userInfo = null;
+			// if the user is anonymous, do not ask the server
+			if (userId == ITuleapConstants.ANONYMOUS_USER_INFO_IDENTIFIER) {
+				userInfo = new UserInfo(Integer.valueOf(userId).toString(),
+						ITuleapConstants.ANONYMOUS_USER_INFO_USERNAME, Integer.valueOf(
+								ITuleapConstants.ANONYMOUS_USER_INFO_IDENTIFIER).toString(),
+						ITuleapConstants.ANONYMOUS_USER_INFO_REAL_NAME,
+						ITuleapConstants.ANONYMOUS_USER_INFO_EMAIL,
+						ITuleapConstants.ANONYMOUS_USER_INFO_LDAP_IDENTIFIER);
+			} else {
+				userInfo = codendiAPIPort.getUserInfo(sessionHash, userId);
+			}
 			String label = userInfo.getReal_name() + " (" + userInfo.getUsername() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 			TuleapSelectBoxItem tuleapSelectBoxItem = new TuleapSelectBoxItem(userId);
 			tuleapSelectBoxItem.setLabel(label);
@@ -1522,7 +1533,18 @@ public class TuleapSoapConnector {
 	 */
 	private TuleapPerson getPersonFromId(int identifier) {
 		try {
-			UserInfo userInfo = codendiAPIPort.getUserInfo(sessionHash, identifier);
+			UserInfo userInfo = null;
+			// if the user is anonymous, do not ask the server
+			if (identifier == ITuleapConstants.ANONYMOUS_USER_INFO_IDENTIFIER) {
+				userInfo = new UserInfo(Integer.valueOf(identifier).toString(),
+						ITuleapConstants.ANONYMOUS_USER_INFO_USERNAME, Integer.valueOf(
+								ITuleapConstants.ANONYMOUS_USER_INFO_IDENTIFIER).toString(),
+						ITuleapConstants.ANONYMOUS_USER_INFO_REAL_NAME,
+						ITuleapConstants.ANONYMOUS_USER_INFO_EMAIL,
+						ITuleapConstants.ANONYMOUS_USER_INFO_LDAP_IDENTIFIER);
+			} else {
+				userInfo = codendiAPIPort.getUserInfo(sessionHash, identifier);
+			}
 			return new TuleapPerson(userInfo.getUsername(), userInfo.getReal_name(), userInfo.getId(),
 					userInfo.getEmail());
 		} catch (RemoteException e) {

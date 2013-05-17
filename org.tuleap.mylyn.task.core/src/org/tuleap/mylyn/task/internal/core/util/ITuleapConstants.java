@@ -169,4 +169,29 @@ public interface ITuleapConstants {
 	 * The constant used to specify the label of the field to use to upload new files.
 	 */
 	String ATTACHMENT_FIELD_LABEL = "tuleap_attachment_field_label"; //$NON-NLS-1$
+
+	/**
+	 * The identifier of an anonymous user.
+	 */
+	int ANONYMOUS_USER_INFO_IDENTIFIER = 0;
+
+	/**
+	 * The username of an anonymous user.
+	 */
+	String ANONYMOUS_USER_INFO_USERNAME = "anonymous"; //$NON-NLS-1$
+
+	/**
+	 * The real name of an anonymous user.
+	 */
+	String ANONYMOUS_USER_INFO_REAL_NAME = "Anonymous User"; //$NON-NLS-1$
+
+	/**
+	 * The email address of an anonymous user.
+	 */
+	String ANONYMOUS_USER_INFO_EMAIL = "anonymous@tuleap.net"; //$NON-NLS-1$
+
+	/**
+	 * The LDAP identifier of an anonymous user.
+	 */
+	String ANONYMOUS_USER_INFO_LDAP_IDENTIFIER = ""; //$NON-NLS-1$
 }
