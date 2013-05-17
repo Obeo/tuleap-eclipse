@@ -13,6 +13,7 @@
   <packaging>eclipse-test-plugin</packaging>
   <properties>
     <test.suite>${project.artifactId}.AllTuleapTests</test.suite>
+    <tycho.scmUrl>scm:git:git://github.com/sbegaudeau/mylyn.tasks.git;path="org.tuleap.mylyn.task.tests";tag=R1_0_0;branch=tuleap_master</tycho.scmUrl>
   </properties>
   <build>
     <!-- resources for standalone tests

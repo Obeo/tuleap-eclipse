@@ -11,4 +11,7 @@
   <artifactId>org.tuleap.mylyn.task_feature</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>eclipse-feature</packaging>
+  <properties>
+  	<tycho.scmUrl>scm:git:git://github.com/sbegaudeau/mylyn.tasks.git;path="org.tuleap.mylyn.task-feature";tag=R1_0_0;branch=tuleap_master</tycho.scmUrl>
+  </properties>
 </project>
