@@ -189,7 +189,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 				String[] values = element.getValue();
 				String attributeValue = ""; //$NON-NLS-1$
 				for (int i = 0; i < values.length; i++) {
-					if (values[i] != null && values[i].length() > 0) {
+					if (values[i] != null) {
 						attributeValue += values[i];
 						if (i < values.length - 1) {
 							attributeValue += ITuleapConstants.QUERY_ATTRIBUTES_SEPARATOR;
@@ -202,7 +202,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 					attributeValue += ITuleapConstants.QUERY_ATTRIBUTES_SEPARATOR + operation;
 				}
 
-				if (attributeValue.length() != 0) {
+				if (attributeValue != null) {
 					query.setAttribute(String.valueOf(element.getTuleapFieldName()), attributeValue);
 				}
 			}
