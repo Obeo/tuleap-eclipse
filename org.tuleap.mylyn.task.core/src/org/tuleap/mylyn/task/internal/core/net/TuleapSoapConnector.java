@@ -833,13 +833,15 @@ public class TuleapSoapConnector {
 		int cpt = 0;
 
 		TrackerFieldBindValue[] bindValues = artifactFieldValue.getField_value().getBind_value();
-		for (TrackerFieldBindValue trackerFieldBindValue : bindValues) {
-			if (cpt < bindValues.length - 1) {
-				value = value + trackerFieldBindValue.getBind_value_label() + ", "; //$NON-NLS-1$
-			} else {
-				value = value + trackerFieldBindValue.getBind_value_label();
+		if (bindValues != null) {
+			for (TrackerFieldBindValue trackerFieldBindValue : bindValues) {
+				if (cpt < bindValues.length - 1) {
+					value = value + trackerFieldBindValue.getBind_value_label() + ", "; //$NON-NLS-1$
+				} else {
+					value = value + trackerFieldBindValue.getBind_value_label();
+				}
+				cpt++;
 			}
-			cpt++;
 		}
 		tuleapArtifact.putValue(artifactFieldValue.getField_name(), value);
 	}
