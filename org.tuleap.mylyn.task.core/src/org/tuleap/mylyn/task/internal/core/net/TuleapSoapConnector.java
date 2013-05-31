@@ -1179,16 +1179,22 @@ public class TuleapSoapConnector {
 			// Date
 			artifactFieldValue = this.getArtifactDate(trackerField, artifact);
 		} else if (ITuleapConfigurationConstants.SB.equals(trackerField.getType())
-				&& trackerField.getValues().length == 1) {
-			// One value -> dynamic binding
+				&& trackerField.getBinding() != null
+				&& !ITuleapConstants.TULEAP_STATIC_BINDING_ID
+						.equals(trackerField.getBinding().getBind_type())) {
+			// dynamic binding
 			artifactFieldValue = this.getArtifactSelectBoxWithDynamicBinding(trackerField, artifact);
 		} else if (ITuleapConfigurationConstants.MSB.equals(trackerField.getType())
-				&& trackerField.getValues().length == 1) {
-			// One value -> dynamic binding
+				&& trackerField.getBinding() != null
+				&& !ITuleapConstants.TULEAP_STATIC_BINDING_ID
+						.equals(trackerField.getBinding().getBind_type())) {
+			// dynamic binding
 			artifactFieldValue = this.getArtifactMultiSelectBoxWithDynamicBinding(trackerField, artifact);
 		} else if (ITuleapConfigurationConstants.CB.equals(trackerField.getType())
-				&& trackerField.getValues().length == 1) {
-			// One value -> dynamic binding
+				&& trackerField.getBinding() != null
+				&& !ITuleapConstants.TULEAP_STATIC_BINDING_ID
+						.equals(trackerField.getBinding().getBind_type())) {
+			// dynamic binding
 			artifactFieldValue = this.getArtifactMultiSelectBoxWithDynamicBinding(trackerField, artifact);
 		} else if (ITuleapConfigurationConstants.MSB.equals(trackerField.getType())
 				|| ITuleapConfigurationConstants.SB.equals(trackerField.getType())
