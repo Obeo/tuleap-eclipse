@@ -1292,7 +1292,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		TuleapSelectBox tuleapSelectBox = this.createTuleapSelectBox(id, name, label, description,
 				isRequired, isSemanticContributor, binding, rank, permissions);
 
-		int firstSelectBoxItemId = 84865746;
+		int firstSelectBoxItemId = 84865745;
 		TuleapSelectBoxItem firstItem = new TuleapSelectBoxItem(firstSelectBoxItemId);
 		String firstItemLabel = "first item label select box with options name"; //$NON-NLS-1$
 		String firstItemDescription = "first item description select box with options name"; //$NON-NLS-1$
@@ -1358,7 +1358,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		TuleapSelectBox tuleapSelectBox = this.createTuleapSelectBox(id, name, label, description,
 				isRequired, isSemanticContributor, binding, rank, permissions);
 
-		int firstSelectBoxItemId = 84865746;
+		int firstSelectBoxItemId = 84865745;
 		TuleapSelectBoxItem firstItem = new TuleapSelectBoxItem(firstSelectBoxItemId);
 		String firstItemLabel = "first item label select box with options and a workflow name"; //$NON-NLS-1$
 		String firstItemDescription = "first item description select box with options and a workflow name"; //$NON-NLS-1$
@@ -1370,6 +1370,70 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		TuleapSelectBoxItem secondItem = new TuleapSelectBoxItem(secondSelectBoxItemId);
 		String secondItemLabel = "second item label select box with options and a workflow name"; //$NON-NLS-1$
 		String secondItemDescription = "second item description select box with options and a workflow name"; //$NON-NLS-1$
+		secondItem.setLabel(secondItemLabel);
+		secondItem.setDescription(secondItemDescription);
+		tuleapSelectBox.getItems().add(secondItem);
+
+		TuleapWorkflow tuleapWorkflow = tuleapSelectBox.getWorkflow();
+		TuleapWorkflowTransition aTransition = new TuleapWorkflowTransition();
+		aTransition.setFrom(ITuleapConstants.NEW_ARTIFACT_WORKFLOW_IDENTIFIER);
+		aTransition.setTo(secondSelectBoxItemId);
+		tuleapWorkflow.getTransitions().add(aTransition);
+
+		tuleapTrackerConfiguration.getFields().add(tuleapSelectBox);
+
+		TaskData taskData = this.initialize();
+
+		// Check attributes
+		List<TaskAttribute> attributesByType = taskData.getAttributeMapper().getAttributesByType(taskData,
+				TaskAttribute.TYPE_SINGLE_SELECT);
+		assertThat(Integer.valueOf(attributesByType.size()), is(Integer.valueOf(1)));
+
+		TaskAttribute taskAttribute = attributesByType.get(0);
+		assertThat(taskAttribute.getId(), is(Integer.valueOf(id).toString()));
+
+		// We have one option from the workflow
+		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(1)));
+
+		assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(0)));
+
+		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
+		assertThat(metaData.getLabel(), is(label));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(metaData.getType(), is(TaskAttribute.TYPE_SINGLE_SELECT));
+		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
+	}
+
+	/**
+	 * Test the initialization of the task data with a tuleap select box with options and a workflow.
+	 */
+	public void testInitializeTaskDataSelectBoxWithOptionsAndEmptyWorkflow() {
+		int id = 892;
+		String name = "TuleapSelectBoxWithOptionsAndEmptyWorkflowName"; //$NON-NLS-1$
+		String label = "TuleapSelectBoxWithOptionsAndEmptyWorkflowLabel"; //$NON-NLS-1$
+		String description = "TuleapSelectBoxWithOptionsAndEmptyWorkflowDescription"; //$NON-NLS-1$
+		boolean isRequired = false;
+		boolean isSemanticContributor = false;
+		String binding = ITuleapConstants.TULEAP_STATIC_BINDING_ID;
+		int rank = 0;
+		String[] permissions = new String[] {ITuleapConstants.PERMISSION_READ,
+				ITuleapConstants.PERMISSION_SUBMIT, ITuleapConstants.PERMISSION_UPDATE, };
+
+		TuleapSelectBox tuleapSelectBox = this.createTuleapSelectBox(id, name, label, description,
+				isRequired, isSemanticContributor, binding, rank, permissions);
+
+		int firstSelectBoxItemId = 84865745;
+		TuleapSelectBoxItem firstItem = new TuleapSelectBoxItem(firstSelectBoxItemId);
+		String firstItemLabel = "first item label select box with options and an empty workflow name"; //$NON-NLS-1$
+		String firstItemDescription = "first item description select box with options and an empty workflow name"; //$NON-NLS-1$
+		firstItem.setLabel(firstItemLabel);
+		firstItem.setDescription(firstItemDescription);
+		tuleapSelectBox.getItems().add(firstItem);
+
+		int secondSelectBoxItemId = 84865746;
+		TuleapSelectBoxItem secondItem = new TuleapSelectBoxItem(secondSelectBoxItemId);
+		String secondItemLabel = "second item label select box with options and an empty workflow name"; //$NON-NLS-1$
+		String secondItemDescription = "second item description select box with options and an empty workflow name"; //$NON-NLS-1$
 		secondItem.setLabel(secondItemLabel);
 		secondItem.setDescription(secondItemDescription);
 		tuleapSelectBox.getItems().add(secondItem);
@@ -1420,7 +1484,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		TuleapSelectBox tuleapSelectBox = this.createTuleapSelectBox(id, name, label, description,
 				isRequired, isSemanticContributor, binding, rank, permissions);
 
-		int firstSelectBoxItemId = 84865746;
+		int firstSelectBoxItemId = 84865745;
 		TuleapSelectBoxItem firstItem = new TuleapSelectBoxItem(firstSelectBoxItemId);
 		String firstItemLabel = "first item label select box status with options name"; //$NON-NLS-1$
 		String firstItemDescription = "first item description select box status with options name"; //$NON-NLS-1$
@@ -1525,7 +1589,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		TuleapSelectBox tuleapSelectBox = this.createTuleapSelectBox(id, name, label, description,
 				isRequired, isSemanticContributor, binding, rank, permissions);
 
-		int firstSelectBoxItemId = 84865746;
+		int firstSelectBoxItemId = 84865745;
 		TuleapSelectBoxItem firstItem = new TuleapSelectBoxItem(firstSelectBoxItemId);
 		String firstItemLabel = "first item label select box semantic contributors with options name"; //$NON-NLS-1$
 		String firstItemDescription = "first item description select box semantic contributors with options name"; //$NON-NLS-1$
@@ -1666,7 +1730,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		TuleapMultiSelectBox tuleapMultiSelectBox = this.createTuleapMultiSelectBox(id, name, label,
 				description, isRequired, isSemanticContributor, binding, rank, permissions);
 
-		int firstSelectBoxItemId = 84865746;
+		int firstSelectBoxItemId = 84865745;
 		TuleapSelectBoxItem firstItem = new TuleapSelectBoxItem(firstSelectBoxItemId);
 		String firstItemLabel = "first item label select box with options"; //$NON-NLS-1$
 		String firstItemDescription = "first item description select box with options"; //$NON-NLS-1$
@@ -1715,6 +1779,62 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	}
 
 	/**
+	 * Test the initialization of the task data with a tuleap multi select box with options.
+	 */
+	public void testInitializeTaskDataMultiSelectBoxWithOneOption() {
+		int id = 892;
+		String name = "TuleapMultiSelectBoxWithOneOptionName"; //$NON-NLS-1$
+		String label = "TuleapMukltiSelectBoxWithOneOptionLabel"; //$NON-NLS-1$
+		String description = "TuleapMultiSelectBoxWithOneOptionDescription"; //$NON-NLS-1$
+		boolean isRequired = false;
+		boolean isSemanticContributor = false;
+		String binding = ITuleapConstants.TULEAP_STATIC_BINDING_ID;
+		int rank = 0;
+		String[] permissions = new String[] {ITuleapConstants.PERMISSION_READ,
+				ITuleapConstants.PERMISSION_SUBMIT, ITuleapConstants.PERMISSION_UPDATE, };
+
+		TuleapMultiSelectBox tuleapMultiSelectBox = this.createTuleapMultiSelectBox(id, name, label,
+				description, isRequired, isSemanticContributor, binding, rank, permissions);
+
+		int firstSelectBoxItemId = 84865745;
+		TuleapSelectBoxItem firstItem = new TuleapSelectBoxItem(firstSelectBoxItemId);
+		String firstItemLabel = "first item label select box with one option"; //$NON-NLS-1$
+		String firstItemDescription = "first item description select box with one option"; //$NON-NLS-1$
+		firstItem.setLabel(firstItemLabel);
+		firstItem.setDescription(firstItemDescription);
+		tuleapMultiSelectBox.getItems().add(firstItem);
+
+		tuleapTrackerConfiguration.getFields().add(tuleapMultiSelectBox);
+
+		TaskData taskData = this.initialize();
+
+		// Check attributes
+		List<TaskAttribute> attributesByType = taskData.getAttributeMapper().getAttributesByType(taskData,
+				TaskAttribute.TYPE_MULTI_SELECT);
+		assertThat(Integer.valueOf(attributesByType.size()), is(Integer.valueOf(1)));
+
+		TaskAttribute taskAttribute = attributesByType.get(0);
+		assertThat(taskAttribute.getId(), is(Integer.valueOf(id).toString()));
+		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(2)));
+		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
+		for (Entry<String, String> entry : entrySet) {
+			if ("".equals(entry.getKey())) { //$NON-NLS-1$
+				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
+			} else if (firstItemLabel.equals(entry.getKey())) {
+				assertThat(entry.getValue(), is(firstItemLabel));
+			}
+		}
+
+		assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(0)));
+
+		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
+		assertThat(metaData.getLabel(), is(label));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(metaData.getType(), is(TaskAttribute.TYPE_MULTI_SELECT));
+		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
+	}
+
+	/**
 	 * Test the initialization of the task data with a tuleap multi select box with options and workflow.
 	 */
 	public void testInitializeTaskDataMultiSelectBoxWithOptionsAndWorkflow() {
@@ -1732,7 +1852,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		TuleapMultiSelectBox tuleapMultiSelectBox = this.createTuleapMultiSelectBox(id, name, label,
 				description, isRequired, isSemanticContributor, binding, rank, permissions);
 
-		int firstSelectBoxItemId = 84865746;
+		int firstSelectBoxItemId = 84865745;
 		TuleapSelectBoxItem firstItem = new TuleapSelectBoxItem(firstSelectBoxItemId);
 		String firstItemLabel = "first item label select box with options and workflow"; //$NON-NLS-1$
 		String firstItemDescription = "first item description select box with options and workflow"; //$NON-NLS-1$
@@ -1804,7 +1924,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		TuleapMultiSelectBox tuleapMultiSelectBox = this.createTuleapMultiSelectBox(id, name, label,
 				description, isRequired, isSemanticContributor, binding, rank, permissions);
 
-		int firstSelectBoxItemId = 84865746;
+		int firstSelectBoxItemId = 84865745;
 		TuleapSelectBoxItem firstItem = new TuleapSelectBoxItem(firstSelectBoxItemId);
 		String firstItemLabel = "first item label multi select box status with options"; //$NON-NLS-1$
 		String firstItemDescription = "first item description multi select box status with options"; //$NON-NLS-1$
@@ -1909,7 +2029,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		TuleapMultiSelectBox tuleapMultiSelectBox = this.createTuleapMultiSelectBox(id, name, label,
 				description, isRequired, isSemanticContributor, binding, rank, permissions);
 
-		int firstSelectBoxItemId = 84865746;
+		int firstSelectBoxItemId = 84865745;
 		TuleapSelectBoxItem firstItem = new TuleapSelectBoxItem(firstSelectBoxItemId);
 		String firstItemLabel = "first item label multi select box semantic contributors with options"; //$NON-NLS-1$
 		String firstItemDescription = "first item description multi select box semantic contributors with options"; //$NON-NLS-1$
@@ -2545,7 +2665,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		TuleapSelectBox tuleapSelectBox = this.createTuleapSelectBox(id, name, label, description,
 				isRequired, isSemanticContributor, binding, rank, permissions);
 
-		int firstSelectBoxItemId = 84865746;
+		int firstSelectBoxItemId = 84865745;
 		TuleapSelectBoxItem firstItem = new TuleapSelectBoxItem(firstSelectBoxItemId);
 		String firstItemLabel = "first item label select box with options name"; //$NON-NLS-1$
 		String firstItemDescription = "first item description select box with options name"; //$NON-NLS-1$
@@ -2597,6 +2717,65 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	}
 
 	/**
+	 * Test the creation of the task data from a tuleap artifact with a tuleap select box with options.
+	 */
+	public void testCreateTaskDataFromArtifactSelectBoxWithOneOption() {
+		int id = 892;
+		String name = "TuleapSelectBoxWithOneOptionName"; //$NON-NLS-1$
+		String label = "TuleapSelectBoxWithOneOptionLabel"; //$NON-NLS-1$
+		String description = "TuleapSelectBoxWithOneOptionDescription"; //$NON-NLS-1$
+		boolean isRequired = false;
+		boolean isSemanticContributor = false;
+		String binding = ITuleapConstants.TULEAP_STATIC_BINDING_ID;
+		int rank = 0;
+		String[] permissions = new String[] {ITuleapConstants.PERMISSION_READ,
+				ITuleapConstants.PERMISSION_SUBMIT, ITuleapConstants.PERMISSION_UPDATE, };
+
+		TuleapSelectBox tuleapSelectBox = this.createTuleapSelectBox(id, name, label, description,
+				isRequired, isSemanticContributor, binding, rank, permissions);
+
+		int firstSelectBoxItemId = 84865745;
+		TuleapSelectBoxItem firstItem = new TuleapSelectBoxItem(firstSelectBoxItemId);
+		String firstItemLabel = "first item label select box with one option name"; //$NON-NLS-1$
+		String firstItemDescription = "first item description select box with one option name"; //$NON-NLS-1$
+		firstItem.setLabel(firstItemLabel);
+		firstItem.setDescription(firstItemDescription);
+		tuleapSelectBox.getItems().add(firstItem);
+
+		tuleapTrackerConfiguration.getFields().add(tuleapSelectBox);
+
+		TuleapArtifact tuleapArtifact = new TuleapArtifact(id, trackerId, trackerName, projectName);
+		tuleapArtifact.putValue(name, firstItemLabel);
+		TaskData taskData = this.createTaskDataFromArtifact(tuleapArtifact);
+
+		// Check attributes
+		List<TaskAttribute> attributesByType = taskData.getAttributeMapper().getAttributesByType(taskData,
+				TaskAttribute.TYPE_SINGLE_SELECT);
+		assertThat(Integer.valueOf(attributesByType.size()), is(Integer.valueOf(1)));
+
+		TaskAttribute taskAttribute = attributesByType.get(0);
+		assertThat(taskAttribute.getId(), is(Integer.valueOf(id).toString()));
+		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(2)));
+		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
+		for (Entry<String, String> entry : entrySet) {
+			if ("".equals(entry.getKey())) { //$NON-NLS-1$
+				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
+			} else if (firstItemLabel.equals(entry.getKey())) {
+				assertThat(entry.getValue(), is(firstItemLabel));
+			}
+		}
+
+		assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(1)));
+		assertThat(taskAttribute.getValue(), is(firstItemLabel));
+
+		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
+		assertThat(metaData.getLabel(), is(label));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(metaData.getType(), is(TaskAttribute.TYPE_SINGLE_SELECT));
+		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
+	}
+
+	/**
 	 * Test the creation of the task data from a tuleap artifact with a tuleap select box with options and a
 	 * workflow.
 	 */
@@ -2615,7 +2794,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		TuleapSelectBox tuleapSelectBox = this.createTuleapSelectBox(id, name, label, description,
 				isRequired, isSemanticContributor, binding, rank, permissions);
 
-		int firstSelectBoxItemId = 84865746;
+		int firstSelectBoxItemId = 84865745;
 		TuleapSelectBoxItem firstItem = new TuleapSelectBoxItem(firstSelectBoxItemId);
 		String firstItemLabel = "first item label select box with options and a workflow name"; //$NON-NLS-1$
 		String firstItemDescription = "first item description select box with options and a workflow name"; //$NON-NLS-1$
@@ -2696,7 +2875,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		TuleapSelectBox tuleapSelectBox = this.createTuleapSelectBox(id, name, label, description,
 				isRequired, isSemanticContributor, binding, rank, permissions);
 
-		int firstSelectBoxItemId = 84865746;
+		int firstSelectBoxItemId = 84865745;
 		TuleapSelectBoxItem firstItem = new TuleapSelectBoxItem(firstSelectBoxItemId);
 		String firstItemLabel = "first item label select box status with options name"; //$NON-NLS-1$
 		String firstItemDescription = "first item description select box status with options name"; //$NON-NLS-1$
@@ -2767,7 +2946,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		TuleapSelectBox tuleapSelectBox = this.createTuleapSelectBox(id, name, label, description,
 				isRequired, isSemanticContributor, binding, rank, permissions);
 
-		int firstSelectBoxItemId = 84865746;
+		int firstSelectBoxItemId = 84865745;
 		TuleapSelectBoxItem firstItem = new TuleapSelectBoxItem(firstSelectBoxItemId);
 		String firstItemLabel = "first item label select box semantic contributors with options name"; //$NON-NLS-1$
 		String firstItemDescription = "first item description select box semantic contributors with options name"; //$NON-NLS-1$
@@ -2836,7 +3015,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		TuleapMultiSelectBox tuleapMultiSelectBox = this.createTuleapMultiSelectBox(id, name, label,
 				description, isRequired, isSemanticContributor, binding, rank, permissions);
 
-		int firstSelectBoxItemId = 84865746;
+		int firstSelectBoxItemId = 84865745;
 		TuleapSelectBoxItem firstItem = new TuleapSelectBoxItem(firstSelectBoxItemId);
 		String firstItemLabel = "first item label select box with options"; //$NON-NLS-1$
 		String firstItemDescription = "first item description select box with options"; //$NON-NLS-1$
@@ -2906,7 +3085,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		TuleapMultiSelectBox tuleapMultiSelectBox = this.createTuleapMultiSelectBox(id, name, label,
 				description, isRequired, isSemanticContributor, binding, rank, permissions);
 
-		int firstSelectBoxItemId = 84865746;
+		int firstSelectBoxItemId = 84865745;
 		TuleapSelectBoxItem firstItem = new TuleapSelectBoxItem(firstSelectBoxItemId);
 		String firstItemLabel = "first item label select box with options and workflow"; //$NON-NLS-1$
 		String firstItemDescription = "first item description select box with options and workflow"; //$NON-NLS-1$
@@ -2988,7 +3167,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		TuleapMultiSelectBox tuleapMultiSelectBox = this.createTuleapMultiSelectBox(id, name, label,
 				description, isRequired, isSemanticContributor, binding, rank, permissions);
 
-		int firstSelectBoxItemId = 84865746;
+		int firstSelectBoxItemId = 84865745;
 		TuleapSelectBoxItem firstItem = new TuleapSelectBoxItem(firstSelectBoxItemId);
 		String firstItemLabel = "first item label"; //$NON-NLS-1$
 		String firstItemDescription = "first item description"; //$NON-NLS-1$
@@ -3058,7 +3237,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		TuleapMultiSelectBox tuleapMultiSelectBox = this.createTuleapMultiSelectBox(id, name, label,
 				description, isRequired, isSemanticContributor, binding, rank, permissions);
 
-		int firstSelectBoxItemId = 84865746;
+		int firstSelectBoxItemId = 84865745;
 		TuleapSelectBoxItem firstItem = new TuleapSelectBoxItem(firstSelectBoxItemId);
 		String firstItemLabel = "first item label"; //$NON-NLS-1$
 		String firstItemDescription = "first item description"; //$NON-NLS-1$
