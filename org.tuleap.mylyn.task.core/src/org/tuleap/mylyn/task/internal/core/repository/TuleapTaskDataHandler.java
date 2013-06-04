@@ -422,7 +422,6 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				List<Integer> accessibleStates = tuleapSelectBox.getWorkflow().accessibleStates(
 						ITuleapConstants.NEW_ARTIFACT_WORKFLOW_IDENTIFIER);
 				attribute.clearOptions();
-				attribute.putOption(value, value);
 
 				for (Integer accessibleState : accessibleStates) {
 					for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
