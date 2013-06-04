@@ -194,4 +194,9 @@ public interface ITuleapConstants {
 	 * The LDAP identifier of an anonymous user.
 	 */
 	String ANONYMOUS_USER_INFO_LDAP_IDENTIFIER = ""; //$NON-NLS-1$
+
+	/**
+	 * The identifier of a new artifact in the workflow.
+	 */
+	int NEW_ARTIFACT_WORKFLOW_IDENTIFIER = 0;
 }

@@ -417,6 +417,21 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 						}
 					}
 				}
+			} else {
+				// If we start from an empty state, we can go to the state for the item with the identifier 0.
+				List<Integer> accessibleStates = tuleapSelectBox.getWorkflow().accessibleStates(
+						ITuleapConstants.NEW_ARTIFACT_WORKFLOW_IDENTIFIER);
+				attribute.clearOptions();
+				attribute.putOption(value, value);
+
+				for (Integer accessibleState : accessibleStates) {
+					for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
+						if (accessibleState.intValue() == tuleapSelectBoxItem.getIdentifier()) {
+							attribute.putOption(tuleapSelectBoxItem.getLabel(), tuleapSelectBoxItem
+									.getLabel());
+						}
+					}
+				}
 			}
 		} else {
 			Map<String, String> options = tuleapField.getOptions();
