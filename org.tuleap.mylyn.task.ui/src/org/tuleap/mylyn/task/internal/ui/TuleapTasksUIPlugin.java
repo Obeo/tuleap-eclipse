@@ -30,7 +30,7 @@ import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
 
 /**
- * The activator in charge of managing the lifecycle of thie bundle.
+ * The activator in charge of managing the lifecycle of the bundle.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
@@ -39,7 +39,7 @@ public class TuleapTasksUIPlugin extends AbstractUIPlugin {
 	/**
 	 * The plug-in ID.
 	 */
-	public static final String PLUGIN_ID = "org.eclipse.mylyn.tuleap.ui"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "org.tuleap.mylyn.task.ui"; //$NON-NLS-1$
 
 	/**
 	 * The sole instance of the activator.

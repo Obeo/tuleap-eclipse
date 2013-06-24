@@ -31,7 +31,7 @@ public class TuleapCoreActivator extends Plugin {
 	/**
 	 * The ID of the plugin.
 	 */
-	public static final String PLUGIN_ID = "org.eclipse.mylyn.tuleap.core"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "org.tuleap.mylyn.task.core"; //$NON-NLS-1$
 
 	/**
 	 * The sole instance of the activator.
