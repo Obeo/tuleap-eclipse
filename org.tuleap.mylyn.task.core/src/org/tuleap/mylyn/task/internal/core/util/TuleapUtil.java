@@ -313,6 +313,6 @@ public final class TuleapUtil {
 	 * @return <code>true</code> if the url is valid, <code>false</code> otherwise.
 	 */
 	public static boolean isValidUrl(String url) {
-		return url.matches("https://.*/plugins/tracker/\\?group_id=[0-9]*"); //$NON-NLS-1$
+		return url.matches("https://.*"); //$NON-NLS-1$
 	}
 }

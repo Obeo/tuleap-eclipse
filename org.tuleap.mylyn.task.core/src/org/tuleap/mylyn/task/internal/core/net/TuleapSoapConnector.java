@@ -217,15 +217,15 @@ public class TuleapSoapConnector {
 		int index = soapv1url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
 		if (index != -1) {
 			soapv1url = soapv1url.substring(0, index);
-			soapv1url = soapv1url + ITuleapConstants.SOAP_V1_URL;
 		}
+		soapv1url = soapv1url + ITuleapConstants.SOAP_V1_URL;
 
 		String soapv2url = trackerLocation.getUrl();
 		index = soapv2url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
 		if (index != -1) {
 			soapv2url = soapv2url.substring(0, index);
-			soapv2url = soapv2url + ITuleapConstants.SOAP_V2_URL;
 		}
+		soapv2url = soapv2url + ITuleapConstants.SOAP_V2_URL;
 
 		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
 		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
@@ -260,6 +260,7 @@ public class TuleapSoapConnector {
 			try {
 				codendiAPIPort.logout(sessionHash);
 			} catch (RemoteException e) {
+				status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage());
 				TuleapCoreActivator.log(e, true);
 			}
 

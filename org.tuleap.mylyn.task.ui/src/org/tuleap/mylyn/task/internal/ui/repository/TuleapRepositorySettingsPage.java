@@ -74,7 +74,7 @@ public class TuleapRepositorySettingsPage extends AbstractRepositorySettingsPage
 	@Override
 	protected boolean isValidUrl(String url) {
 		// The Tuleap tracker that the repository will respect the following pattern
-		// "https://<domainName>/plugins/tracker/?group_id=<groupId>"
+		// "https://<domainName>"
 		boolean isValid = super.isValidUrl(url);
 		return isValid && TuleapUtil.isValidUrl(url);
 	}
