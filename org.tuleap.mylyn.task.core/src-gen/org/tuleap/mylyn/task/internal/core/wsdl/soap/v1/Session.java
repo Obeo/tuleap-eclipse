@@ -103,7 +103,7 @@ public class Session  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(Session.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net", "Session"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net", "Session"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("user_id");
         elemField.setXmlName(new javax.xml.namespace.QName("", "user_id"));

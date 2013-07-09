@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,34 +17,36 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.IWizardPage;
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.commons.workbench.forms.SectionComposite;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
-import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerReport;
 import org.tuleap.mylyn.task.internal.core.net.TuleapSoapConnector;
-import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
-import org.tuleap.mylyn.task.internal.core.util.TuleapUtil;
 import org.tuleap.mylyn.task.internal.ui.TuleapTasksUIPlugin;
 import org.tuleap.mylyn.task.internal.ui.util.ITuleapUIConstants;
 import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
+import org.tuleap.mylyn.task.internal.ui.wizards.TuleapTrackerPage;
 
 /**
  * The first page of the Tuleap query wizard.
@@ -52,41 +54,32 @@ import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
-public class TuleapQueryPage extends WizardPage {
-	/**
-	 * The custom query page.
-	 */
-	private TuleapCustomQueryPage customQueryPage;
+public class TuleapQueryPage extends AbstractRepositoryQueryPage2 {
 
 	/**
-	 * The default queries page.
+	 * The tracker identifier.
 	 */
-	private TuleapDefaultQueriesPage defaultQueriesPage;
+	private int trackerId = -1;
 
 	/**
-	 * The group displaying the queries.
+	 * The identifier of the project in which the query will be performed.
 	 */
-	private Group queriesGroup;
+	private int groupId = -1;
 
 	/**
-	 * The button to search the artifacts of a selected project.
+	 * The button to search the artifacts of a selected project using a report.
 	 */
-	private Button defaultQueriesButton;
+	private Button reportsButton;
+
+	/**
+	 * A table showing the list of all the reports available for the tracker.
+	 */
+	private TableViewer reportsTableViewer;
 
 	/**
 	 * The button to select the search with a custom query.
 	 */
 	private Button customQueryButton;
-
-	/**
-	 * The task repository.
-	 */
-	private TaskRepository repository;
-
-	/**
-	 * This combo will display the trackers available.
-	 */
-	private Combo projectSelectionCombo;
 
 	/**
 	 * the constructor.
@@ -95,65 +88,174 @@ public class TuleapQueryPage extends WizardPage {
 	 *            The Mylyn tasks repository.
 	 */
 	public TuleapQueryPage(TaskRepository taskRepository) {
-		super(TuleapMylynTasksUIMessages.getString("TuleapQueryPage.Name")); //$NON-NLS-1$
-		this.setTitle(TuleapMylynTasksUIMessages.getString("TuleapQueryPage.Name")); //$NON-NLS-1$
+		super(TuleapMylynTasksUIMessages.getString("TuleapQueryPage.Name"), taskRepository, null); //$NON-NLS-1$
+		this.setTitle(TuleapMylynTasksUIMessages.getString("TuleapQueryPage.Title")); //$NON-NLS-1$
 		this.setDescription(TuleapMylynTasksUIMessages.getString("TuleapQueryPage.Description")); //$NON-NLS-1$
-		this.repository = taskRepository;
+	}
+
+	/**
+	 * the constructor.
+	 * 
+	 * @param taskRepository
+	 *            The Mylyn tasks repository.
+	 * @param queryToEdit
+	 *            The query that will be edited
+	 */
+	public TuleapQueryPage(TaskRepository taskRepository, IRepositoryQuery queryToEdit) {
+		super(TuleapMylynTasksUIMessages.getString("TuleapQueryPage.Name"), taskRepository, queryToEdit); //$NON-NLS-1$
+		this.setTitle(TuleapMylynTasksUIMessages.getString("TuleapQueryPage.Title")); //$NON-NLS-1$
+		this.setDescription(TuleapMylynTasksUIMessages.getString("TuleapQueryPage.Description")); //$NON-NLS-1$
+
+		String tracker = queryToEdit.getAttribute(ITuleapConstants.QUERY_TRACKER_ID);
+		this.trackerId = Integer.valueOf(tracker).intValue();
+		String group = queryToEdit.getAttribute(ITuleapConstants.QUERY_GROUP_ID);
+		this.groupId = Integer.valueOf(group).intValue();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
+	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2#createPageContent(org.eclipse.mylyn.commons.workbench.forms.SectionComposite)
 	 */
-	public void createControl(Composite parent) {
-		Composite composite = new Composite(parent, SWT.NONE);
+	@Override
+	protected void createPageContent(SectionComposite parent) {
+		Composite composite = new Composite(parent.getContent(), SWT.NONE);
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.grabExcessVerticalSpace = false;
 		composite.setLayoutData(gridData);
 		composite.setLayout(new GridLayout(1, false));
 
-		this.queriesGroup = new Group(composite, SWT.NONE);
-		this.queriesGroup.setText(TuleapMylynTasksUIMessages.getString("TuleapQueryPage.QueriesGroup.Name")); //$NON-NLS-1$
-		gridData = new GridData(GridData.FILL_HORIZONTAL);
-		gridData.grabExcessVerticalSpace = false;
-		this.queriesGroup.setLayoutData(gridData);
-		this.queriesGroup.setLayout(new GridLayout(1, false));
+		this.reportsButton = new Button(composite, SWT.RADIO);
+		this.reportsButton.setText("Use a report saved on the server");
+		this.reportsButton.addSelectionListener(new SelectionListener() {
 
-		Composite groupComposite2 = new Composite(queriesGroup, SWT.NONE);
-		gridData = new GridData(GridData.FILL_HORIZONTAL);
-		gridData.grabExcessVerticalSpace = false;
-		groupComposite2.setLayoutData(gridData);
-		groupComposite2.setLayout(new GridLayout(2, false));
+			public void widgetSelected(SelectionEvent e) {
+				TuleapQueryPage.this.reportsTableViewer.getTable().setEnabled(true);
+				TuleapQueryPage.this.getWizard().getContainer().updateButtons();
+			}
 
-		Label label = new Label(groupComposite2, SWT.NONE);
-		label.setText(TuleapMylynTasksUIMessages.getString("TuleapQueryPage.ProjectLabel.Name")); //$NON-NLS-1$
+			public void widgetDefaultSelected(SelectionEvent e) {
+				TuleapQueryPage.this.reportsTableViewer.getTable().setEnabled(true);
+				TuleapQueryPage.this.getWizard().getContainer().updateButtons();
+			}
+		});
 
-		projectSelectionCombo = new Combo(groupComposite2, SWT.SINGLE);
-		List<String> trackers = getAllAvailableTrackers();
-		projectSelectionCombo.setItems(trackers.toArray(new String[trackers.size()]));
-		if (projectSelectionCombo.getItemCount() > 0) {
-			projectSelectionCombo.setText(projectSelectionCombo.getItem(0));
+		this.reportsTableViewer = new TableViewer(composite, SWT.BORDER);
+		this.reportsTableViewer.getTable().setLayoutData(gridData);
+		this.reportsTableViewer.setContentProvider(new ArrayContentProvider());
+		this.reportsTableViewer.setLabelProvider(new LabelProvider() {
+			/**
+			 * {@inheritDoc}
+			 * 
+			 * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+			 */
+			@Override
+			public String getText(Object element) {
+				if (element instanceof TuleapTrackerReport) {
+					return ((TuleapTrackerReport)element).getName();
+				}
+				return super.getText(element);
+			}
+		});
+		this.reportsTableViewer.getTable().addSelectionListener(new SelectionListener() {
+
+			public void widgetSelected(SelectionEvent e) {
+				TuleapQueryPage.this.getWizard().getContainer().updateButtons();
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				TuleapQueryPage.this.getWizard().getContainer().updateButtons();
+			}
+		});
+
+		if (this.getQuery() == null) {
+			this.customQueryButton = new Button(composite, SWT.RADIO);
+			this.customQueryButton.setText("Create a query using a form");
+			this.customQueryButton.addSelectionListener(new SelectionListener() {
+
+				public void widgetSelected(SelectionEvent e) {
+					TuleapQueryPage.this.reportsTableViewer.getTable().setEnabled(false);
+					TuleapQueryPage.this.getWizard().getContainer().updateButtons();
+				}
+
+				public void widgetDefaultSelected(SelectionEvent e) {
+					TuleapQueryPage.this.reportsTableViewer.getTable().setEnabled(false);
+					TuleapQueryPage.this.getWizard().getContainer().updateButtons();
+				}
+			});
 		}
 
-		Composite groupComposite = new Composite(queriesGroup, SWT.NONE);
-		gridData = new GridData(GridData.FILL_HORIZONTAL);
-		gridData.grabExcessVerticalSpace = false;
-		groupComposite.setLayoutData(gridData);
-		groupComposite.setLayout(new GridLayout(1, false));
+		this.updateReportList(false, false);
 
-		defaultQueriesButton = new Button(groupComposite, SWT.RADIO);
-		defaultQueriesButton.setText(TuleapMylynTasksUIMessages
-				.getString("TuleapQueryPage.ProjectQueryButton.Name")); //$NON-NLS-1$
-		defaultQueriesButton.setSelection(true);
-
-		customQueryButton = new Button(groupComposite, SWT.RADIO);
-		customQueryButton.setText(TuleapMylynTasksUIMessages
-				.getString("TuleapQueryPage.CustomQueryButton.Name")); //$NON-NLS-1$
-
-		setPageComplete(true);
-		setControl(composite);
 		Dialog.applyDialogFont(composite);
+		this.reportsButton.setSelection(true);
+		this.setPageComplete(true);
+		this.setControl(composite);
+	}
+
+	/**
+	 * Updates the list of available reports for the tracker in which we will create the query.
+	 * 
+	 * @param forceRefresh
+	 *            <code>true</code> if we should force the refresh of the report, <code>false</code> otherwise
+	 * @param inWizard
+	 *            <code>true</code> if we should display the progress in the wizard container,
+	 *            <code>false</code> otherwise
+	 */
+	private void updateReportList(boolean forceRefresh, boolean inWizard) {
+		IWizardPage previousPage = this.getPreviousPage();
+		if (previousPage instanceof TuleapTrackerPage) {
+			TuleapTrackerPage tuleapTrackerPage = (TuleapTrackerPage)previousPage;
+			final TuleapTrackerConfiguration tuleapTrackerConfiguration = tuleapTrackerPage
+					.getTrackerSelected();
+			if (tuleapTrackerConfiguration != null) {
+				this.trackerId = tuleapTrackerConfiguration.getTrackerId();
+				this.groupId = tuleapTrackerConfiguration.getTuleapProjectConfiguration().getIdentifier();
+			}
+		}
+
+		final List<TuleapTrackerReport> reports = new ArrayList<TuleapTrackerReport>();
+
+		IRunnableWithProgress runnable = new IRunnableWithProgress() {
+			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+				AbstractWebLocation location = new TaskRepositoryLocation(TuleapQueryPage.this
+						.getTaskRepository());
+				TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(location);
+				if (TuleapQueryPage.this.trackerId != -1) {
+					reports.addAll(tuleapSoapConnector.getReports(TuleapQueryPage.this.trackerId, monitor));
+				}
+			}
+		};
+
+		try {
+			if (inWizard) {
+				this.getContainer().run(true, false, runnable);
+			} else {
+				PlatformUI.getWorkbench().getProgressService().run(true, false, runnable);
+			}
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} finally {
+			if (inWizard) {
+				this.getWizard().getContainer().updateButtons();
+			}
+		}
+
+		this.reportsTableViewer.setInput(reports);
+
+		// Reselect the previously selected report
+		if (this.getQuery() != null) {
+			String reportId = this.getQuery().getAttribute(ITuleapConstants.QUERY_REPORT_ID);
+			int report = Integer.valueOf(reportId).intValue();
+			for (TuleapTrackerReport tuleapTrackerReport : reports) {
+				if (tuleapTrackerReport.getId() == report) {
+					IStructuredSelection selection = new StructuredSelection(tuleapTrackerReport);
+					this.reportsTableViewer.setSelection(selection);
+				}
+			}
+		}
 	}
 
 	/**
@@ -169,111 +271,111 @@ public class TuleapQueryPage extends WizardPage {
 	/**
 	 * {@inheritDoc}
 	 * 
+	 * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
+	 */
+	@Override
+	public boolean isPageComplete() {
+		return this.reportsButton.getSelection() && !this.reportsTableViewer.getSelection().isEmpty()
+				&& this.getQueryTitle() != null && this.getQueryTitle().length() > 0;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.wizard.WizardPage#canFlipToNextPage()
+	 */
+	@Override
+	public boolean canFlipToNextPage() {
+		return this.customQueryButton.getSelection() && this.getQueryTitle() != null
+				&& this.getQueryTitle().length() > 0;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.jface.wizard.WizardPage#getNextPage()
 	 */
 	@Override
 	public IWizardPage getNextPage() {
-		if (this.defaultQueriesButton.getSelection()) {
-			int trackerId = TuleapUtil.getTrackerId(projectSelectionCombo.getText());
-			return getDefaultQueriesPage(trackerId, null);
-		}
-		this.customQueryPage = new TuleapCustomQueryPage(repository, null, projectSelectionCombo.getText());
-		this.customQueryPage.setWizard(this.getWizard());
-		return this.customQueryPage;
+		TuleapCustomQueryPage tuleapCustomQueryPage = new TuleapCustomQueryPage(this.getTaskRepository(),
+				this.getQuery());
+		tuleapCustomQueryPage.setWizard(this.getWizard());
+		return tuleapCustomQueryPage;
 	}
 
 	/**
-	 * Get the default queries page.
+	 * {@inheritDoc}
 	 * 
-	 * @param queryToEdit
-	 *            The query that is updated, null in case of new query
-	 * @return Page to select the default queries
+	 * @see org.eclipse.jface.dialogs.DialogPage#setVisible(boolean)
 	 */
-	public IWizardPage getDefaultQueriesPage(IRepositoryQuery queryToEdit) {
-		String queryTrackerId = queryToEdit.getAttribute(ITuleapConstants.QUERY_TRACKER_ID);
-		int trackerId = Integer.valueOf(queryTrackerId).intValue();
-		return getDefaultQueriesPage(trackerId, queryToEdit);
+	@Override
+	public void setVisible(boolean visible) {
+		this.updateReportList(false, true);
+		super.setVisible(visible);
 	}
 
 	/**
-	 * Get the default queries page.
+	 * {@inheritDoc}
 	 * 
-	 * @param trackerId
-	 *            Tracker identifier
-	 * @param queryToEdit
-	 *            The query that is updated, null in case of new query
-	 * @return Page to select the default queries
+	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2#doRefreshControls()
 	 */
-	private IWizardPage getDefaultQueriesPage(final int trackerId, IRepositoryQuery queryToEdit) {
-		final List<TuleapTrackerReport> reports = new ArrayList<TuleapTrackerReport>();
-		IRunnableWithProgress runnable = new IRunnableWithProgress() {
-			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-				// to stuff that will returns the tracker reports.
-				AbstractWebLocation location = new TaskRepositoryLocationFactory()
-						.createWebLocation(repository);
-				TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(location);
-				reports.addAll(tuleapSoapConnector.getReports(trackerId, monitor));
-			}
-		};
-		try {
-			if (this.getContainer() != null) {
-				// Case creating a new default query, it is the second page of the new query wizard, so the
-				// progress bar will be shown inside the wizard
-				this.getContainer().run(true, false, runnable);
-			} else {
-				// Case editing an existing default query, it is the first page of the editing query wizard,
-				// so show a progress bar
-				try {
-					PlatformUI.getWorkbench().getProgressService().run(true, false, runnable);
-				} catch (InvocationTargetException e) {
-					TuleapTasksUIPlugin.log(e, true);
-				} catch (InterruptedException e) {
-					TuleapTasksUIPlugin.log(e, true);
-				}
-			}
-		} catch (InvocationTargetException e) {
-			TuleapTasksUIPlugin.log(e, true);
-		} catch (InterruptedException e) {
-			TuleapTasksUIPlugin.log(e, true);
-		}
-		this.defaultQueriesPage = new TuleapDefaultQueriesPage(repository, trackerId, reports, queryToEdit);
-		this.defaultQueriesPage.setWizard(this.getWizard());
-		return this.defaultQueriesPage;
+	@Override
+	protected void doRefreshControls() {
+		// do nothing
 	}
 
 	/**
-	 * Get all available trackers.
+	 * {@inheritDoc}
 	 * 
-	 * @return List of trackers
+	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2#hasRepositoryConfiguration()
 	 */
-	private List<String> getAllAvailableTrackers() {
-		final List<String> trackersList = new ArrayList<String>();
+	@Override
+	protected boolean hasRepositoryConfiguration() {
+		return false;
+	}
 
-		IRunnableWithProgress runnable = new IRunnableWithProgress() {
-			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-				String connectorKind = repository.getConnectorKind();
-				final AbstractRepositoryConnector repositoryConnector = TasksUi.getRepositoryManager()
-						.getRepositoryConnector(connectorKind);
-				if (repositoryConnector instanceof ITuleapRepositoryConnector) {
-					ITuleapRepositoryConnector connector = (ITuleapRepositoryConnector)repositoryConnector;
-					final TuleapInstanceConfiguration instanceConfiguration = connector
-							.getRepositoryConfiguration(repository, true, monitor);
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2#restoreState(org.eclipse.mylyn.tasks.core.IRepositoryQuery)
+	 */
+	@Override
+	protected boolean restoreState(IRepositoryQuery query) {
+		return false;
+	}
 
-					List<TuleapTrackerConfiguration> trackerConfigurations = instanceConfiguration
-							.getAllTrackerConfigurations();
-					for (TuleapTrackerConfiguration tuleapTrackerConfiguration : trackerConfigurations) {
-						trackersList.add(tuleapTrackerConfiguration.getQualifiedName());
-					}
-				}
-			}
-		};
-		try {
-			PlatformUI.getWorkbench().getProgressService().run(true, false, runnable);
-		} catch (InvocationTargetException e) {
-			TuleapTasksUIPlugin.log(e, true);
-		} catch (InterruptedException e) {
-			TuleapTasksUIPlugin.log(e, true);
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage#applyTo(org.eclipse.mylyn.tasks.core.IRepositoryQuery)
+	 */
+	@Override
+	public void applyTo(IRepositoryQuery query) {
+		IWizardPage previousPage = this.getPreviousPage();
+		if (this.reportsButton.getSelection() && previousPage instanceof TuleapTrackerPage) {
+			TuleapTrackerPage tuleapTrackerPage = (TuleapTrackerPage)previousPage;
+			TuleapTrackerConfiguration tuleapTrackerConfiguration = tuleapTrackerPage.getTrackerSelected();
+			this.trackerId = tuleapTrackerConfiguration.getTrackerId();
+			this.groupId = tuleapTrackerConfiguration.getTuleapProjectConfiguration().getIdentifier();
 		}
-		return trackersList;
+
+		query.setSummary(this.getQueryTitle());
+		query.setAttribute(ITuleapConstants.QUERY_TRACKER_ID, String.valueOf(this.trackerId));
+		query.setAttribute(ITuleapConstants.QUERY_GROUP_ID, String.valueOf(this.groupId));
+
+		query.setAttribute(ITuleapConstants.QUERY_KIND, ITuleapConstants.QUERY_KIND_REPORT);
+
+		// Report id?
+		ISelection selection = this.reportsTableViewer.getSelection();
+		if (selection instanceof IStructuredSelection) {
+			IStructuredSelection iStructuredSelection = (IStructuredSelection)selection;
+			Object element = iStructuredSelection.getFirstElement();
+			if (element instanceof TuleapTrackerReport) {
+				TuleapTrackerReport tuleapTrackerReport = (TuleapTrackerReport)element;
+
+				query.setAttribute(ITuleapConstants.QUERY_REPORT_ID, Integer.valueOf(
+						tuleapTrackerReport.getId()).toString());
+			}
+		}
 	}
 }

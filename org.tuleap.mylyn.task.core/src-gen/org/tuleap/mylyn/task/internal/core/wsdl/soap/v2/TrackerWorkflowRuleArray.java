@@ -9,58 +9,58 @@ package org.tuleap.mylyn.task.internal.core.wsdl.soap.v2;
 
 @SuppressWarnings("all")
 public class TrackerWorkflowRuleArray  implements java.io.Serializable {
-    private org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerWorkflowRuleDate[] date;
+    private org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerWorkflowRuleDate[] dates;
 
-    private org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerWorkflowRuleList[] list;
+    private org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerWorkflowRuleList[] lists;
 
     public TrackerWorkflowRuleArray() {
     }
 
     public TrackerWorkflowRuleArray(
-           org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerWorkflowRuleDate[] date,
-           org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerWorkflowRuleList[] list) {
-           this.date = date;
-           this.list = list;
+           org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerWorkflowRuleDate[] dates,
+           org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerWorkflowRuleList[] lists) {
+           this.dates = dates;
+           this.lists = lists;
     }
 
 
     /**
-     * Gets the date value for this TrackerWorkflowRuleArray.
+     * Gets the dates value for this TrackerWorkflowRuleArray.
      * 
-     * @return date
+     * @return dates
      */
-    public org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerWorkflowRuleDate[] getDate() {
-        return date;
+    public org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerWorkflowRuleDate[] getDates() {
+        return dates;
     }
 
 
     /**
-     * Sets the date value for this TrackerWorkflowRuleArray.
+     * Sets the dates value for this TrackerWorkflowRuleArray.
      * 
-     * @param date
+     * @param dates
      */
-    public void setDate(org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerWorkflowRuleDate[] date) {
-        this.date = date;
+    public void setDates(org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerWorkflowRuleDate[] dates) {
+        this.dates = dates;
     }
 
 
     /**
-     * Gets the list value for this TrackerWorkflowRuleArray.
+     * Gets the lists value for this TrackerWorkflowRuleArray.
      * 
-     * @return list
+     * @return lists
      */
-    public org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerWorkflowRuleList[] getList() {
-        return list;
+    public org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerWorkflowRuleList[] getLists() {
+        return lists;
     }
 
 
     /**
-     * Sets the list value for this TrackerWorkflowRuleArray.
+     * Sets the lists value for this TrackerWorkflowRuleArray.
      * 
-     * @param list
+     * @param lists
      */
-    public void setList(org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerWorkflowRuleList[] list) {
-        this.list = list;
+    public void setLists(org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerWorkflowRuleList[] lists) {
+        this.lists = lists;
     }
 
     private java.lang.Object __equalsCalc = null;
@@ -75,12 +75,12 @@ public class TrackerWorkflowRuleArray  implements java.io.Serializable {
         __equalsCalc = obj;
         boolean _equals;
         _equals = true && 
-            ((this.date==null && other.getDate()==null) || 
-             (this.date!=null &&
-              java.util.Arrays.equals(this.date, other.getDate()))) &&
-            ((this.list==null && other.getList()==null) || 
-             (this.list!=null &&
-              java.util.Arrays.equals(this.list, other.getList())));
+            ((this.dates==null && other.getDates()==null) || 
+             (this.dates!=null &&
+              java.util.Arrays.equals(this.dates, other.getDates()))) &&
+            ((this.lists==null && other.getLists()==null) || 
+             (this.lists!=null &&
+              java.util.Arrays.equals(this.lists, other.getLists())));
         __equalsCalc = null;
         return _equals;
     }
@@ -92,22 +92,22 @@ public class TrackerWorkflowRuleArray  implements java.io.Serializable {
         }
         __hashCodeCalc = true;
         int _hashCode = 1;
-        if (getDate() != null) {
+        if (getDates() != null) {
             for (int i=0;
-                 i<java.lang.reflect.Array.getLength(getDate());
+                 i<java.lang.reflect.Array.getLength(getDates());
                  i++) {
-                java.lang.Object obj = java.lang.reflect.Array.get(getDate(), i);
+                java.lang.Object obj = java.lang.reflect.Array.get(getDates(), i);
                 if (obj != null &&
                     !obj.getClass().isArray()) {
                     _hashCode += obj.hashCode();
                 }
             }
         }
-        if (getList() != null) {
+        if (getLists() != null) {
             for (int i=0;
-                 i<java.lang.reflect.Array.getLength(getList());
+                 i<java.lang.reflect.Array.getLength(getLists());
                  i++) {
-                java.lang.Object obj = java.lang.reflect.Array.get(getList(), i);
+                java.lang.Object obj = java.lang.reflect.Array.get(getLists(), i);
                 if (obj != null &&
                     !obj.getClass().isArray()) {
                     _hashCode += obj.hashCode();
@@ -123,19 +123,17 @@ public class TrackerWorkflowRuleArray  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(TrackerWorkflowRuleArray.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerWorkflowRuleArray"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerWorkflowRuleArray"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("date");
-        elemField.setXmlName(new javax.xml.namespace.QName("", "date"));
-        elemField.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerWorkflowRuleDate"));
-        elemField.setMinOccurs(0);
+        elemField.setFieldName("dates");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "dates"));
+        elemField.setXmlType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerWorkflowRuleDate"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("list");
-        elemField.setXmlName(new javax.xml.namespace.QName("", "list"));
-        elemField.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerWorkflowRuleList"));
-        elemField.setMinOccurs(0);
+        elemField.setFieldName("lists");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "lists"));
+        elemField.setXmlType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerWorkflowRuleList"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
     }

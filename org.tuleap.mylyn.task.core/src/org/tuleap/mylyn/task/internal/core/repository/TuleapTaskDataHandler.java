@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,7 +39,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskOperation;
-import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapClient;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapDynamicField;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
@@ -62,7 +61,6 @@ import org.tuleap.mylyn.task.internal.core.model.field.dynamic.TuleapSubmittedOn
 import org.tuleap.mylyn.task.internal.core.model.workflow.TuleapWorkflow;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
-import org.tuleap.mylyn.task.internal.core.util.TuleapUtil;
 
 /**
  * This class is in charge of the publication and retrieval of the tasks data to and from the repository.
@@ -117,7 +115,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			response = new RepositoryResponse(ResponseKind.TASK_CREATED, artifactId);
 		} else {
 			client.updateArtifact(artifact, monitor);
-			response = new RepositoryResponse(ResponseKind.TASK_UPDATED, artifact.getUniqueName());
+			response = new RepositoryResponse(ResponseKind.TASK_UPDATED, String.valueOf(artifact.getId()));
 		}
 
 		return response;
@@ -133,15 +131,20 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 * @return A Tuleap artifact representing the given Mylyn task data.
 	 */
 	public static TuleapArtifact getTuleapArtifact(TaskRepository repository, TaskData taskData) {
+		TuleapTaskMapper tuleapTaskMapper = new TuleapTaskMapper(taskData);
+
+		String trackerName = tuleapTaskMapper.getTrackerName();
+		int trackerId = tuleapTaskMapper.getTrackerId();
+
+		String projectName = tuleapTaskMapper.getProjectName();
+
 		// Create the artifact
 		TuleapArtifact artifact = null;
 		if (taskData.isNew()) {
 			artifact = new TuleapArtifact();
+			artifact.setTrackerId(trackerId);
 		} else {
-			String projectName = TuleapUtil.getProjectNameFromTaskDataId(taskData.getTaskId());
-			String trackerName = TuleapUtil.getTrackerNameFromTaskDataId(taskData.getTaskId());
-			int trackerId = TuleapUtil.getTrackerIdFromTaskDataId(taskData.getTaskId());
-			int artifactId = TuleapUtil.getArtifactIdFromTaskDataId(taskData.getTaskId());
+			int artifactId = Integer.valueOf(taskData.getTaskId()).intValue();
 			artifact = new TuleapArtifact(artifactId, trackerId, trackerName, projectName);
 		}
 
@@ -168,8 +171,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 							artifact.putValue(taskAttribute.getId(), nextToken);
 						} catch (NumberFormatException e) {
 							// We have a complex URL, that's what we are looking for! Let's convert it
-							int artifactId = TuleapUtil.getArtifactIdFromTaskDataId(nextToken);
-							artifact.putValue(taskAttribute.getId(), Integer.valueOf(artifactId).toString());
+							// FIXME Handle complex URL the task dependencies
 						}
 					}
 				}
@@ -182,11 +184,6 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				} else {
 					artifact.putValue(taskAttribute.getId(), taskAttribute.getValue());
 				}
-			}
-			if (TaskAttribute.PRODUCT.equals(taskAttribute.getId())) {
-				String product = taskAttribute.getValue();
-				int trackerId = Integer.valueOf(product).intValue();
-				artifact.setTrackerId(trackerId);
 			}
 		}
 
@@ -217,34 +214,29 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 			// Sets the creation date and last modification date.
 			if (this.connector instanceof AbstractRepositoryConnector
-					&& ((AbstractRepositoryConnector)this.connector).getTaskMapping(taskData) instanceof TaskMapper) {
-				String product = initializationData.getProduct();
-				int trackerId = -1;
-				try {
-					trackerId = Integer.valueOf(product).intValue();
+					&& ((AbstractRepositoryConnector)this.connector).getTaskMapping(taskData) instanceof TaskMapper
+					&& initializationData instanceof TuleapTaskMapping) {
+				TuleapTaskMapping tuleapTaskMapping = (TuleapTaskMapping)initializationData;
 
-					TuleapTrackerConfiguration trackerConfiguration = repositoryConfiguration
-							.getTrackerConfiguration(trackerId);
-					if (trackerConfiguration != null) {
-						this.createDefaultAttributes(taskData, trackerConfiguration, false);
+				TuleapTrackerConfiguration trackerConfiguration = tuleapTaskMapping.getTracker();
+				if (trackerConfiguration != null) {
+					this.createDefaultAttributes(taskData, trackerConfiguration, false);
 
-						TaskMapper taskMapper = new TaskMapper(taskData);
-						taskMapper.setCreationDate(new Date());
-						taskMapper.setModificationDate(new Date());
-						taskMapper.setSummary(TuleapMylynTasksMessages.getString(
-								"TuleapTaskDataHandler.DefaultNewTitle", trackerConfiguration.getItemName())); //$NON-NLS-1$
+					TaskMapper taskMapper = new TaskMapper(taskData);
+					taskMapper.setCreationDate(new Date());
+					taskMapper.setModificationDate(new Date());
+					taskMapper.setSummary(TuleapMylynTasksMessages.getString(
+							"TuleapTaskDataHandler.DefaultNewTitle", trackerConfiguration.getItemName())); //$NON-NLS-1$
 
-						// Set the tracker id
-						taskData.getRoot().createAttribute(TaskAttribute.PRODUCT).addValue(product);
+					// Set the tracker id
+					taskData.getRoot().createAttribute(TaskAttribute.PRODUCT).addValue(
+							Integer.valueOf(trackerConfiguration.getTrackerId()).toString());
 
-						String status = taskMapper.getStatus();
-						this.createOperations(taskData, trackerConfiguration, status);
-						this.createPersons(taskData, tuleapClient, trackerConfiguration);
+					String status = taskMapper.getStatus();
+					this.createOperations(taskData, trackerConfiguration, status);
+					this.createPersons(taskData, tuleapClient, trackerConfiguration);
 
-						isInitialized = true;
-					}
-				} catch (NumberFormatException e) {
-					TuleapCoreActivator.log(e, true);
+					isInitialized = true;
 				}
 
 			}
@@ -267,6 +259,9 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		if (configuration == null) {
 			return;
 		}
+
+		TuleapTaskMapper tuleapTaskMapper = new TuleapTaskMapper(taskData);
+
 		// The kind of the task
 		TaskAttribute attribute = taskData.getRoot().createAttribute(TaskAttribute.TASK_KIND);
 		String name = configuration.getName();
@@ -276,6 +271,12 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			attribute.setValue(TuleapMylynTasksMessages
 					.getString("TuleapTaskDataHandler.DefaultConfigurationName")); //$NON-NLS-1$
 		}
+
+		// The group id and the tracker id
+		tuleapTaskMapper.setGroupId(configuration.getTuleapProjectConfiguration().getIdentifier());
+		tuleapTaskMapper.setProjectName(configuration.getTuleapProjectConfiguration().getName());
+		tuleapTaskMapper.setTrackerId(configuration.getTrackerId());
+		tuleapTaskMapper.setTrackerName(configuration.getName());
 
 		// Creation date
 		attribute = taskData.getRoot().createAttribute(TaskAttribute.DATE_CREATION);
@@ -754,8 +755,13 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			TuleapArtifact tuleapArtifact, IProgressMonitor monitor) {
 		// Create the default attributes
 		TaskData taskData = new TaskData(this.getAttributeMapper(taskRepository),
-				ITuleapConstants.CONNECTOR_KIND, taskRepository.getRepositoryUrl(), tuleapArtifact
-						.getUniqueName());
+				ITuleapConstants.CONNECTOR_KIND, taskRepository.getRepositoryUrl(), String
+						.valueOf(tuleapArtifact.getId()));
+
+		TaskAttribute taskKey = taskData.getRoot().createAttribute(TaskAttribute.TASK_KEY);
+		taskKey.setValue(tuleapArtifact.getUniqueName());
+		taskKey.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
+		taskKey.getMetaData().setReadOnly(true);
 
 		// Structure
 		tuleapClient.updateAttributes(monitor, false);

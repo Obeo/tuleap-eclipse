@@ -115,7 +115,7 @@ public class TrackerFieldBindType  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(TrackerFieldBindType.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerFieldBindType"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerFieldBindType"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("bind_type");
         elemField.setXmlName(new javax.xml.namespace.QName("", "bind_type"));
@@ -125,7 +125,7 @@ public class TrackerFieldBindType  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("bind_list");
         elemField.setXmlName(new javax.xml.namespace.QName("", "bind_list"));
-        elemField.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "UGroup"));
+        elemField.setXmlType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "UGroup"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
     }

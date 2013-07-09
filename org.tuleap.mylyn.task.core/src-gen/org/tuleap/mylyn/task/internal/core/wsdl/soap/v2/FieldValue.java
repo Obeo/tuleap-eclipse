@@ -153,7 +153,7 @@ public class FieldValue  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(FieldValue.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "FieldValue"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "FieldValue"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("value");
         elemField.setXmlName(new javax.xml.namespace.QName("", "value"));
@@ -164,14 +164,14 @@ public class FieldValue  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("file_info");
         elemField.setXmlName(new javax.xml.namespace.QName("", "file_info"));
-        elemField.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "FieldValueFileInfo"));
+        elemField.setXmlType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "FieldValueFileInfo"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("bind_value");
         elemField.setXmlName(new javax.xml.namespace.QName("", "bind_value"));
-        elemField.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerFieldBindValue"));
+        elemField.setXmlType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerFieldBindValue"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);

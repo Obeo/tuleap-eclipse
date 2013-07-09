@@ -115,7 +115,7 @@ public class TrackerSemanticStatus  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(TrackerSemanticStatus.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerSemanticStatus"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerSemanticStatus"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("field_name");
         elemField.setXmlName(new javax.xml.namespace.QName("", "field_name"));

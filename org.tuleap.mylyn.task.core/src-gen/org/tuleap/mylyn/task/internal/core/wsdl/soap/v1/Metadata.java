@@ -227,7 +227,7 @@ public class Metadata  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(Metadata.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net", "Metadata"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net", "Metadata"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("label");
         elemField.setXmlName(new javax.xml.namespace.QName("", "label"));
@@ -261,7 +261,7 @@ public class Metadata  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("listOfValues");
         elemField.setXmlName(new javax.xml.namespace.QName("", "listOfValues"));
-        elemField.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net", "MetadataListValue"));
+        elemField.setXmlType(new javax.xml.namespace.QName("https://tuleap.net", "MetadataListValue"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
     }

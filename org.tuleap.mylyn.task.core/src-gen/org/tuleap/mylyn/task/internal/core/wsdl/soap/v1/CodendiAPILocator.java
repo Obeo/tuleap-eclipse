@@ -23,7 +23,7 @@ public class CodendiAPILocator extends org.apache.axis.client.Service implements
     }
 
     // Use to get a proxy class for CodendiAPIPort
-    private java.lang.String CodendiAPIPort_address = "https://demo.tuleap.net:443/soap/";
+    private java.lang.String CodendiAPIPort_address = "https://tuleap.net:443/soap/";
 
     public java.lang.String getCodendiAPIPortAddress() {
         return CodendiAPIPort_address;
@@ -106,7 +106,7 @@ public class CodendiAPILocator extends org.apache.axis.client.Service implements
     }
 
     public javax.xml.namespace.QName getServiceName() {
-        return new javax.xml.namespace.QName("https://demo.tuleap.net", "CodendiAPI");
+        return new javax.xml.namespace.QName("https://tuleap.net", "CodendiAPI");
     }
 
     private java.util.HashSet ports = null;
@@ -114,7 +114,7 @@ public class CodendiAPILocator extends org.apache.axis.client.Service implements
     public java.util.Iterator getPorts() {
         if (ports == null) {
             ports = new java.util.HashSet();
-            ports.add(new javax.xml.namespace.QName("https://demo.tuleap.net", "CodendiAPIPort"));
+            ports.add(new javax.xml.namespace.QName("https://tuleap.net", "CodendiAPIPort"));
         }
         return ports.iterator();
     }

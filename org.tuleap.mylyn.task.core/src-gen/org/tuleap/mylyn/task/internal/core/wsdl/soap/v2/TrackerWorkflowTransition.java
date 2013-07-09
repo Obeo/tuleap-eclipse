@@ -99,7 +99,7 @@ public class TrackerWorkflowTransition  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(TrackerWorkflowTransition.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerWorkflowTransition"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerWorkflowTransition"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("from_id");
         elemField.setXmlName(new javax.xml.namespace.QName("", "from_id"));

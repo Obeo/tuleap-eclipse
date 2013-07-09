@@ -227,7 +227,7 @@ public class UserInfo  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(UserInfo.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net", "UserInfo"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net", "UserInfo"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("identifier");
         elemField.setXmlName(new javax.xml.namespace.QName("", "identifier"));

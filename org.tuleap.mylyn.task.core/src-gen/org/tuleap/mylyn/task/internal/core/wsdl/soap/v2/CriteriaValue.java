@@ -137,7 +137,7 @@ public class CriteriaValue  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(CriteriaValue.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "CriteriaValue"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "CriteriaValue"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("value");
         elemField.setXmlName(new javax.xml.namespace.QName("", "value"));
@@ -148,14 +148,14 @@ public class CriteriaValue  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("date");
         elemField.setXmlName(new javax.xml.namespace.QName("", "date"));
-        elemField.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "CriteriaValueDate"));
+        elemField.setXmlType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "CriteriaValueDate"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("dateAdvanced");
         elemField.setXmlName(new javax.xml.namespace.QName("", "dateAdvanced"));
-        elemField.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "CriteriaValueDateAdvanced"));
+        elemField.setXmlType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "CriteriaValueDateAdvanced"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);

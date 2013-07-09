@@ -32,7 +32,6 @@ import org.tuleap.mylyn.task.internal.core.net.TuleapSoapConnector;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapTaskDataHandler;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
-import org.tuleap.mylyn.task.internal.core.util.TuleapUtil;
 
 /**
  * The Mylyn Tuleap client is in charge of the connection with the repository and it will realize the request
@@ -154,9 +153,9 @@ public class TuleapClient implements ITuleapClient {
 	 */
 	public TuleapArtifact getArtifact(String taskId, IProgressMonitor monitor) throws CoreException {
 		TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(this.location);
-		int trackerId = TuleapUtil.getTrackerIdFromTaskDataId(taskId);
-		int artifactId = TuleapUtil.getArtifactIdFromTaskDataId(taskId);
-		if (trackerId != -1 && artifactId != -1) {
+		int trackerId = -1;
+		int artifactId = Integer.valueOf(taskId).intValue();
+		if (artifactId != -1) {
 			TuleapArtifact tuleapArtifact;
 			try {
 				tuleapArtifact = tuleapSoapConnector.getArtifact(trackerId, artifactId, monitor);

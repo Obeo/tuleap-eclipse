@@ -16,7 +16,6 @@ import junit.framework.TestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.tuleap.mylyn.task.tests.client.TuleapArtifactTests;
 import org.tuleap.mylyn.task.tests.client.TuleapRepositoryConnectorTests;
-import org.tuleap.mylyn.task.tests.client.TuleapSoapConnectorTests;
 import org.tuleap.mylyn.task.tests.client.TuleapTaskDataHandlerTests;
 import org.tuleap.mylyn.task.tests.client.TuleapUtilTests;
 import org.tuleap.mylyn.task.tests.support.TuleapFixture;
@@ -62,7 +61,6 @@ public final class AllTuleapHeadlessStandaloneTests {
 		suite.addTestSuite(TuleapUtilTests.class);
 		suite.addTestSuite(TuleapRepositoryConnectorTests.class);
 		suite.addTestSuite(TuleapTaskDataHandlerTests.class);
-		suite.addTestSuite(TuleapSoapConnectorTests.class);
 		return suite;
 	}
 

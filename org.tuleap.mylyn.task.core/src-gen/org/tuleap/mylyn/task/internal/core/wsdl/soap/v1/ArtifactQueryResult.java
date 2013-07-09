@@ -111,7 +111,7 @@ public class ArtifactQueryResult  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(ArtifactQueryResult.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactQueryResult"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net", "ArtifactQueryResult"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("total_artifacts_number");
         elemField.setXmlName(new javax.xml.namespace.QName("", "total_artifacts_number"));
@@ -121,7 +121,7 @@ public class ArtifactQueryResult  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("artifacts");
         elemField.setXmlName(new javax.xml.namespace.QName("", "artifacts"));
-        elemField.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net", "Artifact"));
+        elemField.setXmlType(new javax.xml.namespace.QName("https://tuleap.net", "Artifact"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
     }

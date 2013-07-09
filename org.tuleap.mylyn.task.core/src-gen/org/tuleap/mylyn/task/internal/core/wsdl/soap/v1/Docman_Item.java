@@ -393,7 +393,7 @@ public class Docman_Item  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(Docman_Item.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net", "Docman_Item"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net", "Docman_Item"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("item_id");
         elemField.setXmlName(new javax.xml.namespace.QName("", "item_id"));

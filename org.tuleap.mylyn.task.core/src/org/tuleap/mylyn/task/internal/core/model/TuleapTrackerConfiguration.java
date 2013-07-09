@@ -68,6 +68,11 @@ public class TuleapTrackerConfiguration implements Serializable {
 	private int trackerId;
 
 	/**
+	 * The configuration of the project containing the tracker.
+	 */
+	private TuleapProjectConfiguration tuleapProjectConfiguration;
+
+	/**
 	 * The default constructor.
 	 * 
 	 * @param trackerIdentifier
@@ -218,5 +223,24 @@ public class TuleapTrackerConfiguration implements Serializable {
 	 */
 	public int getTrackerId() {
 		return this.trackerId;
+	}
+
+	/**
+	 * Sets the configuration of the project containing this tracker.
+	 * 
+	 * @param projectConfiguration
+	 *            The configuration of the project containing this tracker
+	 */
+	public void setTuleapProjectConfiguration(TuleapProjectConfiguration projectConfiguration) {
+		this.tuleapProjectConfiguration = projectConfiguration;
+	}
+
+	/**
+	 * Returns the configuration of the project containing this tracker.
+	 * 
+	 * @return The configuration of the project containing this tracker.
+	 */
+	public TuleapProjectConfiguration getTuleapProjectConfiguration() {
+		return tuleapProjectConfiguration;
 	}
 }

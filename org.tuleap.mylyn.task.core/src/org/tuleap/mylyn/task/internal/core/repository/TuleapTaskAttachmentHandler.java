@@ -32,16 +32,17 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapClient;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapFileUpload;
 import org.tuleap.mylyn.task.internal.core.net.TuleapAttachmentDescriptor;
 import org.tuleap.mylyn.task.internal.core.net.TuleapSoapConnector;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
-import org.tuleap.mylyn.task.internal.core.util.TuleapUtil;
 
 /**
  * The Tuleap task attachement handler will be in charge of manipulating the task attachments.
@@ -109,32 +110,75 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 	 *         otherwise.
 	 */
 	public boolean hasFileUploadField(TaskRepository repository, ITask task) {
-		String taskId = task.getTaskId();
-		int trackerId = TuleapUtil.getTrackerIdFromTaskDataId(taskId);
-
-		ITuleapClient client = this.connector.getClientManager().getClient(repository);
-		if (client == null || trackerId == -1) {
-			return false;
-		}
-
 		boolean hasFileUploadField = false;
 
-		TuleapInstanceConfiguration repositoryConfiguration = client.getRepositoryConfiguration();
-		if (repositoryConfiguration != null) {
-			TuleapTrackerConfiguration trackerConfiguration = repositoryConfiguration
-					.getTrackerConfiguration(trackerId);
-			if (trackerConfiguration != null) {
-				List<AbstractTuleapField> fields = trackerConfiguration.getFields();
-				for (AbstractTuleapField abstractTuleapField : fields) {
-					if (abstractTuleapField instanceof TuleapFileUpload) {
-						hasFileUploadField = true;
-						break;
-					}
+		// HACK-ish [SBE]
+		TuleapTrackerConfiguration configuration = this.getTrackerConfigurationFromTaskKey(repository, task);
+
+		if (configuration != null) {
+			List<AbstractTuleapField> fields = configuration.getFields();
+			for (AbstractTuleapField abstractTuleapField : fields) {
+				if (abstractTuleapField instanceof TuleapFileUpload) {
+					return true;
 				}
 			}
 		}
 
 		return hasFileUploadField;
+	}
+
+	/**
+	 * Returns the configuration of the tracker from the task key.
+	 * <p>
+	 * HACK-ish [SBE] - We should rely on the identifier of the tracker but since we only have access to the
+	 * task and since we do not have access to the server here (Mylyn workflow limitation), we can only rely
+	 * on the name of the field. If the TaskDataManager from Mylyn Core was not
+	 * "only accessible from Mylyn UI", this issue would not exists since we could have access then to the
+	 * task data. If two projects with the same name have a tracker with the same name and if only one of
+	 * those tracker has an upload field, it will allow the support for upload fields on both trackers. Which
+	 * would create errors when we try to upload the attachement.
+	 * </p>
+	 * 
+	 * @param repository
+	 *            The task repository
+	 * @param task
+	 *            The task
+	 * @return The configuration of the tracker from the task key
+	 */
+	private TuleapTrackerConfiguration getTrackerConfigurationFromTaskKey(TaskRepository repository,
+			ITask task) {
+		String projectName = null;
+		String trackerName = null;
+
+		String taskKey = task.getTaskKey();
+		if (taskKey != null) {
+			int startIndex = taskKey.indexOf(':');
+			int endIndex = taskKey.indexOf('-');
+			if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
+				projectName = taskKey.substring(0, startIndex);
+				trackerName = taskKey.substring(startIndex + 1, endIndex);
+			}
+		}
+
+		ITuleapClient client = this.connector.getClientManager().getClient(repository);
+
+		if (client != null && projectName != null && trackerName != null) {
+			TuleapInstanceConfiguration repositoryConfiguration = client.getRepositoryConfiguration();
+			List<TuleapProjectConfiguration> allProjectConfigurations = repositoryConfiguration
+					.getAllProjectConfigurations();
+			for (TuleapProjectConfiguration tuleapProjectConfiguration : allProjectConfigurations) {
+				if (projectName.equals(tuleapProjectConfiguration.getName())) {
+					List<TuleapTrackerConfiguration> allTrackerConfigurations = tuleapProjectConfiguration
+							.getAllTrackerConfigurations();
+					for (TuleapTrackerConfiguration tuleapTrackerConfiguration : allTrackerConfigurations) {
+						if (trackerName.equals(tuleapTrackerConfiguration.getName())) {
+							return tuleapTrackerConfiguration;
+						}
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -157,7 +201,7 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 			String id = attachmentAttributeId.substring(index + "---".length()); //$NON-NLS-1$
 			int attachmentId = Integer.valueOf(id).intValue();
 
-			int artifactId = TuleapUtil.getArtifactIdFromTaskDataId(taskId);
+			int artifactId = Integer.valueOf(taskId).intValue();
 
 			TaskAttachmentMapper taskAttachment = TaskAttachmentMapper.createFrom(attachmentAttribute);
 			Long length = taskAttachment.getLength();
@@ -203,6 +247,33 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 				.createWebLocation(repository);
 		TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(abstractWebLocation);
 
+		TuleapTrackerConfiguration configuration = null;
+
+		// Let's find the tracker configuration
+		ITuleapClient client = this.connector.getClientManager().getClient(repository);
+		TuleapInstanceConfiguration repositoryConfiguration = client.getRepositoryConfiguration();
+
+		// If the attachement attribute is available, let's use it
+		if (attachmentAttribute != null) {
+			TaskData taskData = attachmentAttribute.getTaskData();
+			TuleapTaskMapper tuleapTaskMapper = new TuleapTaskMapper(taskData);
+
+			int trackerId = tuleapTaskMapper.getTrackerId();
+
+			List<TuleapProjectConfiguration> allProjectConfigurations = repositoryConfiguration
+					.getAllProjectConfigurations();
+			for (TuleapProjectConfiguration tuleapProjectConfiguration : allProjectConfigurations) {
+				TuleapTrackerConfiguration trackerConfiguration = tuleapProjectConfiguration
+						.getTrackerConfiguration(trackerId);
+				if (trackerConfiguration != null) {
+					configuration = trackerConfiguration;
+				}
+			}
+		} else {
+			// HACK-ish [SBE]
+			configuration = this.getTrackerConfigurationFromTaskKey(repository, task);
+		}
+
 		// Field name (for context, let's take the first one available)
 		String fieldname = null;
 		if (attachmentAttribute != null) {
@@ -211,16 +282,13 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 			fieldname = attribute.getValue();
 		} else {
 			// Let's find the first valid value for the attachment field name
-			ITuleapClient client = this.connector.getClientManager().getClient(repository);
-			TuleapInstanceConfiguration repositoryConfiguration = client.getRepositoryConfiguration();
-			int trackerId = TuleapUtil.getTrackerIdFromTaskDataId(task.getTaskId());
-			TuleapTrackerConfiguration trackerConfiguration = repositoryConfiguration
-					.getTrackerConfiguration(trackerId);
-			List<AbstractTuleapField> fields = trackerConfiguration.getFields();
-			for (AbstractTuleapField abstractTuleapField : fields) {
-				if (abstractTuleapField instanceof TuleapFileUpload) {
-					fieldname = ((TuleapFileUpload)abstractTuleapField).getName();
-					break;
+			if (configuration != null) {
+				List<AbstractTuleapField> fields = configuration.getFields();
+				for (AbstractTuleapField abstractTuleapField : fields) {
+					if (abstractTuleapField instanceof TuleapFileUpload) {
+						fieldname = ((TuleapFileUpload)abstractTuleapField).getName();
+						break;
+					}
 				}
 			}
 		}
@@ -231,14 +299,9 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 			TaskAttribute attribute = attachmentAttribute
 					.getAttribute(ITuleapConstants.ATTACHMENT_FIELD_LABEL);
 			fieldlabel = attribute.getValue();
-		} else {
+		} else if (configuration != null) {
 			// Let's find the first valid value for the attachment field label
-			ITuleapClient client = this.connector.getClientManager().getClient(repository);
-			TuleapInstanceConfiguration repositoryConfiguration = client.getRepositoryConfiguration();
-			int trackerId = TuleapUtil.getTrackerIdFromTaskDataId(task.getTaskId());
-			TuleapTrackerConfiguration trackerConfiguration = repositoryConfiguration
-					.getTrackerConfiguration(trackerId);
-			List<AbstractTuleapField> fields = trackerConfiguration.getFields();
+			List<AbstractTuleapField> fields = configuration.getFields();
 			for (AbstractTuleapField abstractTuleapField : fields) {
 				if (abstractTuleapField instanceof TuleapFileUpload) {
 					fieldlabel = ((TuleapFileUpload)abstractTuleapField).getLabel();
@@ -256,8 +319,7 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 			description = CONTEXT_DESCRIPTION;
 		}
 
-		int trackerId = TuleapUtil.getTrackerIdFromTaskDataId(task.getTaskId());
-		int artifactId = TuleapUtil.getArtifactIdFromTaskDataId(task.getTaskId());
+		int artifactId = Integer.valueOf(task.getTaskId()).intValue();
 
 		String filename = source.getName();
 		String filetype = source.getContentType();
@@ -267,8 +329,8 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 		TuleapAttachmentDescriptor tuleapAttachmentDescriptor = new TuleapAttachmentDescriptor(fieldname,
 				fieldlabel, filename, filetype, description, size, inputStream);
 		try {
-			tuleapSoapConnector.uploadAttachment(trackerId, artifactId, tuleapAttachmentDescriptor, comment,
-					monitor);
+			tuleapSoapConnector
+					.uploadAttachment(-1, artifactId, tuleapAttachmentDescriptor, comment, monitor);
 		} catch (ServiceException e) {
 			IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
 			throw new CoreException(status);

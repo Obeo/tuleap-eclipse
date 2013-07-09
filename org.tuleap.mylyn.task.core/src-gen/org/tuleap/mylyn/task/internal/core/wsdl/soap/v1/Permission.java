@@ -103,7 +103,7 @@ public class Permission  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(Permission.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net", "Permission"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net", "Permission"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("type");
         elemField.setXmlName(new javax.xml.namespace.QName("", "type"));

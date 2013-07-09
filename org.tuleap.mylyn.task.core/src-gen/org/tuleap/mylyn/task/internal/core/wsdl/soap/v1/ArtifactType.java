@@ -343,7 +343,7 @@ public class ArtifactType  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(ArtifactType.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactType"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net", "ArtifactType"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("group_artifact_id");
         elemField.setXmlName(new javax.xml.namespace.QName("", "group_artifact_id"));
@@ -395,13 +395,13 @@ public class ArtifactType  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("field_sets");
         elemField.setXmlName(new javax.xml.namespace.QName("", "field_sets"));
-        elemField.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactFieldSet"));
+        elemField.setXmlType(new javax.xml.namespace.QName("https://tuleap.net", "ArtifactFieldSet"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("field_dependencies");
         elemField.setXmlName(new javax.xml.namespace.QName("", "field_dependencies"));
-        elemField.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactRule"));
+        elemField.setXmlType(new javax.xml.namespace.QName("https://tuleap.net", "ArtifactRule"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
     }

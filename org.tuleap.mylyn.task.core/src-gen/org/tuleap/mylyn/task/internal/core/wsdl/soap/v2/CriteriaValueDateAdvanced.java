@@ -99,7 +99,7 @@ public class CriteriaValueDateAdvanced  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(CriteriaValueDateAdvanced.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "CriteriaValueDateAdvanced"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "CriteriaValueDateAdvanced"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("from_date");
         elemField.setXmlName(new javax.xml.namespace.QName("", "from_date"));

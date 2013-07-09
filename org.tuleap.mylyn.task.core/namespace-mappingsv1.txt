@@ -1,19 +1,19 @@
-https://demo.tuleap.net/plugins/tracker/soap=org.tuleap.mylyn.task.internal.core.wsdl.soap.v1
+https://tuleap.net/plugins/tracker/soap=org.tuleap.mylyn.task.internal.core.wsdl.soap.v1
 http://schemas.xmlsoap.org/wsdl/=org.tuleap.mylyn.task.internal.core.wsdl.soap.v1
 http://schemas.xmlsoap.org/wsdl/=org.tuleap.mylyn.task.internal.core.wsdl.soap.v1
 http://schemas.xmlsoap.org/wsdl/soap/=org.tuleap.mylyn.task.internal.core.wsdl.soap.v1
-https://demo.tuleap.net/plugins/tracker/soap=org.tuleap.mylyn.task.internal.core.wsdl.soap.v1
+https://tuleap.net/plugins/tracker/soap=org.tuleap.mylyn.task.internal.core.wsdl.soap.v1
 http://schemas.xmlsoap.org/soap/encoding/=org.tuleap.mylyn.task.internal.core.wsdl.soap.v1
 http://www.w3.org/2001/XMLSchema-instance=org.tuleap.mylyn.task.internal.core.wsdl.soap.v1
 http://www.w3.org/2001/XMLSchema=org.tuleap.mylyn.task.internal.core.wsdl.soap.v1
 http://schemas.xmlsoap.org/soap/envelope/=org.tuleap.mylyn.task.internal.core.wsdl.soap.v1
 
-https\://demo.tuleap.net=org.tuleap.mylyn.task.internal.core.wsdl.soap.v1
-https\://demo.tuleap.net/plugins/tracker/soap=org.tuleap.mylyn.task.internal.core.wsdl.soap.v1
+https\://tuleap.net=org.tuleap.mylyn.task.internal.core.wsdl.soap.v1
+https\://tuleap.net/plugins/tracker/soap=org.tuleap.mylyn.task.internal.core.wsdl.soap.v1
 http\://schemas.xmlsoap.org/wsdl=org.tuleap.mylyn.task.internal.core.wsdl.soap.v1
 http\://schemas.xmlsoap.org/wsdl=org.tuleap.mylyn.task.internal.core.wsdl.soap.v1
 http\://schemas.xmlsoap.org/wsdlsoap/=org.tuleap.mylyn.task.internal.core.wsdl.soap.v1
-https\://demo.tuleap.net/plugins/tracker/soap=org.tuleap.mylyn.task.internal.core.wsdl.soap.v1
+https\://tuleap.net/plugins/tracker/soap=org.tuleap.mylyn.task.internal.core.wsdl.soap.v1
 http\://schemas.xmlsoap.org/soap/encoding=org.tuleap.mylyn.task.internal.core.wsdl.soap.v1
 http\://www.w3.org/2001/XMLSchema-instance=org.tuleap.mylyn.task.internal.core.wsdl.soap.v1
 http\://www.w3.org/2001/XMLSchema=org.tuleap.mylyn.task.internal.core.wsdl.soap.v1

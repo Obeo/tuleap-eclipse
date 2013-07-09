@@ -279,7 +279,7 @@ public class TrackerDesc  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(TrackerDesc.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net", "TrackerDesc"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net", "TrackerDesc"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("group_artifact_id");
         elemField.setXmlName(new javax.xml.namespace.QName("", "group_artifact_id"));
@@ -325,7 +325,7 @@ public class TrackerDesc  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("reports_desc");
         elemField.setXmlName(new javax.xml.namespace.QName("", "reports_desc"));
-        elemField.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactReportDesc"));
+        elemField.setXmlType(new javax.xml.namespace.QName("https://tuleap.net", "ArtifactReportDesc"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
     }

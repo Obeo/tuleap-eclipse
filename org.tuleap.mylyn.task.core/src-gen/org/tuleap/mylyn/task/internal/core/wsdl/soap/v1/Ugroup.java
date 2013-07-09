@@ -141,7 +141,7 @@ public class Ugroup  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(Ugroup.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net", "Ugroup"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net", "Ugroup"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("ugroup_id");
         elemField.setXmlName(new javax.xml.namespace.QName("", "ugroup_id"));
@@ -157,7 +157,7 @@ public class Ugroup  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("members");
         elemField.setXmlName(new javax.xml.namespace.QName("", "members"));
-        elemField.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net", "UGroupMember"));
+        elemField.setXmlType(new javax.xml.namespace.QName("https://tuleap.net", "UGroupMember"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
     }

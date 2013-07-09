@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.tuleap.mylyn.task.internal.core.config.ITuleapConfigurationConstants;
 import org.tuleap.mylyn.task.internal.core.model.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerReport;
 import org.tuleap.mylyn.task.internal.core.net.TuleapSoapConnector;
@@ -99,7 +100,10 @@ public class TuleapSoapConnectorTests extends TestCase {
 				.getTuleapInstanceConfiguration(new NullProgressMonitor());
 		assertNotNull(tuleapInstanceConfiguration);
 
-		List<TuleapTrackerConfiguration> tuleapTrackerConfigurations = tuleapInstanceConfiguration
+		List<TuleapProjectConfiguration> allProjectConfigurations = tuleapInstanceConfiguration
+				.getAllProjectConfigurations();
+		assertEquals(1, allProjectConfigurations.size());
+		List<TuleapTrackerConfiguration> tuleapTrackerConfigurations = allProjectConfigurations.get(0)
 				.getAllTrackerConfigurations();
 		assertEquals(3, tuleapTrackerConfigurations.size());
 

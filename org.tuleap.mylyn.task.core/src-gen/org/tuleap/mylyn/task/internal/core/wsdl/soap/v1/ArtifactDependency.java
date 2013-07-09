@@ -267,7 +267,7 @@ public class ArtifactDependency  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(ArtifactDependency.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactDependency"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net", "ArtifactDependency"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("artifact_depend_id");
         elemField.setXmlName(new javax.xml.namespace.QName("", "artifact_depend_id"));

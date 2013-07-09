@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,7 +27,9 @@ import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapUtil;
 import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
 import org.tuleap.mylyn.task.internal.ui.wizards.NewTuleapTaskWizard;
+import org.tuleap.mylyn.task.internal.ui.wizards.TuleapProjectPage;
 import org.tuleap.mylyn.task.internal.ui.wizards.TuleapTaskAttachmentPage;
+import org.tuleap.mylyn.task.internal.ui.wizards.TuleapTrackerPage;
 import org.tuleap.mylyn.task.internal.ui.wizards.query.TuleapCustomQueryPage;
 import org.tuleap.mylyn.task.internal.ui.wizards.query.TuleapQueryPage;
 
@@ -146,10 +148,12 @@ public class TuleapConnectorUi extends AbstractRepositoryConnectorUi {
 				wizard.addPage(new TuleapCustomQueryPage(taskRepository, queryToEdit));
 			} else {
 				// edit an exiting default query
-				wizard.addPage(new TuleapQueryPage(taskRepository).getDefaultQueriesPage(queryToEdit));
+				wizard.addPage(new TuleapQueryPage(taskRepository, queryToEdit));
 			}
 		} else {
 			// new query
+			wizard.addPage(new TuleapProjectPage(taskRepository));
+			wizard.addPage(new TuleapTrackerPage(taskRepository));
 			wizard.addPage(new TuleapQueryPage(taskRepository));
 		}
 		return wizard;

@@ -287,8 +287,7 @@ public class TuleapArtifact {
 	 */
 	public String getUniqueName() {
 		if (this.trackerId != INVALID_ID && this.id != INVALID_ID) {
-			return TuleapUtil.getTaskDataId(this.projectName, TuleapUtil.getTuleapTrackerId(this.trackerName,
-					this.trackerId), this.id);
+			return TuleapUtil.getTaskDataId(this.projectName, this.trackerName, this.id);
 		}
 		return null;
 	}

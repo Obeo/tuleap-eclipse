@@ -107,7 +107,7 @@ public class ArtifactFieldNameValue  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(ArtifactFieldNameValue.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactFieldNameValue"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net", "ArtifactFieldNameValue"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("field_name");
         elemField.setXmlName(new javax.xml.namespace.QName("", "field_name"));

@@ -23,7 +23,7 @@ public class TuleapTrackerV5APILocator extends org.apache.axis.client.Service im
     }
 
     // Use to get a proxy class for TuleapTrackerV5APIPort
-    private java.lang.String TuleapTrackerV5APIPort_address = "https://demo.tuleap.net:443/plugins/tracker/soap/";
+    private java.lang.String TuleapTrackerV5APIPort_address = "https://tuleap.net:443/plugins/tracker/soap/";
 
     public java.lang.String getTuleapTrackerV5APIPortAddress() {
         return TuleapTrackerV5APIPort_address;
@@ -106,7 +106,7 @@ public class TuleapTrackerV5APILocator extends org.apache.axis.client.Service im
     }
 
     public javax.xml.namespace.QName getServiceName() {
-        return new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TuleapTrackerV5API");
+        return new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TuleapTrackerV5API");
     }
 
     private java.util.HashSet ports = null;
@@ -114,7 +114,7 @@ public class TuleapTrackerV5APILocator extends org.apache.axis.client.Service im
     public java.util.Iterator getPorts() {
         if (ports == null) {
             ports = new java.util.HashSet();
-            ports.add(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TuleapTrackerV5APIPort"));
+            ports.add(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TuleapTrackerV5APIPort"));
         }
         return ports.iterator();
     }

@@ -167,7 +167,7 @@ public class TrackerWorkflow  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(TrackerWorkflow.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerWorkflow"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerWorkflow"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("field_id");
         elemField.setXmlName(new javax.xml.namespace.QName("", "field_id"));
@@ -183,13 +183,13 @@ public class TrackerWorkflow  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("rules");
         elemField.setXmlName(new javax.xml.namespace.QName("", "rules"));
-        elemField.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerWorkflowRuleArray"));
+        elemField.setXmlType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerWorkflowRuleArray"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("transitions");
         elemField.setXmlName(new javax.xml.namespace.QName("", "transitions"));
-        elemField.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerWorkflowTransition"));
+        elemField.setXmlType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerWorkflowTransition"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
     }

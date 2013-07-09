@@ -46,6 +46,7 @@ import org.tuleap.mylyn.task.internal.core.client.ITuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
@@ -344,10 +345,23 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 				trackerId = Integer.valueOf(value).intValue();
 				TuleapInstanceConfiguration configuration = this.getRepositoryConfiguration(taskRepository
 						.getRepositoryUrl());
-				TuleapTrackerConfiguration trackerConfiguration = configuration
-						.getTrackerConfiguration(trackerId);
+				TuleapTrackerConfiguration trackerConfiguration = null;
 
-				boolean isCompleted = isTaskCompleted(attributeStatus.getValue(), trackerConfiguration);
+				List<TuleapProjectConfiguration> allProjectConfigurations = configuration
+						.getAllProjectConfigurations();
+				for (TuleapProjectConfiguration tuleapProjectConfiguration : allProjectConfigurations) {
+					TuleapTrackerConfiguration tuleapTrackerConfiguration = tuleapProjectConfiguration
+							.getTrackerConfiguration(trackerId);
+					if (tuleapTrackerConfiguration != null) {
+						trackerConfiguration = tuleapTrackerConfiguration;
+						break;
+					}
+				}
+
+				boolean isCompleted = false;
+				if (trackerConfiguration != null) {
+					isCompleted = isTaskCompleted(attributeStatus.getValue(), trackerConfiguration);
+				}
 
 				if (isCompleted) {
 					if (task.getCompletionDate() == null) {

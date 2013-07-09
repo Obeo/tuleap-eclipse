@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.mylyn.commons.workbench.forms.SectionComposite;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -54,10 +55,10 @@ import org.tuleap.mylyn.task.internal.core.model.field.dynamic.TuleapSubmittedBy
 import org.tuleap.mylyn.task.internal.core.model.field.dynamic.TuleapSubmittedOn;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
-import org.tuleap.mylyn.task.internal.core.util.TuleapUtil;
 import org.tuleap.mylyn.task.internal.ui.TuleapTasksUIPlugin;
 import org.tuleap.mylyn.task.internal.ui.util.ITuleapUIConstants;
 import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
+import org.tuleap.mylyn.task.internal.ui.wizards.TuleapTrackerPage;
 
 /**
  * The second page of the Tuleap query wizard with the form based search page.
@@ -67,15 +68,16 @@ import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
  * @since 0.7
  */
 public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
-	/**
-	 * The task repository.
-	 */
-	private TaskRepository repository;
 
 	/**
 	 * The tracker identifier.
 	 */
 	private int trackerId = -1;
+
+	/**
+	 * The identifier of the project in which the query will be performed.
+	 */
+	private int groupId = -1;
 
 	/**
 	 * The query form graphical elements.
@@ -101,20 +103,21 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 	 * The constructor.
 	 * 
 	 * @param taskRepository
-	 *            The Mylyn task repository
-	 * @param queryToEdit
-	 *            The query to edit
-	 * @param selectedTracker
-	 *            The selected tracker
+	 *            The task repository
 	 */
-	public TuleapCustomQueryPage(TaskRepository taskRepository, IRepositoryQuery queryToEdit,
-			String selectedTracker) {
-		this(taskRepository, queryToEdit);
+	public TuleapCustomQueryPage(TaskRepository taskRepository) {
+		super(TuleapMylynTasksUIMessages.getString("TuleapCustomQueryPage.Name"), taskRepository, null); //$NON-NLS-1$
+		this.setTitle(TuleapMylynTasksUIMessages.getString("TuleapCustomQueryPage.Title")); //$NON-NLS-1$
+		this.setDescription(TuleapMylynTasksUIMessages.getString("TuleapCustomQueryPage.Description")); //$NON-NLS-1$
 
-		// Case use an existing query or define a new custom one, the tracker id is defined in the name of the
-		// selected tracker
-		if (selectedTracker != null) {
-			this.trackerId = TuleapUtil.getTrackerId(selectedTracker);
+		IWizardPage previousPage = this.getPreviousPage();
+		if (previousPage instanceof TuleapQueryPage) {
+			previousPage = ((TuleapQueryPage)previousPage).getPreviousPage();
+			if (previousPage instanceof TuleapTrackerPage) {
+				this.trackerId = ((TuleapTrackerPage)previousPage).getTrackerSelected().getTrackerId();
+				this.groupId = ((TuleapTrackerPage)previousPage).getTrackerSelected()
+						.getTuleapProjectConfiguration().getIdentifier();
+			}
 		}
 	}
 
@@ -131,15 +134,30 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 		this.setTitle(TuleapMylynTasksUIMessages.getString("TuleapCustomQueryPage.Title")); //$NON-NLS-1$
 		this.setDescription(TuleapMylynTasksUIMessages.getString("TuleapCustomQueryPage.Description")); //$NON-NLS-1$
 
-		this.repository = taskRepository;
-
 		// Case existing query to edit, the tracker id is provided by the query attributes
 		if (queryToEdit != null) {
 			String queryTrackerId = this.getQuery().getAttribute(ITuleapConstants.QUERY_TRACKER_ID);
 			this.trackerId = Integer.valueOf(queryTrackerId).intValue();
+			String queryGroupId = this.getQuery().getAttribute(ITuleapConstants.QUERY_GROUP_ID);
+			this.groupId = Integer.valueOf(queryGroupId).intValue();
 			this.queryTitle = queryToEdit.getSummary();
 			this.queryAttributes.putAll(this.getQuery().getAttributes());
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2#setVisible(boolean)
+	 */
+	@Override
+	public void setVisible(boolean visible) {
+		IWizardPage previousPage = this.getPreviousPage();
+		if (previousPage instanceof TuleapQueryPage) {
+			TuleapQueryPage tuleapQueryPage = (TuleapQueryPage)previousPage;
+			this.setQueryTitle(tuleapQueryPage.getQueryTitle());
+		}
+		super.setVisible(visible);
 	}
 
 	/**
@@ -179,11 +197,12 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 	 */
 	@Override
 	public void applyTo(IRepositoryQuery query) {
-
-		if (this.trackerId != -1) {
+		if (this.trackerId != -1 && this.groupId != -1) {
 			query.setSummary(this.getQueryTitle());
 			query.setAttribute(ITuleapConstants.QUERY_KIND, ITuleapConstants.QUERY_KIND_CUSTOM);
 			query.setAttribute(ITuleapConstants.QUERY_TRACKER_ID, Integer.valueOf(this.trackerId).toString());
+			query.setAttribute(ITuleapConstants.QUERY_GROUP_ID, Integer.valueOf(this.groupId).toString());
+
 			// For each field set the query attribute
 			for (TuleapCustomQueryElement element : elements) {
 				String[] values = element.getValue();
@@ -230,9 +249,19 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 			return;
 		}
 
-		if (this.trackerId != -1) {
+		IWizardPage previousPage = this.getPreviousPage();
+		if (previousPage instanceof TuleapQueryPage) {
+			previousPage = ((TuleapQueryPage)previousPage).getPreviousPage();
+			if (previousPage instanceof TuleapTrackerPage) {
+				this.trackerId = ((TuleapTrackerPage)previousPage).getTrackerSelected().getTrackerId();
+				this.groupId = ((TuleapTrackerPage)previousPage).getTrackerSelected()
+						.getTuleapProjectConfiguration().getIdentifier();
+			}
+		}
+
+		if (this.trackerId != -1 && this.groupId != -1) {
 			final TuleapRepositoryConnector repositoryConnector = (TuleapRepositoryConnector)connector;
-			ITuleapClient client = repositoryConnector.getClientManager().getClient(repository);
+			ITuleapClient client = repositoryConnector.getClientManager().getClient(this.getTaskRepository());
 			tuleapTrackerConfiguration = client.getRepositoryConfiguration().getTrackerConfiguration(
 					this.trackerId);
 
@@ -291,7 +320,8 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 		IRunnableWithProgress runnable = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 				final TuleapInstanceConfiguration instanceConfiguration = repositoryConnector
-						.getRepositoryConfiguration(repository, true, monitor);
+						.getRepositoryConfiguration(TuleapCustomQueryPage.this.getTaskRepository(), true,
+								monitor);
 				tuleapTrackerConfiguration = instanceConfiguration.getTrackerConfiguration(trackerId);
 			}
 		};

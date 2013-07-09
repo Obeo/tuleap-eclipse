@@ -189,7 +189,7 @@ public class Tracker  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(Tracker.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "Tracker"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "Tracker"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("tracker_id");
         elemField.setXmlName(new javax.xml.namespace.QName("", "tracker_id"));

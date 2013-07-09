@@ -88,7 +88,7 @@ public interface ITuleapConstants {
 	/**
 	 * The separator used in the id of the task data.
 	 */
-	String TASK_DATA_ID_SEPARATOR = " #"; //$NON-NLS-1$
+	String TASK_DATA_ID_SEPARATOR = "-"; //$NON-NLS-1$
 
 	/**
 	 * The key used to specify the kind of the query.
@@ -119,6 +119,11 @@ public interface ITuleapConstants {
 	 * The key used to identify the tracker id on which the query will be run.
 	 */
 	String QUERY_TRACKER_ID = "tuleap_query_tracker_id"; //$NON-NLS-1$
+
+	/**
+	 * The key used to identify the project id on which the query will be run.
+	 */
+	String QUERY_GROUP_ID = "tuleap_query_group_id"; //$NON-NLS-1$
 
 	/**
 	 * Indicates that the user can read the field.

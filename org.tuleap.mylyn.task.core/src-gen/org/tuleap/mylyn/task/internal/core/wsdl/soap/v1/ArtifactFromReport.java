@@ -137,7 +137,7 @@ public class ArtifactFromReport  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(ArtifactFromReport.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactFromReport"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net", "ArtifactFromReport"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("artifact_id");
         elemField.setXmlName(new javax.xml.namespace.QName("", "artifact_id"));
@@ -153,7 +153,7 @@ public class ArtifactFromReport  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("fields");
         elemField.setXmlName(new javax.xml.namespace.QName("", "fields"));
-        elemField.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactFieldFromReport"));
+        elemField.setXmlType(new javax.xml.namespace.QName("https://tuleap.net", "ArtifactFieldFromReport"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
     }

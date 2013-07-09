@@ -207,7 +207,7 @@ public class FRSPackage  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(FRSPackage.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net", "FRSPackage"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net", "FRSPackage"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("package_id");
         elemField.setXmlName(new javax.xml.namespace.QName("", "package_id"));

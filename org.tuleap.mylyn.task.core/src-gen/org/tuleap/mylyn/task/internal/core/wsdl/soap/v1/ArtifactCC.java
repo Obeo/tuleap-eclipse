@@ -241,7 +241,7 @@ public class ArtifactCC  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(ArtifactCC.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactCC"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net", "ArtifactCC"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("artifact_cc_id");
         elemField.setXmlName(new javax.xml.namespace.QName("", "artifact_cc_id"));

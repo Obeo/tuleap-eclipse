@@ -159,7 +159,7 @@ public class ArtifactComments  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(ArtifactComments.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArtifactComments"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArtifactComments"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("submitted_by");
         elemField.setXmlName(new javax.xml.namespace.QName("", "submitted_by"));

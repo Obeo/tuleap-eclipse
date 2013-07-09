@@ -22,7 +22,6 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
@@ -32,6 +31,7 @@ import org.tuleap.mylyn.task.internal.core.model.TuleapArtifactComment;
 import org.tuleap.mylyn.task.internal.core.model.TuleapAttachment;
 import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
+import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapArtifactLink;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapDate;
@@ -49,6 +49,7 @@ import org.tuleap.mylyn.task.internal.core.model.workflow.TuleapWorkflowTransiti
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapAttributeMapper;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapTaskDataHandler;
+import org.tuleap.mylyn.task.internal.core.repository.TuleapTaskMapping;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.tests.mocks.MockedTuleapClient;
 import org.tuleap.mylyn.task.tests.mocks.MockedTuleapRepositoryConnector;
@@ -123,7 +124,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * The task mapping.
 	 */
-	private TaskMapping taskMapping;
+	private TuleapTaskMapping taskMapping;
 
 	/**
 	 * The name of the configuration.
@@ -134,6 +135,11 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	 * The configuration of the tuleap instance.
 	 */
 	private TuleapInstanceConfiguration tuleapInstanceConfiguration;
+
+	/**
+	 * The configuration of the tuleap project.
+	 */
+	private TuleapProjectConfiguration tuleapProjectConfiguration;
 
 	/**
 	 * The name of the items.
@@ -166,19 +172,22 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		tuleapTrackerConfiguration.setItemName(itemName);
 
 		this.tuleapInstanceConfiguration = new TuleapInstanceConfiguration(repositoryUrl);
-		tuleapInstanceConfiguration.addTracker(Integer.valueOf(trackerId), tuleapTrackerConfiguration);
+
+		this.tuleapProjectConfiguration = new TuleapProjectConfiguration("Project Name", 2); //$NON-NLS-1$
+		this.tuleapProjectConfiguration.addTracker(Integer.valueOf(trackerId), tuleapTrackerConfiguration);
+		tuleapInstanceConfiguration.addProject(Integer.valueOf(2), tuleapProjectConfiguration);
 		this.repositoryConnector = new MockedTuleapRepositoryConnector(tuleapInstanceConfiguration);
 
 		// Used to specify the tracker to use in the group
-		this.taskMapping = new TaskMapping() {
+		this.taskMapping = new TuleapTaskMapping() {
 			/**
 			 * {@inheritDoc}
 			 * 
-			 * @see org.eclipse.mylyn.tasks.core.TaskMapping#getProduct()
+			 * @see org.tuleap.mylyn.task.internal.core.repository.TuleapTaskMapping#getTracker()
 			 */
 			@Override
-			public String getProduct() {
-				return Integer.valueOf(trackerId).toString();
+			public TuleapTrackerConfiguration getTracker() {
+				return tuleapTrackerConfiguration;
 			}
 		};
 
@@ -2108,8 +2117,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		// Check the url of the task
 		String taskId = taskData.getTaskId();
-		assertThat(taskId, is(projectName + ITuleapConstants.TRACKER_ID_SEPARATOR + this.trackerName + '['
-				+ this.trackerId + "] #" + id)); //$NON-NLS-1$
+		assertThat(taskId, is(String.valueOf(id)));
 
 		// Check the dates
 		List<TaskAttribute> attributesByType = taskData.getAttributeMapper().getAttributesByType(taskData,
@@ -3293,7 +3301,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	 */
 	public void testGetTuleapArtifactFromTaskDataString() {
 		TuleapAttributeMapper mapper = new TuleapAttributeMapper(repository, this.repositoryConnector);
-		String taskId = "TaskId"; //$NON-NLS-1$
+		String taskId = "485"; //$NON-NLS-1$
 		TaskData taskData = new TaskData(mapper, connectorKind, repositoryUrl, taskId);
 		String attributeId = "attributeId"; //$NON-NLS-1$
 		TaskAttribute taskAttribute = taskData.getRoot().createAttribute(attributeId);
@@ -3310,7 +3318,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	 */
 	public void testGetTuleapArtifactFromTaskDataArtifactLink() {
 		TuleapAttributeMapper mapper = new TuleapAttributeMapper(repository, this.repositoryConnector);
-		String taskId = "TaskId"; //$NON-NLS-1$
+		String taskId = "218"; //$NON-NLS-1$
 		TaskData taskData = new TaskData(mapper, connectorKind, repositoryUrl, taskId);
 		String attributeId = "attributeId"; //$NON-NLS-1$
 		TaskAttribute taskAttribute = taskData.getRoot().createAttribute(attributeId);
@@ -3325,7 +3333,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		// Artifact id from the code completion
 		taskData = new TaskData(mapper, connectorKind, repositoryUrl, taskId);
 		taskAttribute = taskData.getRoot().createAttribute(attributeId);
-		artifactLinkValue = "MyRepository:MyProject[116] #917"; //$NON-NLS-1$
+		artifactLinkValue = "917"; //$NON-NLS-1$
 		String shortArtifactLinkValue = "917"; //$NON-NLS-1$
 		taskAttribute.setValue(artifactLinkValue);
 		taskAttribute.getMetaData().setType(TaskAttribute.TYPE_TASK_DEPENDENCY);

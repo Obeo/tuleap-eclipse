@@ -40,9 +40,9 @@ public class TuleapInstanceConfiguration implements Serializable {
 	private long lastUpdate;
 
 	/**
-	 * This map contains the ID of the tracker of the Tuleap instance and their matching configuration.
+	 * This map contains the ID of the projects of the Tuleap instance and their matching configuration.
 	 */
-	private Map<Integer, TuleapTrackerConfiguration> trackerId2trackerConfiguration = new HashMap<Integer, TuleapTrackerConfiguration>();
+	private Map<Integer, TuleapProjectConfiguration> projectId2projectConfiguration = new HashMap<Integer, TuleapProjectConfiguration>();
 
 	/**
 	 * The constructor.
@@ -55,26 +55,26 @@ public class TuleapInstanceConfiguration implements Serializable {
 	}
 
 	/**
-	 * Adds the given tracker configuration for the given tracker id in the Tuleap instance configuration.
+	 * Adds the given project configuration for the given project id in the Tuleap instance configuration.
 	 * 
-	 * @param trackerId
-	 *            The id of the tracker.
-	 * @param tuleapTrackerConfiguration
-	 *            The configuration of the tracker.
+	 * @param projectId
+	 *            The id of the project.
+	 * @param tuleapProjectConfiguration
+	 *            The configuration of the project.
 	 */
-	public void addTracker(Integer trackerId, TuleapTrackerConfiguration tuleapTrackerConfiguration) {
-		this.trackerId2trackerConfiguration.put(trackerId, tuleapTrackerConfiguration);
+	public void addProject(Integer projectId, TuleapProjectConfiguration tuleapProjectConfiguration) {
+		this.projectId2projectConfiguration.put(projectId, tuleapProjectConfiguration);
 	}
 
 	/**
-	 * Returns the tracker configuration for the given tracker id.
+	 * Returns the project configuration for the given project id.
 	 * 
-	 * @param trackerId
-	 *            the id of the tracker
-	 * @return The tracker configuration for the given tracker id.
+	 * @param projectId
+	 *            the id of the project
+	 * @return The project configuration for the given project id.
 	 */
-	public TuleapTrackerConfiguration getTrackerConfiguration(int trackerId) {
-		return this.trackerId2trackerConfiguration.get(Integer.valueOf(trackerId));
+	public TuleapProjectConfiguration getProjectConfiguration(int projectId) {
+		return this.projectId2projectConfiguration.get(Integer.valueOf(projectId));
 	}
 
 	/**
@@ -106,12 +106,32 @@ public class TuleapInstanceConfiguration implements Serializable {
 	}
 
 	/**
-	 * Returns the list of all the tracker configurations.
+	 * Returns the list of all the project configurations.
 	 * 
-	 * @return The list of all the tracker configurations.
+	 * @return The list of all the project configurations.
 	 */
-	public List<TuleapTrackerConfiguration> getAllTrackerConfigurations() {
-		return new ArrayList<TuleapTrackerConfiguration>(this.trackerId2trackerConfiguration.values());
+	public List<TuleapProjectConfiguration> getAllProjectConfigurations() {
+		return new ArrayList<TuleapProjectConfiguration>(this.projectId2projectConfiguration.values());
+	}
+
+	/**
+	 * Iterates on all the projects of the configuration and returns the tracker configuration with the given
+	 * identifier or null if none can be found.
+	 * 
+	 * @param trackerId
+	 *            The identifier of the tracker
+	 * @return The configuration of the tracker with the given identifier or null if none can be found
+	 */
+	public TuleapTrackerConfiguration getTrackerConfiguration(int trackerId) {
+		for (TuleapProjectConfiguration tuleapProjectConfiguration : this.projectId2projectConfiguration
+				.values()) {
+			TuleapTrackerConfiguration trackerConfiguration = tuleapProjectConfiguration
+					.getTrackerConfiguration(trackerId);
+			if (trackerConfiguration != null) {
+				return trackerConfiguration;
+			}
+		}
+		return null;
 	}
 
 }

@@ -129,7 +129,7 @@ public class TrackerWorkflowRuleDate  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(TrackerWorkflowRuleDate.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerWorkflowRuleDate"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerWorkflowRuleDate"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("source_field_id");
         elemField.setXmlName(new javax.xml.namespace.QName("", "source_field_id"));

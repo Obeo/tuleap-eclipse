@@ -107,7 +107,7 @@ public class MetadataValue  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(MetadataValue.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net", "MetadataValue"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net", "MetadataValue"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("label");
         elemField.setXmlName(new javax.xml.namespace.QName("", "label"));

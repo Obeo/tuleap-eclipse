@@ -40,7 +40,7 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "group_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArrayOfTracker"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArrayOfTracker"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Tracker[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -55,7 +55,7 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "tracker_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArrayOfTrackerField"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArrayOfTrackerField"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerField[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -70,13 +70,13 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "tracker_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "criteria"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArrayOfCriteria"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Criteria[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "criteria"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArrayOfCriteria"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Criteria[].class, false, false);
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "offset"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "max_rows"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArtifactQueryResult"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArtifactQueryResult"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactQueryResult.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -91,7 +91,7 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "tracker_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "value"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArrayOfArtifactFieldValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactFieldValue[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "value"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArrayOfArtifactFieldValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactFieldValue[].class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
         oper.setReturnClass(int.class);
@@ -110,7 +110,7 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "artifact_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "value"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArrayOfArtifactFieldValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactFieldValue[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "value"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArrayOfArtifactFieldValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactFieldValue[].class, false, false);
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "comment"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
@@ -133,7 +133,7 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "artifact_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "Artifact"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "Artifact"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Artifact.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -150,7 +150,7 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "max_rows"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArtifactQueryResult"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArtifactQueryResult"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactQueryResult.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -226,7 +226,7 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "tracker_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerStructure"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerStructure"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerStructure.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -241,7 +241,7 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "tracker_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArrayOfTrackerReport"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArrayOfTrackerReport"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerReport[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -254,7 +254,7 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "artifact_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArrayOfArtifactComments"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArrayOfArtifactComments"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactComments[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -292,61 +292,61 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
             java.lang.Class simpledf = org.apache.axis.encoding.ser.SimpleDeserializerFactory.class;
             java.lang.Class simplelistsf = org.apache.axis.encoding.ser.SimpleListSerializerFactory.class;
             java.lang.Class simplelistdf = org.apache.axis.encoding.ser.SimpleListDeserializerFactory.class;
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArrayOfArtifact");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArrayOfArtifact");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Artifact[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "Artifact");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "Artifact");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArrayOfArtifactComments");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArrayOfArtifactComments");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactComments[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArtifactComments");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArtifactComments");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArrayOfArtifactCrossReferences");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArrayOfArtifactCrossReferences");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactCrossReferences[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArtifactCrossReferences");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArtifactCrossReferences");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArrayOfArtifactFieldValue");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArrayOfArtifactFieldValue");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactFieldValue[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArtifactFieldValue");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArtifactFieldValue");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArrayOfCriteria");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArrayOfCriteria");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Criteria[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "Criteria");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "Criteria");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArrayOfFieldValueFileInfo");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArrayOfFieldValueFileInfo");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.FieldValueFileInfo[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "FieldValueFileInfo");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "FieldValueFileInfo");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArrayOfInt");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArrayOfInt");
             cachedSerQNames.add(qName);
             cls = int[].class;
             cachedSerClasses.add(cls);
@@ -355,7 +355,7 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArrayOfString");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArrayOfString");
             cachedSerQNames.add(qName);
             cls = java.lang.String[].class;
             cachedSerClasses.add(cls);
@@ -364,261 +364,261 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArrayOfTracker");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArrayOfTracker");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Tracker[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "Tracker");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "Tracker");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArrayOfTrackerField");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArrayOfTrackerField");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerField[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerField");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerField");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArrayOfTrackerFieldBindValue");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArrayOfTrackerFieldBindValue");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerFieldBindValue[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerFieldBindValue");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerFieldBindValue");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArrayOfTrackerReport");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArrayOfTrackerReport");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerReport[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerReport");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerReport");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArrayOfUgroup");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArrayOfUgroup");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.UGroup[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "UGroup");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "UGroup");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "Artifact");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "Artifact");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Artifact.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArtifactComments");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArtifactComments");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactComments.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArtifactCrossReferences");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArtifactCrossReferences");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactCrossReferences.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArtifactFieldValue");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArtifactFieldValue");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactFieldValue.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArtifactQueryResult");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArtifactQueryResult");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactQueryResult.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "Criteria");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "Criteria");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Criteria.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "CriteriaValue");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "CriteriaValue");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.CriteriaValue.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "CriteriaValueDate");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "CriteriaValueDate");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.CriteriaValueDate.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "CriteriaValueDateAdvanced");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "CriteriaValueDateAdvanced");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.CriteriaValueDateAdvanced.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "FieldValue");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "FieldValue");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.FieldValue.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "FieldValueFileInfo");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "FieldValueFileInfo");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.FieldValueFileInfo.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "Tracker");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "Tracker");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Tracker.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerField");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerField");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerField.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerFieldBindType");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerFieldBindType");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerFieldBindType.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerFieldBindValue");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerFieldBindValue");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerFieldBindValue.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerReport");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerReport");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerReport.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerSemantic");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerSemantic");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerSemantic.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerSemanticContributor");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerSemanticContributor");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerSemanticContributor.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerSemanticStatus");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerSemanticStatus");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerSemanticStatus.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerSemanticTitle");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerSemanticTitle");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerSemanticTitle.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerStructure");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerStructure");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerStructure.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerWorkflow");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerWorkflow");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerWorkflow.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerWorkflowRuleArray");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerWorkflowRuleArray");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerWorkflowRuleArray.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerWorkflowRuleDate");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerWorkflowRuleDate");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerWorkflowRuleDate.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerWorkflowRuleDateArray");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerWorkflowRuleDateArray");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerWorkflowRuleDate[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerWorkflowRuleDate");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerWorkflowRuleDate");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerWorkflowRuleList");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerWorkflowRuleList");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerWorkflowRuleList.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerWorkflowRuleListArray");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerWorkflowRuleListArray");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerWorkflowRuleList[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerWorkflowRuleList");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerWorkflowRuleList");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerWorkflowTransition");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerWorkflowTransition");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerWorkflowTransition.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerWorkflowTransitionArray");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerWorkflowTransitionArray");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerWorkflowTransition[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerWorkflowTransition");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerWorkflowTransition");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "UGroup");
+            qName = new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "UGroup");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.UGroup.class;
             cachedSerClasses.add(cls);
@@ -699,9 +699,9 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[0]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net/plugins/tracker/soap#getVersion");
+        _call.setSOAPActionURI("https://tuleap.net/plugins/tracker/soap#getVersion");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "getVersion"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "getVersion"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -730,9 +730,9 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[1]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net/plugins/tracker/soap#getTrackerList");
+        _call.setSOAPActionURI("https://tuleap.net/plugins/tracker/soap#getTrackerList");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "getTrackerList"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "getTrackerList"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -761,9 +761,9 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[2]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net/plugins/tracker/soap#getTrackerFields");
+        _call.setSOAPActionURI("https://tuleap.net/plugins/tracker/soap#getTrackerFields");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "getTrackerFields"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "getTrackerFields"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -792,9 +792,9 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[3]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net/plugins/tracker/soap#getArtifacts");
+        _call.setSOAPActionURI("https://tuleap.net/plugins/tracker/soap#getArtifacts");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "getArtifacts"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "getArtifacts"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -823,9 +823,9 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[4]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net/plugins/tracker/soap#addArtifact");
+        _call.setSOAPActionURI("https://tuleap.net/plugins/tracker/soap#addArtifact");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "addArtifact"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "addArtifact"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -854,9 +854,9 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[5]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net/plugins/tracker/soap#updateArtifact");
+        _call.setSOAPActionURI("https://tuleap.net/plugins/tracker/soap#updateArtifact");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "updateArtifact"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "updateArtifact"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -885,9 +885,9 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[6]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net/plugins/tracker/soap#getArtifact");
+        _call.setSOAPActionURI("https://tuleap.net/plugins/tracker/soap#getArtifact");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "getArtifact"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "getArtifact"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -916,9 +916,9 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[7]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net/plugins/tracker/soap#getArtifactsFromReport");
+        _call.setSOAPActionURI("https://tuleap.net/plugins/tracker/soap#getArtifactsFromReport");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "getArtifactsFromReport"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "getArtifactsFromReport"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -947,9 +947,9 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[8]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net/plugins/tracker/soap#getArtifactAttachmentChunk");
+        _call.setSOAPActionURI("https://tuleap.net/plugins/tracker/soap#getArtifactAttachmentChunk");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "getArtifactAttachmentChunk"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "getArtifactAttachmentChunk"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -978,9 +978,9 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[9]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net/plugins/tracker/soap#createTemporaryAttachment");
+        _call.setSOAPActionURI("https://tuleap.net/plugins/tracker/soap#createTemporaryAttachment");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "createTemporaryAttachment"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "createTemporaryAttachment"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -1009,9 +1009,9 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[10]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net/plugins/tracker/soap#appendTemporaryAttachmentChunk");
+        _call.setSOAPActionURI("https://tuleap.net/plugins/tracker/soap#appendTemporaryAttachmentChunk");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "appendTemporaryAttachmentChunk"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "appendTemporaryAttachmentChunk"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -1040,9 +1040,9 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[11]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net/plugins/tracker/soap#purgeAllTemporaryAttachments");
+        _call.setSOAPActionURI("https://tuleap.net/plugins/tracker/soap#purgeAllTemporaryAttachments");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "purgeAllTemporaryAttachments"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "purgeAllTemporaryAttachments"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -1071,9 +1071,9 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[12]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net/plugins/tracker/soap#getTrackerStructure");
+        _call.setSOAPActionURI("https://tuleap.net/plugins/tracker/soap#getTrackerStructure");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "getTrackerStructure"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "getTrackerStructure"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -1102,9 +1102,9 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[13]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net/plugins/tracker/soap#getTrackerReports");
+        _call.setSOAPActionURI("https://tuleap.net/plugins/tracker/soap#getTrackerReports");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "getTrackerReports"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "getTrackerReports"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -1133,9 +1133,9 @@ public class TuleapTrackerV5APIBindingStub extends org.apache.axis.client.Stub i
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[14]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net/plugins/tracker/soap#getArtifactComments");
+        _call.setSOAPActionURI("https://tuleap.net/plugins/tracker/soap#getArtifactComments");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "getArtifactComments"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "getArtifactComments"));
 
         setRequestHeaders(_call);
         setAttachments(_call);

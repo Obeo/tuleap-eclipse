@@ -221,6 +221,9 @@ public class Test {
 			Tracker[] trackers = tuleapTrackerV5APIPort.getTrackerList(session_hash, groupId);
 			System.out.println("Trackers length: " + trackers.length);
 
+			Artifact anArtifact = tuleapTrackerV5APIPort.getArtifact(session_hash, 0, 0, 739);
+			System.out.println("Artifact Id: " + anArtifact.getArtifact_id());
+
 			for (Tracker tracker : trackers) {
 				String name = tracker.getName();
 				String item_name = tracker.getItem_name();

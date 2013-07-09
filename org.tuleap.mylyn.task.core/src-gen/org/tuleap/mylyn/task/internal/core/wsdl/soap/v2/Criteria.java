@@ -107,7 +107,7 @@ public class Criteria  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(Criteria.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "Criteria"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "Criteria"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("field_name");
         elemField.setXmlName(new javax.xml.namespace.QName("", "field_name"));
@@ -117,7 +117,7 @@ public class Criteria  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("value");
         elemField.setXmlName(new javax.xml.namespace.QName("", "value"));
-        elemField.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "CriteriaValue"));
+        elemField.setXmlType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "CriteriaValue"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
     }

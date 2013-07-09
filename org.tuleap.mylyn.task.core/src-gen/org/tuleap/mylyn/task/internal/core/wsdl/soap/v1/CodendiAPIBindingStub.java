@@ -38,7 +38,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "passwd"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "Session"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "Session"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Session.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -62,7 +62,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.setName("retrieveSession");
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "session_hash"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "Session"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "Session"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Session.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -91,7 +91,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.setName("getMyProjects");
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "sessionKey"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfGroup"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfGroup"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Group[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -104,7 +104,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "unix_group_name"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "Group"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "Group"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Group.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -117,7 +117,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "group_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "Group"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "Group"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Group.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -130,7 +130,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "group_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfUgroup"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfUgroup"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Ugroup[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -143,7 +143,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "group_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfUgroup"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfUgroup"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Ugroup[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -159,9 +159,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.setName("checkUsersExistence");
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "sessionKey"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "users"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfstring"), java.lang.String[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "users"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfstring"), java.lang.String[].class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfUserInfo"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfUserInfo"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.UserInfo[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -174,7 +174,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "user_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "UserInfo"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "UserInfo"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.UserInfo.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -187,7 +187,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "group_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfTrackerDesc"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfTrackerDesc"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.TrackerDesc[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -202,7 +202,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "group_artifact_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactType"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "ArtifactType"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactType.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -215,7 +215,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "group_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactType"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactType"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactType[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -230,13 +230,13 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "group_artifact_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "criteria"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfCriteria"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Criteria[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "criteria"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfCriteria"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Criteria[].class, false, false);
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "offset"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "max_rows"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactQueryResult"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "ArtifactQueryResult"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactQueryResult.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -253,15 +253,15 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "report_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "criteria"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfCriteria"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Criteria[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "criteria"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfCriteria"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Criteria[].class, false, false);
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "offset"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "max_rows"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "sort_criteria"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfSortCriteria"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.SortCriteria[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "sort_criteria"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfSortCriteria"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.SortCriteria[].class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactFromReportResult"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "ArtifactFromReportResult"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactFromReportResult.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -286,7 +286,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "severity"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "extra_fields"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactFieldValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactFieldValue[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "extra_fields"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactFieldValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactFieldValue[].class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
         oper.setReturnClass(int.class);
@@ -313,7 +313,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "severity"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "extra_fields"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactFieldNameValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactFieldNameValue[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "extra_fields"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactFieldNameValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactFieldNameValue[].class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
         oper.setReturnClass(int.class);
@@ -342,7 +342,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "severity"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "extra_fields"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactFieldValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactFieldValue[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "extra_fields"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactFieldValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactFieldValue[].class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
         oper.setReturnClass(int.class);
@@ -376,7 +376,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "severity"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "extra_fields"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactFieldNameValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactFieldNameValue[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "extra_fields"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactFieldNameValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactFieldNameValue[].class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
         oper.setReturnClass(int.class);
@@ -395,7 +395,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "artifact_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactFollowup"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactFollowup"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactFollowup[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -410,7 +410,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "group_artifact_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactCanned"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactCanned"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactCanned[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -425,7 +425,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "group_artifact_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactReport"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactReport"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactReport[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -442,7 +442,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "artifact_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactFile"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactFile"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactFile[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -461,7 +461,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "file_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactFile"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "ArtifactFile"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactFile.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -478,7 +478,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "artifact_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "Artifact"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "Artifact"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Artifact.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -495,7 +495,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "artifact_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactDependency"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactDependency"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactDependency[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -512,7 +512,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "artifact_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactDependency"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactDependency"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactDependency[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -694,7 +694,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "artifact_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactCC"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactCC"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactCC[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -756,7 +756,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "artifact_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactHistory"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactHistory"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactHistory[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -769,7 +769,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "group_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfFRSPackage"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfFRSPackage"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.FRSPackage[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "getPackagesResponse"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -805,7 +805,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "package_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfFRSRelease"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfFRSRelease"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.FRSRelease[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "getReleasesResponse"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -847,7 +847,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "release_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfFRSFile"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfFRSFile"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.FRSFile[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "getFilesResponse"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -866,7 +866,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "file_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "FRSFile"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "FRSFile"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.FRSFile.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "getFileInfoResponse"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -995,7 +995,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "group_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfstring"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfstring"));
         oper.setReturnClass(java.lang.String[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "getUploadedFilesResponse"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -1031,7 +1031,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "cleanup_all"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"), boolean.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfFRSPackage"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfFRSPackage"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.FRSPackage[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "deleteEmptyPackageResponse"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -1050,7 +1050,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "cleanup_all"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"), boolean.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfFRSRelease"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfFRSRelease"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.FRSRelease[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "deleteEmptyReleaseResponse"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -1078,7 +1078,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "item_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfDocman_Item"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfDocman_Item"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Docman_Item[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "listFolderResponse"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -1093,9 +1093,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "item_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "criterias"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfCriteria"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Criteria[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "criterias"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfCriteria"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Criteria[].class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfDocman_Item"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfDocman_Item"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Docman_Item[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "searchDocmanItemResponse"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -1149,7 +1149,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "item_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfstring"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfstring"));
         oper.setReturnClass(java.lang.String[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "getDocmanFileAllVersionsMD5sumResponse"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -1162,7 +1162,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "group_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfMetadata"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfMetadata"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Metadata[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "getDocmanProjectMetadataResponse"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -1177,7 +1177,7 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "parent_id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfItemInfo"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfItemInfo"));
         oper.setReturnClass(org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ItemInfo[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "getDocmanTreeInfoResponse"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -1200,9 +1200,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "status"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "permissions"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfPermission"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Permission[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "permissions"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfPermission"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Permission[].class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "metadata"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfMetadataValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.MetadataValue[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "metadata"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfMetadataValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.MetadataValue[].class, false, false);
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "owner"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
@@ -1235,9 +1235,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "obsolescence_date"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "permissions"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfPermission"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Permission[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "permissions"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfPermission"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Permission[].class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "metadata"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfMetadataValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.MetadataValue[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "metadata"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfMetadataValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.MetadataValue[].class, false, false);
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "file_size"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
@@ -1288,9 +1288,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "content"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "permissions"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfPermission"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Permission[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "permissions"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfPermission"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Permission[].class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "metadata"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfMetadataValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.MetadataValue[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "metadata"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfMetadataValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.MetadataValue[].class, false, false);
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "author"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
@@ -1329,9 +1329,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "content"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "permissions"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfPermission"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Permission[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "permissions"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfPermission"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Permission[].class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "metadata"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfMetadataValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.MetadataValue[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "metadata"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfMetadataValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.MetadataValue[].class, false, false);
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "owner"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
@@ -1366,9 +1366,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "content"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "permissions"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfPermission"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Permission[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "permissions"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfPermission"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Permission[].class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "metadata"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfMetadataValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.MetadataValue[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "metadata"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfMetadataValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.MetadataValue[].class, false, false);
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "owner"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
@@ -1401,9 +1401,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "obsolescence_date"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "permissions"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfPermission"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Permission[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "permissions"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfPermission"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Permission[].class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "metadata"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfMetadataValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.MetadataValue[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "metadata"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfMetadataValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.MetadataValue[].class, false, false);
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "owner"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
@@ -1586,9 +1586,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "status"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "permissions"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfPermission"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Permission[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "permissions"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfPermission"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Permission[].class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "metadata"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfMetadataValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.MetadataValue[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "metadata"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfMetadataValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.MetadataValue[].class, false, false);
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "owner"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
@@ -1619,9 +1619,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "obsolescence_date"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "permissions"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfPermission"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Permission[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "permissions"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfPermission"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Permission[].class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "metadata"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfMetadataValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.MetadataValue[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "metadata"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfMetadataValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.MetadataValue[].class, false, false);
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "owner"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
@@ -1652,9 +1652,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "obsolescence_date"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "permissions"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfPermission"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Permission[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "permissions"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfPermission"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Permission[].class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "metadata"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfMetadataValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.MetadataValue[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "metadata"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfMetadataValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.MetadataValue[].class, false, false);
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "owner"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
@@ -1692,9 +1692,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "content"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "permissions"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfPermission"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Permission[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "permissions"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfPermission"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Permission[].class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "metadata"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfMetadataValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.MetadataValue[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "metadata"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfMetadataValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.MetadataValue[].class, false, false);
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "owner"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
@@ -1727,9 +1727,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "content"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "permissions"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfPermission"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Permission[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "permissions"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfPermission"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Permission[].class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "metadata"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfMetadataValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.MetadataValue[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "metadata"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfMetadataValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.MetadataValue[].class, false, false);
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "owner"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
@@ -1760,9 +1760,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "obsolescence_date"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "permissions"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfPermission"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Permission[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "permissions"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfPermission"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Permission[].class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "metadata"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfMetadataValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.MetadataValue[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "metadata"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfMetadataValue"), org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.MetadataValue[].class, false, false);
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "owner"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
@@ -1808,286 +1808,286 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
             java.lang.Class simpledf = org.apache.axis.encoding.ser.SimpleDeserializerFactory.class;
             java.lang.Class simplelistsf = org.apache.axis.encoding.ser.SimpleListSerializerFactory.class;
             java.lang.Class simplelistdf = org.apache.axis.encoding.ser.SimpleListDeserializerFactory.class;
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifact");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifact");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Artifact[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "Artifact");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "Artifact");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactCanned");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactCanned");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactCanned[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactCanned");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactCanned");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactCC");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactCC");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactCC[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactCC");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactCC");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactDependency");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactDependency");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactDependency[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactDependency");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactDependency");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactField");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactField");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactField[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactField");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactField");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactFieldFromReport");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactFieldFromReport");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactFieldFromReport[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactFieldFromReport");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactFieldFromReport");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactFieldNameValue");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactFieldNameValue");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactFieldNameValue[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactFieldNameValue");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactFieldNameValue");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactFieldSet");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactFieldSet");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactFieldSet[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactFieldSet");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactFieldSet");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactFieldValue");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactFieldValue");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactFieldValue[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactFieldValue");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactFieldValue");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactFieldValueList");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactFieldValueList");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactFieldValueList[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactFieldValueList");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactFieldValueList");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactFile");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactFile");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactFile[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactFile");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactFile");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactFollowup");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactFollowup");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactFollowup[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactFollowup");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactFollowup");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactFromReport");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactFromReport");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactFromReport[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactFromReport");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactFromReport");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactHistory");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactHistory");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactHistory[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactHistory");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactHistory");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactReport");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactReport");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactReport[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactReport");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactReport");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactReportDesc");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactReportDesc");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactReportDesc[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactReportDesc");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactReportDesc");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactReportField");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactReportField");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactReportField[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactReportField");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactReportField");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactRule");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactRule");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactRule[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactRule");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactRule");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfArtifactType");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfArtifactType");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactType[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactType");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactType");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfCriteria");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfCriteria");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Criteria[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "Criteria");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "Criteria");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfDocman_Item");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfDocman_Item");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Docman_Item[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "Docman_Item");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "Docman_Item");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfFRSFile");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfFRSFile");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.FRSFile[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "FRSFile");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "FRSFile");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfFRSPackage");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfFRSPackage");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.FRSPackage[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "FRSPackage");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "FRSPackage");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfFRSRelease");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfFRSRelease");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.FRSRelease[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "FRSRelease");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "FRSRelease");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfGroup");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfGroup");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Group[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "Group");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "Group");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfItemInfo");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfItemInfo");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ItemInfo[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ItemInfo");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ItemInfo");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfMetadata");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfMetadata");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Metadata[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "Metadata");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "Metadata");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfMetadataListValue");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfMetadataListValue");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.MetadataListValue[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "MetadataListValue");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "MetadataListValue");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfMetadataValue");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfMetadataValue");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.MetadataValue[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "MetadataValue");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "MetadataValue");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfPermission");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfPermission");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Permission[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "Permission");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "Permission");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfSortCriteria");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfSortCriteria");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.SortCriteria[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "SortCriteria");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "SortCriteria");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfstring");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfstring");
             cachedSerQNames.add(qName);
             cls = java.lang.String[].class;
             cachedSerClasses.add(cls);
@@ -2096,302 +2096,302 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfTrackerDesc");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfTrackerDesc");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.TrackerDesc[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "TrackerDesc");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "TrackerDesc");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfUgroup");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfUgroup");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Ugroup[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "Ugroup");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "Ugroup");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfUGroupMember");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfUGroupMember");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.UGroupMember[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "UGroupMember");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "UGroupMember");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArrayOfUserInfo");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArrayOfUserInfo");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.UserInfo[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "UserInfo");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "UserInfo");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "Artifact");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "Artifact");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Artifact.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactCanned");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactCanned");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactCanned.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactCC");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactCC");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactCC.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactDependency");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactDependency");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactDependency.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactField");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactField");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactField.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactFieldFromReport");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactFieldFromReport");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactFieldFromReport.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactFieldNameValue");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactFieldNameValue");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactFieldNameValue.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactFieldSet");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactFieldSet");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactFieldSet.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactFieldValue");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactFieldValue");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactFieldValue.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactFieldValueList");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactFieldValueList");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactFieldValueList.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactFile");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactFile");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactFile.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactFollowup");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactFollowup");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactFollowup.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactFromReport");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactFromReport");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactFromReport.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactFromReportResult");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactFromReportResult");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactFromReportResult.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactHistory");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactHistory");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactHistory.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactQueryResult");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactQueryResult");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactQueryResult.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactReport");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactReport");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactReport.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactReportDesc");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactReportDesc");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactReportDesc.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactReportField");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactReportField");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactReportField.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactRule");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactRule");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactRule.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ArtifactType");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ArtifactType");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ArtifactType.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "Criteria");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "Criteria");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Criteria.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "Docman_Item");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "Docman_Item");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Docman_Item.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "FRSFile");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "FRSFile");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.FRSFile.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "FRSPackage");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "FRSPackage");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.FRSPackage.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "FRSRelease");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "FRSRelease");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.FRSRelease.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "Group");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "Group");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Group.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "ItemInfo");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "ItemInfo");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.ItemInfo.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "Metadata");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "Metadata");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Metadata.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "MetadataListValue");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "MetadataListValue");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.MetadataListValue.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "MetadataValue");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "MetadataValue");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.MetadataValue.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "Permission");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "Permission");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Permission.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "Session");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "Session");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Session.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "SortCriteria");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "SortCriteria");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.SortCriteria.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "TrackerDesc");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "TrackerDesc");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.TrackerDesc.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "Ugroup");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "Ugroup");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.Ugroup.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "UGroupMember");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "UGroupMember");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.UGroupMember.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://demo.tuleap.net", "UserInfo");
+            qName = new javax.xml.namespace.QName("https://tuleap.net", "UserInfo");
             cachedSerQNames.add(qName);
             cls = org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.UserInfo.class;
             cachedSerClasses.add(cls);
@@ -2472,9 +2472,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[0]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#login");
+        _call.setSOAPActionURI("https://tuleap.net#login");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "login"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "login"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -2503,9 +2503,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[1]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#loginAs");
+        _call.setSOAPActionURI("https://tuleap.net#loginAs");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "loginAs"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "loginAs"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -2534,9 +2534,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[2]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#retrieveSession");
+        _call.setSOAPActionURI("https://tuleap.net#retrieveSession");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "retrieveSession"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "retrieveSession"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -2565,9 +2565,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[3]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getAPIVersion");
+        _call.setSOAPActionURI("https://tuleap.net#getAPIVersion");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getAPIVersion"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getAPIVersion"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -2596,9 +2596,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[4]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#logout");
+        _call.setSOAPActionURI("https://tuleap.net#logout");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "logout"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "logout"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -2620,9 +2620,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[5]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getMyProjects");
+        _call.setSOAPActionURI("https://tuleap.net#getMyProjects");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getMyProjects"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getMyProjects"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -2651,9 +2651,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[6]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getGroupByName");
+        _call.setSOAPActionURI("https://tuleap.net#getGroupByName");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getGroupByName"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getGroupByName"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -2682,9 +2682,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[7]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getGroupById");
+        _call.setSOAPActionURI("https://tuleap.net#getGroupById");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getGroupById"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getGroupById"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -2713,9 +2713,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[8]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getGroupUgroups");
+        _call.setSOAPActionURI("https://tuleap.net#getGroupUgroups");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getGroupUgroups"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getGroupUgroups"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -2744,9 +2744,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[9]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getProjectGroupsAndUsers");
+        _call.setSOAPActionURI("https://tuleap.net#getProjectGroupsAndUsers");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getProjectGroupsAndUsers"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getProjectGroupsAndUsers"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -2775,9 +2775,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[10]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#checkUsersExistence");
+        _call.setSOAPActionURI("https://tuleap.net#checkUsersExistence");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "checkUsersExistence"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "checkUsersExistence"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -2806,9 +2806,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[11]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getUserInfo");
+        _call.setSOAPActionURI("https://tuleap.net#getUserInfo");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getUserInfo"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getUserInfo"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -2837,9 +2837,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[12]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getTrackerList");
+        _call.setSOAPActionURI("https://tuleap.net#getTrackerList");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getTrackerList"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getTrackerList"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -2868,9 +2868,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[13]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getArtifactType");
+        _call.setSOAPActionURI("https://tuleap.net#getArtifactType");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getArtifactType"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getArtifactType"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -2899,9 +2899,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[14]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getArtifactTypes");
+        _call.setSOAPActionURI("https://tuleap.net#getArtifactTypes");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getArtifactTypes"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getArtifactTypes"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -2930,9 +2930,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[15]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getArtifacts");
+        _call.setSOAPActionURI("https://tuleap.net#getArtifacts");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getArtifacts"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getArtifacts"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -2961,9 +2961,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[16]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getArtifactsFromReport");
+        _call.setSOAPActionURI("https://tuleap.net#getArtifactsFromReport");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getArtifactsFromReport"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getArtifactsFromReport"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -2992,9 +2992,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[17]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#addArtifact");
+        _call.setSOAPActionURI("https://tuleap.net#addArtifact");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "addArtifact"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "addArtifact"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3023,9 +3023,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[18]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#addArtifact");
+        _call.setSOAPActionURI("https://tuleap.net#addArtifact");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "addArtifactWithFieldNames"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "addArtifactWithFieldNames"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3054,9 +3054,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[19]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#updateArtifact");
+        _call.setSOAPActionURI("https://tuleap.net#updateArtifact");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "updateArtifact"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "updateArtifact"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3085,9 +3085,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[20]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#updateArtifact");
+        _call.setSOAPActionURI("https://tuleap.net#updateArtifact");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "updateArtifactWithFieldNames"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "updateArtifactWithFieldNames"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3116,9 +3116,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[21]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getArtifactFollowups");
+        _call.setSOAPActionURI("https://tuleap.net#getArtifactFollowups");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getArtifactFollowups"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getArtifactFollowups"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3147,9 +3147,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[22]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getArtifactCannedResponses");
+        _call.setSOAPActionURI("https://tuleap.net#getArtifactCannedResponses");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getArtifactCannedResponses"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getArtifactCannedResponses"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3178,9 +3178,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[23]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getArtifactReports");
+        _call.setSOAPActionURI("https://tuleap.net#getArtifactReports");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getArtifactReports"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getArtifactReports"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3209,9 +3209,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[24]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getArtifactAttachedFiles");
+        _call.setSOAPActionURI("https://tuleap.net#getArtifactAttachedFiles");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getArtifactAttachedFiles"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getArtifactAttachedFiles"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3240,9 +3240,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[25]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getArtifactAttachedFile");
+        _call.setSOAPActionURI("https://tuleap.net#getArtifactAttachedFile");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getArtifactAttachedFile"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getArtifactAttachedFile"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3271,9 +3271,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[26]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getArtifactById");
+        _call.setSOAPActionURI("https://tuleap.net#getArtifactById");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getArtifactById"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getArtifactById"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3302,9 +3302,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[27]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getArtifactDependencies");
+        _call.setSOAPActionURI("https://tuleap.net#getArtifactDependencies");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getArtifactDependencies"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getArtifactDependencies"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3333,9 +3333,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[28]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getArtifactInverseDependencies");
+        _call.setSOAPActionURI("https://tuleap.net#getArtifactInverseDependencies");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getArtifactInverseDependencies"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getArtifactInverseDependencies"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3364,9 +3364,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[29]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#addArtifactAttachedFile");
+        _call.setSOAPActionURI("https://tuleap.net#addArtifactAttachedFile");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "addArtifactAttachedFile"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "addArtifactAttachedFile"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3395,9 +3395,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[30]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#deleteArtifactAttachedFile");
+        _call.setSOAPActionURI("https://tuleap.net#deleteArtifactAttachedFile");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "deleteArtifactAttachedFile"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "deleteArtifactAttachedFile"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3426,9 +3426,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[31]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#addArtifactDependencies");
+        _call.setSOAPActionURI("https://tuleap.net#addArtifactDependencies");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "addArtifactDependencies"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "addArtifactDependencies"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3457,9 +3457,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[32]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#deleteArtifactDependency");
+        _call.setSOAPActionURI("https://tuleap.net#deleteArtifactDependency");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "deleteArtifactDependency"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "deleteArtifactDependency"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3488,9 +3488,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[33]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#addArtifactFollowup");
+        _call.setSOAPActionURI("https://tuleap.net#addArtifactFollowup");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "addArtifactFollowup"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "addArtifactFollowup"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3519,9 +3519,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[34]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#updateArtifact");
+        _call.setSOAPActionURI("https://tuleap.net#updateArtifact");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "updateArtifactFollowUp"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "updateArtifactFollowUp"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3550,9 +3550,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[35]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#deleteArtifact");
+        _call.setSOAPActionURI("https://tuleap.net#deleteArtifact");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "deleteArtifactFollowUp"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "deleteArtifactFollowUp"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3581,9 +3581,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[36]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#existArtifactSummary");
+        _call.setSOAPActionURI("https://tuleap.net#existArtifactSummary");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "existArtifactSummary"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "existArtifactSummary"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3612,9 +3612,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[37]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getArtifactCCList");
+        _call.setSOAPActionURI("https://tuleap.net#getArtifactCCList");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getArtifactCCList"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getArtifactCCList"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3643,9 +3643,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[38]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#addArtifactCC");
+        _call.setSOAPActionURI("https://tuleap.net#addArtifactCC");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "addArtifactCC"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "addArtifactCC"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3674,9 +3674,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[39]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#deleteArtifactCC");
+        _call.setSOAPActionURI("https://tuleap.net#deleteArtifactCC");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "deleteArtifactCC"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "deleteArtifactCC"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3705,9 +3705,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[40]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getArtifactHistory");
+        _call.setSOAPActionURI("https://tuleap.net#getArtifactHistory");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getArtifactHistory"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getArtifactHistory"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3736,9 +3736,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[41]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getPackages");
+        _call.setSOAPActionURI("https://tuleap.net#getPackages");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getPackages"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getPackages"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3767,9 +3767,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[42]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#addPackage");
+        _call.setSOAPActionURI("https://tuleap.net#addPackage");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "addPackage"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "addPackage"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3798,9 +3798,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[43]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getReleases");
+        _call.setSOAPActionURI("https://tuleap.net#getReleases");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getReleases"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getReleases"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3829,9 +3829,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[44]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#addRelease");
+        _call.setSOAPActionURI("https://tuleap.net#addRelease");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "addRelease"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "addRelease"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3860,9 +3860,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[45]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getFiles");
+        _call.setSOAPActionURI("https://tuleap.net#getFiles");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getFiles"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getFiles"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3891,9 +3891,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[46]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getFileInfo");
+        _call.setSOAPActionURI("https://tuleap.net#getFileInfo");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getFileInfo"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getFileInfo"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3922,9 +3922,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[47]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getFile");
+        _call.setSOAPActionURI("https://tuleap.net#getFile");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getFile"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getFile"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3953,9 +3953,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[48]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getFileChunk");
+        _call.setSOAPActionURI("https://tuleap.net#getFileChunk");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getFileChunk"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getFileChunk"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -3984,9 +3984,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[49]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#addFile");
+        _call.setSOAPActionURI("https://tuleap.net#addFile");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "addFile"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "addFile"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4015,9 +4015,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[50]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#addFileChunk");
+        _call.setSOAPActionURI("https://tuleap.net#addFileChunk");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "addFileChunk"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "addFileChunk"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4046,9 +4046,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[51]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#addUploadedFile");
+        _call.setSOAPActionURI("https://tuleap.net#addUploadedFile");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "addUploadedFile"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "addUploadedFile"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4077,9 +4077,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[52]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getUploadedFiles");
+        _call.setSOAPActionURI("https://tuleap.net#getUploadedFiles");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getUploadedFiles"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getUploadedFiles"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4108,9 +4108,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[53]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#deleteFile");
+        _call.setSOAPActionURI("https://tuleap.net#deleteFile");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "deleteFile"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "deleteFile"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4139,9 +4139,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[54]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#deleteEmptyPackage");
+        _call.setSOAPActionURI("https://tuleap.net#deleteEmptyPackage");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "deleteEmptyPackage"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "deleteEmptyPackage"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4170,9 +4170,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[55]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#deleteEmptyRelease");
+        _call.setSOAPActionURI("https://tuleap.net#deleteEmptyRelease");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "deleteEmptyRelease"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "deleteEmptyRelease"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4201,9 +4201,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[56]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getRootFolder");
+        _call.setSOAPActionURI("https://tuleap.net#getRootFolder");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getRootFolder"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getRootFolder"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4232,9 +4232,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[57]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#listFolder");
+        _call.setSOAPActionURI("https://tuleap.net#listFolder");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "listFolder"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "listFolder"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4263,9 +4263,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[58]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#searchDocmanItem");
+        _call.setSOAPActionURI("https://tuleap.net#searchDocmanItem");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "searchDocmanItem"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "searchDocmanItem"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4294,9 +4294,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[59]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getDocmanFileContents");
+        _call.setSOAPActionURI("https://tuleap.net#getDocmanFileContents");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getDocmanFileContents"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getDocmanFileContents"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4325,9 +4325,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[60]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getDocmanFileMD5sum");
+        _call.setSOAPActionURI("https://tuleap.net#getDocmanFileMD5sum");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getDocmanFileMD5sum"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getDocmanFileMD5sum"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4356,9 +4356,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[61]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getDocmanFileAllVersionsMD5sum");
+        _call.setSOAPActionURI("https://tuleap.net#getDocmanFileAllVersionsMD5sum");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getDocmanFileAllVersionsMD5sum"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getDocmanFileAllVersionsMD5sum"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4387,9 +4387,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[62]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getDocmanProjectMetadata");
+        _call.setSOAPActionURI("https://tuleap.net#getDocmanProjectMetadata");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getDocmanProjectMetadata"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getDocmanProjectMetadata"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4418,9 +4418,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[63]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getDocmanTreeInfo");
+        _call.setSOAPActionURI("https://tuleap.net#getDocmanTreeInfo");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getDocmanTreeInfo"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getDocmanTreeInfo"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4449,9 +4449,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[64]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#createDocmanFolder");
+        _call.setSOAPActionURI("https://tuleap.net#createDocmanFolder");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "createDocmanFolder"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "createDocmanFolder"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4480,9 +4480,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[65]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#createDocmanFile");
+        _call.setSOAPActionURI("https://tuleap.net#createDocmanFile");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "createDocmanFile"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "createDocmanFile"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4511,9 +4511,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[66]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#createDocmanEmbeddedFile");
+        _call.setSOAPActionURI("https://tuleap.net#createDocmanEmbeddedFile");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "createDocmanEmbeddedFile"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "createDocmanEmbeddedFile"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4542,9 +4542,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[67]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#createDocmanWikiPage");
+        _call.setSOAPActionURI("https://tuleap.net#createDocmanWikiPage");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "createDocmanWikiPage"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "createDocmanWikiPage"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4573,9 +4573,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[68]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#createDocmanLink");
+        _call.setSOAPActionURI("https://tuleap.net#createDocmanLink");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "createDocmanLink"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "createDocmanLink"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4604,9 +4604,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[69]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#createDocmanEmptyDocument");
+        _call.setSOAPActionURI("https://tuleap.net#createDocmanEmptyDocument");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "createDocmanEmptyDocument"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "createDocmanEmptyDocument"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4635,9 +4635,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[70]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#createDocmanFileVersion");
+        _call.setSOAPActionURI("https://tuleap.net#createDocmanFileVersion");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "createDocmanFileVersion"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "createDocmanFileVersion"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4666,9 +4666,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[71]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#createDocmanEmbeddedFileVersion");
+        _call.setSOAPActionURI("https://tuleap.net#createDocmanEmbeddedFileVersion");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "createDocmanEmbeddedFileVersion"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "createDocmanEmbeddedFileVersion"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4697,9 +4697,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[72]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#appendDocmanFileChunk");
+        _call.setSOAPActionURI("https://tuleap.net#appendDocmanFileChunk");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "appendDocmanFileChunk"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "appendDocmanFileChunk"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4728,9 +4728,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[73]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#moveDocmanItem");
+        _call.setSOAPActionURI("https://tuleap.net#moveDocmanItem");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "moveDocmanItem"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "moveDocmanItem"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4759,9 +4759,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[74]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#getDocmanFileChunk");
+        _call.setSOAPActionURI("https://tuleap.net#getDocmanFileChunk");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "getDocmanFileChunk"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "getDocmanFileChunk"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4790,9 +4790,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[75]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#deleteDocmanItem");
+        _call.setSOAPActionURI("https://tuleap.net#deleteDocmanItem");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "deleteDocmanItem"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "deleteDocmanItem"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4821,9 +4821,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[76]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#monitorDocmanItem");
+        _call.setSOAPActionURI("https://tuleap.net#monitorDocmanItem");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "monitorDocmanItem"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "monitorDocmanItem"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4852,9 +4852,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[77]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#updateDocmanFolder");
+        _call.setSOAPActionURI("https://tuleap.net#updateDocmanFolder");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "updateDocmanFolder"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "updateDocmanFolder"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4883,9 +4883,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[78]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#updateDocmanFile");
+        _call.setSOAPActionURI("https://tuleap.net#updateDocmanFile");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "updateDocmanFile"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "updateDocmanFile"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4914,9 +4914,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[79]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#updateDocmanEmbeddedFile");
+        _call.setSOAPActionURI("https://tuleap.net#updateDocmanEmbeddedFile");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "updateDocmanEmbeddedFile"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "updateDocmanEmbeddedFile"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4945,9 +4945,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[80]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#updateDocmanWikiPage");
+        _call.setSOAPActionURI("https://tuleap.net#updateDocmanWikiPage");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "updateDocmanWikiPage"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "updateDocmanWikiPage"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -4976,9 +4976,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[81]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#updateDocmanLink");
+        _call.setSOAPActionURI("https://tuleap.net#updateDocmanLink");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "updateDocmanLink"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "updateDocmanLink"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -5007,9 +5007,9 @@ public class CodendiAPIBindingStub extends org.apache.axis.client.Stub implement
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[82]);
         _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("https://demo.tuleap.net#updateDocmanEmptyDocument");
+        _call.setSOAPActionURI("https://tuleap.net#updateDocmanEmptyDocument");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("https://demo.tuleap.net", "updateDocmanEmptyDocument"));
+        _call.setOperationName(new javax.xml.namespace.QName("https://tuleap.net", "updateDocmanEmptyDocument"));
 
         setRequestHeaders(_call);
         setAttachments(_call);

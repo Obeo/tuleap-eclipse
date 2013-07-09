@@ -31,56 +31,11 @@ public class TuleapUtilTests extends TestCase {
 	}
 
 	/**
-	 * Test the parsing of the group id of the repository from the given task repository.
-	 */
-	public void testGetGroupId() {
-		String repositoryUrl = "https://tuleap.mylyn.eclipse.org/plugins/tracker/?group_id=42"; //$NON-NLS-1$
-		int groupId = TuleapUtil.getGroupId(repositoryUrl);
-		assertEquals(42, groupId);
-	}
-
-	/**
-	 * Test the parsing of the artifact id from the task data id.
-	 */
-	public void testGetArtifactIdFromTaskDataId() {
-		String taskDataId = "Mylyn:Bugs[185] #122"; //$NON-NLS-1$
-		int artifactId = TuleapUtil.getArtifactIdFromTaskDataId(taskDataId);
-		assertEquals(122, artifactId);
-	}
-
-	/**
-	 * Test the parsing of the tracker name from the task data id.
-	 */
-	public void testGetTrackerNameFromTaskDataId() {
-		String taskDataId = "Mylyn:Bugs[172] #134"; //$NON-NLS-1$
-		String trackerName = TuleapUtil.getTrackerNameFromTaskDataId(taskDataId);
-		assertEquals("Bugs", trackerName); //$NON-NLS-1$
-	}
-
-	/**
-	 * Test the parsing of the tracker id from the task data id.
-	 */
-	public void testGetTrackerIdFromTaskId() {
-		String taskDataId = "Mylyn:Bugs[185] #134"; //$NON-NLS-1$
-		int trackerId = TuleapUtil.getTrackerIdFromTaskDataId(taskDataId);
-		assertEquals(185, trackerId);
-	}
-
-	/**
-	 * Test the parsing of the project name from the task data id.
-	 */
-	public void testGetProjectNameFromTaskId() {
-		String taskDataId = "Mylyn:Bugs[172] #134"; //$NON-NLS-1$
-		String projectName = TuleapUtil.getProjectNameFromTaskDataId(taskDataId);
-		assertEquals("Mylyn", projectName); //$NON-NLS-1$
-	}
-
-	/**
 	 * Test the creation of the task data id.
 	 */
 	public void testGetTaskDataId() {
-		String taskDataId = TuleapUtil.getTaskDataId("Mylyn", "Bugs[185]", 134); //$NON-NLS-1$ //$NON-NLS-2$
-		assertEquals("Mylyn:Bugs[185] #134", taskDataId); //$NON-NLS-1$
+		String taskDataId = TuleapUtil.getTaskDataId("Mylyn", "Bugs", 134); //$NON-NLS-1$ //$NON-NLS-2$
+		assertEquals("Mylyn:Bugs-134", taskDataId); //$NON-NLS-1$
 	}
 
 	/**

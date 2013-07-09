@@ -103,7 +103,7 @@ public class CriteriaValueDate  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(CriteriaValueDate.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "CriteriaValueDate"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "CriteriaValueDate"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("op");
         elemField.setXmlName(new javax.xml.namespace.QName("", "op"));

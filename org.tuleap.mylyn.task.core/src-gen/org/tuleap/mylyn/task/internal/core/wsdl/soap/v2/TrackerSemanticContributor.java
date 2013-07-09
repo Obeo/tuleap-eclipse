@@ -77,7 +77,7 @@ public class TrackerSemanticContributor  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(TrackerSemanticContributor.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "TrackerSemanticContributor"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerSemanticContributor"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("field_name");
         elemField.setXmlName(new javax.xml.namespace.QName("", "field_name"));

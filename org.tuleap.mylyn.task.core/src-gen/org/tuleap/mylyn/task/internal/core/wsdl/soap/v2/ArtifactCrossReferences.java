@@ -107,7 +107,7 @@ public class ArtifactCrossReferences  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(ArtifactCrossReferences.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net/plugins/tracker/soap", "ArtifactCrossReferences"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "ArtifactCrossReferences"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("ref");
         elemField.setXmlName(new javax.xml.namespace.QName("", "ref"));

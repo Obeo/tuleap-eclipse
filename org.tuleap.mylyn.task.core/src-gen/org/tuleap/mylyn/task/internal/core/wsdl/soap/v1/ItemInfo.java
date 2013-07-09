@@ -215,7 +215,7 @@ public class ItemInfo  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(ItemInfo.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://demo.tuleap.net", "ItemInfo"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://tuleap.net", "ItemInfo"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("id");
         elemField.setXmlName(new javax.xml.namespace.QName("", "id"));
