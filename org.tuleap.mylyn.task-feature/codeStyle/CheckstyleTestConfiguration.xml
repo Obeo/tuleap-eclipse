@@ -170,9 +170,9 @@ Tuleap Checkstyle Configuration
       <property name="severity" value="ignore"/>
       <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
     </module>
-    <module name="DoubleCheckedLocking">
+    <!--module name="DoubleCheckedLocking">
       <property name="severity" value="error"/>
-    </module>
+    </module-->
     <module name="EmptyStatement">
       <property name="severity" value="error"/>
     </module>
@@ -215,10 +215,10 @@ Tuleap Checkstyle Configuration
     <module name="ModifiedControlVariable">
       <property name="severity" value="error"/>
     </module>
-    <module name="MultipleStringLiterals">
+    <!--module name="MultipleStringLiterals">
       <property name="severity" value="error"/>
       <property name="allowedDuplicates" value="2"/>
-    </module>
+    </module-->
     <module name="MultipleVariableDeclarations">
       <property name="severity" value="error"/>
     </module>
