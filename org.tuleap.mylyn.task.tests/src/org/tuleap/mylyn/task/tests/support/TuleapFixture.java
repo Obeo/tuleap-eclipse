@@ -22,7 +22,6 @@ import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
-import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tests.util.TestFixture;
 import org.eclipse.osgi.util.NLS;
@@ -73,17 +72,6 @@ public class TuleapFixture extends TestFixture {
 	 */
 	public TuleapFixture(String tasksRepositoryUrl, String version, String info) {
 		super(ITuleapConstants.CONNECTOR_KIND, tasksRepositoryUrl);
-	}
-
-	/**
-	 * Returns a server URL built after the given Tuleap tracker version.
-	 * 
-	 * @param version
-	 *            the version of the Tuleap tracker
-	 * @return A server URL built after the given Tuleap tracker version.
-	 */
-	public static String getServerUrl(String version) {
-		return TestConfiguration.getRepositoryUrl(version);
 	}
 
 	/**
