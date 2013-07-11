@@ -171,7 +171,12 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 							artifact.putValue(taskAttribute.getId(), nextToken);
 						} catch (NumberFormatException e) {
 							// We have a complex URL, that's what we are looking for! Let's convert it
-							// FIXME Handle complex URL the task dependencies
+							int index = nextToken.indexOf(ITuleapConstants.TASK_DATA_ID_SEPARATOR);
+							if (index != -1) {
+								String id = nextToken.substring(index
+										+ ITuleapConstants.TASK_DATA_ID_SEPARATOR.length());
+								artifact.putValue(taskAttribute.getId(), id);
+							}
 						}
 					}
 				}
