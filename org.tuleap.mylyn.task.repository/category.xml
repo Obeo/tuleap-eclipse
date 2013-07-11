@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.tuleap.mylyn.task_feature_1.0.0.qualifier.jar" id="org.tuleap.mylyn.task_feature" version="1.0.0.qualifier">
+   <feature url="features/org.tuleap.mylyn.task_feature_1.1.0.qualifier.jar" id="org.tuleap.mylyn.task_feature" version="1.1.0.qualifier">
       <category name="org.tuleap.mylyn.task"/>
    </feature>
    <category-def name="org.tuleap.mylyn.task" label="Tuleap">
