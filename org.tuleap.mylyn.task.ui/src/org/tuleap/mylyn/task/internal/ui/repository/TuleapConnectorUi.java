@@ -10,6 +10,12 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.ui.repository;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
@@ -20,6 +26,7 @@ import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskSearchPage;
 import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
@@ -69,8 +76,16 @@ public class TuleapConnectorUi extends AbstractRepositoryConnectorUi {
 	@Override
 	public IHyperlink[] findHyperlinks(TaskRepository repository, ITask task, String text, int index,
 			int textOffset) {
-		// TODO Create a custom hyperlink artifact finder
-		return super.findHyperlinks(repository, task, text, index, textOffset);
+		List<IHyperlink> hyperlinks = new ArrayList<IHyperlink>();
+		Matcher matcher = Pattern.compile("(^|[\\s\\(\\)])(([A-Za-z]+):([A-Za-z]+)-\\d+)").matcher(text); //$NON-NLS-1$
+		while (matcher.find()) {
+			int start = matcher.start(2);
+			int length = matcher.end() - start;
+
+			Region region = new Region(textOffset + start, length);
+			hyperlinks.add(new TaskHyperlink(region, repository, matcher.group(2)));
+		}
+		return hyperlinks.toArray(new IHyperlink[hyperlinks.size()]);
 	}
 
 	/**
