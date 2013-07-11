@@ -20,13 +20,13 @@
 		Repositories view in order to create a new Mylyn repository. Select the Task connector "Tuleap
 		Repository Connector" and click next.
 	</p>
-	<img src="../images/Mylyn_Connector_for_Tuleap_08.png" />
+	<img src="../images/create_repository.png" />
 	<p>
 		In the next page of the wizard, you have access to the page used to connect to the Tuleap server.
 		Use the URL of the trackers of your Tuleap project along with your Tuleap username and password to
 		connect to the Tuleap server as shown in the following screenshot.
 	</p>
-	<img src="../images/Mylyn_Connector_for_Tuleap_10.png" />
+	<img src="../images/repository_settings.png" />
 	<p>
 		Your login and password will be valited prior to the connection but you can force the verification
 		to ensure that your credentials are valid. Do not forget to make sure that the connector will
@@ -36,16 +36,26 @@
 	<h2>Create a query</h2>
 	<p>
 		Once you have created your repository, Mylyn Task will ask you to create a query in order to retrieve
-		your tasks from the Tuleap server. You can use the new Query wizard in order to create your query.
+		your tasks from the Tuleap server. You can use the new Query wizard in order to create your query. First
+		you will have to select the project for which you want to create the query.
 	</p>
-	<img src="../images/Mylyn_Connector_for_Tuleap_14.png" />
+	<img src="../images/create_query_select_project.png" />
+	<p>
+	    Once your project is selected, you will see the list of all the trackers of the selected project.
+	</p>
+	<img src="../images/create_query_select_tracker.png" />
 	<p>
 		In this wizard, you can create two kinds of queries: locally created ones or queries saved on the server.
 		In your Tuleap project, you may have created reports in order to vizualize a specific set of tasks matching
 		a set of critera, you can execute those reports directly from the Mylyn Connector for Tuleap. you can
 		also define new queries directly in Eclipse.
 	</p>
-	<img src="../images/Mylyn_Connector_for_Tuleap_15.png" />
+	<img src="../images/create_query_reports.png" />
+	<p>
+	    You can access your reports from the third page of the wizard or you can continue to the fourth page to create
+	    a custom query.
+	</p>
+	<img src="../images/custom_query.png" />
 	<p>
 		When your query has been executed by Mylyn Task, its result will be available in the Task List view.
 		In this view, you can see the list of the tasks matching your query along with the completion of the query.
@@ -55,7 +65,7 @@
 	<p>
 		If you want to display a specific task, you just have to double click on it from the Task List view.
 	</p>
-	<img src="../images/Mylyn_Connector_for_Tuleap_16.png" />
+	<img src="../images/task_editor.png" />
 		
 	<h2>Update a task</h2>
 	<p>
@@ -68,11 +78,11 @@
 		If the configuration of your Tuleap tracker allows it, you can add attachments to your task directly
 		from the Tuleap task editor.
 	</p>
-	<img src="../images/Mylyn_Connector_for_Tuleap_17.png" />
+	<img src="../images/attachments.png" />
 	<p>
 		You can also use the screenshot tooling to directly attach a screenshot with various annotations. 
 	</p>
-	<img src="../images/Mylyn_Connector_for_Tuleap_18.png" />
+	<img src="../images/screenshot_attachment_editor.png" />
 	
 	<h2>Link with the context</h2>
 	<p>
@@ -82,7 +92,7 @@
 		are done working on a specific task, you just need to uncheck the activate task button. The task and its
 		context will then be closed.
 	</p>
-	<img src="../images/Mylyn_Connector_for_Tuleap_19.png" />
+	<img src="../images/context.png" />
 	<p>
 		You can easily retrieve the context of a task by re-activating it. All the elements of the context that
 		you had used will be reopened. 
