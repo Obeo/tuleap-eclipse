@@ -1247,7 +1247,8 @@ public class TuleapSoapConnector {
 			List<TrackerFieldBindValue> bindValues = new ArrayList<TrackerFieldBindValue>();
 			for (String value : values) {
 				if ("".equals(value)) { //$NON-NLS-1$
-					bindValues.add(new TrackerFieldBindValue(100, "")); //$NON-NLS-1$
+					bindValues.add(new TrackerFieldBindValue(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID,
+							"")); //$NON-NLS-1$
 				} else {
 					TrackerFieldBindValue[] trackerFieldBindValues = trackerField.getValues();
 					for (TrackerFieldBindValue trackerFieldBindValue : trackerFieldBindValues) {
@@ -1374,18 +1375,24 @@ public class TuleapSoapConnector {
 		List<String> values = artifact.getValues(TaskAttribute.USER_ASSIGNED);
 		List<TrackerFieldBindValue> bindValues = new ArrayList<TrackerFieldBindValue>();
 
-		for (String value : values) {
-			if ("".equals(value)) { //$NON-NLS-1$
-				bindValues.add(new TrackerFieldBindValue(100, "")); //$NON-NLS-1$
-			} else {
-				TrackerFieldBindValue[] trackerFieldBindValues = trackerField.getValues();
-				for (TrackerFieldBindValue trackerFieldBindValue : trackerFieldBindValues) {
-					if (value.equals(trackerFieldBindValue.getBind_value_label())) {
-						bindValues.add(new TrackerFieldBindValue(trackerFieldBindValue.getBind_value_id(),
-								trackerFieldBindValue.getBind_value_label()));
+		if (values != null) {
+			for (String value : values) {
+				if ("".equals(value)) { //$NON-NLS-1$
+					bindValues.add(new TrackerFieldBindValue(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID,
+							"")); //$NON-NLS-1$
+				} else {
+					TrackerFieldBindValue[] trackerFieldBindValues = trackerField.getValues();
+					for (TrackerFieldBindValue trackerFieldBindValue : trackerFieldBindValues) {
+						if (value.equals(trackerFieldBindValue.getBind_value_label())) {
+							bindValues.add(new TrackerFieldBindValue(
+									trackerFieldBindValue.getBind_value_id(), trackerFieldBindValue
+											.getBind_value_label()));
+						}
 					}
 				}
 			}
+		} else {
+			bindValues.add(new TrackerFieldBindValue(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID, "")); //$NON-NLS-1$
 		}
 
 		FieldValue fieldValue = new FieldValue(
