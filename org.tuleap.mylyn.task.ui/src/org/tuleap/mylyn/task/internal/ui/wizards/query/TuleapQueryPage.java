@@ -126,7 +126,8 @@ public class TuleapQueryPage extends AbstractRepositoryQueryPage2 {
 		composite.setLayout(new GridLayout(1, false));
 
 		this.reportsButton = new Button(composite, SWT.RADIO);
-		this.reportsButton.setText("Use a report saved on the server");
+		this.reportsButton.setText(TuleapMylynTasksUIMessages
+				.getString("TuleapQueryPage.CustomQueryButtonLabel")); //$NON-NLS-1$
 		this.reportsButton.addSelectionListener(new SelectionListener() {
 
 			public void widgetSelected(SelectionEvent e) {
@@ -170,7 +171,8 @@ public class TuleapQueryPage extends AbstractRepositoryQueryPage2 {
 
 		if (this.getQuery() == null) {
 			this.customQueryButton = new Button(composite, SWT.RADIO);
-			this.customQueryButton.setText("Create a query using a form");
+			this.customQueryButton.setText(TuleapMylynTasksUIMessages
+					.getString("TuleapQueryPage.CustomQueryButtonLabel")); //$NON-NLS-1$
 			this.customQueryButton.addSelectionListener(new SelectionListener() {
 
 				public void widgetSelected(SelectionEvent e) {
