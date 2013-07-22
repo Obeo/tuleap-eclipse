@@ -15,16 +15,20 @@ public class TrackerSemantic  implements java.io.Serializable {
 
     private org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerSemanticContributor contributor;
 
+    private org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.AgileDashBoardSemanticInitialEffort initial_effort;
+
     public TrackerSemantic() {
     }
 
     public TrackerSemantic(
            org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerSemanticTitle title,
            org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerSemanticStatus status,
-           org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerSemanticContributor contributor) {
+           org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerSemanticContributor contributor,
+           org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.AgileDashBoardSemanticInitialEffort initial_effort) {
            this.title = title;
            this.status = status;
            this.contributor = contributor;
+           this.initial_effort = initial_effort;
     }
 
 
@@ -87,6 +91,26 @@ public class TrackerSemantic  implements java.io.Serializable {
         this.contributor = contributor;
     }
 
+
+    /**
+     * Gets the initial_effort value for this TrackerSemantic.
+     * 
+     * @return initial_effort
+     */
+    public org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.AgileDashBoardSemanticInitialEffort getInitial_effort() {
+        return initial_effort;
+    }
+
+
+    /**
+     * Sets the initial_effort value for this TrackerSemantic.
+     * 
+     * @param initial_effort
+     */
+    public void setInitial_effort(org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.AgileDashBoardSemanticInitialEffort initial_effort) {
+        this.initial_effort = initial_effort;
+    }
+
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
         if (!(obj instanceof TrackerSemantic)) return false;
@@ -107,7 +131,10 @@ public class TrackerSemantic  implements java.io.Serializable {
               this.status.equals(other.getStatus()))) &&
             ((this.contributor==null && other.getContributor()==null) || 
              (this.contributor!=null &&
-              this.contributor.equals(other.getContributor())));
+              this.contributor.equals(other.getContributor()))) &&
+            ((this.initial_effort==null && other.getInitial_effort()==null) || 
+             (this.initial_effort!=null &&
+              this.initial_effort.equals(other.getInitial_effort())));
         __equalsCalc = null;
         return _equals;
     }
@@ -127,6 +154,9 @@ public class TrackerSemantic  implements java.io.Serializable {
         }
         if (getContributor() != null) {
             _hashCode += getContributor().hashCode();
+        }
+        if (getInitial_effort() != null) {
+            _hashCode += getInitial_effort().hashCode();
         }
         __hashCodeCalc = false;
         return _hashCode;
@@ -154,6 +184,12 @@ public class TrackerSemantic  implements java.io.Serializable {
         elemField.setFieldName("contributor");
         elemField.setXmlName(new javax.xml.namespace.QName("", "contributor"));
         elemField.setXmlType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "TrackerSemanticContributor"));
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("initial_effort");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "initial_effort"));
+        elemField.setXmlType(new javax.xml.namespace.QName("https://tuleap.net/plugins/tracker/soap", "AgileDashBoardSemanticInitialEffort"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
     }
