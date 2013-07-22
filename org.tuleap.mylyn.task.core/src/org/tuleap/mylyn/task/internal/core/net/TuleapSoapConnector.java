@@ -336,20 +336,29 @@ public class TuleapSoapConnector {
 			for (Group group : groups) {
 				int groupId = group.getGroup_id();
 
-				TuleapProjectConfiguration tuleapProjectConfiguration = new TuleapProjectConfiguration(group
-						.getGroup_name(), groupId);
-				tuleapInstanceConfiguration.addProject(Integer.valueOf(groupId), tuleapProjectConfiguration);
+				Tracker[] trackers = new Tracker[0];
+				try {
+					trackers = tuleapTrackerV5APIPort.getTrackerList(sessionHash, groupId);
+				} catch (RemoteException e) {
+					// https://tuleap.net/plugins/tracker/?aid=4470
+					// The project does not have any trackers, we won't log the error so we catch it
+				}
 
-				Tracker[] trackers = tuleapTrackerV5APIPort.getTrackerList(sessionHash, groupId);
+				if (trackers.length > 0) {
+					TuleapProjectConfiguration tuleapProjectConfiguration = new TuleapProjectConfiguration(
+							group.getGroup_name(), groupId);
+					tuleapInstanceConfiguration.addProject(Integer.valueOf(groupId),
+							tuleapProjectConfiguration);
 
-				for (Tracker tracker : trackers) {
-					monitor.worked(5);
-					monitor.setTaskName(TuleapMylynTasksMessages.getString(
-							"TuleapSoapConnector.AnalyzingTracker", tracker.getName())); //$NON-NLS-1$
-					TuleapTrackerConfiguration tuleapTrackerConfiguration = this
-							.getTuleapTrackerConfiguration(tracker, monitor);
-					tuleapProjectConfiguration.addTracker(Integer.valueOf(tracker.getTracker_id()),
-							tuleapTrackerConfiguration);
+					for (Tracker tracker : trackers) {
+						monitor.worked(5);
+						monitor.setTaskName(TuleapMylynTasksMessages.getString(
+								"TuleapSoapConnector.AnalyzingTracker", tracker.getName())); //$NON-NLS-1$
+						TuleapTrackerConfiguration tuleapTrackerConfiguration = this
+								.getTuleapTrackerConfiguration(tracker, monitor);
+						tuleapProjectConfiguration.addTracker(Integer.valueOf(tracker.getTracker_id()),
+								tuleapTrackerConfiguration);
+					}
 				}
 			}
 		} catch (RemoteException e) {
