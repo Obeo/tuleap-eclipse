@@ -37,3 +37,4 @@ Export-Package: org.tuleap.mylyn.task.internal.core;x-friends:="org.tuleap.mylyn
  org.tuleap.mylyn.task.internal.core.wsdl.soap.v1;x-friends:="org.tuleap.mylyn.task.tests",
  org.tuleap.mylyn.task.internal.core.wsdl.soap.v2;x-friends:="org.tuleap.mylyn.task.tests"
 Bundle-Activator: org.tuleap.mylyn.task.internal.core.TuleapCoreActivator
+Service-Component: OSGI-INF/component.xml
