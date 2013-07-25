@@ -11,6 +11,7 @@
 package org.tuleap.mylyn.task.internal.core.repository;
 
 import org.tuleap.mylyn.task.agile.core.AbstractAgileRepositoryConnector;
+import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**
  * Tuleap Agile repository connector, which is exposed as an OSGI Service. This connector is in charge of
@@ -21,21 +22,16 @@ import org.tuleap.mylyn.task.agile.core.AbstractAgileRepositoryConnector;
 public class TuleapAgileRepositoryConnector extends AbstractAgileRepositoryConnector {
 
 	/**
-	 * Constant that represents the Tuleap connector kind.
-	 */
-	public static final String TULEAP_CONNECTOR_KIND = "TULEAP"; //$NON-NLS-1$
-
-	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * The supported connector kind returned is the constant {@code TULEAP_CONNECTOR_KIND}.
+	 * The supported connector kind returned is the constant {@code ITuleapConstants.CONNECTOR_KIND}.
 	 * </p>
 	 * 
 	 * @see org.tuleap.mylyn.task.agile.core.AbstractAgileRepositoryConnector#getConnectorKind()
 	 */
 	@Override
 	public String getConnectorKind() {
-		return TULEAP_CONNECTOR_KIND;
+		return ITuleapConstants.CONNECTOR_KIND;
 	}
 
 }

@@ -11,7 +11,7 @@
 package org.tuleap.mylyn.task.internal.ui.repository;
 
 import org.tuleap.mylyn.task.agile.ui.AbstractAgileRepositoryConnectorUI;
-import org.tuleap.mylyn.task.internal.core.repository.TuleapAgileRepositoryConnector;
+import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**
  * Agile repository connector UI for Tuleap, which is exposed as an OSGI service.
@@ -31,7 +31,7 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 	 */
 	@Override
 	public String getConnectorKind() {
-		return TuleapAgileRepositoryConnector.TULEAP_CONNECTOR_KIND;
+		return ITuleapConstants.CONNECTOR_KIND;
 	}
 
 }
