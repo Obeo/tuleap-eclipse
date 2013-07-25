@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.ui.repository;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.agile.ui.AbstractAgileRepositoryConnectorUI;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
@@ -32,6 +36,23 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 	@Override
 	public String getConnectorKind() {
 		return ITuleapConstants.CONNECTOR_KIND;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.tuleap.mylyn.task.agile.ui.AbstractAgileRepositoryConnectorUI#getNewMilestoneWizard(org.eclipse.mylyn.tasks.core.data.TaskData,
+	 *      org.eclipse.mylyn.tasks.core.TaskRepository, org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	@Override
+	public IWizard getNewMilestoneWizard(TaskData planningTaskData, TaskRepository taskRepository,
+			IProgressMonitor monitor) {
+		// return new NewTuleapTaskWizard(taskRepository, taskSelection);
+		// AbstractRepositoryConnector de tuleap
+		// repositoryConnector.getTaskDataHandler().initializeTaskData(TaskRepository, TaskData, ITaskMapping,
+		// IProgressMonitor);
+		// create task from task data
+		return null; // FIXME
 	}
 
 }
