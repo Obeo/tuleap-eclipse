@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.tuleap.mylyn.task.core;singleton:=true
-Bundle-Version: 1.1.1.qualifier
+Bundle-Version: 2.0.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
@@ -16,7 +16,8 @@ Require-Bundle: javax.xml.rpc;bundle-version="1.1.0",
  org.apache.commons.discovery,
  javax.activation,
  javax.mail,
- javax.wsdl
+ javax.wsdl,
+ org.tuleap.mylyn.task.agile.core;bundle-version="1.0.0"
 Export-Package: org.tuleap.mylyn.task.internal.core;x-friends:="org.tuleap.mylyn.task.tests",
  org.tuleap.mylyn.task.internal.core.client;x-friends:="org.tuleap.mylyn.task.tests,org.tuleap.mylyn.task.ui",
  org.tuleap.mylyn.task.internal.core.config;x-friends:="org.tuleap.mylyn.task.tests",
