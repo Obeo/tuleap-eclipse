@@ -1,0 +1,31 @@
+{
+  "id": 0,
+  "name": "Product",
+  "unix_name": "product",
+  "description": "The description of the products tracker",
+  "url": "localhost:3001/api/v3.14/trackers/0",
+  "html_url": "localhost:3001/plugins/tracker/?tracker=0",
+  "project_id": 3,
+  "fields": [
+    {
+      "field_id": 0,
+      "short_name": "title",
+      "label": "Title",
+      "type": "string",
+      "permissions": [
+        "read"
+      ]
+    }
+  ],
+  "semantic": {
+    "title": {
+      "field_id": 0
+    }
+  }
+  "hierarchy": {
+    "childrenTrackerId": [
+      2
+    ]
+  },
+  "has_cardwall": true
+}}

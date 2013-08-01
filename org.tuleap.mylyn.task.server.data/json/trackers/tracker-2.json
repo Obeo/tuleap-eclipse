@@ -1,0 +1,98 @@
+{
+  "id": 2,
+  "name": "Release",
+  "unix_name": "release",
+  "description": "The description of the releases tracker",
+  "url": "localhost:3001/api/v3.14/trackers/2",
+  "html_url": "localhost:3001/plugins/tracker/?tracker=2",
+  "project_id": 3,
+  "fields": [
+    {
+      "field_id": 0,
+      "short_name": "title",
+      "label": "Title",
+      "type": "string",
+      "permissions": [
+        "read",
+        "create",
+        "update"
+      ]
+    },
+    {
+      "field_id": 1,
+      "short_name": "start-date",
+      "label": "Start Date",
+      "type": "date",
+      "permissions": [
+        "read",
+        "create",
+        "update"
+      ]
+    },
+    {
+      "field_id": 2,
+      "short_name": "end-date",
+      "label": "End Date",
+      "type": "date",
+      "permissions": [
+        "read",
+        "create",
+        "update"
+      ]
+    },
+    {
+      "field_id": 3,
+      "short_name": "duration",
+      "label": "Duration",
+      "type": "computed",
+      "permissions": [
+        "read",
+        "create",
+        "update"
+      ]
+    },
+    {
+      "field_id": 4,
+      "short_name": "capacity",
+      "label": "Capacity",
+      "type": "int",
+      "permissions": [
+        "read",
+        "create",
+        "update"
+      ]
+    }
+  ],
+  "semantic": {
+    "title": {
+      "field_id": 0
+    },
+    "start_date": {
+      "field_id": 1
+    },
+    "duration": {
+      "field_id": 3
+    },
+    "capacity": {
+      "field_id": 4
+    },
+  },
+  "workflow": {
+    "rules": [
+      {
+        "dates": [
+          "source_field_id": 1,
+          "target_field_id": 2,
+          "comparator": "<"
+        ]
+      }
+    ]
+  },
+  "hierarchy": {
+    "parentTrackerId": 0,
+    "childrenTrackerId": [
+      3
+    ]
+  },
+  "has_cardwall": true
+}

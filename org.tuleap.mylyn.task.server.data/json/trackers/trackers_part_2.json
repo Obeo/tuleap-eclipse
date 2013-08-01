@@ -1,0 +1,64 @@
+[
+  {
+    "id": 5,
+    "name": "User Stories",
+    "unix_name": "user-stories",
+    "description": "The description of the user stories tracker",
+    "url": "localhost:3001/api/v3.14/trackers/5",
+    "html_url": "localhost:3001/plugins/tracker/?tracker=5",
+    "project_id": 3,
+    "fields": [
+      {
+        "field_id": 0,
+        "short_name": "title",
+        "label": "Title",
+        "type": "string",
+        "permissions": [
+          "read",
+          "create",
+          "update"
+        ]
+      },
+      {
+        "field_id": 1,
+        "short_name": "status",
+        "label": "Status",
+        "type": "sb",
+        "values": [
+          {
+            "field_value_id": 0,
+            "field_value_label": "OPENED"
+          },
+          {
+            "field_value_id": 1,
+            "field_value_label": "CLOSED"
+          }
+        ],
+        "permissions": [
+          "read",
+          "create",
+          "update"
+        ]
+      }
+    ],
+    "semantic": {
+      "title": {
+        "field_id": 0
+      },
+      "status": {
+        "field_id": 1,
+        "open_status_field_values_id": [
+          0
+        ]
+      }
+    },
+    "hierarchy": {
+      "parentTrackerId": 3,
+      "childrenTrackerId": [
+        4,
+        1
+      ]
+    },
+    "has_cardwall": false
+  }
+]

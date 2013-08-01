@@ -1,0 +1,42 @@
+[
+  {
+    "id": 0,
+    "email": "john.doe@example.com",
+    "identifier": "0",
+    "real_name": "John Doe",
+    "username": "doej",
+    "ldap_id": ""
+  },
+  {
+    "id": 1,
+    "email": "john.doe1@example.com",
+    "identifier": "1",
+    "real_name": "John Doe 1",
+    "username": "doej 1",
+    "ldap_id": ""
+  },
+  {
+    "id": 2,
+    "email": "john.doe2@example.com",
+    "identifier": "2",
+    "real_name": "John Doe 2",
+    "username": "doej 2",
+    "ldap_id": ""
+  },
+  {
+    "id": 3,
+    "email": "john.doe3@example.com",
+    "identifier": "3",
+    "real_name": "John Doe 3",
+    "username": "doej 3",
+    "ldap_id": ""
+  },
+  {
+    "id": 4,
+    "email": "john.doe4@example.com",
+    "identifier": "4",
+    "real_name": "John Doe 4",
+    "username": "doej 4",
+    "ldap_id": ""
+  }
+]
