@@ -43,6 +43,11 @@ public class MockedArtifact extends Artifact {
 		this.tracker = mockedTracker;
 	}
 
+	/**
+	 * Returns the mocked tracker.
+	 * 
+	 * @return The mocked tracker
+	 */
 	public MockedTracker getTracker() {
 		return tracker;
 	}

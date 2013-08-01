@@ -148,7 +148,7 @@ public class TuleapClient implements ITuleapClient {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.client.ITuleapClient#getArtifact(int,
+	 * @see org.tuleap.mylyn.task.internal.core.client.ITuleapClient#getArtifact(java.lang.String,
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public TuleapArtifact getArtifact(String taskId, IProgressMonitor monitor) throws CoreException {

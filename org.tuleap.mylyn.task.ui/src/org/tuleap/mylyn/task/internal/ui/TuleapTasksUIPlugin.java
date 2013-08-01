@@ -51,6 +51,11 @@ public class TuleapTasksUIPlugin extends AbstractUIPlugin {
 	 */
 	private Map<String, Image> imageMap = new HashMap<String, Image>();
 
+	/**
+	 * Returns the sole instance of the activator.
+	 * 
+	 * @return The sole instancea of the activator
+	 */
 	public static TuleapTasksUIPlugin getDefault() {
 		return instance;
 	}

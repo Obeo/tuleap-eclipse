@@ -477,6 +477,10 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	 *            The description
 	 * @param isRequired
 	 *            Is Required
+	 * @param isSemanticContributor
+	 *            Indicates if the select box represents a semantic contributor
+	 * @param binding
+	 *            The binding
 	 * @param rank
 	 *            The rank
 	 * @param permissions
@@ -512,6 +516,10 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	 *            The description
 	 * @param isRequired
 	 *            Is Required
+	 * @param isSemanticContributor
+	 *            Indicates if the select box represents a semantic contributor
+	 * @param binding
+	 *            The binding
 	 * @param rank
 	 *            The rank
 	 * @param permissions

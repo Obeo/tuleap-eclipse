@@ -221,9 +221,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 					attributeValue += ITuleapConstants.QUERY_ATTRIBUTES_SEPARATOR + operation;
 				}
 
-				if (attributeValue != null) {
-					query.setAttribute(String.valueOf(element.getTuleapFieldName()), attributeValue);
-				}
+				query.setAttribute(String.valueOf(element.getTuleapFieldName()), attributeValue);
 			}
 		}
 	}
