@@ -21,6 +21,7 @@ Require-Bundle: javax.xml.rpc;bundle-version="1.1.0",
 Export-Package: org.tuleap.mylyn.task.internal.core;x-friends:="org.tuleap.mylyn.task.tests",
  org.tuleap.mylyn.task.internal.core.client;x-friends:="org.tuleap.mylyn.task.tests,org.tuleap.mylyn.task.ui",
  org.tuleap.mylyn.task.internal.core.config;x-friends:="org.tuleap.mylyn.task.tests",
+ org.tuleap.mylyn.task.internal.core.data;x-internal:=true,
  org.tuleap.mylyn.task.internal.core.model;x-friends:="org.tuleap.mylyn.task.ui,org.tuleap.mylyn.task.tests",
  org.tuleap.mylyn.task.internal.core.model.field;x-friends:="org.tuleap.mylyn.task.ui,org.tuleap.mylyn.task.tests",
  org.tuleap.mylyn.task.internal.core.model.field.dynamic;x-friends:="org.tuleap.mylyn.task.tests,org.tuleap.mylyn.task.ui",
@@ -28,6 +29,7 @@ Export-Package: org.tuleap.mylyn.task.internal.core;x-friends:="org.tuleap.mylyn
  org.tuleap.mylyn.task.internal.core.net;x-friends:="org.tuleap.mylyn.task.tests,org.tuleap.mylyn.task.ui",
  org.tuleap.mylyn.task.internal.core.repository;x-friends:="org.tuleap.mylyn.task.tests,org.tuleap.mylyn.task.ui",
  org.tuleap.mylyn.task.internal.core.util;x-friends:="org.tuleap.mylyn.task.ui,org.tuleap.mylyn.task.tests",
+ org.tuleap.mylyn.task.internal.core.wsdl.soap;x-internal:=true,
  org.tuleap.mylyn.task.internal.core.wsdl.soap.v1;x-friends:="org.tuleap.mylyn.task.tests",
  org.tuleap.mylyn.task.internal.core.wsdl.soap.v2;x-friends:="org.tuleap.mylyn.task.tests"
 Bundle-Activator: org.tuleap.mylyn.task.internal.core.TuleapCoreActivator
