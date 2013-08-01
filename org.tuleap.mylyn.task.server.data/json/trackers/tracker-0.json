@@ -21,11 +21,11 @@
     "title": {
       "field_id": 0
     }
-  }
+  },
   "hierarchy": {
     "childrenTrackerId": [
       2
     ]
   },
   "has_cardwall": true
-}}
+}

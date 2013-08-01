@@ -22,7 +22,7 @@
       "title": {
         "field_id": 0
       }
-    }
+    },
     "hierarchy": {
       "childrenTrackerId": [
         2
@@ -137,7 +137,7 @@
             "field_value_label": "Functional Tests"
           },
           {
-            "field_value_"id": 3,
+            "field_value_id": 3,
             "field_value_label": "End To End Tests"
           }
         ],
@@ -273,7 +273,7 @@
         "open_status_field_values_id": [
           0,
           1,
-          2,
+          2
         ]
       },
       "contributors": {
@@ -349,7 +349,7 @@
         {
           "from_field_value_id": 5,
           "to_field_value_id": 1
-        },
+        }
       ]
     },
     "hierarchy": {
@@ -434,15 +434,17 @@
       },
       "capacity": {
         "field_id": 4
-      },
+      }
     },
     "workflow": {
       "rules": [
         {
           "dates": [
-            "source_field_id": 1,
-            "target_field_id": 2,
-            "comparator": "<"
+            {
+              "source_field_id": 1,
+              "target_field_id": 2,
+              "comparator": "<"
+            }
           ]
         }
       ]
@@ -548,8 +550,8 @@
       },
       "capacity": {
         "field_id": 4
-      },
-    }
+      }
+    },
     "hierarchy": {
       "parentTrackerId": 2,
       "childrenTrackerId": [
@@ -623,8 +625,9 @@
       },
       "initial_effort": {
         "field_id": 2
-      },
-    }"hierarchy": {
+      }
+    },
+    "hierarchy": {
       "parentTrackerId": 5
     },
     "has_cardwall": false

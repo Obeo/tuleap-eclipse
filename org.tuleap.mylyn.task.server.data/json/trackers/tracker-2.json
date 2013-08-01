@@ -75,15 +75,17 @@
     },
     "capacity": {
       "field_id": 4
-    },
+    }
   },
   "workflow": {
     "rules": [
       {
         "dates": [
-          "source_field_id": 1,
-          "target_field_id": 2,
-          "comparator": "<"
+          {
+            "source_field_id": 1,
+            "target_field_id": 2,
+            "comparator": "<"
+          }
         ]
       }
     ]

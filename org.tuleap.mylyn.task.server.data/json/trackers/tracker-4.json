@@ -63,8 +63,9 @@
     },
     "initial_effort": {
       "field_id": 2
-    },
-  }"hierarchy": {
+    }
+  },
+  "hierarchy": {
     "parentTrackerId": 5
   },
   "has_cardwall": false
