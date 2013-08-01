@@ -62,8 +62,13 @@ app.get('/api/v3.14/projects', projects.list);
 app.options('/api/v3.14/projects/:projectId', projects.options);
 app.get('/api/v3.14/projects/:projectId', projects.get);
 
-//app.options('/api/v3.14/projects/:projectId/plannings', projects.optionsListPlannings);
-//app.get('/api/v3.14/projects/:projectId/plannings', projects.listPlannings);
+// Trackers
+var trackers = require('./controllers/trackers.js');
+app.options('/api/v3.14/projects/:projectId/trackers', trackers.optionsList);
+app.get('/api/v3.14/projects/:projectId/trackers', trackers.list);
+
+app.options('/api/v3.14/trackers/:trackerId', trackers.options);
+app.get('/api/v3.14/trackers/:trackerId', trackers.get);
 
 // Launch the server
 app.listen(3001);
