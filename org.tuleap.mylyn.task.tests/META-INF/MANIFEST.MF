@@ -27,5 +27,4 @@ Require-Bundle: org.junit,
 Export-Package: org.tuleap.mylyn.task.tests;x-internal:=true,
  org.tuleap.mylyn.task.tests.client;x-internal:=true,
  org.tuleap.mylyn.task.tests.mocks;x-internal:=true,
- org.tuleap.mylyn.task.tests.support;x-internal:=true,
- org.tuleap.mylyn.task.tests.ui;x-internal:=true
+ org.tuleap.mylyn.task.tests.support;x-internal:=true
