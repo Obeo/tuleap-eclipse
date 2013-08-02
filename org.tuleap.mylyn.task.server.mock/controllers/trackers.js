@@ -92,10 +92,10 @@ exports.list = function (req, res) {
   res.header('X-PAGINATION-SIZE', '6');
 
   var response = undefined;
-  if (req.params.projectId === '3' && (req.headers['X-PAGINATION-OFFSET'] === '0' || req.headers['X-PAGINATION-OFFSET'] === undefined)) {
+  if (req.params.projectId === '3' && (req.headers['x-pagination-offset'] === '0' || req.headers['x-pagination-offset'] === undefined)) {
   	response = trackersPart1;
-  } else if (req.params.projectId === '3' && req.headers['X-PAGINATION-OFFSET'] === '5') {
-  	response = trackers_part_2;
+  } else if (req.params.projectId === '3' && req.headers['x-pagination-offset'] === '5') {
+  	response = trackersPart2;
   } else {
   	response = error404;
   }

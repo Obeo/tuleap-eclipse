@@ -25,6 +25,11 @@ app.all('/*', function (req, res, next) {
 	res.header('Accept-Charset', 'utf-8');
 	res.header('Accept', 'application/json');
 	res.header('Content-Type', 'application/json, chartset=utf-8');
+
+  // Log the headers of the request
+  console.log(req.headers);
+  console.log(req.body);
+
   next();
 });
 
