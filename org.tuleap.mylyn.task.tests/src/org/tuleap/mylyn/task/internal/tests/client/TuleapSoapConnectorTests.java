@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.tests.client;
+package org.tuleap.mylyn.task.internal.tests.client;
 
 import java.net.MalformedURLException;
 import java.rmi.RemoteException;
@@ -33,12 +33,12 @@ import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.FieldValue;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerField;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerFieldBindValue;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerReport;
-import org.tuleap.mylyn.task.tests.mocks.MockedAbstractWebLocation;
-import org.tuleap.mylyn.task.tests.mocks.MockedArtifact;
-import org.tuleap.mylyn.task.tests.mocks.MockedCodendiAPIPortType;
-import org.tuleap.mylyn.task.tests.mocks.MockedTracker;
-import org.tuleap.mylyn.task.tests.mocks.MockedTuleapTrackerV5APIPortType;
-import org.tuleap.mylyn.task.tests.mocks.MockedUserInfo;
+import org.tuleap.mylyn.task.internal.tests.mocks.MockedAbstractWebLocation;
+import org.tuleap.mylyn.task.internal.tests.mocks.MockedArtifact;
+import org.tuleap.mylyn.task.internal.tests.mocks.MockedCodendiAPIPortType;
+import org.tuleap.mylyn.task.internal.tests.mocks.MockedTracker;
+import org.tuleap.mylyn.task.internal.tests.mocks.MockedTuleapTrackerV5APIPortType;
+import org.tuleap.mylyn.task.internal.tests.mocks.MockedUserInfo;
 
 /**
  * The tests class for the Tuleap SOAP connector.

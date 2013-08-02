@@ -8,12 +8,12 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.tests.validator;
+package org.tuleap.mylyn.task.internal.tests.validator;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.tuleap.mylyn.task.internal.tests.AbstractTuleapTests;
 import org.tuleap.mylyn.task.internal.ui.repository.TuleapValidator;
-import org.tuleap.mylyn.task.tests.AbstractTuleapTests;
 
 /**
  * This test class will be used to validate the settings of a task repository.

@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.tests;
+package org.tuleap.mylyn.task.internal.tests;
 
 import java.util.Set;
 
@@ -30,7 +30,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tests.util.TestFixture;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapClient;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
-import org.tuleap.mylyn.task.tests.support.TuleapFixture;
+import org.tuleap.mylyn.task.internal.tests.support.TuleapFixture;
 
 /**
  * Utility parent class for all Mylyn Tuleap unit tests.

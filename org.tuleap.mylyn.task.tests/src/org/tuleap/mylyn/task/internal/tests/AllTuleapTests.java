@@ -8,14 +8,14 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.tests;
+package org.tuleap.mylyn.task.internal.tests;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
-import org.tuleap.mylyn.task.tests.support.TuleapFixture;
+import org.tuleap.mylyn.task.internal.tests.support.TuleapFixture;
 
 /**
  * This class should be used to launch all Tuleap unit tests.

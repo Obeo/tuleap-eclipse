@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.tests.support;
+package org.tuleap.mylyn.task.internal.tests.support;
 
 import java.io.File;
 import java.io.IOException;

@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.tests.client;
+package org.tuleap.mylyn.task.internal.tests.client;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -51,8 +51,8 @@ import org.tuleap.mylyn.task.internal.core.repository.TuleapAttributeMapper;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapTaskDataHandler;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapTaskMapping;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
-import org.tuleap.mylyn.task.tests.mocks.MockedTuleapClient;
-import org.tuleap.mylyn.task.tests.mocks.MockedTuleapRepositoryConnector;
+import org.tuleap.mylyn.task.internal.tests.mocks.MockedTuleapClient;
+import org.tuleap.mylyn.task.internal.tests.mocks.MockedTuleapRepositoryConnector;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;

@@ -8,17 +8,17 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.tests;
+package org.tuleap.mylyn.task.internal.tests;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
-import org.tuleap.mylyn.task.tests.client.TuleapArtifactTests;
-import org.tuleap.mylyn.task.tests.client.TuleapRepositoryConnectorTests;
-import org.tuleap.mylyn.task.tests.client.TuleapTaskDataHandlerTests;
-import org.tuleap.mylyn.task.tests.client.TuleapUtilTests;
-import org.tuleap.mylyn.task.tests.support.TuleapFixture;
+import org.tuleap.mylyn.task.internal.tests.client.TuleapArtifactTests;
+import org.tuleap.mylyn.task.internal.tests.client.TuleapRepositoryConnectorTests;
+import org.tuleap.mylyn.task.internal.tests.client.TuleapTaskDataHandlerTests;
+import org.tuleap.mylyn.task.internal.tests.client.TuleapUtilTests;
+import org.tuleap.mylyn.task.internal.tests.support.TuleapFixture;
 
 /**
  * The stand alone unit tests suite.

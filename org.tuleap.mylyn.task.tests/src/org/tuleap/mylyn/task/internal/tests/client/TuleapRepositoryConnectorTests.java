@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.tests.client;
+package org.tuleap.mylyn.task.internal.tests.client;
 
 import junit.framework.TestCase;
 

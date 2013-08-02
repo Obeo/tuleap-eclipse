@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.tests.mocks;
+package org.tuleap.mylyn.task.internal.tests.mocks;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;

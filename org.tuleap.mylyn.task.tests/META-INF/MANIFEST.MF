@@ -26,9 +26,9 @@ Require-Bundle: org.junit,
  org.hamcrest;bundle-version="1.1.0",
  org.tuleap.mylyn.task.server.data;bundle-version="2.0.0",
  com.google.gson;bundle-version="2.1.0"
-Export-Package: org.tuleap.mylyn.task.internal.tests.parser;x-internal:=true,
- org.tuleap.mylyn.task.tests;x-internal:=true,
- org.tuleap.mylyn.task.tests.client;x-internal:=true,
- org.tuleap.mylyn.task.tests.mocks;x-internal:=true,
- org.tuleap.mylyn.task.tests.support;x-internal:=true,
- org.tuleap.mylyn.task.tests.validator;x-internal:=true
+Export-Package: org.tuleap.mylyn.task.internal.tests;x-internal:=true,
+ org.tuleap.mylyn.task.internal.tests.client;x-internal:=true,
+ org.tuleap.mylyn.task.internal.tests.mocks;x-internal:=true,
+ org.tuleap.mylyn.task.internal.tests.parser;x-internal:=true,
+ org.tuleap.mylyn.task.internal.tests.support;x-internal:=true,
+ org.tuleap.mylyn.task.internal.tests.validator;x-internal:=true
