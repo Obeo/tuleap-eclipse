@@ -25,6 +25,7 @@
   <modules>
     <module>../org.tuleap.mylyn.task.core</module>
     <module>../org.tuleap.mylyn.task.ui</module>
+    <module>../org.tuleap.mylyn.task.server.data</module>
     <module>../org.tuleap.mylyn.task.tests</module>
     <module>../org.tuleap.mylyn.task.doc</module>
     <module>../org.tuleap.mylyn.task-feature</module>
