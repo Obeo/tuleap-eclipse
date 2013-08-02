@@ -23,8 +23,12 @@ Require-Bundle: org.junit,
  org.apache.httpcomponents.httpcore;bundle-version="4.1.4",
  org.eclipse.mylyn.commons.core;bundle-version="3.9.0",
  javax.xml.rpc;bundle-version="1.1.0",
- org.hamcrest;bundle-version="1.1.0"
-Export-Package: org.tuleap.mylyn.task.tests;x-internal:=true,
+ org.hamcrest;bundle-version="1.1.0",
+ org.tuleap.mylyn.task.server.data;bundle-version="2.0.0",
+ com.google.gson;bundle-version="2.1.0"
+Export-Package: org.tuleap.mylyn.task.internal.tests.parser;x-internal:=true,
+ org.tuleap.mylyn.task.tests;x-internal:=true,
  org.tuleap.mylyn.task.tests.client;x-internal:=true,
  org.tuleap.mylyn.task.tests.mocks;x-internal:=true,
- org.tuleap.mylyn.task.tests.support;x-internal:=true
+ org.tuleap.mylyn.task.tests.support;x-internal:=true,
+ org.tuleap.mylyn.task.tests.validator;x-internal:=true
