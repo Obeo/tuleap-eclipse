@@ -27,8 +27,7 @@
       "childrenTrackerId": [
         2
       ]
-    },
-    "has_cardwall": true
+    }
   },
   {
     "id": 1,
@@ -354,8 +353,7 @@
     },
     "hierarchy": {
       "parentTrackerId": 5
-    },
-    "has_cardwall": false
+    }
   },
   {
     "id": 2,
@@ -454,8 +452,7 @@
       "childrenTrackerId": [
         3
       ]
-    },
-    "has_cardwall": true
+    }
   },
   {
     "id": 3,
@@ -557,8 +554,7 @@
       "childrenTrackerId": [
         5
       ]
-    },
-    "has_cardwall": true
+    }
   },
   {
     "id": 4,
@@ -629,7 +625,6 @@
     },
     "hierarchy": {
       "parentTrackerId": 5
-    },
-    "has_cardwall": false
+    }
   }
 ]

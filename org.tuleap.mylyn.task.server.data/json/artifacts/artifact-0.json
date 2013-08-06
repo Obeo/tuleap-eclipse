@@ -1,0 +1,133 @@
+{
+  "id": 0,
+  "kind": "bugs",
+  "url": "localhost:3001/api/v3.14/artifacts/0",
+  "milestone_url": "localhost:3001/api/v3.14/milestones/0",
+  "html_url": "localhost:3001/plugins/trackers/?tracker=1?aid=0",
+  "tracker_id": 1,
+  "submitted_by": 1,
+  "submitted_on": 123456798,
+  "last_updated_on": 12358979,
+  "values": [
+    {
+      "field_id": 0,
+      "field_label": "title",
+      "field_value": {
+        "value": "First bug"
+    },
+    {
+      "field_id": 1,
+      "field_label": "description",
+      "field_value": {
+        "value": "The description of the first bug"
+    },
+    {
+      "field_id": 2,
+      "field_label": "Remaining Effort",
+      "field_value": {
+        "value": 21,
+      }
+    },
+    {
+      "field_id": 3,
+      "field_label": "Initial Effort",
+      "field_value": {
+        "value": 45
+      }
+    },
+    {
+      "field_id": 4,
+      "field_label": "Difficulty",
+      "field_value": {
+        "value": 18.5
+      }
+    },
+    {
+      "field_id": 5,
+      "field_label": "Component",
+      "field_value": {
+        "bind_values": [
+          "bind_value_id": 3,
+          "bind_value_label": "Database"
+        ]
+      }
+    },
+    {
+      "field_id": 6,
+      "field_label": "Tests to perform",
+      "field_value": {
+        "bind_values": [
+          "bind_value_id": 0,
+          "bind_value_label": "Unit Tests"
+        ]
+      }
+    },
+    {
+      "field_id": 7,
+      "field_label": "Tags",
+      "field_value": {
+        "value": "list,of,tags,for,the,issue",
+      }
+    },
+    {
+      "field_id": 8,
+      "field_label": "Related Artifacts",
+      "field_value": {
+        "value": "",
+      }
+    },
+    {
+      "field_id": 9,
+      "field_label": "Attachments",
+      "field_value": {
+        "files_description": [
+          "file_id": 0,
+          "submitted_by": 1,
+          "description": "First attachment",
+          "name": "test.txt",
+          "size": 0,
+          "type": "mime/txt",
+          "action": ""
+        ]
+      }
+    },
+    {
+      "field_id": 10,
+      "field_label": "Assigned To",
+      "field_value": {
+        "bind_values": [
+          "bind_value_id": 15,
+          "bind_value_label": "John Doe 15"
+        ]
+      }
+    },
+    {
+      "field_id": 11,
+      "field_label": "Status",
+      "field_value": {
+        "bind_values": [
+          "bind_value_id": 0,
+          "bind_value_label": "NEW"
+        ]
+      }
+    },
+    {
+      "field_id": 12,
+      "field_label": "Resolution",
+      "field_value": {
+        "bind_values": [
+          "bind_value_id": 100,
+          "bind_value_label": ""
+        ]
+      }
+    }
+  ],
+  "comments": [
+    {
+      "submitted_by": 1,
+      "submitted_on": 12358979,
+      "email": "johndoe1@example.com",
+      "body": "First comment"
+    }
+  ]
+}

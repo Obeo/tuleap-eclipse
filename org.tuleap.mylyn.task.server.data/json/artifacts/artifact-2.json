@@ -1,0 +1,43 @@
+{
+  "id": 2,
+  "kind": "tests",
+  "url": "localhost:3001/api/v3.14/artifacts/2",
+  "milestone_url": "localhost:3001/api/v3.14/milestones/2",
+  "html_url": "localhost:3001/plugins/trackers/?tracker=4?aid=2",
+  "tracker_id": 4,
+  "submitted_by": 1,
+  "submitted_on": 123456798,
+  "last_updated_on": 12358979,
+  "values": [
+    {
+      "field_id": 0,
+      "field_label": "title",
+      "field_value": {
+        "value": "Setup a new testing strategy for the database."
+    },
+    {
+      "field_id": 1,
+      "field_label": "Status",
+      "field_value": {
+        "bind_values": [
+          "bind_value_id": 100,
+          "bind_value_label": ""
+        ]
+      }
+    },
+    {
+      "field_id": 3,
+      "field_label": "initial-effort",
+      "field_value": {
+        "value": "11"
+    }
+  ],
+  "comments": [
+    {
+      "submitted_by": 1,
+      "submitted_on": 12358979,
+      "email": "johndoe1@example.com",
+      "body": "First comment"
+    }
+  ]
+}
