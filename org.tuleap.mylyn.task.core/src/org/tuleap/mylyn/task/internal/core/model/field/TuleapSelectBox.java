@@ -105,12 +105,13 @@ public class TuleapSelectBox extends AbstractTuleapSelectBox {
 		if (item != null) {
 			List<Integer> accessibleStates = getWorkflow().accessibleStates(item.getIdentifier());
 			attribute.clearOptions();
-			attribute.putOption(value, value);
+			attribute.putOption(String.valueOf(item.getIdentifier()), item.getLabel());
 
 			for (Integer accessibleState : accessibleStates) {
 				for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
 					if (accessibleState.intValue() == tuleapSelectBoxItem.getIdentifier()) {
-						attribute.putOption(tuleapSelectBoxItem.getLabel(), tuleapSelectBoxItem.getLabel());
+						attribute.putOption(String.valueOf(tuleapSelectBoxItem.getIdentifier()),
+								tuleapSelectBoxItem.getLabel());
 					}
 				}
 			}
@@ -123,7 +124,8 @@ public class TuleapSelectBox extends AbstractTuleapSelectBox {
 			for (Integer accessibleState : accessibleStates) {
 				for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
 					if (accessibleState.intValue() == tuleapSelectBoxItem.getIdentifier()) {
-						attribute.putOption(tuleapSelectBoxItem.getLabel(), tuleapSelectBoxItem.getLabel());
+						attribute.putOption(String.valueOf(tuleapSelectBoxItem.getIdentifier()),
+								tuleapSelectBoxItem.getLabel());
 					}
 				}
 			}
