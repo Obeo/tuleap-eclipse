@@ -24,6 +24,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.Platform;
@@ -33,6 +34,7 @@ import org.osgi.framework.Bundle;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapProjectConfigurationDeserializer;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
@@ -209,6 +211,8 @@ public class TuleapProjectConfigurationDeserializerTests {
 		System.out.println(project0);
 		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project0);
 		assertNotNull(tuleapProjectConfiguration);
+		assertEquals(0, tuleapProjectConfiguration.getIdentifier());
+		assertEquals("Project 0", tuleapProjectConfiguration.getName()); //$NON-NLS-1$
 	}
 
 	/**
@@ -219,6 +223,8 @@ public class TuleapProjectConfigurationDeserializerTests {
 		System.out.println(project1);
 		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project1);
 		assertNotNull(tuleapProjectConfiguration);
+		assertEquals(1, tuleapProjectConfiguration.getIdentifier());
+		assertEquals("Project 1", tuleapProjectConfiguration.getName()); //$NON-NLS-1$
 	}
 
 	/**
@@ -229,6 +235,8 @@ public class TuleapProjectConfigurationDeserializerTests {
 		System.out.println(project2);
 		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project2);
 		assertNotNull(tuleapProjectConfiguration);
+		assertEquals(2, tuleapProjectConfiguration.getIdentifier());
+		assertEquals("Project 2", tuleapProjectConfiguration.getName()); //$NON-NLS-1$
 	}
 
 	/**
@@ -239,6 +247,8 @@ public class TuleapProjectConfigurationDeserializerTests {
 		System.out.println(project3);
 		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project3);
 		assertNotNull(tuleapProjectConfiguration);
+		assertEquals(3, tuleapProjectConfiguration.getIdentifier());
+		assertEquals("Project 3", tuleapProjectConfiguration.getName()); //$NON-NLS-1$
 	}
 
 	/**
@@ -249,6 +259,8 @@ public class TuleapProjectConfigurationDeserializerTests {
 		System.out.println(project4);
 		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project4);
 		assertNotNull(tuleapProjectConfiguration);
+		assertEquals(4, tuleapProjectConfiguration.getIdentifier());
+		assertEquals("Project 4", tuleapProjectConfiguration.getName()); //$NON-NLS-1$
 	}
 
 	/**
@@ -274,8 +286,32 @@ public class TuleapProjectConfigurationDeserializerTests {
 			projectsConfiguration.add(tuleapProjectConfiguration);
 		}
 
-		for (TuleapProjectConfiguration tuleapProjectConfiguration : projectsConfiguration) {
-			assertNotNull(tuleapProjectConfiguration);
-		}
+		Iterator<TuleapProjectConfiguration> iterator = projectsConfiguration.iterator();
+
+		TuleapProjectConfiguration firstProjectConfiguration = iterator.next();
+
+		assertEquals(0, firstProjectConfiguration.getIdentifier());
+		assertEquals("Project 0", firstProjectConfiguration.getName()); //$NON-NLS-1$
+
+		TuleapProjectConfiguration secondProjectConfiguration = iterator.next();
+
+		assertEquals(1, secondProjectConfiguration.getIdentifier());
+		assertEquals("Project 1", secondProjectConfiguration.getName()); //$NON-NLS-1$
+
+		TuleapProjectConfiguration thirdProjectConfiguration = iterator.next();
+
+		assertEquals(2, thirdProjectConfiguration.getIdentifier());
+		assertEquals("Project 2", thirdProjectConfiguration.getName()); //$NON-NLS-1$
+
+		TuleapProjectConfiguration fourthProjectConfiguration = iterator.next();
+
+		assertEquals(3, fourthProjectConfiguration.getIdentifier());
+		assertEquals("Project 3", fourthProjectConfiguration.getName()); //$NON-NLS-1$
+
+		TuleapProjectConfiguration fifthProjectConfiguration = iterator.next();
+
+		assertEquals(4, fifthProjectConfiguration.getIdentifier());
+		assertEquals("Project 4", fifthProjectConfiguration.getName()); //$NON-NLS-1$
+
 	}
 }

@@ -13,6 +13,7 @@ package org.tuleap.mylyn.task.internal.core.parser;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
@@ -34,7 +35,13 @@ public class TuleapProjectConfigurationDeserializer implements JsonDeserializer<
 	 */
 	public TuleapProjectConfiguration deserialize(JsonElement arg0, Type arg1, JsonDeserializationContext arg2)
 			throws JsonParseException {
-		return null;
+
+		JsonObject jsonObject = arg0.getAsJsonObject();
+		TuleapProjectConfiguration tuleapProjectConfiguration = new TuleapProjectConfiguration(jsonObject
+				.get("name").getAsString(), jsonObject.get("id") //$NON-NLS-1$//$NON-NLS-2$
+				.getAsInt());
+
+		return tuleapProjectConfiguration;
 	}
 
 }
