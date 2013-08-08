@@ -45,5 +45,4 @@ public class TuleapAttributeMapper extends TaskAttributeMapper {
 	public static boolean isInternalAttribute(TaskAttribute taskAttribute) {
 		return false;
 	}
-
 }

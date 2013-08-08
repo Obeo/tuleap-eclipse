@@ -35,7 +35,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapClient;
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
@@ -116,12 +115,7 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 		TuleapTrackerConfiguration configuration = this.getTrackerConfigurationFromTaskKey(repository, task);
 
 		if (configuration != null) {
-			List<AbstractTuleapField> fields = configuration.getFields();
-			for (AbstractTuleapField abstractTuleapField : fields) {
-				if (abstractTuleapField instanceof TuleapFileUpload) {
-					return true;
-				}
-			}
+			hasFileUploadField = configuration.getAttachmentField() != null;
 		}
 
 		return hasFileUploadField;
@@ -274,49 +268,32 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 			configuration = this.getTrackerConfigurationFromTaskKey(repository, task);
 		}
 
-		// Field name (for context, let's take the first one available)
+		// Field name and label (for context, let's take the first one available) and description
 		String fieldname = null;
+		String fieldlabel = null;
+		String description = ""; //$NON-NLS-1$
 		if (attachmentAttribute != null) {
-			TaskAttribute attribute = attachmentAttribute
+			TaskAttribute nameAttribute = attachmentAttribute
 					.getAttribute(ITuleapConstants.ATTACHMENT_FIELD_NAME);
-			fieldname = attribute.getValue();
+			fieldname = nameAttribute.getValue();
+			TaskAttribute labelAttribute = attachmentAttribute
+					.getAttribute(ITuleapConstants.ATTACHMENT_FIELD_LABEL);
+			fieldlabel = labelAttribute.getValue();
+			TaskAttribute descriptionAttribute = attachmentAttribute
+					.getAttribute(TaskAttribute.ATTACHMENT_DESCRIPTION);
+			description = descriptionAttribute.getValue();
 		} else {
 			// Let's find the first valid value for the attachment field name
 			if (configuration != null) {
-				List<AbstractTuleapField> fields = configuration.getFields();
-				for (AbstractTuleapField abstractTuleapField : fields) {
-					if (abstractTuleapField instanceof TuleapFileUpload) {
-						fieldname = ((TuleapFileUpload)abstractTuleapField).getName();
-						break;
-					}
+				TuleapFileUpload fileUploadField = configuration.getAttachmentField();
+				if (fileUploadField != null) {
+					fieldname = fileUploadField.getName();
+					fieldlabel = fileUploadField.getLabel();
 				}
 			}
-		}
-
-		// Field label (for context, let's take the first one available)
-		String fieldlabel = null;
-		if (attachmentAttribute != null) {
-			TaskAttribute attribute = attachmentAttribute
-					.getAttribute(ITuleapConstants.ATTACHMENT_FIELD_LABEL);
-			fieldlabel = attribute.getValue();
-		} else if (configuration != null) {
-			// Let's find the first valid value for the attachment field label
-			List<AbstractTuleapField> fields = configuration.getFields();
-			for (AbstractTuleapField abstractTuleapField : fields) {
-				if (abstractTuleapField instanceof TuleapFileUpload) {
-					fieldlabel = ((TuleapFileUpload)abstractTuleapField).getLabel();
-					break;
-				}
+			if (CONTEXT_FILENAME.equals(source.getName())) {
+				description = CONTEXT_DESCRIPTION;
 			}
-		}
-
-		// Description
-		String description = ""; //$NON-NLS-1$
-		if (attachmentAttribute != null) {
-			TaskAttribute attribute = attachmentAttribute.getAttribute(TaskAttribute.ATTACHMENT_DESCRIPTION);
-			description = attribute.getValue();
-		} else if (CONTEXT_FILENAME.equals(source.getName())) {
-			description = CONTEXT_DESCRIPTION;
 		}
 
 		int artifactId = Integer.valueOf(task.getTaskId()).intValue();

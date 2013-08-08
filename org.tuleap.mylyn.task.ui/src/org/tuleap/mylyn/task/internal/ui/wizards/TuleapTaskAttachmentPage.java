@@ -11,6 +11,7 @@
 package org.tuleap.mylyn.task.internal.ui.wizards;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -150,7 +151,7 @@ public class TuleapTaskAttachmentPage extends TaskAttachmentPage {
 
 			TuleapTrackerConfiguration trackerConfiguration = repositoryConfiguration
 					.getTrackerConfiguration(trackerId);
-			List<AbstractTuleapField> fields = trackerConfiguration.getFields();
+			Collection<AbstractTuleapField> fields = trackerConfiguration.getFields();
 			for (AbstractTuleapField abstractTuleapField : fields) {
 				if (abstractTuleapField instanceof TuleapFileUpload) {
 					attachmentFieldsName.add(abstractTuleapField.getName());

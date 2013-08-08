@@ -16,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -392,7 +393,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 */
 	private boolean isTaskCompleted(String currentStatus, TuleapTrackerConfiguration configuration) {
 		if (configuration != null) {
-			List<AbstractTuleapField> fields = configuration.getFields();
+			Collection<AbstractTuleapField> fields = configuration.getFields();
 			for (AbstractTuleapField abstractTuleapField : fields) {
 				if (abstractTuleapField instanceof TuleapSelectBox
 						&& ((TuleapSelectBox)abstractTuleapField).isSemanticStatus()) {

@@ -10,24 +10,25 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.data;
 
+import java.util.Collection;
+import java.util.Date;
 import java.util.Set;
 
+import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
+import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.agile.core.data.AbstractTaskMapper;
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapArtifactComment;
 import org.tuleap.mylyn.task.internal.core.model.TuleapAttachment;
+import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapArtifactLink;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapDate;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapFileUpload;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapFloat;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapInteger;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapMultiSelectBox;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapOpenList;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapText;
-import org.tuleap.mylyn.task.internal.core.model.field.dynamic.TuleapComputedValue;
+import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
+import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
+import org.tuleap.mylyn.task.internal.core.util.TuleapUtil;
 
 /**
  * The Tuleap Task Mapper will be used to manipulate the task data model from Mylyn with a higher level of
@@ -48,240 +49,174 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	public static final int INVALID_PROJECT_ID = -1;
 
 	/**
+	 * The identifier of the group id task attribute.
+	 */
+	public static final String GROUP_ID = "tuleap_task_data_group_id"; //$NON-NLS-1$
+
+	/**
+	 * The identifier of the tracker id task attribute.
+	 */
+	public static final String TRACKER_ID = "tuleap_task_data_tracker_id"; //$NON-NLS-1$
+
+	/**
+	 * The identifier of the project name task attribute.
+	 */
+	public static final String PROJECT_ID = "tuleap_task_data_project_id"; //$NON-NLS-1$
+
+	/**
+	 * The identifier of the project name task attribute.
+	 */
+	public static final String PROJECT_NAME = "tuleap_task_data_project_name"; //$NON-NLS-1$
+
+	/**
+	 * The identifier of the tracker name task attribute.
+	 */
+	public static final String TRACKER_NAME = "tuleap_task_data_tracker_name"; //$NON-NLS-1$
+
+	/**
+	 * The tracker configuration.
+	 */
+	protected final TuleapTrackerConfiguration trackerConfiguration;
+
+	/**
 	 * The constructor.
 	 * 
 	 * @param taskData
 	 *            The task data
-	 * @param createNonExistingAttributes
-	 *            <code>true</code> to allow the creation of non existing attributes, <code>false</code>
-	 *            otherwise.
+	 * @param tuleapTrackerConfiguration
+	 *            The tracker configuration.
 	 */
-	public TuleapTaskMapper(TaskData taskData, boolean createNonExistingAttributes) {
-		super(taskData, createNonExistingAttributes);
+	public TuleapTaskMapper(TaskData taskData, TuleapTrackerConfiguration tuleapTrackerConfiguration) {
+		super(taskData);
+		this.trackerConfiguration = tuleapTrackerConfiguration;
 	}
 
 	/**
 	 * Initialize an empty task data from the given Tuleap tracker configuration.
-	 * 
-	 * @param tuleapTrackerConfiguration
-	 *            The configuration of the tuleap tracker.
 	 */
-	public void initializeEmptyTaskData(TuleapTrackerConfiguration tuleapTrackerConfiguration) {
+	public void initializeEmptyTaskData() {
+		createTaskKindTaskAttribute();
+
+		// The group id and the tracker id
+		setProjectId(trackerConfiguration.getTuleapProjectConfiguration().getIdentifier());
+		// setProjectName(trackerConfiguration.getTuleapProjectConfiguration().getName());
+		setTrackerId(trackerConfiguration.getTrackerId());
+		// setTrackerName(trackerConfiguration.getName());
+
+		createCreationDateTaskAttribute();
+		createLastUpdateDateTaskAttribute();
+		createCompletionDateTaskAttribute();
+		createNewCommentTaskAttribute();
+		createSubmittedByTaskAttribute();
+
+		// Default attributes
+		TaskAttribute root = taskData.getRoot();
+		Collection<AbstractTuleapField> fields = trackerConfiguration.getFields();
+		for (AbstractTuleapField abstractTuleapField : fields) {
+			if (abstractTuleapField.needsTaskAttributeForInitialization()) {
+				abstractTuleapField.createTaskAttribute(root);
+			}
+		}
 		// call all the other private method (createXXXX)
 		// keep an eye on the permissions -> read only in the metadata
-		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * Creates the task attribute representing the creation date.
 	 */
 	private void createCreationDateTaskAttribute() {
-		throw new UnsupportedOperationException();
+		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.DATE_CREATION);
+		TaskAttributeMetaData metaData = attribute.getMetaData();
+		metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.CreationDate")); //$NON-NLS-1$
+		metaData.setType(TaskAttribute.TYPE_DATE);
 	}
 
 	/**
 	 * Creates the task attribute representing the last update date.
 	 */
 	private void createLastUpdateDateTaskAttribute() {
-		throw new UnsupportedOperationException();
+		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.DATE_MODIFICATION);
+		TaskAttributeMetaData metaData = attribute.getMetaData();
+		metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.LastModificationDate")); //$NON-NLS-1$
+		metaData.setType(TaskAttribute.TYPE_DATE);
 	}
 
 	/**
 	 * Creates the task attribute representing the author of the task.
 	 */
 	private void createSubmittedByTaskAttribute() {
-		throw new UnsupportedOperationException();
+		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.USER_REPORTER);
+		TaskAttributeMetaData metaData = attribute.getMetaData();
+		metaData.setType(TaskAttribute.TYPE_PERSON);
+		metaData.setReadOnly(true);
 	}
 
 	/**
 	 * Creates the task attribute representing the completion date.
 	 */
 	private void createCompletionDateTaskAttribute() {
-		throw new UnsupportedOperationException();
+		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.DATE_COMPLETION);
+		TaskAttributeMetaData metaData = attribute.getMetaData();
+		metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.CompletionDate")); //$NON-NLS-1$
+		metaData.setType(TaskAttribute.TYPE_DATE);
 	}
 
 	/**
 	 * Creates the task attribute representing the new comment.
+	 * 
+	 * @return the newly created task attribute
 	 */
-	private void createNewCommentTaskAttribute() {
-		throw new UnsupportedOperationException();
+	private TaskAttribute createNewCommentTaskAttribute() {
+		TaskAttribute attribute = taskData.getRoot().createAttribute(TaskAttribute.COMMENT_NEW);
+		TaskAttributeMetaData metaData = attribute.getMetaData();
+		metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.NewComment")); //$NON-NLS-1$
+		metaData.setType(TaskAttribute.TYPE_LONG_RICH_TEXT);
+		return attribute;
 	}
 
 	/**
 	 * Creates the task attribute representing the task kind.
 	 */
 	private void createTaskKindTaskAttribute() {
-		throw new UnsupportedOperationException();
+		TaskAttribute attribute = taskData.getRoot().createAttribute(TaskAttribute.TASK_KIND);
+		String name = trackerConfiguration.getName();
+		if (name != null) {
+			attribute.setValue(name);
+		} else {
+			attribute.setValue(TuleapMylynTasksMessages
+					.getString("TuleapTaskDataHandler.DefaultConfigurationName")); //$NON-NLS-1$
+		}
 	}
 
 	/**
-	 * Creates the task attribute representing the summary.
-	 */
-	private void createSummaryTaskAttribute() {
-		// String
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Creates the task attribute representing the status.
-	 */
-	private void createStatusTaskAttribute() {
-		// SB and MSB + workflow
-		// factorize code between create status / assignedto / select box, checkbox and multi select box
-		// status section etc + a mylyn operation task attribute to modify the real status field
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Creates the task attribute representing the person to which the task is assigned.
-	 */
-	private void createAssignedToTaskAttribute() {
-		// SB and MSB + workflow
-		// factorize code between create status / assignedto / select box, checkbox and multi select box
-		// people section etc
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Creates the task attribute representing the initial effort of the task.
-	 */
-	private void createInitialEffort() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Creates the task attribute representing the cross references of the task.
-	 */
-	private void createCrossReferencesTaskAttribute() {
-		// read only!
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Creates the task attribute representing the string field.
+	 * Add an attachment.
 	 * 
-	 * @param tuleapString
-	 *            The string field
+	 * @param tuleapFieldName
+	 *            The tuleap field name
+	 * @param tuleapAttachment
+	 *            The attachment
 	 */
-	private void createStringTaskAttribute(TuleapString tuleapString) {
-		throw new UnsupportedOperationException();
-	}
+	public void addAttachment(String tuleapFieldName, TuleapAttachment tuleapAttachment) {
+		TaskAttribute attribute = taskData.getRoot().createAttribute(
+				TaskAttribute.PREFIX_ATTACHMENT + tuleapFieldName + "---" + tuleapAttachment.getId()); //$NON-NLS-1$
+		attribute.getMetaData().defaults().setType(TaskAttribute.TYPE_ATTACHMENT);
+		TaskAttachmentMapper taskAttachment = TaskAttachmentMapper.createFrom(attribute);
+		taskAttachment.setAttachmentId(tuleapAttachment.getId());
 
-	/**
-	 * Creates the task attribute representing the text field.
-	 * 
-	 * @param tuleapText
-	 *            The text field
-	 */
-	private void createTextTaskAttribute(TuleapText tuleapText) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Creates the task attribute representing the selectbox field.
-	 * 
-	 * @param tuleapSelectBox
-	 *            The selectbox field
-	 */
-	private void createSelectBoxTaskAttribute(TuleapSelectBox tuleapSelectBox) {
-		// workflow -> filter options
-		// factorize code between create status / assignedto / select box, checkbox and multi select box
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Creates the task attribute representing the multi selectbox field.
-	 * 
-	 * @param tuleapMultiSelectBox
-	 *            The multi selectbox field
-	 */
-	private void createMultiSelectBoxTaskAttribute(TuleapMultiSelectBox tuleapMultiSelectBox) {
-		// workflow -> filter options
-		// factorize code between create status / assignedto / select box, checkbox and multi select box
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Creates the task attribute representing the checkbox field.
-	 * 
-	 * @param tuleapMultiSelectBox
-	 *            The checkbox field
-	 */
-	private void createCheckBoxTaskAttribute(TuleapMultiSelectBox tuleapMultiSelectBox) {
-		// Call createMultiSelectBoxTaskAttribute
-		// workflow -> filter options
-		// factorize code between create status / assignedto / select box, checkbox and multi select box
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Creates the task attribute representing the date field.
-	 * 
-	 * @param tuleapDate
-	 *            The date field
-	 */
-	private void createDateTaskAttribute(TuleapDate tuleapDate) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Creates the task attribute representing the file field.
-	 * 
-	 * @param tuleapFile
-	 *            The file field
-	 */
-	private void createFileUploadTaskAttribute(TuleapFileUpload tuleapFile) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Creates the task attribute representing the integer field.
-	 * 
-	 * @param tuleapInteger
-	 *            The integer field
-	 */
-	private void createIntTaskAttribute(TuleapInteger tuleapInteger) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Creates the task attribute representing the float field.
-	 * 
-	 * @param tuleapFloat
-	 *            The float field
-	 */
-	private void createFloatTaskAttribute(TuleapFloat tuleapFloat) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Creates the task attribute representing the open list field.
-	 * 
-	 * @param tuleapOpenList
-	 *            The open list field
-	 */
-	private void createOpenListTaskAttribute(TuleapOpenList tuleapOpenList) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Creates the task attribute representing the artifact link field.
-	 * 
-	 * @param tuleapArtifactLink
-	 *            The artifact link field
-	 */
-	private void createArtifactLinkTaskAttribute(TuleapArtifactLink tuleapArtifactLink) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Creates the task attribute representing the computed value.
-	 * 
-	 * @param tuleapComputedValue
-	 *            The computed value
-	 */
-	private void createComputedValueTaskAttribute(TuleapComputedValue tuleapComputedValue) {
-		// computed value -> read only
+		TuleapPerson person = tuleapAttachment.getPerson();
+		IRepositoryPerson iRepositoryPerson = trackerConfiguration.getPerson(person.getId());
+		if (iRepositoryPerson == null) {
+			iRepositoryPerson = taskData.getAttributeMapper().getTaskRepository().createPerson(
+					person.getEmail());
+			iRepositoryPerson.setName(person.getRealName());
+			trackerConfiguration.registerPerson(iRepositoryPerson);
+		}
+		taskAttachment.setAuthor(iRepositoryPerson);
+		taskAttachment.setFileName(tuleapAttachment.getFilename());
+		taskAttachment.setLength(tuleapAttachment.getSize());
+		taskAttachment.setDescription(tuleapAttachment.getDescription());
+		taskAttachment.setContentType(tuleapAttachment.getContentType());
+		taskAttachment.applyTo(attribute);
 		throw new UnsupportedOperationException();
 	}
 
@@ -293,7 +228,11 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 */
 	public void setTrackerId(int trackerId) {
 		// should not appear in the attribute part so no task attribute type!
-		throw new UnsupportedOperationException();
+		TaskAttribute trackerIdAtt = taskData.getRoot().getMappedAttribute(TRACKER_ID);
+		if (trackerIdAtt == null) {
+			trackerIdAtt = taskData.getRoot().createMappedAttribute(TRACKER_ID);
+		}
+		taskData.getAttributeMapper().setIntegerValue(trackerIdAtt, Integer.valueOf(trackerId));
 	}
 
 	/**
@@ -302,7 +241,11 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 * @return The identifier of the tracker or INVALID_TRACKER otherwise.
 	 */
 	public int getTrackerId() {
-		throw new UnsupportedOperationException();
+		TaskAttribute trackerIdAtt = taskData.getRoot().getMappedAttribute(TRACKER_ID);
+		if (trackerIdAtt == null) {
+			return INVALID_TRACKER_ID;
+		}
+		return taskData.getAttributeMapper().getIntegerValue(trackerIdAtt).intValue();
 	}
 
 	/**
@@ -313,7 +256,11 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 */
 	public void setProjectId(int projectId) {
 		// should not appear in the attribute part so no task attribute type!
-		throw new UnsupportedOperationException();
+		TaskAttribute projectIdAtt = taskData.getRoot().getMappedAttribute(PROJECT_ID);
+		if (projectIdAtt == null) {
+			projectIdAtt = taskData.getRoot().createMappedAttribute(PROJECT_ID);
+		}
+		taskData.getAttributeMapper().setIntegerValue(projectIdAtt, Integer.valueOf(projectId));
 	}
 
 	/**
@@ -322,18 +269,28 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 * @return The identifier of the project
 	 */
 	public int getProjectId() {
-		throw new UnsupportedOperationException();
+		TaskAttribute projectIdAtt = taskData.getRoot().getMappedAttribute(PROJECT_ID);
+		if (projectIdAtt == null) {
+			return INVALID_PROJECT_ID;
+		}
+		return taskData.getAttributeMapper().getIntegerValue(projectIdAtt).intValue();
 	}
 
 	/**
 	 * Sets the identifier of the artifact.
 	 * 
+	 * @param projectName
+	 *            The name of the project
+	 * @param trackerName
+	 *            The name of the tracker
 	 * @param artifactId
 	 *            The identifier of the artifact
 	 */
-	public void setArtifactId(int artifactId) {
+	public void setTaskKey(String projectName, String trackerName, int artifactId) {
 		// task attribute taskkey
-		throw new UnsupportedOperationException();
+		TaskAttribute taskKey = getMappedAttribute(TaskAttribute.TASK_KEY);
+		taskKey.setValue(TuleapUtil.getTaskDataId(projectName, trackerName, artifactId));
+		taskKey.getMetaData().setReadOnly(true);
 	}
 
 	/**
@@ -342,22 +299,50 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 * @return The identifier of the artifact
 	 */
 	public int getArtifactId() {
-		// task attribute taskkey
-		throw new UnsupportedOperationException();
+		return Integer.valueOf(taskData.getTaskId()).intValue();
 	}
 
 	/**
-	 * Sets the url of the task.
+	 * Provides the wrapped task's key.
+	 * 
+	 * @return The task key or null if it cannot be found.
+	 */
+	public String getTaskKey() {
+		TaskAttribute taskKey = getMappedAttribute(TaskAttribute.TASK_KEY);
+		if (taskKey == null) {
+			return null;
+		}
+		return taskKey.getValue();
+	}
+
+	/**
+	 * Sets the url of the wrapped task.
 	 * 
 	 * @param url
 	 *            the url of the task
 	 */
 	public void setUrl(String url) {
-		throw new UnsupportedOperationException();
+		TaskAttribute attribute = getMappedAttribute(TaskAttribute.TASK_URL);
+		if (attribute != null) {
+			taskData.getAttributeMapper().setValue(attribute, url);
+		}
 	}
 
 	/**
-	 * Sets the summary of the task.
+	 * Provides the wrapped task's URL.
+	 * 
+	 * @return The wrapped task's URL
+	 */
+	public String getUrl() {
+		TaskAttribute attribute = getMappedAttribute(TaskAttribute.TASK_URL);
+		if (attribute != null) {
+			return taskData.getAttributeMapper().getValue(attribute);
+		}
+		return null;
+	}
+
+	/**
+	 * Sets the summary of the wrapped task.
 	 * 
 	 * @param value
 	 *            The value of the summary
@@ -365,22 +350,127 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 *            The identifier of the field used for the summary
 	 */
 	public void setSummary(String value, int fieldId) {
-		throw new UnsupportedOperationException();
+		TaskAttribute attribute = getMappedAttributeById(fieldId);
+		if (attribute != null) {
+			taskData.getAttributeMapper().setValue(attribute, value);
+		}
 	}
 
 	/**
-	 * Sets the status of the task.
+	 * Sets the status of the task. If the task is then closed, its completion date is forced to the last
+	 * modification date if it was not already present. On the contrary, if the task is not closed, its
+	 * completion date is forced to {@code null}, since the closed semantic is managed by mylyn <i>via</i> the
+	 * completion date presence.
 	 * 
 	 * @param valuesId
 	 *            The identifier of the field values selected
 	 * @param fieldId
 	 *            The identifier of the field
 	 */
-	public void setStatus(Set<Integer> valuesId, int fieldId) {
-		// if the value id is among the values id of the closed status, set the completion date to the last
-		// modification date and ensure that the attributes cannot be edited again, else remove any existing
-		// completion date (the task is re-opened)
-		throw new UnsupportedOperationException();
+	public void setStatus(Set<String> valuesId, int fieldId) {
+		TaskAttribute attribute = getMappedAttributeById(fieldId);
+		if (attribute != null) {
+			attribute.clearValues();
+			boolean isClosed = false;
+			for (String value : valuesId) {
+				attribute.addValue(value);
+				if (!isClosed && trackerConfiguration.hasClosedStatusMeaning(value)) {
+					isClosed = true;
+				}
+			}
+			if (isClosed && getCompletionDate() == null) {
+				// Sets the completion date
+				// Hypothesis: the last update date is up to date, which is reasonable since it appears early
+				// in the JSON objects.
+				Date modificationDate = getModificationDate();
+				if (modificationDate != null) {
+					setCompletionDate(modificationDate);
+				} else {
+					setCompletionDate(new Date());
+				}
+			} else {
+				// Remove an existing completion date
+				setCompletionDate(null);
+			}
+		}
+	}
+
+	/**
+	 * Provides access to the completion date if it exists.
+	 * 
+	 * @return The completion date if it exists or null.
+	 */
+	public Date getCompletionDate() {
+		TaskAttribute completionDateAttribute = getMappedAttribute(TaskAttribute.DATE_COMPLETION);
+		if (completionDateAttribute != null) {
+			return taskData.getAttributeMapper().getDateValue(completionDateAttribute);
+		}
+		return null;
+	}
+
+	/**
+	 * Sets the completion date in the relevant task attribute.
+	 * 
+	 * @param completionDate
+	 *            The completion date
+	 */
+	public void setCompletionDate(Date completionDate) {
+		TaskAttribute completionDateAttribute = getMappedAttribute(TaskAttribute.DATE_COMPLETION);
+		if (completionDateAttribute != null) {
+			taskData.getAttributeMapper().setDateValue(completionDateAttribute, completionDate);
+		}
+	}
+
+	/**
+	 * Provides access to the latest modification date if it exists.
+	 * 
+	 * @return The latest modification date if it exists or null.
+	 */
+	public Date getModificationDate() {
+		TaskAttribute modificationDateAttribute = getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
+		if (modificationDateAttribute != null) {
+			return taskData.getAttributeMapper().getDateValue(modificationDateAttribute);
+		}
+		return null;
+	}
+
+	/**
+	 * Sets the latest modification date in the relevant task attribute.
+	 * 
+	 * @param completionDate
+	 *            The latest modification date
+	 */
+	public void setModificationDate(Date completionDate) {
+		TaskAttribute modificationDateAttribute = getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
+		if (modificationDateAttribute != null) {
+			taskData.getAttributeMapper().setDateValue(modificationDateAttribute, completionDate);
+		}
+	}
+
+	/**
+	 * Provides access to the creation date if it exists.
+	 * 
+	 * @return The creation date if it exists or null.
+	 */
+	public Date getCreationDate() {
+		TaskAttribute creationDateAttribute = getMappedAttribute(TaskAttribute.DATE_CREATION);
+		if (creationDateAttribute != null) {
+			return taskData.getAttributeMapper().getDateValue(creationDateAttribute);
+		}
+		return null;
+	}
+
+	/**
+	 * Sets the creation date in the relevant task attribute.
+	 * 
+	 * @param creationDate
+	 *            The creation date
+	 */
+	public void setCreationDate(Date creationDate) {
+		TaskAttribute creationDateAttribute = getMappedAttribute(TaskAttribute.DATE_CREATION);
+		if (creationDateAttribute != null) {
+			taskData.getAttributeMapper().setDateValue(creationDateAttribute, creationDate);
+		}
 	}
 
 	/**
@@ -404,7 +494,10 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 *            The identifier of the field
 	 */
 	public void setInitialEffort(int initialEffort, int fieldId) {
-		throw new UnsupportedOperationException();
+		TaskAttribute attribute = getMappedAttributeById(fieldId);
+		if (attribute != null) {
+			taskData.getAttributeMapper().setIntegerValue(attribute, Integer.valueOf(initialEffort));
+		}
 	}
 
 	/**
@@ -419,7 +512,10 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 		// string, text(, int, float, computed field, open list, artifact links?) or individual method for
 		// each setTextValue, setIntValue, setFloatValue, setComputedFieldValue, setOpenListValue, etc...
 		// They will all have exactly the same behavior...
-		throw new UnsupportedOperationException();
+		TaskAttribute attribute = getMappedAttributeById(fieldId);
+		if (attribute != null) {
+			taskData.getAttributeMapper().setValue(attribute, value);
+		}
 	}
 
 	/**
@@ -432,7 +528,10 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 */
 	public void setDateValue(int value, int fieldId) {
 		// int <-> long
-		throw new UnsupportedOperationException();
+		TaskAttribute attribute = getMappedAttributeById(fieldId);
+		if (attribute != null) {
+			taskData.getAttributeMapper().setDateValue(attribute, new Date(1000L * value));
+		}
 	}
 
 	/**
@@ -445,7 +544,20 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 */
 	public void setSelectBoxValue(int valueId, int fieldId) {
 		// ITuleapConstants -> 100 nothing selected
-		throw new UnsupportedOperationException();
+		TaskAttribute attribute = getMappedAttributeById(fieldId);
+		if (attribute != null) {
+			if (valueId == ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID) {
+				attribute.clearValues();
+			} else {
+				attribute.setValue(String.valueOf(valueId));
+			}
+		}
+		// Take the workflow of the select box into account if it exists
+		AbstractTuleapField field = trackerConfiguration.getFieldById(fieldId);
+		if (field instanceof TuleapSelectBox) {
+			TuleapSelectBox selectBox = (TuleapSelectBox)field;
+			selectBox.updateOptionsWithWorkflow(attribute);
+		} // TODO else configuration error?
 	}
 
 	/**
@@ -479,7 +591,8 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 *            The comment to add
 	 */
 	public void addComment(TuleapArtifactComment tuleapArtifactComment) {
-		throw new UnsupportedOperationException();
+		TaskAttribute attribute = createNewCommentTaskAttribute();
+		attribute.setValue(tuleapArtifactComment.getBody());
 	}
 
 	/**
@@ -502,6 +615,21 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 		// attachments are not uploaded with the same mechanism so no need to return them here
 		// do not return the fields computed by tuleap or mylyn: creation date, completion date, id, etc
 		throw new UnsupportedOperationException();
+	}
+
+	// private TaskAttribute getAttributeById(int fieldId) {
+	// return taskData.getRoot().getAttribute(String.valueOf(fieldId));
+	// }
+
+	/**
+	 * Returns the mapped attribute with the given id or {@code null} if it doesn't exist.
+	 * 
+	 * @param fieldId
+	 *            The id of the task attribute being looked for
+	 * @return The mapped attribute with the given id or {@code null} if it doesn't exist.
+	 */
+	private TaskAttribute getMappedAttributeById(int fieldId) {
+		return taskData.getRoot().getMappedAttribute(String.valueOf(fieldId));
 	}
 
 }

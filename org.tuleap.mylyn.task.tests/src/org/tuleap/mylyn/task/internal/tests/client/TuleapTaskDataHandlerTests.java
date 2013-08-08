@@ -579,7 +579,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapString tuleapString = this.createTuleapString(id, name, label, description, maximumSize,
 				isTitle, isRequired, rank, permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapString);
+		tuleapTrackerConfiguration.addField(tuleapString);
 
 		TaskData taskData = this.initialize();
 
@@ -617,7 +617,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapString tuleapString = this.createTuleapString(id, name, label, description, maximumSize,
 				isTitle, isRequired, rank, permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapString);
+		tuleapTrackerConfiguration.addField(tuleapString);
 
 		TaskData taskData = this.initialize();
 
@@ -656,7 +656,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapString tuleapString = this.createTuleapString(id, name, label, description, maximumSize,
 				isTitle, isRequired, rank, permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapString);
+		tuleapTrackerConfiguration.addField(tuleapString);
 
 		TaskData taskData = this.initialize();
 
@@ -692,7 +692,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapText tuleapText = this.createTuleapText(id, name, label, description, isRequired, rank,
 				permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapText);
+		tuleapTrackerConfiguration.addField(tuleapText);
 
 		TaskData taskData = this.initialize();
 
@@ -738,7 +738,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapText tuleapText = this.createTuleapText(id, name, label, description, isRequired, rank,
 				permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapText);
+		tuleapTrackerConfiguration.addField(tuleapText);
 
 		TaskData taskData = this.initialize();
 
@@ -785,7 +785,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapInteger tuleapInteger = this.createTuleapInteger(id, name, label, description, isRequired,
 				rank, permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapInteger);
+		tuleapTrackerConfiguration.addField(tuleapInteger);
 
 		TaskData taskData = this.initialize();
 
@@ -821,7 +821,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapInteger tuleapInteger = this.createTuleapInteger(id, name, label, description, isRequired,
 				rank, permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapInteger);
+		tuleapTrackerConfiguration.addField(tuleapInteger);
 
 		TaskData taskData = this.initialize();
 
@@ -858,7 +858,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapFloat tuleapFloat = this.createTuleapFloat(id, name, label, description, isRequired, rank,
 				permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapFloat);
+		tuleapTrackerConfiguration.addField(tuleapFloat);
 
 		TaskData taskData = this.initialize();
 
@@ -894,7 +894,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapFloat tuleapFloat = this.createTuleapFloat(id, name, label, description, isRequired, rank,
 				permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapFloat);
+		tuleapTrackerConfiguration.addField(tuleapFloat);
 
 		TaskData taskData = this.initialize();
 
@@ -931,7 +931,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapArtifactLink tuleapArtifactLink = this.createTuleapArtifactLink(id, name, label, description,
 				isRequired, rank, permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapArtifactLink);
+		tuleapTrackerConfiguration.addField(tuleapArtifactLink);
 
 		TaskData taskData = this.initialize();
 
@@ -966,7 +966,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapArtifactLink tuleapArtifactLink = this.createTuleapArtifactLink(id, name, label, description,
 				isRequired, rank, permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapArtifactLink);
+		tuleapTrackerConfiguration.addField(tuleapArtifactLink);
 
 		TaskData taskData = this.initialize();
 
@@ -1002,7 +1002,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapDate tuleapDate = this.createTuleapDate(id, name, label, description, isRequired, rank,
 				permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapDate);
+		tuleapTrackerConfiguration.addField(tuleapDate);
 
 		TaskData taskData = this.initialize();
 
@@ -1066,7 +1066,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapDate tuleapDate = this.createTuleapDate(id, name, label, description, isRequired, rank,
 				permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapDate);
+		tuleapTrackerConfiguration.addField(tuleapDate);
 
 		TaskData taskData = this.initialize();
 
@@ -1131,7 +1131,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapFileUpload tuleapFileUpload = this.createTuleapFileUpload(id, name, label, description,
 				isRequired, rank, permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapFileUpload);
+		tuleapTrackerConfiguration.addField(tuleapFileUpload);
 
 		TaskData taskData = this.initialize();
 
@@ -1158,7 +1158,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapOpenList tuleapOpenList = this.createTuleapOpenList(id, name, label, description, isRequired,
 				rank, permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapOpenList);
+		tuleapTrackerConfiguration.addField(tuleapOpenList);
 
 		TaskData taskData = this.initialize();
 
@@ -1194,7 +1194,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapOpenList tuleapOpenList = this.createTuleapOpenList(id, name, label, description, isRequired,
 				rank, permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapOpenList);
+		tuleapTrackerConfiguration.addField(tuleapOpenList);
 
 		TaskData taskData = this.initialize();
 
@@ -1233,7 +1233,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapSelectBox tuleapSelectBox = this.createTuleapSelectBox(id, name, label, description,
 				isRequired, isSemanticContributor, binding, rank, permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapSelectBox);
+		tuleapTrackerConfiguration.addField(tuleapSelectBox);
 
 		TaskData taskData = this.initialize();
 
@@ -1270,7 +1270,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapSelectBox tuleapSelectBox = this.createTuleapSelectBox(id, name, label, description,
 				isRequired, isSemanticContributor, binding, rank, permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapSelectBox);
+		tuleapTrackerConfiguration.addField(tuleapSelectBox);
 
 		TaskData taskData = this.initialize();
 
@@ -1325,7 +1325,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		secondItem.setDescription(secondItemDescription);
 		tuleapSelectBox.getItems().add(secondItem);
 
-		tuleapTrackerConfiguration.getFields().add(tuleapSelectBox);
+		tuleapTrackerConfiguration.addField(tuleapSelectBox);
 
 		TaskData taskData = this.initialize();
 
@@ -1397,7 +1397,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		aTransition.setTo(secondSelectBoxItemId);
 		tuleapWorkflow.getTransitions().add(aTransition);
 
-		tuleapTrackerConfiguration.getFields().add(tuleapSelectBox);
+		tuleapTrackerConfiguration.addField(tuleapSelectBox);
 
 		TaskData taskData = this.initialize();
 
@@ -1461,7 +1461,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		aTransition.setTo(secondSelectBoxItemId);
 		tuleapWorkflow.getTransitions().add(aTransition);
 
-		tuleapTrackerConfiguration.getFields().add(tuleapSelectBox);
+		tuleapTrackerConfiguration.addField(tuleapSelectBox);
 
 		TaskData taskData = this.initialize();
 
@@ -1519,7 +1519,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		tuleapSelectBox.getOpenStatus().add(firstItem);
 
-		tuleapTrackerConfiguration.getFields().add(tuleapSelectBox);
+		tuleapTrackerConfiguration.addField(tuleapSelectBox);
 
 		TaskData taskData = this.initialize();
 
@@ -1567,7 +1567,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapSelectBox tuleapSelectBox = this.createTuleapSelectBox(id, name, label, description,
 				isRequired, isSemanticContributor, binding, rank, permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapSelectBox);
+		tuleapTrackerConfiguration.addField(tuleapSelectBox);
 
 		TaskData taskData = this.initialize();
 
@@ -1622,7 +1622,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		secondItem.setDescription(secondItemDescription);
 		tuleapSelectBox.getItems().add(secondItem);
 
-		tuleapTrackerConfiguration.getFields().add(tuleapSelectBox);
+		tuleapTrackerConfiguration.addField(tuleapSelectBox);
 
 		TaskData taskData = this.initialize();
 
@@ -1671,7 +1671,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapMultiSelectBox tuleapMultiSelectBox = this.createTuleapMultiSelectBox(id, name, label,
 				description, isRequired, isSemanticContributor, binding, rank, permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapMultiSelectBox);
+		tuleapTrackerConfiguration.addField(tuleapMultiSelectBox);
 
 		TaskData taskData = this.initialize();
 
@@ -1708,7 +1708,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapMultiSelectBox tuleapMultiSelectBox = this.createTuleapMultiSelectBox(id, name, label,
 				description, isRequired, isSemanticContributor, binding, rank, permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapMultiSelectBox);
+		tuleapTrackerConfiguration.addField(tuleapMultiSelectBox);
 
 		TaskData taskData = this.initialize();
 
@@ -1763,7 +1763,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		secondItem.setDescription(secondItemDescription);
 		tuleapMultiSelectBox.getItems().add(secondItem);
 
-		tuleapTrackerConfiguration.getFields().add(tuleapMultiSelectBox);
+		tuleapTrackerConfiguration.addField(tuleapMultiSelectBox);
 
 		TaskData taskData = this.initialize();
 
@@ -1821,7 +1821,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		firstItem.setDescription(firstItemDescription);
 		tuleapMultiSelectBox.getItems().add(firstItem);
 
-		tuleapTrackerConfiguration.getFields().add(tuleapMultiSelectBox);
+		tuleapTrackerConfiguration.addField(tuleapMultiSelectBox);
 
 		TaskData taskData = this.initialize();
 
@@ -1885,13 +1885,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		secondItem.setDescription(secondItemDescription);
 		tuleapMultiSelectBox.getItems().add(secondItem);
 
-		TuleapWorkflow tuleapWorkflow = tuleapMultiSelectBox.getWorkflow();
-		TuleapWorkflowTransition aTransition = new TuleapWorkflowTransition();
-		aTransition.setFrom(firstSelectBoxItemId);
-		aTransition.setTo(secondSelectBoxItemId);
-		tuleapWorkflow.getTransitions().add(aTransition);
-
-		tuleapTrackerConfiguration.getFields().add(tuleapMultiSelectBox);
+		tuleapTrackerConfiguration.addField(tuleapMultiSelectBox);
 
 		TaskData taskData = this.initialize();
 
@@ -1959,7 +1953,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		tuleapMultiSelectBox.getOpenStatus().add(firstItem);
 
-		tuleapTrackerConfiguration.getFields().add(tuleapMultiSelectBox);
+		tuleapTrackerConfiguration.addField(tuleapMultiSelectBox);
 
 		TaskData taskData = this.initialize();
 
@@ -2007,7 +2001,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapMultiSelectBox tuleapMultiSelectBox = this.createTuleapMultiSelectBox(id, name, label,
 				description, isRequired, isSemanticContributor, binding, rank, permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapMultiSelectBox);
+		tuleapTrackerConfiguration.addField(tuleapMultiSelectBox);
 
 		TaskData taskData = this.initialize();
 
@@ -2062,7 +2056,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		secondItem.setDescription(secondItemDescription);
 		tuleapMultiSelectBox.getItems().add(secondItem);
 
-		tuleapTrackerConfiguration.getFields().add(tuleapMultiSelectBox);
+		tuleapTrackerConfiguration.addField(tuleapMultiSelectBox);
 
 		TaskData taskData = this.initialize();
 
@@ -2230,7 +2224,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapString tuleapString = this.createTuleapString(id, name, label, description, maximumSize,
 				isTitle, isRequired, rank, permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapString);
+		tuleapTrackerConfiguration.addField(tuleapString);
 
 		String stringValue = "String Value"; //$NON-NLS-1$
 
@@ -2272,7 +2266,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapString tuleapString = this.createTuleapString(id, name, label, description, maximumSize,
 				isTitle, isRequired, rank, permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapString);
+		tuleapTrackerConfiguration.addField(tuleapString);
 
 		String stringValue = "String Value"; //$NON-NLS-1$
 
@@ -2311,7 +2305,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapText tuleapText = this.createTuleapText(id, name, label, description, isRequired, rank,
 				permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapText);
+		tuleapTrackerConfiguration.addField(tuleapText);
 
 		String textValue = "Text Value"; //$NON-NLS-1$
 
@@ -2362,7 +2356,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapInteger tuleapInteger = this.createTuleapInteger(id, name, label, description, isRequired,
 				rank, permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapInteger);
+		tuleapTrackerConfiguration.addField(tuleapInteger);
 
 		String integerValue = "825"; //$NON-NLS-1$
 
@@ -2403,7 +2397,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapFloat tuleapFloat = this.createTuleapFloat(id, name, label, description, isRequired, rank,
 				permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapFloat);
+		tuleapTrackerConfiguration.addField(tuleapFloat);
 
 		String floatValue = "825.417"; //$NON-NLS-1$
 
@@ -2444,7 +2438,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapArtifactLink tuleapArtifactLink = this.createTuleapArtifactLink(id, name, label, description,
 				isRequired, rank, permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapArtifactLink);
+		tuleapTrackerConfiguration.addField(tuleapArtifactLink);
 
 		String artifactLinkValue = "892, 921"; //$NON-NLS-1$
 
@@ -2485,7 +2479,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapDate tuleapDate = this.createTuleapDate(id, name, label, description, isRequired, rank,
 				permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapDate);
+		tuleapTrackerConfiguration.addField(tuleapDate);
 
 		Date creationDate = new Date();
 		Date modifiedDate = new Date();
@@ -2571,7 +2565,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapFileUpload tuleapFileUpload = this.createTuleapFileUpload(id, name, label, description,
 				isRequired, rank, permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapFileUpload);
+		tuleapTrackerConfiguration.addField(tuleapFileUpload);
 
 		TuleapArtifact tuleapArtifact = new TuleapArtifact(id, trackerId, trackerName, projectName);
 
@@ -2637,7 +2631,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapOpenList tuleapOpenList = this.createTuleapOpenList(id, name, label, description, isRequired,
 				rank, permissions);
-		tuleapTrackerConfiguration.getFields().add(tuleapOpenList);
+		tuleapTrackerConfiguration.addField(tuleapOpenList);
 
 		String openListValue = "First Open List Value, Second Open List Value, Third Open List Value"; //$NON-NLS-1$
 
@@ -2697,7 +2691,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		secondItem.setDescription(secondItemDescription);
 		tuleapSelectBox.getItems().add(secondItem);
 
-		tuleapTrackerConfiguration.getFields().add(tuleapSelectBox);
+		tuleapTrackerConfiguration.addField(tuleapSelectBox);
 
 		TuleapArtifact tuleapArtifact = new TuleapArtifact(id, trackerId, trackerName, projectName);
 		tuleapArtifact.putValue(name, firstItemLabel);
@@ -2758,7 +2752,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		firstItem.setDescription(firstItemDescription);
 		tuleapSelectBox.getItems().add(firstItem);
 
-		tuleapTrackerConfiguration.getFields().add(tuleapSelectBox);
+		tuleapTrackerConfiguration.addField(tuleapSelectBox);
 
 		TuleapArtifact tuleapArtifact = new TuleapArtifact(id, trackerId, trackerName, projectName);
 		tuleapArtifact.putValue(name, firstItemLabel);
@@ -2840,7 +2834,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		aTransition.setTo(thirdSelectBoxItemId);
 		tuleapWorkflow.getTransitions().add(aTransition);
 
-		tuleapTrackerConfiguration.getFields().add(tuleapSelectBox);
+		tuleapTrackerConfiguration.addField(tuleapSelectBox);
 
 		TuleapArtifact tuleapArtifact = new TuleapArtifact(id, trackerId, trackerName, projectName);
 		tuleapArtifact.putValue(name, firstItemLabel);
@@ -2909,7 +2903,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		tuleapSelectBox.getOpenStatus().add(firstItem);
 
-		tuleapTrackerConfiguration.getFields().add(tuleapSelectBox);
+		tuleapTrackerConfiguration.addField(tuleapSelectBox);
 
 		TuleapArtifact tuleapArtifact = new TuleapArtifact(id, trackerId, trackerName, projectName);
 		tuleapArtifact.putValue(name, firstItemLabel);
@@ -2978,7 +2972,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		secondItem.setDescription(secondItemDescription);
 		tuleapSelectBox.getItems().add(secondItem);
 
-		tuleapTrackerConfiguration.getFields().add(tuleapSelectBox);
+		tuleapTrackerConfiguration.addField(tuleapSelectBox);
 
 		TuleapArtifact tuleapArtifact = new TuleapArtifact(id, trackerId, trackerName, projectName);
 		tuleapArtifact.putValue(name, firstItemLabel);
@@ -3047,7 +3041,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		secondItem.setDescription(secondItemDescription);
 		tuleapMultiSelectBox.getItems().add(secondItem);
 
-		tuleapTrackerConfiguration.getFields().add(tuleapMultiSelectBox);
+		tuleapTrackerConfiguration.addField(tuleapMultiSelectBox);
 
 		TuleapArtifact tuleapArtifact = new TuleapArtifact(id, trackerId, trackerName, projectName);
 		tuleapArtifact.putValue(name, firstItemLabel);
@@ -3125,13 +3119,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		thirdItem.setDescription(thirdItemDescription);
 		tuleapMultiSelectBox.getItems().add(thirdItem);
 
-		TuleapWorkflow tuleapWorkflow = tuleapMultiSelectBox.getWorkflow();
-		TuleapWorkflowTransition aTransition = new TuleapWorkflowTransition();
-		aTransition.setFrom(firstSelectBoxItemId);
-		aTransition.setTo(thirdSelectBoxItemId);
-		tuleapWorkflow.getTransitions().add(aTransition);
-
-		tuleapTrackerConfiguration.getFields().add(tuleapMultiSelectBox);
+		tuleapTrackerConfiguration.addField(tuleapMultiSelectBox);
 
 		TuleapArtifact tuleapArtifact = new TuleapArtifact(id, trackerId, trackerName, projectName);
 		tuleapArtifact.putValue(name, firstItemLabel);
@@ -3144,7 +3132,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttribute taskAttribute = attributesByType.get(0);
 		assertThat(taskAttribute.getId(), is(Integer.valueOf(id).toString()));
-		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(2)));
+		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(4)));
 		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		for (Entry<String, String> entry : entrySet) {
 			if (firstItemLabel.equals(entry.getKey())) {
@@ -3201,7 +3189,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		tuleapMultiSelectBox.getOpenStatus().add(firstItem);
 
-		tuleapTrackerConfiguration.getFields().add(tuleapMultiSelectBox);
+		tuleapTrackerConfiguration.addField(tuleapMultiSelectBox);
 
 		TuleapArtifact tuleapArtifact = new TuleapArtifact(id, trackerId, trackerName, projectName);
 		tuleapArtifact.putValue(name, firstItemLabel);
@@ -3269,7 +3257,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		secondItem.setDescription(secondItemDescription);
 		tuleapMultiSelectBox.getItems().add(secondItem);
 
-		tuleapTrackerConfiguration.getFields().add(tuleapMultiSelectBox);
+		tuleapTrackerConfiguration.addField(tuleapMultiSelectBox);
 
 		TuleapArtifact tuleapArtifact = new TuleapArtifact(id, trackerId, trackerName, projectName);
 		tuleapArtifact.putValue(name, firstItemLabel);

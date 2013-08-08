@@ -40,7 +40,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapClient;
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapDynamicField;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.TuleapArtifactComment;
@@ -48,16 +47,13 @@ import org.tuleap.mylyn.task.internal.core.model.TuleapAttachment;
 import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.field.TuleapComputedValue;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapDate;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapFileUpload;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapMultiSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
-import org.tuleap.mylyn.task.internal.core.model.field.dynamic.TuleapArtifactId;
-import org.tuleap.mylyn.task.internal.core.model.field.dynamic.TuleapLastUpdateDate;
-import org.tuleap.mylyn.task.internal.core.model.field.dynamic.TuleapSubmittedBy;
-import org.tuleap.mylyn.task.internal.core.model.field.dynamic.TuleapSubmittedOn;
 import org.tuleap.mylyn.task.internal.core.model.workflow.TuleapWorkflow;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
@@ -308,7 +304,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		metaData.setType(TaskAttribute.TYPE_LONG_RICH_TEXT);
 
 		// Default attributes
-		List<AbstractTuleapField> fields = configuration.getFields();
+		Collection<AbstractTuleapField> fields = configuration.getFields();
 		for (AbstractTuleapField abstractTuleapField : fields) {
 			if (shouldCreateAttributeFor(abstractTuleapField)) {
 				this.createAttribute(taskData, abstractTuleapField);
@@ -325,17 +321,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 *         <code>false</code> otherwise.
 	 */
 	private boolean shouldCreateAttributeFor(AbstractTuleapField abstractTuleapField) {
-		boolean shouldCreateAttributeFor = true;
-		shouldCreateAttributeFor = shouldCreateAttributeFor
-				&& !(abstractTuleapField instanceof TuleapFileUpload);
-		shouldCreateAttributeFor = shouldCreateAttributeFor
-				&& !(abstractTuleapField instanceof TuleapArtifactId);
-		shouldCreateAttributeFor = shouldCreateAttributeFor
-				&& !(abstractTuleapField instanceof TuleapLastUpdateDate);
-		shouldCreateAttributeFor = shouldCreateAttributeFor
-				&& !(abstractTuleapField instanceof TuleapSubmittedOn);
-		shouldCreateAttributeFor = shouldCreateAttributeFor
-				&& !(abstractTuleapField instanceof TuleapSubmittedBy);
+		boolean shouldCreateAttributeFor = !(abstractTuleapField instanceof TuleapFileUpload);
 		return shouldCreateAttributeFor;
 	}
 
@@ -372,7 +358,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		}
 
 		// Dynamic fields are read only
-		if (tuleapField instanceof AbstractTuleapDynamicField) {
+		if (tuleapField instanceof TuleapComputedValue) {
 			attributeMetaData.setReadOnly(true);
 		}
 
@@ -542,7 +528,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		AbstractTuleapField statusSelectBox = null;
 
 		// Create operations from the status semantic
-		List<AbstractTuleapField> fields = configuration.getFields();
+		Collection<AbstractTuleapField> fields = configuration.getFields();
 		for (AbstractTuleapField abstractTuleapField : fields) {
 			if (abstractTuleapField instanceof TuleapSelectBox) {
 				TuleapSelectBox selectBox = (TuleapSelectBox)abstractTuleapField;
@@ -577,9 +563,6 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		if (statusSelectBox instanceof TuleapSelectBox) {
 			workflow = ((TuleapSelectBox)statusSelectBox).getWorkflow();
 			items.addAll(((TuleapSelectBox)statusSelectBox).getItems());
-		} else if (statusSelectBox instanceof TuleapMultiSelectBox) {
-			workflow = ((TuleapMultiSelectBox)statusSelectBox).getWorkflow();
-			items.addAll(((TuleapMultiSelectBox)statusSelectBox).getItems());
 		}
 		if (workflow != null && workflow.getTransitions().size() > 0 && currentStatus != null
 				&& currentStatus.length() > 0) {
@@ -635,7 +618,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			TuleapTrackerConfiguration configuration) {
 		AbstractTuleapField personsSelectBox = null;
 
-		List<AbstractTuleapField> fields = configuration.getFields();
+		Collection<AbstractTuleapField> fields = configuration.getFields();
 		for (AbstractTuleapField abstractTuleapField : fields) {
 			if (abstractTuleapField instanceof TuleapSelectBox) {
 				TuleapSelectBox selectBox = (TuleapSelectBox)abstractTuleapField;
@@ -798,7 +781,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		// Attachments
 		taskData = this.populateAttachments(tuleapArtifact, taskData);
 
-		List<AbstractTuleapField> fields = trackerConfiguration.getFields();
+		Collection<AbstractTuleapField> fields = trackerConfiguration.getFields();
 		for (AbstractTuleapField abstractTuleapField : fields) {
 			if (abstractTuleapField instanceof TuleapString
 					&& ((TuleapString)abstractTuleapField).isSemanticTitle()) {
@@ -844,10 +827,6 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			if (abstractTuleapField instanceof TuleapSelectBox
 					&& ((TuleapSelectBox)abstractTuleapField).getWorkflow().getTransitions().size() > 0) {
 				this.changeOptionsForSelectBoxWorkflow(taskData, (TuleapSelectBox)abstractTuleapField);
-			} else if (abstractTuleapField instanceof TuleapMultiSelectBox
-					&& ((TuleapMultiSelectBox)abstractTuleapField).getWorkflow().getTransitions().size() > 0) {
-				this.changeOptionsForMultiSelectBoxWorkflow(taskData,
-						(TuleapMultiSelectBox)abstractTuleapField);
 			}
 		}
 
@@ -1024,52 +1003,6 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			attribute.putOption(value, value);
 
 			List<Integer> accessibleStates = tuleapSelectBox.getWorkflow().accessibleStates(
-					item.getIdentifier());
-			for (Integer accessibleState : accessibleStates) {
-				for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
-					if (accessibleState.intValue() == tuleapSelectBoxItem.getIdentifier()) {
-						attribute.putOption(tuleapSelectBoxItem.getLabel(), tuleapSelectBoxItem.getLabel());
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * Changes the options on the task attribute if the Tuleap multi select box has a workflow.
-	 * 
-	 * @param taskData
-	 *            the task data
-	 * @param tuleapMultiSelectBox
-	 *            The Tuleap multi select box
-	 */
-	private void changeOptionsForMultiSelectBoxWorkflow(TaskData taskData,
-			TuleapMultiSelectBox tuleapMultiSelectBox) {
-		// The widget has a workflow
-		TuleapSelectBoxItem item = null;
-
-		TaskAttribute attribute = null;
-		if (tuleapMultiSelectBox.isSemanticStatus()) {
-			attribute = taskData.getRoot().getAttribute(TaskAttribute.STATUS);
-		} else {
-			attribute = taskData.getRoot().getAttribute(
-					Integer.valueOf(tuleapMultiSelectBox.getIdentifier()).toString());
-		}
-
-		String value = attribute.getValue();
-
-		List<TuleapSelectBoxItem> items = tuleapMultiSelectBox.getItems();
-		for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
-			if (value != null && value.equals(tuleapSelectBoxItem.getLabel())) {
-				item = tuleapSelectBoxItem;
-			}
-		}
-
-		if (item != null) {
-			attribute.clearOptions();
-			attribute.putOption(value, value);
-
-			List<Integer> accessibleStates = tuleapMultiSelectBox.getWorkflow().accessibleStates(
 					item.getIdentifier());
 			for (Integer accessibleState : accessibleStates) {
 				for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {

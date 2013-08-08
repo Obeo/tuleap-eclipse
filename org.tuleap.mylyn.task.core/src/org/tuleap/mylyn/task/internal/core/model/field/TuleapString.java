@@ -11,6 +11,7 @@
 package org.tuleap.mylyn.task.internal.core.model.field;
 
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 
 /**
@@ -114,5 +115,35 @@ public class TuleapString extends AbstractTuleapField {
 	 */
 	public boolean isSemanticTitle() {
 		return this.isSemanticTitle;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField#createTaskAttribute(org.eclipse.mylyn.tasks.core.data.TaskAttribute)
+	 */
+	@Override
+	public TaskAttribute createTaskAttribute(TaskAttribute parent) {
+		if (isSemanticTitle()) {
+			return createSummaryTaskAttribute(parent);
+		}
+		return super.createTaskAttribute(parent);
+	}
+
+	/**
+	 * Creates the task attribute representing the summary.
+	 * 
+	 * @param parent
+	 *            The parent task attribute
+	 * @return The created task attribute.
+	 */
+	private TaskAttribute createSummaryTaskAttribute(TaskAttribute parent) {
+		// String with semantic title
+		TaskAttribute attribute = parent.createAttribute(TaskAttribute.SUMMARY);
+		// Attributes
+		TaskAttributeMetaData attributeMetadata = attribute.getMetaData();
+		attributeMetadata.setType(getMetadataType());
+		attributeMetadata.setLabel(getLabel());
+		return attribute;
 	}
 }

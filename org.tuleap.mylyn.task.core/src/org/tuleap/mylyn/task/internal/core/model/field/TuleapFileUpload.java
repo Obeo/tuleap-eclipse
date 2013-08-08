@@ -65,4 +65,15 @@ public class TuleapFileUpload extends AbstractTuleapField {
 	public Object getDefaultValue() {
 		return null;
 	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @return {@code false}, since file upload fields do not need to be initiated with a task attribute.
+	 * @see org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField#needsTaskAttributeForInitialization()
+	 */
+	@Override
+	public boolean needsTaskAttributeForInitialization() {
+		return false;
+	}
 }

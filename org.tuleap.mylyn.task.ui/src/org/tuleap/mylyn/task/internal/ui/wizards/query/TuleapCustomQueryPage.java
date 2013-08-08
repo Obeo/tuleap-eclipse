@@ -12,6 +12,7 @@ package org.tuleap.mylyn.task.internal.ui.wizards.query;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,7 @@ import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapArtifactLink;
+import org.tuleap.mylyn.task.internal.core.model.field.TuleapComputedValue;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapDate;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapFloat;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapInteger;
@@ -48,11 +50,6 @@ import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapText;
-import org.tuleap.mylyn.task.internal.core.model.field.dynamic.TuleapArtifactId;
-import org.tuleap.mylyn.task.internal.core.model.field.dynamic.TuleapComputedValue;
-import org.tuleap.mylyn.task.internal.core.model.field.dynamic.TuleapLastUpdateDate;
-import org.tuleap.mylyn.task.internal.core.model.field.dynamic.TuleapSubmittedBy;
-import org.tuleap.mylyn.task.internal.core.model.field.dynamic.TuleapSubmittedOn;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.ui.TuleapTasksUIPlugin;
@@ -273,7 +270,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 			group.setLayoutData(gridData);
 			group.setLayout(new GridLayout(3, false));
 
-			List<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
+			Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
 			for (AbstractTuleapField field : fields) {
 				if (field instanceof TuleapString) {
 					this.createGroupContent((TuleapString)field, group);
@@ -283,16 +280,8 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 					this.createGroupContent((TuleapMultiSelectBox)field, group);
 				} else if (field instanceof TuleapText) {
 					this.createGroupContent((TuleapText)field, group);
-				} else if (field instanceof TuleapArtifactId) {
-					this.createGroupContent((TuleapArtifactId)field, group);
-				} else if (field instanceof TuleapLastUpdateDate) {
-					this.createGroupContent((TuleapLastUpdateDate)field, group);
 				} else if (field instanceof TuleapDate) {
 					this.createGroupContent((TuleapDate)field, group);
-				} else if (field instanceof TuleapSubmittedOn) {
-					this.createGroupContent((TuleapSubmittedOn)field, group);
-				} else if (field instanceof TuleapSubmittedBy) {
-					this.createGroupContent((TuleapSubmittedBy)field, group);
 				} else if (field instanceof TuleapInteger) {
 					this.createGroupContent((TuleapInteger)field, group);
 				} else if (field instanceof TuleapFloat) {
@@ -415,43 +404,6 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 	}
 
 	/**
-	 * Creates the dedicated type of widget for the Tuleap string field.
-	 * 
-	 * @param tuleapSubmittedBy
-	 *            The Tuleap string field
-	 * @param group
-	 *            The group in which the widget should be created
-	 */
-	private void createGroupContent(TuleapSubmittedBy tuleapSubmittedBy, Group group) {
-		// Create a single line text field for each Tuleap submitted by
-		createGroupContentForString(tuleapSubmittedBy.getLabel(), group, tuleapSubmittedBy);
-	}
-
-	/**
-	 * Creates the dedicated type of widget for the Tuleap last update date field.
-	 * 
-	 * @param tuleapDate
-	 *            The Tuleap last update date field
-	 * @param group
-	 *            The group in which the widget should be created
-	 */
-	private void createGroupContent(TuleapLastUpdateDate tuleapDate, Group group) {
-		createGroupContentForDate(tuleapDate.getLabel(), group, tuleapDate);
-	}
-
-	/**
-	 * Creates the dedicated type of widget for the Tuleap submitted on field.
-	 * 
-	 * @param tuleapDate
-	 *            The Tuleap submitted on field
-	 * @param group
-	 *            The group in which the widget should be created
-	 */
-	private void createGroupContent(TuleapSubmittedOn tuleapDate, Group group) {
-		createGroupContentForDate(tuleapDate.getLabel(), group, tuleapDate);
-	}
-
-	/**
 	 * Creates the dedicated type of widget for the Tuleap date field.
 	 * 
 	 * @param tuleapDate
@@ -493,19 +445,6 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 		}
 
 		elements.add(new TuleapCustomQueryElement(text, tuleapField, combo));
-	}
-
-	/**
-	 * Creates the dedicated type of widget for the Tuleap artifact id field.
-	 * 
-	 * @param tuleapArtifactId
-	 *            The Tuleap artifact id field
-	 * @param group
-	 *            The group in which the widget should be created
-	 */
-	private void createGroupContent(TuleapArtifactId tuleapArtifactId, Group group) {
-		// Create a single line text field for each Tuleap ArtifactId
-		createGroupContentForString(tuleapArtifactId.getLabel(), group, tuleapArtifactId);
 	}
 
 	/**

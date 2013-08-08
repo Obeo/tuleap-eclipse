@@ -34,18 +34,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="4" language="java" name="org.tuleap.mylyn.task.internal.core.model.TuleapCannedResponse" 
-    project="org.tuleap.mylyn.task.core" 
-    file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/TuleapCannedResponse.java" 
-    binary="false" corner="BOTTOM_RIGHT">    
-    <position height="171" width="211" x="710" y="1253"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
-      visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="5" language="java" name="org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField" 
+  <class id="4" language="java" name="org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/AbstractTuleapField.java" 
     binary="false" corner="BOTTOM_RIGHT">    
@@ -56,18 +45,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="6" language="java" name="org.tuleap.mylyn.task.internal.core.model.AbstractTuleapDynamicField" 
-    project="org.tuleap.mylyn.task.core" 
-    file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/AbstractTuleapDynamicField.java" 
-    binary="false" corner="BOTTOM_RIGHT">    
-    <position height="99" width="190" x="961" y="1464"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
-      visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="7" language="java" name="org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration" 
+  <class id="5" language="java" name="org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/TuleapTrackerConfiguration.java" 
     binary="false" corner="BOTTOM_RIGHT">    
@@ -78,7 +56,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="8" language="java" name="org.tuleap.mylyn.task.internal.core.model.TuleapArtifact" 
+  <class id="6" language="java" name="org.tuleap.mylyn.task.internal.core.model.TuleapArtifact" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/TuleapArtifact.java" binary="false" 
     corner="BOTTOM_RIGHT">    
@@ -89,7 +67,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="9" language="java" name="org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration" 
+  <class id="7" language="java" name="org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/TuleapProjectConfiguration.java" 
     binary="false" corner="BOTTOM_RIGHT">    
@@ -100,7 +78,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="10" language="java" name="org.tuleap.mylyn.task.internal.core.model.TuleapTrackerReport" 
+  <class id="8" language="java" name="org.tuleap.mylyn.task.internal.core.model.TuleapTrackerReport" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/TuleapTrackerReport.java" 
     binary="false" corner="BOTTOM_RIGHT">    
@@ -111,7 +89,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="11" language="java" name="org.tuleap.mylyn.task.internal.core.model.AbstractTuleapFormElement" 
+  <class id="9" language="java" name="org.tuleap.mylyn.task.internal.core.model.AbstractTuleapFormElement" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/AbstractTuleapFormElement.java" 
     binary="false" corner="BOTTOM_RIGHT">    
@@ -122,7 +100,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="12" language="java" name="org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration" 
+  <class id="10" language="java" name="org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/TuleapInstanceConfiguration.java" 
     binary="false" corner="BOTTOM_RIGHT">    
@@ -133,68 +111,56 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <generalization id="13">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="5"/>  
-  </generalization>  
-  <association id="14">    
+  <association id="11">    
     <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="15" name="fields"/>      
-      <multiplicity id="16" minimum="0" maximum="2147483647"/>    
+      <attribute id="12" name="trackerId2trackerConfiguration"/>      
+      <multiplicity id="13" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="5" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="17">    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="18" name="cannedResponses"/>      
-      <multiplicity id="19" minimum="0" maximum="2147483647"/>    
+  <association id="14">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="15" name="comments"/>      
+      <multiplicity id="16" minimum="0" maximum="2147483647"/>    
     </end>    
-    <end type="TARGET" refId="4" navigable="true"/>    
+    <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="20">    
-    <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="21" name="trackerId2trackerConfiguration"/>      
-      <multiplicity id="22" minimum="0" maximum="2147483647"/>    
+  <generalization id="17">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="9"/>  
+  </generalization>  
+  <association id="18">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="19" name="tuleapProjectConfiguration"/>      
+      <multiplicity id="20" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="23">    
-    <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="11"/>  
-  </generalization>  
-  <association id="24">    
-    <end type="SOURCE" refId="12" navigable="false">      
-      <attribute id="25" name="projectId2projectConfiguration"/>      
-      <multiplicity id="26" minimum="0" maximum="2147483647"/>    
+  <association id="21">    
+    <end type="SOURCE" refId="10" navigable="false">      
+      <attribute id="22" name="projectId2projectConfiguration"/>      
+      <multiplicity id="23" minimum="0" maximum="2147483647"/>    
     </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
+    <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="27">    
+  <association id="24">    
     <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="28" name="person"/>      
-      <multiplicity id="29" minimum="0" maximum="1"/>    
+      <attribute id="25" name="person"/>      
+      <multiplicity id="26" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="30">    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="31" name="tuleapProjectConfiguration"/>      
-      <multiplicity id="32" minimum="0" maximum="1"/>    
+  <association id="27">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="28" name="fields"/>      
+      <multiplicity id="29" minimum="0" maximum="2147483647"/>    
     </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="33">    
-    <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="34" name="comments"/>      
-      <multiplicity id="35" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
+    <end type="TARGET" refId="4" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 

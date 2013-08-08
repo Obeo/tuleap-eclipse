@@ -11,22 +11,22 @@
 package org.tuleap.mylyn.task.internal.core.model.field;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
+import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 import org.tuleap.mylyn.task.internal.core.model.workflow.TuleapWorkflow;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
+import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 
 /**
  * The Tuleap select box widget.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
+ * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  * @since 0.7
  */
-public class TuleapSelectBox extends AbstractTuleapField {
+public class TuleapSelectBox extends AbstractTuleapSelectBox {
 
 	/**
 	 * The serialization ID.
@@ -34,29 +34,9 @@ public class TuleapSelectBox extends AbstractTuleapField {
 	private static final long serialVersionUID = 5407624943841583459L;
 
 	/**
-	 * The select box items.
-	 */
-	private List<TuleapSelectBoxItem> items = new ArrayList<TuleapSelectBoxItem>();
-
-	/**
-	 * The value of the binding of the select box.
-	 */
-	private String binding;
-
-	/**
-	 * The list of items that should be considered as an open status semantically.
-	 */
-	private List<TuleapSelectBoxItem> openStatus = new ArrayList<TuleapSelectBoxItem>();
-
-	/**
 	 * The workflow of the field.
 	 */
-	private TuleapWorkflow workflow = new TuleapWorkflow();
-
-	/**
-	 * Indicates if this field represents the list of contributors of the artifact.
-	 */
-	private boolean isSemanticContributor;
+	protected TuleapWorkflow workflow = new TuleapWorkflow();
 
 	/**
 	 * The constructor.
@@ -69,76 +49,12 @@ public class TuleapSelectBox extends AbstractTuleapField {
 	}
 
 	/**
-	 * Returns the list of the items available in the select box.
+	 * Returns the workflow of the field.
 	 * 
-	 * @return The list of the items available in the select box.
+	 * @return The workflow of the field.
 	 */
-	public List<TuleapSelectBoxItem> getItems() {
-		return this.items;
-	}
-
-	/**
-	 * Returns the list of items that should be considered as opened status semantically.
-	 * 
-	 * @return The list of items that should be considered as opened status semantically.
-	 */
-	public List<TuleapSelectBoxItem> getOpenStatus() {
-		return this.openStatus;
-	}
-
-	/**
-	 * Returns the list of items that should be considered as closed status semantically.
-	 * 
-	 * @return The list of items that should be considered as closed status semantically.
-	 */
-	public List<TuleapSelectBoxItem> getClosedStatus() {
-		ArrayList<TuleapSelectBoxItem> closedStatus = new ArrayList<TuleapSelectBoxItem>(this.items);
-		closedStatus.removeAll(this.openStatus);
-		return closedStatus;
-	}
-
-	/**
-	 * Returns <code>true</code> if this field is to be considered as the status of the artifact semantically,
-	 * <code>false</code> otherwise.
-	 * 
-	 * @return <code>true</code> if this field is to be considered as the status of the artifact semantically,
-	 *         <code>false</code> otherwise.
-	 */
-	public boolean isSemanticStatus() {
-		return this.openStatus.size() > 0;
-	}
-
-	/**
-	 * Returns <code>true</code> if this field represents the list of contributors on the artifact of the
-	 * tracker, <code>false</code> otherwise.
-	 * 
-	 * @return <code>true</code> if this field represents the list of contributors on the artifact of the
-	 *         tracker, <code>false</code> otherwise.
-	 */
-	public boolean isSemanticContributor() {
-		return this.isSemanticContributor;
-	}
-
-	/**
-	 * Sets to indicate that this field represents the list of the contributors on the artifact of the
-	 * tracker.
-	 * 
-	 * @param isContributor
-	 *            <code>true</code> to indicate that this field represents the list of contributors on the
-	 *            artifact of the tracker.
-	 */
-	public void setSemanticContributor(boolean isContributor) {
-		this.isSemanticContributor = isContributor;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField#getMetadataKind()
-	 */
-	@Override
-	public String getMetadataKind() {
-		return TaskAttribute.KIND_DEFAULT;
+	public TuleapWorkflow getWorkflow() {
+		return this.workflow;
 	}
 
 	/**
@@ -154,70 +70,125 @@ public class TuleapSelectBox extends AbstractTuleapField {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField#getOptions()
+	 * @see org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField#afterTaskAttributeCreation(org.eclipse.mylyn.tasks.core.data.TaskAttribute)
 	 */
 	@Override
-	public Map<String, String> getOptions() {
-		Map<String, String> options = new HashMap<String, String>();
-		for (TuleapSelectBoxItem item : this.items) {
-			options.put(item.getLabel(), item.getLabel());
+	protected void afterTaskAttributeCreation(TaskAttribute attribute) {
+		// Possible values
+		if (workflow != null && workflow.getTransitions().size() > 0) {
+			updateOptionsWithWorkflow(attribute);
+		} else {
+			super.afterTaskAttributeCreation(attribute);
 		}
-		return options;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Updates the given task attribute's options depending on the configuration workflow and the task's
+	 * current status.
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField#getDefaultValue()
+	 * @param attribute
+	 *            The task attribute to update.
+	 */
+	public void updateOptionsWithWorkflow(TaskAttribute attribute) {
+		// The widget has a workflow
+		TuleapSelectBoxItem item = null;
+		String value = attribute.getValue();
+
+		// TODO Create a map for the items instead of a list
+		for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
+			if (value != null && value.equals(tuleapSelectBoxItem.getLabel())) {
+				item = tuleapSelectBoxItem;
+				break;
+			}
+		}
+
+		if (item != null) {
+			List<Integer> accessibleStates = getWorkflow().accessibleStates(item.getIdentifier());
+			attribute.clearOptions();
+			attribute.putOption(value, value);
+
+			for (Integer accessibleState : accessibleStates) {
+				for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
+					if (accessibleState.intValue() == tuleapSelectBoxItem.getIdentifier()) {
+						attribute.putOption(tuleapSelectBoxItem.getLabel(), tuleapSelectBoxItem.getLabel());
+					}
+				}
+			}
+		} else {
+			// If we start from an empty state, we can go to the state for the item with the identifier 0.
+			List<Integer> accessibleStates = getWorkflow().accessibleStates(
+					ITuleapConstants.NEW_ARTIFACT_WORKFLOW_IDENTIFIER);
+			attribute.clearOptions();
+
+			for (Integer accessibleState : accessibleStates) {
+				for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
+					if (accessibleState.intValue() == tuleapSelectBoxItem.getIdentifier()) {
+						attribute.putOption(tuleapSelectBoxItem.getLabel(), tuleapSelectBoxItem.getLabel());
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * {@inheritDoc} Also creates the operation attributes required to manage the status, with the relevant
+	 * options depending on the currently selected option.
+	 * 
+	 * @see org.tuleap.mylyn.task.internal.core.model.field.AbstractTuleapSelectBox#createStatusTaskAttribute(org.eclipse.mylyn.tasks.core.data.TaskAttribute)
 	 */
 	@Override
-	public Object getDefaultValue() {
-		return null;
-	}
+	protected TaskAttribute createStatusTaskAttribute(TaskAttribute parent) {
+		TaskAttribute attribute = super.createStatusTaskAttribute(parent);
 
-	/**
-	 * Sets the value of the binding of the select box.
-	 * <p>
-	 * The binding must be one of the following value:
-	 * <ul>
-	 * <li>static (the collections of the possible bindings must then be added to
-	 * {@link org.tuleap.mylyn.task.internal.core.model.TuleapSelectBox#getItems()}</li>
-	 * <li>users (the collections of users must be requested to the server and then added to
-	 * {@link org.tuleap.mylyn.task.internal.core.model.TuleapSelectBox#getItems()}</li>
-	 * </ul>
-	 * </p>
-	 * 
-	 * @param selectBoxBinding
-	 *            The value of the binding
-	 */
-	public void setBinding(String selectBoxBinding) {
-		this.binding = selectBoxBinding;
-	}
+		TaskAttribute operationAttribute = parent.getAttribute(TaskAttribute.OPERATION);
+		if (operationAttribute == null) {
+			operationAttribute = parent.createAttribute(TaskAttribute.OPERATION);
+		}
+		TaskOperation.applyTo(operationAttribute, TaskAttribute.STATUS, TuleapMylynTasksMessages
+				.getString("TuleapTaskDataHandler.MarkAs")); //$NON-NLS-1$
 
-	/**
-	 * Returns the kind of binding used by this select box.
-	 * 
-	 * @return The kind of binding used by this select box.
-	 */
-	public String getBinding() {
-		return this.binding;
-	}
+		List<String> tuleapStatus = new ArrayList<String>();
 
-	/**
-	 * Returns <code>true</code> if the field is statically binded, <code>false</code> otherwise.
-	 * 
-	 * @return <code>true</code> if the field is statically binded, <code>false</code> otherwise.
-	 */
-	public boolean isStaticallyBinded() {
-		return ITuleapConstants.TULEAP_STATIC_BINDING_ID.equals(this.binding);
-	}
+		String currentStatus = null;
+		TaskAttribute statusAttribute = parent.getTaskData().getRoot().getMappedAttribute(
+				TaskAttribute.STATUS);
+		if (attribute != null) {
+			currentStatus = parent.getTaskData().getAttributeMapper().getValueLabel(statusAttribute);
+		}
+		if (currentStatus != null && currentStatus.length() > 0) {
+			for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
+				if (tuleapSelectBoxItem.getLabel().equals(currentStatus)) {
+					// Only support the reachable state from the current status
+					List<Integer> accessibleStates = workflow.accessibleStates(tuleapSelectBoxItem
+							.getIdentifier());
+					for (Integer accessibleState : accessibleStates) {
+						for (TuleapSelectBoxItem item : items) {
+							if (item.getIdentifier() == accessibleState.intValue()) {
+								tuleapStatus.add(item.getLabel());
+							}
+						}
+					}
+				}
+			}
+		} else {
+			for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
+				tuleapStatus.add(tuleapSelectBoxItem.getLabel());
+			}
+		}
 
-	/**
-	 * Returns the workflow of the field.
-	 * 
-	 * @return The workflow of the field.
-	 */
-	public TuleapWorkflow getWorkflow() {
-		return this.workflow;
+		TaskAttribute attrResolvedInput = parent.createAttribute(TaskAttribute.PREFIX_OPERATION
+				+ TaskAttribute.STATUS);
+		attrResolvedInput.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+		attrResolvedInput.getMetaData().setKind(TaskAttribute.KIND_OPERATION);
+		for (String status : tuleapStatus) {
+			attrResolvedInput.putOption(status, status);
+		}
+		TaskOperation.applyTo(attrResolvedInput, TaskAttribute.STATUS, TuleapMylynTasksMessages
+				.getString("TuleapTaskDataHandler.MarkAs")); //$NON-NLS-1$
+
+		attrResolvedInput.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID,
+				TaskAttribute.STATUS);
+
+		return attribute;
 	}
 }

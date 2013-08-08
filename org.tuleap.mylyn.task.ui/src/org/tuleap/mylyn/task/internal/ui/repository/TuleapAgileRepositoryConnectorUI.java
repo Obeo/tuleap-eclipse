@@ -12,10 +12,16 @@ package org.tuleap.mylyn.task.internal.ui.repository;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.tuleap.mylyn.task.agile.ui.AbstractAgileRepositoryConnectorUI;
+import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
+import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
+import org.tuleap.mylyn.task.internal.core.repository.TuleapTaskMapper;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
+import org.tuleap.mylyn.task.internal.ui.wizards.NewTuleapTaskWizard;
 
 /**
  * Agile repository connector UI for Tuleap, which is exposed as an OSGI service.
@@ -47,12 +53,29 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 	@Override
 	public IWizard getNewMilestoneWizard(TaskData planningTaskData, TaskRepository taskRepository,
 			IProgressMonitor monitor) {
-		// return new NewTuleapTaskWizard(taskRepository, taskSelection);
+		// TODO Comment obtenir le tracker où créer la nouvelle tâche ?
+		// TODO Créer un interface de wizard qui permette de shunter les pages inutiles et de préalimenter ce
+		// qu'on veut forcer (notamment le tracker)
+		NewTuleapTaskWizard wizard = new NewTuleapTaskWizard(taskRepository, null);
+
+		TuleapTaskMapper mapper = new TuleapTaskMapper(planningTaskData);
+		int trackerId = mapper.getTrackerId();
+
+		String connectorKind = taskRepository.getConnectorKind();
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+				connectorKind);
+		if (connector instanceof TuleapRepositoryConnector) {
+			TuleapRepositoryConnector tuleapRepositoryConnector = (TuleapRepositoryConnector)connector;
+			TuleapInstanceConfiguration repositoryConfiguration = tuleapRepositoryConnector
+					.getRepositoryConfiguration(taskRepository.getRepositoryUrl());
+
+		}
+
+		return wizard;
 		// AbstractRepositoryConnector de tuleap
 		// repositoryConnector.getTaskDataHandler().initializeTaskData(TaskRepository, TaskData, ITaskMapping,
 		// IProgressMonitor);
 		// create task from task data
-		return null; // FIXME
 	}
 
 }

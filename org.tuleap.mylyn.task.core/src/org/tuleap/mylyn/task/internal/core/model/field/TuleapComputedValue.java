@@ -11,28 +11,29 @@
 package org.tuleap.mylyn.task.internal.core.model.field;
 
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 
 /**
- * The Tuleap open list field.
+ * The computed value Tuleap dynamic field.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
-public class TuleapOpenList extends AbstractTuleapField {
+public class TuleapComputedValue extends AbstractTuleapField {
 
 	/**
 	 * The serialization ID.
 	 */
-	private static final long serialVersionUID = -6206534825044562854L;
+	private static final long serialVersionUID = 5752655667355337938L;
 
 	/**
 	 * The constructor.
 	 * 
 	 * @param formElementIdentifier
-	 *            The identifier of the form element
+	 *            The identifier of the form element.
 	 */
-	public TuleapOpenList(int formElementIdentifier) {
+	public TuleapComputedValue(int formElementIdentifier) {
 		super(formElementIdentifier);
 	}
 
@@ -53,7 +54,7 @@ public class TuleapOpenList extends AbstractTuleapField {
 	 */
 	@Override
 	public String getMetadataType() {
-		return TaskAttribute.TYPE_SHORT_RICH_TEXT;
+		return TaskAttribute.TYPE_INTEGER;
 	}
 
 	/**
@@ -65,4 +66,16 @@ public class TuleapOpenList extends AbstractTuleapField {
 	public Object getDefaultValue() {
 		return ""; //$NON-NLS-1$
 	}
+
+	/**
+	 * Sets the readonly flag to true in the given metadata. {@inheritDoc}
+	 * 
+	 * @see org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField#initializeMetaData(org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData)
+	 */
+	@Override
+	protected void initializeMetaData(TaskAttributeMetaData metaData) {
+		super.initializeMetaData(metaData);
+		metaData.setReadOnly(true);
+	}
+
 }

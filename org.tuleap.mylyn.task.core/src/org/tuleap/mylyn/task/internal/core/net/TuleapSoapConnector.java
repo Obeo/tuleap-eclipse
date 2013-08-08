@@ -56,24 +56,17 @@ import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerReport;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapArtifactLink;
+import org.tuleap.mylyn.task.internal.core.model.field.TuleapComputedValue;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapDate;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapFileUpload;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapFloat;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapInteger;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapMultiSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapOpenList;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapPermissionOnArtifact;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapText;
-import org.tuleap.mylyn.task.internal.core.model.field.dynamic.TuleapArtifactId;
-import org.tuleap.mylyn.task.internal.core.model.field.dynamic.TuleapBurndownChart;
-import org.tuleap.mylyn.task.internal.core.model.field.dynamic.TuleapComputedValue;
-import org.tuleap.mylyn.task.internal.core.model.field.dynamic.TuleapCrossReferences;
-import org.tuleap.mylyn.task.internal.core.model.field.dynamic.TuleapLastUpdateDate;
-import org.tuleap.mylyn.task.internal.core.model.field.dynamic.TuleapSubmittedBy;
-import org.tuleap.mylyn.task.internal.core.model.field.dynamic.TuleapSubmittedOn;
 import org.tuleap.mylyn.task.internal.core.model.workflow.TuleapWorkflow;
 import org.tuleap.mylyn.task.internal.core.model.workflow.TuleapWorkflowTransition;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapTaskDataHandler;
@@ -455,10 +448,6 @@ public class TuleapSoapConnector {
 			}
 		} else if (ITuleapConfigurationConstants.TEXT.equals(type)) {
 			tuleapField = new TuleapText(fieldIdentifier);
-		} else if (ITuleapConfigurationConstants.AID.equals(type)) {
-			tuleapField = new TuleapArtifactId(fieldIdentifier);
-		} else if (ITuleapConfigurationConstants.LUD.equals(type)) {
-			tuleapField = new TuleapLastUpdateDate(fieldIdentifier);
 		} else if (ITuleapConfigurationConstants.SB.equals(type)) {
 			tuleapField = this.getTuleapSelectBox(trackerStructure, trackerField);
 		} else if (ITuleapConfigurationConstants.MSB.equals(type)
@@ -468,20 +457,10 @@ public class TuleapSoapConnector {
 			tuleapField = new TuleapDate(fieldIdentifier);
 		} else if (ITuleapConfigurationConstants.FILE.equals(type)) {
 			tuleapField = new TuleapFileUpload(fieldIdentifier);
-		} else if (ITuleapConfigurationConstants.CROSS.equals(type)) {
-			tuleapField = new TuleapCrossReferences(fieldIdentifier);
 		} else if (ITuleapConfigurationConstants.ARTLINK.equals(type)) {
 			tuleapField = new TuleapArtifactLink(fieldIdentifier);
-		} else if (ITuleapConfigurationConstants.SUBBY.equals(type)) {
-			tuleapField = new TuleapSubmittedBy(fieldIdentifier);
-		} else if (ITuleapConfigurationConstants.SUBON.equals(type)) {
-			tuleapField = new TuleapSubmittedOn(fieldIdentifier);
 		} else if (ITuleapConfigurationConstants.INT.equals(type)) {
 			tuleapField = new TuleapInteger(fieldIdentifier);
-		} else if (ITuleapConfigurationConstants.BURNDOWN.equals(type)) {
-			tuleapField = new TuleapBurndownChart(fieldIdentifier);
-		} else if (ITuleapConfigurationConstants.PERM.equals(type)) {
-			tuleapField = new TuleapPermissionOnArtifact(fieldIdentifier);
 		} else if (ITuleapConfigurationConstants.TBL.equals(type)) {
 			tuleapField = new TuleapOpenList(fieldIdentifier);
 		} else if (ITuleapConfigurationConstants.FLOAT.equals(type)) {

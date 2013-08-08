@@ -11,8 +11,15 @@
 package org.tuleap.mylyn.task.internal.core.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
+import org.tuleap.mylyn.task.internal.core.model.field.AbstractTuleapSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.field.TuleapFileUpload;
+import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
 
 /**
  * The repository configuration will hold the latest known configuration of a given repository. This
@@ -53,14 +60,9 @@ public class TuleapTrackerConfiguration implements Serializable {
 	private String description;
 
 	/**
-	 * The list of canned responses.
-	 */
-	private List<TuleapCannedResponse> cannedResponses = new ArrayList<TuleapCannedResponse>();
-
-	/**
 	 * The fields of the Tuleap tracker.
 	 */
-	private List<AbstractTuleapField> fields = new ArrayList<AbstractTuleapField>();
+	private Map<Integer, AbstractTuleapField> fields = new LinkedHashMap<Integer, AbstractTuleapField>();
 
 	/**
 	 * The identifier of the tracker.
@@ -71,6 +73,26 @@ public class TuleapTrackerConfiguration implements Serializable {
 	 * The configuration of the project containing the tracker.
 	 */
 	private TuleapProjectConfiguration tuleapProjectConfiguration;
+
+	/**
+	 * The cached status field.
+	 */
+	private AbstractTuleapSelectBox statusField;
+
+	/**
+	 * The cached contributor field.
+	 */
+	private AbstractTuleapSelectBox contributorField;
+
+	/**
+	 * The attachement field.
+	 */
+	private TuleapFileUpload attachmentField;
+
+	/**
+	 * A cache for the repository persons available.
+	 */
+	private Map<String, IRepositoryPerson> personsByEmail = new HashMap<String, IRepositoryPerson>();
 
 	/**
 	 * The default constructor.
@@ -190,21 +212,34 @@ public class TuleapTrackerConfiguration implements Serializable {
 	}
 
 	/**
-	 * Returns the fields of the tracker.
+	 * Returns an immutable view of the fields of the tracker. Elements cannot be added or removed form the
+	 * returned list.
 	 * 
-	 * @return The fields of the tracker.
+	 * @return An immutable view of the fields of the tracker.
 	 */
-	public List<AbstractTuleapField> getFields() {
-		return this.fields;
+	public Collection<AbstractTuleapField> getFields() {
+		return this.fields.values();
 	}
 
 	/**
-	 * Returns the list of the canned responses.
+	 * Add a field to this configuration. If the given field has a specific semantic, it is cached in the
+	 * relevant field to allow for easy retrieval.
 	 * 
-	 * @return The list of the canned respones.
+	 * @param field
+	 *            The field to add to the configuration
 	 */
-	public List<TuleapCannedResponse> getCannedResponses() {
-		return this.cannedResponses;
+	public void addField(AbstractTuleapField field) {
+		this.fields.put(Integer.valueOf(field.getIdentifier()), field);
+		if (field instanceof AbstractTuleapSelectBox) {
+			AbstractTuleapSelectBox selectbox = (AbstractTuleapSelectBox)field;
+			if (selectbox.isSemanticStatus()) {
+				this.statusField = selectbox;
+			} else if (selectbox.isSemanticContributor()) {
+				this.contributorField = selectbox;
+			}
+		} else if (field instanceof TuleapFileUpload) {
+			attachmentField = (TuleapFileUpload)field;
+		}
 	}
 
 	/**
@@ -242,5 +277,85 @@ public class TuleapTrackerConfiguration implements Serializable {
 	 */
 	public TuleapProjectConfiguration getTuleapProjectConfiguration() {
 		return tuleapProjectConfiguration;
+	}
+
+	/**
+	 * Provides access to the cached status field. To use only used after configuration creation.
+	 * 
+	 * @return The field with the "status" semantic or null if such a field doesn't exist.
+	 */
+	public AbstractTuleapSelectBox getStatusField() {
+		return statusField;
+	}
+
+	/**
+	 * Provides access to the cached contributor field. To use only used after configuration creation.
+	 * 
+	 * @return The field with the "contributor" semantic or null if such a field doesn't exist.
+	 */
+	public AbstractTuleapSelectBox getContributorField() {
+		return contributorField;
+	}
+
+	/**
+	 * Provides access to the attachment field of this configuration.
+	 * 
+	 * @return The attachment field of this configuration.
+	 */
+	public TuleapFileUpload getAttachmentField() {
+		return attachmentField;
+	}
+
+	/**
+	 * Indicates whether the given status represents a closed status.
+	 * 
+	 * @param status
+	 *            The status for which you want to know if it means the task is closed.
+	 * @return {@code true} if the configuration of the status field closed statuses contains the given
+	 *         status, {@false otherwise}.
+	 */
+	public boolean hasClosedStatusMeaning(String status) {
+		if (statusField != null) {
+			for (TuleapSelectBoxItem item : statusField.getClosedStatus()) {
+				if (item.getLabel().equals(status)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Provides access to a configuration field by its id.
+	 * 
+	 * @param id
+	 *            the field identifier
+	 * @return The configuration field or null if it doesn't exist.
+	 */
+	public AbstractTuleapField getFieldById(int id) {
+		return fields.get(Integer.valueOf(id));
+	}
+
+	/**
+	 * Returns the person registered in the local cache for the given email (which must be the person's id).
+	 * 
+	 * @param email
+	 *            the person's email, which must also be his id
+	 * @return The person registered for this email, or null if none is registered for this email.
+	 */
+	public IRepositoryPerson getPerson(String email) {
+		return personsByEmail.get(email);
+	}
+
+	/**
+	 * Register the given person for the given email in a local cache.
+	 * 
+	 * @param person
+	 *            The person
+	 * @return The given person, for fluency.
+	 */
+	public IRepositoryPerson registerPerson(IRepositoryPerson person) {
+		personsByEmail.put(person.getPersonId(), person);
+		return person;
 	}
 }
