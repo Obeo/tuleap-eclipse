@@ -30,6 +30,7 @@ import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapText;
+import org.tuleap.mylyn.task.internal.core.model.workflow.TuleapWorkflowTransition;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapAttributeMapper;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
@@ -39,6 +40,7 @@ import org.tuleap.mylyn.task.internal.tests.mocks.MockedTuleapRepositoryConnecto
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -305,16 +307,21 @@ public class TuleapTaskMapperTests {
 	 * Check the correct creation of a select box attribute without special semantic.
 	 */
 	@Test
-	public void testInitializeEmptyTaskDataWithSelectBox() {
+	public void testInitializeEmptyTaskDataWithSemanticStatus() {
 		int id = 403;
-		tuleapTrackerConfiguration.addField(newTuleapSelectBox(id));
+		tuleapTrackerConfiguration.addField(newSemanticStatus(id));
 		mapper.initializeEmptyTaskData();
 
 		TaskAttribute att = taskData.getRoot().getMappedAttribute(String.valueOf(id));
+		assertNull(att);
+		att = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
 		assertNotNull(att);
+		assertEquals(5, att.getOptions().size());
+
 		TaskAttributeMetaData metadata = att.getMetaData();
 		assertEquals(TaskAttribute.TYPE_SINGLE_SELECT, metadata.getType());
-		assertEquals(getLabelFromId(id), metadata.getLabel());
+		assertEquals(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.Status"), //$NON-NLS-1$
+				metadata.getLabel());
 		String lbl = getLabelFromId(0);
 		assertEquals(lbl, att.getOption("0")); //$NON-NLS-1$
 		lbl = getLabelFromId(1);
@@ -323,9 +330,79 @@ public class TuleapTaskMapperTests {
 		assertEquals(lbl, att.getOption("2")); //$NON-NLS-1$
 		lbl = getLabelFromId(3);
 		assertEquals(lbl, att.getOption("3")); //$NON-NLS-1$
-		assertEquals("", att.getOption("")); //$NON-NLS-1$ //$NON-NLS-2$
+		assertEquals("", att.getOption(String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID))); //$NON-NLS-1$ 
+	}
 
-		System.out.println(att);
+	/**
+	 * Check the correct creation of a select box attribute without special semantic.
+	 */
+	@Test
+	public void testInitializeEmptyTaskDataWithSemanticStatusWithWorkflow() {
+		int id = 403;
+		tuleapTrackerConfiguration.addField(newSemanticStatusWithWorkflow(id));
+		mapper.initializeEmptyTaskData();
+
+		TaskAttribute att = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
+		assertNotNull(att);
+		TaskAttributeMetaData metadata = att.getMetaData();
+		assertEquals(TaskAttribute.TYPE_SINGLE_SELECT, metadata.getType());
+		assertEquals(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.Status"), //$NON-NLS-1$
+				metadata.getLabel());
+
+		// No value is assigned to the field
+		// => as if status were equal to 100, only 1 state should be accessible, state 0
+
+		assertEquals(2, att.getOptions().size());
+		String lbl = getLabelFromId(0);
+		assertEquals(lbl, att.getOption("0")); //$NON-NLS-1$
+		assertEquals("", att.getOption(String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID))); //$NON-NLS-1$
+	}
+
+	/**
+	 * Check the correct creation of a select box attribute without special semantic.
+	 */
+	@Test
+	public void testInitializeEmptyTaskDataWithSelectBoxWithWorkflow() {
+		int id = 403;
+		TuleapSelectBox selectBox = newTuleapSelectBox(id);
+		// We create 4 transitions:
+		// 100 -> 0 -> 1 -> 2 -> 3 & 2 -> 1
+		TuleapWorkflowTransition transition = new TuleapWorkflowTransition();
+		transition.setFrom(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID);
+		transition.setTo(0);
+		selectBox.getWorkflow().getTransitions().add(transition);
+		transition = new TuleapWorkflowTransition();
+		transition.setFrom(0);
+		transition.setTo(1);
+		selectBox.getWorkflow().getTransitions().add(transition);
+		transition = new TuleapWorkflowTransition();
+		transition.setFrom(1);
+		transition.setTo(2);
+		selectBox.getWorkflow().getTransitions().add(transition);
+		transition = new TuleapWorkflowTransition();
+		transition.setFrom(2);
+		transition.setTo(3);
+		selectBox.getWorkflow().getTransitions().add(transition);
+		transition = new TuleapWorkflowTransition();
+		transition.setFrom(2);
+		transition.setTo(1);
+		selectBox.getWorkflow().getTransitions().add(transition);
+		tuleapTrackerConfiguration.addField(selectBox);
+		mapper.initializeEmptyTaskData();
+
+		// No value is assigned to the field
+		// => as if status were equal to 100, only 1 state should be accessible, state 0
+
+		TaskAttribute att = taskData.getRoot().getMappedAttribute(String.valueOf(id));
+		assertNotNull(att);
+		TaskAttributeMetaData metadata = att.getMetaData();
+		assertEquals(TaskAttribute.TYPE_SINGLE_SELECT, metadata.getType());
+		assertEquals(getLabelFromId(id), metadata.getLabel());
+
+		assertEquals(2, att.getOptions().size());
+		String lbl = getLabelFromId(0);
+		assertEquals(lbl, att.getOption("0")); //$NON-NLS-1$
+		assertEquals("", att.getOption(String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID))); //$NON-NLS-1$
 	}
 
 	/**
@@ -342,8 +419,6 @@ public class TuleapTaskMapperTests {
 		TaskAttributeMetaData metadata = att.getMetaData();
 		assertEquals(TaskAttribute.TYPE_MULTI_SELECT, metadata.getType());
 		assertEquals(getLabelFromId(id), metadata.getLabel());
-
-		System.out.println(att);
 	}
 
 	/**
@@ -515,6 +590,41 @@ public class TuleapTaskMapperTests {
 		result.getOpenStatus().add(item1);
 		result.getClosedStatus().add(item2);
 		result.getClosedStatus().add(item3);
+		return result;
+	}
+
+	/**
+	 * Creates a new Tuleap select box Field with the semantic "status" and 4 fields among which the 3 first
+	 * are open and the two others are closed.
+	 * 
+	 * @param id
+	 *            the id
+	 * @return The created field
+	 */
+	private TuleapSelectBox newSemanticStatusWithWorkflow(int id) {
+		TuleapSelectBox result = newSemanticStatus(id);
+
+		// 100 -> 0 -> 1 <-> 2 -> 3
+		TuleapWorkflowTransition transition = new TuleapWorkflowTransition();
+		transition.setFrom(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID);
+		transition.setTo(0);
+		result.getWorkflow().getTransitions().add(transition);
+		transition = new TuleapWorkflowTransition();
+		transition.setFrom(0);
+		transition.setTo(1);
+		result.getWorkflow().getTransitions().add(transition);
+		transition = new TuleapWorkflowTransition();
+		transition.setFrom(1);
+		transition.setTo(2);
+		result.getWorkflow().getTransitions().add(transition);
+		transition = new TuleapWorkflowTransition();
+		transition.setFrom(2);
+		transition.setTo(3);
+		result.getWorkflow().getTransitions().add(transition);
+		transition = new TuleapWorkflowTransition();
+		transition.setFrom(2);
+		transition.setTo(1);
+		result.getWorkflow().getTransitions().add(transition);
 		return result;
 	}
 

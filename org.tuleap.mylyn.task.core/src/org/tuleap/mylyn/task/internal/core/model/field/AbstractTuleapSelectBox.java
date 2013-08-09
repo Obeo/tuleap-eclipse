@@ -277,7 +277,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 			attribute.putOption(String.valueOf(item.getIdentifier()), item.getLabel());
 		}
 		if (items.size() > 0) {
-			attribute.putOption("", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			attribute.putOption(String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID), ""); //$NON-NLS-1$
 		}
 	}
 
@@ -287,6 +287,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 	 * @return something useless
 	 * @deprecated
 	 */
+	@Override
 	@Deprecated
 	public Map<String, String> getOptions() {
 		Map<String, String> options = new HashMap<String, String>();
@@ -294,7 +295,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 			options.put(item.getLabel(), item.getLabel());
 		}
 		if (items.size() > 0) {
-			options.put("", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			options.put(String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID), ""); //$NON-NLS-1$
 		}
 		return options;
 	}

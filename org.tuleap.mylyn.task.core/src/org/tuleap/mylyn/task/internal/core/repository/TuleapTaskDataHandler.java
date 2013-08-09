@@ -412,7 +412,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			} else {
 				// If we start from an empty state, we can go to the state for the item with the identifier 0.
 				List<Integer> accessibleStates = tuleapSelectBox.getWorkflow().accessibleStates(
-						ITuleapConstants.NEW_ARTIFACT_WORKFLOW_IDENTIFIER);
+						ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID);
 				attribute.clearOptions();
 
 				for (Integer accessibleState : accessibleStates) {
@@ -430,7 +430,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				attribute.putOption(entry.getKey(), entry.getValue());
 			}
 			if (tuleapField.getOptions().size() > 0) {
-				attribute.putOption("", ""); //$NON-NLS-1$//$NON-NLS-2$
+				attribute.putOption(String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID), ""); //$NON-NLS-1$
 			}
 		}
 	}

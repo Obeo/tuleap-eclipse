@@ -116,10 +116,13 @@ public class TuleapSelectBox extends AbstractTuleapSelectBox {
 				}
 			}
 		} else {
-			// If we start from an empty state, we can go to the state for the item with the identifier 0.
+			// If there is no selected value, it is as if value "100" was selected
+			// Every workflow should have at least one transition from "100" to something,
+			// otherwise the select box will always be empty...
 			List<Integer> accessibleStates = getWorkflow().accessibleStates(
-					ITuleapConstants.NEW_ARTIFACT_WORKFLOW_IDENTIFIER);
+					ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID);
 			attribute.clearOptions();
+			attribute.putOption(String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID), ""); //$NON-NLS-1$
 
 			for (Integer accessibleState : accessibleStates) {
 				for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {

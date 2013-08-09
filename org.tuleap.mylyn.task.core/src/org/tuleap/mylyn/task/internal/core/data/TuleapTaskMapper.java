@@ -368,6 +368,7 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 *            The identifier of the field
 	 */
 	public void setStatus(Set<String> valuesId, int fieldId) {
+		// TODO LDE revoir ça, le statut est matérialisé par plusieurs champ en particulier TA.STATUS
 		TaskAttribute attribute = getMappedAttributeById(fieldId);
 		if (attribute != null) {
 			attribute.clearValues();

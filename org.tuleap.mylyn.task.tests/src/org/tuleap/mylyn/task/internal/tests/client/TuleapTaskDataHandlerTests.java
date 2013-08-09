@@ -1393,7 +1393,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapWorkflow tuleapWorkflow = tuleapSelectBox.getWorkflow();
 		TuleapWorkflowTransition aTransition = new TuleapWorkflowTransition();
-		aTransition.setFrom(ITuleapConstants.NEW_ARTIFACT_WORKFLOW_IDENTIFIER);
+		aTransition.setFrom(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID);
 		aTransition.setTo(secondSelectBoxItemId);
 		tuleapWorkflow.getTransitions().add(aTransition);
 
