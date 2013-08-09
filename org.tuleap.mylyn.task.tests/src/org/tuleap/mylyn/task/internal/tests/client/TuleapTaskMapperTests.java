@@ -422,6 +422,26 @@ public class TuleapTaskMapperTests {
 	}
 
 	/**
+	 * Check the correct creation of a multi select box attribute without special semantic.
+	 */
+	@Test
+	public void testInitializeEmptyTaskDataWithSemanticContributor() {
+		int id = 408;
+		tuleapTrackerConfiguration.addField(newSemanticContributorSingle(id));
+		mapper.initializeEmptyTaskData();
+
+		TaskAttribute att = taskData.getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED);
+		assertNotNull(att);
+		TaskAttributeMetaData metadata = att.getMetaData();
+		assertEquals(TaskAttribute.TYPE_SINGLE_SELECT, metadata.getType());
+		assertEquals(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.AssignedToLabel"), metadata
+				.getLabel());
+		assertEquals(TaskAttribute.KIND_PEOPLE, metadata.getKind());
+
+		System.out.println(taskData.getRoot());
+	}
+
+	/**
 	 * Creates a new Tuleap Date Field.
 	 * 
 	 * @param id
