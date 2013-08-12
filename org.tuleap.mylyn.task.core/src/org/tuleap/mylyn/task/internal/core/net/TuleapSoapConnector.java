@@ -788,7 +788,7 @@ public class TuleapSoapConnector {
 						} else if (ITuleapConfigurationConstants.MSB.equals(trackerField.getType())
 								|| ITuleapConfigurationConstants.SB.equals(trackerField.getType())
 								|| ITuleapConfigurationConstants.CB.equals(trackerField.getType())) {
-							this.populateArtifactForBindedField(tuleapArtifact, artifactFieldValue);
+							this.populateArtifactForBoundField(tuleapArtifact, artifactFieldValue);
 							found = true;
 						} else if (ITuleapConfigurationConstants.TBL.equals(trackerField.getType())) {
 							this.populateArtifactForOpenList(tuleapArtifact, artifactFieldValue);
@@ -865,7 +865,7 @@ public class TuleapSoapConnector {
 	 * @param artifactFieldValue
 	 *            The artifact field value of a binded field.
 	 */
-	private void populateArtifactForBindedField(TuleapArtifact tuleapArtifact,
+	private void populateArtifactForBoundField(TuleapArtifact tuleapArtifact,
 			ArtifactFieldValue artifactFieldValue) {
 		FieldValue fieldValue = artifactFieldValue.getField_value();
 		TrackerFieldBindValue[] bindValues = fieldValue.getBind_value();
