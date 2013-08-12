@@ -14,6 +14,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -358,26 +359,30 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				if (value != null) {
 					mapper.setSummary(value);
 				}
-			} else if (abstractTuleapField instanceof TuleapSelectBox) {
-				if (((TuleapSelectBox)abstractTuleapField).isSemanticStatus()) {
+			} else if (abstractTuleapField instanceof AbstractTuleapSelectBox) {
+				AbstractTuleapSelectBox box = (AbstractTuleapSelectBox)abstractTuleapField;
+				if (box.isSemanticStatus()) {
 					// Look for the status
 					this.createTaskDataStatusFromArtifact(tuleapArtifact, mapper, abstractTuleapField);
-				} else if (((TuleapSelectBox)abstractTuleapField).isSemanticContributor()) {
+				} else if (box.isSemanticContributor()) {
 					// Look for the contributors in the select box
-					this.setTaskDataContributors(tuleapArtifact, taskData,
-							(TuleapSelectBox)abstractTuleapField);
+					this.setTaskDataContributors(tuleapArtifact, taskData, box);
 				} else {
-					List<String> values = tuleapArtifact.getValues(abstractTuleapField.getName());
-					String value = values.get(0);
-					mapper.setSelectBoxValue(Integer.parseInt(value), abstractTuleapField.getIdentifier());
-				}
-			} else if (abstractTuleapField instanceof TuleapMultiSelectBox) {
-				if (((TuleapMultiSelectBox)abstractTuleapField).isSemanticStatus()) {
-					this.createTaskDataStatusFromArtifact(tuleapArtifact, mapper, abstractTuleapField);
-				} else if (((TuleapMultiSelectBox)abstractTuleapField).isSemanticContributor()) {
-					// Look for the contributors in the multi select box
-					this.setTaskDataContributors(tuleapArtifact, taskData,
-							(TuleapMultiSelectBox)abstractTuleapField);
+					List<String> values = tuleapArtifact.getValues(box.getName());
+					if (box instanceof TuleapSelectBox) {
+						String value = values.get(0);
+						mapper.setSelectBoxValue(Integer.parseInt(value), box.getIdentifier());
+					} else if (box instanceof TuleapMultiSelectBox) {
+						Set<Integer> intValues = new HashSet<Integer>();
+						for (String strValue : values) {
+							try {
+								intValues.add(Integer.valueOf(strValue));
+							} catch (NumberFormatException e) {
+								// Do nothing
+							}
+						}
+						mapper.setMultiSelectBoxValues(intValues, box.getIdentifier());
+					}
 				}
 			} else if (abstractTuleapField instanceof TuleapDate) {
 				// Look for the date

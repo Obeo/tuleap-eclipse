@@ -583,7 +583,22 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 *            The identifier of the field
 	 */
 	public void setMultiSelectBoxValues(Set<Integer> valuesId, int fieldId) {
-		throw new UnsupportedOperationException();
+		// ITuleapConstants -> 100 nothing selected
+		TaskAttribute attribute = getMappedAttributeById(fieldId);
+		if (attribute != null) {
+			attribute.clearValues();
+			for (Integer valueId : valuesId) {
+				if (valueId.intValue() != ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID) {
+					attribute.addValue(String.valueOf(valueId));
+				}
+			}
+		}
+		// Take the workflow of the select box into account if it exists
+		AbstractTuleapField field = trackerConfiguration.getFieldById(fieldId);
+		if (field instanceof TuleapSelectBox) {
+			TuleapSelectBox selectBox = (TuleapSelectBox)field;
+			selectBox.updateOptionsWithWorkflow(attribute);
+		} // TODO else configuration error?
 	}
 
 	/**

@@ -1346,7 +1346,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 			} else if (String.valueOf(secondSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(secondItemLabel));
 			} else {
-				fail("This entry should not be here");
+				fail("The entry" + entry + " should not be here"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
@@ -1542,7 +1542,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 			} else if (String.valueOf(secondSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(secondItemLabel));
 			} else {
-				fail("This entry should not be here");
+				fail("The entry" + entry + " should not be here"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
@@ -1647,7 +1647,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 			} else if (String.valueOf(secondSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(secondItemLabel));
 			} else {
-				fail("This entry should not be here");
+				fail("The entry" + entry + " should not be here"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
@@ -1790,7 +1790,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 			} else if (String.valueOf(secondSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(secondItemLabel));
 			} else {
-				fail("This entry should not be here");
+				fail("The entry" + entry + " should not be here"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
@@ -1848,7 +1848,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 			} else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(firstItemLabel));
 			} else {
-				fail("This entry should not be here");
+				fail("The entry" + entry + " should not be here"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
@@ -1916,7 +1916,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 			} else if (String.valueOf(secondSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(secondItemLabel));
 			} else {
-				fail("This entry should not be here");
+				fail("The entry" + entry + " should not be here"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
@@ -1986,7 +1986,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 			} else if (String.valueOf(secondSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(secondItemLabel));
 			} else {
-				fail("This entry should not be here");
+				fail("The entry" + entry + " should not be here"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
@@ -2091,7 +2091,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 			} else if (String.valueOf(secondSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(secondItemLabel));
 			} else {
-				fail("This entry should not be here");
+				fail("The entry" + entry + " should not be here"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
@@ -2730,7 +2730,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 			} else if (String.valueOf(secondSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(secondItemLabel));
 			} else {
-				fail("This entry should not be here");
+				fail("The entry" + entry + " should not be here"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
@@ -2791,7 +2791,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 			} else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(firstItemLabel));
 			} else {
-				fail("This entry should not be here");
+				fail("The entry" + entry + " should not be here"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
@@ -2929,7 +2929,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		tuleapTrackerConfiguration.addField(tuleapSelectBox);
 
 		TuleapArtifact tuleapArtifact = new TuleapArtifact(id, trackerId, trackerName, projectName);
-		tuleapArtifact.putValue(name, firstItemLabel);
+		tuleapArtifact.putValue(name, String.valueOf(firstSelectBoxItemId));
 		TaskData taskData = this.createTaskDataFromArtifact(tuleapArtifact);
 
 		// Check attributes
@@ -2949,12 +2949,12 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 			} else if (String.valueOf(secondSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(secondItemLabel));
 			} else {
-				fail("This entry should not be here");
+				fail("The entry" + entry + " should not be here"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
 		assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(1)));
-		assertThat(taskAttribute.getValue(), is(firstItemLabel));
+		assertThat(taskAttribute.getValue(), is(String.valueOf(firstSelectBoxItemId)));
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(STATUS_LABEL));
@@ -3000,7 +3000,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		tuleapTrackerConfiguration.addField(tuleapSelectBox);
 
 		TuleapArtifact tuleapArtifact = new TuleapArtifact(id, trackerId, trackerName, projectName);
-		tuleapArtifact.putValue(name, firstItemLabel);
+		tuleapArtifact.putValue(name, String.valueOf(firstSelectBoxItemId));
 		TaskData taskData = this.createTaskDataFromArtifact(tuleapArtifact);
 
 		// Check attributes
@@ -3020,12 +3020,12 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 			} else if (String.valueOf(secondSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(secondItemLabel));
 			} else {
-				fail("This entry should not be here");
+				fail("The entry" + entry + " should not be here"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
 		assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(1)));
-		assertThat(taskAttribute.getValue(), is(firstItemLabel));
+		assertThat(taskAttribute.getValue(), is(String.valueOf(firstSelectBoxItemId)));
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(CONTRIBUTORS_LABEL));
@@ -3071,7 +3071,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		tuleapTrackerConfiguration.addField(tuleapMultiSelectBox);
 
 		TuleapArtifact tuleapArtifact = new TuleapArtifact(id, trackerId, trackerName, projectName);
-		tuleapArtifact.putValue(name, firstItemLabel);
+		tuleapArtifact.putValue(name, String.valueOf(firstSelectBoxItemId));
 		TaskData taskData = this.createTaskDataFromArtifact(tuleapArtifact);
 
 		// Check attributes
@@ -3091,12 +3091,12 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 			} else if (String.valueOf(secondSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(secondItemLabel));
 			} else {
-				fail("This entry should not be here");
+				fail("The entry" + entry + " should not be here"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
 		assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(1)));
-		assertThat(taskAttribute.getValue(), is(firstItemLabel));
+		assertThat(taskAttribute.getValue(), is(String.valueOf(firstSelectBoxItemId)));
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
@@ -3151,7 +3151,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		tuleapTrackerConfiguration.addField(tuleapMultiSelectBox);
 
 		TuleapArtifact tuleapArtifact = new TuleapArtifact(id, trackerId, trackerName, projectName);
-		tuleapArtifact.putValue(name, firstItemLabel);
+		tuleapArtifact.putValue(name, String.valueOf(firstSelectBoxItemId));
 		TaskData taskData = this.createTaskDataFromArtifact(tuleapArtifact);
 
 		// Check attributes
@@ -3164,15 +3164,21 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(4)));
 		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		for (Entry<String, String> entry : entrySet) {
-			if (firstItemLabel.equals(entry.getKey())) {
+			if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
+				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
+			} else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(firstItemLabel));
-			} else if (thirdItemLabel.equals(entry.getKey())) {
+			} else if (String.valueOf(secondSelectBoxItemId).equals(entry.getKey())) {
+				assertThat(entry.getValue(), is(secondItemLabel));
+			} else if (String.valueOf(thirdSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(thirdItemLabel));
+			} else {
+				fail("The entry " + entry + "should not be here"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
 		assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(1)));
-		assertThat(taskAttribute.getValue(), is(firstItemLabel));
+		assertThat(taskAttribute.getValue(), is(String.valueOf(firstSelectBoxItemId)));
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
@@ -3244,7 +3250,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 			} else if (String.valueOf(secondSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(secondItemLabel));
 			} else {
-				fail("This entry should not be here");
+				fail("The entry" + entry + " should not be here"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
@@ -3314,7 +3320,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 			} else if (String.valueOf(secondSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(secondItemLabel));
 			} else {
-				fail("This entry should not be here");
+				fail("The entry" + entry + " should not be here"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
