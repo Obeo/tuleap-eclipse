@@ -27,7 +27,8 @@
       "childrenTrackerId": [
         2
       ]
-    }
+    },
+    "has_cardwall": true
   },
   {
     "id": 1,
@@ -183,8 +184,7 @@
         "short_name": "assigned-to",
         "label": "Assigned To",
         "type": "msb",
-        "binding": [
-          {
+        "binding": {
             "bind_type": "users",
             "bind_list": [
               {
@@ -196,8 +196,7 @@
                 "user_group_name": "Project Members"
               }
             ]
-          }
-        ],
+          },
         "permissions": [
           "read",
           "create",
@@ -353,7 +352,8 @@
     },
     "hierarchy": {
       "parentTrackerId": 5
-    }
+    },
+    "has_cardwall": false
   },
   {
     "id": 2,
@@ -452,7 +452,8 @@
       "childrenTrackerId": [
         3
       ]
-    }
+    },
+    "has_cardwall": true
   },
   {
     "id": 3,
@@ -554,7 +555,8 @@
       "childrenTrackerId": [
         5
       ]
-    }
+    },
+    "has_cardwall": true
   },
   {
     "id": 4,
@@ -625,6 +627,7 @@
     },
     "hierarchy": {
       "parentTrackerId": 5
-    }
+    },
+    "has_cardwall": false
   }
 ]
