@@ -57,7 +57,7 @@ public class TuleapTrackerConfigurationDeserializer implements JsonDeserializer<
 	/**
 	 * The field open status key word.
 	 */
-	private final String jsonOpenStatusIds = "open_status_field_value_ids"; //$NON-NLS-1$
+	private final String jsonOpenStatusIds = "open_status_field_values_ids"; //$NON-NLS-1$
 
 	/**
 	 * {@inheritDoc}

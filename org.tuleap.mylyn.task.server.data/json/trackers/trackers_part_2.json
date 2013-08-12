@@ -47,7 +47,7 @@
       },
       "status": {
         "field_id": 1,
-        "open_status_field_value_ids": [
+        "open_status_field_values_ids": [
           0
         ]
       }
