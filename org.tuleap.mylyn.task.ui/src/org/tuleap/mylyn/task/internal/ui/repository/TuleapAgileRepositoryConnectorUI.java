@@ -53,9 +53,10 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 	@Override
 	public IWizard getNewMilestoneWizard(TaskData planningTaskData, TaskRepository taskRepository,
 			IProgressMonitor monitor) {
-		// TODO Comment obtenir le tracker où créer la nouvelle tâche ?
-		// TODO Créer un interface de wizard qui permette de shunter les pages inutiles et de préalimenter ce
-		// qu'on veut forcer (notamment le tracker)
+		// TODO How can we find the tracker in which the task will be created?
+		// TODO Create an interface for wizards used in order to skip useless pages in order to filter the
+		// content of the wizard. We don't want to see all the pages of the Tuleap wizard,just the tracker
+		// selection.
 		NewTuleapTaskWizard wizard = new NewTuleapTaskWizard(taskRepository, null);
 
 		TuleapTaskMapper mapper = new TuleapTaskMapper(planningTaskData);
@@ -77,5 +78,4 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 		// IProgressMonitor);
 		// create task from task data
 	}
-
 }
