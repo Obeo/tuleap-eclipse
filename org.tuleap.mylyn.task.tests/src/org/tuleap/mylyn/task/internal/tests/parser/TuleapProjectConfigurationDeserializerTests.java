@@ -208,7 +208,6 @@ public class TuleapProjectConfigurationDeserializerTests {
 	 */
 	@Test
 	public void testProject0Parsing() {
-		System.out.println(project0);
 		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project0);
 		assertNotNull(tuleapProjectConfiguration);
 		assertEquals(0, tuleapProjectConfiguration.getIdentifier());
@@ -220,7 +219,6 @@ public class TuleapProjectConfigurationDeserializerTests {
 	 */
 	@Test
 	public void testProject1Parsing() {
-		System.out.println(project1);
 		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project1);
 		assertNotNull(tuleapProjectConfiguration);
 		assertEquals(1, tuleapProjectConfiguration.getIdentifier());
@@ -232,7 +230,6 @@ public class TuleapProjectConfigurationDeserializerTests {
 	 */
 	@Test
 	public void testProject2Parsing() {
-		System.out.println(project2);
 		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project2);
 		assertNotNull(tuleapProjectConfiguration);
 		assertEquals(2, tuleapProjectConfiguration.getIdentifier());
@@ -244,7 +241,6 @@ public class TuleapProjectConfigurationDeserializerTests {
 	 */
 	@Test
 	public void testProject3Parsing() {
-		System.out.println(project3);
 		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project3);
 		assertNotNull(tuleapProjectConfiguration);
 		assertEquals(3, tuleapProjectConfiguration.getIdentifier());
@@ -256,7 +252,6 @@ public class TuleapProjectConfigurationDeserializerTests {
 	 */
 	@Test
 	public void testProject4Parsing() {
-		System.out.println(project4);
 		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project4);
 		assertNotNull(tuleapProjectConfiguration);
 		assertEquals(4, tuleapProjectConfiguration.getIdentifier());
@@ -268,8 +263,6 @@ public class TuleapProjectConfigurationDeserializerTests {
 	 */
 	@Test
 	public void testProjectsParsing() {
-		System.out.println(projects);
-
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(TuleapProjectConfiguration.class,
 				new TuleapProjectConfigurationDeserializer());
