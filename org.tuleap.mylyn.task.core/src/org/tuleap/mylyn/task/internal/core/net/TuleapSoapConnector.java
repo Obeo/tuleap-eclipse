@@ -404,7 +404,7 @@ public class TuleapSoapConnector {
 					tuleapField.setName(trackerField.getShort_name());
 					tuleapField.setLabel(trackerField.getLabel());
 					tuleapField.setPermissions(trackerField.getPermissions());
-					tuleapTrackerConfiguration.getFields().add(tuleapField);
+					tuleapTrackerConfiguration.addField(tuleapField);
 				}
 			}
 		} catch (RemoteException e) {
@@ -534,7 +534,7 @@ public class TuleapSoapConnector {
 				TuleapSelectBoxItem tuleapSelectBoxItem = new TuleapSelectBoxItem(trackerFieldBindValue
 						.getBind_value_id());
 				tuleapSelectBoxItem.setLabel(trackerFieldBindValue.getBind_value_label());
-				tuleapField.getItems().add(tuleapSelectBoxItem);
+				tuleapField.addItem(tuleapSelectBoxItem);
 				if (ArrayUtils.contains(trackerSemanticStatusOpenValues, trackerFieldBindValue
 						.getBind_value_id())) {
 					tuleapField.getOpenStatus().add(tuleapSelectBoxItem);
@@ -574,7 +574,7 @@ public class TuleapSoapConnector {
 			String label = userInfo.getReal_name() + " (" + userInfo.getUsername() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 			TuleapSelectBoxItem tuleapSelectBoxItem = new TuleapSelectBoxItem(userId);
 			tuleapSelectBoxItem.setLabel(label);
-			tuleapSelectBox.getItems().add(tuleapSelectBoxItem);
+			tuleapSelectBox.addItem(tuleapSelectBoxItem);
 		}
 	}
 
@@ -613,7 +613,7 @@ public class TuleapSoapConnector {
 			TuleapSelectBoxItem tuleapSelectBoxItem = new TuleapSelectBoxItem(trackerFieldBindValue
 					.getBind_value_id());
 			tuleapSelectBoxItem.setLabel(trackerFieldBindValue.getBind_value_label());
-			tuleapField.getItems().add(tuleapSelectBoxItem);
+			tuleapField.addItem(tuleapSelectBoxItem);
 
 			// Semantic status
 			if (trackerField.getShort_name().equals(trackerSemanticStatus.getField_name())) {
