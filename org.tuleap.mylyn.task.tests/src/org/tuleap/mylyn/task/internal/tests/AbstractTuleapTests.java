@@ -12,8 +12,6 @@ package org.tuleap.mylyn.task.internal.tests;
 
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
@@ -28,9 +26,14 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tests.util.TestFixture;
+import org.junit.After;
+import org.junit.Before;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapClient;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.tests.support.TuleapFixture;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * Utility parent class for all Mylyn Tuleap unit tests.
@@ -38,7 +41,7 @@ import org.tuleap.mylyn.task.internal.tests.support.TuleapFixture;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
-public abstract class AbstractTuleapTests extends TestCase {
+public abstract class AbstractTuleapTests {
 	/**
 	 * The Tuleap repository connector.
 	 */
@@ -69,9 +72,8 @@ public abstract class AbstractTuleapTests extends TestCase {
 	 * 
 	 * @see junit.framework.TestCase#setUp()
 	 */
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(
 				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 		manager = TasksUiPlugin.getRepositoryManager();
@@ -87,9 +89,8 @@ public abstract class AbstractTuleapTests extends TestCase {
 	 * 
 	 * @see junit.framework.TestCase#tearDown()
 	 */
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
 		TestFixture.resetTaskList();
 		manager.clearRepositories();
 	}

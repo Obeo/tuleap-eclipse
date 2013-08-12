@@ -10,15 +10,16 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.tests;
 
+import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
-import junit.framework.TestSuite;
+import junit.textui.TestRunner;
 
-import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 import org.tuleap.mylyn.task.internal.tests.client.TuleapArtifactTests;
 import org.tuleap.mylyn.task.internal.tests.client.TuleapRepositoryConnectorTests;
 import org.tuleap.mylyn.task.internal.tests.client.TuleapTaskDataHandlerTests;
 import org.tuleap.mylyn.task.internal.tests.client.TuleapUtilTests;
-import org.tuleap.mylyn.task.internal.tests.support.TuleapFixture;
 
 /**
  * The stand alone unit tests suite.
@@ -26,54 +27,34 @@ import org.tuleap.mylyn.task.internal.tests.support.TuleapFixture;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
-// Test configuration
-@SuppressWarnings("restriction")
+@RunWith(Suite.class)
+@Suite.SuiteClasses({TuleapArtifactTests.class, TuleapUtilTests.class, TuleapRepositoryConnectorTests.class,
+		TuleapTaskDataHandlerTests.class })
 public final class AllTuleapHeadlessStandaloneTests {
 
 	/**
 	 * The constructor.
 	 */
 	private AllTuleapHeadlessStandaloneTests() {
-		// Prevent instantiation
+		// prevent instantiation
 	}
 
 	/**
-	 * Returns the headless stand alone test suite for Tuleap.
+	 * Launches the test with the given arguments.
 	 * 
-	 * @return The headless stand alone test suite for Tuleap.
+	 * @param args
+	 *            Arguments of the testCase.
+	 */
+	public static void main(String[] args) {
+		TestRunner.run(suite());
+	}
+
+	/**
+	 * Creates the {@link junit.framework.TestSuite TestSuite} for all the test.
+	 * 
+	 * @return The test suite containing all the tests
 	 */
 	public static Test suite() {
-		return suite(TestConfiguration.getDefault());
-	}
-
-	// CHECKSTYLE:OFF (suite should not have any parameters)
-	/**
-	 * Returns the headless stand alone tests suite for the given configuration.
-	 * 
-	 * @param configuration
-	 *            The Mylyn test configuration
-	 * @return The headless stand alone tests suite for the given configuration.
-	 */
-	public static Test suite(TestConfiguration configuration) {
-		// CHECKSTYLE:ON
-		TestSuite suite = new TestSuite(AllTuleapHeadlessStandaloneTests.class.getName());
-		suite.addTestSuite(TuleapArtifactTests.class);
-		suite.addTestSuite(TuleapUtilTests.class);
-		suite.addTestSuite(TuleapRepositoryConnectorTests.class);
-		suite.addTestSuite(TuleapTaskDataHandlerTests.class);
-		return suite;
-	}
-
-	/**
-	 * Adds unit tests to the given test suite.
-	 * 
-	 * @param suite
-	 *            The tests suite
-	 * @param fixture
-	 *            The Tuleap fixture
-	 */
-	public static void addTests(TestSuite suite, TuleapFixture fixture) {
-		fixture.createSuite(suite);
-		fixture.done();
+		return new JUnit4TestAdapter(AllTuleapHeadlessStandaloneTests.class);
 	}
 }

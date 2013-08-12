@@ -12,8 +12,11 @@ package org.tuleap.mylyn.task.internal.tests.validator;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.junit.Test;
 import org.tuleap.mylyn.task.internal.tests.AbstractTuleapTests;
 import org.tuleap.mylyn.task.internal.ui.repository.TuleapValidator;
+
+import static org.junit.Assert.fail;
 
 /**
  * This test class will be used to validate the settings of a task repository.
@@ -26,6 +29,7 @@ public class TuleapValidatorTests extends AbstractTuleapTests {
 	/**
 	 * Test a connection with an user account.
 	 */
+	@Test
 	public void testUserConnection() {
 		TuleapValidator validator = new TuleapValidator(this.repository);
 		try {

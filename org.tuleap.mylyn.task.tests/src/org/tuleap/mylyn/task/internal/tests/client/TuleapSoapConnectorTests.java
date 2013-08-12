@@ -16,9 +16,9 @@ import java.util.List;
 
 import javax.xml.rpc.ServiceException;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.junit.Before;
+import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.config.ITuleapConfigurationConstants;
 import org.tuleap.mylyn.task.internal.core.model.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
@@ -40,13 +40,16 @@ import org.tuleap.mylyn.task.internal.tests.mocks.MockedTracker;
 import org.tuleap.mylyn.task.internal.tests.mocks.MockedTuleapTrackerV5APIPortType;
 import org.tuleap.mylyn.task.internal.tests.mocks.MockedUserInfo;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 /**
  * The tests class for the Tuleap SOAP connector.
  * 
  * @author <a href="mailto:melanie.bats@obeo.fr">Melanie Bats</a>
  * @since 0.7
  */
-public class TuleapSoapConnectorTests extends TestCase {
+public class TuleapSoapConnectorTests {
 	/**
 	 * Mocked server URL.
 	 */
@@ -73,12 +76,10 @@ public class TuleapSoapConnectorTests extends TestCase {
 	private MockedTuleapTrackerV5APIPortType tuleapTrackerAPI;
 
 	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see junit.framework.TestCase#setUp()
+	 * Setup.
 	 */
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	protected void setUp() {
 		MockedAbstractWebLocation location = new MockedAbstractWebLocation(URL);
 		codendiAPIPortType = new MockedCodendiAPIPortType();
 		tuleapTrackerAPI = new MockedTuleapTrackerV5APIPortType();
@@ -89,6 +90,7 @@ public class TuleapSoapConnectorTests extends TestCase {
 	/**
 	 * Test to retrieve a configuration.
 	 */
+	@Test
 	public void testGetTuleapInstanceConfiguration() {
 		MockedTracker tracker1 = createMockedTracker(1);
 		MockedTracker tracker2 = createMockedTracker(2);
@@ -121,6 +123,7 @@ public class TuleapSoapConnectorTests extends TestCase {
 	/**
 	 * Test to retrieve a configuration.
 	 */
+	@Test
 	public void testGetArtifact() {
 		MockedArtifact artifact1 = createAMockedTrackerWithOneArtifact();
 
@@ -176,6 +179,7 @@ public class TuleapSoapConnectorTests extends TestCase {
 	/**
 	 * Test to update an artifact.
 	 */
+	@Test
 	public void testUpdateArtifact() {
 		MockedArtifact artifact = createAMockedTrackerWithOneArtifact();
 
@@ -217,6 +221,7 @@ public class TuleapSoapConnectorTests extends TestCase {
 	/**
 	 * Test to get the reports.
 	 */
+	@Test
 	public void testGetReports() {
 		MockedTracker tracker1 = createMockedTracker(1);
 		MockedUserInfo user1 = createUser(1);

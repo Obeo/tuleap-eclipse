@@ -26,6 +26,8 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.junit.Before;
+import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.model.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.TuleapArtifactComment;
 import org.tuleap.mylyn.task.internal.core.model.TuleapAttachment;
@@ -152,11 +154,10 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	private String projectName = "Project Name"; //$NON-NLS-1$
 
 	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see junit.framework.TestCase#setUp()
+	 * test setup.
 	 */
 	@Override
+	@Before
 	public void setUp() {
 		this.repositoryUrl = "https://demo.tuleap.net/plugins/tracker/?groupdId=871"; //$NON-NLS-1$
 		this.connectorKind = ITuleapConstants.CONNECTOR_KIND;
@@ -565,6 +566,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a tuleap string.
 	 */
+	@Test
 	public void testInitializeTaskDataString() {
 		int id = 892;
 		String name = "TuleapStringName"; //$NON-NLS-1$
@@ -604,6 +606,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a read only tuleap string.
 	 */
+	@Test
 	public void testInitializeTaskDataStringReadOnly() {
 		int id = 892;
 		String name = "TuleapStringReadOnlyName"; //$NON-NLS-1$
@@ -642,6 +645,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a tuleap string as a title.
 	 */
+	@Test
 	public void testInitializeTaskDataStringTitle() {
 		int id = 892;
 		String name = "TuleapStringTitleName"; //$NON-NLS-1$
@@ -680,6 +684,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a tuleap text.
 	 */
+	@Test
 	public void testInitializeTaskDataText() {
 		int id = 892;
 		String name = "TuleapTextName"; //$NON-NLS-1$
@@ -727,6 +732,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a read only tuleap text.
 	 */
+	@Test
 	public void testInitializeTaskDataTextReadOnly() {
 		int id = 892;
 		String name = "TuleapTextReadOnlyName"; //$NON-NLS-1$
@@ -773,6 +779,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a tuleap integer.
 	 */
+	@Test
 	public void testInitializeTaskDataInteger() {
 		int id = 892;
 		String name = "TuleapIntegerName"; //$NON-NLS-1$
@@ -810,6 +817,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a read only tuleap integer.
 	 */
+	@Test
 	public void testInitializeTaskDataIntegerReadOnly() {
 		int id = 892;
 		String name = "TuleapIntegerReadOnlyName"; //$NON-NLS-1$
@@ -846,6 +854,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a tuleap float.
 	 */
+	@Test
 	public void testInitializeTaskDataFloat() {
 		int id = 892;
 		String name = "TuleapFloatName"; //$NON-NLS-1$
@@ -883,6 +892,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a read only tuleap float.
 	 */
+	@Test
 	public void testInitializeTaskDataFloatReadOnly() {
 		int id = 892;
 		String name = "TuleapFloatReadOnlyName"; //$NON-NLS-1$
@@ -955,6 +965,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a read only tuleap artifact link.
 	 */
+	@Test
 	public void testInitializeTaskDataArtifactLinkReadOnly() {
 		int id = 892;
 		String name = "TuleapArtifactLinkReadOnlyName"; //$NON-NLS-1$
@@ -990,6 +1001,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a tuleap date.
 	 */
+	@Test
 	public void testInitializeTaskDataDate() {
 		int id = 892;
 		String name = "TuleapDateName"; //$NON-NLS-1$
@@ -1055,6 +1067,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a read only tuleap date.
 	 */
+	@Test
 	public void testInitializeTaskDataDateReadOnly() {
 		int id = 892;
 		String name = "TuleapDateReadOnlyName"; //$NON-NLS-1$
@@ -1119,6 +1132,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a tuleap file upload.
 	 */
+	@Test
 	public void testInitializeTaskDataFileUpload() {
 		int id = 892;
 		String name = "TuleapFileUploadName"; //$NON-NLS-1$
@@ -1146,6 +1160,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a tuleap open list.
 	 */
+	@Test
 	public void testInitializeTaskDataOpenList() {
 		int id = 892;
 		String name = "TuleapOpenListName"; //$NON-NLS-1$
@@ -1183,6 +1198,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a read only tuleap open list.
 	 */
+	@Test
 	public void testInitializeTaskDataOpenListReadOnly() {
 		int id = 892;
 		String name = "TuleapOpenListReadOnlyName"; //$NON-NLS-1$
@@ -1219,6 +1235,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a tuleap select box.
 	 */
+	@Test
 	public void testInitializeTaskDataSelectBox() {
 		int id = 892;
 		String name = "TuleapSelectBoxName"; //$NON-NLS-1$
@@ -1257,6 +1274,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a readonly tuleap select box.
 	 */
+	@Test
 	public void testInitializeTaskDataSelectBoxReadOnly() {
 		int id = 892;
 		String name = "TuleapSelectBoxReadOnlyName"; //$NON-NLS-1$
@@ -1294,6 +1312,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a tuleap select box with options.
 	 */
+	@Test
 	public void testInitializeTaskDataSelectBoxWithOptions() {
 		int id = 892;
 		String name = "TuleapSelectBoxWithOptionsName"; //$NON-NLS-1$
@@ -1362,6 +1381,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a tuleap select box with options and a workflow.
 	 */
+	@Test
 	public void testInitializeTaskDataSelectBoxWithOptionsAndWorkflow() {
 		int id = 892;
 		String name = "TuleapSelectBoxWithOptionsAndWorkflowName"; //$NON-NLS-1$
@@ -1426,6 +1446,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a tuleap select box with options and a workflow.
 	 */
+	@Test
 	public void testInitializeTaskDataSelectBoxWithOptionsAndEmptyWorkflow() {
 		int id = 892;
 		String name = "TuleapSelectBoxWithOptionsAndEmptyWorkflowName"; //$NON-NLS-1$
@@ -1488,6 +1509,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a tuleap select box with options.
 	 */
+	@Test
 	public void testInitializeTaskDataSelectBoxStatusWithOptions() {
 		int id = 892;
 		String name = "TuleapSelectBoxStatusWithOptionsName"; //$NON-NLS-1$
@@ -1557,6 +1579,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a tuleap select box.
 	 */
+	@Test
 	public void testInitializeTaskDataSelectBoxSemanticContributor() {
 		int id = 892;
 		String name = "TuleapSelectBoxName"; //$NON-NLS-1$
@@ -1595,6 +1618,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a tuleap select box with options.
 	 */
+	@Test
 	public void testInitializeTaskDataSelectBoxSemanticContributorsWithOptions() {
 		int id = 892;
 		String name = "TuleapSelectBoxSemanticContributorsWithOptionsName"; //$NON-NLS-1$
@@ -1663,6 +1687,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a tuleap multi select box.
 	 */
+	@Test
 	public void testInitializeTaskDataMultiSelectBox() {
 		int id = 892;
 		String name = "TuleapMultiSelectBoxName"; //$NON-NLS-1$
@@ -1701,6 +1726,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a read only tuleap multi select box.
 	 */
+	@Test
 	public void testInitializeTaskDataMultiSelectBoxReadOnly() {
 		int id = 892;
 		String name = "TuleapMultiSelectBoxReadOnlyName"; //$NON-NLS-1$
@@ -1738,6 +1764,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a tuleap multi select box with options.
 	 */
+	@Test
 	public void testInitializeTaskDataMultiSelectBoxWithOptions() {
 		int id = 892;
 		String name = "TuleapMultiSelectBoxWithOptionsName"; //$NON-NLS-1$
@@ -1806,6 +1833,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a tuleap multi select box with options.
 	 */
+	@Test
 	public void testInitializeTaskDataMultiSelectBoxWithOneOption() {
 		int id = 892;
 		String name = "TuleapMultiSelectBoxWithOneOptionName"; //$NON-NLS-1$
@@ -1864,6 +1892,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a tuleap multi select box with options and workflow.
 	 */
+	@Test
 	public void testInitializeTaskDataMultiSelectBoxWithOptionsAndWorkflow() {
 		int id = 892;
 		String name = "TuleapMultiSelectBoxWithOptionsAndWorkflowName"; //$NON-NLS-1$
@@ -1932,6 +1961,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a tuleap multi select box with options as a status.
 	 */
+	@Test
 	public void testInitializeTaskDataMultiSelectBoxStatusWithOptions() {
 		int id = 892;
 		String name = "TuleapMultiSelectBoxStatusWithOptionsName"; //$NON-NLS-1$
@@ -2001,6 +2031,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a tuleap multi select box.
 	 */
+	@Test
 	public void testInitializeTaskDataMultiSelectBoxSemanticContributor() {
 		int id = 892;
 		String name = "TuleapMultiSelectBoxName"; //$NON-NLS-1$
@@ -2039,6 +2070,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the initialization of the task data with a tuleap multi select box with options.
 	 */
+	@Test
 	public void testInitializeTaskDataMultiSelectBoxSemanticContributorsWithOptions() {
 		int id = 892;
 		String name = "TuleapMultiSelectBoxSemanticContributorsWithOptionsName"; //$NON-NLS-1$
@@ -2122,6 +2154,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the creation of the task data from an empty tuleap artifact.
 	 */
+	@Test
 	public void testCreateTaskDataFromArtifactEmpty() {
 		int id = 892;
 		Date creationDate = new Date();
@@ -2184,6 +2217,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the creation of the task data from a tuleap artifact with comments.
 	 */
+	@Test
 	public void testCreateTaskDataFromArtifactComments() {
 		int id = 892;
 
@@ -2226,6 +2260,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the creation of the task data from a tuleap artifact with a tuleap string.
 	 */
+	@Test
 	public void testCreateTaskDataFromArtifactString() {
 		int id = 892;
 		String name = "TuleapStringName"; //$NON-NLS-1$
@@ -2268,6 +2303,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the creation of the task data from a tuleap artifact with a tuleap string as the title.
 	 */
+	@Test
 	public void testCreateTaskDataFromArtifactStringTitle() {
 		int id = 892;
 		String name = "TuleapStringTitleName"; //$NON-NLS-1$
@@ -2309,6 +2345,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the creation of the task data from a tuleap artifact with a tuleap text.
 	 */
+	@Test
 	public void testCreateTaskDataFromArtifactText() {
 		int id = 892;
 		String name = "TuleapTextName"; //$NON-NLS-1$
@@ -2360,6 +2397,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the creation of the task data from a tuleap artifact with a tuleap integer.
 	 */
+	@Test
 	public void testCreateTaskDataFromArtifactInteger() {
 		int id = 892;
 		String name = "TuleapIntegerName"; //$NON-NLS-1$
@@ -2401,6 +2439,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the creation of the task data from a tuleap artifact with a tuleap float.
 	 */
+	@Test
 	public void testCreateTaskDataFromArtifactFloat() {
 		int id = 892;
 		String name = "TuleapFloatName"; //$NON-NLS-1$
@@ -2442,6 +2481,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the creation of the task data from a tuleap artifact with a tuleap artifact link.
 	 */
+	@Test
 	public void testCreateTaskDataFromArtifactArtifactLink() {
 		int id = 892;
 		String name = "TuleapArtifactLinkName"; //$NON-NLS-1$
@@ -2483,6 +2523,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the creation of the task data from a tuleap artifact with a tuleap date.
 	 */
+	@Test
 	public void testCreateTaskDataFromArtifactDate() {
 		int id = 892;
 		String name = "TuleapDateName"; //$NON-NLS-1$
@@ -2569,6 +2610,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the creation of the task data from a tuleap artifact with a tuleap file upload.
 	 */
+	@Test
 	public void testCreateTaskDataFromArtifactFileUpload() {
 		int id = 892;
 		String name = "TuleapFileUploadName"; //$NON-NLS-1$
@@ -2635,6 +2677,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the creation of the task data from a tuleap artifact with a tuleap open list.
 	 */
+	@Test
 	public void testCreateTaskDataFromArtifactOpenList() {
 		int id = 892;
 		String name = "TuleapOpenListName"; //$NON-NLS-1$
@@ -2676,6 +2719,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the creation of the task data from a tuleap artifact with a tuleap select box with options.
 	 */
+	@Test
 	public void testCreateTaskDataFromArtifactSelectBoxWithOptions() {
 		int id = 892;
 		String name = "TuleapSelectBoxWithOptionsName"; //$NON-NLS-1$
@@ -2747,6 +2791,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the creation of the task data from a tuleap artifact with a tuleap select box with options.
 	 */
+	@Test
 	public void testCreateTaskDataFromArtifactSelectBoxWithOneOption() {
 		int id = 892;
 		String name = "TuleapSelectBoxWithOneOptionName"; //$NON-NLS-1$
@@ -2809,6 +2854,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	 * Test the creation of the task data from a tuleap artifact with a tuleap select box with options and a
 	 * workflow.
 	 */
+	@Test
 	public void testCreateTaskDataFromArtifactSelectBoxWithOptionsAndWorkflow() {
 		int id = 892;
 		String name = "TuleapSelectBoxWithOptionsAndWorkflowName"; //$NON-NLS-1$
@@ -2893,6 +2939,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the creation of the task data from a tuleap artifact with a tuleap select box status with options.
 	 */
+	@Test
 	public void testCreateTaskDataFromArtifactSelectBoxStatusWithOptions() {
 		int id = 892;
 		String name = "TuleapSelectBoxStatusWithOptionsName"; //$NON-NLS-1$
@@ -2966,6 +3013,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	 * Test the creation of the task data from a tuleap artifact with a tuleap select box semantic contributor
 	 * with options.
 	 */
+	@Test
 	public void testCreateTaskDataFromArtifactSelectBoxSemanticContributorsWithOptions() {
 		int id = 892;
 		String name = "TuleapSelectBoxSemanticContributorsWithOptionsName"; //$NON-NLS-1$
@@ -3037,6 +3085,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the creation of the task data from a tuleap artifact with a tuleap multi select box with options.
 	 */
+	@Test
 	public void testCreateTaskDataFromArtifactMultiSelectBoxWithOptions() {
 		int id = 892;
 		String name = "TuleapMultiSelectBoxWithOptionsName"; //$NON-NLS-1$
@@ -3109,6 +3158,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	 * Test the creation of the task data from a tuleap artifact with a tuleap multi select box with options
 	 * and workflow.
 	 */
+	@Test
 	public void testCreateTaskDataFromArtifactMultiSelectBoxWithOptionsAndWorkflow() {
 		int id = 892;
 		String name = "TuleapMultiSelectBoxWithOptionsAndWorkflowName"; //$NON-NLS-1$
@@ -3191,6 +3241,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	 * Test the creation of the task data from a tuleap artifact with a tuleap multi select box with options
 	 * as a status.
 	 */
+	@Test
 	public void testCreateTaskDataFromArtifactMultiSelectBoxStatusWithOptions() {
 		int id = 892;
 		String name = "TuleapMultiSelectBoxStatusWithOptionsName"; //$NON-NLS-1$
@@ -3266,6 +3317,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the creation of the task data from a tuleap artifact with a tuleap multi select box with options.
 	 */
+	@Test
 	public void testCreateTaskDataFromArtifactMultiSelectBoxSemanticContributorsWithOptions() {
 		int id = 892;
 		String name = "TuleapMultiSelectBoxSemanticContributorsWithOptionsName"; //$NON-NLS-1$
@@ -3337,6 +3389,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the creation of a Tuleap artifact from a task data containing a string.
 	 */
+	@Test
 	public void testGetTuleapArtifactFromTaskDataString() {
 		TuleapAttributeMapper mapper = new TuleapAttributeMapper(repository, this.repositoryConnector);
 		String taskId = "485"; //$NON-NLS-1$
@@ -3354,6 +3407,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * Test the creation of a Tuleap artifact from a task data containing an artifact link.
 	 */
+	@Test
 	public void testGetTuleapArtifactFromTaskDataArtifactLink() {
 		TuleapAttributeMapper mapper = new TuleapAttributeMapper(repository, this.repositoryConnector);
 		String taskId = "218"; //$NON-NLS-1$

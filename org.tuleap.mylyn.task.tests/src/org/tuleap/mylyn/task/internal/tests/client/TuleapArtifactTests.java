@@ -14,11 +14,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import junit.framework.TestCase;
-
+import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.model.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapUtil;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * This class will test Tuleap artifacts.
@@ -26,11 +29,12 @@ import org.tuleap.mylyn.task.internal.core.util.TuleapUtil;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
-public class TuleapArtifactTests extends TestCase {
+public class TuleapArtifactTests {
 	/**
 	 * This test will ensure that a newly created Tuleap artifact is only valid when its ID is set with a
 	 * valid value (artifactId >= 0).
 	 */
+	@Test
 	public void testValid() {
 		TuleapArtifact artifact = new TuleapArtifact();
 		assertFalse(artifact.isValid());
@@ -42,6 +46,7 @@ public class TuleapArtifactTests extends TestCase {
 	/**
 	 * This test will ensure that once the value of a Tuleap attribute is set, we can access it.
 	 */
+	@Test
 	public void testPutTuleapValue() {
 		final String key = "attributeKey"; //$NON-NLS-1$
 		final String value = "attributeValue"; //$NON-NLS-1$
@@ -72,6 +77,7 @@ public class TuleapArtifactTests extends TestCase {
 	/**
 	 * This test will ensure that we cannot create a new attribute named ID in the Tuleap artifact.
 	 */
+	@Test
 	public void testPutTuleapValueId() {
 		final String key = "id"; //$NON-NLS-1$
 		final String value = "attributeValue"; //$NON-NLS-1$
@@ -90,6 +96,7 @@ public class TuleapArtifactTests extends TestCase {
 	/**
 	 * This test will ensure that we can store and retrieve the creation date of a Tuleap artifact.
 	 */
+	@Test
 	public void testTuleapArtifactCreationDate() {
 		TuleapArtifact artifact = new TuleapArtifact();
 
@@ -106,6 +113,7 @@ public class TuleapArtifactTests extends TestCase {
 	 * This test will ensure that we can store and retrieve the date of the last modification of a Tuleap
 	 * artifact.
 	 */
+	@Test
 	public void testTuleapArtifactLastModificationDate() {
 		TuleapArtifact artifact = new TuleapArtifact();
 

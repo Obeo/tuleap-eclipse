@@ -10,12 +10,12 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.tests;
 
+import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
-import junit.framework.TestSuite;
+import junit.textui.TestRunner;
 
-import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
-import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
-import org.tuleap.mylyn.task.internal.tests.support.TuleapFixture;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
 /**
  * This class should be used to launch all Tuleap unit tests.
@@ -24,7 +24,8 @@ import org.tuleap.mylyn.task.internal.tests.support.TuleapFixture;
  * @since 0.7
  */
 // Test configuration
-@SuppressWarnings("restriction")
+@RunWith(Suite.class)
+@Suite.SuiteClasses({AllTuleapHeadlessStandaloneTests.class })
 public final class AllTuleapTests {
 
 	/**
@@ -35,63 +36,21 @@ public final class AllTuleapTests {
 	}
 
 	/**
-	 * Returns the test suite with all Tuleap tests.
+	 * Launches the test with the given arguments.
 	 * 
-	 * @return The test suite with all Tuleap tests.
+	 * @param args
+	 *            Arguments of the testCase.
+	 */
+	public static void main(String[] args) {
+		TestRunner.run(suite());
+	}
+
+	/**
+	 * Creates the {@link junit.framework.TestSuite TestSuite} for all the test.
+	 * 
+	 * @return The test suite containing all the tests
 	 */
 	public static Test suite() {
-		TestSuite suite = new ManagedTestSuite(AllTuleapTests.class.getName());
-		addTests(suite, TestConfiguration.getDefault());
-		return suite;
-	}
-
-	// CHECKSTYLE:OFF (suite should not have any parameters)
-	/**
-	 * Returns the test suite configured with the given test configuration.
-	 * 
-	 * @param configuration
-	 *            The test configuration
-	 * @return The test suite configured with the given test configuration.
-	 */
-	public static Test suite(TestConfiguration configuration) {
-		// CHECKSTYLE:ON
-		TestSuite suite = new TestSuite(AllTuleapTests.class.getName());
-		addTests(suite, configuration);
-		return suite;
-	}
-
-	/**
-	 * Adds the tests to the tests suite for the given configuration.
-	 * 
-	 * @param suite
-	 *            The test suite
-	 * @param configuration
-	 *            The test configuration
-	 */
-	public static void addTests(TestSuite suite, TestConfiguration configuration) {
-		// Standalone tests (Don't require an instance of Eclipse)
-		suite.addTest(AllTuleapHeadlessStandaloneTests.suite(configuration));
-
-		// Plug-in tests (need the user interface)
-		// suite.addTestSuite(TuleapValidatorTests.class);
-
-		// Network tests
-	}
-
-	/**
-	 * Adds the tests to the tests suite with the given fixture.
-	 * 
-	 * @param suite
-	 *            The test suite to run
-	 * @param fixture
-	 *            The Tuleap fixture to use
-	 */
-	public static void addTests(TestSuite suite, TuleapFixture fixture) {
-		if (fixture.isExcluded()) {
-			return;
-		}
-
-		fixture.createSuite(suite);
-		fixture.done();
+		return new JUnit4TestAdapter(AllTuleapTests.class);
 	}
 }
