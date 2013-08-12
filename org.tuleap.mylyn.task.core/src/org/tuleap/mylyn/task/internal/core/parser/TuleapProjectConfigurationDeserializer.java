@@ -28,6 +28,16 @@ import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 public class TuleapProjectConfigurationDeserializer implements JsonDeserializer<TuleapProjectConfiguration> {
 
 	/**
+	 * The key used for the name of the project.
+	 */
+	private static final String PROJECT_NAME = "name"; //$NON-NLS-1$
+
+	/**
+	 * The key used for the identifier of the project.
+	 */
+	private static final String PROJECT_ID = "id"; //$NON-NLS-1$
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see com.google.gson.JsonDeserializer#deserialize(com.google.gson.JsonElement, java.lang.reflect.Type,
@@ -35,11 +45,9 @@ public class TuleapProjectConfigurationDeserializer implements JsonDeserializer<
 	 */
 	public TuleapProjectConfiguration deserialize(JsonElement arg0, Type arg1, JsonDeserializationContext arg2)
 			throws JsonParseException {
-
 		JsonObject jsonObject = arg0.getAsJsonObject();
 		TuleapProjectConfiguration tuleapProjectConfiguration = new TuleapProjectConfiguration(jsonObject
-				.get("name").getAsString(), jsonObject.get("id") //$NON-NLS-1$//$NON-NLS-2$
-				.getAsInt());
+				.get(PROJECT_NAME).getAsString(), jsonObject.get(PROJECT_ID).getAsInt());
 
 		return tuleapProjectConfiguration;
 	}
