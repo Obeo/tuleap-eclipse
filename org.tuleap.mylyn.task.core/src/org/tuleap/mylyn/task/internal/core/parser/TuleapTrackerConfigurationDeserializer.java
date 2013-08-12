@@ -19,6 +19,7 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
+import org.tuleap.mylyn.task.internal.core.config.ITuleapConfigurationConstants;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapArtifactLink;
@@ -54,14 +55,9 @@ public class TuleapTrackerConfigurationDeserializer implements JsonDeserializer<
 	private final String jsonContributors = "contributors"; //$NON-NLS-1$
 
 	/**
-	 * The field workflow key word.
-	 */
-	private final String jsonWorkflow = "workflow"; //$NON-NLS-1$
-
-	/**
 	 * The field open status key word.
 	 */
-	private final String jsonOpenStatusIds = "open_status_field_values_id"; //$NON-NLS-1$
+	private final String jsonOpenStatusIds = "open_status_field_value_ids"; //$NON-NLS-1$
 
 	/**
 	 * {@inheritDoc}
@@ -69,19 +65,21 @@ public class TuleapTrackerConfigurationDeserializer implements JsonDeserializer<
 	 * @see com.google.gson.JsonDeserializer#deserialize(com.google.gson.JsonElement, java.lang.reflect.Type,
 	 *      com.google.gson.JsonDeserializationContext)
 	 */
-	public TuleapTrackerConfiguration deserialize(JsonElement arg0, Type arg1, JsonDeserializationContext arg2)
-			throws JsonParseException {
-
-		JsonObject jsonObject = arg0.getAsJsonObject();
+	public TuleapTrackerConfiguration deserialize(JsonElement rootJsonElement, Type type,
+			JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+		JsonObject jsonObject = rootJsonElement.getAsJsonObject();
 		String trackerName = jsonObject.get("name").getAsString(); //$NON-NLS-1$
 		String trackerDescription = jsonObject.get("description").getAsString(); //$NON-NLS-1$
 		JsonArray trackerFieldsArray = jsonObject.get("fields").getAsJsonArray(); //$NON-NLS-1$
+
 		TuleapTrackerConfiguration tuleapTrackerConfiguration = new TuleapTrackerConfiguration(jsonObject
 				.get("id").getAsInt(), //$NON-NLS-1$
 				jsonObject.get("url").getAsString()); //$NON-NLS-1$
+
 		tuleapTrackerConfiguration.setName(trackerName);
 		tuleapTrackerConfiguration.setDescription(trackerDescription);
-		JsonObject fieldSemantic = jsonObject.get("semantic").getAsJsonObject(); //$NON-NLS-1$
+
+		JsonObject fieldSemantic = jsonObject.get(ITuleapConfigurationConstants.SEMANTIC).getAsJsonObject();
 		for (int i = 0; i < trackerFieldsArray.size(); i++) {
 			JsonObject field = (JsonObject)trackerFieldsArray.get(i);
 
@@ -91,29 +89,29 @@ public class TuleapTrackerConfigurationDeserializer implements JsonDeserializer<
 			// the field type
 			String fieldType = field.get("type").getAsString(); //$NON-NLS-1$
 			AbstractTuleapField tuleapField = null;
-			if ("string".equals(fieldType)) { //$NON-NLS-1$
+			if (ITuleapConfigurationConstants.STRING.equals(fieldType)) {
 				tuleapField = new TuleapString(fieldId);
-			} else if ("text".equals(fieldType)) { //$NON-NLS-1$
+			} else if (ITuleapConfigurationConstants.TEXT.equals(fieldType)) {
 				tuleapField = new TuleapText(fieldId);
-			} else if ("computed".equals(fieldType)) { //$NON-NLS-1$
+			} else if (ITuleapConfigurationConstants.COMPUTED.equals(fieldType)) {
 				tuleapField = new TuleapComputedValue(fieldId);
-			} else if ("sb".equals(fieldType)) { //$NON-NLS-1$
+			} else if (ITuleapConfigurationConstants.SB.equals(fieldType)) {
 				tuleapField = new TuleapSelectBox(fieldId);
-			} else if ("msb".equals(fieldType)) { //$NON-NLS-1$
+			} else if (ITuleapConfigurationConstants.MSB.equals(fieldType)) {
 				tuleapField = new TuleapMultiSelectBox(fieldId);
-			} else if ("cb".equals(fieldType)) { //$NON-NLS-1$
+			} else if (ITuleapConfigurationConstants.CB.equals(fieldType)) {
 				tuleapField = new TuleapMultiSelectBox(fieldId);
-			} else if ("date".equals(fieldType)) { //$NON-NLS-1$
+			} else if (ITuleapConfigurationConstants.DATE.equals(fieldType)) {
 				tuleapField = new TuleapDate(fieldId);
-			} else if ("int".equals(fieldType)) { //$NON-NLS-1$
+			} else if (ITuleapConfigurationConstants.INT.equals(fieldType)) {
 				tuleapField = new TuleapInteger(fieldId);
-			} else if ("float".equals(fieldType)) { //$NON-NLS-1$
+			} else if (ITuleapConfigurationConstants.FLOAT.equals(fieldType)) {
 				tuleapField = new TuleapFloat(fieldId);
-			} else if ("tbl".equals(fieldType)) { //$NON-NLS-1$
+			} else if (ITuleapConfigurationConstants.TBL.equals(fieldType)) {
 				tuleapField = new TuleapOpenList(fieldId);
-			} else if ("art_link".equals(fieldType)) { //$NON-NLS-1$
+			} else if (ITuleapConfigurationConstants.ARTLINK.equals(fieldType)) {
 				tuleapField = new TuleapArtifactLink(fieldId);
-			} else if ("file".equals(fieldType)) { //$NON-NLS-1$
+			} else if (ITuleapConfigurationConstants.FILE.equals(fieldType)) {
 				tuleapField = new TuleapFileUpload(fieldId);
 			}
 
@@ -129,13 +127,14 @@ public class TuleapTrackerConfigurationDeserializer implements JsonDeserializer<
 				JsonArray permissions = field.get("permissions").getAsJsonArray(); //$NON-NLS-1$
 				String[] permissionsArray = new String[permissions.size()];
 
-				for (int x = 0; x < permissions.size(); x++) {
-					if ("create".equals(permissions.get(x).getAsString())) { //$NON-NLS-1$
-						permissionsArray[x] = ITuleapConstants.PERMISSION_SUBMIT;
+				for (int j = 0; j < permissions.size(); j++) {
+					if ("create".equals(permissions.get(j).getAsString())) { //$NON-NLS-1$
+						permissionsArray[j] = ITuleapConstants.PERMISSION_SUBMIT;
 					} else {
-						permissionsArray[x] = permissions.get(x).getAsString();
+						permissionsArray[j] = permissions.get(j).getAsString();
 					}
 				}
+
 				tuleapField.setPermissions(permissionsArray);
 
 				// The Multi Select Box case
@@ -162,30 +161,31 @@ public class TuleapTrackerConfigurationDeserializer implements JsonDeserializer<
 				tuleapTrackerConfiguration.addField(tuleapField);
 			}
 		}
+
 		// the semantic title part
-		createTuleapStringField(tuleapTrackerConfiguration, fieldSemantic);
+		this.createTuleapStringField(tuleapTrackerConfiguration, fieldSemantic);
 		return tuleapTrackerConfiguration;
 	}
 
 	/**
-	 * The case of creating a Multi Select Box field.
+	 * Returns the TuleapMultiSelectBox created from the parsing of the JSON elements.
 	 * 
 	 * @param tuleapField
-	 *            the field
+	 *            The field
 	 * @param fieldValuesArray
-	 *            the values
+	 *            The values
 	 * @param fieldSemantic
-	 *            the semantic
+	 *            The semantic
 	 * @param fieldBinding
-	 *            the binding
-	 * @return the resulted field
+	 *            The binding
+	 * @return The resulted field
 	 */
-	public TuleapMultiSelectBox createTuleapMultiSelectBoxField(AbstractTuleapField tuleapField,
+	private TuleapMultiSelectBox createTuleapMultiSelectBoxField(AbstractTuleapField tuleapField,
 			JsonArray fieldValuesArray, JsonObject fieldSemantic, JsonObject fieldBinding) {
 		TuleapMultiSelectBox multiSelectBoxField = (TuleapMultiSelectBox)tuleapField;
 		if (fieldValuesArray != null) {
-			for (int y = 0; y < fieldValuesArray.size(); y++) {
-				JsonObject value = (JsonObject)fieldValuesArray.get(y);
+			for (int i = 0; i < fieldValuesArray.size(); i++) {
+				JsonObject value = (JsonObject)fieldValuesArray.get(i);
 				int fieldValueId = value.get("field_value_id").getAsInt(); //$NON-NLS-1$
 				String fieldValueLabel = value.get("field_value_label").getAsString(); //$NON-NLS-1$
 				TuleapSelectBoxItem selectBoxItem = new TuleapSelectBoxItem(fieldValueId);
@@ -195,8 +195,8 @@ public class TuleapTrackerConfigurationDeserializer implements JsonDeserializer<
 				JsonObject semanticStatus = fieldSemantic.get("status").getAsJsonObject(); //$NON-NLS-1$
 				if (multiSelectBoxField.getIdentifier() == semanticStatus.get(jsonFieldId).getAsInt()) {
 					JsonArray openStatus = semanticStatus.get(jsonOpenStatusIds).getAsJsonArray();
-					for (int z = 0; z < openStatus.size(); z++) {
-						if (fieldValueId == openStatus.get(z).getAsInt()) {
+					for (int j = 0; j < openStatus.size(); j++) {
+						if (fieldValueId == openStatus.get(j).getAsInt()) {
 							multiSelectBoxField.getOpenStatus().add(selectBoxItem);
 						}
 					}
@@ -208,6 +208,7 @@ public class TuleapTrackerConfigurationDeserializer implements JsonDeserializer<
 		if (fieldBinding != null) {
 			multiSelectBoxField.setBinding(fieldBinding.get("bind_type").getAsString()); //$NON-NLS-1$
 		}
+
 		// the semantic contributors part
 		JsonObject semanticContributor = fieldSemantic.get(jsonContributors).getAsJsonObject();
 		if (semanticContributor.get(jsonFieldId).getAsInt() == multiSelectBoxField.getIdentifier()) {
@@ -217,27 +218,27 @@ public class TuleapTrackerConfigurationDeserializer implements JsonDeserializer<
 	}
 
 	/**
-	 * The case of creating a Select Box field.
+	 * Returns the TuleapSelectBox created from the parsing of the JSON elements.
 	 * 
 	 * @param tuleapField
-	 *            the field
+	 *            The field
 	 * @param fieldValuesArray
-	 *            the values array
+	 *            The values array
 	 * @param fieldSemantic
-	 *            the semantic
+	 *            The semantic
 	 * @param fieldBinding
-	 *            the binding
+	 *            The binding
 	 * @param jsonObject
-	 *            the root json object
-	 * @return the resulted field
+	 *            The root json object
+	 * @return The resulted field
 	 */
-	public TuleapSelectBox createTuleapSelectBoxField(AbstractTuleapField tuleapField,
+	private TuleapSelectBox createTuleapSelectBoxField(AbstractTuleapField tuleapField,
 			JsonArray fieldValuesArray, JsonObject fieldSemantic, JsonObject fieldBinding,
 			JsonObject jsonObject) {
 		TuleapSelectBox selectBoxField = (TuleapSelectBox)tuleapField;
 		if (fieldValuesArray != null) {
-			for (int y = 0; y < fieldValuesArray.size(); y++) {
-				JsonObject value = (JsonObject)fieldValuesArray.get(y);
+			for (int i = 0; i < fieldValuesArray.size(); i++) {
+				JsonObject value = (JsonObject)fieldValuesArray.get(i);
 				int fieldValueId = value.get("field_value_id").getAsInt(); //$NON-NLS-1$
 				String fieldValueLabel = value.get("field_value_label").getAsString(); //$NON-NLS-1$
 				TuleapSelectBoxItem selectBoxItem = new TuleapSelectBoxItem(fieldValueId);
@@ -248,13 +249,14 @@ public class TuleapTrackerConfigurationDeserializer implements JsonDeserializer<
 				JsonObject semanticStatus = fieldSemantic.get("status").getAsJsonObject(); //$NON-NLS-1$
 				for (int z = 0; z < semanticStatus.get(jsonOpenStatusIds).getAsJsonArray().size(); z++) {
 					if (selectBoxField.getIdentifier() == semanticStatus.get(jsonFieldId).getAsInt()
-							&& fieldValueId == semanticStatus.get(jsonOpenStatusIds).getAsJsonArray().get(
-									z).getAsInt()) {
+							&& fieldValueId == semanticStatus.get(jsonOpenStatusIds).getAsJsonArray().get(z)
+									.getAsInt()) {
 						selectBoxField.getOpenStatus().add(selectBoxItem);
 					}
 				}
 			}
 		}
+
 		// the binding
 		if (fieldBinding != null) {
 			selectBoxField.setBinding(fieldBinding.get("bind_type").getAsString()); //$NON-NLS-1$
@@ -268,19 +270,20 @@ public class TuleapTrackerConfigurationDeserializer implements JsonDeserializer<
 		}
 
 		// the workflow
-		createTuleapWorkflowSelectBoxField(jsonObject, selectBoxField);
+		this.createTuleapWorkflowSelectBoxField(jsonObject, selectBoxField);
 		return selectBoxField;
 	}
 
 	/**
-	 * The case of creating a String field.
+	 * Finds the fields with the identifier matching the field_if used for the title semantic and indicate in
+	 * the configuration of the project that it represents the title.
 	 * 
 	 * @param tuleapTrackerConfiguration
-	 *            the tracker configuration
+	 *            The tracker configuration
 	 * @param fieldSemantic
-	 *            the semantic field
+	 *            The semantic field
 	 */
-	public void createTuleapStringField(TuleapTrackerConfiguration tuleapTrackerConfiguration,
+	private void createTuleapStringField(TuleapTrackerConfiguration tuleapTrackerConfiguration,
 			JsonObject fieldSemantic) {
 		JsonObject semanticTitle = fieldSemantic.get("title").getAsJsonObject(); //$NON-NLS-1$
 		for (AbstractTuleapField tuleapSemanticField : tuleapTrackerConfiguration.getFields()) {
@@ -293,28 +296,34 @@ public class TuleapTrackerConfigurationDeserializer implements JsonDeserializer<
 	}
 
 	/**
-	 * The case of creating the workflow of a select box field.
+	 * Sets the workflow and the transition for the select box.
 	 * 
 	 * @param jsonObject
 	 *            the JSON root object
 	 * @param selectBoxField
 	 *            the select box field
 	 */
-	public void createTuleapWorkflowSelectBoxField(JsonObject jsonObject, TuleapSelectBox selectBoxField) {
-		if (jsonObject.get(jsonWorkflow) != null
-				&& jsonObject.get(jsonWorkflow).getAsJsonObject().get(jsonFieldId).getAsInt() == selectBoxField
-						.getIdentifier()) {
-			// the workflow transitions
-			for (int j = 0; j < jsonObject.get(jsonWorkflow).getAsJsonObject().get("transitions") //$NON-NLS-1$
-					.getAsJsonArray().size(); j++) {
-				JsonObject transition = (JsonObject)jsonObject.get(jsonWorkflow).getAsJsonObject().get(
-						"transitions").getAsJsonArray().get(j); //$NON-NLS-1$
-				int from = transition.get("from_field_value_id").getAsInt(); //$NON-NLS-1$
-				int to = transition.get("to_field_value_id").getAsInt(); //$NON-NLS-1$
-				TuleapWorkflowTransition workflowTransition = new TuleapWorkflowTransition();
-				workflowTransition.setFrom(from);
-				workflowTransition.setTo(to);
-				selectBoxField.getWorkflow().addTransition(workflowTransition);
+	private void createTuleapWorkflowSelectBoxField(JsonObject jsonObject, TuleapSelectBox selectBoxField) {
+		JsonElement workflowJsonElement = jsonObject.get(ITuleapConfigurationConstants.WORKFLOW);
+		if (workflowJsonElement != null) {
+			JsonObject workflowJsonObject = workflowJsonElement.getAsJsonObject();
+
+			if (workflowJsonObject.get(jsonFieldId).getAsInt() == selectBoxField.getIdentifier()) {
+				// the workflow transitions
+				JsonArray transitionsJsonArray = workflowJsonObject.get("transitions").getAsJsonArray(); //$NON-NLS-1$
+				for (JsonElement transitionJsonElement : transitionsJsonArray) {
+					if (transitionJsonElement instanceof JsonObject) {
+						JsonObject transitionJsonObject = (JsonObject)transitionJsonElement;
+						int from = transitionJsonObject.get("from_field_value_id").getAsInt(); //$NON-NLS-1$
+						int to = transitionJsonObject.get("to_field_value_id").getAsInt(); //$NON-NLS-1$
+
+						TuleapWorkflowTransition workflowTransition = new TuleapWorkflowTransition();
+						workflowTransition.setFrom(from);
+						workflowTransition.setTo(to);
+
+						selectBoxField.getWorkflow().addTransition(workflowTransition);
+					}
+				}
 			}
 		}
 	}
