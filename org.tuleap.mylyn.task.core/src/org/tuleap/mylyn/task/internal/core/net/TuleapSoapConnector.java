@@ -870,16 +870,12 @@ public class TuleapSoapConnector {
 		FieldValue fieldValue = artifactFieldValue.getField_value();
 		TrackerFieldBindValue[] bindValues = fieldValue.getBind_value();
 		if (bindValues == null || bindValues.length == 0) {
-			tuleapArtifact.putValue(artifactFieldValue.getField_name(), ""); //$NON-NLS-1$
+			tuleapArtifact.putValue(artifactFieldValue.getField_name(), String
+					.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID));
 		} else {
 			for (TrackerFieldBindValue bindValue : bindValues) {
-				// If the bind value id is "100", we have an empty value
-				if (ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID == bindValue.getBind_value_id()) {
-					tuleapArtifact.putValue(artifactFieldValue.getField_name(), ""); //$NON-NLS-1$
-				} else {
-					tuleapArtifact.putValue(artifactFieldValue.getField_name(), bindValue
-							.getBind_value_label());
-				}
+				tuleapArtifact.putValue(artifactFieldValue.getField_name(), String.valueOf(bindValue
+						.getBind_value_id()));
 			}
 		}
 	}

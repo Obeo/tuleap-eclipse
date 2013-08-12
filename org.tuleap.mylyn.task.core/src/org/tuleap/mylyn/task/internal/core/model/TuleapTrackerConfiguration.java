@@ -316,8 +316,9 @@ public class TuleapTrackerConfiguration implements Serializable {
 	 */
 	public boolean hasClosedStatusMeaning(String status) {
 		if (statusField != null) {
+			int statusId = Integer.parseInt(status);
 			for (TuleapSelectBoxItem item : statusField.getClosedStatus()) {
-				if (item.getLabel().equals(status)) {
+				if (item.getIdentifier() == statusId) {
 					return true;
 				}
 			}
