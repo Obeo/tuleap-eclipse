@@ -96,8 +96,10 @@
       "field_label": "Assigned To",
       "field_value": {
         "bind_values": [
-          "bind_value_id": 15,
-          "bind_value_label": "John Doe 15"
+          {
+            "bind_value_id": 15,
+            "bind_value_label": "John Doe 15"
+          }
         ]
       }
     },
@@ -105,20 +107,20 @@
       "field_id": 11,
       "field_label": "Status",
       "field_value": {
-        "bind_values": [
+        "bind_value": {
           "bind_value_id": 0,
           "bind_value_label": "NEW"
-        ]
+        }
       }
     },
     {
       "field_id": 12,
       "field_label": "Resolution",
       "field_value": {
-        "bind_values": [
+        "bind_value": {
           "bind_value_id": 100,
           "bind_value_label": ""
-        ]
+        }
       }
     }
   ],

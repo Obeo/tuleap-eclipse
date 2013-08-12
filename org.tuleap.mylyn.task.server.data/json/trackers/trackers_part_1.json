@@ -24,11 +24,10 @@
       }
     },
     "hierarchy": {
-      "childrenTrackerId": [
+      "children_tracker_ids": [
         2
       ]
-    },
-    "has_cardwall": true
+    }
   },
   {
     "id": 1,
@@ -264,11 +263,11 @@
     ],
     "semantic": {
       "title": {
-        "field_id": 1
+        "field_id": 0
       },
       "status": {
         "field_id": 11,
-        "open_status_field_values_id": [
+        "open_status_field_value_ids": [
           0,
           1,
           2
@@ -351,9 +350,8 @@
       ]
     },
     "hierarchy": {
-      "parentTrackerId": 5
-    },
-    "has_cardwall": false
+      "parent_tracker_id": 5
+    }
   },
   {
     "id": 2,
@@ -448,12 +446,11 @@
       ]
     },
     "hierarchy": {
-      "parentTrackerId": 0,
-      "childrenTrackerId": [
+      "parent_tracker_id": 0,
+      "children_tracker_ids": [
         3
       ]
-    },
-    "has_cardwall": true
+    }
   },
   {
     "id": 3,
@@ -536,7 +533,7 @@
       },
       "status": {
         "field_id": 2,
-        "open_status_field_values_id": [
+        "open_status_field_value_ids": [
           0
         ]
       },
@@ -551,12 +548,11 @@
       }
     },
     "hierarchy": {
-      "parentTrackerId": 2,
-      "childrenTrackerId": [
+      "parent_tracker_id": 2,
+      "children_tracker_ids": [
         5
       ]
-    },
-    "has_cardwall": true
+    }
   },
   {
     "id": 4,
@@ -617,7 +613,7 @@
       },
       "status": {
         "field_id": 1,
-        "open_status_field_values_id": [
+        "open_status_field_value_ids": [
           0
         ]
       },
@@ -626,8 +622,7 @@
       }
     },
     "hierarchy": {
-      "parentTrackerId": 5
-    },
-    "has_cardwall": false
+      "parent_tracker_id": 5
+    }
   }
 ]

@@ -79,7 +79,7 @@
     },
     "status": {
       "field_id": 2,
-      "open_status_field_values_id": [
+      "open_status_field_values_ids": [
         0
       ]
     },
@@ -94,8 +94,8 @@
     }
   },
   "hierarchy": {
-    "parentTrackerId": 2,
-    "childrenTrackerId": [
+    "parent_tracker_id": 2,
+    "children_tracker_ids": [
       5
     ]
   }

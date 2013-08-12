@@ -46,14 +46,14 @@
     },
     "status": {
       "field_id": 1,
-      "open_status_field_values_id": [
+      "open_status_field_values_ids": [
         0
       ]
     }
   },
   "hierarchy": {
-    "parentTrackerId": 3,
-    "childrenTrackerId": [
+    "parent_tracker_id": 3,
+    "children_tracker_ids": [
       4,
       1
     ]
