@@ -11,6 +11,7 @@
 package org.tuleap.mylyn.task.internal.core.model.field;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -36,7 +37,7 @@ public class TuleapSelectBox extends AbstractTuleapSelectBox {
 	/**
 	 * The workflow of the field.
 	 */
-	protected TuleapWorkflow workflow = new TuleapWorkflow();
+	protected final TuleapWorkflow workflow = new TuleapWorkflow(this);
 
 	/**
 	 * The constructor.
@@ -51,7 +52,7 @@ public class TuleapSelectBox extends AbstractTuleapSelectBox {
 	/**
 	 * Returns the workflow of the field.
 	 * 
-	 * @return The workflow of the field.
+	 * @return The workflow of the field, never null.
 	 */
 	public TuleapWorkflow getWorkflow() {
 		return this.workflow;
@@ -75,7 +76,7 @@ public class TuleapSelectBox extends AbstractTuleapSelectBox {
 	@Override
 	protected void afterTaskAttributeCreation(TaskAttribute attribute) {
 		// Possible values
-		if (workflow != null && workflow.getTransitions().size() > 0) {
+		if (hasWorkflow()) {
 			updateOptionsWithWorkflow(attribute);
 		} else {
 			super.afterTaskAttributeCreation(attribute);
@@ -90,47 +91,27 @@ public class TuleapSelectBox extends AbstractTuleapSelectBox {
 	 *            The task attribute to update.
 	 */
 	public void updateOptionsWithWorkflow(TaskAttribute attribute) {
-		// The widget has a workflow
-		TuleapSelectBoxItem item = null;
-		String value = attribute.getValue();
+		if (hasWorkflow()) {
+			String value = attribute.getValue();
+			TuleapSelectBoxItem item = getItem(value);
 
-		// TODO Create a map for the items instead of a list
-		for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
-			if (value != null && value.equals(tuleapSelectBoxItem.getLabel())) {
-				item = tuleapSelectBoxItem;
-				break;
-			}
-		}
-
-		if (item != null) {
-			List<Integer> accessibleStates = getWorkflow().accessibleStates(item.getIdentifier());
-			attribute.clearOptions();
-			attribute.putOption(String.valueOf(item.getIdentifier()), item.getLabel());
-
-			for (Integer accessibleState : accessibleStates) {
-				for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
-					if (accessibleState.intValue() == tuleapSelectBoxItem.getIdentifier()) {
-						attribute.putOption(String.valueOf(tuleapSelectBoxItem.getIdentifier()),
-								tuleapSelectBoxItem.getLabel());
-					}
-				}
-			}
-		} else {
 			// If there is no selected value, it is as if value "100" was selected
 			// Every workflow should have at least one transition from "100" to something,
 			// otherwise the select box will always be empty...
-			List<Integer> accessibleStates = getWorkflow().accessibleStates(
-					ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID);
+			// If there is a workflow, the default value "100" is never available, a real state must be
+			// selected.
+			int stateId = ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID;
+			String stateLabel = ""; //$NON-NLS-1$
 			attribute.clearOptions();
-			attribute.putOption(String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID), ""); //$NON-NLS-1$
+			if (item != null) {
+				stateId = item.getIdentifier();
+				stateLabel = item.getLabel();
+				attribute.putOption(String.valueOf(stateId), stateLabel);
+			}
 
-			for (Integer accessibleState : accessibleStates) {
-				for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
-					if (accessibleState.intValue() == tuleapSelectBoxItem.getIdentifier()) {
-						attribute.putOption(String.valueOf(tuleapSelectBoxItem.getIdentifier()),
-								tuleapSelectBoxItem.getLabel());
-					}
-				}
+			for (TuleapSelectBoxItem accessibleState : workflow.accessibleStates(stateId)) {
+				attribute.putOption(String.valueOf(accessibleState.getIdentifier()), accessibleState
+						.getLabel());
 			}
 		}
 	}
@@ -145,10 +126,7 @@ public class TuleapSelectBox extends AbstractTuleapSelectBox {
 	protected TaskAttribute createStatusTaskAttribute(TaskAttribute parent) {
 		TaskAttribute attribute = super.createStatusTaskAttribute(parent);
 
-		TaskAttribute operationAttribute = parent.getAttribute(TaskAttribute.OPERATION);
-		if (operationAttribute == null) {
-			operationAttribute = parent.createAttribute(TaskAttribute.OPERATION);
-		}
+		TaskAttribute operationAttribute = parent.createAttribute(TaskAttribute.OPERATION);
 		TaskOperation.applyTo(operationAttribute, TaskAttribute.STATUS, TuleapMylynTasksMessages
 				.getString("TuleapTaskDataHandler.MarkAs")); //$NON-NLS-1$
 
@@ -161,22 +139,18 @@ public class TuleapSelectBox extends AbstractTuleapSelectBox {
 			currentStatus = parent.getTaskData().getAttributeMapper().getValueLabel(statusAttribute);
 		}
 		if (currentStatus != null && currentStatus.length() > 0) {
-			for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
+			for (TuleapSelectBoxItem tuleapSelectBoxItem : items.values()) {
 				if (tuleapSelectBoxItem.getLabel().equals(currentStatus)) {
 					// Only support the reachable state from the current status
-					List<Integer> accessibleStates = workflow.accessibleStates(tuleapSelectBoxItem
-							.getIdentifier());
-					for (Integer accessibleState : accessibleStates) {
-						for (TuleapSelectBoxItem item : items) {
-							if (item.getIdentifier() == accessibleState.intValue()) {
-								tuleapStatus.add(item.getLabel());
-							}
-						}
+					Collection<TuleapSelectBoxItem> accessibleStates = workflow
+							.accessibleStates(tuleapSelectBoxItem.getIdentifier());
+					for (TuleapSelectBoxItem accessibleState : accessibleStates) {
+						tuleapStatus.add(accessibleState.getLabel());
 					}
 				}
 			}
 		} else {
-			for (TuleapSelectBoxItem tuleapSelectBoxItem : items) {
+			for (TuleapSelectBoxItem tuleapSelectBoxItem : items.values()) {
 				tuleapStatus.add(tuleapSelectBoxItem.getLabel());
 			}
 		}
@@ -195,5 +169,14 @@ public class TuleapSelectBox extends AbstractTuleapSelectBox {
 				TaskAttribute.STATUS);
 
 		return attribute;
+	}
+
+	/**
+	 * Indicates whether this selectbox has a real workflow, i.e. one with transitions.
+	 * 
+	 * @return {@code true} if and only if the workflow of this selectbox has at least one transition.
+	 */
+	public boolean hasWorkflow() {
+		return workflow.hasTransitions();
 	}
 }

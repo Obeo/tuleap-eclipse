@@ -474,10 +474,12 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 			queryAttributeValues = queryAttributes.get(tuleapSelectBox.getName());
 		}
 
+		int index = 0;
 		for (TuleapSelectBoxItem tuleapSelectBoxItem : tuleapSelectBox.getItems()) {
 			items.add(tuleapSelectBoxItem.getLabel());
+			index++;
 			if (String.valueOf(tuleapSelectBoxItem.getIdentifier()).equals(queryAttributeValues)) {
-				selectedItem = tuleapSelectBox.getItems().indexOf(tuleapSelectBoxItem) + 1;
+				selectedItem = index; // tuleapSelectBox.getItems().indexOf(tuleapSelectBoxItem) + 1;
 			}
 		}
 
@@ -511,7 +513,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 		List<String> items = new ArrayList<String>();
 		items.add(""); //$NON-NLS-1$
 
-		List<TuleapSelectBoxItem> tuleapMultiSelectBoxItems = tuleapMultiSelectBox.getItems();
+		Collection<TuleapSelectBoxItem> tuleapMultiSelectBoxItems = tuleapMultiSelectBox.getItems();
 		List<Integer> selectedItems = new ArrayList<Integer>();
 
 		String queryAttributeValues = null;
@@ -519,12 +521,12 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 			queryAttributeValues = queryAttributes.get(tuleapMultiSelectBox.getName());
 		}
 
-		for (int i = 0; i < tuleapMultiSelectBoxItems.size(); i++) {
-			TuleapSelectBoxItem tuleapSelectBoxItem = tuleapMultiSelectBoxItems.get(i);
+		int index = 0;
+		for (TuleapSelectBoxItem tuleapSelectBoxItem : tuleapMultiSelectBoxItems) {
+			index++;
 			items.add(tuleapSelectBoxItem.getLabel());
 			if (queryAttributeValues != null && queryAttributeValues.contains(tuleapSelectBoxItem.getLabel())) {
-				selectedItems
-						.add(Integer.valueOf(tuleapMultiSelectBoxItems.indexOf(tuleapSelectBoxItem) + 1));
+				selectedItems.add(Integer.valueOf(index));
 			}
 		}
 		list.setItems(items.toArray(new String[items.size()]));

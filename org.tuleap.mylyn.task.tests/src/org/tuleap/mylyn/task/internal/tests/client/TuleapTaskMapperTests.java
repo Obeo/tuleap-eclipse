@@ -351,11 +351,11 @@ public class TuleapTaskMapperTests {
 
 		// No value is assigned to the field
 		// => as if status were equal to 100, only 1 state should be accessible, state 0
+		// There is a workflow, state 100 is not present in the options.
 
-		assertEquals(2, att.getOptions().size());
+		assertEquals(1, att.getOptions().size());
 		String lbl = getLabelFromId(0);
 		assertEquals(lbl, att.getOption("0")); //$NON-NLS-1$
-		assertEquals("", att.getOption(String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID))); //$NON-NLS-1$
 	}
 
 	/**
@@ -370,23 +370,23 @@ public class TuleapTaskMapperTests {
 		TuleapWorkflowTransition transition = new TuleapWorkflowTransition();
 		transition.setFrom(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID);
 		transition.setTo(0);
-		selectBox.getWorkflow().getTransitions().add(transition);
+		selectBox.getWorkflow().addTransition(transition);
 		transition = new TuleapWorkflowTransition();
 		transition.setFrom(0);
 		transition.setTo(1);
-		selectBox.getWorkflow().getTransitions().add(transition);
+		selectBox.getWorkflow().addTransition(transition);
 		transition = new TuleapWorkflowTransition();
 		transition.setFrom(1);
 		transition.setTo(2);
-		selectBox.getWorkflow().getTransitions().add(transition);
+		selectBox.getWorkflow().addTransition(transition);
 		transition = new TuleapWorkflowTransition();
 		transition.setFrom(2);
 		transition.setTo(3);
-		selectBox.getWorkflow().getTransitions().add(transition);
+		selectBox.getWorkflow().addTransition(transition);
 		transition = new TuleapWorkflowTransition();
 		transition.setFrom(2);
 		transition.setTo(1);
-		selectBox.getWorkflow().getTransitions().add(transition);
+		selectBox.getWorkflow().addTransition(transition);
 		tuleapTrackerConfiguration.addField(selectBox);
 		mapper.initializeEmptyTaskData();
 
@@ -399,10 +399,9 @@ public class TuleapTaskMapperTests {
 		assertEquals(TaskAttribute.TYPE_SINGLE_SELECT, metadata.getType());
 		assertEquals(getLabelFromId(id), metadata.getLabel());
 
-		assertEquals(2, att.getOptions().size());
+		assertEquals(1, att.getOptions().size());
 		String lbl = getLabelFromId(0);
 		assertEquals(lbl, att.getOption("0")); //$NON-NLS-1$
-		assertEquals("", att.getOption(String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID))); //$NON-NLS-1$
 	}
 
 	/**
@@ -580,10 +579,10 @@ public class TuleapTaskMapperTests {
 		TuleapSelectBoxItem item1 = newTuleapSelectBoxItem(1);
 		TuleapSelectBoxItem item2 = newTuleapSelectBoxItem(2);
 		TuleapSelectBoxItem item3 = newTuleapSelectBoxItem(3);
-		result.getItems().add(item0);
-		result.getItems().add(item1);
-		result.getItems().add(item2);
-		result.getItems().add(item3);
+		result.addItem(item0);
+		result.addItem(item1);
+		result.addItem(item2);
+		result.addItem(item3);
 		return result;
 	}
 
@@ -602,10 +601,10 @@ public class TuleapTaskMapperTests {
 		TuleapSelectBoxItem item1 = newTuleapSelectBoxItem(1);
 		TuleapSelectBoxItem item2 = newTuleapSelectBoxItem(2);
 		TuleapSelectBoxItem item3 = newTuleapSelectBoxItem(3);
-		result.getItems().add(item0);
-		result.getItems().add(item1);
-		result.getItems().add(item2);
-		result.getItems().add(item3);
+		result.addItem(item0);
+		result.addItem(item1);
+		result.addItem(item2);
+		result.addItem(item3);
 		result.getOpenStatus().add(item0);
 		result.getOpenStatus().add(item1);
 		result.getClosedStatus().add(item2);
@@ -628,23 +627,23 @@ public class TuleapTaskMapperTests {
 		TuleapWorkflowTransition transition = new TuleapWorkflowTransition();
 		transition.setFrom(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID);
 		transition.setTo(0);
-		result.getWorkflow().getTransitions().add(transition);
+		result.getWorkflow().addTransition(transition);
 		transition = new TuleapWorkflowTransition();
 		transition.setFrom(0);
 		transition.setTo(1);
-		result.getWorkflow().getTransitions().add(transition);
+		result.getWorkflow().addTransition(transition);
 		transition = new TuleapWorkflowTransition();
 		transition.setFrom(1);
 		transition.setTo(2);
-		result.getWorkflow().getTransitions().add(transition);
+		result.getWorkflow().addTransition(transition);
 		transition = new TuleapWorkflowTransition();
 		transition.setFrom(2);
 		transition.setTo(3);
-		result.getWorkflow().getTransitions().add(transition);
+		result.getWorkflow().addTransition(transition);
 		transition = new TuleapWorkflowTransition();
 		transition.setFrom(2);
 		transition.setTo(1);
-		result.getWorkflow().getTransitions().add(transition);
+		result.getWorkflow().addTransition(transition);
 		return result;
 	}
 
@@ -690,10 +689,10 @@ public class TuleapTaskMapperTests {
 		TuleapSelectBoxItem item1 = newTuleapSelectBoxItem(1);
 		TuleapSelectBoxItem item2 = newTuleapSelectBoxItem(2);
 		TuleapSelectBoxItem item3 = newTuleapSelectBoxItem(3);
-		result.getItems().add(item0);
-		result.getItems().add(item1);
-		result.getItems().add(item2);
-		result.getItems().add(item3);
+		result.addItem(item0);
+		result.addItem(item1);
+		result.addItem(item2);
+		result.addItem(item3);
 		return result;
 	}
 

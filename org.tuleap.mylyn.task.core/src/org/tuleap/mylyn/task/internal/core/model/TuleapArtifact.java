@@ -28,7 +28,9 @@ import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Artifact;
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
+ * @deprecated
  */
+@Deprecated
 public class TuleapArtifact {
 
 	/**

@@ -17,9 +17,9 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.tuleap.mylyn.task.agile.ui.AbstractAgileRepositoryConnectorUI;
+import org.tuleap.mylyn.task.internal.core.data.TuleapTaskMapper;
 import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
-import org.tuleap.mylyn.task.internal.core.repository.TuleapTaskMapper;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.ui.wizards.NewTuleapTaskWizard;
 
@@ -59,7 +59,7 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 		// selection.
 		NewTuleapTaskWizard wizard = new NewTuleapTaskWizard(taskRepository, null);
 
-		TuleapTaskMapper mapper = new TuleapTaskMapper(planningTaskData);
+		TuleapTaskMapper mapper = new TuleapTaskMapper(planningTaskData, null);
 		int trackerId = mapper.getTrackerId();
 
 		String connectorKind = taskRepository.getConnectorKind();

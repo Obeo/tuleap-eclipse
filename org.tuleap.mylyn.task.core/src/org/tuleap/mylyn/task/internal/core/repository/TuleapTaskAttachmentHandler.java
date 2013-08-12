@@ -35,6 +35,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapClient;
+import org.tuleap.mylyn.task.internal.core.data.TuleapTaskMapper;
 import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
@@ -250,7 +251,7 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 		// If the attachement attribute is available, let's use it
 		if (attachmentAttribute != null) {
 			TaskData taskData = attachmentAttribute.getTaskData();
-			TuleapTaskMapper tuleapTaskMapper = new TuleapTaskMapper(taskData);
+			TuleapTaskMapper tuleapTaskMapper = new TuleapTaskMapper(taskData, configuration);
 
 			int trackerId = tuleapTaskMapper.getTrackerId();
 

@@ -11,7 +11,9 @@
 package org.tuleap.mylyn.task.internal.core.model.field;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +39,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 	/**
 	 * The select box items.
 	 */
-	protected List<TuleapSelectBoxItem> items = new ArrayList<TuleapSelectBoxItem>();
+	protected final Map<String, TuleapSelectBoxItem> items = new LinkedHashMap<String, TuleapSelectBoxItem>();
 
 	/**
 	 * The value of the binding of the select box.
@@ -47,7 +49,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 	/**
 	 * The list of items that should be considered as an open status semantically.
 	 */
-	protected List<TuleapSelectBoxItem> openStatus = new ArrayList<TuleapSelectBoxItem>();
+	protected final List<TuleapSelectBoxItem> openStatus = new ArrayList<TuleapSelectBoxItem>();
 
 	/**
 	 * Indicates if this field represents the list of contributors of the artifact.
@@ -65,15 +67,6 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 	}
 
 	/**
-	 * Returns the list of the items available in the select box.
-	 * 
-	 * @return The list of the items available in the select box.
-	 */
-	public List<TuleapSelectBoxItem> getItems() {
-		return this.items;
-	}
-
-	/**
 	 * Returns the list of items that should be considered as opened status semantically.
 	 * 
 	 * @return The list of items that should be considered as opened status semantically.
@@ -88,7 +81,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 	 * @return The list of items that should be considered as closed status semantically.
 	 */
 	public List<TuleapSelectBoxItem> getClosedStatus() {
-		ArrayList<TuleapSelectBoxItem> closedStatus = new ArrayList<TuleapSelectBoxItem>(this.items);
+		ArrayList<TuleapSelectBoxItem> closedStatus = new ArrayList<TuleapSelectBoxItem>(this.items.values());
 		closedStatus.removeAll(this.openStatus);
 		return closedStatus;
 	}
@@ -153,9 +146,9 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 	 * The binding must be one of the following value:
 	 * <ul>
 	 * <li>static (the collections of the possible bindings must then be added to
-	 * {@link org.tuleap.mylyn.task.internal.core.model.field.AbstractTuleapSelectBox#getItems()}</li>
+	 * {@code org.tuleap.mylyn.task.internal.core.model.field.AbstractTuleapSelectBox#addItem()}</li>
 	 * <li>users (the collections of users must be requested to the server and then added to
-	 * {@link org.tuleap.mylyn.task.internal.core.model.field.AbstractTuleapSelectBox#getItems()}</li>
+	 * {@code org.tuleap.mylyn.task.internal.core.model.field.AbstractTuleapSelectBox#addItem()}</li>
 	 * </ul>
 	 * </p>
 	 * 
@@ -210,15 +203,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 	 * @return The newly created task attribute.
 	 */
 	protected TaskAttribute createSelectBoxTaskAttribute(TaskAttribute parent) {
-		TaskAttribute attribute = parent.createAttribute(Integer.valueOf(getIdentifier()).toString());
-		// Attributes
-		TaskAttributeMetaData attributeMetadata = attribute.getMetaData();
-		attributeMetadata.setType(getMetadataType());
-		attributeMetadata.setLabel(getLabel());
-
-		afterTaskAttributeCreation(attribute);
-
-		return attribute;
+		return super.createTaskAttribute(parent);
 	}
 
 	/**
@@ -266,6 +251,38 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 	}
 
 	/**
+	 * Returns a select box item by its id.
+	 * 
+	 * @param itemId
+	 *            the id of the item being looked for, as a string
+	 * @return The relevant item, or {@code null} if it cannot be found.
+	 */
+	public TuleapSelectBoxItem getItem(String itemId) {
+		// TODO See if itemId should be an int
+		return items.get(itemId);
+	}
+
+	/**
+	 * Returns the collection of items of this select box.
+	 * 
+	 * @return The collection of items in this select box, never null.
+	 */
+	public Collection<TuleapSelectBoxItem> getItems() {
+		return items.values();
+	}
+
+	/**
+	 * Add a new option to this select box.
+	 * 
+	 * @param item
+	 *            the item to add. If an item with the same identifier was already registered, it will be
+	 *            silently overridden.
+	 */
+	public void addItem(TuleapSelectBoxItem item) {
+		items.put(String.valueOf(item.getIdentifier()), item);
+	}
+
+	/**
 	 * Copies the items in the task attribute's options.
 	 * 
 	 * @param attribute
@@ -273,7 +290,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 	 */
 	@Override
 	protected void afterTaskAttributeCreation(TaskAttribute attribute) {
-		for (TuleapSelectBoxItem item : items) {
+		for (TuleapSelectBoxItem item : items.values()) {
 			attribute.putOption(String.valueOf(item.getIdentifier()), item.getLabel());
 		}
 		if (items.size() > 0) {
@@ -291,8 +308,8 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 	@Deprecated
 	public Map<String, String> getOptions() {
 		Map<String, String> options = new HashMap<String, String>();
-		for (TuleapSelectBoxItem item : items) {
-			options.put(item.getLabel(), item.getLabel());
+		for (TuleapSelectBoxItem item : items.values()) {
+			options.put(String.valueOf(item.getIdentifier()), item.getLabel());
 		}
 		if (items.size() > 0) {
 			options.put(String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID), ""); //$NON-NLS-1$

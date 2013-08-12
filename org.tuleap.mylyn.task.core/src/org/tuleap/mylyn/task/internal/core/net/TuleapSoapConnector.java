@@ -599,7 +599,7 @@ public class TuleapSoapConnector {
 				TuleapWorkflowTransition tuleapTransition = new TuleapWorkflowTransition();
 				tuleapTransition.setFrom(trackerTransition.getFrom_id());
 				tuleapTransition.setTo(trackerTransition.getTo_id());
-				tuleapWorkflow.getTransitions().add(tuleapTransition);
+				tuleapWorkflow.addTransition(tuleapTransition);
 			}
 		}
 

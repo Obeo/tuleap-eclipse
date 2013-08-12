@@ -596,7 +596,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_SHORT_RICH_TEXT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -634,7 +634,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(true)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.TRUE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_SHORT_RICH_TEXT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -673,7 +673,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_SHORT_RICH_TEXT));
 	}
 
@@ -709,7 +709,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 				assertThat(metaData.getLabel(), is(label));
-				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 				assertThat(metaData.getType(), is(TaskAttribute.TYPE_LONG_RICH_TEXT));
 				assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 			} else if (taskAttribute.getId().equals(TaskAttribute.COMMENT_NEW)) {
@@ -718,7 +718,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 				assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(0)));
 
 				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
-				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 				assertThat(metaData.getType(), is(TaskAttribute.TYPE_LONG_RICH_TEXT));
 			}
 		}
@@ -755,7 +755,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 				assertThat(metaData.getLabel(), is(label));
-				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(true)));
+				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.TRUE));
 				assertThat(metaData.getType(), is(TaskAttribute.TYPE_LONG_RICH_TEXT));
 				assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 			} else if (taskAttribute.getId().equals(TaskAttribute.COMMENT_NEW)) {
@@ -764,7 +764,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 				assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(0)));
 
 				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
-				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 				assertThat(metaData.getType(), is(TaskAttribute.TYPE_LONG_RICH_TEXT));
 			}
 		}
@@ -802,7 +802,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_INTEGER));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -838,7 +838,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(true)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.TRUE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_INTEGER));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -875,7 +875,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_DOUBLE));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -911,7 +911,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(true)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.TRUE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_DOUBLE));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -947,7 +947,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_TASK_DEPENDENCY));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -982,7 +982,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(true)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.TRUE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_TASK_DEPENDENCY));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -1018,7 +1018,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 				assertThat(metaData.getLabel(), is(label));
-				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 				assertThat(metaData.getType(), is(TaskAttribute.TYPE_DATE));
 				assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 			} else if (taskAttribute.getId().equals(TaskAttribute.DATE_COMPLETION)) {
@@ -1028,7 +1028,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 				assertThat(metaData.getLabel(), is(COMPLETED_DATE_LABEL));
-				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 				assertThat(metaData.getType(), is(TaskAttribute.TYPE_DATE));
 			} else if (taskAttribute.getId().equals(TaskAttribute.DATE_CREATION)) {
 				assertThat(taskAttribute.getId(), is(TaskAttribute.DATE_CREATION));
@@ -1037,7 +1037,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 				assertThat(metaData.getLabel(), is(CREATED_DATE_LABEL));
-				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 				assertThat(metaData.getType(), is(TaskAttribute.TYPE_DATE));
 			} else if (taskAttribute.getId().equals(TaskAttribute.DATE_MODIFICATION)) {
 				assertThat(taskAttribute.getId(), is(TaskAttribute.DATE_MODIFICATION));
@@ -1046,7 +1046,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 				assertThat(metaData.getLabel(), is(MODIFIED_DATE_LABEL));
-				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 				assertThat(metaData.getType(), is(TaskAttribute.TYPE_DATE));
 			}
 		}
@@ -1082,7 +1082,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 				assertThat(metaData.getLabel(), is(label));
-				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(true)));
+				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.TRUE));
 				assertThat(metaData.getType(), is(TaskAttribute.TYPE_DATE));
 				assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 			} else if (taskAttribute.getId().equals(TaskAttribute.DATE_COMPLETION)) {
@@ -1092,7 +1092,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 				assertThat(metaData.getLabel(), is(COMPLETED_DATE_LABEL));
-				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 				assertThat(metaData.getType(), is(TaskAttribute.TYPE_DATE));
 			} else if (taskAttribute.getId().equals(TaskAttribute.DATE_CREATION)) {
 				assertThat(taskAttribute.getId(), is(TaskAttribute.DATE_CREATION));
@@ -1101,7 +1101,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 				assertThat(metaData.getLabel(), is(CREATED_DATE_LABEL));
-				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 				assertThat(metaData.getType(), is(TaskAttribute.TYPE_DATE));
 			} else if (taskAttribute.getId().equals(TaskAttribute.DATE_MODIFICATION)) {
 				assertThat(taskAttribute.getId(), is(TaskAttribute.DATE_MODIFICATION));
@@ -1110,7 +1110,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 				assertThat(metaData.getLabel(), is(MODIFIED_DATE_LABEL));
-				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 				assertThat(metaData.getType(), is(TaskAttribute.TYPE_DATE));
 			}
 		}
@@ -1175,7 +1175,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_SHORT_RICH_TEXT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -1211,7 +1211,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(true)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.TRUE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_SHORT_RICH_TEXT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -1249,7 +1249,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_SINGLE_SELECT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -1286,7 +1286,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(true)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.TRUE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_SINGLE_SELECT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -1315,7 +1315,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String firstItemDescription = "first item description select box with options name"; //$NON-NLS-1$
 		firstItem.setLabel(firstItemLabel);
 		firstItem.setDescription(firstItemDescription);
-		tuleapSelectBox.getItems().add(firstItem);
+		tuleapSelectBox.addItem(firstItem);
 
 		int secondSelectBoxItemId = 84865746;
 		TuleapSelectBoxItem secondItem = new TuleapSelectBoxItem(secondSelectBoxItemId);
@@ -1323,7 +1323,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String secondItemDescription = "second item description select box with options name"; //$NON-NLS-1$
 		secondItem.setLabel(secondItemLabel);
 		secondItem.setDescription(secondItemDescription);
-		tuleapSelectBox.getItems().add(secondItem);
+		tuleapSelectBox.addItem(secondItem);
 
 		tuleapTrackerConfiguration.addField(tuleapSelectBox);
 
@@ -1339,12 +1339,14 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(3)));
 		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		for (Entry<String, String> entry : entrySet) {
-			if ("".equals(entry.getKey())) { //$NON-NLS-1$
+			if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
-			} else if (firstItemLabel.equals(entry.getKey())) {
+			} else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(firstItemLabel));
-			} else if (secondItemLabel.equals(entry.getKey())) {
+			} else if (String.valueOf(secondSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(secondItemLabel));
+			} else {
+				fail("This entry should not be here");
 			}
 		}
 
@@ -1352,7 +1354,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_SINGLE_SELECT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -1381,7 +1383,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String firstItemDescription = "first item description select box with options and a workflow name"; //$NON-NLS-1$
 		firstItem.setLabel(firstItemLabel);
 		firstItem.setDescription(firstItemDescription);
-		tuleapSelectBox.getItems().add(firstItem);
+		tuleapSelectBox.addItem(firstItem);
 
 		int secondSelectBoxItemId = 84865746;
 		TuleapSelectBoxItem secondItem = new TuleapSelectBoxItem(secondSelectBoxItemId);
@@ -1389,13 +1391,13 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String secondItemDescription = "second item description select box with options and a workflow name"; //$NON-NLS-1$
 		secondItem.setLabel(secondItemLabel);
 		secondItem.setDescription(secondItemDescription);
-		tuleapSelectBox.getItems().add(secondItem);
+		tuleapSelectBox.addItem(secondItem);
 
 		TuleapWorkflow tuleapWorkflow = tuleapSelectBox.getWorkflow();
 		TuleapWorkflowTransition aTransition = new TuleapWorkflowTransition();
 		aTransition.setFrom(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID);
 		aTransition.setTo(secondSelectBoxItemId);
-		tuleapWorkflow.getTransitions().add(aTransition);
+		tuleapWorkflow.addTransition(aTransition);
 
 		tuleapTrackerConfiguration.addField(tuleapSelectBox);
 
@@ -1416,7 +1418,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_SINGLE_SELECT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -1445,7 +1447,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String firstItemDescription = "first item description select box with options and an empty workflow name"; //$NON-NLS-1$
 		firstItem.setLabel(firstItemLabel);
 		firstItem.setDescription(firstItemDescription);
-		tuleapSelectBox.getItems().add(firstItem);
+		tuleapSelectBox.addItem(firstItem);
 
 		int secondSelectBoxItemId = 84865746;
 		TuleapSelectBoxItem secondItem = new TuleapSelectBoxItem(secondSelectBoxItemId);
@@ -1453,13 +1455,13 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String secondItemDescription = "second item description select box with options and an empty workflow name"; //$NON-NLS-1$
 		secondItem.setLabel(secondItemLabel);
 		secondItem.setDescription(secondItemDescription);
-		tuleapSelectBox.getItems().add(secondItem);
+		tuleapSelectBox.addItem(secondItem);
 
 		TuleapWorkflow tuleapWorkflow = tuleapSelectBox.getWorkflow();
 		TuleapWorkflowTransition aTransition = new TuleapWorkflowTransition();
 		aTransition.setFrom(firstSelectBoxItemId);
 		aTransition.setTo(secondSelectBoxItemId);
-		tuleapWorkflow.getTransitions().add(aTransition);
+		tuleapWorkflow.addTransition(aTransition);
 
 		tuleapTrackerConfiguration.addField(tuleapSelectBox);
 
@@ -1478,7 +1480,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_SINGLE_SELECT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -1507,7 +1509,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String firstItemDescription = "first item description select box status with options name"; //$NON-NLS-1$
 		firstItem.setLabel(firstItemLabel);
 		firstItem.setDescription(firstItemDescription);
-		tuleapSelectBox.getItems().add(firstItem);
+		tuleapSelectBox.addItem(firstItem);
 
 		int secondSelectBoxItemId = 84865746;
 		TuleapSelectBoxItem secondItem = new TuleapSelectBoxItem(secondSelectBoxItemId);
@@ -1515,7 +1517,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String secondItemDescription = "second item description select box status with options name"; //$NON-NLS-1$
 		secondItem.setLabel(secondItemLabel);
 		secondItem.setDescription(secondItemDescription);
-		tuleapSelectBox.getItems().add(secondItem);
+		tuleapSelectBox.addItem(secondItem);
 
 		tuleapSelectBox.getOpenStatus().add(firstItem);
 
@@ -1533,12 +1535,14 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(3)));
 		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		for (Entry<String, String> entry : entrySet) {
-			if ("".equals(entry.getKey())) { //$NON-NLS-1$
+			if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
-			} else if (firstItemLabel.equals(entry.getKey())) {
+			} else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(firstItemLabel));
-			} else if (secondItemLabel.equals(entry.getKey())) {
+			} else if (String.valueOf(secondSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(secondItemLabel));
+			} else {
+				fail("This entry should not be here");
 			}
 		}
 
@@ -1546,7 +1550,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(STATUS_LABEL));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_SINGLE_SELECT));
 	}
 
@@ -1583,7 +1587,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(CONTRIBUTORS_LABEL));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_SINGLE_SELECT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_PEOPLE));
 	}
@@ -1612,7 +1616,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String firstItemDescription = "first item description select box semantic contributors with options name"; //$NON-NLS-1$
 		firstItem.setLabel(firstItemLabel);
 		firstItem.setDescription(firstItemDescription);
-		tuleapSelectBox.getItems().add(firstItem);
+		tuleapSelectBox.addItem(firstItem);
 
 		int secondSelectBoxItemId = 84865746;
 		TuleapSelectBoxItem secondItem = new TuleapSelectBoxItem(secondSelectBoxItemId);
@@ -1620,7 +1624,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String secondItemDescription = "second item description select box semantic contributors with options name"; //$NON-NLS-1$
 		secondItem.setLabel(secondItemLabel);
 		secondItem.setDescription(secondItemDescription);
-		tuleapSelectBox.getItems().add(secondItem);
+		tuleapSelectBox.addItem(secondItem);
 
 		tuleapTrackerConfiguration.addField(tuleapSelectBox);
 
@@ -1636,12 +1640,14 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(3)));
 		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		for (Entry<String, String> entry : entrySet) {
-			if ("".equals(entry.getKey())) { //$NON-NLS-1$
+			if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
-			} else if (firstItemLabel.equals(entry.getKey())) {
+			} else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(firstItemLabel));
-			} else if (secondItemLabel.equals(entry.getKey())) {
+			} else if (String.valueOf(secondSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(secondItemLabel));
+			} else {
+				fail("This entry should not be here");
 			}
 		}
 
@@ -1649,7 +1655,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(CONTRIBUTORS_LABEL));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_SINGLE_SELECT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_PEOPLE));
 	}
@@ -1687,7 +1693,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_MULTI_SELECT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -1724,7 +1730,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(true)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.TRUE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_MULTI_SELECT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -1753,7 +1759,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String firstItemDescription = "first item description select box with options"; //$NON-NLS-1$
 		firstItem.setLabel(firstItemLabel);
 		firstItem.setDescription(firstItemDescription);
-		tuleapMultiSelectBox.getItems().add(firstItem);
+		tuleapMultiSelectBox.addItem(firstItem);
 
 		int secondSelectBoxItemId = 84865746;
 		TuleapSelectBoxItem secondItem = new TuleapSelectBoxItem(secondSelectBoxItemId);
@@ -1761,7 +1767,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String secondItemDescription = "second item description select box with options"; //$NON-NLS-1$
 		secondItem.setLabel(secondItemLabel);
 		secondItem.setDescription(secondItemDescription);
-		tuleapMultiSelectBox.getItems().add(secondItem);
+		tuleapMultiSelectBox.addItem(secondItem);
 
 		tuleapTrackerConfiguration.addField(tuleapMultiSelectBox);
 
@@ -1777,12 +1783,14 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(3)));
 		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		for (Entry<String, String> entry : entrySet) {
-			if ("".equals(entry.getKey())) { //$NON-NLS-1$
+			if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
-			} else if (firstItemLabel.equals(entry.getKey())) {
+			} else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(firstItemLabel));
-			} else if (secondItemLabel.equals(entry.getKey())) {
+			} else if (String.valueOf(secondSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(secondItemLabel));
+			} else {
+				fail("This entry should not be here");
 			}
 		}
 
@@ -1790,7 +1798,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_MULTI_SELECT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -1819,7 +1827,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String firstItemDescription = "first item description select box with one option"; //$NON-NLS-1$
 		firstItem.setLabel(firstItemLabel);
 		firstItem.setDescription(firstItemDescription);
-		tuleapMultiSelectBox.getItems().add(firstItem);
+		tuleapMultiSelectBox.addItem(firstItem);
 
 		tuleapTrackerConfiguration.addField(tuleapMultiSelectBox);
 
@@ -1835,10 +1843,12 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(2)));
 		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		for (Entry<String, String> entry : entrySet) {
-			if ("".equals(entry.getKey())) { //$NON-NLS-1$
+			if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
-			} else if (firstItemLabel.equals(entry.getKey())) {
+			} else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(firstItemLabel));
+			} else {
+				fail("This entry should not be here");
 			}
 		}
 
@@ -1846,7 +1856,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_MULTI_SELECT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -1875,7 +1885,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String firstItemDescription = "first item description select box with options and workflow"; //$NON-NLS-1$
 		firstItem.setLabel(firstItemLabel);
 		firstItem.setDescription(firstItemDescription);
-		tuleapMultiSelectBox.getItems().add(firstItem);
+		tuleapMultiSelectBox.addItem(firstItem);
 
 		int secondSelectBoxItemId = 84865746;
 		TuleapSelectBoxItem secondItem = new TuleapSelectBoxItem(secondSelectBoxItemId);
@@ -1883,7 +1893,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String secondItemDescription = "second item description select box with options and workflow"; //$NON-NLS-1$
 		secondItem.setLabel(secondItemLabel);
 		secondItem.setDescription(secondItemDescription);
-		tuleapMultiSelectBox.getItems().add(secondItem);
+		tuleapMultiSelectBox.addItem(secondItem);
 
 		tuleapTrackerConfiguration.addField(tuleapMultiSelectBox);
 
@@ -1899,12 +1909,14 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(3)));
 		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		for (Entry<String, String> entry : entrySet) {
-			if ("".equals(entry.getKey())) { //$NON-NLS-1$
+			if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
-			} else if (firstItemLabel.equals(entry.getKey())) {
+			} else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(firstItemLabel));
-			} else if (secondItemLabel.equals(entry.getKey())) {
+			} else if (String.valueOf(secondSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(secondItemLabel));
+			} else {
+				fail("This entry should not be here");
 			}
 		}
 
@@ -1912,7 +1924,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_MULTI_SELECT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -1941,7 +1953,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String firstItemDescription = "first item description multi select box status with options"; //$NON-NLS-1$
 		firstItem.setLabel(firstItemLabel);
 		firstItem.setDescription(firstItemDescription);
-		tuleapMultiSelectBox.getItems().add(firstItem);
+		tuleapMultiSelectBox.addItem(firstItem);
 
 		int secondSelectBoxItemId = 84865746;
 		TuleapSelectBoxItem secondItem = new TuleapSelectBoxItem(secondSelectBoxItemId);
@@ -1949,7 +1961,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String secondItemDescription = "second item description multi select box status with options"; //$NON-NLS-1$
 		secondItem.setLabel(secondItemLabel);
 		secondItem.setDescription(secondItemDescription);
-		tuleapMultiSelectBox.getItems().add(secondItem);
+		tuleapMultiSelectBox.addItem(secondItem);
 
 		tuleapMultiSelectBox.getOpenStatus().add(firstItem);
 
@@ -1967,12 +1979,14 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(3)));
 		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		for (Entry<String, String> entry : entrySet) {
-			if ("".equals(entry.getKey())) { //$NON-NLS-1$
+			if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
-			} else if (firstItemLabel.equals(entry.getKey())) {
+			} else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(firstItemLabel));
-			} else if (secondItemLabel.equals(entry.getKey())) {
+			} else if (String.valueOf(secondSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(secondItemLabel));
+			} else {
+				fail("This entry should not be here");
 			}
 		}
 
@@ -1980,7 +1994,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(STATUS_LABEL));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_MULTI_SELECT));
 	}
 
@@ -2017,7 +2031,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(CONTRIBUTORS_LABEL));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_MULTI_SELECT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_PEOPLE));
 	}
@@ -2046,7 +2060,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String firstItemDescription = "first item description multi select box semantic contributors with options"; //$NON-NLS-1$
 		firstItem.setLabel(firstItemLabel);
 		firstItem.setDescription(firstItemDescription);
-		tuleapMultiSelectBox.getItems().add(firstItem);
+		tuleapMultiSelectBox.addItem(firstItem);
 
 		int secondSelectBoxItemId = 84865746;
 		TuleapSelectBoxItem secondItem = new TuleapSelectBoxItem(secondSelectBoxItemId);
@@ -2054,7 +2068,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String secondItemDescription = "second item description multi select box semantic contributors with options"; //$NON-NLS-1$
 		secondItem.setLabel(secondItemLabel);
 		secondItem.setDescription(secondItemDescription);
-		tuleapMultiSelectBox.getItems().add(secondItem);
+		tuleapMultiSelectBox.addItem(secondItem);
 
 		tuleapTrackerConfiguration.addField(tuleapMultiSelectBox);
 
@@ -2070,12 +2084,14 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(3)));
 		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		for (Entry<String, String> entry : entrySet) {
-			if ("".equals(entry.getKey())) { //$NON-NLS-1$
+			if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
-			} else if (firstItemLabel.equals(entry.getKey())) {
+			} else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(firstItemLabel));
-			} else if (secondItemLabel.equals(entry.getKey())) {
+			} else if (String.valueOf(secondSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(secondItemLabel));
+			} else {
+				fail("This entry should not be here");
 			}
 		}
 
@@ -2083,7 +2099,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(CONTRIBUTORS_LABEL));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_MULTI_SELECT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_PEOPLE));
 	}
@@ -2133,7 +2149,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 				assertThat(metaData.getLabel(), is(COMPLETED_DATE_LABEL));
-				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 				assertThat(metaData.getType(), is(TaskAttribute.TYPE_DATE));
 			} else if (taskAttribute.getId().equals(TaskAttribute.DATE_CREATION)) {
 				assertThat(taskAttribute.getId(), is(TaskAttribute.DATE_CREATION));
@@ -2146,7 +2162,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 				assertThat(metaData.getLabel(), is(CREATED_DATE_LABEL));
-				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 				assertThat(metaData.getType(), is(TaskAttribute.TYPE_DATE));
 			} else if (taskAttribute.getId().equals(TaskAttribute.DATE_MODIFICATION)) {
 				assertThat(taskAttribute.getId(), is(TaskAttribute.DATE_MODIFICATION));
@@ -2159,7 +2175,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 				assertThat(metaData.getLabel(), is(MODIFIED_DATE_LABEL));
-				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 				assertThat(metaData.getType(), is(TaskAttribute.TYPE_DATE));
 			}
 		}
@@ -2204,7 +2220,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(dateAttribute.getValue(), is(Integer.valueOf(submittedOnTimestamp * 1000).toString()));
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(true)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.TRUE));
 	}
 
 	/**
@@ -2244,7 +2260,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_SHORT_RICH_TEXT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -2286,7 +2302,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_SHORT_RICH_TEXT));
 	}
 
@@ -2326,7 +2342,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 				assertThat(metaData.getLabel(), is(label));
-				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 				assertThat(metaData.getType(), is(TaskAttribute.TYPE_LONG_RICH_TEXT));
 				assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 			} else if (taskAttribute.getId().equals(TaskAttribute.COMMENT_NEW)) {
@@ -2335,7 +2351,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 				assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(0)));
 
 				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
-				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 				assertThat(metaData.getType(), is(TaskAttribute.TYPE_LONG_RICH_TEXT));
 			}
 		}
@@ -2377,7 +2393,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_INTEGER));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -2418,7 +2434,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_DOUBLE));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -2459,7 +2475,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_TASK_DEPENDENCY));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -2510,7 +2526,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 				assertThat(metaData.getLabel(), is(label));
-				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 				assertThat(metaData.getType(), is(TaskAttribute.TYPE_DATE));
 				assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 			} else if (taskAttribute.getId().equals(TaskAttribute.DATE_COMPLETION)) {
@@ -2520,7 +2536,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 				assertThat(metaData.getLabel(), is(COMPLETED_DATE_LABEL));
-				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 				assertThat(metaData.getType(), is(TaskAttribute.TYPE_DATE));
 			} else if (taskAttribute.getId().equals(TaskAttribute.DATE_CREATION)) {
 				assertThat(taskAttribute.getId(), is(TaskAttribute.DATE_CREATION));
@@ -2532,7 +2548,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 				assertThat(metaData.getLabel(), is(CREATED_DATE_LABEL));
-				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 				assertThat(metaData.getType(), is(TaskAttribute.TYPE_DATE));
 			} else if (taskAttribute.getId().equals(TaskAttribute.DATE_MODIFICATION)) {
 				assertThat(taskAttribute.getId(), is(TaskAttribute.DATE_MODIFICATION));
@@ -2544,7 +2560,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 				assertThat(metaData.getLabel(), is(MODIFIED_DATE_LABEL));
-				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+				assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 				assertThat(metaData.getType(), is(TaskAttribute.TYPE_DATE));
 			}
 		}
@@ -2652,7 +2668,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_SHORT_RICH_TEXT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -2681,7 +2697,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String firstItemDescription = "first item description select box with options name"; //$NON-NLS-1$
 		firstItem.setLabel(firstItemLabel);
 		firstItem.setDescription(firstItemDescription);
-		tuleapSelectBox.getItems().add(firstItem);
+		tuleapSelectBox.addItem(firstItem);
 
 		int secondSelectBoxItemId = 84865746;
 		TuleapSelectBoxItem secondItem = new TuleapSelectBoxItem(secondSelectBoxItemId);
@@ -2689,12 +2705,12 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String secondItemDescription = "second item description select box with options name"; //$NON-NLS-1$
 		secondItem.setLabel(secondItemLabel);
 		secondItem.setDescription(secondItemDescription);
-		tuleapSelectBox.getItems().add(secondItem);
+		tuleapSelectBox.addItem(secondItem);
 
 		tuleapTrackerConfiguration.addField(tuleapSelectBox);
 
 		TuleapArtifact tuleapArtifact = new TuleapArtifact(id, trackerId, trackerName, projectName);
-		tuleapArtifact.putValue(name, firstItemLabel);
+		tuleapArtifact.putValue(name, String.valueOf(firstSelectBoxItemId));
 		TaskData taskData = this.createTaskDataFromArtifact(tuleapArtifact);
 
 		// Check attributes
@@ -2707,21 +2723,23 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(3)));
 		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		for (Entry<String, String> entry : entrySet) {
-			if ("".equals(entry.getKey())) { //$NON-NLS-1$
+			if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
-			} else if (firstItemLabel.equals(entry.getKey())) {
+			} else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(firstItemLabel));
-			} else if (secondItemLabel.equals(entry.getKey())) {
+			} else if (String.valueOf(secondSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(secondItemLabel));
+			} else {
+				fail("This entry should not be here");
 			}
 		}
 
 		assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(1)));
-		assertThat(taskAttribute.getValue(), is(firstItemLabel));
+		assertThat(taskAttribute.getValue(), is(String.valueOf(firstSelectBoxItemId)));
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_SINGLE_SELECT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -2750,12 +2768,12 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String firstItemDescription = "first item description select box with one option name"; //$NON-NLS-1$
 		firstItem.setLabel(firstItemLabel);
 		firstItem.setDescription(firstItemDescription);
-		tuleapSelectBox.getItems().add(firstItem);
+		tuleapSelectBox.addItem(firstItem);
 
 		tuleapTrackerConfiguration.addField(tuleapSelectBox);
 
 		TuleapArtifact tuleapArtifact = new TuleapArtifact(id, trackerId, trackerName, projectName);
-		tuleapArtifact.putValue(name, firstItemLabel);
+		tuleapArtifact.putValue(name, String.valueOf(firstSelectBoxItemId));
 		TaskData taskData = this.createTaskDataFromArtifact(tuleapArtifact);
 
 		// Check attributes
@@ -2768,19 +2786,21 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(2)));
 		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		for (Entry<String, String> entry : entrySet) {
-			if ("".equals(entry.getKey())) { //$NON-NLS-1$
+			if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
-			} else if (firstItemLabel.equals(entry.getKey())) {
+			} else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(firstItemLabel));
+			} else {
+				fail("This entry should not be here");
 			}
 		}
 
 		assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(1)));
-		assertThat(taskAttribute.getValue(), is(firstItemLabel));
+		assertThat(taskAttribute.getValue(), is(String.valueOf(firstSelectBoxItemId)));
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_SINGLE_SELECT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -2810,7 +2830,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String firstItemDescription = "first item description select box with options and a workflow name"; //$NON-NLS-1$
 		firstItem.setLabel(firstItemLabel);
 		firstItem.setDescription(firstItemDescription);
-		tuleapSelectBox.getItems().add(firstItem);
+		tuleapSelectBox.addItem(firstItem);
 
 		int secondSelectBoxItemId = 84865747;
 		TuleapSelectBoxItem secondItem = new TuleapSelectBoxItem(secondSelectBoxItemId);
@@ -2818,7 +2838,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String secondItemDescription = "second item description select box with options and a workflow name"; //$NON-NLS-1$
 		secondItem.setLabel(secondItemLabel);
 		secondItem.setDescription(secondItemDescription);
-		tuleapSelectBox.getItems().add(secondItem);
+		tuleapSelectBox.addItem(secondItem);
 
 		int thirdSelectBoxItemId = 84865748;
 		TuleapSelectBoxItem thirdItem = new TuleapSelectBoxItem(thirdSelectBoxItemId);
@@ -2826,18 +2846,18 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String thirdItemDescription = "third item description select box with options and a workflow name"; //$NON-NLS-1$
 		thirdItem.setLabel(thirdItemLabel);
 		thirdItem.setDescription(thirdItemDescription);
-		tuleapSelectBox.getItems().add(thirdItem);
+		tuleapSelectBox.addItem(thirdItem);
 
 		TuleapWorkflow tuleapWorkflow = tuleapSelectBox.getWorkflow();
 		TuleapWorkflowTransition aTransition = new TuleapWorkflowTransition();
 		aTransition.setFrom(firstSelectBoxItemId);
 		aTransition.setTo(thirdSelectBoxItemId);
-		tuleapWorkflow.getTransitions().add(aTransition);
+		tuleapWorkflow.addTransition(aTransition);
 
 		tuleapTrackerConfiguration.addField(tuleapSelectBox);
 
 		TuleapArtifact tuleapArtifact = new TuleapArtifact(id, trackerId, trackerName, projectName);
-		tuleapArtifact.putValue(name, firstItemLabel);
+		tuleapArtifact.putValue(name, String.valueOf(firstSelectBoxItemId));
 		TaskData taskData = this.createTaskDataFromArtifact(tuleapArtifact);
 
 		// Check attributes
@@ -2846,6 +2866,9 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(Integer.valueOf(attributesByType.size()), is(Integer.valueOf(1)));
 
 		TaskAttribute taskAttribute = attributesByType.get(0);
+
+		System.out.println(taskAttribute);
+
 		assertThat(taskAttribute.getId(), is(Integer.valueOf(id).toString()));
 		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(2)));
 		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
@@ -2858,11 +2881,11 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		}
 
 		assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(1)));
-		assertThat(taskAttribute.getValue(), is(firstItemLabel));
+		assertThat(taskAttribute.getValue(), is(String.valueOf(firstSelectBoxItemId)));
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_SINGLE_SELECT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -2891,7 +2914,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String firstItemDescription = "first item description select box status with options name"; //$NON-NLS-1$
 		firstItem.setLabel(firstItemLabel);
 		firstItem.setDescription(firstItemDescription);
-		tuleapSelectBox.getItems().add(firstItem);
+		tuleapSelectBox.addItem(firstItem);
 
 		int secondSelectBoxItemId = 84865746;
 		TuleapSelectBoxItem secondItem = new TuleapSelectBoxItem(secondSelectBoxItemId);
@@ -2899,7 +2922,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String secondItemDescription = "second item description select box status with options name"; //$NON-NLS-1$
 		secondItem.setLabel(secondItemLabel);
 		secondItem.setDescription(secondItemDescription);
-		tuleapSelectBox.getItems().add(secondItem);
+		tuleapSelectBox.addItem(secondItem);
 
 		tuleapSelectBox.getOpenStatus().add(firstItem);
 
@@ -2919,12 +2942,14 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(3)));
 		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		for (Entry<String, String> entry : entrySet) {
-			if ("".equals(entry.getKey())) { //$NON-NLS-1$
+			if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
-			} else if (firstItemLabel.equals(entry.getKey())) {
+			} else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(firstItemLabel));
-			} else if (secondItemLabel.equals(entry.getKey())) {
+			} else if (String.valueOf(secondSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(secondItemLabel));
+			} else {
+				fail("This entry should not be here");
 			}
 		}
 
@@ -2933,7 +2958,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(STATUS_LABEL));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_SINGLE_SELECT));
 	}
 
@@ -2962,7 +2987,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String firstItemDescription = "first item description select box semantic contributors with options name"; //$NON-NLS-1$
 		firstItem.setLabel(firstItemLabel);
 		firstItem.setDescription(firstItemDescription);
-		tuleapSelectBox.getItems().add(firstItem);
+		tuleapSelectBox.addItem(firstItem);
 
 		int secondSelectBoxItemId = 84865746;
 		TuleapSelectBoxItem secondItem = new TuleapSelectBoxItem(secondSelectBoxItemId);
@@ -2970,7 +2995,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String secondItemDescription = "second item description select box semantic contributors with options name"; //$NON-NLS-1$
 		secondItem.setLabel(secondItemLabel);
 		secondItem.setDescription(secondItemDescription);
-		tuleapSelectBox.getItems().add(secondItem);
+		tuleapSelectBox.addItem(secondItem);
 
 		tuleapTrackerConfiguration.addField(tuleapSelectBox);
 
@@ -2988,12 +3013,14 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(3)));
 		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		for (Entry<String, String> entry : entrySet) {
-			if ("".equals(entry.getKey())) { //$NON-NLS-1$
+			if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
-			} else if (firstItemLabel.equals(entry.getKey())) {
+			} else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(firstItemLabel));
-			} else if (secondItemLabel.equals(entry.getKey())) {
+			} else if (String.valueOf(secondSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(secondItemLabel));
+			} else {
+				fail("This entry should not be here");
 			}
 		}
 
@@ -3002,7 +3029,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(CONTRIBUTORS_LABEL));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_SINGLE_SELECT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_PEOPLE));
 	}
@@ -3031,7 +3058,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String firstItemDescription = "first item description select box with options"; //$NON-NLS-1$
 		firstItem.setLabel(firstItemLabel);
 		firstItem.setDescription(firstItemDescription);
-		tuleapMultiSelectBox.getItems().add(firstItem);
+		tuleapMultiSelectBox.addItem(firstItem);
 
 		int secondSelectBoxItemId = 84865746;
 		TuleapSelectBoxItem secondItem = new TuleapSelectBoxItem(secondSelectBoxItemId);
@@ -3039,7 +3066,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String secondItemDescription = "second item description select box with options"; //$NON-NLS-1$
 		secondItem.setLabel(secondItemLabel);
 		secondItem.setDescription(secondItemDescription);
-		tuleapMultiSelectBox.getItems().add(secondItem);
+		tuleapMultiSelectBox.addItem(secondItem);
 
 		tuleapTrackerConfiguration.addField(tuleapMultiSelectBox);
 
@@ -3057,12 +3084,14 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(3)));
 		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		for (Entry<String, String> entry : entrySet) {
-			if ("".equals(entry.getKey())) { //$NON-NLS-1$
+			if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
-			} else if (firstItemLabel.equals(entry.getKey())) {
+			} else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(firstItemLabel));
-			} else if (secondItemLabel.equals(entry.getKey())) {
+			} else if (String.valueOf(secondSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(secondItemLabel));
+			} else {
+				fail("This entry should not be here");
 			}
 		}
 
@@ -3071,7 +3100,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_MULTI_SELECT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -3101,7 +3130,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String firstItemDescription = "first item description select box with options and workflow"; //$NON-NLS-1$
 		firstItem.setLabel(firstItemLabel);
 		firstItem.setDescription(firstItemDescription);
-		tuleapMultiSelectBox.getItems().add(firstItem);
+		tuleapMultiSelectBox.addItem(firstItem);
 
 		int secondSelectBoxItemId = 84865746;
 		TuleapSelectBoxItem secondItem = new TuleapSelectBoxItem(secondSelectBoxItemId);
@@ -3109,7 +3138,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String secondItemDescription = "second item description select box with options and workflow"; //$NON-NLS-1$
 		secondItem.setLabel(secondItemLabel);
 		secondItem.setDescription(secondItemDescription);
-		tuleapMultiSelectBox.getItems().add(secondItem);
+		tuleapMultiSelectBox.addItem(secondItem);
 
 		int thirdSelectBoxItemId = 84865748;
 		TuleapSelectBoxItem thirdItem = new TuleapSelectBoxItem(thirdSelectBoxItemId);
@@ -3117,7 +3146,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String thirdItemDescription = "third item description select box with options and a workflow name"; //$NON-NLS-1$
 		thirdItem.setLabel(thirdItemLabel);
 		thirdItem.setDescription(thirdItemDescription);
-		tuleapMultiSelectBox.getItems().add(thirdItem);
+		tuleapMultiSelectBox.addItem(thirdItem);
 
 		tuleapTrackerConfiguration.addField(tuleapMultiSelectBox);
 
@@ -3147,7 +3176,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(label));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_MULTI_SELECT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_DEFAULT));
 	}
@@ -3177,7 +3206,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String firstItemDescription = "first item description"; //$NON-NLS-1$
 		firstItem.setLabel(firstItemLabel);
 		firstItem.setDescription(firstItemDescription);
-		tuleapMultiSelectBox.getItems().add(firstItem);
+		tuleapMultiSelectBox.addItem(firstItem);
 
 		int secondSelectBoxItemId = 84865746;
 		TuleapSelectBoxItem secondItem = new TuleapSelectBoxItem(secondSelectBoxItemId);
@@ -3185,14 +3214,16 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String secondItemDescription = "second item description"; //$NON-NLS-1$
 		secondItem.setLabel(secondItemLabel);
 		secondItem.setDescription(secondItemDescription);
-		tuleapMultiSelectBox.getItems().add(secondItem);
+		tuleapMultiSelectBox.addItem(secondItem);
 
 		tuleapMultiSelectBox.getOpenStatus().add(firstItem);
 
 		tuleapTrackerConfiguration.addField(tuleapMultiSelectBox);
 
 		TuleapArtifact tuleapArtifact = new TuleapArtifact(id, trackerId, trackerName, projectName);
-		tuleapArtifact.putValue(name, firstItemLabel);
+
+		// TODO Check this is relevant : shouldn't we pass the id of the element?
+		tuleapArtifact.putValue(name, String.valueOf(firstSelectBoxItemId));
 		TaskData taskData = this.createTaskDataFromArtifact(tuleapArtifact);
 
 		// Check attributes
@@ -3201,25 +3232,28 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(Integer.valueOf(attributesByType.size()), is(Integer.valueOf(1)));
 
 		TaskAttribute taskAttribute = attributesByType.get(0);
+
 		assertThat(taskAttribute.getId(), is(TaskAttribute.STATUS));
 		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(3)));
 		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		for (Entry<String, String> entry : entrySet) {
-			if ("".equals(entry.getKey())) { //$NON-NLS-1$
+			if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
-			} else if (firstItemLabel.equals(entry.getKey())) {
+			} else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(firstItemLabel));
-			} else if (secondItemLabel.equals(entry.getKey())) {
+			} else if (String.valueOf(secondSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(secondItemLabel));
+			} else {
+				fail("This entry should not be here");
 			}
 		}
 
 		assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(1)));
-		assertThat(taskAttribute.getValue(), is(firstItemLabel));
+		assertThat(taskAttribute.getValue(), is(String.valueOf(firstSelectBoxItemId)));
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(STATUS_LABEL));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_MULTI_SELECT));
 	}
 
@@ -3247,7 +3281,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String firstItemDescription = "first item description"; //$NON-NLS-1$
 		firstItem.setLabel(firstItemLabel);
 		firstItem.setDescription(firstItemDescription);
-		tuleapMultiSelectBox.getItems().add(firstItem);
+		tuleapMultiSelectBox.addItem(firstItem);
 
 		int secondSelectBoxItemId = 84865746;
 		TuleapSelectBoxItem secondItem = new TuleapSelectBoxItem(secondSelectBoxItemId);
@@ -3255,12 +3289,12 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String secondItemDescription = "second item description"; //$NON-NLS-1$
 		secondItem.setLabel(secondItemLabel);
 		secondItem.setDescription(secondItemDescription);
-		tuleapMultiSelectBox.getItems().add(secondItem);
+		tuleapMultiSelectBox.addItem(secondItem);
 
 		tuleapTrackerConfiguration.addField(tuleapMultiSelectBox);
 
 		TuleapArtifact tuleapArtifact = new TuleapArtifact(id, trackerId, trackerName, projectName);
-		tuleapArtifact.putValue(name, firstItemLabel);
+		tuleapArtifact.putValue(name, String.valueOf(firstSelectBoxItemId));
 		TaskData taskData = this.createTaskDataFromArtifact(tuleapArtifact);
 
 		// Check attributes
@@ -3273,21 +3307,23 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(3)));
 		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		for (Entry<String, String> entry : entrySet) {
-			if ("".equals(entry.getKey())) { //$NON-NLS-1$
+			if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
-			} else if (firstItemLabel.equals(entry.getKey())) {
+			} else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(firstItemLabel));
-			} else if (secondItemLabel.equals(entry.getKey())) {
+			} else if (String.valueOf(secondSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(secondItemLabel));
+			} else {
+				fail("This entry should not be here");
 			}
 		}
 
 		assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(1)));
-		assertThat(taskAttribute.getValue(), is(firstItemLabel));
+		assertThat(taskAttribute.getValue(), is(String.valueOf(firstSelectBoxItemId)));
 
 		TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 		assertThat(metaData.getLabel(), is(CONTRIBUTORS_LABEL));
-		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.valueOf(false)));
+		assertThat(Boolean.valueOf(metaData.isReadOnly()), is(Boolean.FALSE));
 		assertThat(metaData.getType(), is(TaskAttribute.TYPE_MULTI_SELECT));
 		assertThat(metaData.getKind(), is(TaskAttribute.KIND_PEOPLE));
 	}

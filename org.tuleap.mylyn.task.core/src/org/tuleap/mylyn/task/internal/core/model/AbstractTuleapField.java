@@ -96,7 +96,6 @@ public abstract class AbstractTuleapField extends AbstractTuleapFormElement {
 		int id = getIdentifier();
 		TaskAttribute attribute = this.getWriteableAttribute(parent, String.valueOf(id), getMetadataType());
 		if (attribute != null) {
-			attribute.getMetaData().setKind(getMetadataKind());
 			Object defaultValue = getDefaultValue();
 			if (defaultValue != null) {
 				parent.getTaskData().getAttributeMapper().setValue(attribute, defaultValue.toString());
@@ -120,10 +119,7 @@ public abstract class AbstractTuleapField extends AbstractTuleapFormElement {
 	protected void initializeMetaData(TaskAttributeMetaData metaData) {
 		metaData.setKind(getMetadataKind());
 		metaData.setLabel(getLabel());
-
-		if (!isSubmitable() && !isUpdatable()) {
-			metaData.setReadOnly(true);
-		}
+		metaData.setReadOnly(!isSubmitable() && !isUpdatable());
 	}
 
 	/**

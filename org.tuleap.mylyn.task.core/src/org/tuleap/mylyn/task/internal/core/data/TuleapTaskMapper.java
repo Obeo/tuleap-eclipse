@@ -25,10 +25,11 @@ import org.tuleap.mylyn.task.internal.core.model.TuleapArtifactComment;
 import org.tuleap.mylyn.task.internal.core.model.TuleapAttachment;
 import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.field.AbstractTuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
-import org.tuleap.mylyn.task.internal.core.util.TuleapUtil;
 
 /**
  * The Tuleap Task Mapper will be used to manipulate the task data model from Mylyn with a higher level of
@@ -279,18 +280,14 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	/**
 	 * Sets the identifier of the artifact.
 	 * 
-	 * @param projectName
-	 *            The name of the project
-	 * @param trackerName
-	 *            The name of the tracker
-	 * @param artifactId
-	 *            The identifier of the artifact
+	 * @param taskKey
+	 *            The task key
 	 */
-	public void setTaskKey(String projectName, String trackerName, int artifactId) {
+	public void setTaskKey(String taskKey) {
 		// task attribute taskkey
-		TaskAttribute taskKey = getMappedAttribute(TaskAttribute.TASK_KEY);
-		taskKey.setValue(TuleapUtil.getTaskDataId(projectName, trackerName, artifactId));
-		taskKey.getMetaData().setReadOnly(true);
+		TaskAttribute taskKeyAtt = getMappedAttribute(TaskAttribute.TASK_KEY);
+		taskKeyAtt.setValue(taskKey);
+		taskKeyAtt.getMetaData().setReadOnly(true);
 	}
 
 	/**
@@ -321,7 +318,7 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 * @param url
 	 *            the url of the task
 	 */
-	public void setUrl(String url) {
+	public void setTaskUrl(String url) {
 		TaskAttribute attribute = getMappedAttribute(TaskAttribute.TASK_URL);
 		if (attribute != null) {
 			taskData.getAttributeMapper().setValue(attribute, url);
@@ -333,7 +330,7 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 * 
 	 * @return The wrapped task's URL
 	 */
-	public String getUrl() {
+	public String getTaskUrl() {
 		TaskAttribute attribute = getMappedAttribute(TaskAttribute.TASK_URL);
 		if (attribute != null) {
 			return taskData.getAttributeMapper().getValue(attribute);
@@ -346,11 +343,9 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 * 
 	 * @param value
 	 *            The value of the summary
-	 * @param fieldId
-	 *            The identifier of the field used for the summary
 	 */
-	public void setSummary(String value, int fieldId) {
-		TaskAttribute attribute = getMappedAttributeById(fieldId);
+	public void setSummary(String value) {
+		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY);
 		if (attribute != null) {
 			taskData.getAttributeMapper().setValue(attribute, value);
 		}
@@ -362,24 +357,16 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 * completion date is forced to {@code null}, since the closed semantic is managed by mylyn <i>via</i> the
 	 * completion date presence.
 	 * 
-	 * @param valuesId
-	 *            The identifier of the field values selected
-	 * @param fieldId
-	 *            The identifier of the field
+	 * @param value
+	 *            The status value id
 	 */
-	public void setStatus(Set<String> valuesId, int fieldId) {
-		// TODO LDE revoir ça, le statut est matérialisé par plusieurs champ en particulier TA.STATUS
-		TaskAttribute attribute = getMappedAttributeById(fieldId);
+	public void setStatus(String value) {
+		// Sets the value of the read-only field and update the selectbox on which an operation is bound
+		TaskAttribute attribute = getStatusTaskAttribute();
 		if (attribute != null) {
 			attribute.clearValues();
-			boolean isClosed = false;
-			for (String value : valuesId) {
-				attribute.addValue(value);
-				if (!isClosed && trackerConfiguration.hasClosedStatusMeaning(value)) {
-					isClosed = true;
-				}
-			}
-			if (isClosed && getCompletionDate() == null) {
+			attribute.setValue(value);
+			if (trackerConfiguration.hasClosedStatusMeaning(value) && getCompletionDate() == null) {
 				// Sets the completion date
 				// Hypothesis: the last update date is up to date, which is reasonable since it appears early
 				// in the JSON objects.
@@ -392,6 +379,32 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 			} else {
 				// Remove an existing completion date
 				setCompletionDate(null);
+			}
+			updateStatusSelectBox(value, attribute);
+		}
+	}
+
+	/**
+	 * Update the associated select box according to the workflow if there is a workflow.
+	 * 
+	 * @param value
+	 *            The new status value
+	 * @param attribute
+	 *            the task attribute to update
+	 */
+	private void updateStatusSelectBox(String value, TaskAttribute attribute) {
+		// update the options of the status field
+		AbstractTuleapSelectBox field = trackerConfiguration.getStatusField();
+		if (field instanceof TuleapSelectBox) {
+			TuleapSelectBox selectBox = (TuleapSelectBox)field;
+			if (selectBox.hasWorkflow()) {
+				attribute.clearOptions();
+				Collection<TuleapSelectBoxItem> accessibleStates = selectBox.getWorkflow().accessibleStates(
+						Integer.parseInt(value));
+				// TODO Change id type to String?
+				for (TuleapSelectBoxItem item : accessibleStates) {
+					attribute.getOptions().put(String.valueOf(item.getIdentifier()), item.getLabel());
+				}
 			}
 		}
 	}
@@ -574,18 +587,6 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	}
 
 	/**
-	 * Sets the value of the check box field with the given field identifier.
-	 * 
-	 * @param valuesId
-	 *            The identifier of the values of the check box selected
-	 * @param fieldId
-	 *            The identifier of the field
-	 */
-	public void setCheckboxValues(Set<Integer> valuesId, int fieldId) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * Adds a comment to the task.
 	 * 
 	 * @param tuleapArtifactComment
@@ -607,20 +608,16 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	}
 
 	/**
-	 * Returns the set of the fields value.
+	 * Returns the set of the field values.
 	 * 
-	 * @return The set of the fields value
+	 * @return The set of the field values
 	 */
-	public Set<AbstractTuleapFieldValue> getFieldsValue() {
+	public Set<AbstractTuleapFieldValue> getFieldValues() {
 		// returns all the tuleap field value in order to send them to the server
 		// attachments are not uploaded with the same mechanism so no need to return them here
 		// do not return the fields computed by tuleap or mylyn: creation date, completion date, id, etc
 		throw new UnsupportedOperationException();
 	}
-
-	// private TaskAttribute getAttributeById(int fieldId) {
-	// return taskData.getRoot().getAttribute(String.valueOf(fieldId));
-	// }
 
 	/**
 	 * Returns the mapped attribute with the given id or {@code null} if it doesn't exist.
@@ -633,4 +630,143 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 		return taskData.getRoot().getMappedAttribute(String.valueOf(fieldId));
 	}
 
+	/**
+	 * Provides access to the TaskAttribute that contains the actual status value.
+	 * 
+	 * @return The status task attribute.
+	 */
+	private TaskAttribute getStatusTaskAttribute() {
+		return taskData.getRoot().getAttribute(TaskAttribute.STATUS);
+	}
+
+	/**
+	 * Provides access to the TaskAttribute that supports the operation to change the status.
+	 * 
+	 * @return The select box task attribute for the status.
+	 */
+	private TaskAttribute getStatusSelectBoxTaskAttribute() {
+		return taskData.getRoot().getAttribute(TaskAttribute.PREFIX_OPERATION + TaskAttribute.STATUS);
+	}
+
+	/**
+	 * Sets the project name of the task data.
+	 * 
+	 * @param projectName
+	 *            The project name
+	 */
+	public void setProjectName(String projectName) {
+		TaskAttribute attribute = this.getWriteableAttribute(TuleapTaskMapper.PROJECT_NAME, null);
+		if (attribute != null) {
+			this.taskData.getAttributeMapper().setValue(attribute, projectName);
+		}
+	}
+
+	/**
+	 * Returns the project name of the task data.
+	 * 
+	 * @return The project name of the task data
+	 */
+	public String getProjectName() {
+		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(TuleapTaskMapper.PROJECT_NAME);
+		if (attribute != null) {
+			return taskData.getAttributeMapper().getValueLabel(attribute);
+		}
+		return ""; //$NON-NLS-1$
+	}
+
+	/**
+	 * Sets the tracker name of the task data.
+	 * 
+	 * @param trackerName
+	 *            The tracker name
+	 */
+	public void setTrackerName(String trackerName) {
+		TaskAttribute attribute = this.getWriteableAttribute(TuleapTaskMapper.TRACKER_NAME, null);
+		if (attribute != null) {
+			this.taskData.getAttributeMapper().setValue(attribute, trackerName);
+		}
+	}
+
+	/**
+	 * Returns the tracker name of the task data.
+	 * 
+	 * @return The tracker name of the task data
+	 */
+	public String getTrackerName() {
+		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(TuleapTaskMapper.TRACKER_NAME);
+		if (attribute != null) {
+			return taskData.getAttributeMapper().getValueLabel(attribute);
+		}
+		return ""; //$NON-NLS-1$
+	}
+
+	/**
+	 * Sets the group id of the task data.
+	 * 
+	 * @param groupId
+	 *            The group id
+	 */
+	public void setGroupId(int groupId) {
+		this.setIntValue(TuleapTaskMapper.GROUP_ID, groupId);
+	}
+
+	/**
+	 * Returns the group id of the task data or -1 if it can't be found.
+	 * 
+	 * @return The group id of the task data or -1 if it can"t be found
+	 */
+	public int getGroupId() {
+		return this.getIntValue(TuleapTaskMapper.GROUP_ID);
+	}
+
+	/**
+	 * Sets a value of type "int" in the task data for an attribute with the given key. If the attribute does
+	 * not exist, it will be created.
+	 * 
+	 * @param taskAttributeKey
+	 *            The key of the task data attribute
+	 * @param value
+	 *            The int value to set
+	 */
+	private void setIntValue(String taskAttributeKey, int value) {
+		TaskAttribute attribute = this.getWriteableAttribute(taskAttributeKey, null);
+		if (attribute != null) {
+			this.taskData.getAttributeMapper().setValue(attribute, Integer.valueOf(value).toString());
+		}
+	}
+
+	/**
+	 * Returns the value of type int for the task data attribute with the given key.
+	 * 
+	 * @param taskAttributeKey
+	 *            The key of the task data attribute
+	 * @return The value of type int for the task data attribute with the given key
+	 */
+	private int getIntValue(String taskAttributeKey) {
+		int value = -1;
+
+		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(taskAttributeKey);
+		if (attribute != null) {
+			String valueLabel = taskData.getAttributeMapper().getValueLabel(attribute);
+			try {
+				return Integer.valueOf(valueLabel).intValue();
+			} catch (NumberFormatException e) {
+				// do not log
+			}
+		}
+		return value;
+	}
+
+	/**
+	 * The status of the task.
+	 * 
+	 * @return the status of the task.
+	 */
+	public String getStatus() {
+		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
+		if (attribute != null) {
+			return attribute.getValue();
+		}
+		return null;
+	}
 }

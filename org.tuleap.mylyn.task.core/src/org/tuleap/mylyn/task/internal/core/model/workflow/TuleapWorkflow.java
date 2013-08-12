@@ -10,9 +10,18 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model.workflow;
 
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
+
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
+
+import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
+import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**
  * This class contains the details of the Tuleap workflow of a specific field.
@@ -27,17 +36,68 @@ public class TuleapWorkflow implements Serializable {
 	private static final long serialVersionUID = -8494847603902677049L;
 
 	/**
-	 * The transitions of the workflow.
+	 * Map of transitions.
 	 */
-	private List<TuleapWorkflowTransition> transitions = new ArrayList<TuleapWorkflowTransition>();
+	private final Multimap<TuleapSelectBoxItem, TuleapSelectBoxItem> transitions = LinkedHashMultimap
+			.create();
 
 	/**
-	 * Returns the transitions of the workflow.
-	 * 
-	 * @return The transitions of the workflow.
+	 * Set of possible initial states.
 	 */
-	public List<TuleapWorkflowTransition> getTransitions() {
-		return this.transitions;
+	private final Set<TuleapSelectBoxItem> initialStates = Sets.newLinkedHashSet();
+
+	/**
+	 * The select box on which the workflow applies.
+	 */
+	private final TuleapSelectBox selectBox;
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param aSelectBox
+	 *            the select box on which this workflow applies.
+	 */
+	public TuleapWorkflow(TuleapSelectBox aSelectBox) {
+		this.selectBox = aSelectBox;
+	}
+
+	/**
+	 * Adds a transition to the workflow.
+	 * 
+	 * @param transition
+	 *            the transition to add.
+	 * @return {@code true} if and only if the transition's ends match existing options of the associated
+	 *         select box (or the initial pseudo-state) and that the same transition was not already
+	 *         registered, {@code false} otherwise.
+	 */
+	public boolean addTransition(TuleapWorkflowTransition transition) {
+		if (ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID == transition.getFrom()) {
+			return addInitialStateTransition(transition.getTo());
+		}
+		boolean result = false;
+		TuleapSelectBoxItem fromItem = selectBox.getItem(String.valueOf(transition.getFrom()));
+		TuleapSelectBoxItem toItem = selectBox.getItem(String.valueOf(transition.getTo()));
+		if (fromItem != null && toItem != null) {
+			result = transitions.put(fromItem, toItem);
+		}
+		return result;
+	}
+
+	/**
+	 * Adds a transition to the workflow from the initial pseudo-state to the given state.
+	 * 
+	 * @param to
+	 *            the target of the transition.
+	 * @return {@code true} if and only if the transition's ends match existing options of the associated
+	 *         select box (or the initial pseudo-state) and that the same transition was not already
+	 *         registered, {@code false} otherwise.
+	 */
+	private boolean addInitialStateTransition(int to) {
+		TuleapSelectBoxItem toItem = selectBox.getItem(String.valueOf(to));
+		if (toItem != null) {
+			return initialStates.add(toItem);
+		}
+		return false;
 	}
 
 	/**
@@ -47,15 +107,19 @@ public class TuleapWorkflow implements Serializable {
 	 *            The state from which we need to compute the accessible states.
 	 * @return The list of accessible state from the given state.
 	 */
-	public List<Integer> accessibleStates(int from) {
-		List<Integer> accessibleStates = new ArrayList<Integer>();
-
-		for (TuleapWorkflowTransition transition : this.transitions) {
-			if (from == transition.getFrom()) {
-				accessibleStates.add(Integer.valueOf(transition.getTo()));
-			}
+	public Collection<TuleapSelectBoxItem> accessibleStates(int from) {
+		if (ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID == from) {
+			return Collections.unmodifiableCollection(initialStates);
 		}
+		return transitions.get(selectBox.getItem(String.valueOf(from)));
+	}
 
-		return accessibleStates;
+	/**
+	 * Indicates whether this workflow really has transitions.
+	 * 
+	 * @return {@code true} if and only if this workflow has at least one transition.
+	 */
+	public boolean hasTransitions() {
+		return !(transitions.isEmpty() && initialStates.isEmpty());
 	}
 }
