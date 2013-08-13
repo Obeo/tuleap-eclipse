@@ -10,8 +10,12 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.data;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
@@ -73,6 +77,14 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 * The identifier of the tracker name task attribute.
 	 */
 	public static final String TRACKER_NAME = "tuleap_task_data_tracker_name"; //$NON-NLS-1$
+
+	/**
+	 * List of attribute Ids that need not be sent to the server for update.
+	 */
+	private static final List<String> ATTRIBUTE_IDS_NOT_TO_SEND = Collections.unmodifiableList(Arrays.asList(
+			TaskAttribute.DATE_COMPLETION, TaskAttribute.DATE_CREATION, TaskAttribute.DATE_MODIFICATION,
+			TaskAttribute.PREFIX_OPERATION + TaskAttribute.STATUS, TaskAttribute.TASK_KEY,
+			TaskAttribute.TASK_KIND));
 
 	/**
 	 * The tracker configuration.
@@ -619,19 +631,66 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 *            The attachment to add
 	 */
 	public void addAttachement(TuleapAttachment tuleapAttachment) {
+		// TODO Implement addAttachment or remove method
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * Returns the set of the field values.
 	 * 
-	 * @return The set of the field values
+	 * @return The set of the field values, never null but potentially empty.
 	 */
 	public Set<AbstractTuleapFieldValue> getFieldValues() {
 		// returns all the tuleap field value in order to send them to the server
 		// attachments are not uploaded with the same mechanism so no need to return them here
 		// do not return the fields computed by tuleap or mylyn: creation date, completion date, id, etc
-		throw new UnsupportedOperationException();
+		Set<AbstractTuleapFieldValue> result = new LinkedHashSet<AbstractTuleapFieldValue>();
+		// For the moment, we return all known values.
+		// Later, an improvement will be to return only those values that have changed.
+		for (TaskAttribute attribute : taskData.getRoot().getAttributes().values()) {
+			if (mustBeSentToServer(attribute)) {
+				if (attribute.getOptions().isEmpty()) {
+					TuleapLiteralFieldValue fieldValue = new TuleapLiteralFieldValue(attribute.getValue(),
+							Integer.parseInt(attribute.getId()));
+					result.add(fieldValue);
+				} else {
+					// select box or multi select box (or check box)
+					Set<Integer> valueIds = new LinkedHashSet<Integer>();
+					for (String strValue : attribute.getValues()) {
+						try {
+							valueIds.add(Integer.valueOf(strValue));
+						} catch (NumberFormatException e) {
+							// TODO Add log about non integer value
+						}
+					}
+					TuleapBoundFieldValue boundFieldValue = new TuleapBoundFieldValue(valueIds, Integer
+							.parseInt(attribute.getId()));
+					result.add(boundFieldValue);
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Indicates whether the given Task Attribute needs be sent to the server, which is true for the moment if
+	 * the attribute is not a computed field like the creation, modification, or completion date, th id, and
+	 * so on.
+	 * 
+	 * @param attribute
+	 *            The candidate attribute
+	 * @return {@code true} if and only if the task attribute's modification must be sent to the server.
+	 */
+	private boolean mustBeSentToServer(TaskAttribute attribute) {
+		boolean result = true;
+		String attributeId = attribute.getId();
+		if (ATTRIBUTE_IDS_NOT_TO_SEND.contains(attributeId)) {
+			result = false;
+		}
+		if (attributeId.startsWith(TaskAttribute.PREFIX_ATTACHMENT)) {
+			result = false;
+		}
+		return result;
 	}
 
 	/**
