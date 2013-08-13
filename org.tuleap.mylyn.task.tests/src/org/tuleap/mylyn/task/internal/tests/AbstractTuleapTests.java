@@ -28,9 +28,8 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tests.util.TestFixture;
 import org.junit.After;
 import org.junit.Before;
-import org.tuleap.mylyn.task.internal.core.client.ITuleapClient;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
-import org.tuleap.mylyn.task.internal.tests.support.TuleapFixture;
+import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -41,6 +40,7 @@ import static org.junit.Assert.fail;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
+@SuppressWarnings("restriction")
 public abstract class AbstractTuleapTests {
 	/**
 	 * The Tuleap repository connector.
@@ -63,35 +63,45 @@ public abstract class AbstractTuleapTests {
 	protected TaskList taskList;
 
 	/**
-	 * The Tuleap client.
+	 * The URL of the repository.
 	 */
-	protected ITuleapClient client;
+	private String repositoryUrl = "https://tuleap.net"; //$NON-NLS-1$
 
 	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see junit.framework.TestCase#setUp()
+	 * Called before every single test.
 	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(
 				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 		manager = TasksUiPlugin.getRepositoryManager();
-		TestFixture.resetTaskListAndRepositories();
-		this.client = TuleapFixture.current().client();
-		this.connector = (TuleapRepositoryConnector)TuleapFixture.current().connector();
-		this.repository = TuleapFixture.current().repository();
+
+		try {
+			TestFixture.resetTaskListAndRepositories();
+			// CHECKSTYLE:OFF
+		} catch (Exception e) {
+			// CHECKSTYLE:ON
+			e.printStackTrace();
+		}
+
+		this.connector = new TuleapRepositoryConnector();
+		this.repository = new TaskRepository(ITuleapConstants.CONNECTOR_KIND, this.repositoryUrl);
+
 		TasksUi.getRepositoryManager().addRepository(repository);
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see junit.framework.TestCase#tearDown()
+	 * Called after every single test.
 	 */
 	@After
-	public void tearDown() throws Exception {
-		TestFixture.resetTaskList();
+	public void tearDown() {
+		try {
+			TestFixture.resetTaskList();
+			// CHECKSTYLE:OFF
+		} catch (Exception e) {
+			// CHECKSTYLE:ON
+			e.printStackTrace();
+		}
 		manager.clearRepositories();
 	}
 
