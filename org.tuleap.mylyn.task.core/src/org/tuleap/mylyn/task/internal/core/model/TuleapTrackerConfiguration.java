@@ -12,6 +12,7 @@ package org.tuleap.mylyn.task.internal.core.model;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -93,6 +94,16 @@ public class TuleapTrackerConfiguration implements Serializable {
 	 * A cache for the repository persons available.
 	 */
 	private Map<String, IRepositoryPerson> personsByEmail = new HashMap<String, IRepositoryPerson>();
+
+	/**
+	 * The tracker's parent.
+	 */
+	private TuleapTrackerConfiguration parentTracker;
+
+	/**
+	 * The children trackers.
+	 */
+	private Map<Integer, TuleapTrackerConfiguration> childrenTrackers = new LinkedHashMap<Integer, TuleapTrackerConfiguration>();
 
 	/**
 	 * The default constructor.
@@ -358,5 +369,92 @@ public class TuleapTrackerConfiguration implements Serializable {
 	public IRepositoryPerson registerPerson(IRepositoryPerson person) {
 		personsByEmail.put(person.getPersonId(), person);
 		return person;
+	}
+
+	/**
+	 * Gets the parent tracker.
+	 * 
+	 * @return the parent tracker configuration
+	 */
+	public TuleapTrackerConfiguration getParentTracker() {
+		return this.parentTracker;
+	}
+
+	/**
+	 * Gets the list of children trackers.
+	 * 
+	 * @return The list of the children trackers
+	 */
+	public Collection<TuleapTrackerConfiguration> getChildrenTrackers() {
+		return Collections.unmodifiableCollection(this.childrenTrackers.values());
+	}
+
+	/**
+	 * Sets the parent tracker that should not be contained in the children collection and should be different
+	 * from the actual tracker.
+	 * 
+	 * @param parentTracker
+	 *            the parent tracker configuration to set
+	 */
+	public void setParentTracker(TuleapTrackerConfiguration parentTracker) {
+		if (this.doSetParent(parentTracker)) {
+			parentTracker.doAddChild(this);
+		}
+
+	}
+
+	/**
+	 * Add a child tracker to this configuration that should be different from the parent tracker and the
+	 * actual one.
+	 * 
+	 * @param childTrackerConfiguration
+	 *            the child tracker configuration
+	 */
+	public void addChildTracker(TuleapTrackerConfiguration childTrackerConfiguration) {
+		if (this.doAddChild(childTrackerConfiguration)) {
+			childTrackerConfiguration.doSetParent(this);
+		}
+	}
+
+	/**
+	 * In order to avoid infinite loops we create this method that has the same behavior as the
+	 * setParentTracker(TuleapTrackerConfiguration parentTracker) one.
+	 * 
+	 * @param theParentTracker
+	 *            the parent tracker configuration to set
+	 * @return <code>true</code> if the parent is really set.
+	 */
+	private boolean doSetParent(TuleapTrackerConfiguration theParentTracker) {
+		if (this.childrenTrackers.get(Integer.valueOf(theParentTracker.getTrackerId())) == null
+				&& theParentTracker.getTrackerId() != this.getTrackerId()) {
+			if (this.parentTracker != null) {
+				this.parentTracker.childrenTrackers.remove(Integer.valueOf(this.getTrackerId()));
+			}
+			this.parentTracker = theParentTracker;
+		}
+		return this.parentTracker == theParentTracker;
+
+	}
+
+	/**
+	 * In order to avoid infinite loops we create this method that has the same behavior as the
+	 * addChildTracker(TuleapTrackerConfiguration childTrackerConfiguration) one.
+	 * 
+	 * @param childTrackerConfiguration
+	 *            the child tracker configuration
+	 * @return <code>true</code> if the child is really added to the collection of tracker's children.
+	 */
+	private boolean doAddChild(TuleapTrackerConfiguration childTrackerConfiguration) {
+		if (this.parentTracker == null) {
+			if (childTrackerConfiguration.getTrackerId() != this.getTrackerId()) {
+				this.childrenTrackers.put(Integer.valueOf(childTrackerConfiguration.getTrackerId()),
+						childTrackerConfiguration);
+			}
+		} else if (childTrackerConfiguration.getTrackerId() != this.parentTracker.getTrackerId()
+				&& childTrackerConfiguration.getTrackerId() != this.getTrackerId()) {
+			this.childrenTrackers.put(Integer.valueOf(childTrackerConfiguration.getTrackerId()),
+					childTrackerConfiguration);
+		}
+		return this.childrenTrackers.containsKey(Integer.valueOf(childTrackerConfiguration.getTrackerId()));
 	}
 }
