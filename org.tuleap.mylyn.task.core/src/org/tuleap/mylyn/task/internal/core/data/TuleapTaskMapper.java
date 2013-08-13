@@ -331,10 +331,8 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 *            the url of the task
 	 */
 	public void setTaskUrl(String url) {
-		TaskAttribute attribute = getMappedAttribute(TaskAttribute.TASK_URL);
-		if (attribute != null) {
-			taskData.getAttributeMapper().setValue(attribute, url);
-		}
+		TaskAttribute attribute = getWriteableAttribute(TaskAttribute.TASK_URL, TaskAttribute.TYPE_URL);
+		taskData.getAttributeMapper().setValue(attribute, url);
 	}
 
 	/**

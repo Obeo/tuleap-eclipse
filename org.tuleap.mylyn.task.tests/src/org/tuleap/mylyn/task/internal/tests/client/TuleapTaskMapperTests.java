@@ -532,6 +532,20 @@ public class TuleapTaskMapperTests {
 	}
 
 	/**
+	 * Test task url getter and setter.
+	 */
+	@Test
+	public void testTaskURLAccessors() {
+		// There is no specific field description in the configuration
+		mapper.initializeEmptyTaskData();
+		String url = "http://www.tuleap.net/some/url/123"; //$NON-NLS-1$
+		mapper.setTaskUrl(url);
+
+		assertEquals(url, taskData.getRoot().getAttribute(TaskAttribute.TASK_URL).getValue());
+		assertEquals(url, mapper.getTaskUrl());
+	}
+
+	/**
 	 * Creates a new Tuleap Date Field.
 	 * 
 	 * @param id
