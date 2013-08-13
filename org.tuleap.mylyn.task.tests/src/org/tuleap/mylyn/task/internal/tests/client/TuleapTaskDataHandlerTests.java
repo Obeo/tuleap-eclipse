@@ -2913,8 +2913,6 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TaskAttribute taskAttribute = attributesByType.get(0);
 
-		System.out.println(taskAttribute);
-
 		assertThat(taskAttribute.getId(), is(Integer.valueOf(id).toString()));
 		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(2)));
 		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
