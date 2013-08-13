@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.server;
 
+// By design, tThis class should have no dependency to
+// - com.google.json
+// - org.restlet
 import com.google.common.collect.Maps;
 
 import java.util.List;
