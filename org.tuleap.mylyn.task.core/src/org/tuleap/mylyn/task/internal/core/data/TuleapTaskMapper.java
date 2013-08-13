@@ -121,6 +121,7 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 		createCompletionDateTaskAttribute();
 		createNewCommentTaskAttribute();
 		createSubmittedByTaskAttribute();
+		createTaskKeyAttribute();
 
 		// Default attributes
 		TaskAttribute root = taskData.getRoot();
@@ -132,6 +133,16 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 		}
 		// call all the other private method (createXXXX)
 		// keep an eye on the permissions -> read only in the metadata
+	}
+
+	/**
+	 * Creates the read-only task attribute representing the task key.
+	 */
+	private void createTaskKeyAttribute() {
+		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.TASK_KEY);
+		TaskAttributeMetaData metaData = attribute.getMetaData();
+		metaData.setType(TaskAttribute.TYPE_SHORT_TEXT);
+		metaData.setReadOnly(true);
 	}
 
 	/**
@@ -296,10 +307,8 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 *            The task key
 	 */
 	public void setTaskKey(String taskKey) {
-		// task attribute taskkey
 		TaskAttribute taskKeyAtt = getMappedAttribute(TaskAttribute.TASK_KEY);
 		taskKeyAtt.setValue(taskKey);
-		taskKeyAtt.getMetaData().setReadOnly(true);
 	}
 
 	/**
@@ -318,9 +327,6 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 */
 	public String getTaskKey() {
 		TaskAttribute taskKey = getMappedAttribute(TaskAttribute.TASK_KEY);
-		if (taskKey == null) {
-			return null;
-		}
 		return taskKey.getValue();
 	}
 
@@ -345,7 +351,7 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 		if (attribute != null) {
 			return taskData.getAttributeMapper().getValue(attribute);
 		}
-		return null;
+		return ""; //$NON-NLS-1$
 	}
 
 	/**

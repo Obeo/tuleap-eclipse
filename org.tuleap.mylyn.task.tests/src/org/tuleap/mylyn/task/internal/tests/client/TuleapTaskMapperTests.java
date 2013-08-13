@@ -160,6 +160,11 @@ public class TuleapTaskMapperTests {
 		assertNotNull(att);
 		assertEquals(String.valueOf(trackerId), att.getValue());
 
+		// Check that the task_key attribute has been created
+		att = root.getAttribute(TaskAttribute.TASK_KEY);
+		assertNotNull(att);
+		assertTrue(att.getMetaData().isReadOnly());
+
 		att = root.getAttribute(TaskAttribute.DATE_MODIFICATION);
 		assertNotNull(att);
 		metadata = att.getMetaData();
@@ -433,7 +438,7 @@ public class TuleapTaskMapperTests {
 		assertNotNull(att);
 		TaskAttributeMetaData metadata = att.getMetaData();
 		assertEquals(TaskAttribute.TYPE_SINGLE_SELECT, metadata.getType());
-		assertEquals(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.AssignedToLabel"), metadata
+		assertEquals(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.AssignedToLabel"), metadata //$NON-NLS-1$
 				.getLabel());
 		assertEquals(TaskAttribute.KIND_PEOPLE, metadata.getKind());
 
@@ -468,7 +473,7 @@ public class TuleapTaskMapperTests {
 		assertNotNull(mapper.getCompletionDate());
 
 		// Back to open, completion date must be null
-		String statusOpen1 = "1";
+		String statusOpen1 = "1"; //$NON-NLS-1$
 		mapper.setStatus(statusOpen1);
 
 		assertEquals(statusOpen1, taskData.getRoot().getAttribute(TaskAttribute.STATUS).getValue());
@@ -521,7 +526,7 @@ public class TuleapTaskMapperTests {
 		assertEquals(3, taskData.getRoot().getAttribute(TaskAttribute.STATUS).getOptions().size());
 		assertNotNull(taskData.getRoot().getAttribute(TaskAttribute.STATUS).getOption(statusOpen1));
 		assertNotNull(taskData.getRoot().getAttribute(TaskAttribute.STATUS).getOption(statusClosed2));
-		assertNotNull(taskData.getRoot().getAttribute(TaskAttribute.STATUS).getOption("3"));
+		assertNotNull(taskData.getRoot().getAttribute(TaskAttribute.STATUS).getOption("3")); //$NON-NLS-1$
 
 		// Back to open, completion date must be null
 		mapper.setStatus(statusOpen1);
@@ -538,6 +543,7 @@ public class TuleapTaskMapperTests {
 	public void testTaskURLAccessors() {
 		// There is no specific field description in the configuration
 		mapper.initializeEmptyTaskData();
+		assertEquals("", mapper.getTaskUrl()); //$NON-NLS-1$
 		String url = "http://www.tuleap.net/some/url/123"; //$NON-NLS-1$
 		mapper.setTaskUrl(url);
 
