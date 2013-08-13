@@ -27,8 +27,7 @@
       "children_tracker_ids": [
         2
       ]
-    },
-    "has_cardwall": true
+    }
   },
   {
     "id": 1,
@@ -264,7 +263,7 @@
     ],
     "semantic": {
       "title": {
-        "field_id": 1
+        "field_id": 0
       },
       "status": {
         "field_id": 11,
@@ -352,8 +351,7 @@
     },
     "hierarchy": {
       "parent_tracker_id": 5
-    },
-    "has_cardwall": false
+    }
   },
   {
     "id": 2,
@@ -452,8 +450,7 @@
       "children_tracker_ids": [
         3
       ]
-    },
-    "has_cardwall": false
+    }
   },
   {
     "id": 3,
@@ -555,8 +552,7 @@
       "children_tracker_ids": [
         5
       ]
-    },
-    "has_cardwall": false
+    }
   },
   {
     "id": 4,
@@ -627,7 +623,6 @@
     },
     "hierarchy": {
       "parent_tracker_id": 5
-    },
-    "has_cardwall": false
+    }
   }
 ]
