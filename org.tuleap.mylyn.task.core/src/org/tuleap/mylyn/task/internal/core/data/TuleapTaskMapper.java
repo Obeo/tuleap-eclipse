@@ -545,12 +545,24 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 *            The identifier of the field
 	 */
 	public void setValue(String value, int fieldId) {
-		// string, text(, int, float, computed field, open list, artifact links?) or individual method for
-		// each setTextValue, setIntValue, setFloatValue, setComputedFieldValue, setOpenListValue, etc...
-		// They will all have exactly the same behavior...
 		TaskAttribute attribute = getMappedAttributeById(fieldId);
 		if (attribute != null) {
 			taskData.getAttributeMapper().setValue(attribute, value);
+		}
+	}
+
+	/**
+	 * Sets the value of the literal field with the given field identifier.
+	 * 
+	 * @param values
+	 *            The value of the field
+	 * @param fieldId
+	 *            The identifier of the field
+	 */
+	public void setValues(List<String> values, int fieldId) {
+		TaskAttribute attribute = getMappedAttributeById(fieldId);
+		if (attribute != null && values != null) {
+			taskData.getAttributeMapper().setValues(attribute, values);
 		}
 	}
 
@@ -593,7 +605,7 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 		if (field instanceof TuleapSelectBox) {
 			TuleapSelectBox selectBox = (TuleapSelectBox)field;
 			selectBox.updateOptionsWithWorkflow(attribute);
-		} // TODO else configuration error?
+		}
 	}
 
 	/**
@@ -615,12 +627,6 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 				}
 			}
 		}
-		// Take the workflow of the select box into account if it exists
-		AbstractTuleapField field = trackerConfiguration.getFieldById(fieldId);
-		if (field instanceof TuleapSelectBox) {
-			TuleapSelectBox selectBox = (TuleapSelectBox)field;
-			selectBox.updateOptionsWithWorkflow(attribute);
-		} // TODO else configuration error?
 	}
 
 	/**

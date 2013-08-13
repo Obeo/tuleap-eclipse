@@ -2544,7 +2544,8 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
-		String dateValue = Long.valueOf(calendar.getTimeInMillis()).toString();
+		int dateInTuleapFormat = (int)(calendar.getTimeInMillis() / 1000);
+		String dateValue = String.valueOf(dateInTuleapFormat);
 
 		TuleapArtifact tuleapArtifact = new TuleapArtifact(id, trackerId, trackerName, projectName);
 		tuleapArtifact.setCreationDate(creationDate);
@@ -2562,8 +2563,8 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 				assertThat(taskAttribute.getId(), is(Integer.valueOf(id).toString()));
 				assertThat(taskAttribute.getOptions(), is((Map<String, String>)new HashMap<String, String>()));
 				assertThat(Integer.valueOf(taskAttribute.getValues().size()), is(Integer.valueOf(1)));
-				calendar.setTimeInMillis(Long.valueOf(taskAttribute.getValues().get(0)).longValue() / 1000);
-				assertThat(calendar.getTime(), is(date));
+				assertThat(Long.valueOf(taskAttribute.getValue()), is(Long
+						.valueOf(1000L * dateInTuleapFormat)));
 
 				TaskAttributeMetaData metaData = taskAttribute.getMetaData();
 				assertThat(metaData.getLabel(), is(label));

@@ -10,13 +10,10 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.repository;
 
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -24,7 +21,6 @@ import java.util.StringTokenizer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
@@ -60,20 +56,9 @@ import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 	/**
-	 * The label "contributors".
-	 */
-	private final String personContributorsLabel = TuleapMylynTasksMessages
-			.getString("TuleapTaskDataHandler.AssignedToLabel"); //$NON-NLS-1$
-
-	/**
 	 * The Tuleap repository connector.
 	 */
 	private ITuleapRepositoryConnector connector;
-
-	/**
-	 * A cache for the repository persons available.
-	 */
-	private Map<String, IRepositoryPerson> email2person = new HashMap<String, IRepositoryPerson>();
 
 	/**
 	 * The constructor.
@@ -122,10 +107,11 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	public static TuleapArtifact getTuleapArtifact(TaskRepository repository, TaskData taskData) {
 		TuleapTaskMapper tuleapTaskMapper = new TuleapTaskMapper(taskData, null);
 
-		String trackerName = ""; // tuleapTaskMapper.getTrackerName();
+		// TODO Remove this when removing SOAP Connector
+		String trackerName = ""; //$NON-NLS-1$
 		int trackerId = tuleapTaskMapper.getTrackerId();
 
-		String projectName = ""; // tuleapTaskMapper.getProjectName();
+		String projectName = ""; //$NON-NLS-1$
 
 		// Create the artifact
 		TuleapArtifact artifact = null;
@@ -222,10 +208,6 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 					mapper.setModificationDate(now);
 					mapper.setSummary(TuleapMylynTasksMessages.getString(
 							"TuleapTaskDataHandler.DefaultNewTitle", trackerConfiguration.getItemName())); //$NON-NLS-1$
-
-					// String status = mapper.getStatus();
-					// this.createOperations(taskData, trackerConfiguration, status);
-					// this.createPersons(taskData, tuleapClient, trackerConfiguration);
 
 					isInitialized = true;
 				}
@@ -382,18 +364,12 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				}
 			} else if (abstractTuleapField instanceof TuleapDate) {
 				// Look for the date
-				this.createTaskDataDateFromArtifact(tuleapArtifact, taskData, (TuleapDate)abstractTuleapField);
+				this.createTaskDataDateFromArtifact(tuleapArtifact, mapper, (TuleapDate)abstractTuleapField);
 			} else {
 				// Other fields
 				List<String> values = tuleapArtifact.getValues(abstractTuleapField.getName());
-
-				TaskAttribute attribute = taskData.getRoot();
-				Map<String, TaskAttribute> attributes = attribute.getAttributes();
-				TaskAttribute taskAttribute = attributes.get(Integer.valueOf(
-						abstractTuleapField.getIdentifier()).toString());
-				if (taskAttribute != null && values != null) {
-					taskAttribute.setValues(values);
-				}
+				// No need to test values != null
+				mapper.setValues(values, abstractTuleapField.getIdentifier());
 			}
 
 			// Change the options if the select box has a workflow
@@ -448,27 +424,20 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 * 
 	 * @param tuleapArtifact
 	 *            The Tuleap artifact
-	 * @param taskData
-	 *            The task data
+	 * @param mapper
+	 *            The task mapper
 	 * @param tuleapDate
 	 *            The Tuleap field representing the date
 	 */
-	private void createTaskDataDateFromArtifact(TuleapArtifact tuleapArtifact, TaskData taskData,
+	private void createTaskDataDateFromArtifact(TuleapArtifact tuleapArtifact, TuleapTaskMapper mapper,
 			TuleapDate tuleapDate) {
-		// Date need to have their timestamp converted
+		// This value represents the number of seconds from 1/1/1970
+		// yes, seconds, not milliseconds!
 		String value = tuleapArtifact.getValue(tuleapDate.getName());
-
-		TaskAttribute attribute = taskData.getRoot();
-		Map<String, TaskAttribute> attributes = attribute.getAttributes();
-		TaskAttribute taskAttribute = attributes.get(Integer.valueOf(tuleapDate.getIdentifier()).toString());
-		if (taskAttribute != null && value != null) {
-			try {
-				Calendar calendar = Calendar.getInstance();
-				calendar.setTimeInMillis(Long.valueOf(value).longValue() * 1000);
-				taskAttribute.setValue(Long.valueOf(calendar.getTimeInMillis()).toString());
-			} catch (NumberFormatException e) {
-				// The date is empty
-			}
+		try {
+			mapper.setDateValue(Integer.parseInt(value), tuleapDate.getIdentifier());
+		} catch (NumberFormatException e) {
+			// The date is empty or invalid...
 		}
 	}
 
