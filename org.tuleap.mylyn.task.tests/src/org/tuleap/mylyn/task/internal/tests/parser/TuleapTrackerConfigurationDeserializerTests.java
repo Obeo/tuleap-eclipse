@@ -236,7 +236,6 @@ public class TuleapTrackerConfigurationDeserializerTests {
 	 */
 	@Test
 	public void testTracker0Parsing() {
-		System.out.println(tracker0);
 		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker0);
 		assertNotNull(tuleapTrackerConfiguration);
 		assertEquals(0, tuleapTrackerConfiguration.getTrackerId());
@@ -267,7 +266,6 @@ public class TuleapTrackerConfigurationDeserializerTests {
 	 */
 	@Test
 	public void testTracker1Parsing() {
-		System.out.println(tracker1);
 		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker1);
 		assertNotNull(tuleapTrackerConfiguration);
 		assertEquals(1, tuleapTrackerConfiguration.getTrackerId());
@@ -352,7 +350,6 @@ public class TuleapTrackerConfigurationDeserializerTests {
 	 */
 	@Test
 	public void testTracker2Parsing() {
-		System.out.println(tracker2);
 		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker2);
 		assertNotNull(tuleapTrackerConfiguration);
 		assertEquals(2, tuleapTrackerConfiguration.getTrackerId());
@@ -384,7 +381,6 @@ public class TuleapTrackerConfigurationDeserializerTests {
 	 */
 	@Test
 	public void testTracker3Parsing() {
-		System.out.println(tracker3);
 		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker3);
 		assertNotNull(tuleapTrackerConfiguration);
 		assertEquals(3, tuleapTrackerConfiguration.getTrackerId());
@@ -399,8 +395,6 @@ public class TuleapTrackerConfigurationDeserializerTests {
 		iterator.next();
 		iterator.next();
 		AbstractTuleapField thirdField = iterator.next();
-
-		System.out.print(thirdField.getMetadataType());
 
 		assertEquals(2, thirdField.getIdentifier());
 		assertEquals(TaskAttribute.TYPE_SINGLE_SELECT, thirdField.getMetadataType());
@@ -418,7 +412,6 @@ public class TuleapTrackerConfigurationDeserializerTests {
 	 */
 	@Test
 	public void testTracker4Parsing() {
-		System.out.println(tracker4);
 		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker4);
 		assertNotNull(tuleapTrackerConfiguration);
 		assertEquals(4, tuleapTrackerConfiguration.getTrackerId());
@@ -434,8 +427,6 @@ public class TuleapTrackerConfigurationDeserializerTests {
 		iterator.next();
 		AbstractTuleapField thirdField = iterator.next();
 
-		System.out.print(thirdField.getMetadataType());
-
 		assertEquals(2, thirdField.getIdentifier());
 		assertEquals(TaskAttribute.TYPE_INTEGER, thirdField.getMetadataType());
 		assertEquals("initial-effort", thirdField.getName()); //$NON-NLS-1$
@@ -444,7 +435,6 @@ public class TuleapTrackerConfigurationDeserializerTests {
 		assertTrue(thirdField.isReadable());
 		assertTrue(thirdField.isSubmitable());
 		assertTrue(thirdField.isUpdatable());
-
 	}
 
 	/**
@@ -452,7 +442,6 @@ public class TuleapTrackerConfigurationDeserializerTests {
 	 */
 	@Test
 	public void testTracker5Parsing() {
-		System.out.println(tracker5);
 		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker5);
 		assertNotNull(tuleapTrackerConfiguration);
 		assertEquals(5, tuleapTrackerConfiguration.getTrackerId());
@@ -468,8 +457,6 @@ public class TuleapTrackerConfigurationDeserializerTests {
 		iterator.next();
 		AbstractTuleapField secondField = iterator.next();
 
-		System.out.print(secondField.getMetadataType());
-
 		assertEquals(1, secondField.getIdentifier());
 		assertEquals(TaskAttribute.TYPE_SINGLE_SELECT, secondField.getMetadataType());
 		assertEquals("status", secondField.getName()); //$NON-NLS-1$
@@ -478,7 +465,6 @@ public class TuleapTrackerConfigurationDeserializerTests {
 		assertTrue(secondField.isReadable());
 		assertTrue(secondField.isSubmitable());
 		assertTrue(secondField.isUpdatable());
-
 	}
 
 	/**
@@ -486,8 +472,6 @@ public class TuleapTrackerConfigurationDeserializerTests {
 	 */
 	@Test
 	public void testFirstTrackersGroupParsing() {
-		System.out.println(firstTrackersGroup);
-
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(TuleapTrackerConfiguration.class,
 				new TuleapTrackerConfigurationDeserializer());
@@ -548,8 +532,6 @@ public class TuleapTrackerConfigurationDeserializerTests {
 	 */
 	@Test
 	public void testSecondTrackersGroupParsing() {
-		System.out.println(secondTrackersGroup);
-
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(TuleapTrackerConfiguration.class,
 				new TuleapTrackerConfigurationDeserializer());
