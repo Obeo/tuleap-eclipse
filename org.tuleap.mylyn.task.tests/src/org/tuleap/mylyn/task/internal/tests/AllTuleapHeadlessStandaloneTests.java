@@ -20,6 +20,8 @@ import org.tuleap.mylyn.task.internal.tests.client.TuleapArtifactTests;
 import org.tuleap.mylyn.task.internal.tests.client.TuleapRepositoryConnectorTests;
 import org.tuleap.mylyn.task.internal.tests.client.TuleapTaskDataHandlerTests;
 import org.tuleap.mylyn.task.internal.tests.client.TuleapUtilTests;
+import org.tuleap.mylyn.task.internal.tests.parser.TuleapProjectConfigurationDeserializerTests;
+import org.tuleap.mylyn.task.internal.tests.parser.TuleapTrackerConfigurationDeserializerTests;
 
 /**
  * The stand alone unit tests suite.
@@ -29,7 +31,8 @@ import org.tuleap.mylyn.task.internal.tests.client.TuleapUtilTests;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({TuleapArtifactTests.class, TuleapUtilTests.class, TuleapRepositoryConnectorTests.class,
-		TuleapTaskDataHandlerTests.class })
+		TuleapTaskDataHandlerTests.class, TuleapProjectConfigurationDeserializerTests.class,
+		TuleapTrackerConfigurationDeserializerTests.class })
 public final class AllTuleapHeadlessStandaloneTests {
 
 	/**
