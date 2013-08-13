@@ -22,7 +22,7 @@ import java.util.Set;
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public class TuleapBindedFieldValue extends AbstractTuleapFieldValue {
+public class TuleapBoundFieldValue extends AbstractTuleapFieldValue {
 
 	/**
 	 * The identifier of the values selected for the field.
@@ -37,7 +37,7 @@ public class TuleapBindedFieldValue extends AbstractTuleapFieldValue {
 	 * @param fieldId
 	 *            the identifier of the field
 	 */
-	public TuleapBindedFieldValue(Set<Integer> valuesId, int fieldId) {
+	public TuleapBoundFieldValue(Set<Integer> valuesId, int fieldId) {
 		super(fieldId);
 	}
 
