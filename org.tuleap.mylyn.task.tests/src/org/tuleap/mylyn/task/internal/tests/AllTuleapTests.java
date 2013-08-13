@@ -25,7 +25,7 @@ import org.junit.runners.Suite;
  */
 // Test configuration
 @RunWith(Suite.class)
-@Suite.SuiteClasses({AllTuleapHeadlessStandaloneTests.class })
+@Suite.SuiteClasses({AllTuleapEclipseTests.class })
 public final class AllTuleapTests {
 
 	/**

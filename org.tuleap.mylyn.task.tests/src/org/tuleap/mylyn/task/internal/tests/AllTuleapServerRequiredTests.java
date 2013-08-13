@@ -16,8 +16,6 @@ import junit.textui.TestRunner;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.tuleap.mylyn.task.internal.tests.parser.TuleapProjectConfigurationDeserializerTests;
-import org.tuleap.mylyn.task.internal.tests.parser.TuleapTrackerConfigurationDeserializerTests;
 import org.tuleap.mylyn.task.internal.tests.validator.TuleapValidatorTests;
 
 /**
@@ -26,8 +24,7 @@ import org.tuleap.mylyn.task.internal.tests.validator.TuleapValidatorTests;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({TuleapValidatorTests.class, TuleapProjectConfigurationDeserializerTests.class,
-		TuleapTrackerConfigurationDeserializerTests.class })
+@Suite.SuiteClasses({TuleapValidatorTests.class })
 public final class AllTuleapServerRequiredTests {
 	/**
 	 * The constructor.

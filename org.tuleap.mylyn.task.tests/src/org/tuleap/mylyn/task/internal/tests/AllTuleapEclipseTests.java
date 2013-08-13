@@ -34,12 +34,12 @@ import org.tuleap.mylyn.task.internal.tests.parser.TuleapTrackerConfigurationDes
 @Suite.SuiteClasses({TuleapArtifactTests.class, TuleapUtilTests.class, TuleapRepositoryConnectorTests.class,
 		TuleapTaskDataHandlerTests.class, TuleapProjectConfigurationDeserializerTests.class,
 		TuleapTrackerConfigurationDeserializerTests.class, TuleapWorkflowTests.class })
-public final class AllTuleapHeadlessStandaloneTests {
+public final class AllTuleapEclipseTests {
 
 	/**
 	 * The constructor.
 	 */
-	private AllTuleapHeadlessStandaloneTests() {
+	private AllTuleapEclipseTests() {
 		// prevent instantiation
 	}
 
@@ -59,6 +59,6 @@ public final class AllTuleapHeadlessStandaloneTests {
 	 * @return The test suite containing all the tests
 	 */
 	public static Test suite() {
-		return new JUnit4TestAdapter(AllTuleapHeadlessStandaloneTests.class);
+		return new JUnit4TestAdapter(AllTuleapEclipseTests.class);
 	}
 }
