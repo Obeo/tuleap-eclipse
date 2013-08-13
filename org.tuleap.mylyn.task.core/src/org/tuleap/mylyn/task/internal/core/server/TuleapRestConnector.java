@@ -139,6 +139,11 @@ public class TuleapRestConnector {
 	 *            The arguments
 	 */
 	public static void main(String[] args) {
+		Resource projectsTrackersGet = Resource.PROJECTS_GROUPS_MEMBERS__OPTIONS;
+		projectsTrackersGet.addPathVariable("42");
+		projectsTrackersGet.addPathVariable("project_admins");
+		String url2 = projectsTrackersGet.getUrl();
+
 		TuleapRestConnector connector = new TuleapRestConnector("http://localhost:3001");
 		connector.sendRequest("v3.14", Resource.API__OPTIONS, new HashMap<String, String>(), null);
 	}

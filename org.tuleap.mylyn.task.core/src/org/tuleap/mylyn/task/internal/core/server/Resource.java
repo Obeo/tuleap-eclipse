@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.server;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This enumeration contains all the available resources on the server.
  * 
@@ -19,47 +22,243 @@ public enum Resource {
 	/**
 	 * OPTIONS &lt;domain&gt;/api/&lt;api_version&gt;.
 	 */
-	API__OPTIONS(URL.API, Operation.OPTIONS),
+	API__OPTIONS(Operation.OPTIONS, URL.API),
 
 	/**
 	 * GET &lt;domain&gt;/api/&lt;api_version&gt;.
 	 */
-	API__GET(URL.API, Operation.GET),
+	API__GET(Operation.GET, URL.API),
 
 	/**
 	 * OPTIONS &lt;domain&gt;/api/&lt;api_version&gt;/login.
 	 */
-	LOGIN__OPTIONS(URL.LOGIN, Operation.OPTIONS),
+	LOGIN__OPTIONS(Operation.OPTIONS, URL.LOGIN),
 
 	/**
 	 * GET &lt;domain&gt;/api/&lt;api_version&gt;/login.
 	 */
-	LOGIN__GET(URL.LOGIN, Operation.GET),
+	LOGIN__GET(Operation.GET, URL.LOGIN),
 
 	/**
 	 * OPTIONS &lt;domain&gt;/api/&lt;api_version&gt;/logout.
 	 */
-	LOGOUT__OPTIONS(URL.LOGIN, Operation.OPTIONS),
+	LOGOUT__OPTIONS(Operation.OPTIONS, URL.LOGIN),
 
 	/**
 	 * POST &lt;domain&gt;/api/&lt;api_version&gt;/logout.
 	 */
-	LOGOUT__POST(URL.LOGIN, Operation.POST),
+	LOGOUT__POST(Operation.POST, URL.LOGIN),
+
+	/**
+	 * OPTIONS &lt;domain&gt;/api/&lt;api_version&gt;/session.
+	 */
+	SESSION__OPTIONS(Operation.OPTIONS, URL.SESSION),
+
+	/**
+	 * GET &lt;domain&gt;/api/&lt;api_version&gt;/session.
+	 */
+	SESSION__GET(Operation.GET, URL.SESSION),
 
 	/**
 	 * OPTIONS &lt;domain&gt;/api/&lt;api_version&gt;/projects.
 	 */
-	PROJECTS__OPTIONS(URL.PROJECTS, Operation.OPTIONS),
+	PROJECTS__OPTIONS(Operation.OPTIONS, URL.PROJECTS),
 
 	/**
 	 * GET &lt;domain&gt;/api/&lt;api_version&gt;/projects.
 	 */
-	PROJECTS__GET(URL.PROJECTS, Operation.GET);
+	PROJECTS__GET(Operation.GET, URL.PROJECTS),
 
 	/**
-	 * The URL of the resource.
+	 * OPTIONS &lt;domain&gt;/api/&lt;api_version&gt;/projects/&lt;project_id&gt;/plannings.
 	 */
-	private final String url;
+	PROJECTS_PLANNINGS__OPTIONS(Operation.OPTIONS, URL.PROJECTS, URL.PLANNINGS),
+
+	/**
+	 * GET &lt;domain&gt;/api/&lt;api_version&gt;/projects/&lt;project_id&gt;/plannings.
+	 */
+	PROJECTS_PLANNINGS__GET(Operation.GET, URL.PROJECTS, URL.PLANNINGS),
+
+	/**
+	 * OPTIONS &lt;domain&gt;/api/&lt;api_version&gt;/plannings.
+	 */
+	PLANNINGS__OPTIONS(Operation.OPTIONS, URL.PLANNINGS),
+
+	/**
+	 * GET &lt;domain&gt;/api/&lt;api_version&gt;/plannings.
+	 */
+	PLANNINGS__GET(Operation.GET, URL.PLANNINGS),
+
+	/**
+	 * OPTIONS &lt;domain&gt;/api/&lt;api_version&gt;/plannings/&lt;planning_id&gt;/milestones.
+	 */
+	PLANNINGS_MILESTONES__OPTIONS(Operation.OPTIONS, URL.PLANNINGS, URL.MILESTONES),
+
+	/**
+	 * GET &lt;domain&gt;/api/&lt;api_version&gt;/plannings/&lt;planning_id&gt;/milestones.
+	 */
+	PLANNINGS_MILESTONES__GET(Operation.GET, URL.PLANNINGS, URL.MILESTONES),
+
+	/**
+	 * OPTIONS &lt;domain&gt;/api/&lt;api_version&gt;/milestones.
+	 */
+	MILESTONES__OPTIONS(Operation.OPTIONS, URL.MILESTONES),
+
+	/**
+	 * GET &lt;domain&gt;/api/&lt;api_version&gt;/milestones.
+	 */
+	MILESTONES__GET(Operation.GET, URL.MILESTONES),
+
+	/**
+	 * OPTIONS &lt;domain&gt;/api/&lt;api_version&gt;/milestones/&lt;milestones_id&gt;/submilestones.
+	 */
+	MILESTONES_SUBMILESTONES__OPTIONS(Operation.OPTIONS, URL.MILESTONES, URL.SUBMILESTONES),
+
+	/**
+	 * GET &lt;domain&gt;/api/&lt;api_version&gt;/milestones/&lt;milestones_id&gt;/submilestones.
+	 */
+	MILESTONES_SUBMILESTONES__GET(Operation.GET, URL.MILESTONES, URL.SUBMILESTONES),
+
+	/**
+	 * OPTIONS &lt;domain&gt;/api/&lt;api_version&gt;/milestones/&lt;milestones_id&gt;/backlog_items.
+	 */
+	MILESTONES_BACKLOG_ITEMS__OPTIONS(Operation.OPTIONS, URL.MILESTONES, URL.BACKLOG_ITEMS),
+
+	/**
+	 * GET &lt;domain&gt;/api/&lt;api_version&gt;/milestones/&lt;milestones_id&gt;/backlog_items.
+	 */
+	MILESTONES_BACKLOG_ITEMS__GET(Operation.GET, URL.MILESTONES, URL.BACKLOG_ITEMS),
+
+	/**
+	 * OPTIONS &lt;domain&gt;/api/&lt;api_version&gt;/projects/&lt;project_id&gt;/trackers.
+	 */
+	PROJECTS_TRACKERS__OPTIONS(Operation.OPTIONS, URL.PROJECTS, URL.TRACKERS),
+
+	/**
+	 * GET &lt;domain&gt;/api/&lt;api_version&gt;/projects/&lt;project_id&gt;/trackers.
+	 */
+	PROJECTS_TRACKERS__GET(Operation.GET, URL.PROJECTS, URL.TRACKERS),
+
+	/**
+	 * OPTIONS &lt;domain&gt;/api/&lt;api_version&gt;/trackers.
+	 */
+	TRACKERS__OPTIONS(Operation.OPTIONS, URL.TRACKERS),
+
+	/**
+	 * GET &lt;domain&gt;/api/&lt;api_version&gt;/trackers.
+	 */
+	TRACKERS__GET(Operation.GET, URL.TRACKERS),
+
+	/**
+	 * OPTIONS &lt;domain&gt;/api/&lt;api_version&gt;/projects/&lt;project_id&gt;/groups.
+	 */
+	PROJECTS_GROUP__OPTIONS(Operation.OPTIONS, URL.PROJECTS, URL.GROUPS),
+
+	/**
+	 * GET &lt;domain&gt;/api/&lt;api_version&gt;/projects/&lt;project_id&gt;/groups.
+	 */
+	PROJECTS_GROUP__GET(Operation.GET, URL.PROJECTS, URL.GROUPS),
+
+	/**
+	 * OPTIONS
+	 * &lt;domain&gt;/api/&lt;api_version&gt;/projects/&lt;project_id&gt;/groups/&lt;group_id&gt;/members.
+	 */
+	PROJECTS_GROUPS_MEMBERS__OPTIONS(Operation.OPTIONS, URL.PROJECTS, URL.GROUPS, URL.MEMBERS),
+
+	/**
+	 * GEt &lt;domain&gt;/api/&lt;api_version&gt;/projects/&lt;project_id&gt;/groups/&lt;group_id&gt;/members.
+	 */
+	PROJECTS_GROUPS_MEMBERS__GET(Operation.GET, URL.PROJECTS, URL.GROUPS, URL.MEMBERS),
+
+	/**
+	 * OPTIONS &lt;domain&gt;/api/&lt;api_version&gt;/users.
+	 */
+	USERS__OPTIONS(Operation.OPTIONS, URL.USERS),
+
+	/**
+	 * GEt &lt;domain&gt;/api/&lt;api_version&gt;/users.
+	 */
+	USERS__GET(Operation.GET, URL.USERS),
+
+	/**
+	 * OPTIONS &lt;domain&gt;/api/&lt;api_version&gt;/trackers/&lt;tracker_id&gt;/reports.
+	 */
+	TRACKERS_REPORTS__OPTIONS(Operation.OPTIONS, URL.TRACKERS, URL.REPORTS),
+
+	/**
+	 * GET &lt;domain&gt;/api/&lt;api_version&gt;/trackers/&lt;tracker_id&gt;/reports.
+	 */
+	TRACKERS_REPORTS__GET(Operation.GET, URL.TRACKERS, URL.REPORTS),
+
+	/**
+	 * OPTIONS &lt;domain&gt;/api/&lt;api_version&gt;/trackers/&lt;tracker_id&gt;/query.
+	 */
+	TRACKERS_QUERY__OPTIONS(Operation.OPTIONS, URL.TRACKERS, URL.QUERY),
+
+	/**
+	 * GET &lt;domain&gt;/api/&lt;api_version&gt;/trackers/&lt;tracker_id&gt;/query.
+	 */
+	TRACKERS_QUERY__GET(Operation.GET, URL.TRACKERS, URL.QUERY),
+
+	/**
+	 * OPTIONS &lt;domain&gt;/api/&lt;api_version&gt;/trackers/&lt;tracker_id&gt;/artifacts.
+	 */
+	TRACKERS_ARTIFACTS__OPTIONS(Operation.OPTIONS, URL.TRACKERS, URL.ARTIFACTS),
+
+	/**
+	 * GET &lt;domain&gt;/api/&lt;api_version&gt;/trackers/&lt;tracker_id&gt;/artifacts.
+	 */
+	TRACKERS_ARTIFACTS__GET(Operation.GET, URL.TRACKERS, URL.ARTIFACTS),
+
+	/**
+	 * POST &lt;domain&gt;/api/&lt;api_version&gt;/trackers/&lt;tracker_id&gt;/artifacts.
+	 */
+	TRACKERS_ARTIFACTS__POST(Operation.POST, URL.TRACKERS, URL.ARTIFACTS),
+
+	/**
+	 * OPTIONS &lt;domain&gt;/api/&lt;api_version&gt;/artifacts.
+	 */
+	ARTIFACTS__OPTIONS(Operation.OPTIONS, URL.ARTIFACTS),
+
+	/**
+	 * GET &lt;domain&gt;/api/&lt;api_version&gt;/artifacts.
+	 */
+	ARTIFACTS__GET(Operation.GET, URL.ARTIFACTS),
+
+	/**
+	 * PUT &lt;domain&gt;/api/&lt;api_version&gt;/artifacts.
+	 */
+	ARTIFACTS__PUT(Operation.PUT, URL.ARTIFACTS),
+
+	/**
+	 * OPTIONS &lt;domain&gt;/api/&lt;api_version&gt;/files/chunked_upload.
+	 */
+	FILES_CHUNKED_UPLOAD__OPTIONS(Operation.OPTIONS, URL.FILES, URL.CHUNKED_UPLOAD),
+
+	/**
+	 * PUT &lt;domain&gt;/api/&lt;api_version&gt;/files/chunked_upload.
+	 */
+	FILES_CHUNKED_UPLOAD__PUT(Operation.PUT, URL.FILES, URL.CHUNKED_UPLOAD),
+
+	/**
+	 * POST &lt;domain&gt;/api/&lt;api_version&gt;/files/chunked_upload.
+	 */
+	FILES_CHUNKED_UPLOAD__POST(Operation.POST, URL.FILES, URL.CHUNKED_UPLOAD),
+
+	/**
+	 * OPTIONS &lt;domain&gt;/api/&lt;api_version&gt;/files.
+	 */
+	FILES__OPTIONS(Operation.OPTIONS, URL.FILES),
+
+	/**
+	 * GET &lt;domain&gt;/api/&lt;api_version&gt;/files.
+	 */
+	FILES__GET(Operation.GET, URL.FILES);
+
+	/**
+	 * The segments of the URL of the resource.
+	 */
+	private final String[] segments;
 
 	/**
 	 * The operation of the resource.
@@ -67,16 +266,31 @@ public enum Resource {
 	private final Operation operation;
 
 	/**
+	 * The path variables of the URL.
+	 */
+	private final List<String> pathVariables = new ArrayList<String>();
+
+	/**
 	 * the constructor.
 	 * 
-	 * @param url
-	 *            The URL
 	 * @param operation
 	 *            The operation
+	 * @param segments
+	 *            The segments
 	 */
-	private Resource(String url, Operation operation) {
-		this.url = url;
+	private Resource(Operation operation, String... segments) {
+		this.segments = segments;
 		this.operation = operation;
+	}
+
+	/**
+	 * Adds the variable to the list of path variables.
+	 * 
+	 * @param variable
+	 *            The variable
+	 */
+	public void addPathVariable(String variable) {
+		this.pathVariables.add(variable);
 	}
 
 	/**
@@ -85,7 +299,21 @@ public enum Resource {
 	 * @return The url of the resource
 	 */
 	public String getUrl() {
-		return url;
+		StringBuilder stringBuilder = new StringBuilder();
+
+		int i = 0;
+		for (String segment : this.segments) {
+			stringBuilder.append(segment);
+
+			if (pathVariables.size() > i) {
+				stringBuilder.append('/');
+				stringBuilder.append(pathVariables.get(i));
+			}
+
+			i++;
+		}
+
+		return stringBuilder.toString();
 	}
 
 	/**
@@ -105,6 +333,7 @@ public enum Resource {
 	 * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
 	 */
 	public interface URL {
+
 		/**
 		 * "".
 		 */
@@ -121,9 +350,79 @@ public enum Resource {
 		String LOGOUT = "/logout"; //$NON-NLS-1$
 
 		/**
+		 * "/session".
+		 */
+		String SESSION = "/session"; //$NON-NLS-1$
+
+		/**
 		 * "/projects".
 		 */
 		String PROJECTS = "/projects"; //$NON-NLS-1$
+
+		/**
+		 * "/plannings".
+		 */
+		String PLANNINGS = "/plannings"; //$NON-NLS-1$
+
+		/**
+		 * "/milestones".
+		 */
+		String MILESTONES = "/milestones"; //$NON-NLS-1$
+
+		/**
+		 * "/submilestones".
+		 */
+		String SUBMILESTONES = "/submilestones"; //$NON-NLS-1$
+
+		/**
+		 * "/backlog_items".
+		 */
+		String BACKLOG_ITEMS = "/backlog_items"; //$NON-NLS-1$
+
+		/**
+		 * "/trackers".
+		 */
+		String TRACKERS = "/trackers"; //$NON-NLS-1$
+
+		/**
+		 * "/groups".
+		 */
+		String GROUPS = "/groups"; //$NON-NLS-1$
+
+		/**
+		 * "/members".
+		 */
+		String MEMBERS = "/members"; //$NON-NLS-1$
+
+		/**
+		 * "/users".
+		 */
+		String USERS = "/users"; //$NON-NLS-1$
+
+		/**
+		 * "/reports".
+		 */
+		String REPORTS = "/reports"; //$NON-NLS-1$
+
+		/**
+		 * "/query".
+		 */
+		String QUERY = "/query"; //$NON-NLS-1$
+
+		/**
+		 * "/artifacts".
+		 */
+		String ARTIFACTS = "/artifacts"; //$NON-NLS-1$
+
+		/**
+		 * "/files".
+		 */
+		String FILES = "/files"; //$NON-NLS-1$
+
+		/**
+		 * "/chunked_upload".
+		 */
+		String CHUNKED_UPLOAD = "chunked_upload"; //$NON-NLS-1$
 	}
 
 	/**
