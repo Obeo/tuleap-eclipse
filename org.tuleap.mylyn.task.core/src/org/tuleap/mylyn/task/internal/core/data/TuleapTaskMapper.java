@@ -11,6 +11,7 @@
 package org.tuleap.mylyn.task.internal.core.data;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -22,6 +23,7 @@ import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
+import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.agile.core.data.AbstractTaskMapper;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
@@ -241,7 +243,6 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 		taskAttachment.setDescription(tuleapAttachment.getDescription());
 		taskAttachment.setContentType(tuleapAttachment.getContentType());
 		taskAttachment.applyTo(attribute);
-		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -629,19 +630,49 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 *            The comment to add
 	 */
 	public void addComment(TuleapArtifactComment tuleapArtifactComment) {
-		TaskAttribute attribute = createNewCommentTaskAttribute();
-		attribute.setValue(tuleapArtifactComment.getBody());
+		int count = getNumberOfCommentAttributes();
+		TaskAttribute attribute = taskData.getRoot().createAttribute(
+				TaskAttribute.PREFIX_COMMENT + String.valueOf(count));
+		attribute.getMetaData().defaults().setReadOnly(true).setType(TaskAttribute.TYPE_COMMENT);
+		attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID,
+				TaskAttribute.COMMENT_TEXT);
+		TaskCommentMapper taskComment = TaskCommentMapper.createFrom(attribute);
+
+		taskComment.setCommentId(String.valueOf(count));
+		taskComment.setNumber(Integer.valueOf(count));
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(Long.valueOf(tuleapArtifactComment.getSubmittedOn()).longValue() * 1000);
+		Date creationDate = calendar.getTime();
+		taskComment.setCreationDate(creationDate);
+		taskComment.setText(tuleapArtifactComment.getBody());
+		if (tuleapArtifactComment.getEmail() != null) {
+			IRepositoryPerson iRepositoryPerson = trackerConfiguration.getPerson(tuleapArtifactComment
+					.getEmail());
+			if (iRepositoryPerson == null) {
+				iRepositoryPerson = taskData.getAttributeMapper().getTaskRepository().createPerson(
+						tuleapArtifactComment.getEmail());
+				iRepositoryPerson.setName(tuleapArtifactComment.getName());
+				trackerConfiguration.registerPerson(iRepositoryPerson);
+			}
+			taskComment.setAuthor(iRepositoryPerson);
+		}
+		taskComment.applyTo(attribute);
 	}
 
 	/**
-	 * Adds an attachment to the task.
+	 * Counts the number of existing comment attributes in the wrapped task data.
 	 * 
-	 * @param tuleapAttachment
-	 *            The attachment to add
+	 * @return the number of comment task attributes present in the task data.
 	 */
-	public void addAttachement(TuleapAttachment tuleapAttachment) {
-		// TODO Implement addAttachment or remove method
-		throw new UnsupportedOperationException();
+	private int getNumberOfCommentAttributes() {
+		Set<String> keys = taskData.getRoot().getAttributes().keySet();
+		int count = 0;
+		for (String key : keys) {
+			if (key.startsWith(TaskAttribute.PREFIX_COMMENT)) {
+				count++;
+			}
+		}
+		return count;
 	}
 
 	/**

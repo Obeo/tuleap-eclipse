@@ -31,10 +31,8 @@ import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
-import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
-import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapClient;
@@ -44,7 +42,6 @@ import org.tuleap.mylyn.task.internal.core.model.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.TuleapArtifactComment;
 import org.tuleap.mylyn.task.internal.core.model.TuleapAttachment;
 import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.AbstractTuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapDate;
@@ -314,11 +311,6 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				ITuleapConstants.CONNECTOR_KIND, taskRepository.getRepositoryUrl(), String
 						.valueOf(tuleapArtifact.getId()));
 
-		TaskAttribute taskKey = taskData.getRoot().createAttribute(TaskAttribute.TASK_KEY);
-		taskKey.setValue(tuleapArtifact.getUniqueName());
-		taskKey.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
-		taskKey.getMetaData().setReadOnly(true);
-
 		// Structure
 		tuleapClient.updateAttributes(monitor, false);
 		TuleapInstanceConfiguration repositoryConfiguration = tuleapClient.getRepositoryConfiguration();
@@ -326,6 +318,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				.getTrackerConfiguration(tuleapArtifact.getTrackerId());
 		TuleapTaskMapper mapper = new TuleapTaskMapper(taskData, trackerConfiguration);
 		mapper.initializeEmptyTaskData();
+		mapper.setTaskKey(tuleapArtifact.getUniqueName());
 		// this.createOperations(taskData, trackerConfiguration,
 		// tuleapArtifact.getValue(TaskAttribute.STATUS));
 
@@ -345,10 +338,13 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		mapper.setTaskKey(Integer.valueOf(tuleapArtifact.getId()).toString());
 
 		// Comments
-		taskData = this.populateComments(tuleapArtifact, taskData);
+		List<TuleapArtifactComment> comments = tuleapArtifact.getComments();
+		for (TuleapArtifactComment comment : comments) {
+			mapper.addComment(comment);
+		}
 
 		// Attachments
-		taskData = this.populateAttachments(tuleapArtifact, taskData);
+		this.populateAttachments(tuleapArtifact, mapper);
 
 		Collection<AbstractTuleapField> fields = trackerConfiguration.getFields();
 		for (AbstractTuleapField abstractTuleapField : fields) {
@@ -503,83 +499,19 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 * 
 	 * @param tuleapArtifact
 	 *            The Tuleap artifact
-	 * @param taskData
-	 *            The task data
-	 * @return The task data
+	 * @param mapper
+	 *            The task mapper
 	 */
-	private TaskData populateAttachments(TuleapArtifact tuleapArtifact, TaskData taskData) {
+	private void populateAttachments(TuleapArtifact tuleapArtifact, TuleapTaskMapper mapper) {
 		Set<Entry<String, List<TuleapAttachment>>> attachments = tuleapArtifact.getAttachments();
 		for (Entry<String, List<TuleapAttachment>> entry : attachments) {
 			String tuleapFieldName = entry.getKey();
 
 			List<TuleapAttachment> attachmentsList = entry.getValue();
 			for (TuleapAttachment tuleapAttachment : attachmentsList) {
-				TaskAttribute attribute = taskData.getRoot().createAttribute(
-						TaskAttribute.PREFIX_ATTACHMENT + tuleapFieldName + "---" + tuleapAttachment.getId()); //$NON-NLS-1$
-				attribute.getMetaData().defaults().setType(TaskAttribute.TYPE_ATTACHMENT);
-				TaskAttachmentMapper taskAttachment = TaskAttachmentMapper.createFrom(attribute);
-				taskAttachment.setAttachmentId(tuleapAttachment.getId());
-
-				TuleapPerson person = tuleapAttachment.getPerson();
-				IRepositoryPerson iRepositoryPerson = email2person.get(person.getId());
-				if (iRepositoryPerson == null) {
-					iRepositoryPerson = taskData.getAttributeMapper().getTaskRepository().createPerson(
-							person.getEmail());
-					iRepositoryPerson.setName(person.getRealName());
-					email2person.put(person.getEmail(), iRepositoryPerson);
-				}
-				taskAttachment.setAuthor(iRepositoryPerson);
-				taskAttachment.setFileName(tuleapAttachment.getFilename());
-				taskAttachment.setLength(tuleapAttachment.getSize());
-				taskAttachment.setDescription(tuleapAttachment.getDescription());
-				taskAttachment.setContentType(tuleapAttachment.getContentType());
-				taskAttachment.applyTo(attribute);
+				mapper.addAttachment(tuleapFieldName, tuleapAttachment);
 			}
 		}
-		return taskData;
-	}
-
-	/**
-	 * Populate the comments of the task data thanks to the comment from the Tuleap artifact.
-	 * 
-	 * @param tuleapArtifact
-	 *            The Tuleap artifact
-	 * @param taskData
-	 *            The task data
-	 * @return The task data
-	 */
-	private TaskData populateComments(TuleapArtifact tuleapArtifact, TaskData taskData) {
-		int count = 0;
-		List<TuleapArtifactComment> comments = tuleapArtifact.getComments();
-		for (TuleapArtifactComment tuleapArtifactComment : comments) {
-			TaskAttribute attribute = taskData.getRoot().createAttribute(
-					TaskAttribute.PREFIX_COMMENT + Integer.valueOf(count).toString());
-			attribute.getMetaData().defaults().setReadOnly(true).setType(TaskAttribute.TYPE_COMMENT);
-			attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID,
-					TaskAttribute.COMMENT_TEXT);
-			TaskCommentMapper taskComment = TaskCommentMapper.createFrom(attribute);
-
-			taskComment.setCommentId(Integer.valueOf(count).toString());
-			taskComment.setNumber(Integer.valueOf(count));
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTimeInMillis(Long.valueOf(tuleapArtifactComment.getSubmittedOn()).longValue() * 1000);
-			Date creationDate = calendar.getTime();
-			taskComment.setCreationDate(creationDate);
-			taskComment.setText(tuleapArtifactComment.getBody());
-			if (tuleapArtifactComment.getEmail() != null) {
-				IRepositoryPerson iRepositoryPerson = email2person.get(tuleapArtifactComment.getEmail());
-				if (iRepositoryPerson == null) {
-					iRepositoryPerson = taskData.getAttributeMapper().getTaskRepository().createPerson(
-							tuleapArtifactComment.getEmail());
-					iRepositoryPerson.setName(tuleapArtifactComment.getName());
-					email2person.put(tuleapArtifactComment.getEmail(), iRepositoryPerson);
-				}
-				taskComment.setAuthor(iRepositoryPerson);
-			}
-			taskComment.applyTo(attribute);
-			count++;
-		}
-		return taskData;
 	}
 
 	/**
