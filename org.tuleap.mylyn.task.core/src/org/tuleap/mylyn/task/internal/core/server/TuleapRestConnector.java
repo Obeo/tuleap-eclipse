@@ -38,11 +38,6 @@ import org.restlet.resource.ClientResource;
 public class TuleapRestConnector {
 
 	/**
-	 * The prefix of the REST API.
-	 */
-	public static final String API_PREFIX = "/api/"; //$NON-NLS-1$
-
-	/**
 	 * The url of the REST API of the server.
 	 */
 	private String url;
@@ -54,7 +49,7 @@ public class TuleapRestConnector {
 	 *            The URL of the server without any trailing '/'
 	 */
 	public TuleapRestConnector(String serverURL) {
-		this.url = serverURL + API_PREFIX;
+		this.url = serverURL;
 	}
 
 	/**
@@ -69,16 +64,20 @@ public class TuleapRestConnector {
 	 *            The headers of our request
 	 * @param data
 	 *            The data sent
+	 * @return The response of the server
 	 */
-	public void sendRequest(String apiVersion, Resource resource, Map<String, String> headers, Object data) {
+	public ServerResponse sendRequest(String apiVersion, Resource resource, Map<String, String> headers,
+			Object data) {
 		// process the request
-		ClientResource client = new ClientResource(this.url + apiVersion + "/projects/3/trackers/");
+		ClientResource client = new ClientResource(this.url + ITuleapAPIVersions.API_PREFIX + apiVersion
+				+ "/projects/3/trackers/");
 
-		// TODO Support proxies!
+		// TODO Support proxies! (AbstractWebLocation in TuleapServer?)
 
 		switch (resource.getOperation()) {
 			case OPTIONS:
-				Request request = new Request(Method.GET, this.url + apiVersion + "/projects/3/trackers/");
+				Request request = new Request(Method.GET, this.url + ITuleapAPIVersions.API_PREFIX
+						+ apiVersion + "/projects/3/trackers/");
 
 				Preference<CharacterSet> preferenceCharset = new Preference<CharacterSet>(CharacterSet.UTF_8);
 				request.getClientInfo().getAcceptedCharacterSets().add(preferenceCharset);
@@ -130,6 +129,8 @@ public class TuleapRestConnector {
 			default:
 				break;
 		}
+
+		return null;
 	}
 
 	/**

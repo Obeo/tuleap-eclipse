@@ -11,25 +11,25 @@
 package org.tuleap.mylyn.task.internal.core.server;
 
 /**
- * The versions of the API of the server.
+ * This interface holds all the headers used by the Tuleap server.
  * 
  * @noextend This class is not intended to be subclassed by clients.
  * @noinstantiate This class is not intended to be instantiated by clients.
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public interface ITuleapAPIVersions {
+public interface ITuleapHeaders {
 	/**
-	 * The prefix of the api url.
+	 * Location.
 	 */
-	String API_PREFIX = "/api/"; //$NON-NLS-1$
+	String LOCATION = "Location"; //$NON-NLS-1$
 
 	/**
-	 * v1.
+	 * Allow.
 	 */
-	String V1 = "v1"; //$NON-NLS-1$
+	String ALLOW = "Allow"; //$NON-NLS-1$
 
 	/**
-	 * v1.0.
+	 * Access-Control-Allow-Methods.
 	 */
-	String V1_0 = "v1.0"; //$NON-NLS-1$
+	String ACCESS_CONTROL_ALLOW_METHODS = "Access-Control-Allow-Methods"; //$NON-NLS-1$
 }

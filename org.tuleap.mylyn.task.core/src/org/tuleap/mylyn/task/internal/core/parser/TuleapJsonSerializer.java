@@ -19,13 +19,26 @@ import org.tuleap.mylyn.task.internal.core.data.TuleapTaskMapper;
  */
 public class TuleapJsonSerializer {
 	/**
-	 * Serialize in JSON the fields of the Tuleap artifact.
+	 * Serializes in JSON the fields of the Tuleap artifact.
 	 * 
 	 * @param tuleapTaskMapper
 	 *            The Tuleap task mapper
 	 * @return A JSON representation of the fields of the Tuleap artifact
 	 */
 	public String serializeArtifactFields(TuleapTaskMapper tuleapTaskMapper) {
+		return null;
+	}
+
+	/**
+	 * Serializes in JSON the given credentials.
+	 * 
+	 * @param username
+	 *            The username
+	 * @param password
+	 *            The password
+	 * @return A JSON representation of the username and password
+	 */
+	public String serializeLogin(String username, String password) {
 		return null;
 	}
 }

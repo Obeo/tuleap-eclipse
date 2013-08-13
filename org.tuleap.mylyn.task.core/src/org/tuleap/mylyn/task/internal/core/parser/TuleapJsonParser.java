@@ -64,4 +64,15 @@ public class TuleapJsonParser {
 	public List<TuleapTrackerConfiguration> getTrackersConfiguration(String jsonResponse) {
 		return null;
 	}
+
+	/**
+	 * Parse the JSON representation of the session hash and return it.
+	 * 
+	 * @param jsonResponse
+	 *            The JSON representation of the session hash
+	 * @return The session hash
+	 */
+	public String getSessionHash(String jsonResponse) {
+		return null;
+	}
 }

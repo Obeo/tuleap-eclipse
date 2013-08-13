@@ -10,26 +10,35 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.server;
 
+import com.google.common.collect.Maps;
+
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerReport;
 import org.tuleap.mylyn.task.internal.core.net.TuleapAttachmentDescriptor;
+import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
+import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
+import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 
 /**
  * This class will be used to communicate with the server with a higher level of abstraction than raw HTTP
- * connections.
+ * connections. This class will not have any relation with the framework used to parse the JSON nor with the
+ * framework used to communicate with the server in order to be easily testable.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class TuleapServer {
+
 	/**
 	 * The version number of the best api supported.
 	 */
@@ -38,23 +47,45 @@ public class TuleapServer {
 	/**
 	 * Utility class used to communicate using HTTP with the server.
 	 */
-	private TuleapRestConnector tuleapRestConnector;
+	private final TuleapRestConnector tuleapRestConnector;
+
+	/**
+	 * The JSON parser.
+	 */
+	private final TuleapJsonParser tuleapJsonParser;
+
+	/**
+	 * The JSON serializer.
+	 */
+	private final TuleapJsonSerializer tuleapJsonSerializer;
 
 	/**
 	 * The task repository.
 	 */
-	private TaskRepository taskRepository;
+	private final TaskRepository taskRepository;
+
+	/**
+	 * The version of the API to use.
+	 */
+	private String apiVersion = BEST_SUPPORTED_API_VERSION;
 
 	/**
 	 * The constructor.
 	 * 
 	 * @param tuleapRestConnector
 	 *            The connector is used for HTTP communication
+	 * @param tuleapJsonParser
+	 *            The Tuleap JSON parser
+	 * @param tuleapJsonSerializer
+	 *            The Tuleap JSON serializer
 	 * @param taskRepository
 	 *            The task repository
 	 */
-	public TuleapServer(TuleapRestConnector tuleapRestConnector, TaskRepository taskRepository) {
+	public TuleapServer(TuleapRestConnector tuleapRestConnector, TuleapJsonParser tuleapJsonParser,
+			TuleapJsonSerializer tuleapJsonSerializer, TaskRepository taskRepository) {
 		this.tuleapRestConnector = tuleapRestConnector;
+		this.tuleapJsonParser = tuleapJsonParser;
+		this.tuleapJsonSerializer = tuleapJsonSerializer;
 		this.taskRepository = taskRepository;
 	}
 
@@ -68,18 +99,62 @@ public class TuleapServer {
 	 * @return A status indicating if the server supports a version of the API compatible with the one
 	 *         expected by the connector
 	 */
-	private IStatus testConnection(IProgressMonitor monitor) {
+	protected IStatus testConnection(IProgressMonitor monitor) {
+		IStatus status = null;
+
 		// Try to send a request to the best supported version of the API
+		ServerResponse serverResponse = this.tuleapRestConnector.sendRequest(BEST_SUPPORTED_API_VERSION,
+				Resource.API__OPTIONS, Maps.<String, String> newHashMap(), null);
 
-		// If we receive a 200 OK, the connection is good
+		switch (serverResponse.getStatus()) {
+			case ITuleapServerStatus.OK:
+				// If we receive a 200 OK, the connection is good
+				status = Status.OK_STATUS;
+				break;
+			case ITuleapServerStatus.MOVED:
+				// If we receive a 301 Moved Permanently, a new compatible version of the API is available
+				Map<String, String> headers = serverResponse.getHeaders();
+				String newApiLocation = headers.get(ITuleapHeaders.LOCATION);
 
-		// If we receive a 301 Moved Permanently, a new compatible version of the API is available, use it
+				// Parse the new location to get the api version segment.
+				if (newApiLocation != null) {
+					int indexOfAPIPrefix = newApiLocation.indexOf(ITuleapAPIVersions.API_PREFIX);
+					if (indexOfAPIPrefix != -1) {
+						String newApiVersion = newApiLocation.substring(indexOfAPIPrefix
+								+ ITuleapAPIVersions.API_PREFIX.length());
+						this.apiVersion = newApiVersion;
+					} else {
+						// Error, invalid behavior of the server, invalid location
+						status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
+								TuleapMylynTasksMessages.getString("TuleapServer.InvalidAPILocation", //$NON-NLS-1$
+										newApiLocation));
+					}
+				} else {
+					// Error, invalid behavior of the server, no new location
+					status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
+							TuleapMylynTasksMessages.getString("TuleapServer.MissingAPILocation")); //$NON-NLS-1$
+				}
+				break;
+			case ITuleapServerStatus.GONE:
+				// If we receive a 410 Gone, the server does not support the required API, the connector
+				// cannot work with this server
+				status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, TuleapMylynTasksMessages
+						.getString("TuleapServer.MissingCompatibleAPI", BEST_SUPPORTED_API_VERSION)); //$NON-NLS-1$
+				break;
+			case ITuleapServerStatus.NOT_FOUND:
+				// If we receive a 404 Not Found, the URL of server is invalid or the server is offline
+				status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, TuleapMylynTasksMessages
+						.getString("TuleapServer.APINotFound")); //$NON-NLS-1$
+				break;
+			default:
+				// Unknown error, invalid behavior of the server?
+				status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, TuleapMylynTasksMessages
+						.getString("TuleapServer.InvalidBehavior", Integer //$NON-NLS-1$
+								.valueOf(serverResponse.getStatus())));
+				break;
+		}
 
-		// If we receive a 410 Gone, the server does not support the required API, the connector cannot work
-
-		// If we receive a 404 Not Found, the URL of server is invalid or the server is offline
-
-		return null;
+		return status;
 	}
 
 	/**
@@ -94,13 +169,17 @@ public class TuleapServer {
 	 */
 	public IStatus validateConnection(IProgressMonitor monitor) {
 		// Test the connection first
+		IStatus testConnectionStatus = this.testConnection(monitor);
+		if (testConnectionStatus.isOK()) {
+			String sessionHash = this.login(monitor);
+			if (sessionHash != null) {
+				IStatus logoutStatus = this.logout(sessionHash, monitor);
+				return logoutStatus;
+			}
+		}
 
-		// If the connection is valid, try to login with the credentials of the repository
-
-		// Retrieve the session to ensure that we are correctly logged in
-
-		// Try to logout
-		return null;
+		// If the connection status is not ok, do not try to go further and return the error directly
+		return testConnectionStatus;
 	}
 
 	/**
@@ -110,14 +189,47 @@ public class TuleapServer {
 	 *            Used to monitor the progress
 	 * @return The session hash
 	 */
-	private String login(IProgressMonitor monitor) {
+	protected String login(IProgressMonitor monitor) {
+		String sessionHash = null;
+
 		// Send a request with OPTIONS to ensure that we can log in and that we have the right to log in.
+		ServerResponse loginOptionsServerResponse = this.tuleapRestConnector.sendRequest(this.apiVersion,
+				Resource.LOGIN__OPTIONS, Maps.<String, String> newHashMap(), null);
 
-		// Try to log in using the credentials of the repository
-		this.taskRepository.getCredentials(AuthenticationType.HTTP);
+		// Check the available operations
+		Map<String, String> headers = loginOptionsServerResponse.getHeaders();
+		String allowHeaderEntry = headers.get(ITuleapHeaders.ALLOW);
+		String corsAllowMethodsHeaderEntry = headers.get(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS);
 
-		// If we succeed in logging the user in, return the session hash
-		return null;
+		boolean canLogin = allowHeaderEntry != null
+				&& allowHeaderEntry.contains(Resource.Operation.GET.toString());
+		boolean isAuthorizedToLogin = corsAllowMethodsHeaderEntry != null
+				&& corsAllowMethodsHeaderEntry.contains(Resource.Operation.GET.toString());
+
+		if (ITuleapServerStatus.OK == loginOptionsServerResponse.getStatus() && canLogin
+				&& isAuthorizedToLogin) {
+			// Try to log in with the credentials of the repository
+			String username = this.taskRepository.getCredentials(AuthenticationType.REPOSITORY).getUserName();
+			String password = this.taskRepository.getCredentials(AuthenticationType.REPOSITORY).getPassword();
+
+			// Create the JSON representation of the login to send to the server
+			String serializedLogin = this.tuleapJsonSerializer.serializeLogin(username, password);
+
+			ServerResponse loginGetServerResponse = this.tuleapRestConnector.sendRequest(this.apiVersion,
+					Resource.LOGIN__GET, Maps.<String, String> newHashMap(), serializedLogin);
+
+			if (ITuleapServerStatus.OK == loginGetServerResponse.getStatus()) {
+				// If we succeed in logging the user in, return the session hash
+				String loginResponseBody = loginGetServerResponse.getBody();
+				sessionHash = this.tuleapJsonParser.getSessionHash(loginResponseBody);
+			} else {
+				// TODO Invalid login? server error?
+			}
+		} else {
+			// TODO cannot login? not authorized to login? server error?
+		}
+
+		return sessionHash;
 	}
 
 	/**
@@ -129,7 +241,7 @@ public class TuleapServer {
 	 *            Used to monitor the progress
 	 * @return A status indicating if we succeed in logging out of the server
 	 */
-	private IStatus logout(String sessionHash, IProgressMonitor monitor) {
+	protected IStatus logout(String sessionHash, IProgressMonitor monitor) {
 		// Send a request with OPTIONS to ensure that we can log out and that we have the right to log out
 
 		// Try to log our using the session hash

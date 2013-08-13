@@ -11,25 +11,60 @@
 package org.tuleap.mylyn.task.internal.core.server;
 
 /**
- * The versions of the API of the server.
+ * The list of all the possible status from the Tuleap server.
  * 
  * @noextend This class is not intended to be subclassed by clients.
  * @noinstantiate This class is not intended to be instantiated by clients.
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public interface ITuleapAPIVersions {
+public interface ITuleapServerStatus {
 	/**
-	 * The prefix of the api url.
+	 * OK - 200.
 	 */
-	String API_PREFIX = "/api/"; //$NON-NLS-1$
+	int OK = 200;
 
 	/**
-	 * v1.
+	 * Moved - 301.
 	 */
-	String V1 = "v1"; //$NON-NLS-1$
+	int MOVED = 301;
 
 	/**
-	 * v1.0.
+	 * Bad Request - 400.
 	 */
-	String V1_0 = "v1.0"; //$NON-NLS-1$
+	int BAD_REQUEST = 400;
+
+	/**
+	 * Gone - 401.
+	 */
+	int GONE = 401;
+
+	/**
+	 * Forbidden - 403.
+	 */
+	int FORBIDDEN = 403;
+
+	/**
+	 * Not Found - 404.
+	 */
+	int NOT_FOUND = 404;
+
+	/**
+	 * Not Acceptable - 406.
+	 */
+	int NOT_ACCEPTABLE = 406;
+
+	/**
+	 * Unauthorized - 410.
+	 */
+	int UNAUTHORIZED = 410;
+
+	/**
+	 * Requested Range Not Satisfiable - 416.
+	 */
+	int REQUESTED_RANGE_NOT_SATISFIABLE = 416;
+
+	/**
+	 * Internal Server Error - 500.
+	 */
+	int INTERNAL_SERVER_ERROR = 500;
 }
