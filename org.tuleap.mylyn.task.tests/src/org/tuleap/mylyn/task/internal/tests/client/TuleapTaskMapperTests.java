@@ -477,6 +477,61 @@ public class TuleapTaskMapperTests {
 	}
 
 	/**
+	 * Test of the setStatus() method when there is a workflow. Checks that the completion date becomes set
+	 * when status becomes closed, and becomes unset when status becomes open, and that available status
+	 * change according to current status.
+	 */
+	@Test
+	public void testSetStatusWithWorkflow() {
+		int statusId = 556;
+		// 100 -> 0 -> 1 <-> 2 -> 3
+		tuleapTrackerConfiguration.addField(newSemanticStatusWithWorkflow(statusId));
+		mapper.initializeEmptyTaskData();
+
+		assertEquals("", taskData.getRoot().getAttribute(TaskAttribute.STATUS).getValue()); //$NON-NLS-1$
+
+		String statusOpen0 = "0"; //$NON-NLS-1$
+		String statusOpen1 = "1"; //$NON-NLS-1$
+		String statusClosed2 = "2"; //$NON-NLS-1$
+		mapper.setStatus(statusOpen0);
+
+		assertEquals(statusOpen0, taskData.getRoot().getAttribute(TaskAttribute.STATUS).getValue());
+		assertEquals(statusOpen0, mapper.getStatus());
+		assertNull(mapper.getCompletionDate());
+		assertEquals(2, taskData.getRoot().getAttribute(TaskAttribute.STATUS).getOptions().size());
+		assertNotNull(taskData.getRoot().getAttribute(TaskAttribute.STATUS).getOption(statusOpen1));
+		assertNotNull(taskData.getRoot().getAttribute(TaskAttribute.STATUS).getOption(statusOpen0));
+
+		// go to closed state, completion date must be non-null
+		mapper.setStatus(statusOpen1);
+
+		assertEquals(statusOpen1, taskData.getRoot().getAttribute(TaskAttribute.STATUS).getValue());
+		assertEquals(statusOpen1, mapper.getStatus());
+		assertNull(mapper.getCompletionDate());
+		assertEquals(2, taskData.getRoot().getAttribute(TaskAttribute.STATUS).getOptions().size());
+		assertNotNull(taskData.getRoot().getAttribute(TaskAttribute.STATUS).getOption(statusOpen1));
+		assertNotNull(taskData.getRoot().getAttribute(TaskAttribute.STATUS).getOption(statusClosed2));
+
+		// go to closed state, completion date must be non-null
+		mapper.setStatus(statusClosed2);
+
+		assertEquals(statusClosed2, taskData.getRoot().getAttribute(TaskAttribute.STATUS).getValue());
+		assertEquals(statusClosed2, mapper.getStatus());
+		assertNotNull(mapper.getCompletionDate());
+		assertEquals(3, taskData.getRoot().getAttribute(TaskAttribute.STATUS).getOptions().size());
+		assertNotNull(taskData.getRoot().getAttribute(TaskAttribute.STATUS).getOption(statusOpen1));
+		assertNotNull(taskData.getRoot().getAttribute(TaskAttribute.STATUS).getOption(statusClosed2));
+		assertNotNull(taskData.getRoot().getAttribute(TaskAttribute.STATUS).getOption("3"));
+
+		// Back to open, completion date must be null
+		mapper.setStatus(statusOpen1);
+
+		assertEquals(statusOpen1, taskData.getRoot().getAttribute(TaskAttribute.STATUS).getValue());
+		assertEquals(statusOpen1, mapper.getStatus());
+		assertNull(mapper.getCompletionDate());
+	}
+
+	/**
 	 * Creates a new Tuleap Date Field.
 	 * 
 	 * @param id

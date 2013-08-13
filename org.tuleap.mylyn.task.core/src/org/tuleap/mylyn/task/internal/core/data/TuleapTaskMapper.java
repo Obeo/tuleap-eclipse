@@ -410,12 +410,17 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 		if (field instanceof TuleapSelectBox) {
 			TuleapSelectBox selectBox = (TuleapSelectBox)field;
 			if (selectBox.hasWorkflow()) {
+				String currentOption = attribute.getOption(value);
 				attribute.clearOptions();
+				if (currentOption != null
+						&& !String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(value)) {
+					// currentOption can only be null if the workflow forbids the current modification...
+					attribute.putOption(value, currentOption);
+				}
 				Collection<TuleapSelectBoxItem> accessibleStates = selectBox.getWorkflow().accessibleStates(
 						Integer.parseInt(value));
-				// TODO Change id type to String?
 				for (TuleapSelectBoxItem item : accessibleStates) {
-					attribute.getOptions().put(String.valueOf(item.getIdentifier()), item.getLabel());
+					attribute.putOption(String.valueOf(item.getIdentifier()), item.getLabel());
 				}
 			}
 		}
