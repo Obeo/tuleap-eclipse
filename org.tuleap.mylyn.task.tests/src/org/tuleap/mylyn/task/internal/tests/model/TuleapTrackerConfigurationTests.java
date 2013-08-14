@@ -246,7 +246,7 @@ public class TuleapTrackerConfigurationTests {
 	 * Testing irregular cases .
 	 */
 	@Test
-	public void testIrrigularCases() {
+	public void testIrregularCases() {
 
 		// adding a tracker to its self as a child
 		tracker6.addChildTracker(tracker6);

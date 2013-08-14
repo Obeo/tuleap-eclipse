@@ -20,6 +20,7 @@ import org.tuleap.mylyn.task.internal.tests.client.TuleapArtifactTests;
 import org.tuleap.mylyn.task.internal.tests.client.TuleapRepositoryConnectorTests;
 import org.tuleap.mylyn.task.internal.tests.client.TuleapTaskDataHandlerTests;
 import org.tuleap.mylyn.task.internal.tests.client.TuleapUtilTests;
+import org.tuleap.mylyn.task.internal.tests.model.TuleapTrackerConfigurationTests;
 import org.tuleap.mylyn.task.internal.tests.model.TuleapWorkflowTests;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapProjectConfigurationDeserializerTests;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapTrackerConfigurationDeserializerTests;
@@ -33,7 +34,8 @@ import org.tuleap.mylyn.task.internal.tests.parser.TuleapTrackerConfigurationDes
 @RunWith(Suite.class)
 @Suite.SuiteClasses({TuleapArtifactTests.class, TuleapUtilTests.class, TuleapRepositoryConnectorTests.class,
 		TuleapTaskDataHandlerTests.class, TuleapProjectConfigurationDeserializerTests.class,
-		TuleapTrackerConfigurationDeserializerTests.class, TuleapWorkflowTests.class })
+		TuleapTrackerConfigurationDeserializerTests.class, TuleapWorkflowTests.class,
+		TuleapTrackerConfigurationTests.class })
 public final class AllTuleapEclipseTests {
 
 	/**
