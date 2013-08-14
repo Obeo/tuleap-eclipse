@@ -123,11 +123,12 @@ public class TuleapRestConnector {
 		Response response = c.handle(request);
 		String responseBody = null;
 		try {
-			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-			response.getEntity().write(byteArrayOutputStream);
-			responseBody = new String(byteArrayOutputStream.toByteArray());
-			byteArrayOutputStream.close();
-
+			if (response.getEntity() != null) {
+				ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+				response.getEntity().write(byteArrayOutputStream);
+				responseBody = new String(byteArrayOutputStream.toByteArray());
+				byteArrayOutputStream.close();
+			}
 		} catch (IOException e) {
 			// do not propagate
 			this.logger.log(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e));
