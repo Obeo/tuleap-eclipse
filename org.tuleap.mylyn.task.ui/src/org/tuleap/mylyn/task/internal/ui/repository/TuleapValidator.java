@@ -20,12 +20,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.tuleap.mylyn.task.internal.core.net.TuleapSoapConnector;
-import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.ui.TuleapTasksUIPlugin;
@@ -66,13 +63,13 @@ public class TuleapValidator {
 	public IStatus validate(IProgressMonitor monitor) throws CoreException {
 		IStatus status = new Status(IStatus.ERROR, TuleapTasksUIPlugin.PLUGIN_ID, TuleapMylynTasksMessages
 				.getString("TuleapValidator.InvalidRepositoryConnector")); //$NON-NLS-1$ 
-		AbstractRepositoryConnector repositoryConnector = TasksUi.getRepositoryManager()
-				.getRepositoryConnector(ITuleapConstants.CONNECTOR_KIND);
-		if (repositoryConnector instanceof TuleapRepositoryConnector) {
+		if (ITuleapConstants.CONNECTOR_KIND.equals(this.taskRepository.getConnectorKind())) {
 			AbstractWebLocation location = new TaskRepositoryLocationFactory()
 					.createWebLocation(taskRepository);
 			monitor.beginTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.ValidateConnection"), //$NON-NLS-1$
 					10);
+
+			// TODO ask for the TuleapServer in the constructor!
 			TuleapSoapConnector trackerSoapConnector = new TuleapSoapConnector(location);
 			try {
 				status = trackerSoapConnector.validateConnection(monitor);
