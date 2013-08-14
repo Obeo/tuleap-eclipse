@@ -126,8 +126,7 @@ public class TuleapQueryPage extends AbstractRepositoryQueryPage2 {
 		composite.setLayout(new GridLayout(1, false));
 
 		this.reportsButton = new Button(composite, SWT.RADIO);
-		this.reportsButton.setText(TuleapMylynTasksUIMessages
-				.getString("TuleapQueryPage.CustomQueryButtonLabel")); //$NON-NLS-1$
+		this.reportsButton.setText(TuleapMylynTasksUIMessages.getString("TuleapQueryPage.ReportButtonLabel")); //$NON-NLS-1$
 		this.reportsButton.addSelectionListener(new SelectionListener() {
 
 			public void widgetSelected(SelectionEvent e) {
