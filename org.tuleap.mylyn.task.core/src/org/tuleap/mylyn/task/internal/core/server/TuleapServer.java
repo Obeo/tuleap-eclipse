@@ -15,9 +15,12 @@ package org.tuleap.mylyn.task.internal.core.server;
 // - org.restlet
 import com.google.common.collect.Maps;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -37,6 +40,11 @@ import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
  * This class will be used to communicate with the server with a higher level of abstraction than raw HTTP
  * connections. This class will not have any relation with the framework used to parse the JSON nor with the
  * framework used to communicate with the server in order to be easily testable.
+ * <p>
+ * All the operations that can be used from the editor will throw {@link CoreException} in order to let the
+ * editor catch these exceptions. All the operations that cannot be used from an editor will instead log their
+ * errors using the logger.
+ * </p>
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
@@ -73,6 +81,11 @@ public class TuleapServer {
 	private String apiVersion = BEST_SUPPORTED_API_VERSION;
 
 	/**
+	 * The logger.
+	 */
+	private ILog logger;
+
+	/**
 	 * The constructor.
 	 * 
 	 * @param tuleapRestConnector
@@ -83,13 +96,16 @@ public class TuleapServer {
 	 *            The Tuleap JSON serializer
 	 * @param taskRepository
 	 *            The task repository
+	 * @param logger
+	 *            The logger
 	 */
 	public TuleapServer(TuleapRestConnector tuleapRestConnector, TuleapJsonParser tuleapJsonParser,
-			TuleapJsonSerializer tuleapJsonSerializer, TaskRepository taskRepository) {
+			TuleapJsonSerializer tuleapJsonSerializer, TaskRepository taskRepository, ILog logger) {
 		this.tuleapRestConnector = tuleapRestConnector;
 		this.tuleapJsonParser = tuleapJsonParser;
 		this.tuleapJsonSerializer = tuleapJsonSerializer;
 		this.taskRepository = taskRepository;
+		this.logger = logger;
 	}
 
 	/**
@@ -126,23 +142,27 @@ public class TuleapServer {
 						String newApiVersion = newApiLocation.substring(indexOfAPIPrefix
 								+ ITuleapAPIVersions.API_PREFIX.length());
 						this.apiVersion = newApiVersion;
+						status = Status.OK_STATUS;
 					} else {
 						// Error, invalid behavior of the server, invalid location
 						status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
 								TuleapMylynTasksMessages.getString("TuleapServer.InvalidAPILocation", //$NON-NLS-1$
-										newApiLocation));
+										BEST_SUPPORTED_API_VERSION));
 					}
 				} else {
 					// Error, invalid behavior of the server, no new location
 					status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
-							TuleapMylynTasksMessages.getString("TuleapServer.MissingAPILocation")); //$NON-NLS-1$
+							TuleapMylynTasksMessages.getString("TuleapServer.MissingAPILocation", //$NON-NLS-1$
+									BEST_SUPPORTED_API_VERSION));
 				}
 				break;
 			case ITuleapServerStatus.GONE:
 				// If we receive a 410 Gone, the server does not support the required API, the connector
 				// cannot work with this server
+				String goneErrorMessage = this.tuleapJsonParser.getErrorMessage(serverResponse.getBody());
 				status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, TuleapMylynTasksMessages
-						.getString("TuleapServer.MissingCompatibleAPI", BEST_SUPPORTED_API_VERSION)); //$NON-NLS-1$
+						.getString("TuleapServer.MissingCompatibleAPI", BEST_SUPPORTED_API_VERSION, //$NON-NLS-1$
+								goneErrorMessage));
 				break;
 			case ITuleapServerStatus.NOT_FOUND:
 				// If we receive a 404 Not Found, the URL of server is invalid or the server is offline
@@ -169,20 +189,26 @@ public class TuleapServer {
 	 *            Used to monitor the progress
 	 * @return A status indicating if the server support a version of the API compatible with the one expected
 	 *         by the connector and if we can successfully log in and log out from the server
+	 * @throws CoreException
+	 *             In case of error during the log in or log out process
 	 */
-	public IStatus validateConnection(IProgressMonitor monitor) {
+	public IStatus validateConnection(IProgressMonitor monitor) throws CoreException {
 		// Test the connection first
-		IStatus testConnectionStatus = this.testConnection(monitor);
-		if (testConnectionStatus.isOK()) {
-			String sessionHash = this.login(monitor);
-			if (sessionHash != null) {
-				IStatus logoutStatus = this.logout(sessionHash, monitor);
-				return logoutStatus;
-			}
-		}
+		IStatus status = this.testConnection(monitor);
 
 		// If the connection status is not ok, do not try to go further and return the error directly
-		return testConnectionStatus;
+		if (status.isOK()) {
+			String sessionHash = this.login(monitor);
+			if (sessionHash != null) {
+				this.logout(sessionHash, monitor);
+			}
+		} else {
+			throw new CoreException(status);
+		}
+
+		// If we made it here without exception, everything is fine since all the potential errors in the
+		// validation process would be considered as critical, they would throw a CoreException
+		return Status.OK_STATUS;
 	}
 
 	/**
@@ -191,8 +217,12 @@ public class TuleapServer {
 	 * @param monitor
 	 *            Used to monitor the progress
 	 * @return The session hash
+	 * @throws CoreException
+	 *             If an error occurs while trying to log in, for example, the user is not authorized to log
+	 *             in or the server does not support log in or an unsuspected server error or if the
+	 *             credentials are invalid.
 	 */
-	protected String login(IProgressMonitor monitor) {
+	protected String login(IProgressMonitor monitor) throws CoreException {
 		String sessionHash = null;
 
 		// Send a request with OPTIONS to ensure that we can log in and that we have the right to log in.
@@ -204,13 +234,13 @@ public class TuleapServer {
 		String allowHeaderEntry = headers.get(ITuleapHeaders.ALLOW);
 		String corsAllowMethodsHeaderEntry = headers.get(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS);
 
-		boolean canLogin = allowHeaderEntry != null
+		boolean canLogIn = allowHeaderEntry != null
 				&& allowHeaderEntry.contains(Resource.Operation.GET.toString());
-		boolean isAuthorizedToLogin = corsAllowMethodsHeaderEntry != null
+		boolean isAuthorizedToLogIn = corsAllowMethodsHeaderEntry != null
 				&& corsAllowMethodsHeaderEntry.contains(Resource.Operation.GET.toString());
 
-		if (ITuleapServerStatus.OK == loginOptionsServerResponse.getStatus() && canLogin
-				&& isAuthorizedToLogin) {
+		if (ITuleapServerStatus.OK == loginOptionsServerResponse.getStatus() && canLogIn
+				&& isAuthorizedToLogIn) {
 			// Try to log in with the credentials of the repository
 			String username = this.taskRepository.getCredentials(AuthenticationType.REPOSITORY).getUserName();
 			String password = this.taskRepository.getCredentials(AuthenticationType.REPOSITORY).getPassword();
@@ -226,10 +256,22 @@ public class TuleapServer {
 				String loginResponseBody = loginGetServerResponse.getBody();
 				sessionHash = this.tuleapJsonParser.getSessionHash(loginResponseBody);
 			} else {
-				// TODO Invalid login? server error?
+				// Invalid login? server error?
+				String message = this.tuleapJsonParser.getErrorMessage(loginOptionsServerResponse.getBody());
+				throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, message));
 			}
+		} else if (!canLogIn) {
+			// Cannot log in? not authorized to log in? server error?
+			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
+					TuleapMylynTasksMessages.getString("TuleapServer.CannotLogIn"))); //$NON-NLS-1$
+		} else if (!isAuthorizedToLogIn) {
+			// Not authorized to log in?
+			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
+					TuleapMylynTasksMessages.getString("TuleapServer.NotAuthorizedToLogIn"))); //$NON-NLS-1$
 		} else {
-			// TODO cannot login? not authorized to login? server error?
+			// Server error?
+			String message = this.tuleapJsonParser.getErrorMessage(loginOptionsServerResponse.getBody());
+			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, message));
 		}
 
 		return sessionHash;
@@ -242,15 +284,54 @@ public class TuleapServer {
 	 *            The hash of the session
 	 * @param monitor
 	 *            Used to monitor the progress
-	 * @return A status indicating if we succeed in logging out of the server
+	 * @throws CoreException
+	 *             In case of error during the log out, for example if the server does not support or
+	 *             authorize logging user out or if an unexpected error occur on the server or if the session
+	 *             hash is invalid
 	 */
-	protected IStatus logout(String sessionHash, IProgressMonitor monitor) {
+	protected void logout(String sessionHash, IProgressMonitor monitor) throws CoreException {
 		// Send a request with OPTIONS to ensure that we can log out and that we have the right to log out
+		ServerResponse logoutOptionsServerResponse = this.tuleapRestConnector.sendRequest(this.apiVersion,
+				Resource.LOGOUT__OPTIONS, Maps.<String, String> newHashMap(), null);
 
-		// Try to log our using the session hash
+		// Check the available operations
+		Map<String, String> headers = logoutOptionsServerResponse.getHeaders();
+		String allowHeaderEntry = headers.get(ITuleapHeaders.ALLOW);
+		String corsAllowMethodsHeaderEntry = headers.get(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS);
 
-		// If we succeed in logging the user out, return an OK status
-		return null;
+		boolean canLogout = allowHeaderEntry != null
+				&& allowHeaderEntry.contains(Resource.Operation.POST.toString());
+		boolean isAuthorizedToLogout = corsAllowMethodsHeaderEntry != null
+				&& corsAllowMethodsHeaderEntry.contains(Resource.Operation.POST.toString());
+
+		if (ITuleapServerStatus.OK == logoutOptionsServerResponse.getStatus() && canLogout
+				&& isAuthorizedToLogout) {
+			// Try to log out using the session hash
+			Map<String, String> logoutHeaders = new HashMap<String, String>();
+			logoutHeaders.put(ITuleapHeaders.AUTHORIZATION, sessionHash);
+
+			// If we succeed in logging the user out, there's nothing to do anymore
+			ServerResponse logoutServerResponse = this.tuleapRestConnector.sendRequest(this.apiVersion,
+					Resource.LOGOUT__POST, logoutHeaders, null);
+
+			if (ITuleapServerStatus.OK != logoutServerResponse.getStatus()) {
+				// Invalid session hash? server error?
+				String message = this.tuleapJsonParser.getErrorMessage(logoutServerResponse.getBody());
+				throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, message));
+			}
+		} else if (!canLogout) {
+			// Cannot log out
+			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
+					TuleapMylynTasksMessages.getString("TuleapServer.CannotLogOut"))); //$NON-NLS-1$
+		} else if (!isAuthorizedToLogout) {
+			// Not authorized
+			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
+					TuleapMylynTasksMessages.getString("TuleapServer.NotAuthorizedToLogOut"))); //$NON-NLS-1$
+		} else {
+			// Server error?
+			String message = this.tuleapJsonParser.getErrorMessage(logoutOptionsServerResponse.getBody());
+			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, message));
+		}
 	}
 
 	/**
@@ -259,11 +340,23 @@ public class TuleapServer {
 	 * @param monitor
 	 *            Used to monitor the progress
 	 * @return The configuration of the server
+	 * @throws CoreException
+	 *             In case of error during the retrieval of the configuration
 	 */
-	public TuleapInstanceConfiguration getTuleapServerConfiguration(IProgressMonitor monitor) {
+	public TuleapInstanceConfiguration getTuleapServerConfiguration(IProgressMonitor monitor)
+			throws CoreException {
 		// Test the connection
+		IStatus connectionStatus = this.testConnection(monitor);
+		if (IStatus.OK != connectionStatus.getSeverity()) {
+			// No need to go further, something is very wrong with the server (unsupported API, server not
+			// found, etc)
+			throw new CoreException(connectionStatus);
+		}
+
+		TuleapInstanceConfiguration tuleapServerConfiguration = null;
 
 		// Try to log in
+		String sessionHash = this.login(monitor);
 
 		// Send a request with OPTIONS to ensure that we can and have the right to get the projects
 
@@ -278,7 +371,9 @@ public class TuleapServer {
 		// Put the configuration of the trackers in their containing project's configuration
 
 		// Try to log out
-		return null;
+		this.logout(sessionHash, monitor);
+
+		return tuleapServerConfiguration;
 	}
 
 	// get user groups of a project
@@ -318,9 +413,8 @@ public class TuleapServer {
 	 *            The task data
 	 * @param monitor
 	 *            Used to monitor the progress
-	 * @return A status indicating if the artifact was successfully updated
 	 */
-	public IStatus updateArtifact(TaskData taskData, IProgressMonitor monitor) {
+	public void updateArtifact(TaskData taskData, IProgressMonitor monitor) {
 		// Test the connection
 
 		// Try to log in
@@ -336,7 +430,6 @@ public class TuleapServer {
 		// Send the update of the other artifacts
 
 		// Try to log out
-		return null;
 	}
 
 	/**
@@ -489,9 +582,8 @@ public class TuleapServer {
 	 *            The comment
 	 * @param monitor
 	 *            Used to monitor the progress
-	 * @return A status indicating if the attachment was successfully uploaded
 	 */
-	public IStatus uploadAttachment(int artifactId, int attachmentFieldId,
+	public void uploadAttachment(int artifactId, int attachmentFieldId,
 			TuleapAttachmentDescriptor tuleapAttachmentDescriptor, String comment, IProgressMonitor monitor) {
 		// Test the connection
 
@@ -512,6 +604,5 @@ public class TuleapServer {
 		// Update the artifact with a new attachment
 
 		// Try to log out
-		return null;
 	}
 }

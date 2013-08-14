@@ -22,7 +22,7 @@ import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
  */
 public class TuleapJsonParser {
 	/**
-	 * Parse the JSON representation of one Tuleap project and returns its configuration.
+	 * Parses the JSON representation of one Tuleap project and returns its configuration.
 	 * 
 	 * @param jsonResponse
 	 *            The JSON representation of a Tuleap project.
@@ -33,7 +33,7 @@ public class TuleapJsonParser {
 	}
 
 	/**
-	 * Parse the JSON representation of a collection of Tuleap projects and return their configuration.
+	 * Parses the JSON representation of a collection of Tuleap projects and returns their configuration.
 	 * 
 	 * @param jsonReponse
 	 *            The JSON representation of a collection of Tuleap projects
@@ -44,7 +44,7 @@ public class TuleapJsonParser {
 	}
 
 	/**
-	 * Parse the JSON representation of one Tuleap tracker and returns its configuration.
+	 * Parses the JSON representation of one Tuleap tracker and returns its configuration.
 	 * 
 	 * @param jsonResponse
 	 *            The JSON representation of a Tuleap tracker.
@@ -55,7 +55,7 @@ public class TuleapJsonParser {
 	}
 
 	/**
-	 * Parse the JSON representation of a collection of Tuleap trackers and return their configuration.
+	 * Parses the JSON representation of a collection of Tuleap trackers and returns their configuration.
 	 * 
 	 * @param jsonResponse
 	 *            The JSON representation of a collection of Tuleap trackers
@@ -66,13 +66,24 @@ public class TuleapJsonParser {
 	}
 
 	/**
-	 * Parse the JSON representation of the session hash and return it.
+	 * Parses the JSON representation of the session hash and returns it.
 	 * 
 	 * @param jsonResponse
 	 *            The JSON representation of the session hash
 	 * @return The session hash
 	 */
 	public String getSessionHash(String jsonResponse) {
+		return null;
+	}
+
+	/**
+	 * Parse the JSON representation of an error and returns its message.
+	 * 
+	 * @param jsonResponse
+	 *            The JSON representation of the error
+	 * @return The error message
+	 */
+	public String getErrorMessage(String jsonResponse) {
 		return null;
 	}
 }

@@ -16,6 +16,7 @@ import junit.textui.TestRunner;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+import org.tuleap.mylyn.task.internal.tests.server.TuleapServerIntegrationTests;
 import org.tuleap.mylyn.task.internal.tests.validator.TuleapValidatorTests;
 
 /**
@@ -24,7 +25,7 @@ import org.tuleap.mylyn.task.internal.tests.validator.TuleapValidatorTests;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({TuleapValidatorTests.class })
+@Suite.SuiteClasses({TuleapValidatorTests.class, TuleapServerIntegrationTests.class })
 public final class AllTuleapServerRequiredTests {
 	/**
 	 * The constructor.

@@ -10,29 +10,19 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.tests;
 
-import java.util.Set;
-
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
-import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
-import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tests.util.TestFixture;
 import org.junit.After;
 import org.junit.Before;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  * Utility parent class for all Mylyn Tuleap unit tests.
@@ -63,11 +53,6 @@ public abstract class AbstractTuleapTests {
 	protected TaskList taskList;
 
 	/**
-	 * The URL of the repository.
-	 */
-	private String repositoryUrl = "https://tuleap.net"; //$NON-NLS-1$
-
-	/**
 	 * Called before every single test.
 	 */
 	@Before
@@ -85,7 +70,9 @@ public abstract class AbstractTuleapTests {
 		}
 
 		this.connector = new TuleapRepositoryConnector();
-		this.repository = new TaskRepository(ITuleapConstants.CONNECTOR_KIND, this.repositoryUrl);
+		this.repository = new TaskRepository(ITuleapConstants.CONNECTOR_KIND, this.getRepositoryUrl());
+		this.repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(this
+				.getUsername(), this.getPassword()), true);
 
 		TasksUi.getRepositoryManager().addRepository(repository);
 	}
@@ -106,80 +93,27 @@ public abstract class AbstractTuleapTests {
 	}
 
 	/**
-	 * Creates a task data model.
+	 * Returns the URL of the remote repository.
 	 * 
-	 * @param task
-	 *            The task
-	 * @return The task data model
-	 * @throws CoreException
-	 *             In case of problems
+	 * @return The URL of the remote repository.
 	 */
-	protected TaskDataModel createModel(ITask task) throws CoreException {
-		ITaskDataWorkingCopy taskDataState = getWorkingCopy(task);
-		return new TaskDataModel(repository, task, taskDataState);
+	public abstract String getRepositoryUrl();
+
+	/**
+	 * Returns the user name.
+	 * 
+	 * @return The user name
+	 */
+	public String getUsername() {
+		return "admin"; //$NON-NLS-1$
 	}
 
 	/**
-	 * Returns the working copy of the task.
+	 * Returns the password.
 	 * 
-	 * @param task
-	 *            The task
-	 * @return The working copy of the task.
-	 * @throws CoreException
-	 *             In case of problems
+	 * @return The password
 	 */
-	protected ITaskDataWorkingCopy getWorkingCopy(ITask task) throws CoreException {
-		return TasksUiPlugin.getTaskDataManager().getWorkingCopy(task);
-	}
-
-	/**
-	 * Submits the task data model.
-	 * 
-	 * @param model
-	 *            The model to be submitted
-	 */
-	protected void submit(TaskDataModel model) {
-		SubmitJob submitJob = TasksUiInternal.getJobFactory().createSubmitTaskJob(connector,
-				model.getTaskRepository(), model.getTask(), model.getTaskData(),
-				model.getChangedOldAttributes());
-		submitJob.schedule();
-		try {
-			submitJob.join();
-		} catch (InterruptedException e) {
-			fail(e.getMessage());
-		}
-	}
-
-	/**
-	 * Synchronizes and asserts the state.
-	 * 
-	 * @param tasks
-	 *            The tasks to synchronize
-	 * @param state
-	 *            The synchronization state
-	 */
-	protected void synchAndAssertState(Set<ITask> tasks, SynchronizationState state) {
-		for (ITask task : tasks) {
-			TasksUiInternal.synchronizeTask(connector, task, true, null);
-			TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
-			assertEquals(task.getSynchronizationState(), state);
-		}
-	}
-
-	/**
-	 * Generates a local task and download.
-	 * 
-	 * @param id
-	 *            The id of the task to generate and download
-	 * @return The task generated
-	 * @throws CoreException
-	 *             In case of problems
-	 */
-	public ITask generateLocalTaskAndDownload(String id) throws CoreException {
-		ITask task = TasksUi.getRepositoryModel().createTask(repository, id);
-		TasksUiPlugin.getTaskList().addTask(task);
-		TasksUiInternal.synchronizeTask(connector, task, true, null);
-		TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
-		return task;
+	public String getPassword() {
+		return "password"; //$NON-NLS-1$
 	}
 }

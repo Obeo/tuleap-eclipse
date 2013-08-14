@@ -32,4 +32,9 @@ public interface ITuleapHeaders {
 	 * Access-Control-Allow-Methods.
 	 */
 	String ACCESS_CONTROL_ALLOW_METHODS = "Access-Control-Allow-Methods"; //$NON-NLS-1$
+
+	/**
+	 * Authorization.
+	 */
+	String AUTHORIZATION = "Authorization"; //$NON-NLS-1$
 }

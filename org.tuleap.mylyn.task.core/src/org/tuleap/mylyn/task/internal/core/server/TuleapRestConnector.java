@@ -10,14 +10,24 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.server;
 
+import com.google.common.collect.Maps;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.ILog;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.Version;
 import org.restlet.Client;
 import org.restlet.Request;
 import org.restlet.Response;
+import org.restlet.data.ChallengeResponse;
+import org.restlet.data.ChallengeScheme;
 import org.restlet.data.CharacterSet;
 import org.restlet.data.Form;
 import org.restlet.data.Language;
@@ -28,7 +38,7 @@ import org.restlet.data.Protocol;
 import org.restlet.engine.http.header.HeaderConstants;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
-import org.restlet.resource.ClientResource;
+import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 
 /**
  * This class will be used to establish the connection with the HTTP based Tuleap server.
@@ -43,13 +53,21 @@ public class TuleapRestConnector {
 	private String url;
 
 	/**
+	 * The logger.
+	 */
+	private ILog logger;
+
+	/**
 	 * the constructor.
 	 * 
 	 * @param serverURL
 	 *            The URL of the server without any trailing '/'
+	 * @param logger
+	 *            The logger.
 	 */
-	public TuleapRestConnector(String serverURL) {
+	public TuleapRestConnector(String serverURL, ILog logger) {
 		this.url = serverURL;
+		this.logger = logger;
 	}
 
 	/**
@@ -67,70 +85,149 @@ public class TuleapRestConnector {
 	 * @return The response of the server
 	 */
 	public ServerResponse sendRequest(String apiVersion, Resource resource, Map<String, String> headers,
-			Object data) {
-		// process the request
-		ClientResource client = new ClientResource(this.url + ITuleapAPIVersions.API_PREFIX + apiVersion
-				+ "/projects/3/trackers/");
-
+			String data) {
 		// TODO Support proxies! (AbstractWebLocation in TuleapServer?)
+		Method method = this.getMethodFromResource(resource);
+		Request request = new Request(method, this.url + ITuleapAPIVersions.API_PREFIX + apiVersion
+				+ resource.getUrl());
 
-		switch (resource.getOperation()) {
-			case OPTIONS:
-				Request request = new Request(Method.GET, this.url + ITuleapAPIVersions.API_PREFIX
-						+ apiVersion + "/projects/3/trackers/");
+		Preference<CharacterSet> preferenceCharset = new Preference<CharacterSet>(CharacterSet.UTF_8);
+		request.getClientInfo().getAcceptedCharacterSets().add(preferenceCharset);
 
-				Preference<CharacterSet> preferenceCharset = new Preference<CharacterSet>(CharacterSet.UTF_8);
-				request.getClientInfo().getAcceptedCharacterSets().add(preferenceCharset);
-				// Preference<Encoding> preferenceEncoding = new Preference<Encoding>(Encoding.GZIP);
-				// request.getClientInfo().getAcceptedEncodings().add(preferenceEncoding);
-				Preference<MediaType> preferenceMediaType = new Preference<MediaType>(
-						MediaType.APPLICATION_JSON);
-				request.getClientInfo().getAcceptedMediaTypes().add(preferenceMediaType);
+		// TODO Support for gzipped responses?
+		// Preference<Encoding> preferenceEncoding = new Preference<Encoding>(Encoding.GZIP);
+		// request.getClientInfo().getAcceptedEncodings().add(preferenceEncoding);
 
-				request.getClientInfo().setAgent(
-						"Mylyn Connector for Tuleap - 2.0.0; Eclipse 3.8; Windows 7 86x64; Java SE 7u12");
+		Preference<MediaType> preferenceMediaType = new Preference<MediaType>(MediaType.APPLICATION_JSON);
+		request.getClientInfo().getAcceptedMediaTypes().add(preferenceMediaType);
 
-				Representation entity = new StringRepresentation("{\"hello\": \"world\"}",
-						MediaType.APPLICATION_JSON, Language.ENGLISH_US, CharacterSet.UTF_8);
-				request.setEntity(entity);
+		request.getClientInfo().setAgent(this.getUserAgent());
 
-				Client c = new Client(Protocol.HTTP);
-				Object object = request.getAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
-				if (object == null) {
-					object = new Form();
-					request.getAttributes().put(HeaderConstants.ATTRIBUTE_HEADERS, object);
-				}
-				if (object instanceof Form) {
-					Form form = (Form)object;
-					form.add("X-PAGINATION-OFFSET", "5");
-				}
-
-				Response response = c.handle(request);
-				System.out.println(response.getAttributes());
-				try {
-					ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-					response.getEntity().write(byteArrayOutputStream);
-					String r = new String(byteArrayOutputStream.toByteArray());
-					System.out.println(r);
-					byteArrayOutputStream.close();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-				break;
-			case GET:
-				Representation get = client.get();
-				break;
-			case POST:
-				Representation post = client.post(null);
-				break;
-			case PUT:
-				Representation put = client.put(null);
-				break;
-			default:
-				break;
+		String authorizationValue = headers.get(ITuleapHeaders.AUTHORIZATION);
+		if (authorizationValue != null) {
+			ChallengeResponse challengeResponse = new ChallengeResponse(ChallengeScheme.HTTP_BASIC);
+			request.setChallengeResponse(challengeResponse);
 		}
 
-		return null;
+		Representation entity = new StringRepresentation(data, MediaType.APPLICATION_JSON,
+				Language.ENGLISH_US, CharacterSet.UTF_8);
+		request.setEntity(entity);
+
+		Client c = new Client(Protocol.HTTP);
+		Object object = request.getAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
+		if (object == null) {
+			object = new Form();
+			request.getAttributes().put(HeaderConstants.ATTRIBUTE_HEADERS, object);
+		}
+
+		Response response = c.handle(request);
+		String responseBody = null;
+		try {
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			response.getEntity().write(byteArrayOutputStream);
+			responseBody = new String(byteArrayOutputStream.toByteArray());
+			byteArrayOutputStream.close();
+
+		} catch (IOException e) {
+			// do not propagate
+			this.logger.log(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e));
+		}
+
+		Map<String, String> responseHeader = Maps.<String, String> newHashMap();
+
+		Map<String, Object> attributes = response.getAttributes();
+		Object formObject = attributes.get(HeaderConstants.ATTRIBUTE_HEADERS);
+		if (formObject instanceof Form) {
+			Form form = (Form)formObject;
+			responseHeader = form.getValuesMap();
+		}
+		ServerResponse serverResponse = new ServerResponse(response.getStatus().getCode(), responseBody,
+				responseHeader);
+		return serverResponse;
+	}
+
+	/**
+	 * Returns the user agent used for the connection.
+	 * 
+	 * @return The user agent used for the connection
+	 */
+	private String getUserAgent() {
+		// Mylyn Connector for Tuleap v2.0.0; Eclipse v3.8; Windows 7 6.1; Java v1.7.0_17 Oracle Corporation
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append("Mylyn Connector for Tuleap"); //$NON-NLS-1$
+
+		Bundle bundle = Platform.getBundle(TuleapCoreActivator.PLUGIN_ID);
+		if (bundle != null) {
+			Version version = bundle.getVersion();
+			if (version != null) {
+				stringBuilder.append(" v"); //$NON-NLS-1$
+				stringBuilder.append(version.getMajor());
+				stringBuilder.append('.');
+				stringBuilder.append(version.getMinor());
+				stringBuilder.append('.');
+				stringBuilder.append(version.getMicro());
+			}
+		}
+
+		final String separator = "; "; //$NON-NLS-1$
+
+		bundle = Platform.getBundle("org.eclipse.core.runtime"); //$NON-NLS-1$
+		if (bundle != null) {
+			Version version = bundle.getVersion();
+			if (version != null) {
+				stringBuilder.append(separator);
+				stringBuilder.append(" Eclipse v"); //$NON-NLS-1$
+				stringBuilder.append(version.getMajor());
+				stringBuilder.append('.');
+				stringBuilder.append(version.getMinor());
+				stringBuilder.append('.');
+				stringBuilder.append(version.getMicro());
+			}
+		}
+
+		stringBuilder.append(separator);
+
+		stringBuilder.append(System.getProperty("os.name")); //$NON-NLS-1$
+		stringBuilder.append(' ');
+		stringBuilder.append(System.getProperty("os.version")); //$NON-NLS-1$
+
+		stringBuilder.append(separator);
+
+		stringBuilder.append(" Java v"); //$NON-NLS-1$
+		stringBuilder.append(System.getProperty("java.version")); //$NON-NLS-1$
+		stringBuilder.append(' ');
+		stringBuilder.append(System.getProperty("java.vendor")); //$NON-NLS-1$
+
+		return stringBuilder.toString();
+	}
+
+	/**
+	 * Returns a RESTlet method from the Tuleap resource.
+	 * 
+	 * @param resource
+	 *            The resource
+	 * @return The method.
+	 */
+	private Method getMethodFromResource(Resource resource) {
+		Method method = null;
+		switch (resource.getOperation()) {
+			case OPTIONS:
+				method = Method.OPTIONS;
+				break;
+			case GET:
+				method = Method.GET;
+				break;
+			case PUT:
+				method = Method.PUT;
+				break;
+			case POST:
+				method = Method.POST;
+				break;
+			default:
+				method = Method.OPTIONS;
+				break;
+		}
+		return method;
 	}
 
 	/**
@@ -140,12 +237,10 @@ public class TuleapRestConnector {
 	 *            The arguments
 	 */
 	public static void main(String[] args) {
-		Resource projectsTrackersGet = Resource.PROJECTS_GROUPS_MEMBERS__OPTIONS;
-		projectsTrackersGet.addPathVariable("42");
-		projectsTrackersGet.addPathVariable("project_admins");
-		String url2 = projectsTrackersGet.getUrl();
-
-		TuleapRestConnector connector = new TuleapRestConnector("http://localhost:3001");
-		connector.sendRequest("v3.14", Resource.API__OPTIONS, new HashMap<String, String>(), null);
+		// TODO REMOVE THIS§§§!!!!!!!!!
+		TuleapRestConnector connector = new TuleapRestConnector("http://localhost:3001", null);
+		ServerResponse serverResponse = connector.sendRequest("v3.14", Resource.LOGIN__GET,
+				new HashMap<String, String>(), "{\"user_name\":\"admin\",\"password\":\"password\"}");
+		System.out.println(serverResponse.getBody());
 	}
 }

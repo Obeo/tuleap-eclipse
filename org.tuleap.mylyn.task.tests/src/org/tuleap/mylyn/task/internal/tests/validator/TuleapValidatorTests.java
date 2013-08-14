@@ -38,4 +38,14 @@ public class TuleapValidatorTests extends AbstractTuleapTests {
 			fail(e.getMessage());
 		}
 	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.tuleap.mylyn.task.internal.tests.AbstractTuleapTests#getRepositoryUrl()
+	 */
+	@Override
+	public String getRepositoryUrl() {
+		return "https://tuleap.net"; //$NON-NLS-1$
+	}
 }
