@@ -48,9 +48,11 @@ exports.get = function (req, res) {
   var data = req.body;
   if (data.user_name === 'admin' && data.password === 'password') {
     response = login;
+    res.send(response);
   } else {
     response = error401;
+    res.status(401);
+    res.send(response);
   }
 
-  res.send(response);
 };

@@ -10,6 +10,18 @@
  ********************************************************************************/
 'use strict';
 
+var fs = require('fs');
+
+var error401 = undefined;
+
+fs.readFile('../org.tuleap.mylyn.task.server.data/json/errors/401.json', 'utf-8', function(err, data) {
+  if (err) {
+    console.log(err);
+    return;
+  }
+  error401 = JSON.parse(data);
+});
+
 exports.options = function (res, req) {
   res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Accept-Charset, Accept, Content-Type, Authorization');
@@ -23,5 +35,12 @@ exports.post = function (req, res) {
   res.header('Allow', 'POST, OPTIONS');
 
   // The authentification error should have been intercepted before
-  res.send();
+  if (req.headers['authorization'] === 'qljslqkdhqkhdqsjkhdqkhsdsq715d7hfg6h41f6') {
+    res.send();
+  } else {
+    // Invalid session hash!
+    response = error401;
+    res.status(401);
+    res.send(response);
+  }
 };
