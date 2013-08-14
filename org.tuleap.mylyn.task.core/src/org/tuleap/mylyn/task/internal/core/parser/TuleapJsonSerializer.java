@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.parser;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskMapper;
 
 /**
@@ -39,6 +42,11 @@ public class TuleapJsonSerializer {
 	 * @return A JSON representation of the username and password
 	 */
 	public String serializeLogin(String username, String password) {
-		return null;
+		Gson gson = new Gson();
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("user_name", username); //$NON-NLS-1$
+		jsonObject.addProperty("password", password); //$NON-NLS-1$
+		String login = gson.toJson(jsonObject);
+		return login;
 	}
 }
