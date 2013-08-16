@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model;
 
+import com.google.common.collect.Lists;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,6 +46,11 @@ public class TuleapProjectConfiguration implements Serializable {
 	private int identifier;
 
 	/**
+	 * The list of active services for this project.
+	 */
+	private final List<String> services = Lists.newArrayList();
+
+	/**
 	 * The constructor.
 	 * 
 	 * @param projectName
@@ -59,14 +66,13 @@ public class TuleapProjectConfiguration implements Serializable {
 	/**
 	 * Adds the given tracker configuration for the given tracker id in the Tuleap instance configuration.
 	 * 
-	 * @param trackerId
-	 *            The id of the tracker.
-	 * @param tuleapTrackerConfiguration
+	 * @param trackerConfiguration
 	 *            The configuration of the tracker.
 	 */
-	public void addTracker(Integer trackerId, TuleapTrackerConfiguration tuleapTrackerConfiguration) {
-		this.trackerId2trackerConfiguration.put(trackerId, tuleapTrackerConfiguration);
-		tuleapTrackerConfiguration.setTuleapProjectConfiguration(this);
+	public void addTracker(TuleapTrackerConfiguration trackerConfiguration) {
+		this.trackerId2trackerConfiguration.put(Integer.valueOf(trackerConfiguration.getTrackerId()),
+				trackerConfiguration);
+		trackerConfiguration.setTuleapProjectConfiguration(this);
 	}
 
 	/**
@@ -105,5 +111,27 @@ public class TuleapProjectConfiguration implements Serializable {
 	 */
 	public int getIdentifier() {
 		return identifier;
+	}
+
+	/**
+	 * Add the given service.
+	 * 
+	 * @param service
+	 *            The service to add.
+	 */
+	public void addService(String service) {
+		services.add(service);
+	}
+
+	/**
+	 * Indicates whether the given service is active for thie project.
+	 * 
+	 * @param service
+	 *            The service being looked for
+	 * @return {@code true} if and only if the given service is present in the list of services of this
+	 *         project.
+	 */
+	public boolean hasService(String service) {
+		return services.contains(service);
 	}
 }

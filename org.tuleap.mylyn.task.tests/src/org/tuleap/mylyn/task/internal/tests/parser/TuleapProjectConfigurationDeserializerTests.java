@@ -35,7 +35,9 @@ import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapProjectConfigurationDeserializer;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests the desiarialization of the Tuleap project configuration.
@@ -212,6 +214,10 @@ public class TuleapProjectConfigurationDeserializerTests {
 		assertNotNull(tuleapProjectConfiguration);
 		assertEquals(0, tuleapProjectConfiguration.getIdentifier());
 		assertEquals("Project 0", tuleapProjectConfiguration.getName()); //$NON-NLS-1$
+
+		assertTrue(tuleapProjectConfiguration.hasService("documents")); //$NON-NLS-1$
+		assertFalse(tuleapProjectConfiguration.hasService("")); //$NON-NLS-1$
+		assertFalse(tuleapProjectConfiguration.hasService("trackers")); //$NON-NLS-1$
 	}
 
 	/**
@@ -223,6 +229,10 @@ public class TuleapProjectConfigurationDeserializerTests {
 		assertNotNull(tuleapProjectConfiguration);
 		assertEquals(1, tuleapProjectConfiguration.getIdentifier());
 		assertEquals("Project 1", tuleapProjectConfiguration.getName()); //$NON-NLS-1$
+
+		assertFalse(tuleapProjectConfiguration.hasService("documents")); //$NON-NLS-1$
+		assertFalse(tuleapProjectConfiguration.hasService("")); //$NON-NLS-1$
+		assertFalse(tuleapProjectConfiguration.hasService("trackers")); //$NON-NLS-1$
 	}
 
 	/**
@@ -234,6 +244,10 @@ public class TuleapProjectConfigurationDeserializerTests {
 		assertNotNull(tuleapProjectConfiguration);
 		assertEquals(2, tuleapProjectConfiguration.getIdentifier());
 		assertEquals("Project 2", tuleapProjectConfiguration.getName()); //$NON-NLS-1$
+
+		assertTrue(tuleapProjectConfiguration.hasService("documents")); //$NON-NLS-1$
+		assertFalse(tuleapProjectConfiguration.hasService("")); //$NON-NLS-1$
+		assertFalse(tuleapProjectConfiguration.hasService("trackers")); //$NON-NLS-1$
 	}
 
 	/**
@@ -245,6 +259,20 @@ public class TuleapProjectConfigurationDeserializerTests {
 		assertNotNull(tuleapProjectConfiguration);
 		assertEquals(3, tuleapProjectConfiguration.getIdentifier());
 		assertEquals("Project 3", tuleapProjectConfiguration.getName()); //$NON-NLS-1$
+
+		assertTrue(tuleapProjectConfiguration.hasService("trackers")); //$NON-NLS-1$
+		assertTrue(tuleapProjectConfiguration.hasService("agile_dashboard")); //$NON-NLS-1$
+		assertTrue(tuleapProjectConfiguration.hasService("documents")); //$NON-NLS-1$
+		assertTrue(tuleapProjectConfiguration.hasService("wikis")); //$NON-NLS-1$
+		assertTrue(tuleapProjectConfiguration.hasService("forums")); //$NON-NLS-1$
+		assertTrue(tuleapProjectConfiguration.hasService("lists")); //$NON-NLS-1$
+		assertTrue(tuleapProjectConfiguration.hasService("news")); //$NON-NLS-1$
+		assertTrue(tuleapProjectConfiguration.hasService("subversion")); //$NON-NLS-1$
+		assertTrue(tuleapProjectConfiguration.hasService("files")); //$NON-NLS-1$
+		assertTrue(tuleapProjectConfiguration.hasService("instant_messaging")); //$NON-NLS-1$
+		assertTrue(tuleapProjectConfiguration.hasService("continuous_integration")); //$NON-NLS-1$
+		assertTrue(tuleapProjectConfiguration.hasService("git")); //$NON-NLS-1$
+		assertFalse(tuleapProjectConfiguration.hasService("")); //$NON-NLS-1$
 	}
 
 	/**
@@ -256,6 +284,11 @@ public class TuleapProjectConfigurationDeserializerTests {
 		assertNotNull(tuleapProjectConfiguration);
 		assertEquals(4, tuleapProjectConfiguration.getIdentifier());
 		assertEquals("Project 4", tuleapProjectConfiguration.getName()); //$NON-NLS-1$
+
+		assertTrue(tuleapProjectConfiguration.hasService("git")); //$NON-NLS-1$
+		assertFalse(tuleapProjectConfiguration.hasService("")); //$NON-NLS-1$
+		assertFalse(tuleapProjectConfiguration.hasService("documents")); //$NON-NLS-1$
+		assertFalse(tuleapProjectConfiguration.hasService("trackers")); //$NON-NLS-1$
 	}
 
 	/**
@@ -285,26 +318,52 @@ public class TuleapProjectConfigurationDeserializerTests {
 
 		assertEquals(0, firstProjectConfiguration.getIdentifier());
 		assertEquals("Project 0", firstProjectConfiguration.getName()); //$NON-NLS-1$
+		assertTrue(firstProjectConfiguration.hasService("documents")); //$NON-NLS-1$
+		assertFalse(firstProjectConfiguration.hasService("")); //$NON-NLS-1$
+		assertFalse(firstProjectConfiguration.hasService("trackers")); //$NON-NLS-1$
 
 		TuleapProjectConfiguration secondProjectConfiguration = iterator.next();
 
 		assertEquals(1, secondProjectConfiguration.getIdentifier());
 		assertEquals("Project 1", secondProjectConfiguration.getName()); //$NON-NLS-1$
+		assertFalse(secondProjectConfiguration.hasService("documents")); //$NON-NLS-1$
+		assertFalse(secondProjectConfiguration.hasService("")); //$NON-NLS-1$
+		assertFalse(secondProjectConfiguration.hasService("trackers")); //$NON-NLS-1$
 
 		TuleapProjectConfiguration thirdProjectConfiguration = iterator.next();
 
 		assertEquals(2, thirdProjectConfiguration.getIdentifier());
 		assertEquals("Project 2", thirdProjectConfiguration.getName()); //$NON-NLS-1$
+		assertTrue(thirdProjectConfiguration.hasService("documents")); //$NON-NLS-1$
+		assertFalse(thirdProjectConfiguration.hasService("")); //$NON-NLS-1$
+		assertFalse(thirdProjectConfiguration.hasService("trackers")); //$NON-NLS-1$
 
 		TuleapProjectConfiguration fourthProjectConfiguration = iterator.next();
 
 		assertEquals(3, fourthProjectConfiguration.getIdentifier());
 		assertEquals("Project 3", fourthProjectConfiguration.getName()); //$NON-NLS-1$
+		assertTrue(fourthProjectConfiguration.hasService("trackers")); //$NON-NLS-1$
+		assertTrue(fourthProjectConfiguration.hasService("agile_dashboard")); //$NON-NLS-1$
+		assertTrue(fourthProjectConfiguration.hasService("documents")); //$NON-NLS-1$
+		assertTrue(fourthProjectConfiguration.hasService("wikis")); //$NON-NLS-1$
+		assertTrue(fourthProjectConfiguration.hasService("forums")); //$NON-NLS-1$
+		assertTrue(fourthProjectConfiguration.hasService("lists")); //$NON-NLS-1$
+		assertTrue(fourthProjectConfiguration.hasService("news")); //$NON-NLS-1$
+		assertTrue(fourthProjectConfiguration.hasService("subversion")); //$NON-NLS-1$
+		assertTrue(fourthProjectConfiguration.hasService("files")); //$NON-NLS-1$
+		assertTrue(fourthProjectConfiguration.hasService("instant_messaging")); //$NON-NLS-1$
+		assertTrue(fourthProjectConfiguration.hasService("continuous_integration")); //$NON-NLS-1$
+		assertTrue(fourthProjectConfiguration.hasService("git")); //$NON-NLS-1$
+		assertFalse(fourthProjectConfiguration.hasService("")); //$NON-NLS-1$
 
 		TuleapProjectConfiguration fifthProjectConfiguration = iterator.next();
 
 		assertEquals(4, fifthProjectConfiguration.getIdentifier());
 		assertEquals("Project 4", fifthProjectConfiguration.getName()); //$NON-NLS-1$
+		assertTrue(fifthProjectConfiguration.hasService("git")); //$NON-NLS-1$
+		assertFalse(fifthProjectConfiguration.hasService("")); //$NON-NLS-1$
+		assertFalse(fifthProjectConfiguration.hasService("documents")); //$NON-NLS-1$
+		assertFalse(fifthProjectConfiguration.hasService("trackers")); //$NON-NLS-1$
 
 	}
 }

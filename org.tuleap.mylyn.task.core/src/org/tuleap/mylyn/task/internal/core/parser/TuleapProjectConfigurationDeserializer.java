@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.parser;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -48,6 +49,15 @@ public class TuleapProjectConfigurationDeserializer implements JsonDeserializer<
 		JsonObject jsonObject = arg0.getAsJsonObject();
 		TuleapProjectConfiguration tuleapProjectConfiguration = new TuleapProjectConfiguration(jsonObject
 				.get(PROJECT_NAME).getAsString(), jsonObject.get(PROJECT_ID).getAsInt());
+
+		// Active services
+		JsonElement servicesElement = jsonObject.get("services"); //$NON-NLS-1$
+		if (servicesElement != null) {
+			JsonArray services = servicesElement.getAsJsonArray();
+			for (JsonElement element : services) {
+				tuleapProjectConfiguration.addService(element.getAsString());
+			}
+		}
 
 		return tuleapProjectConfiguration;
 	}
