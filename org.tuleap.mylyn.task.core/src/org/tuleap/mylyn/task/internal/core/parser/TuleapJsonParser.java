@@ -10,6 +10,12 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.parser;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.util.List;
 
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
@@ -21,6 +27,12 @@ import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class TuleapJsonParser {
+
+	/**
+	 * The key used for the session hash.
+	 */
+	private static final String SESSION_HASH = "session_hash"; //$NON-NLS-1$
+
 	/**
 	 * Parses the JSON representation of one Tuleap project and returns its configuration.
 	 * 
@@ -29,7 +41,18 @@ public class TuleapJsonParser {
 	 * @return The Tuleap configuration matching the JSON representation
 	 */
 	public TuleapProjectConfiguration getProjectConfiguration(String jsonResponse) {
-		return null;
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		gsonBuilder.registerTypeAdapter(TuleapProjectConfiguration.class,
+				new TuleapProjectConfigurationDeserializer());
+
+		JsonParser jsonParser = new JsonParser();
+		JsonObject jsonObject = jsonParser.parse(jsonResponse).getAsJsonObject();
+
+		Gson gson = gsonBuilder.create();
+		TuleapProjectConfiguration tuleapProjectConfiguration = gson.fromJson(jsonObject,
+				TuleapProjectConfiguration.class);
+
+		return tuleapProjectConfiguration;
 	}
 
 	/**
@@ -73,6 +96,13 @@ public class TuleapJsonParser {
 	 * @return The session hash
 	 */
 	public String getSessionHash(String jsonResponse) {
+		JsonParser jsonParser = new JsonParser();
+		JsonObject jsonObject = jsonParser.parse(jsonResponse).getAsJsonObject();
+		JsonElement sessionsHashElement = jsonObject.get(SESSION_HASH);
+		if (sessionsHashElement != null) {
+			return sessionsHashElement.getAsString();
+		}
+		// TODO Throw exception?
 		return null;
 	}
 
