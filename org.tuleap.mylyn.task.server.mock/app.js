@@ -40,7 +40,7 @@ app.all('/*', function (req, res, next) {
   next();
 });
 
-// Authentification error
+// Authentication error
 app.all('/*', function (req, res, next) {
 	next();
 });
@@ -50,7 +50,7 @@ var api = require('./controllers/api.js');
 app.options('/api/v3.14', api.options);
 app.get('/api/v3.14', api.get);
 
-// Authentification
+// Authentication
 var login = require('./controllers/login.js');
 app.options('/api/v3.14/login', login.options);
 app.get('/api/v3.14/login', login.get);
