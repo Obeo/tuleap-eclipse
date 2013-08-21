@@ -27,6 +27,7 @@ app.all('/*', function (req, res, next) {
 	res.header('Content-Type', 'application/json, chartset=utf-8');
 
   // Log the headers of the request
+  console.log(req.path);
   console.log(req.headers);
   console.log(req.body);
 
