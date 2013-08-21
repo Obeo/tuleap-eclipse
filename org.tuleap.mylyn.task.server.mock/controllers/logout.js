@@ -22,7 +22,7 @@ fs.readFile('../org.tuleap.mylyn.task.server.data/json/errors/401.json', 'utf-8'
   error401 = JSON.parse(data);
 });
 
-exports.options = function (res, req) {
+exports.options = function (req, res) {
   res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Accept-Charset, Accept, Content-Type, Authorization');
   res.header('Allow', 'POST, OPTIONS');

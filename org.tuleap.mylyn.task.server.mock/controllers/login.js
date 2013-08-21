@@ -31,7 +31,7 @@ fs.readFile('../org.tuleap.mylyn.task.server.data/json/errors/401.json', 'utf-8'
   error401 = JSON.parse(data);
 });
 
-exports.options = function (res, req) {
+exports.options = function (req, res) {
   res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Accept-Charset, Accept, Content-Type');
   res.header('Allow', 'GET, OPTIONS');

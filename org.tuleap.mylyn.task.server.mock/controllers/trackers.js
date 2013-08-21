@@ -72,7 +72,7 @@ for (var i = 0; i < files.length; i++) {
   fs.readFile(file, 'utf-8', functionCreator(i, file));
 }
 
-exports.optionsList = function (res, req) {
+exports.optionsList = function (req, res) {
   res.header('Access-Control-Allow-Methods', 'OPTIONS, GET');
   res.header('Access-Control-Allow-Headers', 'Accept-Charset, Accept, Content-Type, Authorization');
   res.header('Allow', 'OPTIONS, GET');
