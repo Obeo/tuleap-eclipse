@@ -32,6 +32,15 @@ public interface ITuleapRepositoryConnector {
 	/**
 	 * Returns the configuration of the Tuleap repository.
 	 * 
+	 * @param repositoryUrl
+	 *            the URL of the repository
+	 * @return The configuration of the Tuleap repository.
+	 */
+	TuleapInstanceConfiguration getRepositoryConfiguration(String repositoryUrl);
+
+	/**
+	 * Returns the configuration of the Tuleap repository.
+	 * 
 	 * @param taskRepository
 	 *            the Mylyn task repository
 	 * @param forceRefresh

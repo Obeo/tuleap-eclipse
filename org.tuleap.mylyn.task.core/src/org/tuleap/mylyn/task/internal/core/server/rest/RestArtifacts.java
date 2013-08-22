@@ -17,33 +17,48 @@ import org.restlet.data.Method;
 import org.tuleap.mylyn.task.internal.core.server.ServerResponse;
 
 /**
- * JSON Resource for the {@code /api/<version>} URL.
+ * Resource {@code /trackers}, which can optionally use an integer parameter representing the id of an
+ * artifact.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class RestProjectsTrackers extends AbstractAuthenticatedRestResource {
+public class RestArtifacts extends AbstractAuthenticatedRestResource {
 
 	/**
-	 * The project id.
+	 * The artifact id.
 	 */
-	protected int projectId;
+	private Integer artifactId;
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param serverUrl
-	 *            URL of the rest API on the server.
+	 *            The server URL.
 	 * @param apiVersion
-	 *            Version of the REST API to use.
+	 *            The API version.
 	 * @param credentials
-	 *            The credentials to use.
-	 * @param projectId
-	 *            The id of the project.
+	 *            The credentials for authentication.
 	 */
-	protected RestProjectsTrackers(String serverUrl, String apiVersion, ICredentials credentials,
-			int projectId) {
+	public RestArtifacts(String serverUrl, String apiVersion, ICredentials credentials) {
 		super(serverUrl, apiVersion, credentials);
-		this.projectId = projectId;
+		this.artifactId = null;
+	}
+
+	/**
+	 * Constructor with an artifact id.
+	 * 
+	 * @param serverUrl
+	 *            The server URL.
+	 * @param apiVersion
+	 *            The API version.
+	 * @param credentials
+	 *            The credentials for authentication.
+	 * @param artifactId
+	 *            The id of the artifact desired.
+	 */
+	public RestArtifacts(String serverUrl, String apiVersion, ICredentials credentials, int artifactId) {
+		super(serverUrl, apiVersion, credentials);
+		this.artifactId = Integer.valueOf(artifactId);
 	}
 
 	/**
@@ -53,12 +68,14 @@ public class RestProjectsTrackers extends AbstractAuthenticatedRestResource {
 	 */
 	@Override
 	protected String getUrl() {
-		return URL.PROJECTS + "/" + projectId + URL.TRACKERS; //$NON-NLS-1$
+		if (artifactId != null) {
+			return URL.ARTIFACTS + SLASH + artifactId;
+		}
+		return URL.ARTIFACTS;
 	}
 
 	/**
-	 * Sends an GET request to the {@code /api/<version>/projects/:projectId/trackers} URL and returns the
-	 * response.
+	 * Sends an GET request to the {@code /api/<version>/artifacts</:id>} URL and returns the response.
 	 * 
 	 * @param headers
 	 *            Headers to use for sending the request, just in case. There is no reason why this map
@@ -70,8 +87,8 @@ public class RestProjectsTrackers extends AbstractAuthenticatedRestResource {
 	}
 
 	/**
-	 * Sends an OPTIONS request to the {@code /api/<version>/projects/:projectId/trackers} URL and checks that
-	 * the GET operation is allowed in the response provided by the server.
+	 * Sends an OPTIONS request to the {@code /api/<version>/artifacts</:artifactId>} URL and checks that the
+	 * GET operation is allowed in the response provided by the server.
 	 * 
 	 * @param headers
 	 *            Headers to use for sending the request, just in case. There is no reason why this map
@@ -82,5 +99,4 @@ public class RestProjectsTrackers extends AbstractAuthenticatedRestResource {
 	public void checkGet(Map<String, String> headers) throws CoreException {
 		checkAccreditation(Method.GET, headers);
 	}
-
 }

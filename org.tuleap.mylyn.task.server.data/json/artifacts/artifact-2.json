@@ -14,6 +14,7 @@
       "field_label": "title",
       "field_value": {
         "value": "Setup a new testing strategy for the database."
+      }
     },
     {
       "field_id": 1,
@@ -30,6 +31,7 @@
       "field_label": "initial-effort",
       "field_value": {
         "value": "11"
+      }
     }
   ],
   "comments": [

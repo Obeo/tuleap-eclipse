@@ -21,6 +21,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tests.util.TestFixture;
 import org.junit.After;
 import org.junit.Before;
+import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
@@ -35,7 +36,7 @@ public abstract class AbstractTuleapTests {
 	/**
 	 * The Tuleap repository connector.
 	 */
-	protected TuleapRepositoryConnector connector;
+	protected ITuleapRepositoryConnector connector;
 
 	/**
 	 * The tasks repository manager.

@@ -48,7 +48,7 @@ public class RestProjects extends AbstractAuthenticatedRestResource {
 	}
 
 	/**
-	 * Sends an GET request to the {@code /api/<version>} URL and returns the response.
+	 * Sends an GET request to the {@code /api/<version>/projects} URL and returns the response.
 	 * 
 	 * @param headers
 	 *            Headers to use for sending the request, just in case. There is no reason why this map
@@ -56,11 +56,12 @@ public class RestProjects extends AbstractAuthenticatedRestResource {
 	 * @return The received server response, as is.
 	 */
 	public ServerResponse get(Map<String, String> headers) {
-		return sendRequest(Method.GET, headers, ""); //$NON-NLS-1$
+		return sendRequest(Method.GET, headers, EMPTY_BODY);
 	}
 
 	/**
-	 * Sends an GET request to the {@code /api/<version>} URL and returns the response.
+	 * Sends an OPTIONS request to the {@code /api/<version>/projects} URL and checks that the GET operation
+	 * is allowed in the response provided by the server.
 	 * 
 	 * @param headers
 	 *            Headers to use for sending the request, just in case. There is no reason why this map

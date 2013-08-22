@@ -74,6 +74,19 @@ public class MockedTuleapRepositoryConnector extends AbstractRepositoryConnector
 	}
 
 	/**
+	 * Returns the mock configuration if the given URL is the right URL, i.e. the one of the mock config.
+	 * {@inheritDoc}
+	 * 
+	 * @see org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector#getRepositoryConfiguration(java.lang.String)
+	 */
+	public TuleapInstanceConfiguration getRepositoryConfiguration(String repositoryUrl) {
+		if (configuration.getUrl().equals(repositoryUrl)) {
+			return configuration;
+		}
+		return null;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector#getClientManager()

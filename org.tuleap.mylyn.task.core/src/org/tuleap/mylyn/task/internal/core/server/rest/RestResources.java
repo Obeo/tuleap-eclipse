@@ -164,6 +164,26 @@ public final class RestResources {
 	/**
 	 * Provides access to the {code /projects} HTTP resource.
 	 * 
+	 * @return A resource that gives access to the {code /projects} HTTP resource.
+	 */
+	public RestArtifacts artifacts() {
+		return new RestArtifacts(serverUrl, apiVersion, credentials);
+	}
+
+	/**
+	 * Provides access to the {code /projects} HTTP resource.
+	 * 
+	 * @param artifactId
+	 *            Id of the artifact.
+	 * @return A resource that gives access to the {code /projects} HTTP resource.
+	 */
+	public RestArtifacts artifacts(int artifactId) {
+		return new RestArtifacts(serverUrl, apiVersion, credentials, artifactId);
+	}
+
+	/**
+	 * Provides access to the {code /projects} HTTP resource.
+	 * 
 	 * @param projectId
 	 *            the project id
 	 * @return A resource that gives access to the {code /projects/:projectId/trackers} HTTP resource.

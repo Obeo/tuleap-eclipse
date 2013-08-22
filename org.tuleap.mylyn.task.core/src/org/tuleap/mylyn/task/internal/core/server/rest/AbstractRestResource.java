@@ -52,6 +52,17 @@ import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 public abstract class AbstractRestResource {
 
 	/**
+	 * String to send in the body when no data needs to be in the request body. {@code null} provokes an
+	 * exception in Restlet.
+	 */
+	public static final String EMPTY_BODY = ""; //$NON-NLS-1$
+
+	/**
+	 * Separator to use between URL fragment.
+	 */
+	public static final String SLASH = "/"; //$NON-NLS-1$
+
+	/**
 	 * The serverUrl of the REST API on the server, for example {@code http://localhost:3001}.
 	 */
 	private String serverUrl;

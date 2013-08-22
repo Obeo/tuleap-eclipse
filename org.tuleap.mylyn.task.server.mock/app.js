@@ -79,6 +79,11 @@ app.get('/api/v3.14/projects/:projectId/trackers', auth, trackers.list);
 app.options('/api/v3.14/trackers/:trackerId', auth, trackers.options);
 app.get('/api/v3.14/trackers/:trackerId', auth, trackers.get);
 
+// Artifacts
+var artifacts = require('./controllers/artifacts.js');
+app.options('/api/v3.14/artifacts/:artifactId', auth, artifacts.options);
+app.get('/api/v3.14/artifacts/:artifactId', auth, artifacts.get);
+
 // Launch the server
 app.listen(3001);
 console.log("Express server listening on port 3001");

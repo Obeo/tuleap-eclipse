@@ -15,13 +15,18 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.junit.Test;
+import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
 import org.tuleap.mylyn.task.internal.core.server.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.server.rest.TuleapRestConnector;
 import org.tuleap.mylyn.task.internal.tests.AbstractTuleapTests;
 import org.tuleap.mylyn.task.internal.tests.TestLogger;
+import org.tuleap.mylyn.task.internal.tests.mocks.MockedTuleapRepositoryConnector;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -78,6 +83,41 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 		} catch (CoreException e) {
 			assertEquals(IStatus.ERROR, e.getStatus().getSeverity());
 			assertEquals("Error 401: Unauthorized", e.getMessage()); //$NON-NLS-1$ 
+		}
+	}
+
+	/**
+	 * Test the retrieval of an existing artifact.
+	 */
+	@Test
+	public void testGetExistingArtifact() {
+		TuleapInstanceConfiguration config = new TuleapInstanceConfiguration(getServerUrl());
+		// The artifact test data need the project Id 3 and the trackers 0, 1 and 4
+		TuleapProjectConfiguration projectConfig = new TuleapProjectConfiguration("Project 3", 3);
+		config.addProject(projectConfig);
+		TuleapTrackerConfiguration trackerConfig0 = new TuleapTrackerConfiguration(0, getServerUrl());
+		projectConfig.addTracker(trackerConfig0);
+		TuleapTrackerConfiguration trackerConfig1 = new TuleapTrackerConfiguration(0, getServerUrl());
+		projectConfig.addTracker(trackerConfig1);
+		TuleapTrackerConfiguration trackerConfig4 = new TuleapTrackerConfiguration(0, getServerUrl());
+		projectConfig.addTracker(trackerConfig4);
+
+		this.connector = new MockedTuleapRepositoryConnector(config);
+
+		TestLogger logger = new TestLogger();
+		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(this.getServerUrl(), "v3.14", //$NON-NLS-1$
+				logger);
+		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
+		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
+
+		TuleapServer tuleapServer = new TuleapServer(tuleapRestConnector, tuleapJsonParser,
+				tuleapJsonSerializer, this.repository, logger);
+		try {
+			TaskData taskData = tuleapServer.getArtifact(1, this.connector, null);
+			System.out.println(taskData.getRoot());
+			// TODO Check the TaskData content
+		} catch (CoreException e) {
+			fail(e.getMessage());
 		}
 	}
 
