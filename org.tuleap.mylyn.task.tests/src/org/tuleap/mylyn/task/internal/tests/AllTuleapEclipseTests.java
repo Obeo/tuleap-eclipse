@@ -24,6 +24,8 @@ import org.tuleap.mylyn.task.internal.tests.model.TuleapTrackerConfigurationTest
 import org.tuleap.mylyn.task.internal.tests.model.TuleapWorkflowTests;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapProjectConfigurationDeserializerTests;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapTrackerConfigurationDeserializerTests;
+import org.tuleap.mylyn.task.internal.tests.server.ServerResponseTest;
+import org.tuleap.mylyn.task.internal.tests.server.TaskRepositoryCredentialsTest;
 
 /**
  * The stand alone unit tests suite.
@@ -35,7 +37,7 @@ import org.tuleap.mylyn.task.internal.tests.parser.TuleapTrackerConfigurationDes
 @Suite.SuiteClasses({TuleapArtifactTests.class, TuleapUtilTests.class, TuleapRepositoryConnectorTests.class,
 		TuleapTaskDataHandlerTests.class, TuleapProjectConfigurationDeserializerTests.class,
 		TuleapTrackerConfigurationDeserializerTests.class, TuleapWorkflowTests.class,
-		TuleapTrackerConfigurationTests.class })
+		TuleapTrackerConfigurationTests.class, TaskRepositoryCredentialsTest.class, ServerResponseTest.class })
 public final class AllTuleapEclipseTests {
 
 	/**
