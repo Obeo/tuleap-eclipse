@@ -81,11 +81,11 @@ public class TuleapRestConnector {
 			ServerResponse serverResponse = connector.resources(new ICredentials() {
 
 				public String getUserName() {
-					return "admin";
+					return "admin"; //$NON-NLS-1$
 				}
 
 				public String getPassword() {
-					return "password";
+					return "password"; //$NON-NLS-1$
 				}
 			}).user().get(new HashMap<String, String>(), ""); //$NON-NLS-1$
 			System.out.println(serverResponse.getBody());
