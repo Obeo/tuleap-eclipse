@@ -57,13 +57,12 @@ public class TuleapInstanceConfiguration implements Serializable {
 	/**
 	 * Adds the given project configuration for the given project id in the Tuleap instance configuration.
 	 * 
-	 * @param projectId
-	 *            The id of the project.
 	 * @param tuleapProjectConfiguration
-	 *            The configuration of the project.
+	 *            The configuration of the project (must not be null).
 	 */
-	public void addProject(Integer projectId, TuleapProjectConfiguration tuleapProjectConfiguration) {
-		this.projectId2projectConfiguration.put(projectId, tuleapProjectConfiguration);
+	public void addProject(TuleapProjectConfiguration tuleapProjectConfiguration) {
+		this.projectId2projectConfiguration.put(Integer.valueOf(tuleapProjectConfiguration.getIdentifier()),
+				tuleapProjectConfiguration);
 	}
 
 	/**

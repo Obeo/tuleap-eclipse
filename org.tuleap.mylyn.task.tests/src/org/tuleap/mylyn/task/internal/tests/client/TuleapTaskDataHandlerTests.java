@@ -176,7 +176,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		this.tuleapProjectConfiguration = new TuleapProjectConfiguration("Project Name", 2); //$NON-NLS-1$
 		this.tuleapProjectConfiguration.addTracker(tuleapTrackerConfiguration);
-		tuleapInstanceConfiguration.addProject(Integer.valueOf(2), tuleapProjectConfiguration);
+		tuleapInstanceConfiguration.addProject(tuleapProjectConfiguration);
 		this.repositoryConnector = new MockedTuleapRepositoryConnector(tuleapInstanceConfiguration);
 
 		// Used to specify the tracker to use in the group

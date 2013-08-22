@@ -340,8 +340,7 @@ public class TuleapSoapConnector {
 				if (trackers.length > 0) {
 					TuleapProjectConfiguration tuleapProjectConfiguration = new TuleapProjectConfiguration(
 							group.getGroup_name(), groupId);
-					tuleapInstanceConfiguration.addProject(Integer.valueOf(groupId),
-							tuleapProjectConfiguration);
+					tuleapInstanceConfiguration.addProject(tuleapProjectConfiguration);
 
 					for (Tracker tracker : trackers) {
 						monitor.worked(5);
