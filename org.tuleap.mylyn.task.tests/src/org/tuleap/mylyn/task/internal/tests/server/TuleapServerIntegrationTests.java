@@ -13,11 +13,13 @@ package org.tuleap.mylyn.task.internal.tests.server;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
-import org.tuleap.mylyn.task.internal.core.server.TuleapRestConnector;
 import org.tuleap.mylyn.task.internal.core.server.TuleapServer;
+import org.tuleap.mylyn.task.internal.core.server.rest.TuleapRestConnector;
 import org.tuleap.mylyn.task.internal.tests.AbstractTuleapTests;
 import org.tuleap.mylyn.task.internal.tests.TestLogger;
 
@@ -30,13 +32,15 @@ import static org.junit.Assert.fail;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class TuleapServerIntegrationTests extends AbstractTuleapTests {
+
 	/**
-	 * We will try to log in and out of the server.
+	 * We will try to connect to the server with valid credentials.
 	 */
 	@Test
-	public void testValidAuthentification() {
+	public void testValidAuthentication() {
 		TestLogger logger = new TestLogger();
-		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(this.getRepositoryUrl(), logger);
+		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(this.getServerUrl(), "v3.14", //$NON-NLS-1$
+				logger);
 		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
 		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
 
@@ -52,29 +56,39 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 	}
 
 	/**
-	 * We will try to log in with an invalid user name or password.
+	 * We will try to connect to the server with invalid credentials.
 	 */
 	@Test
-	public void testLogInWithInvalidCredentials() {
-		fail();
-	}
+	public void testInvalidAuthentication() {
+		// Setting a wrong password for the test
+		this.repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(
+				"admin", "wrong"), false); //$NON-NLS-1$ //$NON-NLS-2$
 
-	/**
-	 * We will try to log out from the server with an invalid session hash.
-	 */
-	@Test
-	public void testLogOutWithInvalidSessionHash() {
-		fail();
+		TestLogger logger = new TestLogger();
+		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(this.getServerUrl(), "v3.14", //$NON-NLS-1$
+				logger);
+		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
+		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
+
+		TuleapServer tuleapServer = new TuleapServer(tuleapRestConnector, tuleapJsonParser,
+				tuleapJsonSerializer, this.repository, logger);
+		try {
+			tuleapServer.validateConnection(new NullProgressMonitor());
+			fail("A CoreException should have been thrown"); //$NON-NLS-1$
+		} catch (CoreException e) {
+			assertEquals(IStatus.ERROR, e.getStatus().getSeverity());
+			assertEquals("Error 401: Unauthorized", e.getMessage()); //$NON-NLS-1$ 
+		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.tests.AbstractTuleapTests#getRepositoryUrl()
+	 * @see org.tuleap.mylyn.task.internal.tests.AbstractTuleapTests#getServerUrl()
 	 */
 	@Override
-	public String getRepositoryUrl() {
+	public String getServerUrl() {
 		// TODO Use properties in order to be able to customize the unit test from jenkins/hudson
-		return "localhost:3001"; //$NON-NLS-1$
+		return "http://localhost:3001"; //$NON-NLS-1$
 	}
 }

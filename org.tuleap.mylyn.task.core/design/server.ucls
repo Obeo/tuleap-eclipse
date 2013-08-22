@@ -12,7 +12,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </enumeration>  
-  <class id="2" language="java" name="org.tuleap.mylyn.task.internal.core.server.TuleapRestConnector" 
+  <class id="2" language="java" name="org.tuleap.mylyn.task.internal.core.server.rest.TuleapRestConnector" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/server/TuleapRestConnector.java" 
     binary="false" corner="BOTTOM_RIGHT">    

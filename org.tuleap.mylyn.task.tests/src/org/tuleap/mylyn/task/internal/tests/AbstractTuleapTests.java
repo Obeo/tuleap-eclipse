@@ -70,9 +70,9 @@ public abstract class AbstractTuleapTests {
 		}
 
 		this.connector = new TuleapRepositoryConnector();
-		this.repository = new TaskRepository(ITuleapConstants.CONNECTOR_KIND, this.getRepositoryUrl());
-		this.repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(this
-				.getUsername(), this.getPassword()), true);
+		this.repository = new TaskRepository(ITuleapConstants.CONNECTOR_KIND, this.getServerUrl());
+		this.repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(
+				"admin", "password"), true); //$NON-NLS-1$ //$NON-NLS-2$
 
 		TasksUi.getRepositoryManager().addRepository(repository);
 	}
@@ -97,23 +97,5 @@ public abstract class AbstractTuleapTests {
 	 * 
 	 * @return The URL of the remote repository.
 	 */
-	public abstract String getRepositoryUrl();
-
-	/**
-	 * Returns the user name.
-	 * 
-	 * @return The user name
-	 */
-	public String getUsername() {
-		return "admin"; //$NON-NLS-1$
-	}
-
-	/**
-	 * Returns the password.
-	 * 
-	 * @return The password
-	 */
-	public String getPassword() {
-		return "password"; //$NON-NLS-1$
-	}
+	public abstract String getServerUrl();
 }

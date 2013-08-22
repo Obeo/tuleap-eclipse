@@ -175,7 +175,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		this.tuleapInstanceConfiguration = new TuleapInstanceConfiguration(repositoryUrl);
 
 		this.tuleapProjectConfiguration = new TuleapProjectConfiguration("Project Name", 2); //$NON-NLS-1$
-		this.tuleapProjectConfiguration.addTracker(Integer.valueOf(trackerId), tuleapTrackerConfiguration);
+		this.tuleapProjectConfiguration.addTracker(tuleapTrackerConfiguration);
 		tuleapInstanceConfiguration.addProject(Integer.valueOf(2), tuleapProjectConfiguration);
 		this.repositoryConnector = new MockedTuleapRepositoryConnector(tuleapInstanceConfiguration);
 
@@ -2632,7 +2632,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		String attachementName = "Photo.png"; //$NON-NLS-1$
 		String username = "enigma"; //$NON-NLS-1$
 		String realname = "Edward Nigma"; //$NON-NLS-1$
-		String identifier = "enigma218"; //$NON-NLS-1$
+		int identifier = 218;
 		String mail = "edward.nigma@we.com"; //$NON-NLS-1$
 		TuleapPerson uploadedBy = new TuleapPerson(username, realname, identifier, mail);
 		Long filesize = Long.valueOf(2048);

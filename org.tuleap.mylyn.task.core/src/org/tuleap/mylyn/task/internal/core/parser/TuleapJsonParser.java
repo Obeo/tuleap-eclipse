@@ -10,8 +10,10 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.parser;
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -58,12 +60,27 @@ public class TuleapJsonParser {
 	/**
 	 * Parses the JSON representation of a collection of Tuleap projects and returns their configuration.
 	 * 
-	 * @param jsonReponse
+	 * @param jsonResponse
 	 *            The JSON representation of a collection of Tuleap projects
 	 * @return The list of the Tuleap project's configuration
 	 */
-	public List<TuleapProjectConfiguration> getProjectsConfiguration(String jsonReponse) {
-		return null;
+	public List<TuleapProjectConfiguration> getProjectConfigurations(String jsonResponse) {
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		gsonBuilder.registerTypeAdapter(TuleapProjectConfiguration.class,
+				new TuleapProjectConfigurationDeserializer());
+
+		JsonParser jsonParser = new JsonParser();
+		JsonArray jsonArray = jsonParser.parse(jsonResponse).getAsJsonArray();
+
+		List<TuleapProjectConfiguration> result = Lists.newArrayList();
+		for (JsonElement jsonElement : jsonArray) {
+			Gson gson = gsonBuilder.create();
+			TuleapProjectConfiguration tuleapProjectConfiguration = gson.fromJson(jsonElement,
+					TuleapProjectConfiguration.class);
+
+			result.add(tuleapProjectConfiguration);
+		}
+		return result;
 	}
 
 	/**
@@ -84,7 +101,7 @@ public class TuleapJsonParser {
 	 *            The JSON representation of a collection of Tuleap trackers
 	 * @return The list of the Tulea tracker's configuration
 	 */
-	public List<TuleapTrackerConfiguration> getTrackersConfiguration(String jsonResponse) {
+	public List<TuleapTrackerConfiguration> getTrackerConfigurations(String jsonResponse) {
 		return null;
 	}
 

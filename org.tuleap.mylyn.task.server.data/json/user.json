@@ -1,0 +1,8 @@
+{
+  "id": 123,
+  "email": "doug.ross@somewhere.com",
+  "identifier": "admin",
+  "real_name": "Doug Ross",
+  "username": "admin",
+  "ldap_id": "dougross"
+}

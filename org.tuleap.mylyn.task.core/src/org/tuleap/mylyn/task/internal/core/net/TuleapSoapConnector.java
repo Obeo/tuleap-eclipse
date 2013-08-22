@@ -349,8 +349,7 @@ public class TuleapSoapConnector {
 								"TuleapSoapConnector.AnalyzingTracker", tracker.getName())); //$NON-NLS-1$
 						TuleapTrackerConfiguration tuleapTrackerConfiguration = this
 								.getTuleapTrackerConfiguration(tracker, monitor);
-						tuleapProjectConfiguration.addTracker(Integer.valueOf(tracker.getTracker_id()),
-								tuleapTrackerConfiguration);
+						tuleapProjectConfiguration.addTracker(tuleapTrackerConfiguration);
 					}
 				}
 			}
@@ -1585,8 +1584,8 @@ public class TuleapSoapConnector {
 			} else {
 				userInfo = codendiAPIPort.getUserInfo(sessionHash, identifier);
 			}
-			return new TuleapPerson(userInfo.getUsername(), userInfo.getReal_name(), userInfo.getId(),
-					userInfo.getEmail());
+			return new TuleapPerson(userInfo.getUsername(), userInfo.getReal_name(), Integer
+					.parseInt(userInfo.getId()), userInfo.getEmail());
 		} catch (RemoteException e) {
 			TuleapCoreActivator.log(e, true);
 		}

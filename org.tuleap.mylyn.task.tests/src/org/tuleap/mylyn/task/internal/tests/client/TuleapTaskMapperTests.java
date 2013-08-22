@@ -831,7 +831,7 @@ public class TuleapTaskMapperTests {
 		this.tuleapInstanceConfiguration = new TuleapInstanceConfiguration(repositoryUrl);
 
 		this.tuleapProjectConfiguration = new TuleapProjectConfiguration(projectName, projectId);
-		this.tuleapProjectConfiguration.addTracker(Integer.valueOf(trackerId), tuleapTrackerConfiguration);
+		this.tuleapProjectConfiguration.addTracker(tuleapTrackerConfiguration);
 		tuleapInstanceConfiguration.addProject(Integer.valueOf(projectId), tuleapProjectConfiguration);
 		this.repositoryConnector = new MockedTuleapRepositoryConnector(tuleapInstanceConfiguration);
 

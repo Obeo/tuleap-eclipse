@@ -46,35 +46,38 @@ app.all('/*', function (req, res, next) {
 	next();
 });
 
+// Authenticator
+var auth = express.basicAuth(function(user, pass) {
+  console.log("user = " + user);
+  console.log("password = " + pass);
+  return user === 'admin' && pass === 'password';
+});
+
 // API
 var api = require('./controllers/api.js');
 app.options('/api/v3.14', api.options);
 app.get('/api/v3.14', api.get);
 
-// Authentication
-var login = require('./controllers/login.js');
-app.options('/api/v3.14/login', login.options);
-app.get('/api/v3.14/login', login.get);
-
-var logout = require('./controllers/logout.js');
-app.options('/api/v3.14/logout', logout.options);
-app.post('/api/v3.14/logout', logout.post);
+//User
+var user = require('./controllers/user.js');
+app.options('/api/v3.14/user', auth, user.options);
+app.get('/api/v3.14/user', auth, user.get);
 
 // Projects
 var projects = require('./controllers/projects.js');
-app.options('/api/v3.14/projects', projects.optionsList);
-app.get('/api/v3.14/projects', projects.list);
+app.options('/api/v3.14/projects', auth, projects.optionsList);
+app.get('/api/v3.14/projects', auth, projects.list);
 
-app.options('/api/v3.14/projects/:projectId', projects.options);
-app.get('/api/v3.14/projects/:projectId', projects.get);
+app.options('/api/v3.14/projects/:projectId', auth, projects.options);
+app.get('/api/v3.14/projects/:projectId', auth, projects.get);
 
 // Trackers
 var trackers = require('./controllers/trackers.js');
-app.options('/api/v3.14/projects/:projectId/trackers', trackers.optionsList);
-app.get('/api/v3.14/projects/:projectId/trackers', trackers.list);
+app.options('/api/v3.14/projects/:projectId/trackers', auth, trackers.optionsList);
+app.get('/api/v3.14/projects/:projectId/trackers', auth, trackers.list);
 
-app.options('/api/v3.14/trackers/:trackerId', trackers.options);
-app.get('/api/v3.14/trackers/:trackerId', trackers.get);
+app.options('/api/v3.14/trackers/:trackerId', auth, trackers.options);
+app.get('/api/v3.14/trackers/:trackerId', auth, trackers.get);
 
 // Launch the server
 app.listen(3001);
