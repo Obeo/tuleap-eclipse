@@ -230,7 +230,7 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 		taskAttachment.setAttachmentId(tuleapAttachment.getId());
 
 		TuleapPerson person = tuleapAttachment.getPerson();
-		IRepositoryPerson iRepositoryPerson = trackerConfiguration.getPerson(person.getId());
+		IRepositoryPerson iRepositoryPerson = trackerConfiguration.getPerson(person.getEmail());
 		if (iRepositoryPerson == null) {
 			iRepositoryPerson = taskData.getAttributeMapper().getTaskRepository().createPerson(
 					person.getEmail());

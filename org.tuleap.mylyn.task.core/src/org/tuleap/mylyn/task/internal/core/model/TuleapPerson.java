@@ -19,22 +19,22 @@ public class TuleapPerson {
 	/**
 	 * The user name.
 	 */
-	private String userName;
+	private final String userName;
 
 	/**
 	 * The real name.
 	 */
-	private String realName;
+	private final String realName;
 
 	/**
 	 * The identifier.
 	 */
-	private String id;
+	private final int id;
 
 	/**
 	 * The email address.
 	 */
-	private String email;
+	private final String email;
 
 	/**
 	 * The constructor.
@@ -48,7 +48,7 @@ public class TuleapPerson {
 	 * @param mail
 	 *            The email address
 	 */
-	public TuleapPerson(String username, String realname, String identifier, String mail) {
+	public TuleapPerson(String username, String realname, int identifier, String mail) {
 		this.userName = username;
 		this.realName = realname;
 		this.id = identifier;
@@ -60,7 +60,7 @@ public class TuleapPerson {
 	 * 
 	 * @return the id
 	 */
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
