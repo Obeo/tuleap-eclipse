@@ -10,6 +10,11 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.tests.client;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
@@ -42,6 +47,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Tests of the new Tuleap Task Mapper.
@@ -441,8 +447,6 @@ public class TuleapTaskMapperTests {
 		assertEquals(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.AssignedToLabel"), metadata //$NON-NLS-1$
 				.getLabel());
 		assertEquals(TaskAttribute.KIND_PEOPLE, metadata.getKind());
-
-		System.out.println(taskData.getRoot());
 	}
 
 	/**
@@ -549,6 +553,42 @@ public class TuleapTaskMapperTests {
 
 		assertEquals(url, taskData.getRoot().getAttribute(TaskAttribute.TASK_URL).getValue());
 		assertEquals(url, mapper.getTaskUrl());
+	}
+
+	/**
+	 * Test the assignment of the task with a single select box configuration.
+	 */
+	@Test
+	public void testSetAssignedToSingle() {
+		int id = 408;
+		tuleapTrackerConfiguration.addField(newSemanticContributorSingle(id));
+		mapper.initializeEmptyTaskData();
+		mapper.setAssignedTo(Collections.singleton(Integer.valueOf(1)));
+
+		assertEquals("1", taskData.getRoot().getAttribute(TaskAttribute.USER_ASSIGNED).getValue()); //$NON-NLS-1$
+	}
+
+	/**
+	 * Test the assignment of the task with a multiple select box configuration.
+	 */
+	@Test
+	public void testSetAssignedToMultiple() {
+		int id = 408;
+		tuleapTrackerConfiguration.addField(newSemanticContributorMultiple(id));
+		mapper.initializeEmptyTaskData();
+		Set<Integer> valueIds = new HashSet<Integer>();
+		valueIds.add(Integer.valueOf(117));
+		valueIds.add(Integer.valueOf(1023));
+		mapper.setAssignedTo(valueIds);
+
+		List<String> values = taskData.getRoot().getAttribute(TaskAttribute.USER_ASSIGNED).getValues();
+		if ("117".equals(values.get(0))) { //$NON-NLS-1$
+			assertEquals("1023", values.get(1)); //$NON-NLS-1$
+		} else if ("1023".equals(values.get(0))) { //$NON-NLS-1$
+			assertEquals("117", values.get(1)); //$NON-NLS-1$
+		} else {
+			fail("Wrong values received"); //$NON-NLS-1$
+		}
 	}
 
 	/**
@@ -767,6 +807,20 @@ public class TuleapTaskMapperTests {
 	 */
 	private TuleapSelectBox newSemanticContributorSingle(int id) {
 		TuleapSelectBox result = new TuleapSelectBox(id);
+		setDescriptionAndLabelFromId(result);
+		result.setSemanticContributor(true);
+		return result;
+	}
+
+	/**
+	 * Creates a new Tuleap multi select box Field with the semantic "contributor".
+	 * 
+	 * @param id
+	 *            the id
+	 * @return The created field
+	 */
+	private TuleapMultiSelectBox newSemanticContributorMultiple(int id) {
+		TuleapMultiSelectBox result = new TuleapMultiSelectBox(id);
 		setDescriptionAndLabelFromId(result);
 		result.setSemanticContributor(true);
 		return result;

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.data;
 
+import com.google.common.collect.Lists;
+
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
@@ -510,15 +512,21 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	}
 
 	/**
-	 * Sets the values representing who this task is assigned to.
+	 * Sets the values representing who this task is assigned to if a relevant field with this semantic for
+	 * mylyn exists. Such a field uses {@code TaskAttribute.USER_ASSIGNED} for id.
 	 * 
-	 * @param valuesId
+	 * @param valueIds
 	 *            The identifier of the field values selected
-	 * @param fieldId
-	 *            The identifier of the field
 	 */
-	public void setAssignedTo(Set<Integer> valuesId, int fieldId) {
-		throw new UnsupportedOperationException();
+	public void setAssignedTo(Set<Integer> valueIds) {
+		TaskAttribute attribute = getMappedAttribute(TaskAttribute.USER_ASSIGNED);
+		if (attribute != null) {
+			List<String> values = Lists.newArrayList();
+			for (Integer valueId : valueIds) {
+				values.add(String.valueOf(valueId));
+			}
+			attribute.setValues(values);
+		}
 	}
 
 	/**
@@ -757,15 +765,6 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 */
 	private TaskAttribute getStatusTaskAttribute() {
 		return taskData.getRoot().getAttribute(TaskAttribute.STATUS);
-	}
-
-	/**
-	 * Provides access to the TaskAttribute that supports the operation to change the status.
-	 * 
-	 * @return The select box task attribute for the status.
-	 */
-	private TaskAttribute getStatusSelectBoxTaskAttribute() {
-		return taskData.getRoot().getAttribute(TaskAttribute.PREFIX_OPERATION + TaskAttribute.STATUS);
 	}
 
 	/**
