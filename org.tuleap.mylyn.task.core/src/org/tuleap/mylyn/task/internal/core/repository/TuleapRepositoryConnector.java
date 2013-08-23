@@ -46,8 +46,8 @@ import org.tuleap.mylyn.task.internal.core.client.ITuleapClient;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
-import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
@@ -80,7 +80,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	/**
 	 * The cache of the repository configurations.
 	 */
-	private final Map<String, TuleapInstanceConfiguration> repositoryConfigurations = new HashMap<String, TuleapInstanceConfiguration>();
+	private final Map<String, TuleapServerConfiguration> repositoryConfigurations = new HashMap<String, TuleapServerConfiguration>();
 
 	/**
 	 * Indicates that the cache of the repository configuration has been read.
@@ -313,7 +313,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 * @see org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector#getRepositoryConfiguration(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      boolean, org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public TuleapInstanceConfiguration getRepositoryConfiguration(TaskRepository repository,
+	public TuleapServerConfiguration getRepositoryConfiguration(TaskRepository repository,
 			boolean forceRefresh, IProgressMonitor monitor) {
 		// TODO Returns and/or update the configuration of the given repository.
 		ITuleapClient client = this.getClientManager().getClient(repository);
@@ -344,7 +344,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			String value = attributeProduct.getValue();
 			try {
 				trackerId = Integer.valueOf(value).intValue();
-				TuleapInstanceConfiguration configuration = this.getRepositoryConfiguration(taskRepository
+				TuleapServerConfiguration configuration = this.getRepositoryConfiguration(taskRepository
 						.getRepositoryUrl());
 				TuleapTrackerConfiguration trackerConfiguration = null;
 
@@ -441,7 +441,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 * @see org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector#putRepositoryConfiguration(java.lang.String,
 	 *      org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration)
 	 */
-	public void putRepositoryConfiguration(String repositoryUrl, TuleapInstanceConfiguration configuration) {
+	public void putRepositoryConfiguration(String repositoryUrl, TuleapServerConfiguration configuration) {
 		this.repositoryConfigurations.put(repositoryUrl, configuration);
 	}
 
@@ -452,7 +452,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 *            The repository url
 	 * @return The repository configuration matching the given url.
 	 */
-	public TuleapInstanceConfiguration getRepositoryConfiguration(String repositoryUrl) {
+	public TuleapServerConfiguration getRepositoryConfiguration(String repositoryUrl) {
 		this.readRepositoryConfigurationFile();
 		return repositoryConfigurations.get(repositoryUrl);
 	}
@@ -471,7 +471,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 				in = new ObjectInputStream(new FileInputStream(repositoryConfigurationFile));
 				int size = in.readInt();
 				for (int nX = 0; nX < size; nX++) {
-					TuleapInstanceConfiguration item = (TuleapInstanceConfiguration)in.readObject();
+					TuleapServerConfiguration item = (TuleapServerConfiguration)in.readObject();
 					if (item != null) {
 						repositoryConfigurations.put(item.getUrl(), item);
 					}
@@ -513,14 +513,14 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		if (repositoryConfigurationFile != null) {
 			ObjectOutputStream out = null;
 			try {
-				Set<TuleapInstanceConfiguration> tempConfigs;
+				Set<TuleapServerConfiguration> tempConfigs;
 				synchronized(repositoryConfigurations) {
-					tempConfigs = new HashSet<TuleapInstanceConfiguration>(repositoryConfigurations.values());
+					tempConfigs = new HashSet<TuleapServerConfiguration>(repositoryConfigurations.values());
 				}
 				if (tempConfigs.size() > 0) {
 					out = new ObjectOutputStream(new FileOutputStream(repositoryConfigurationFile));
 					out.writeInt(tempConfigs.size());
-					for (TuleapInstanceConfiguration repositoryConfiguration : tempConfigs) {
+					for (TuleapServerConfiguration repositoryConfiguration : tempConfigs) {
 						if (repositoryConfiguration != null) {
 							out.writeObject(repositoryConfiguration);
 						}

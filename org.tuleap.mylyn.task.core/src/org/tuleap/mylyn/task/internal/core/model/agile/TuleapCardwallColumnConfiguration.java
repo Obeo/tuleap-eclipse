@@ -19,7 +19,7 @@ import java.util.Map;
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class TuleapCardwallColumn {
+public class TuleapCardwallColumnConfiguration {
 
 	/**
 	 * The column's id.

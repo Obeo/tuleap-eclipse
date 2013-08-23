@@ -17,7 +17,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapClient;
 import org.tuleap.mylyn.task.internal.core.model.TuleapArtifact;
-import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 
 /**
  * Mock of tuleap client.
@@ -34,7 +34,7 @@ public class MockedTuleapClient implements ITuleapClient {
 	/**
 	 * Tuleap instance configuration.
 	 */
-	private TuleapInstanceConfiguration tuleapInstanceConfiguration;
+	private TuleapServerConfiguration tuleapServerConfiguration;
 
 	/**
 	 * Constructor.
@@ -44,9 +44,9 @@ public class MockedTuleapClient implements ITuleapClient {
 	 * @param instanceConfiguration
 	 *            Tuleap Instance configuration
 	 */
-	public MockedTuleapClient(TuleapArtifact artifact, TuleapInstanceConfiguration instanceConfiguration) {
+	public MockedTuleapClient(TuleapArtifact artifact, TuleapServerConfiguration instanceConfiguration) {
 		this.tuleapArtifact = artifact;
-		this.tuleapInstanceConfiguration = instanceConfiguration;
+		this.tuleapServerConfiguration = instanceConfiguration;
 	}
 
 	/**
@@ -94,8 +94,8 @@ public class MockedTuleapClient implements ITuleapClient {
 	 * 
 	 * @see org.tuleap.mylyn.task.internal.core.client.ITuleapClient#getRepositoryConfiguration()
 	 */
-	public TuleapInstanceConfiguration getRepositoryConfiguration() {
-		return tuleapInstanceConfiguration;
+	public TuleapServerConfiguration getRepositoryConfiguration() {
+		return tuleapServerConfiguration;
 	}
 
 	/**

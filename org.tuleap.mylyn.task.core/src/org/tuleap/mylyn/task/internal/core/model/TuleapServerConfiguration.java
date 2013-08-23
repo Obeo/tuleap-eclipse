@@ -17,12 +17,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This class will hold the configuration of a Tuleap instance.
+ * This class will hold the configuration of a Tuleap server instance.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
-public class TuleapInstanceConfiguration implements Serializable {
+public class TuleapServerConfiguration implements Serializable {
 
 	/**
 	 * The generated serialization ID.
@@ -50,7 +50,7 @@ public class TuleapInstanceConfiguration implements Serializable {
 	 * @param tuleapInstanceUrl
 	 *            The url of the Tuleap instance.
 	 */
-	public TuleapInstanceConfiguration(String tuleapInstanceUrl) {
+	public TuleapServerConfiguration(String tuleapInstanceUrl) {
 		this.url = tuleapInstanceUrl;
 	}
 

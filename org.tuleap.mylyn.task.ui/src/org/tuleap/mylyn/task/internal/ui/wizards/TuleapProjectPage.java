@@ -36,8 +36,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
-import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
 
@@ -150,7 +150,7 @@ public class TuleapProjectPage extends WizardPage {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException,
 						InterruptedException {
 					ITuleapRepositoryConnector connector = (ITuleapRepositoryConnector)repositoryConnector;
-					final TuleapInstanceConfiguration instanceConfiguration = connector
+					final TuleapServerConfiguration instanceConfiguration = connector
 							.getRepositoryConfiguration(TuleapProjectPage.this.repository, forceRefresh,
 									monitor);
 					projectsList.addAll(instanceConfiguration.getAllProjectConfigurations());

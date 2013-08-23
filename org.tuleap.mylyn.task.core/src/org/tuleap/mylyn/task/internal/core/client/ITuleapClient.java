@@ -17,7 +17,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.tuleap.mylyn.task.internal.core.model.TuleapArtifact;
-import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 
 /**
  * this interface represents a tuleap client.
@@ -80,7 +80,7 @@ public interface ITuleapClient {
 	 * 
 	 * @return The configuration of the repository handled by the client.
 	 */
-	TuleapInstanceConfiguration getRepositoryConfiguration();
+	TuleapServerConfiguration getRepositoryConfiguration();
 
 	/**
 	 * Execute the given query on the task repository in order to collect a set of tasks. The tasks are

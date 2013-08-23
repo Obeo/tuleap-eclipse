@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Label;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapClient;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskMapper;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
-import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapFileUpload;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
@@ -140,7 +140,7 @@ public class TuleapTaskAttachmentPage extends TaskAttachmentPage {
 		if (repositoryConnector instanceof TuleapRepositoryConnector) {
 			TuleapRepositoryConnector tuleapRepositoryConnector = (TuleapRepositoryConnector)repositoryConnector;
 			ITuleapClient client = tuleapRepositoryConnector.getClientManager().getClient(taskRepository);
-			TuleapInstanceConfiguration repositoryConfiguration = client.getRepositoryConfiguration();
+			TuleapServerConfiguration repositoryConfiguration = client.getRepositoryConfiguration();
 
 			TaskAttribute attribute = this.getModel().getAttribute();
 			TaskData taskData = attribute.getTaskData();

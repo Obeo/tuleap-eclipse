@@ -56,18 +56,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="6" language="java" name="org.tuleap.mylyn.task.internal.core.repository.TuleapTaskMapper" 
-    project="org.tuleap.mylyn.task.core" 
-    file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/repository/TuleapTaskMapper.java" 
-    binary="false" corner="BOTTOM_RIGHT">    
-    <position height="315" width="201" x="436" y="37"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
-      visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="false" static="true"/>    
-    </display>  
-  </class>  
-  <class id="7" language="java" name="org.tuleap.mylyn.task.internal.core.repository.TuleapAgileRepositoryConnector" 
+  <class id="6" language="java" name="org.tuleap.mylyn.task.internal.core.repository.TuleapAgileRepositoryConnector" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/repository/TuleapAgileRepositoryConnector.java" 
     binary="false" corner="BOTTOM_RIGHT">    
@@ -78,7 +67,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="8" language="java" name="org.tuleap.mylyn.task.internal.core.repository.TuleapTaskDataCollector" 
+  <class id="7" language="java" name="org.tuleap.mylyn.task.internal.core.repository.TuleapTaskDataCollector" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/repository/TuleapTaskDataCollector.java" 
     binary="false" corner="BOTTOM_RIGHT">    
@@ -89,7 +78,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="9" language="java" name="org.tuleap.mylyn.task.internal.core.repository.TuleapTaskMapping" 
+  <class id="8" language="java" name="org.tuleap.mylyn.task.internal.core.repository.TuleapTaskMapping" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/repository/TuleapTaskMapping.java" 
     binary="false" corner="BOTTOM_RIGHT">    
@@ -100,35 +89,35 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <realization id="10">    
-    <bendpoint x="686" y="662"/>    
-    <end type="SOURCE" refId="4"/>    
-    <end type="TARGET" refId="3"/>  
-  </realization>  
-  <association id="11">    
+  <association id="9">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="10" name="connector"/>      
+      <multiplicity id="11" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="12">    
     <end type="SOURCE" refId="4" navigable="false">      
-      <attribute id="12" name="taskDataHandler"/>      
-      <multiplicity id="13" minimum="0" maximum="1"/>    
+      <attribute id="13" name="taskDataHandler"/>      
+      <multiplicity id="14" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="14">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="15" name="connector"/>      
-      <multiplicity id="16" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="17">    
+  <association id="15">    
     <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="18" name="connector"/>      
-      <multiplicity id="19" minimum="0" maximum="1"/>    
+      <attribute id="16" name="connector"/>      
+      <multiplicity id="17" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
+  <realization id="18">    
+    <bendpoint x="686" y="662"/>    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="3"/>  
+  </realization>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    

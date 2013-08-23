@@ -17,8 +17,8 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.junit.Test;
-import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
@@ -91,7 +91,7 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 	 */
 	@Test
 	public void testGetExistingArtifact() {
-		TuleapInstanceConfiguration config = new TuleapInstanceConfiguration(getServerUrl());
+		TuleapServerConfiguration config = new TuleapServerConfiguration(getServerUrl());
 		// The artifact test data need the project Id 3 and the trackers 0, 1 and 4
 		TuleapProjectConfiguration projectConfig = new TuleapProjectConfiguration("Project 3", 3);
 		config.addProject(projectConfig);

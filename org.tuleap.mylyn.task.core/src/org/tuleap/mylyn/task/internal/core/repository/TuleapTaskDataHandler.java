@@ -37,7 +37,7 @@ import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.TuleapArtifactComment;
 import org.tuleap.mylyn.task.internal.core.model.TuleapAttachment;
-import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.AbstractTuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapDate;
@@ -185,7 +185,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		}
 
 		boolean isInitialized = false;
-		TuleapInstanceConfiguration repositoryConfiguration = connector.getRepositoryConfiguration(
+		TuleapServerConfiguration repositoryConfiguration = connector.getRepositoryConfiguration(
 				repository, false, monitor);
 		if (repositoryConfiguration != null) {
 			// Update the available attributes for the tasks
@@ -295,7 +295,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 		// Structure
 		tuleapClient.updateAttributes(monitor, false);
-		TuleapInstanceConfiguration repositoryConfiguration = tuleapClient.getRepositoryConfiguration();
+		TuleapServerConfiguration repositoryConfiguration = tuleapClient.getRepositoryConfiguration();
 		TuleapTrackerConfiguration trackerConfiguration = repositoryConfiguration
 				.getTrackerConfiguration(tuleapArtifact.getTrackerId());
 		TuleapTaskMapper mapper = new TuleapTaskMapper(taskData, trackerConfiguration);

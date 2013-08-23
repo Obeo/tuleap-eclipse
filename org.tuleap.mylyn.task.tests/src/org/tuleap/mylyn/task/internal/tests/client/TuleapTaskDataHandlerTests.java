@@ -31,9 +31,9 @@ import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.model.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.TuleapArtifactComment;
 import org.tuleap.mylyn.task.internal.core.model.TuleapAttachment;
-import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapArtifactLink;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapDate;
@@ -136,7 +136,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	/**
 	 * The configuration of the tuleap instance.
 	 */
-	private TuleapInstanceConfiguration tuleapInstanceConfiguration;
+	private TuleapServerConfiguration tuleapServerConfiguration;
 
 	/**
 	 * The configuration of the tuleap project.
@@ -172,12 +172,12 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		tuleapTrackerConfiguration.setDescription(repositoryDescription);
 		tuleapTrackerConfiguration.setItemName(itemName);
 
-		this.tuleapInstanceConfiguration = new TuleapInstanceConfiguration(repositoryUrl);
+		this.tuleapServerConfiguration = new TuleapServerConfiguration(repositoryUrl);
 
 		this.tuleapProjectConfiguration = new TuleapProjectConfiguration("Project Name", 2); //$NON-NLS-1$
 		this.tuleapProjectConfiguration.addTracker(tuleapTrackerConfiguration);
-		tuleapInstanceConfiguration.addProject(tuleapProjectConfiguration);
-		this.repositoryConnector = new MockedTuleapRepositoryConnector(tuleapInstanceConfiguration);
+		tuleapServerConfiguration.addProject(tuleapProjectConfiguration);
+		this.repositoryConnector = new MockedTuleapRepositoryConnector(tuleapServerConfiguration);
 
 		// Used to specify the tracker to use in the group
 		this.taskMapping = new TuleapTaskMapping() {
@@ -2146,7 +2146,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 	private TaskData createTaskDataFromArtifact(TuleapArtifact tuleapArtifact) {
 		TuleapTaskDataHandler tuleapTaskDataHandler = new TuleapTaskDataHandler(repositoryConnector);
 		MockedTuleapClient tuleapClient = new MockedTuleapClient(tuleapArtifact,
-				this.tuleapInstanceConfiguration);
+				this.tuleapServerConfiguration);
 		return tuleapTaskDataHandler.createTaskDataFromArtifact(tuleapClient, repository, tuleapArtifact,
 				new NullProgressMonitor());
 	}

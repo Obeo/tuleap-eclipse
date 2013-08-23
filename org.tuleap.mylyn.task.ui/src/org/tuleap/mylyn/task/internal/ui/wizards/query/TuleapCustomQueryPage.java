@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapClient;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
-import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapArtifactLink;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapComputedValue;
@@ -306,7 +306,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 	public void reloadConfiguration(final TuleapRepositoryConnector repositoryConnector) {
 		IRunnableWithProgress runnable = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-				final TuleapInstanceConfiguration instanceConfiguration = repositoryConnector
+				final TuleapServerConfiguration instanceConfiguration = repositoryConnector
 						.getRepositoryConfiguration(TuleapCustomQueryPage.this.getTaskRepository(), true,
 								monitor);
 				tuleapTrackerConfiguration = instanceConfiguration.getTrackerConfiguration(trackerId);

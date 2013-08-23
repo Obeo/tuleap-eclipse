@@ -1,20 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class-diagram version="1.1.3" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
   associations="true" dependencies="false" nesting-relationships="true">  
-  <enumeration id="1" language="java" name="org.tuleap.mylyn.task.internal.core.server.Resource" 
+  <class id="1" language="java" name="org.tuleap.mylyn.task.internal.core.server.rest.TuleapRestConnector" 
     project="org.tuleap.mylyn.task.core" 
-    file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/server/Resource.java" binary="false" 
-    corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="897" y="740"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
-      visibility="true">      
-      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </enumeration>  
-  <class id="2" language="java" name="org.tuleap.mylyn.task.internal.core.server.rest.TuleapRestConnector" 
-    project="org.tuleap.mylyn.task.core" 
-    file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/server/TuleapRestConnector.java" 
+    file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/server/rest/TuleapRestConnector.java" 
     binary="false" corner="BOTTOM_RIGHT">    
     <position height="135" width="389" x="640" y="482"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
@@ -23,7 +12,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <interface id="3" language="java" name="org.tuleap.mylyn.task.internal.core.server.ITuleapServerStatus" 
+  <interface id="2" language="java" name="org.tuleap.mylyn.task.internal.core.server.ITuleapServerStatus" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/server/ITuleapServerStatus.java" 
     binary="false" corner="BOTTOM_RIGHT">    
@@ -34,7 +23,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <interface id="4" language="java" name="org.tuleap.mylyn.task.internal.core.server.ITuleapHeaders" 
+  <interface id="3" language="java" name="org.tuleap.mylyn.task.internal.core.server.ITuleapHeaders" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/server/ITuleapHeaders.java" binary="false" 
     corner="BOTTOM_RIGHT">    
@@ -45,7 +34,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <class id="5" language="java" name="org.tuleap.mylyn.task.internal.core.server.TuleapServer" 
+  <class id="4" language="java" name="org.tuleap.mylyn.task.internal.core.server.TuleapServer" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/server/TuleapServer.java" binary="false" 
     corner="BOTTOM_RIGHT">    
@@ -56,7 +45,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <interface id="6" language="java" name="org.tuleap.mylyn.task.internal.core.server.ITuleapAPIVersions" 
+  <interface id="5" language="java" name="org.tuleap.mylyn.task.internal.core.server.ITuleapAPIVersions" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/server/ITuleapAPIVersions.java" 
     binary="false" corner="BOTTOM_RIGHT">    
@@ -67,7 +56,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <class id="7" language="java" name="org.tuleap.mylyn.task.internal.core.server.ServerResponse" 
+  <class id="6" language="java" name="org.tuleap.mylyn.task.internal.core.server.ServerResponse" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/server/ServerResponse.java" binary="false" 
     corner="BOTTOM_RIGHT">    
@@ -78,97 +67,31 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <enumeration id="8" language="java" name="org.tuleap.mylyn.task.internal.core.server.Resource.Operation" 
-    project="org.tuleap.mylyn.task.core" 
-    file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/server/Resource.java" binary="false" 
-    corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="900" y="948"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
-      visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </enumeration>  
-  <interface id="9" language="java" name="org.tuleap.mylyn.task.internal.core.server.Resource.URL" 
-    project="org.tuleap.mylyn.task.core" 
-    file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/server/Resource.java" binary="false" 
-    corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1209" y="733"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
-      visibility="true">      
-      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </interface>  
-  <dependency id="10">    
-    <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="4"/>  
-  </dependency>  
-  <nesting id="11">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="9"/>  
-  </nesting>  
-  <association id="12">    
-    <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="13" name="tuleapRestConnector"/>      
-      <multiplicity id="14" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <dependency id="15">    
-    <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="3"/>  
-  </dependency>  
-  <dependency id="16">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="7"/>  
-  </dependency>  
-  <association id="17">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="18" name="operation"/>      
-      <multiplicity id="19" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <nesting id="20">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="8"/>  
-  </nesting>  
-  <dependency id="21">    
-    <bendpoint x="1101" y="482"/>    
-    <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="6"/>  
-  </dependency>  
-  <dependency id="22">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="6"/>  
-  </dependency>  
-  <dependency id="23">    
+  <dependency id="7">    
     <bendpoint x="468" y="505"/>    
-    <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="7"/>  
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="6"/>  
   </dependency>  
-  <dependency id="24">    
-    <bendpoint x="761" y="765"/>    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="8"/>  
+  <dependency id="8">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="6"/>  
   </dependency>  
-  <dependency id="25">    
-    <bendpoint x="1059" y="482"/>    
-    <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="1"/>  
+  <association id="9">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="10" name="tuleapRestConnector"/>      
+      <multiplicity id="11" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="12">    
+    <bendpoint x="1101" y="482"/>    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="5"/>  
   </dependency>  
-  <dependency id="26">    
-    <bendpoint x="1080" y="482"/>    
-    <bendpoint x="1080" y="765"/>    
-    <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="8"/>  
-  </dependency>  
-  <dependency id="27">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="1"/>  
+  <dependency id="13">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="2"/>  
   </dependency>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     accessors="true" visibility="true">    

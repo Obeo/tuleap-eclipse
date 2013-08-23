@@ -30,8 +30,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskMapper;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
-import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapDate;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapFileUpload;
@@ -281,7 +281,7 @@ public class TuleapJsonParser {
 		int artifactId = obj.get(ID).getAsInt();
 		int trackerId = obj.get(TRACKER_ID).getAsInt();
 
-		TuleapInstanceConfiguration config = connector.getRepositoryConfiguration(taskRepository
+		TuleapServerConfiguration config = connector.getRepositoryConfiguration(taskRepository
 				.getRepositoryUrl());
 		TuleapTrackerConfiguration trackerConfig = config.getTrackerConfiguration(trackerId);
 

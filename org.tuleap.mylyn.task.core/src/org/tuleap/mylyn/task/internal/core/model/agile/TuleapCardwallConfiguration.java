@@ -23,14 +23,14 @@ import java.util.List;
 public class TuleapCardwallConfiguration {
 
 	/**
-	 * flag indicating whether the card wall is enabled.
+	 * Flag indicating whether the card wall is enabled.
 	 */
 	private final boolean enabled;
 
 	/**
 	 * Card wall column configurations.
 	 */
-	private final List<TuleapCardwallColumn> columns;
+	private final List<TuleapCardwallColumnConfiguration> columns;
 
 	/**
 	 * Constructor.
@@ -55,11 +55,11 @@ public class TuleapCardwallConfiguration {
 	/**
 	 * Add a column configuration to the card wall.
 	 * 
-	 * @param column
-	 *            The column to add.
+	 * @param columnConfig
+	 *            The column configuration to add.
 	 */
-	public void addColumn(TuleapCardwallColumn column) {
-		columns.add(column);
+	public void addColumnConfiguration(TuleapCardwallColumnConfiguration columnConfig) {
+		columns.add(columnConfig);
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class TuleapCardwallConfiguration {
 	 * 
 	 * @return An unmodifiable list view of the columns of this card wall.
 	 */
-	public List<TuleapCardwallColumn> getColumns() {
+	public List<TuleapCardwallColumnConfiguration> getColumnConfigurations() {
 		return ImmutableList.copyOf(columns);
 	}
 }

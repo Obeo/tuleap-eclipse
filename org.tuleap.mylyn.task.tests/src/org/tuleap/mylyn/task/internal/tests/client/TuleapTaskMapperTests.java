@@ -18,8 +18,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskMapper;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
-import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapDate;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapFloat;
@@ -95,7 +95,7 @@ public class TuleapTaskMapperTests {
 	/**
 	 * The configuration of the tuleap instance.
 	 */
-	private TuleapInstanceConfiguration tuleapInstanceConfiguration;
+	private TuleapServerConfiguration tuleapServerConfiguration;
 
 	/**
 	 * The configuration of the tuleap project.
@@ -828,12 +828,12 @@ public class TuleapTaskMapperTests {
 		tuleapTrackerConfiguration.setDescription(repositoryDescription);
 		tuleapTrackerConfiguration.setItemName(itemName);
 
-		this.tuleapInstanceConfiguration = new TuleapInstanceConfiguration(repositoryUrl);
+		this.tuleapServerConfiguration = new TuleapServerConfiguration(repositoryUrl);
 
 		this.tuleapProjectConfiguration = new TuleapProjectConfiguration(projectName, projectId);
 		this.tuleapProjectConfiguration.addTracker(tuleapTrackerConfiguration);
-		tuleapInstanceConfiguration.addProject(tuleapProjectConfiguration);
-		this.repositoryConnector = new MockedTuleapRepositoryConnector(tuleapInstanceConfiguration);
+		tuleapServerConfiguration.addProject(tuleapProjectConfiguration);
+		this.repositoryConnector = new MockedTuleapRepositoryConnector(tuleapServerConfiguration);
 
 		this.attributeMapper = new TuleapAttributeMapper(repository, repositoryConnector);
 		this.taskData = new TaskData(attributeMapper, connectorKind, repositoryUrl, "task1"); //$NON-NLS-1$

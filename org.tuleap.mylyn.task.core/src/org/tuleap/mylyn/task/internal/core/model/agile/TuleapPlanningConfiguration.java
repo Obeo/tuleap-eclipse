@@ -16,7 +16,7 @@ package org.tuleap.mylyn.task.internal.core.model.agile;
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class TuleapPlanning extends AbstractTuleapAgileElement {
+public class TuleapPlanningConfiguration extends AbstractTuleapAgileElement {
 
 	/**
 	 * The human readable name of the planning.

@@ -21,8 +21,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.config.ITuleapConfigurationConstants;
 import org.tuleap.mylyn.task.internal.core.model.TuleapArtifact;
-import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerReport;
 import org.tuleap.mylyn.task.internal.core.net.TuleapSoapConnector;
@@ -98,18 +98,18 @@ public class TuleapSoapConnectorTests {
 
 		tuleapTrackerAPI.setTrackers(tracker1, tracker2, tracker3);
 
-		TuleapInstanceConfiguration tuleapInstanceConfiguration = tuleapSoapConnector
+		TuleapServerConfiguration tuleapServerConfiguration = tuleapSoapConnector
 				.getTuleapInstanceConfiguration(new NullProgressMonitor());
-		assertNotNull(tuleapInstanceConfiguration);
+		assertNotNull(tuleapServerConfiguration);
 
-		List<TuleapProjectConfiguration> allProjectConfigurations = tuleapInstanceConfiguration
+		List<TuleapProjectConfiguration> allProjectConfigurations = tuleapServerConfiguration
 				.getAllProjectConfigurations();
 		assertEquals(1, allProjectConfigurations.size());
 		List<TuleapTrackerConfiguration> tuleapTrackerConfigurations = allProjectConfigurations.get(0)
 				.getAllTrackerConfigurations();
 		assertEquals(3, tuleapTrackerConfigurations.size());
 
-		TuleapTrackerConfiguration tuleapTrackerConfiguration1 = tuleapInstanceConfiguration
+		TuleapTrackerConfiguration tuleapTrackerConfiguration1 = tuleapServerConfiguration
 				.getTrackerConfiguration(1);
 		assertEquals(tracker1.getTracker_id(), tuleapTrackerConfiguration1.getTrackerId());
 		assertEquals(tracker1.getName(), tuleapTrackerConfiguration1.getName());

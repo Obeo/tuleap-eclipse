@@ -50,9 +50,9 @@ import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.TuleapArtifactComment;
 import org.tuleap.mylyn.task.internal.core.model.TuleapAttachment;
-import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerReport;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapArtifactLink;
@@ -314,8 +314,8 @@ public class TuleapSoapConnector {
 	 *            The progress monitor
 	 * @return The configuration of the Tuleap instance.
 	 */
-	public TuleapInstanceConfiguration getTuleapInstanceConfiguration(IProgressMonitor monitor) {
-		TuleapInstanceConfiguration tuleapInstanceConfiguration = new TuleapInstanceConfiguration(
+	public TuleapServerConfiguration getTuleapInstanceConfiguration(IProgressMonitor monitor) {
+		TuleapServerConfiguration tuleapServerConfiguration = new TuleapServerConfiguration(
 				this.trackerLocation.getUrl());
 		try {
 			this.login(monitor);
@@ -340,7 +340,7 @@ public class TuleapSoapConnector {
 				if (trackers.length > 0) {
 					TuleapProjectConfiguration tuleapProjectConfiguration = new TuleapProjectConfiguration(
 							group.getGroup_name(), groupId);
-					tuleapInstanceConfiguration.addProject(tuleapProjectConfiguration);
+					tuleapServerConfiguration.addProject(tuleapProjectConfiguration);
 
 					for (Tracker tracker : trackers) {
 						monitor.worked(5);
@@ -361,7 +361,7 @@ public class TuleapSoapConnector {
 		}
 
 		this.logout();
-		return tuleapInstanceConfiguration;
+		return tuleapServerConfiguration;
 	}
 
 	/**

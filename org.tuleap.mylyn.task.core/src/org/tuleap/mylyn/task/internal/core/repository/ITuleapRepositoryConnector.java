@@ -13,7 +13,7 @@ package org.tuleap.mylyn.task.internal.core.repository;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapClientManager;
-import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 
 /**
  * This interface represents a Tuleap repository connector.
@@ -36,7 +36,7 @@ public interface ITuleapRepositoryConnector {
 	 *            the URL of the repository
 	 * @return The configuration of the Tuleap repository.
 	 */
-	TuleapInstanceConfiguration getRepositoryConfiguration(String repositoryUrl);
+	TuleapServerConfiguration getRepositoryConfiguration(String repositoryUrl);
 
 	/**
 	 * Returns the configuration of the Tuleap repository.
@@ -49,7 +49,7 @@ public interface ITuleapRepositoryConnector {
 	 *            the progress monitor
 	 * @return The configuration of the Tuleap repository.
 	 */
-	TuleapInstanceConfiguration getRepositoryConfiguration(TaskRepository taskRepository,
+	TuleapServerConfiguration getRepositoryConfiguration(TaskRepository taskRepository,
 			boolean forceRefresh, IProgressMonitor monitor);
 
 	/**
@@ -60,5 +60,5 @@ public interface ITuleapRepositoryConnector {
 	 * @param configuration
 	 *            The configuration
 	 */
-	void putRepositoryConfiguration(String repositoryUrl, TuleapInstanceConfiguration configuration);
+	void putRepositoryConfiguration(String repositoryUrl, TuleapServerConfiguration configuration);
 }

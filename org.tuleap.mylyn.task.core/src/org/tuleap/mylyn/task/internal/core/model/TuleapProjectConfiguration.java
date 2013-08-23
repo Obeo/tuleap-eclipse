@@ -11,10 +11,12 @@
 package org.tuleap.mylyn.task.internal.core.model;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +35,7 @@ public class TuleapProjectConfiguration implements Serializable {
 	/**
 	 * This map contains the ID of the tracker of the Tuleap instance and their matching configuration.
 	 */
-	private Map<Integer, TuleapTrackerConfiguration> trackerId2trackerConfiguration = new HashMap<Integer, TuleapTrackerConfiguration>();
+	private Map<Integer, TuleapTrackerConfiguration> trackerId2trackerConfiguration = Maps.newHashMap();
 
 	/**
 	 * The name of the project.
@@ -49,6 +51,11 @@ public class TuleapProjectConfiguration implements Serializable {
 	 * The list of active services for this project.
 	 */
 	private final List<String> services = Lists.newArrayList();
+
+	/**
+	 * User groups indexed by id.
+	 */
+	private final Map<Integer, TuleapGroup> groupsById = Maps.newHashMap();
 
 	/**
 	 * The constructor.
@@ -133,5 +140,36 @@ public class TuleapProjectConfiguration implements Serializable {
 	 */
 	public boolean hasService(String service) {
 		return services.contains(service);
+	}
+
+	/**
+	 * Registers a user group with this project configuration.
+	 * 
+	 * @param group
+	 *            User group to register with this project. Must not be {@code null}.
+	 */
+	public void addGroup(TuleapGroup group) {
+		groupsById.put(Integer.valueOf(group.getId()), group);
+	}
+
+	/**
+	 * Provides the group with the given id, or {@code null} if the given id matches no registered group of
+	 * this project.
+	 * 
+	 * @param groupId
+	 *            The id of the group being looked for.
+	 * @return The group with the given id if it is registered with this project, {@code null} otherwise.
+	 */
+	public TuleapGroup getGroup(int groupId) {
+		return groupsById.get(Integer.valueOf(groupId));
+	}
+
+	/**
+	 * Provides all the registered groups of this project.
+	 * 
+	 * @return An unmodifiable view of the user groups registered with this project.
+	 */
+	public Collection<TuleapGroup> getAllGroups() {
+		return Collections.unmodifiableCollection(groupsById.values());
 	}
 }

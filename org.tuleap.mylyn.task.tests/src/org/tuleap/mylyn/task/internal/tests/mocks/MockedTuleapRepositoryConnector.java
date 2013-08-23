@@ -23,7 +23,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.model.TuleapArtifact;
-import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
@@ -42,7 +42,7 @@ public class MockedTuleapRepositoryConnector extends AbstractRepositoryConnector
 	/**
 	 * The configuration to be returned.
 	 */
-	private TuleapInstanceConfiguration configuration;
+	private TuleapServerConfiguration configuration;
 
 	/**
 	 * The attachement handler.
@@ -52,25 +52,25 @@ public class MockedTuleapRepositoryConnector extends AbstractRepositoryConnector
 	/**
 	 * The constructor.
 	 * 
-	 * @param tuleapInstanceConfiguration
+	 * @param tuleapServerConfiguration
 	 *            The configuration that will be returned for the unit test.
 	 * @param artifact
 	 *            Tuleap Artifact
 	 */
-	public MockedTuleapRepositoryConnector(TuleapInstanceConfiguration tuleapInstanceConfiguration,
+	public MockedTuleapRepositoryConnector(TuleapServerConfiguration tuleapServerConfiguration,
 			TuleapArtifact artifact) {
-		this.configuration = tuleapInstanceConfiguration;
+		this.configuration = tuleapServerConfiguration;
 		this.tuleapArtifact = artifact;
 	}
 
 	/**
 	 * The constructor.
 	 * 
-	 * @param tuleapInstanceConfiguration
+	 * @param tuleapServerConfiguration
 	 *            The configuration that will be returned for the unit test.
 	 */
-	public MockedTuleapRepositoryConnector(TuleapInstanceConfiguration tuleapInstanceConfiguration) {
-		this.configuration = tuleapInstanceConfiguration;
+	public MockedTuleapRepositoryConnector(TuleapServerConfiguration tuleapServerConfiguration) {
+		this.configuration = tuleapServerConfiguration;
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class MockedTuleapRepositoryConnector extends AbstractRepositoryConnector
 	 * 
 	 * @see org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector#getRepositoryConfiguration(java.lang.String)
 	 */
-	public TuleapInstanceConfiguration getRepositoryConfiguration(String repositoryUrl) {
+	public TuleapServerConfiguration getRepositoryConfiguration(String repositoryUrl) {
 		if (configuration.getUrl().equals(repositoryUrl)) {
 			return configuration;
 		}
@@ -101,7 +101,7 @@ public class MockedTuleapRepositoryConnector extends AbstractRepositoryConnector
 	 * @see org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector#getRepositoryConfiguration(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      boolean, org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public TuleapInstanceConfiguration getRepositoryConfiguration(TaskRepository taskRepository,
+	public TuleapServerConfiguration getRepositoryConfiguration(TaskRepository taskRepository,
 			boolean forceRefresh, IProgressMonitor monitor) {
 		return this.configuration;
 	}
@@ -110,10 +110,10 @@ public class MockedTuleapRepositoryConnector extends AbstractRepositoryConnector
 	 * {@inheritDoc}
 	 * 
 	 * @see org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector#putRepositoryConfiguration(java.lang.String,
-	 *      org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration)
+	 *      org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration)
 	 */
 	public void putRepositoryConfiguration(String repositoryUrl,
-			TuleapInstanceConfiguration tuleapInstanceConfiguration) {
+			TuleapServerConfiguration tuleapServerConfiguration) {
 		// do nothing
 	}
 

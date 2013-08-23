@@ -26,8 +26,8 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
-import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerReport;
 import org.tuleap.mylyn.task.internal.core.net.TuleapAttachmentDescriptor;
@@ -146,12 +146,12 @@ public class TuleapServer {
 	 * @throws CoreException
 	 *             In case of error during the retrieval of the configuration
 	 */
-	public TuleapInstanceConfiguration getTuleapServerConfiguration(IProgressMonitor monitor)
+	public TuleapServerConfiguration getTuleapServerConfiguration(IProgressMonitor monitor)
 			throws CoreException {
 		// Test the connection
 		RestResources restResources = tuleapRestConnector.resources(credentials);
 
-		TuleapInstanceConfiguration tuleapServerConfiguration = null;
+		TuleapServerConfiguration tuleapServerConfiguration = null;
 
 		// Check that we can get the list of projects
 		RestProjects restProjects = restResources.projects();

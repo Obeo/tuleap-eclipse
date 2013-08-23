@@ -36,8 +36,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapClient;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskMapper;
-import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapFileUpload;
 import org.tuleap.mylyn.task.internal.core.net.TuleapAttachmentDescriptor;
@@ -158,7 +158,7 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 		ITuleapClient client = this.connector.getClientManager().getClient(repository);
 
 		if (client != null && projectName != null && trackerName != null) {
-			TuleapInstanceConfiguration repositoryConfiguration = client.getRepositoryConfiguration();
+			TuleapServerConfiguration repositoryConfiguration = client.getRepositoryConfiguration();
 			List<TuleapProjectConfiguration> allProjectConfigurations = repositoryConfiguration
 					.getAllProjectConfigurations();
 			for (TuleapProjectConfiguration tuleapProjectConfiguration : allProjectConfigurations) {
@@ -246,7 +246,7 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 
 		// Let's find the tracker configuration
 		ITuleapClient client = this.connector.getClientManager().getClient(repository);
-		TuleapInstanceConfiguration repositoryConfiguration = client.getRepositoryConfiguration();
+		TuleapServerConfiguration repositoryConfiguration = client.getRepositoryConfiguration();
 
 		// If the attachement attribute is available, let's use it
 		if (attachmentAttribute != null) {

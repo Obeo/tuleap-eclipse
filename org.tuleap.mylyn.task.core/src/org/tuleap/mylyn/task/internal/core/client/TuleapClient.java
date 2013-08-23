@@ -27,7 +27,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.model.TuleapArtifact;
-import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.net.TuleapSoapConnector;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapTaskDataHandler;
@@ -55,7 +55,7 @@ public class TuleapClient implements ITuleapClient {
 	/**
 	 * The configuration of the repository.
 	 */
-	private TuleapInstanceConfiguration configuration;
+	private TuleapServerConfiguration configuration;
 
 	/**
 	 * The task repository.
@@ -77,7 +77,7 @@ public class TuleapClient implements ITuleapClient {
 		this.location = weblocation;
 		this.taskRepository = repository;
 		this.repositoryConnector = connector;
-		this.configuration = new TuleapInstanceConfiguration(this.location.getUrl());
+		this.configuration = new TuleapServerConfiguration(this.location.getUrl());
 	}
 
 	/**
@@ -133,7 +133,7 @@ public class TuleapClient implements ITuleapClient {
 	private void updateAttributes(IProgressMonitor monitor) {
 		TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(location);
 
-		TuleapInstanceConfiguration newConfiguration = tuleapSoapConnector
+		TuleapServerConfiguration newConfiguration = tuleapSoapConnector
 				.getTuleapInstanceConfiguration(monitor);
 		if (newConfiguration != null) {
 			this.configuration = newConfiguration;
@@ -225,7 +225,7 @@ public class TuleapClient implements ITuleapClient {
 	 * 
 	 * @see org.tuleap.mylyn.task.internal.core.client.ITuleapClient#getRepositoryConfiguration()
 	 */
-	public TuleapInstanceConfiguration getRepositoryConfiguration() {
+	public TuleapServerConfiguration getRepositoryConfiguration() {
 		return this.configuration;
 	}
 

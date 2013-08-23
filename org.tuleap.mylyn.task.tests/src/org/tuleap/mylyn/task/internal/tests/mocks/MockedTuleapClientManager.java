@@ -14,7 +14,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapClient;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.model.TuleapArtifact;
-import org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 
 /**
  * Mock of tuleap client manager.
@@ -31,7 +31,7 @@ public class MockedTuleapClientManager implements ITuleapClientManager {
 	/**
 	 * Tuleap instance configuration.
 	 */
-	private TuleapInstanceConfiguration tuleapInstanceConfiguration;
+	private TuleapServerConfiguration tuleapServerConfiguration;
 
 	/**
 	 * Constructor.
@@ -42,9 +42,9 @@ public class MockedTuleapClientManager implements ITuleapClientManager {
 	 *            Tuleap Instance configuration
 	 */
 	public MockedTuleapClientManager(TuleapArtifact artifact,
-			TuleapInstanceConfiguration instanceConfiguration) {
+			TuleapServerConfiguration instanceConfiguration) {
 		this.tuleapArtifact = artifact;
-		this.tuleapInstanceConfiguration = instanceConfiguration;
+		this.tuleapServerConfiguration = instanceConfiguration;
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class MockedTuleapClientManager implements ITuleapClientManager {
 	 * @see org.tuleap.mylyn.task.internal.core.client.ITuleapClientManager#getClient(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
 	public ITuleapClient getClient(TaskRepository taskRepository) {
-		return new MockedTuleapClient(tuleapArtifact, tuleapInstanceConfiguration);
+		return new MockedTuleapClient(tuleapArtifact, tuleapServerConfiguration);
 	}
 
 }

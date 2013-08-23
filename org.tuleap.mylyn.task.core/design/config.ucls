@@ -100,7 +100,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="10" language="java" name="org.tuleap.mylyn.task.internal.core.model.TuleapInstanceConfiguration" 
+  <class id="10" language="java" name="org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/TuleapInstanceConfiguration.java" 
     binary="false" corner="BOTTOM_RIGHT">    
