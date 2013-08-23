@@ -19,6 +19,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -330,7 +331,13 @@ public class TuleapJsonParser {
 				TuleapSelectBox selectBox = (TuleapSelectBox)fieldConfig;
 				JsonObject bindValue = fieldValue.get(BIND_VALUE).getAsJsonObject();
 				int bindValueId = bindValue.get(BIND_VALUE_ID).getAsInt();
-				mapper.setSelectBoxValue(bindValueId, fieldId);
+				if (selectBox.isSemanticStatus()) {
+					mapper.setStatus(String.valueOf(bindValueId));
+				} else if (selectBox.isSemanticContributor()) {
+					mapper.setAssignedTo(Collections.singleton(Integer.valueOf(bindValueId)));
+				} else {
+					mapper.setSelectBoxValue(bindValueId, fieldId);
+				}
 			} else if (fieldConfig instanceof TuleapMultiSelectBox) {
 				TuleapSelectBox selectBox = (TuleapSelectBox)fieldConfig;
 				JsonArray bindValues = fieldValue.get(BIND_VALUES).getAsJsonArray();
@@ -340,9 +347,16 @@ public class TuleapJsonParser {
 					int bindValueId = object.get(BIND_VALUE_ID).getAsInt();
 					valueIds.add(Integer.valueOf(bindValueId));
 				}
-				mapper.setMultiSelectBoxValues(valueIds, fieldId);
+				if (selectBox.isSemanticStatus()) {
+					// TODO Support multiple status?
+					mapper.setStatus(valueIds.iterator().next().toString());
+				} else if (selectBox.isSemanticContributor()) {
+					mapper.setAssignedTo(valueIds);
+				} else {
+					mapper.setMultiSelectBoxValues(valueIds, fieldId);
+				}
 			} else if (fieldConfig instanceof TuleapFileUpload) {
-				// TODO
+				// TODO is there something to do here?
 			} else if (fieldConfig instanceof TuleapInteger) {
 				mapper.setValue(String.valueOf(fieldValue.get(VALUE).getAsInt()), fieldId);
 			} else if (fieldConfig instanceof TuleapFloat) {
