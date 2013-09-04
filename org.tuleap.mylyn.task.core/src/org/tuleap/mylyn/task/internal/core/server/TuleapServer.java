@@ -13,6 +13,10 @@ package org.tuleap.mylyn.task.internal.core.server;
 // By design, tThis class should have no dependency to
 // - com.google.json
 // - org.restlet
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -185,6 +189,22 @@ public class TuleapServer {
 						for (TuleapTrackerConfiguration trackerConfig : trackerConfigurations) {
 							projectConfig.addTracker(trackerConfig);
 						}
+
+						// adding the properties parent/children to trackers
+						JsonParser trackersParser = new JsonParser();
+						JsonArray trackersArray = trackersParser.parse(projectTrackersGetResponseBody)
+								.getAsJsonArray();
+
+						for (int i = 0; i < trackersArray.size(); i++) {
+							JsonObject tracker = (JsonObject)trackersArray.get(i);
+							int trackerId = tracker.get("id").getAsInt(); //$NON-NLS-1$
+							JsonObject hierarchy = tracker.get("hierarchy").getAsJsonObject(); //$NON-NLS-1$
+							int parentTrackerId = hierarchy.get("parent_tracker_id").getAsInt(); //$NON-NLS-1$
+
+							projectConfig.getTrackerConfiguration(trackerId).setParentTracker(
+									projectConfig.getTrackerConfiguration(parentTrackerId));
+						}
+
 					} else {
 						// Invalid login? server error?
 						String message = this.jsonParser.getErrorMessage(projectTrackersGetServerResponse
