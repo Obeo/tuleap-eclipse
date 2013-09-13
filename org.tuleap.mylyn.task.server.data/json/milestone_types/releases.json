@@ -1,0 +1,61 @@
+{
+  "id" : 901,
+  "label" : "Releases",
+  "description" : "The description of Releases",
+  "url" : "localhost:3001/api/v3.14/milestone_types/901",
+  "project_id" : 3,
+  "fields" : [
+      {
+        "field_id" : 950,
+        "label" : "Title",
+        "type" : "string",
+        "permissions" : [
+            "read", "create", "update"
+        ]
+      }, {
+        "field_id" : 951,
+        "label" : "Status",
+        "values" : [
+            {
+              "field_value_id" : 1050,
+              "field_value_label" : "Planned"
+            }, {
+              "field_value_id" : 1051,
+              "field_value_label" : "On going"
+            }, {
+              "field_value_id" : 1052,
+              "field_value_label" : "Delivered"
+            }
+        ]
+      }, {
+        "field_id" : 952,
+        "label" : "Remaining Effort",
+        "type" : "float",
+        "permissions" : [
+          "read"
+        ]
+      }, {
+        "field_id" : 953,
+        "label" : "Version",
+        "type" : "string",
+        "permissions" : [
+            "read", "create", "update"
+        ]
+      }, {
+        "field_id" : 954,
+        "label" : "In release",
+        "type" : "string",
+        "permissions" : [
+            "read", "create", "update"
+        ]
+      }
+  ],
+  "semantic" : {
+    "title" : {
+      "field_id" : 950
+    },
+    "status" : {
+      "field_id" : 951
+    }
+  }
+}

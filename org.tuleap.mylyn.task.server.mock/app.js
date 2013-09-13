@@ -84,6 +84,23 @@ var artifacts = require('./controllers/artifacts.js');
 app.options('/api/v3.14/artifacts/:artifactId', auth, artifacts.options);
 app.get('/api/v3.14/artifacts/:artifactId', auth, artifacts.get);
 
+// Milestone types
+var milestone_types = require('./controllers/milestone_types.js');
+// Getting all the milestone types of a project
+app.options('/api/v3.14/projects/:projectId/milestone_types', auth, milestone_types.optionsList);
+app.get('/api/v3.14/projects/:projectId/milestone_types', auth, milestone_types.list);
+// Getting a milestone type by id
+app.options('/api/v3.14/milestone_types/:typeId', auth, milestone_types.options);
+app.get('/api/v3.14/milestone_types/:typeId', auth, milestone_types.get);
+
+// --------------- API-DOCS ---------------
+var apiDocs = require('./controllers/api-docs.js');
+app.options('/api/v3.14/api-docs', apiDocs.options);
+app.get('/api/v3.14/api-docs', apiDocs.get);
+app.get('/api/v3.14/api-docs/milestones', apiDocs.milestones);
+app.get('/api/v3.14/api-docs/plannings', apiDocs.plannings);
+
+
 // Launch the server
 app.listen(3001);
 console.log("Express server listening on port 3001");

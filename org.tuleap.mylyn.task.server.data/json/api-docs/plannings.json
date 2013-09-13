@@ -1,0 +1,52 @@
+{
+  "apiVersion": "3.14",
+  "swaggerVersion": "1.2",
+  "basePath": "http://localhost:3001/api",
+  "resourcePath": "/plannings",
+  "apis" : [
+    {
+      "path":"/plannings/{planningId}",
+      "description":"Operations about plannings",
+      "operations":[
+        {
+          "method":"OPTIONS",
+          "nickname":"optionsOfPlannings",
+          "type":"Planning",
+          "parameters":[],
+          "summary":"description of the resource",
+          "notes": "",
+          "responseMessages":[ ]
+        },
+        {
+          "method":"GET",
+          "nickname":"getPlanningById",
+          "type":"Planning",
+          "parameters":[],
+          "summary":"Find planning by its unique ID",
+          "notes": "Only Plannings which you have permission to see will be returned",
+          "responseMessages":[ ]
+        }
+      ]
+    }
+  ],
+  "models" : {
+    "Planning": {
+      "id":"Planning",
+      "required": ["id", "project_id"],
+      "properties":{
+        "id": {"type":"integer","format":"int32"},
+        "project_id": {"type":"integer","format":"int32","description":"The id of the planning's project"},
+        "label": {"type":"string", "description":"Does a planning really have a label?"},
+        "backlog_label": {"type":"string", "description":"The label to use for the backlogs of this planning"},
+        "plan_label": {"type":"string","description":"What is this for?"},
+        "milestone_ids": {
+          "type":"array",
+          "items": {
+            "$ref":"integer"
+          },
+          "description":"The IDs of the milestones of the planning."
+        }
+      }
+    }
+  }
+}

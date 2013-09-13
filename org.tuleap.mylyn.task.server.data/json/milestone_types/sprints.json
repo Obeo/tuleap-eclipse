@@ -1,0 +1,79 @@
+{
+  "id" : 902,
+  "label" : "Sprints",
+  "description" : "The description of sprints",
+  "url" : "localhost:3001/api/v3.14/milestone_types/902",
+  "project_id" : 3,
+  "fields" : [
+      {
+        "field_id" : 960,
+        "label" : "Name",
+        "type" : "string",
+        "permissions" : [
+            "read", "create", "update"
+        ]
+      }, {
+        "field_id" : 961,
+        "label" : "Status",
+        "type" : "sb",
+        "values" : [
+            {
+              "field_value_id" : 1060,
+              "field_value_label" : "Planned"
+            }, {
+              "field_value_id" : 1061,
+              "field_value_label" : "Current"
+            }, {
+              "field_value_id" : 1062,
+              "field_value_label" : "Done"
+            }
+        ],
+        "permissions" : [
+            "read", "create", "update"
+        ]
+      }, {
+        "field_id" : 962,
+        "label" : "Linked Artifacts",
+        "type" : "string",
+        "permissions" : [
+          "read", "update", "delete"
+        ]
+      }, {
+        "field_id" : 963,
+        "label" : "Start date",
+        "type" : "date",
+        "permissions" : [
+            "read", "create", "update"
+        ]
+      }, {
+        "field_id" : 964,
+        "label" : "Duration",
+        "type" : "float",
+        "permissions" : [
+            "read", "create", "update"
+        ]
+      }, {
+        "field_id" : 965,
+        "label" : "Capacity",
+        "type" : "float",
+        "permissions" : [
+            "read", "create", "update"
+        ]
+      }, {
+        "field_id" : 966,
+        "label" : "Remaining Effort",
+        "type" : "float",
+        "permissions" : [
+            "read"
+        ]
+      }
+  ],
+  "semantic" : {
+    "title" : {
+      "field_id" : 960
+    },
+    "status" : {
+      "field_id" : 961
+    }
+  }
+}
