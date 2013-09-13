@@ -172,4 +172,23 @@ public class TuleapMilestone extends AbstractTuleapAgileElement {
 		return ImmutableList.copyOf(this.subMilestones);
 	}
 
+	/**
+	 * Adds a new sub-milestone to this milestone.
+	 * 
+	 * @param backlogItem
+	 *            The backlog item to add.
+	 */
+	public void addSubMilestone(TuleapBacklogItem backlogItem) {
+		this.backlogItems.add(backlogItem);
+	}
+
+	/**
+	 * Provides the backlog items of this milestone.
+	 * 
+	 * @return An unmodifiable list view of the backlog items of this milestone.
+	 */
+	public List<TuleapBacklogItem> getBacklogItems() {
+		return ImmutableList.copyOf(this.backlogItems);
+	}
+
 }
