@@ -18,13 +18,13 @@
         "type" : "sb",
         "values" : [
             {
-              "field_value_id" : 1060,
+              "field_value_id" : 9610,
               "field_value_label" : "Planned"
             }, {
-              "field_value_id" : 1061,
+              "field_value_id" : 9611,
               "field_value_label" : "Current"
             }, {
-              "field_value_id" : 1062,
+              "field_value_id" : 9612,
               "field_value_label" : "Done"
             }
         ],
@@ -34,9 +34,9 @@
       }, {
         "field_id" : 962,
         "label" : "Linked Artifacts",
-        "type" : "string",
+        "type" : "art_link",
         "permissions" : [
-          "read", "update", "delete"
+            "read", "update", "delete"
         ]
       }, {
         "field_id" : 963,
@@ -62,9 +62,9 @@
       }, {
         "field_id" : 966,
         "label" : "Remaining Effort",
-        "type" : "computed",
+        "type" : "float",
         "permissions" : [
-            "read"
+          "read"
         ]
       }
   ],
@@ -73,7 +73,10 @@
       "field_id" : 960
     },
     "status" : {
-      "field_id" : 961
+      "field_id" : 961,
+      "open_status_field_values_ids" : [
+          9610, 9611, 9612
+      ]
     }
   }
 }

@@ -18,13 +18,13 @@
             "label" : "Status",
             "values" : [
                 {
-                  "field_value_id" : 1050,
+                  "field_value_id" : 9510,
                   "field_value_label" : "Planned"
                 }, {
-                  "field_value_id" : 1051,
+                  "field_value_id" : 9511,
                   "field_value_label" : "On going"
                 }, {
-                  "field_value_id" : 1052,
+                  "field_value_id" : 9512,
                   "field_value_label" : "Delivered"
                 }
             ]
@@ -45,7 +45,7 @@
           }, {
             "field_id" : 954,
             "label" : "In release",
-            "type" : "string",
+            "type" : "art_link",
             "permissions" : [
                 "read", "create", "update"
             ]
@@ -56,7 +56,10 @@
           "field_id" : 950
         },
         "status" : {
-          "field_id" : 951
+          "field_id" : 951,
+          "open_status_field_values_ids" : [
+              9510, 9511, 9512
+          ]
         }
       }
     }, {
@@ -79,13 +82,13 @@
             "type" : "sb",
             "values" : [
                 {
-                  "field_value_id" : 1060,
+                  "field_value_id" : 9610,
                   "field_value_label" : "Planned"
                 }, {
-                  "field_value_id" : 1061,
+                  "field_value_id" : 9611,
                   "field_value_label" : "Current"
                 }, {
-                  "field_value_id" : 1062,
+                  "field_value_id" : 9612,
                   "field_value_label" : "Done"
                 }
             ],
@@ -95,9 +98,9 @@
           }, {
             "field_id" : 962,
             "label" : "Linked Artifacts",
-            "type" : "string",
+            "type" : "art_link",
             "permissions" : [
-              "read", "update", "delete"
+                "read", "update", "delete"
             ]
           }, {
             "field_id" : 963,
@@ -125,7 +128,7 @@
             "label" : "Remaining Effort",
             "type" : "float",
             "permissions" : [
-                "read"
+              "read"
             ]
           }
       ],
@@ -134,7 +137,10 @@
           "field_id" : 960
         },
         "status" : {
-          "field_id" : 961
+          "field_id" : 961,
+          "open_status_field_values_ids" : [
+              9610, 9611, 9612
+          ]
         }
       }
     }
