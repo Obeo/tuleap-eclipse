@@ -20,6 +20,11 @@ import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapFieldContainerCon
 public class TuleapCardType extends AbstractTuleapFieldContainerConfig {
 
 	/**
+	 * The serial version UID.
+	 */
+	private static final long serialVersionUID = -5407014401984400730L;
+
+	/**
 	 * The default constructor.
 	 * 
 	 * @param trackerIdentifier
@@ -37,9 +42,9 @@ public class TuleapCardType extends AbstractTuleapFieldContainerConfig {
 	 * @param repositoryURL
 	 *            The URL of the repository.
 	 * @param repositoryName
-	 *            The name of the repository
+	 *            The label of the repository
 	 * @param repositoryItemName
-	 *            The item name of the repository
+	 *            The item label of the repository
 	 * @param repositoryDescription
 	 *            The description of the repository
 	 */

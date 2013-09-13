@@ -57,7 +57,7 @@ public class TuleapProjectConfiguration implements Serializable {
 	private Map<Integer, TuleapCardType> cardTypesById = Maps.newHashMap();
 
 	/**
-	 * The name of the project.
+	 * The label of the project.
 	 */
 	private String name;
 
@@ -80,7 +80,7 @@ public class TuleapProjectConfiguration implements Serializable {
 	 * The constructor.
 	 * 
 	 * @param projectName
-	 *            The name of the project
+	 *            The label of the project
 	 * @param projectIdentifier
 	 *            The identifier of the project
 	 */
@@ -122,9 +122,102 @@ public class TuleapProjectConfiguration implements Serializable {
 	}
 
 	/**
-	 * Returns the name of the project.
+	 * Adds the given milestone type in the project configuration.
 	 * 
-	 * @return The name of the project
+	 * @param milestoneType
+	 *            The configuration of a milestone type.
+	 */
+	public void addMilestoneType(TuleapMilestoneType milestoneType) {
+		this.milestoneTypesById.put(Integer.valueOf(milestoneType.identifier), milestoneType);
+		milestoneType.setTuleapProjectConfiguration(this);
+	}
+
+	/**
+	 * Returns the Milestone type configuration for the given milestone type id.
+	 * 
+	 * @param milestoneTypeId
+	 *            the id of the milestone type
+	 * @return The Milestone type configuration for the given milestone type id.
+	 */
+	public TuleapMilestoneType getMilestoneType(int milestoneTypeId) {
+		return this.milestoneTypesById.get(Integer.valueOf(milestoneTypeId));
+	}
+
+	/**
+	 * Returns the list of all the milestone type for this project.
+	 * 
+	 * @return The list of all the milestone type for this project.
+	 */
+	public List<TuleapMilestoneType> getAllMilestoneTypes() {
+		return new ArrayList<TuleapMilestoneType>(this.milestoneTypesById.values());
+	}
+
+	/**
+	 * Adds the given backlogItem type in the project configuration.
+	 * 
+	 * @param backlogItemType
+	 *            The configuration of a backlogItem type.
+	 */
+	public void addBacklogItemType(TuleapBacklogItemType backlogItemType) {
+		this.backlogItemTypesById.put(Integer.valueOf(backlogItemType.identifier), backlogItemType);
+		backlogItemType.setTuleapProjectConfiguration(this);
+	}
+
+	/**
+	 * Returns the BacklogItem type configuration for the given backlogItem type id.
+	 * 
+	 * @param backlogItemTypeId
+	 *            the id of the backlogItem type
+	 * @return The BacklogItem type configuration for the given backlogItem type id.
+	 */
+	public TuleapBacklogItemType getBacklogItemType(int backlogItemTypeId) {
+		return this.backlogItemTypesById.get(Integer.valueOf(backlogItemTypeId));
+	}
+
+	/**
+	 * Returns the list of all the backlogItem type for this project.
+	 * 
+	 * @return The list of all the backlogItem type for this project.
+	 */
+	public List<TuleapBacklogItemType> getAllBacklogItemTypes() {
+		return new ArrayList<TuleapBacklogItemType>(this.backlogItemTypesById.values());
+	}
+
+	/**
+	 * Adds the given card type in the project configuration.
+	 * 
+	 * @param cardType
+	 *            The configuration of a card type.
+	 */
+	public void addCardType(TuleapCardType cardType) {
+		this.cardTypesById.put(Integer.valueOf(cardType.identifier), cardType);
+		cardType.setTuleapProjectConfiguration(this);
+	}
+
+	/**
+	 * Returns the Card type configuration for the given card type id.
+	 * 
+	 * @param cardTypeId
+	 *            the id of the card type
+	 * @return The Card type configuration for the given card type id.
+	 */
+	public TuleapCardType getCardType(int cardTypeId) {
+		return this.cardTypesById.get(Integer.valueOf(cardTypeId));
+	}
+
+	/**
+	 * Returns the list of all the card type for this project.
+	 * 
+	 * @return The list of all the card type for this project.
+	 */
+	public List<TuleapCardType> getAllCardTypes() {
+		return new ArrayList<TuleapCardType>(this.cardTypesById.values());
+	}
+
+	/**
+	 * Returns the label of the project.
+	 * 
+	 * @return The label of the project
 	 */
 	public String getName() {
 		return name;

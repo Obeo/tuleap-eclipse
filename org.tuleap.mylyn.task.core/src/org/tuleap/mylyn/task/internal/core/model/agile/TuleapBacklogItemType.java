@@ -20,6 +20,11 @@ import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapFieldContainerCon
 public class TuleapBacklogItemType extends AbstractTuleapFieldContainerConfig {
 
 	/**
+	 * The serial version UID.
+	 */
+	private static final long serialVersionUID = 5142346531052227378L;
+
+	/**
 	 * The default constructor.
 	 * 
 	 * @param trackerIdentifier

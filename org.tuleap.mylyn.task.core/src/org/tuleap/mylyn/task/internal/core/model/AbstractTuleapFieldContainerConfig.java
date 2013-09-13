@@ -19,6 +19,7 @@ import java.util.Map;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.tuleap.mylyn.task.internal.core.model.field.AbstractTuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapFileUpload;
+import org.tuleap.mylyn.task.internal.core.model.field.TuleapFloat;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
 
 /**
@@ -45,12 +46,12 @@ public abstract class AbstractTuleapFieldContainerConfig implements Serializable
 	protected String url;
 
 	/**
-	 * The name of the Tuleap tracker.
+	 * The label of the Tuleap tracker.
 	 */
-	protected String name;
+	protected String label;
 
 	/**
-	 * The item name.
+	 * The item label.
 	 */
 	protected String itemName;
 
@@ -85,6 +86,11 @@ public abstract class AbstractTuleapFieldContainerConfig implements Serializable
 	protected AbstractTuleapSelectBox contributorField;
 
 	/**
+	 * The cached initial effort field (not mandatory).
+	 */
+	protected TuleapFloat initialEffortField;
+
+	/**
 	 * The attachment field.
 	 */
 	protected TuleapFileUpload attachmentField;
@@ -113,16 +119,16 @@ public abstract class AbstractTuleapFieldContainerConfig implements Serializable
 	 * @param repositoryURL
 	 *            The URL of the repository.
 	 * @param repositoryName
-	 *            The name of the repository
+	 *            The label of the repository
 	 * @param repositoryItemName
-	 *            The item name of the repository
+	 *            The item label of the repository
 	 * @param repositoryDescription
 	 *            The description of the repository
 	 */
 	public AbstractTuleapFieldContainerConfig(String repositoryURL, String repositoryName,
 			String repositoryItemName, String repositoryDescription) {
 		this.url = repositoryURL;
-		this.name = repositoryName;
+		this.label = repositoryName;
 		this.itemName = repositoryItemName;
 	}
 
@@ -155,38 +161,38 @@ public abstract class AbstractTuleapFieldContainerConfig implements Serializable
 	}
 
 	/**
-	 * Returns the name of the repository.
+	 * Returns the label of the repository.
 	 * 
-	 * @return The name of the repository.
+	 * @return The label of the repository.
 	 */
 	public String getName() {
-		return this.name;
+		return this.label;
 	}
 
 	/**
-	 * Sets the name of the configuration.
+	 * Sets the label of the configuration.
 	 * 
 	 * @param configurationName
-	 *            The name of the configuration.
+	 *            The label of the configuration.
 	 */
 	public void setName(String configurationName) {
-		this.name = configurationName;
+		this.label = configurationName;
 	}
 
 	/**
-	 * Returns the item name of the repository.
+	 * Returns the item label of the repository.
 	 * 
-	 * @return The item name of the repository.
+	 * @return The item label of the repository.
 	 */
 	public String getItemName() {
 		return this.itemName;
 	}
 
 	/**
-	 * Sets the item name of the repository.
+	 * Sets the item label of the repository.
 	 * 
 	 * @param repositoryItemName
-	 *            The item name of the repository.
+	 *            The item label of the repository.
 	 */
 	public void setItemName(String repositoryItemName) {
 		this.itemName = repositoryItemName;
@@ -243,12 +249,12 @@ public abstract class AbstractTuleapFieldContainerConfig implements Serializable
 	}
 
 	/**
-	 * Returns a qualified name composed of the name and the identifier.
+	 * Returns a qualified label composed of the label and the identifier.
 	 * 
-	 * @return A qualified name composed of the name and the identifier.
+	 * @return A qualified label composed of the label and the identifier.
 	 */
 	public String getQualifiedName() {
-		return this.name + " [" + this.identifier + ']'; //$NON-NLS-1$
+		return this.label + " [" + this.identifier + ']'; //$NON-NLS-1$
 	}
 
 	/**
@@ -295,6 +301,15 @@ public abstract class AbstractTuleapFieldContainerConfig implements Serializable
 	 */
 	public AbstractTuleapSelectBox getContributorField() {
 		return contributorField;
+	}
+
+	/**
+	 * Provides access to the cached initial effort field. To use only used after configuration creation.
+	 * 
+	 * @return The field with the "initial effort" semantic or null if such a field doesn't exist.
+	 */
+	public TuleapFloat geInitialEffortField() {
+		return initialEffortField;
 	}
 
 	/**

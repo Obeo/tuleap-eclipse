@@ -23,6 +23,11 @@ public abstract class AbstractTuleapAgileElement {
 	protected int id;
 
 	/**
+	 * The human-readable label of the element.
+	 */
+	protected String label;
+
+	/**
 	 * The planning Rest URL.
 	 */
 	protected String url;
@@ -92,6 +97,25 @@ public abstract class AbstractTuleapAgileElement {
 	 */
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	/**
+	 * Label getter.
+	 * 
+	 * @return the label
+	 */
+	public String getLabel() {
+		return label;
+	}
+
+	/**
+	 * Label setter.
+	 * 
+	 * @param label
+	 *            the label to set
+	 */
+	public void setLabel(String label) {
+		this.label = label;
 	}
 
 }
