@@ -176,6 +176,11 @@ public interface ITuleapConstants {
 	String ATTACHMENT_FIELD_LABEL = "tuleap_attachment_field_label"; //$NON-NLS-1$
 
 	/**
+	 * The constant used to specify the id of the field with the "initial effort" semantic.
+	 */
+	String INITIAL_EFFORT_FIELD_ID = "tuleap_initial_effort"; //$NON-NLS-1$
+
+	/**
 	 * The identifier of an anonymous user.
 	 */
 	int ANONYMOUS_USER_INFO_IDENTIFIER = 0;
