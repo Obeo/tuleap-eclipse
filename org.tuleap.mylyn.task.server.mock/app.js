@@ -93,6 +93,15 @@ app.get('/api/v3.14/projects/:projectId/milestone_types', auth, milestone_types.
 app.options('/api/v3.14/milestone_types/:typeId', auth, milestone_types.options);
 app.get('/api/v3.14/milestone_types/:typeId', auth, milestone_types.get);
 
+// Backlog item types
+var milestone_types = require('./controllers/backlog_item_types.js');
+// Getting all the milestone types of a project
+app.options('/api/v3.14/projects/:projectId/backlog_item_types', auth, milestone_types.optionsList);
+app.get('/api/v3.14/projects/:projectId/backlog_item_types', auth, milestone_types.list);
+// Getting a milestone type by id
+app.options('/api/v3.14/backlog_item_types/:typeId', auth, milestone_types.options);
+app.get('/api/v3.14/backlog_item_types/:typeId', auth, milestone_types.get);
+
 // --------------- API-DOCS ---------------
 var apiDocs = require('./controllers/api-docs.js');
 app.options('/api/v3.14/api-docs', apiDocs.options);
