@@ -111,7 +111,7 @@ public class TuleapSoapConnectorTests {
 
 		TuleapTrackerConfiguration tuleapTrackerConfiguration1 = tuleapServerConfiguration
 				.getTrackerConfiguration(1);
-		assertEquals(tracker1.getTracker_id(), tuleapTrackerConfiguration1.getTrackerId());
+		assertEquals(tracker1.getTracker_id(), tuleapTrackerConfiguration1.getIdentifier());
 		assertEquals(tracker1.getName(), tuleapTrackerConfiguration1.getName());
 		assertEquals(tracker1.getDescription(), tuleapTrackerConfiguration1.getDescription());
 		assertEquals(tracker1.getItem_name(), tuleapTrackerConfiguration1.getItemName());

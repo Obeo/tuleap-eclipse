@@ -44,14 +44,19 @@ public class TuleapMilestone extends AbstractTuleapTrackerElement {
 	private float capacity;
 
 	/**
-	 * Flag for the presence of submilestones.
+	 * The id of the milestone's type.
 	 */
-	private boolean hasSubmilestones;
+	private int typeId;
 
 	/**
 	 * The milestone's sub-milestones.
 	 */
 	private List<TuleapMilestone> subMilestones = Lists.newArrayList();
+
+	/**
+	 * The milestone's backlog items (including those assigned to sub-milestones).
+	 */
+	private List<TuleapBacklogItem> backlogItems = Lists.newArrayList();
 
 	/**
 	 * Title getter.
@@ -130,22 +135,22 @@ public class TuleapMilestone extends AbstractTuleapTrackerElement {
 	}
 
 	/**
-	 * has submilestones getter.
+	 * typeId getter.
 	 * 
-	 * @return the hasSubmilestones
+	 * @return the typeId
 	 */
-	public boolean getHasSubmilestones() {
-		return hasSubmilestones;
+	public int getTypeId() {
+		return typeId;
 	}
 
 	/**
-	 * has submilestones setter.
+	 * typeId setter.
 	 * 
-	 * @param hasSubmilestones
-	 *            the hasSubmilestones to set
+	 * @param typeId
+	 *            the typeId to set
 	 */
-	public void setHasSubmilestones(boolean hasSubmilestones) {
-		this.hasSubmilestones = hasSubmilestones;
+	public void setTypeId(int typeId) {
+		this.typeId = typeId;
 	}
 
 	/**

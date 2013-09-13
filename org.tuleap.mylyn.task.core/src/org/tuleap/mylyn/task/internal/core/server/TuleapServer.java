@@ -34,6 +34,7 @@ import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerReport;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.net.TuleapAttachmentDescriptor;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
@@ -171,6 +172,7 @@ public class TuleapServer {
 
 			// For each project that has the tracker service
 			for (TuleapProjectConfiguration projectConfig : projectConfigurations) {
+				// TODO Comment the tracker part while there is no REST API for trackers
 				if (projectConfig.hasService("trackers")) { //$NON-NLS-1$
 					// Check that we can get the list of trackers for this project
 					RestProjectsTrackers restTrackers = restResources.projectsTrackers(projectConfig
@@ -213,6 +215,11 @@ public class TuleapServer {
 								message));
 					}
 				}
+
+				// TODO Retrieve Milestone types for the project
+
+				// TODO Retrieve BacklogItem types for the project
+
 			}
 		} else {
 			// Invalid login? server error?
@@ -477,4 +484,24 @@ public class TuleapServer {
 
 		// Try to log out
 	}
+
+	/**
+	 * TODO document me.
+	 * 
+	 * @param milestoneId
+	 *            milestone id
+	 * @param monitor
+	 *            progress monitor to use
+	 * @return TODO
+	 */
+	public TuleapMilestone getMilestone(int milestoneId, IProgressMonitor monitor) {
+		// RestResources restResources = tuleapRestConnector.resources(credentials);
+		// RestMilestones restMilestones = restResources.milestones(milestoneId);
+		// restMilestones.checkGet();
+
+		// ServerResponse resp = restMilestones.get();
+		// TODO Exploiter server Response pour construire le POJO Milestone
+		return null;
+	}
+
 }

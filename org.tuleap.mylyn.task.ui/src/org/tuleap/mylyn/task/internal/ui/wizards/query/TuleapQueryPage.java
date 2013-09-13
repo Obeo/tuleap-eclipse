@@ -210,7 +210,7 @@ public class TuleapQueryPage extends AbstractRepositoryQueryPage2 {
 			final TuleapTrackerConfiguration tuleapTrackerConfiguration = tuleapTrackerPage
 					.getTrackerSelected();
 			if (tuleapTrackerConfiguration != null) {
-				this.trackerId = tuleapTrackerConfiguration.getTrackerId();
+				this.trackerId = tuleapTrackerConfiguration.getIdentifier();
 				this.groupId = tuleapTrackerConfiguration.getTuleapProjectConfiguration().getIdentifier();
 			}
 		}
@@ -356,7 +356,7 @@ public class TuleapQueryPage extends AbstractRepositoryQueryPage2 {
 		if (this.reportsButton.getSelection() && previousPage instanceof TuleapTrackerPage) {
 			TuleapTrackerPage tuleapTrackerPage = (TuleapTrackerPage)previousPage;
 			TuleapTrackerConfiguration tuleapTrackerConfiguration = tuleapTrackerPage.getTrackerSelected();
-			this.trackerId = tuleapTrackerConfiguration.getTrackerId();
+			this.trackerId = tuleapTrackerConfiguration.getIdentifier();
 			this.groupId = tuleapTrackerConfiguration.getTuleapProjectConfiguration().getIdentifier();
 		}
 

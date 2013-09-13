@@ -206,7 +206,7 @@ public class TuleapTrackerConfigurationTests {
 
 		// adding a tracker to its self as a parent
 		tracker4.setParentTracker(tracker4);
-		assertEquals(1, tracker4.getParentTracker().getTrackerId());
+		assertEquals(1, tracker4.getParentTracker().getIdentifier());
 
 	}
 

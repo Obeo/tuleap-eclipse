@@ -111,7 +111,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 		if (previousPage instanceof TuleapQueryPage) {
 			previousPage = ((TuleapQueryPage)previousPage).getPreviousPage();
 			if (previousPage instanceof TuleapTrackerPage) {
-				this.trackerId = ((TuleapTrackerPage)previousPage).getTrackerSelected().getTrackerId();
+				this.trackerId = ((TuleapTrackerPage)previousPage).getTrackerSelected().getIdentifier();
 				this.groupId = ((TuleapTrackerPage)previousPage).getTrackerSelected()
 						.getTuleapProjectConfiguration().getIdentifier();
 			}
@@ -248,7 +248,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 		if (previousPage instanceof TuleapQueryPage) {
 			previousPage = ((TuleapQueryPage)previousPage).getPreviousPage();
 			if (previousPage instanceof TuleapTrackerPage) {
-				this.trackerId = ((TuleapTrackerPage)previousPage).getTrackerSelected().getTrackerId();
+				this.trackerId = ((TuleapTrackerPage)previousPage).getTrackerSelected().getIdentifier();
 				this.groupId = ((TuleapTrackerPage)previousPage).getTrackerSelected()
 						.getTuleapProjectConfiguration().getIdentifier();
 			}

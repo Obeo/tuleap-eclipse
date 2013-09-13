@@ -203,6 +203,7 @@ public abstract class AbstractRestResource {
 		Object object = request.getAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
 		if (object == null) {
 			object = new Form();
+			// TODO Utiliser headers pour récupérer les attributs non standards (pagination)
 			request.getAttributes().put(HeaderConstants.ATTRIBUTE_HEADERS, object);
 		}
 

@@ -20,6 +20,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItemType;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardType;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
+
 /**
  * This class will hold the configuration of a Tuleap project.
  * 
@@ -36,6 +40,21 @@ public class TuleapProjectConfiguration implements Serializable {
 	 * This map contains the ID of the tracker of the Tuleap instance and their matching configuration.
 	 */
 	private Map<Integer, TuleapTrackerConfiguration> trackerId2trackerConfiguration = Maps.newHashMap();
+
+	/**
+	 * Map of milestone types (i.e. configuration) by id.
+	 */
+	private Map<Integer, TuleapMilestoneType> milestoneTypesById = Maps.newHashMap();
+
+	/**
+	 * Map of backlogItem types (i.e. configuration) by id.
+	 */
+	private Map<Integer, TuleapBacklogItemType> backlogItemTypesById = Maps.newHashMap();
+
+	/**
+	 * Map of card types (i.e. configuration) by id.
+	 */
+	private Map<Integer, TuleapCardType> cardTypesById = Maps.newHashMap();
 
 	/**
 	 * The name of the project.
@@ -77,7 +96,7 @@ public class TuleapProjectConfiguration implements Serializable {
 	 *            The configuration of the tracker.
 	 */
 	public void addTracker(TuleapTrackerConfiguration trackerConfiguration) {
-		this.trackerId2trackerConfiguration.put(Integer.valueOf(trackerConfiguration.getTrackerId()),
+		this.trackerId2trackerConfiguration.put(Integer.valueOf(trackerConfiguration.identifier),
 				trackerConfiguration);
 		trackerConfiguration.setTuleapProjectConfiguration(this);
 	}
