@@ -1,0 +1,57 @@
+{
+  "id" : 801,
+  "label" : "Epics",
+  "description" : "The description of epics",
+  "url" : "localhost:3001/api/v3.14/backlog_item_types/801",
+  "project_id" : 3,
+  "fields" : [
+      {
+        "field_id" : 850,
+        "label" : "Status",
+        "values" : [
+            {
+              "field_value_id" : 8500,
+              "field_value_label" : "To be done"
+            }, {
+              "field_value_id" : 8501,
+              "field_value_label" : "On going"
+            }, {
+              "field_value_id" : 8502,
+              "field_value_label" : "Delivered"
+            }
+        ]
+      }, {
+        "field_id" : 851,
+        "label" : "Remaining Effort",
+        "type" : "computed",
+        "permissions" : [
+          "read"
+        ]
+      }, {
+        "field_id" : 852,
+        "label" : "Summary",
+        "type" : "string",
+        "permissions" : [
+            "read", "create", "update"
+        ]
+      }, {
+        "field_id" : 853,
+        "label" : "Stories",
+        "type" : "string",
+        "permissions" : [
+            "read", "create", "update"
+        ]
+      }
+  ],
+  "semantic" : {
+    "title" : {
+      "field_id" : 852
+    },
+    "status" : {
+      "field_id" : 850,
+      "open_status_field_values_ids" : [
+          8500, 8501
+      ]
+    }
+  }
+}
