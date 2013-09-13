@@ -62,7 +62,7 @@
       }, {
         "field_id" : 966,
         "label" : "Remaining Effort",
-        "type" : "float",
+        "type" : "computed",
         "permissions" : [
             "read"
         ]
