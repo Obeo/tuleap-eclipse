@@ -10,18 +10,12 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model.agile;
 
-
 /**
  * Configuration of a Planning in Tuleap.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
 public class TuleapPlanningConfiguration extends AbstractTuleapAgileElement {
-
-	/**
-	 * The human readable name of the planning.
-	 */
-	private String name;
 
 	/**
 	 * The id of the project that contains this planning.
@@ -47,25 +41,6 @@ public class TuleapPlanningConfiguration extends AbstractTuleapAgileElement {
 	 * The label of the backlog tracker.
 	 */
 	private String backlogTrackerLabel;
-
-	/**
-	 * name getter.
-	 * 
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * name setter.
-	 * 
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
 
 	/**
 	 * Project id getter.
