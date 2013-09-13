@@ -21,7 +21,7 @@ import java.util.List;
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class TuleapMilestone extends AbstractTuleapTrackerElement {
+public class TuleapMilestone extends AbstractTuleapAgileElement {
 
 	/**
 	 * The milestone's label.
