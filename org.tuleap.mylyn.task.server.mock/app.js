@@ -102,6 +102,19 @@ app.get('/api/v3.14/projects/:projectId/backlog_item_types', auth, milestone_typ
 app.options('/api/v3.14/backlog_item_types/:typeId', auth, milestone_types.options);
 app.get('/api/v3.14/backlog_item_types/:typeId', auth, milestone_types.get);
 
+// Top plannings
+var top_plannings = require('./controllers/top_plannings.js');
+// Getting the top plannings of a project
+app.options('/api/v3.14/projects/:projectId/top_plannings', auth, top_plannings.optionsList);
+app.get('/api/v3.14/projects/:projectId/top_plannings', auth, top_plannings.list);
+// Getting the milestones of a top planning
+app.options('/api/v3.14/top_plannings/:topPlanningId/milestones', auth, top_plannings.optionsMilestones);
+app.get('/api/v3.14/top_plannings/:topPlanningId/milestones', auth, top_plannings.milestones);
+//Getting the backlog items of a top planning
+app.options('/api/v3.14/top_plannings/:topPlanningId/backlog_items', auth, top_plannings.optionsBacklogItems);
+app.get('/api/v3.14/top_plannings/:topPlanningId/backlog_items', auth, top_plannings.backlogItems);
+
+
 // --------------- API-DOCS ---------------
 var apiDocs = require('./controllers/api-docs.js');
 app.options('/api/v3.14/api-docs', apiDocs.options);

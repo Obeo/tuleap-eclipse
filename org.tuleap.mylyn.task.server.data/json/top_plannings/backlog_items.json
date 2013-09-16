@@ -1,0 +1,66 @@
+[
+  {
+    "id" : 200,
+    "label" : "Release 0.9",
+    "start_date" : 12345678,
+    "duration" : 50,
+    "capacity" : 100,
+    "url" : "/milestones/200",
+    "html_url" : "/milestones?id=200&group_id=3",
+    "milestone_type_id" : 901,
+    "values" : [
+      {
+        "field_id" : 950,
+        "value" : "Release 0.9"
+      },
+      {
+        "field_id" : 951,
+        "bind_value_id" : 9510
+      },
+      {
+        "field_id" : 952,
+        "value" : 35
+      },
+      {
+        "field_id" : 953,
+        "value" : "0.9"
+      },
+      {
+        "field_id" : 954,
+        "value" : "300, 301, 302"
+      }
+    ]
+  },
+  {
+    "id" : 201,
+    "label" : "Release 1.0",
+    "start_date" : 12385678,
+    "duration" : 50,
+    "capacity" : 120,
+    "url" : "/milestones/201",
+    "html_url" : "/milestones?id=201&group_id=3",
+    "milestone_type_id" : 901,
+    "values" : [
+      {
+        "field_id" : 950,
+        "value" : "Release 1.0"
+      },
+      {
+        "field_id" : 951,
+        "bind_value_id" : 9511
+      },
+      {
+        "field_id" : 952,
+        "value" : 120
+      },
+      {
+        "field_id" : 953,
+        "value" : "1.0"
+      },
+      {
+        "field_id" : 954,
+        "value" : "310, 311, 312"
+      }
+    ]
+  }
+]
