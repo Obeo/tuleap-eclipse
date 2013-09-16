@@ -53,7 +53,7 @@ public class RestTopPlanningsBacklogItems extends AbstractAuthenticatedRestResou
 	 */
 	@Override
 	protected String getUrl() {
-		return URL.PROJECTS + "/" + topPlanningId + URL.BACKLOG_ITEMS; //$NON-NLS-1$
+		return URL.TOP_PLANNINGS + "/" + topPlanningId + URL.BACKLOG_ITEMS; //$NON-NLS-1$
 	}
 
 	/**

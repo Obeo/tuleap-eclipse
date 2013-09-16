@@ -53,7 +53,7 @@ public class RestTopPlanningsMilestones extends AbstractAuthenticatedRestResourc
 	 */
 	@Override
 	protected String getUrl() {
-		return URL.PROJECTS + "/" + topPlanningId + URL.MILESTONES; //$NON-NLS-1$
+		return URL.TOP_PLANNINGS + "/" + topPlanningId + URL.MILESTONES; //$NON-NLS-1$
 	}
 
 	/**
