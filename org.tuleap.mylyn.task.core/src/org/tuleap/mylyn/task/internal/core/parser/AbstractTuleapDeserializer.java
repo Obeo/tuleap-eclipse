@@ -16,6 +16,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
 
 import java.lang.reflect.Type;
 
@@ -66,6 +67,16 @@ public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapAgileEl
 	private static final String FIELD_VALUE = "value"; //$NON-NLS-1$
 
 	/**
+	 * The key used to retrieve the bind value id.
+	 */
+	private static final String FIELD_BIND_VALUE_ID = "bind_value_id"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the list of bind value ids.
+	 */
+	private static final String FIELD_BIND_VALUE_IDS = "bind_value_ids"; //$NON-NLS-1$
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see com.google.gson.JsonDeserializer#deserialize(com.google.gson.JsonElement, java.lang.reflect.Type,
@@ -93,8 +104,39 @@ public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapAgileEl
 		for (JsonElement field : fields) {
 			JsonObject jsonField = field.getAsJsonObject();
 			int fieldId = jsonField.get(FIELD_ID).getAsInt();
-			String fieldValue = jsonField.get(FIELD_VALUE).getAsString();
-			pojo.addFieldValue(Integer.valueOf(fieldId), fieldValue);
+			JsonElement jsonValue = jsonField.get(FIELD_VALUE);
+			if (jsonValue != null) {
+				if (jsonValue.isJsonPrimitive()) {
+					JsonPrimitive primitive = jsonValue.getAsJsonPrimitive();
+					if (primitive.isString()) {
+						pojo.getValues().put(Integer.valueOf(fieldId), primitive.getAsString());
+					} else if (primitive.isNumber()) {
+						pojo.getValues().put(Integer.valueOf(fieldId), primitive.getAsNumber());
+					} else if (primitive.isBoolean()) {
+						pojo.getValues().put(Integer.valueOf(fieldId),
+								Boolean.valueOf(primitive.getAsBoolean()));
+					}
+				}
+			} else {
+				JsonElement jsonBindValueId = jsonField.get(FIELD_BIND_VALUE_ID);
+				if (jsonBindValueId != null) {
+					int bindValueId = jsonBindValueId.getAsInt();
+					pojo.getValues().put(Integer.valueOf(fieldId), Integer.valueOf(bindValueId));
+				} else {
+					JsonElement jsonBindValueIds = jsonField.get(FIELD_BIND_VALUE_IDS);
+					if (jsonBindValueIds != null) {
+						JsonArray jsonIds = jsonBindValueIds.getAsJsonArray();
+						int[] ids = new int[jsonIds.size()];
+						int i = 0;
+						for (JsonElement idElement : jsonIds) {
+							ids[i++] = idElement.getAsInt();
+						}
+						pojo.getValues().put(Integer.valueOf(fieldId), ids);
+					} else {
+						// TODO Files
+					}
+				}
+			}
 		}
 
 		return pojo;
