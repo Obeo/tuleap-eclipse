@@ -193,7 +193,7 @@ public final class RestResources {
 	}
 
 	/**
-	 * Provides access to the {code /projects} HTTP resource.
+	 * Provides access to the {code /projects/:projectId/trackers} HTTP resource.
 	 * 
 	 * @param projectId
 	 *            the project id
@@ -201,5 +201,38 @@ public final class RestResources {
 	 */
 	public RestProjectsTrackers projectsTrackers(int projectId) {
 		return new RestProjectsTrackers(serverUrl, apiVersion, credentials, projectId);
+	}
+
+	/**
+	 * Provides access to the {code /projects/:projectId/top_plannings} HTTP resource.
+	 * 
+	 * @param projectId
+	 *            the project id
+	 * @return A resource that gives access to the {code /projects/:projectId/top_plannings} HTTP resource.
+	 */
+	public RestProjectsTopPlannings projectsTopPlannings(int projectId) {
+		return new RestProjectsTopPlannings(serverUrl, apiVersion, credentials, projectId);
+	}
+
+	/**
+	 * Provides access to the {code /top_plannings/:id/milestones} HTTP resource.
+	 * 
+	 * @param topPlanningId
+	 *            the top planning id
+	 * @return A resource that gives access to the {code /top_plannings/:id/milestones} HTTP resource.
+	 */
+	public RestTopPlanningsMilestones topPlanningsMilestones(int topPlanningId) {
+		return new RestTopPlanningsMilestones(serverUrl, apiVersion, credentials, topPlanningId);
+	}
+
+	/**
+	 * Provides access to the {code /top_plannings/:id/backlog_items} HTTP resource.
+	 * 
+	 * @param topPlanningId
+	 *            the top planning id
+	 * @return A resource that gives access to the {code /top_plannings/:id/backlog_items} HTTP resource.
+	 */
+	public RestTopPlanningsBacklogItems topPlanningsBacklogItems(int topPlanningId) {
+		return new RestTopPlanningsBacklogItems(serverUrl, apiVersion, credentials, topPlanningId);
 	}
 }
