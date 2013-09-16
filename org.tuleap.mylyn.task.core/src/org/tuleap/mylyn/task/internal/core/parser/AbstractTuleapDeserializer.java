@@ -24,9 +24,11 @@ import org.tuleap.mylyn.task.internal.core.model.agile.AbstractTuleapAgileElemen
 /**
  * This class is used to deserialize a JSON representation of a Tuleap object.
  * 
+ * @param <T>
+ *            The type of the agile element to deserialize.
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public abstract class AbstractTuleapDeserializer implements JsonDeserializer<AbstractTuleapAgileElement> {
+public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapAgileElement> implements JsonDeserializer<T> {
 
 	/**
 	 * The key used for the id of the POJO.
@@ -69,11 +71,11 @@ public abstract class AbstractTuleapDeserializer implements JsonDeserializer<Abs
 	 * @see com.google.gson.JsonDeserializer#deserialize(com.google.gson.JsonElement, java.lang.reflect.Type,
 	 *      com.google.gson.JsonDeserializationContext)
 	 */
-	public AbstractTuleapAgileElement deserialize(JsonElement rootJsonElement, Type type,
+	public T deserialize(JsonElement rootJsonElement, Type type,
 			JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
 
 		JsonObject jsonObject = rootJsonElement.getAsJsonObject();
-		AbstractTuleapAgileElement pojo = buildPojo();
+		T pojo = buildPojo();
 
 		int id = jsonObject.get(ID).getAsInt();
 		pojo.setId(id);
@@ -103,6 +105,6 @@ public abstract class AbstractTuleapDeserializer implements JsonDeserializer<Abs
 	 * 
 	 * @return The POJO.
 	 */
-	protected abstract AbstractTuleapAgileElement buildPojo();
+	protected abstract T buildPojo();
 
 }

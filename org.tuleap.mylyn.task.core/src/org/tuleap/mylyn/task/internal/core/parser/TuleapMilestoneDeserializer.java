@@ -18,7 +18,6 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
-import org.tuleap.mylyn.task.internal.core.model.agile.AbstractTuleapAgileElement;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
 
 /**
@@ -27,7 +26,7 @@ import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public class TuleapMilestoneDeserializer extends AbstractTuleapDeserializer {
+public class TuleapMilestoneDeserializer extends AbstractTuleapDeserializer<TuleapMilestone> {
 
 	/**
 	 * The key used to retrieve the start date of the milestone.
@@ -61,11 +60,10 @@ public class TuleapMilestoneDeserializer extends AbstractTuleapDeserializer {
 	 *      com.google.gson.JsonDeserializationContext)
 	 */
 	@Override
-	public AbstractTuleapAgileElement deserialize(JsonElement rootJsonElement, Type type,
+	public TuleapMilestone deserialize(JsonElement rootJsonElement, Type type,
 			JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
 
-		TuleapMilestone milestone = (TuleapMilestone)super.deserialize(rootJsonElement, type,
-				jsonDeserializationContext);
+		TuleapMilestone milestone = super.deserialize(rootJsonElement, type, jsonDeserializationContext);
 
 		JsonObject jsonObject = rootJsonElement.getAsJsonObject();
 
@@ -83,7 +81,7 @@ public class TuleapMilestoneDeserializer extends AbstractTuleapDeserializer {
 
 		JsonArray submilestones = jsonObject.get(SUBMILESTONES).getAsJsonArray();
 		for (JsonElement submilestone : submilestones) {
-			TuleapMilestone sub = (TuleapMilestone)deserialize(submilestone, type, jsonDeserializationContext);
+			TuleapMilestone sub = deserialize(submilestone, type, jsonDeserializationContext);
 			milestone.addSubMilestone(sub);
 		}
 
@@ -97,7 +95,7 @@ public class TuleapMilestoneDeserializer extends AbstractTuleapDeserializer {
 	 * @see org.tuleap.mylyn.task.internal.core.parser.AbstractTuleapDeserializer#buildPojo()
 	 */
 	@Override
-	protected AbstractTuleapAgileElement buildPojo() {
+	protected TuleapMilestone buildPojo() {
 		return new TuleapMilestone();
 	}
 
