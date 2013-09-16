@@ -27,13 +27,13 @@ public class TuleapBacklogItemType extends AbstractTuleapFieldContainerConfig {
 	/**
 	 * The default constructor.
 	 * 
-	 * @param trackerIdentifier
+	 * @param backlogItemTypeIdentifier
 	 *            The id of the tracker.
 	 * @param repositoryURL
 	 *            The URL of the repository.
 	 */
-	public TuleapBacklogItemType(int trackerIdentifier, String repositoryURL) {
-		super(trackerIdentifier, repositoryURL);
+	public TuleapBacklogItemType(int backlogItemTypeIdentifier, String repositoryURL) {
+		super(backlogItemTypeIdentifier, repositoryURL);
 	}
 
 	/**

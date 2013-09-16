@@ -32,13 +32,13 @@ public class TuleapMilestoneType extends AbstractTuleapFieldContainerConfig {
 	/**
 	 * The default constructor.
 	 * 
-	 * @param trackerIdentifier
+	 * @param milestoneTypeIdentifier
 	 *            The id of the tracker.
 	 * @param repositoryURL
 	 *            The URL of the repository.
 	 */
-	public TuleapMilestoneType(int trackerIdentifier, String repositoryURL) {
-		super(trackerIdentifier, repositoryURL);
+	public TuleapMilestoneType(int milestoneTypeIdentifier, String repositoryURL) {
+		super(milestoneTypeIdentifier, repositoryURL);
 	}
 
 	/**
