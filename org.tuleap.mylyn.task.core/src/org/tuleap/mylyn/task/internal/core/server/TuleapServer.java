@@ -559,6 +559,7 @@ public class TuleapServer {
 		for (JsonElement element : topPlanningIds) {
 			TuleapTopPlanning topPlanning = new TuleapTopPlanning();
 			int topPlanningId = element.getAsInt();
+			topPlanning.setId(topPlanningId);
 
 			// 2- Retrieve the milestones of this top planning
 			RestTopPlanningsMilestones restMilestones = restResources.topPlanningsMilestones(topPlanningId);
