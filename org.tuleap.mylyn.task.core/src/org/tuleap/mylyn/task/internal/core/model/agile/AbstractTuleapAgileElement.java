@@ -10,10 +10,15 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model.agile;
 
+import com.google.common.collect.Maps;
+
+import java.util.Map;
+
 /**
  * Ancestor of all tuleap agile elements that have and ID, a REST URL, and an HTML URL.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
+ * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
 public abstract class AbstractTuleapAgileElement {
 
@@ -41,6 +46,11 @@ public abstract class AbstractTuleapAgileElement {
 	 * The URL of the planning for web browsers.
 	 */
 	protected String htmlUrl;
+
+	/**
+	 * The milestone's configurable values.
+	 */
+	private Map<Integer, Object> fieldTypeIdToValue = Maps.newHashMap();
 
 	/**
 	 * id getter.
@@ -116,6 +126,38 @@ public abstract class AbstractTuleapAgileElement {
 	 */
 	public void setLabel(String label) {
 		this.label = label;
+	}
+
+	/**
+	 * Add a value to the field identified by the given field id.
+	 * 
+	 * @param fieldTypeId
+	 *            The field id.
+	 * @param value
+	 *            The value to set.
+	 */
+	public void addFieldValue(Integer fieldTypeId, Object value) {
+		fieldTypeIdToValue.put(fieldTypeId, value);
+	}
+
+	/**
+	 * Get the value in relation to the given field id.
+	 * 
+	 * @param fieldTypeId
+	 *            the field id.
+	 * @return the value of the given field.
+	 */
+	public Object getValue(Integer fieldTypeId) {
+		return fieldTypeIdToValue.get(fieldTypeId);
+	}
+
+	/**
+	 * Get the configurable values.
+	 * 
+	 * @return The values.
+	 */
+	public Map<Integer, Object> getValues() {
+		return fieldTypeIdToValue;
 	}
 
 }

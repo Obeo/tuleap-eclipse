@@ -41,6 +41,7 @@ import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.server.rest.ICredentials;
 import org.tuleap.mylyn.task.internal.core.server.rest.RestArtifacts;
+import org.tuleap.mylyn.task.internal.core.server.rest.RestMilestones;
 import org.tuleap.mylyn.task.internal.core.server.rest.RestProjects;
 import org.tuleap.mylyn.task.internal.core.server.rest.RestProjectsTrackers;
 import org.tuleap.mylyn.task.internal.core.server.rest.RestResources;
@@ -486,21 +487,38 @@ public class TuleapServer {
 	}
 
 	/**
-	 * TODO document me.
+	 * Retrieves the milestone from the server with the given milestone id.
 	 * 
 	 * @param milestoneId
-	 *            milestone id
+	 *            The identifier of the milestone
 	 * @param monitor
-	 *            progress monitor to use
-	 * @return TODO
+	 *            Used to monitor the progress
+	 * @return The milestone POJO
+	 * @throws CoreException
+	 *             In case of error during the retrieval of the milestone
 	 */
-	public TuleapMilestone getMilestone(int milestoneId, IProgressMonitor monitor) {
-		// RestResources restResources = tuleapRestConnector.resources(credentials);
-		// RestMilestones restMilestones = restResources.milestones(milestoneId);
-		// restMilestones.checkGet();
+	public TuleapMilestone getMilestone(int milestoneId, IProgressMonitor monitor) throws CoreException {
+		// TODO [SBE] See if the parameter connector should be a class attribute instead of a parameter
+		// Test the connection
+		RestResources restResources = tuleapRestConnector.resources(credentials);
 
-		// ServerResponse resp = restMilestones.get();
-		// TODO Exploiter server Response pour construire le POJO Milestone
+		// Send a request with OPTIONS to ensure that we can and have the right to retrieve the milestone
+		RestMilestones restMilestones = restResources.milestones(milestoneId);
+		restMilestones.checkGet(Collections.<String, String> emptyMap());
+
+		// Retrieve the milestone
+		ServerResponse response = restMilestones.get(Collections.<String, String> emptyMap());
+
+		if (ITuleapServerStatus.OK != response.getStatus()) {
+			// Invalid login? server error?
+			String message = this.jsonParser.getErrorMessage(response.getBody());
+			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, message));
+		}
+		// Create the task data
+		String json = response.getBody();
+
+		// TODO
+
 		return null;
 	}
 

@@ -184,6 +184,17 @@ public final class RestResources {
 	/**
 	 * Provides access to the {code /projects} HTTP resource.
 	 * 
+	 * @param milestoneId
+	 *            Id of the milestone.
+	 * @return A resource that gives access to the {code /milestones} HTTP resource.
+	 */
+	public RestMilestones milestones(int milestoneId) {
+		return new RestMilestones(serverUrl, apiVersion, credentials, milestoneId);
+	}
+
+	/**
+	 * Provides access to the {code /projects} HTTP resource.
+	 * 
 	 * @param projectId
 	 *            the project id
 	 * @return A resource that gives access to the {code /projects/:projectId/trackers} HTTP resource.

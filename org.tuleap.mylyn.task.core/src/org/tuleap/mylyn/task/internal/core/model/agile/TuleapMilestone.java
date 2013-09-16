@@ -13,7 +13,6 @@ package org.tuleap.mylyn.task.internal.core.model.agile;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,14 +23,9 @@ import java.util.List;
 public class TuleapMilestone extends AbstractTuleapAgileElement {
 
 	/**
-	 * The milestone's label.
-	 */
-	private String title;
-
-	/**
 	 * The milestone's start date.
 	 */
-	private Date startDate;
+	private long startDate;
 
 	/**
 	 * The milestone's start date.
@@ -59,30 +53,11 @@ public class TuleapMilestone extends AbstractTuleapAgileElement {
 	private List<TuleapBacklogItem> backlogItems = Lists.newArrayList();
 
 	/**
-	 * Title getter.
-	 * 
-	 * @return the title
-	 */
-	public String getTitle() {
-		return title;
-	}
-
-	/**
-	 * Title setter.
-	 * 
-	 * @param title
-	 *            the title to set
-	 */
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	/**
 	 * Start date getter.
 	 * 
 	 * @return the startDate
 	 */
-	public Date getStartDate() {
+	public long getStartDate() {
 		return startDate;
 	}
 
@@ -92,7 +67,7 @@ public class TuleapMilestone extends AbstractTuleapAgileElement {
 	 * @param startDate
 	 *            the startDate to set
 	 */
-	public void setStartDate(Date startDate) {
+	public void setStartDate(long startDate) {
 		this.startDate = startDate;
 	}
 
@@ -178,7 +153,7 @@ public class TuleapMilestone extends AbstractTuleapAgileElement {
 	 * @param backlogItem
 	 *            The backlog item to add.
 	 */
-	public void addSubMilestone(TuleapBacklogItem backlogItem) {
+	public void addBacklogItem(TuleapBacklogItem backlogItem) {
 		this.backlogItems.add(backlogItem);
 	}
 

@@ -372,6 +372,25 @@ public class TuleapJsonParser {
 	}
 
 	/**
+	 * Parses a JSON String representing a milestone into a POJO.
+	 * 
+	 * @param taskRepository
+	 *            The task repository to use
+	 * @param connector
+	 *            The repository connector to use
+	 * @param json
+	 *            The JSON response representing an artifact
+	 * @return a POJO populated with the data from the JSON String.
+	 * @throws CoreException
+	 *             If a problem occurs.
+	 */
+	public TaskData parseMilestone(TaskRepository taskRepository, ITuleapRepositoryConnector connector,
+			String json) throws CoreException {
+		// TODO
+		return null;
+	}
+
+	/**
 	 * Parse the JSON representation of an error and returns its message.
 	 * 
 	 * @param jsonResponse
