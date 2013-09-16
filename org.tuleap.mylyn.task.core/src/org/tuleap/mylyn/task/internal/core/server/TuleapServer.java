@@ -226,10 +226,6 @@ public class TuleapServer {
 					}
 				}
 
-				// TODO Retrieve Milestone types for the project
-
-				// TODO Retrieve BacklogItem types for the project
-
 			}
 		} else {
 			// Invalid login? server error?
@@ -594,5 +590,6 @@ public class TuleapServer {
 		}
 
 		return result;
+
 	}
 }
