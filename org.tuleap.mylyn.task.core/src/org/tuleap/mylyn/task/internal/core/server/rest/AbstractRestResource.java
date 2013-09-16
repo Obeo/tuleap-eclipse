@@ -332,6 +332,11 @@ public abstract class AbstractRestResource {
 		String PLANNINGS = "/plannings"; //$NON-NLS-1$
 
 		/**
+		 * "/top_plannings".
+		 */
+		String TOP_PLANNINGS = "/top_plannings"; //$NON-NLS-1$
+
+		/**
 		 * "/milestones".
 		 */
 		String MILESTONES = "/milestones"; //$NON-NLS-1$
