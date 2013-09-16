@@ -395,5 +395,16 @@ public abstract class AbstractRestResource {
 		 * "/chunked_upload".
 		 */
 		String CHUNKED_UPLOAD = "chunked_upload"; //$NON-NLS-1$
+
+		/**
+		 * "/backlog_item_types".
+		 */
+		String BACKLOG_ITEM_TYPES = "/backlog_item_types"; //$NON-NLS-1$
+
+		/**
+		 * "/milestone_types".
+		 */
+		String MILESTONE_TYPES = "/milestone_types"; //$NON-NLS-1$
+
 	}
 }
