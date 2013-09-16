@@ -92,7 +92,7 @@ exports.milestones = function(req, res) {
   res.header('Allow', 'OPTIONS, GET');
 
   var response = undefined;
-  var typeId = req.params.typeId;
+  var topPlanningId = req.params.topPlanningId;
 
   if (topPlanningId === '30') {
     response = milestones;
@@ -120,7 +120,7 @@ exports.backlogItems = function(req, res) {
   res.header('Allow', 'OPTIONS, GET');
 
   var response = undefined;
-  var typeId = req.params.typeId;
+  var topPlanningId = req.params.topPlanningId;
 
   if (topPlanningId === '30') {
     response = backlogItems;
