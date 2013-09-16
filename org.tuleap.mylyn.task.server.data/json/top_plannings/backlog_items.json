@@ -1,65 +1,79 @@
 [
   {
-    "id" : 200,
-    "label" : "Release 0.9",
-    "start_date" : 12345678,
-    "duration" : 50,
-    "capacity" : 100,
-    "url" : "/milestones/200",
-    "html_url" : "/milestones?id=200&group_id=3",
-    "milestone_type_id" : 901,
+    "id" : 300,
+    "label" : "An important Epic",
+    "initial_effort": 30,
+    "url" : "/backlog_items/300",
+    "html_url" : "/backlog_items?id=300&group_id=3",
+    "backlog_item_type_id" : 801,
     "values" : [
       {
-        "field_id" : 950,
-        "value" : "Release 0.9"
+        "field_id" : 850,
+        "bind_value_id" : 8502
       },
       {
-        "field_id" : 951,
-        "bind_value_id" : 9510
+        "field_id" : 851,
+        "bind_value_id" : 0
       },
       {
-        "field_id" : 952,
-        "value" : 35
+        "field_id" : 852,
+        "value" : "The summary of an important Epic"
       },
       {
-        "field_id" : 953,
-        "value" : "0.9"
-      },
-      {
-        "field_id" : 954,
-        "value" : "300, 301, 302"
+        "field_id" : 853,
+        "value" : "400, 401, 402"
       }
     ]
   },
   {
-    "id" : 201,
-    "label" : "Release 1.0",
-    "start_date" : 12385678,
-    "duration" : 50,
-    "capacity" : 120,
-    "url" : "/milestones/201",
-    "html_url" : "/milestones?id=201&group_id=3",
-    "milestone_type_id" : 901,
+    "id" : 301,
+    "label" : "Another important Epic",
+    "initial_effort": 40.5,
+    "url" : "/backlog_items/301",
+    "html_url" : "/backlog_items?id=300&group_id=3",
+    "backlog_item_type_id" : 801,
     "values" : [
       {
-        "field_id" : 950,
-        "value" : "Release 1.0"
+        "field_id" : 850,
+        "bind_value_id" : 8501
       },
       {
-        "field_id" : 951,
-        "bind_value_id" : 9511
+        "field_id" : 851,
+        "bind_value_id" : 20.5
       },
       {
-        "field_id" : 952,
-        "value" : 120
+        "field_id" : 852,
+        "value" : "Bring more added-value to users"
       },
       {
-        "field_id" : 953,
-        "value" : "1.0"
+        "field_id" : 853,
+        "value" : "403, 404, 405"
+      }
+    ]
+  },
+  {
+    "id" : 302,
+    "label" : "Some nice Epic",
+    "initial_effort": 25,
+    "url" : "/backlog_items/302",
+    "html_url" : "/backlog_items?id=300&group_id=3",
+    "backlog_item_type_id" : 801,
+    "values" : [
+      {
+        "field_id" : 850,
+        "bind_value_id" : 8500
       },
       {
-        "field_id" : 954,
-        "value" : "310, 311, 312"
+        "field_id" : 851,
+        "bind_value_id" : 26.5
+      },
+      {
+        "field_id" : 852,
+        "value" : "Use some nice visual effects"
+      },
+      {
+        "field_id" : 853,
+        "value" : "406, 407, 408"
       }
     ]
   }
