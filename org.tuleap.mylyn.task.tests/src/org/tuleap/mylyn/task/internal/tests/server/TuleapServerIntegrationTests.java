@@ -99,7 +99,7 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 	public void testGetExistingArtifact() {
 		TuleapServerConfiguration config = new TuleapServerConfiguration(getServerUrl());
 		// The artifact test data need the project Id 3 and the trackers 0, 1 and 4
-		TuleapProjectConfiguration projectConfig = new TuleapProjectConfiguration("Project 3", 3);
+		TuleapProjectConfiguration projectConfig = new TuleapProjectConfiguration("Project 3", 3); //$NON-NLS-1$
 		config.addProject(projectConfig);
 		TuleapTrackerConfiguration trackerConfig0 = new TuleapTrackerConfiguration(0, getServerUrl());
 		projectConfig.addTracker(trackerConfig0);
@@ -133,11 +133,11 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 	@Test
 	public void testGetTopPlannings() {
 		TestLogger logger = new TestLogger();
-		TuleapRestConnector connector = new TuleapRestConnector(this.getServerUrl(), "v3.14", logger);
+		TuleapRestConnector restConnector = new TuleapRestConnector(this.getServerUrl(), "v3.14", logger); //$NON-NLS-1$
 		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
 		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
 
-		TuleapServer tuleapServer = new TuleapServer(connector, tuleapJsonParser, tuleapJsonSerializer,
+		TuleapServer tuleapServer = new TuleapServer(restConnector, tuleapJsonParser, tuleapJsonSerializer,
 				this.repository, logger);
 		try {
 			List<TuleapTopPlanning> topPlannings = tuleapServer.getTopPlannings(3, null);
