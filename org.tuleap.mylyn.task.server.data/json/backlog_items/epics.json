@@ -21,7 +21,7 @@
       },
       {
         "field_id" : 853,
-        "value" : "400, 401, 402"
+        "value" : "350, 351"
       }
     ]
   },
@@ -30,7 +30,7 @@
     "label" : "Another important Epic",
     "initial_effort": 40.5,
     "url" : "/backlog_items/301",
-    "html_url" : "/backlog_items?id=301&group_id=3",
+    "html_url" : "/backlog_items?id=300&group_id=3",
     "backlog_item_type_id" : 801,
     "values" : [
       {
@@ -47,7 +47,7 @@
       },
       {
         "field_id" : 853,
-        "value" : "403, 404, 405"
+        "value" : "352"
       }
     ]
   },
@@ -56,7 +56,7 @@
     "label" : "Some nice Epic",
     "initial_effort": 25,
     "url" : "/backlog_items/302",
-    "html_url" : "/backlog_items?id=302&group_id=3",
+    "html_url" : "/backlog_items?id=300&group_id=3",
     "backlog_item_type_id" : 801,
     "values" : [
       {
@@ -70,10 +70,6 @@
       {
         "field_id" : 852,
         "value" : "Use some nice visual effects"
-      },
-      {
-        "field_id" : 853,
-        "value" : "406, 407, 408"
       }
     ]
   }

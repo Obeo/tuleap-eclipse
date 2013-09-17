@@ -1,0 +1,26 @@
+{
+  "id" : 301,
+  "label" : "Another important Epic",
+  "initial_effort": 40.5,
+  "url" : "/backlog_items/301",
+  "html_url" : "/backlog_items?id=300&group_id=3",
+  "backlog_item_type_id" : 801,
+  "values" : [
+    {
+      "field_id" : 850,
+      "bind_value_id" : 8501
+    },
+    {
+      "field_id" : 851,
+      "bind_value_id" : 20.5
+    },
+    {
+      "field_id" : 852,
+      "value" : "Bring more added-value to users"
+    },
+    {
+      "field_id" : 853,
+      "value" : "352"
+    }
+  ]
+}

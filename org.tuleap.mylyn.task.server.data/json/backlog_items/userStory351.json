@@ -1,0 +1,46 @@
+{
+  "id" : 351,
+  "label" : "Another important User Story",
+  "initial_effort": 3,
+  "url" : "/backlog_items/351",
+  "html_url" : "/backlog_items?id=351&group_id=3",
+  "backlog_item_type_id" : 802,
+  "values" : [
+    {
+      "field_id" : 860,
+      "bind_value_id" : 8602
+    },
+    {
+      "field_id" : 861,
+      "bind_value_id" : "Do something more useful"
+    },
+    {
+      "field_id" : 862,
+      "value" : "it brings more added-value to my work"
+    },
+    {
+      "field_id" : 863,
+      "value" : "Other are acceptance Criteria:\n* Blah blah\n* Foo"
+    },
+    {
+      "field_id" : 864,
+      "value" : "510,511,512,513"
+    },
+    {
+      "field_id" : 865,
+      "value" : "Iteration 1"
+    },
+    {
+      "field_id" : 866,
+      "value" : 3
+    },
+    {
+      "field_id" : 867,
+      "value" : "0"
+    },
+    {
+      "field_id" : 868,
+      "bind_value_id" : 8612
+    }
+  ]
+}

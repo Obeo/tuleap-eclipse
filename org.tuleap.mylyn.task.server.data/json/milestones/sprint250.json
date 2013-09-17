@@ -1,0 +1,40 @@
+{
+  "id" : 250,
+  "label" : "Sprint 1"
+  "start_date" : 12345678,
+  "duration" : 15,
+  "capacity" : 24.5,
+  "url" : "/milestones/300",
+  "html_url" : "/milestones?id=300&group_id=3",
+  "milestone_type_id" : 902,
+  "values" : [
+    {
+      "field_id" : 960,
+      "value" : "Sprint 1"
+    },
+    {
+      "field_id" : 961,
+      "bind_value_id" : 9612
+    },
+    {
+      "field_id" : 962,
+      "value" : "400, 401, 402"
+    },
+    {
+      "field_id" : 963,
+      "value" : 12345678
+    },
+    {
+      "field_id" : 964,
+      "value" : 15
+    },
+    {
+      "field_id" : 965,
+      "value" : 24.5
+    },
+    {
+      "field_id" : 966,
+      "value" : 0
+    }
+  ]
+}
