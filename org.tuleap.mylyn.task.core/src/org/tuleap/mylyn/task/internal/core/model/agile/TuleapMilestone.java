@@ -28,12 +28,12 @@ public class TuleapMilestone extends AbstractTuleapAgileElement {
 	private long startDate;
 
 	/**
-	 * The milestone's start date.
+	 * The milestone's duration.
 	 */
 	private float duration;
 
 	/**
-	 * The milestone's start date.
+	 * The milestone's capacity.
 	 */
 	private float capacity;
 
