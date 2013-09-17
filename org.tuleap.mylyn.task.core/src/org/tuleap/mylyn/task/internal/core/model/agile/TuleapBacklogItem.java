@@ -28,6 +28,12 @@ public class TuleapBacklogItem extends AbstractTuleapAgileElement {
 	private int typeId;
 
 	/**
+	 * The id of the milestone to which the backlog item is assigned. {@code null} indicates that the backlog
+	 * item is NOT assigned to any milestone.
+	 */
+	private Integer assignedMilestoneId;
+
+	/**
 	 * Initial effort.
 	 * 
 	 * @return the initialEffort
@@ -63,6 +69,25 @@ public class TuleapBacklogItem extends AbstractTuleapAgileElement {
 	 */
 	public void setTypeId(int typeId) {
 		this.typeId = typeId;
+	}
+
+	/**
+	 * Gets the id of the milestone this backlog item is assigned to.
+	 * 
+	 * @return the assignedMilestoneId
+	 */
+	public Integer getAssignedMilestoneId() {
+		return assignedMilestoneId;
+	}
+
+	/**
+	 * Sets the id of the milestone this backlog item is assigned to.
+	 * 
+	 * @param assignedMilestoneId
+	 *            the assignedMilestoneId to set
+	 */
+	public void setAssignedMilestoneId(Integer assignedMilestoneId) {
+		this.assignedMilestoneId = assignedMilestoneId;
 	}
 
 }

@@ -5,6 +5,7 @@
   "url" : "/backlog_items/301",
   "html_url" : "/backlog_items?id=301&group_id=3",
   "backlog_item_type_id" : 801,
+  "assigned_milestone_id": 201,
   "values" : [
     {
       "field_id" : 850,

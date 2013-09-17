@@ -37,6 +37,11 @@ public class TuleapBacklogItemDeserializer extends AbstractTuleapDeserializer<Tu
 	private static final String TYPE_ID = "backlog_item_type_id"; //$NON-NLS-1$
 
 	/**
+	 * The key used for the assigned milestone id.
+	 */
+	private static final String ASSIGNED_MILESTONE_ID = "assigned_milestone_id"; //$NON-NLS-1$
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see com.google.gson.JsonDeserializer#deserialize(com.google.gson.JsonElement, java.lang.reflect.Type,
@@ -49,10 +54,16 @@ public class TuleapBacklogItemDeserializer extends AbstractTuleapDeserializer<Tu
 
 		JsonObject jsonObject = element.getAsJsonObject();
 
-		JsonElement initialEffortElement = jsonObject.get(INITIAL_EFFORT);
-		if (initialEffortElement != null) {
-			float initialEffort = initialEffortElement.getAsFloat();
+		JsonElement elt = jsonObject.get(INITIAL_EFFORT);
+		if (elt != null) {
+			float initialEffort = elt.getAsFloat();
 			backlogItem.setInitialEffort(initialEffort);
+		}
+
+		elt = jsonObject.get(ASSIGNED_MILESTONE_ID);
+		if (elt != null) {
+			int assignedMilestoneId = elt.getAsInt();
+			backlogItem.setAssignedMilestoneId(Integer.valueOf(assignedMilestoneId));
 		}
 
 		int typeId = jsonObject.get(TYPE_ID).getAsInt();

@@ -6,6 +6,7 @@
     "url" : "/backlog_items/350",
     "html_url" : "/backlog_items?id=350&group_id=3",
     "backlog_item_type_id" : 802,
+    "assigned_milestone_id": 250,
     "values" : [
       {
         "field_id" : 860,
@@ -52,6 +53,7 @@
     "url" : "/backlog_items/351",
     "html_url" : "/backlog_items?id=351&group_id=3",
     "backlog_item_type_id" : 802,
+    "assigned_milestone_id": 250,
     "values" : [
       {
         "field_id" : 860,
@@ -98,6 +100,7 @@
     "url" : "/backlog_items/352",
     "html_url" : "/backlog_items?id=352&group_id=3",
     "backlog_item_type_id" : 802,
+    "assigned_milestone_id": 250,
     "values" : [
       {
         "field_id" : 860,
