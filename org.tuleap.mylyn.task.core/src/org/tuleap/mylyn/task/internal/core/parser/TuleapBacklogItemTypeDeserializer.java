@@ -117,9 +117,6 @@ public class TuleapBacklogItemTypeDeserializer implements JsonDeserializer<Tulea
 				// the field label
 				tuleapField.setLabel(field.get("label").getAsString()); //$NON-NLS-1$
 
-				// the field name
-				tuleapField.setName(field.get("short_name").getAsString()); //$NON-NLS-1$
-
 				// the field permissions
 				JsonArray permissions = field.get("permissions").getAsJsonArray(); //$NON-NLS-1$
 				String[] permissionsArray = new String[permissions.size()];
