@@ -67,22 +67,38 @@ public class TuleapMilestoneDeserializer extends AbstractTuleapDeserializer<Tule
 
 		JsonObject jsonObject = rootJsonElement.getAsJsonObject();
 
-		long startDate = jsonObject.get(START_DATE).getAsLong();
-		milestone.setStartDate(startDate);
+		JsonElement elt = jsonObject.get(START_DATE);
+		if (elt != null) {
+			long startDate = elt.getAsLong();
+			milestone.setStartDate(startDate);
+		}
 
-		float duration = jsonObject.get(DURATION).getAsFloat();
-		milestone.setDuration(duration);
+		elt = jsonObject.get(DURATION);
+		if (elt != null) {
+			float duration = elt.getAsFloat();
+			milestone.setDuration(duration);
+		}
 
-		float capacity = jsonObject.get(CAPACITY).getAsFloat();
-		milestone.setCapacity(capacity);
+		elt = jsonObject.get(CAPACITY);
+		if (elt != null) {
+			float capacity = elt.getAsFloat();
+			milestone.setCapacity(capacity);
+		}
 
-		int typeId = jsonObject.get(TYPE_ID).getAsInt();
-		milestone.setTypeId(typeId);
+		elt = jsonObject.get(TYPE_ID);
+		if (elt != null) {
+			int typeId = elt.getAsInt();
+			milestone.setTypeId(typeId);
+		}
 
-		JsonArray submilestones = jsonObject.get(SUBMILESTONES).getAsJsonArray();
-		for (JsonElement submilestone : submilestones) {
-			TuleapMilestone sub = deserialize(submilestone, type, jsonDeserializationContext);
-			milestone.addSubMilestone(sub);
+		elt = jsonObject.get(SUBMILESTONES);
+		if (elt != null) {
+			JsonArray submilestones = jsonObject.get(SUBMILESTONES).getAsJsonArray();
+			for (JsonElement submilestone : submilestones) {
+				TuleapMilestone sub = deserialize(submilestone, type,
+						jsonDeserializationContext);
+				milestone.addSubMilestone(sub);
+			}
 		}
 
 		return milestone;
