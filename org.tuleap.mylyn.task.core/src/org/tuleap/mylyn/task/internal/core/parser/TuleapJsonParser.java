@@ -339,7 +339,7 @@ public class TuleapJsonParser {
 					mapper.setSelectBoxValue(bindValueId, fieldId);
 				}
 			} else if (fieldConfig instanceof TuleapMultiSelectBox) {
-				TuleapSelectBox selectBox = (TuleapSelectBox)fieldConfig;
+				TuleapMultiSelectBox selectBox = (TuleapMultiSelectBox)fieldConfig;
 				JsonArray bindValues = fieldValue.get(BIND_VALUES).getAsJsonArray();
 				Set<Integer> valueIds = Sets.newHashSet();
 				for (JsonElement bindValue : bindValues) {
