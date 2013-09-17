@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.tests.server;
 
+import com.google.common.collect.ImmutableList;
+
+import java.util.List;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -20,6 +24,8 @@ import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
 import org.tuleap.mylyn.task.internal.core.server.TuleapServer;
@@ -116,6 +122,30 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 			TaskData taskData = tuleapServer.getArtifact(1, this.connector, null);
 			System.out.println(taskData.getRoot());
 			// TODO Check the TaskData content
+		} catch (CoreException e) {
+			fail(e.getMessage());
+		}
+	}
+
+	/**
+	 * Test of top plannings retrieval.
+	 */
+	@Test
+	public void testGetTopPlannings() {
+		TestLogger logger = new TestLogger();
+		TuleapRestConnector connector = new TuleapRestConnector(this.getServerUrl(), "v3.14", logger);
+		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
+		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
+
+		TuleapServer tuleapServer = new TuleapServer(connector, tuleapJsonParser, tuleapJsonSerializer,
+				this.repository, logger);
+		try {
+			List<TuleapTopPlanning> topPlannings = tuleapServer.getTopPlannings(3, null);
+			assertEquals(1, topPlannings.size());
+			TuleapTopPlanning topPlanning = topPlannings.get(0);
+			assertEquals(30, topPlanning.getId());
+			ImmutableList<TuleapMilestone> milestones = topPlanning.getMilestones();
+			assertEquals(2, milestones.size());
 		} catch (CoreException e) {
 			fail(e.getMessage());
 		}

@@ -17,20 +17,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.runtime.Platform;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.osgi.framework.Bundle;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapProjectConfigurationDeserializer;
 
@@ -45,10 +37,11 @@ import static org.junit.Assert.assertTrue;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class TuleapProjectConfigurationDeserializerTests {
+
 	/**
-	 * The identifier of the server data bundle.
+	 * Folder prefix.
 	 */
-	private static final String SERVER_DATA_BUNDLE_ID = "org.tuleap.mylyn.task.server.data"; //$NON-NLS-1$
+	private static final String FOLDER_PREFIX = "/json/projects/"; //$NON-NLS-1$
 
 	/**
 	 * The prefix of all the individual project files.
@@ -96,91 +89,16 @@ public class TuleapProjectConfigurationDeserializerTests {
 	private static String projects;
 
 	/**
-	 * Reads the content of the file at the given url and returns it.
-	 * 
-	 * @param url
-	 *            The url of the file in the bundle.
-	 * @return The content of the file
-	 */
-	private static String readFileFromURL(URL url) {
-		String result = ""; //$NON-NLS-1$
-
-		InputStream openStream = null;
-		InputStreamReader inputStreamReader = null;
-		BufferedReader bufferedReader = null;
-		try {
-			openStream = url.openStream();
-		} catch (IOException e) {
-			// do nothing, openStream is null
-		}
-
-		if (openStream != null) {
-			inputStreamReader = new InputStreamReader(openStream);
-			bufferedReader = new BufferedReader(inputStreamReader);
-
-			StringBuilder stringBuilder = new StringBuilder();
-
-			String line = null;
-			try {
-				while ((line = bufferedReader.readLine()) != null) {
-					stringBuilder.append(line);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			try {
-				bufferedReader.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-				try {
-					inputStreamReader.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				} finally {
-					try {
-						openStream.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-
-			result = stringBuilder.toString();
-		}
-
-		return result;
-	}
-
-	/**
 	 * Loads the json files from the server data project into the appropriate variables.
 	 */
 	@BeforeClass
 	public static void staticSetUp() {
-		Bundle serverDataBundle = Platform.getBundle(SERVER_DATA_BUNDLE_ID);
-		if (serverDataBundle == null) {
-			return;
-		}
-		Enumeration<URL> entries = serverDataBundle.findEntries("/json/projects", "*.json", true); //$NON-NLS-1$//$NON-NLS-2$
-		while (entries.hasMoreElements()) {
-			URL url = entries.nextElement();
-			String content = readFileFromURL(url);
-
-			if (url.getPath().endsWith(PROJECTS_FILE_NAME)) {
-				projects = content;
-			} else if (url.getPath().endsWith(PROJECT_FILE_PREFIX + 0 + JSON_EXTENSION)) {
-				project0 = content;
-			} else if (url.getPath().endsWith(PROJECT_FILE_PREFIX + 1 + JSON_EXTENSION)) {
-				project1 = content;
-			} else if (url.getPath().endsWith(PROJECT_FILE_PREFIX + 2 + JSON_EXTENSION)) {
-				project2 = content;
-			} else if (url.getPath().endsWith(PROJECT_FILE_PREFIX + 3 + JSON_EXTENSION)) {
-				project3 = content;
-			} else if (url.getPath().endsWith(PROJECT_FILE_PREFIX + 4 + JSON_EXTENSION)) {
-				project4 = content;
-			}
-		}
+		projects = ParserUtil.loadFile(FOLDER_PREFIX + PROJECTS_FILE_NAME);
+		project0 = ParserUtil.loadFile(FOLDER_PREFIX + PROJECT_FILE_PREFIX + 0 + JSON_EXTENSION);
+		project1 = ParserUtil.loadFile(FOLDER_PREFIX + PROJECT_FILE_PREFIX + 1 + JSON_EXTENSION);
+		project2 = ParserUtil.loadFile(FOLDER_PREFIX + PROJECT_FILE_PREFIX + 2 + JSON_EXTENSION);
+		project3 = ParserUtil.loadFile(FOLDER_PREFIX + PROJECT_FILE_PREFIX + 3 + JSON_EXTENSION);
+		project4 = ParserUtil.loadFile(FOLDER_PREFIX + PROJECT_FILE_PREFIX + 4 + JSON_EXTENSION);
 	}
 
 	/**

@@ -27,7 +27,8 @@ Require-Bundle: org.junit,
  org.hamcrest;bundle-version="1.1.0",
  org.tuleap.mylyn.task.server.data;bundle-version="2.0.0",
  com.google.gson;bundle-version="2.1.0",
- org.tuleap.mylyn.task.agile.core;bundle-version="1.0.0"
+ org.tuleap.mylyn.task.agile.core;bundle-version="1.0.0",
+ com.google.guava;bundle-version="11.0.2"
 Export-Package: org.tuleap.mylyn.task.internal.tests;x-internal:=true,
  org.tuleap.mylyn.task.internal.tests.client;x-internal:=true,
  org.tuleap.mylyn.task.internal.tests.mocks;x-internal:=true,
