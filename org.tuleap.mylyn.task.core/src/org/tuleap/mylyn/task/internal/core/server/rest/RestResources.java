@@ -235,4 +235,27 @@ public final class RestResources {
 	public RestTopPlanningsBacklogItems topPlanningsBacklogItems(int topPlanningId) {
 		return new RestTopPlanningsBacklogItems(serverUrl, apiVersion, credentials, topPlanningId);
 	}
+
+	/**
+	 * Provides access to the {code /projects} HTTP resource.
+	 * 
+	 * @param projectId
+	 *            the project id
+	 * @return A resource that gives access to the {code /projects/:projectId/backlog_item_types} HTTP
+	 *         resource.
+	 */
+	public RestProjectsBacklogItemTypes projectsBacklogItemTypes(int projectId) {
+		return new RestProjectsBacklogItemTypes(serverUrl, apiVersion, credentials, projectId);
+	}
+
+	/**
+	 * Provides access to the {code /projects} HTTP resource.
+	 * 
+	 * @param projectId
+	 *            the project id
+	 * @return A resource that gives access to the {code /projects/:projectId/milestone_types} HTTP resource.
+	 */
+	public RestProjectsMilestoneTypes projectsMilestoneTypes(int projectId) {
+		return new RestProjectsMilestoneTypes(serverUrl, apiVersion, credentials, projectId);
+	}
 }
