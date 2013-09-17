@@ -143,7 +143,7 @@ public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapAgileEl
 	}
 
 	/**
-	 * It instantiates the POJO to fill.
+	 * Instantiates the relevant class of POJO to fill.
 	 * 
 	 * @return The POJO.
 	 */
