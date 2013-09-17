@@ -36,7 +36,7 @@
         "label" : "Linked Artifacts",
         "type" : "art_link",
         "permissions" : [
-            "read", "update", "delete"
+            "read", "create", "update"
         ]
       }, {
         "field_id" : 963,

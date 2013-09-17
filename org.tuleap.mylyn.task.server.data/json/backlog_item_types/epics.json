@@ -7,7 +7,9 @@
   "fields" : [
       {
         "field_id" : 850,
-        "label" : "Status",
+        "label" : "Status", 
+        "type": "sb",
+        "permissions" : [],
         "values" : [
             {
               "field_value_id" : 8500,
