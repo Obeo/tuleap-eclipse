@@ -33,7 +33,7 @@
     "submilestones" : [
       {
         "id" : 250,
-        "label" : "Sprint 1"
+        "label" : "Sprint 1",
         "start_date" : 12345678,
         "duration" : 15,
         "capacity" : 24.5,
@@ -73,7 +73,7 @@
       },
       {
         "id" : 251,
-        "label" : "Sprint 2"
+        "label" : "Sprint 2",
         "start_date" : 12355678,
         "duration" : 21,
         "capacity" : 28.5,
@@ -113,7 +113,7 @@
       },
       {
         "id" : 252,
-        "label" : "Sprint 3"
+        "label" : "Sprint 3",
         "start_date" : 12365678,
         "duration" : 20,
         "capacity" : 26.5,
