@@ -3,7 +3,7 @@
   "label" : "Some nice Epic",
   "initial_effort": 25,
   "url" : "/backlog_items/302",
-  "html_url" : "/backlog_items?id=300&group_id=3",
+  "html_url" : "/backlog_items?id=302&group_id=3",
   "backlog_item_type_id" : 801,
   "values" : [
     {
