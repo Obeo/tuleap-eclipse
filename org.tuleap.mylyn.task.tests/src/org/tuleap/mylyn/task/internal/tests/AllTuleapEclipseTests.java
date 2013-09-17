@@ -23,6 +23,8 @@ import org.tuleap.mylyn.task.internal.tests.client.TuleapUtilTests;
 import org.tuleap.mylyn.task.internal.tests.model.TuleapTrackerConfigurationTests;
 import org.tuleap.mylyn.task.internal.tests.model.TuleapWorkflowTests;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapBacklogItemDeserializerTest;
+import org.tuleap.mylyn.task.internal.tests.parser.TuleapBacklogItemTypeDeserializerTests;
+import org.tuleap.mylyn.task.internal.tests.parser.TuleapMilestoneTypeDeserializerTests;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapProjectConfigurationDeserializerTests;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapTrackerConfigurationDeserializerTests;
 import org.tuleap.mylyn.task.internal.tests.server.ServerResponseTest;
@@ -39,7 +41,8 @@ import org.tuleap.mylyn.task.internal.tests.server.TaskRepositoryCredentialsTest
 		TuleapTaskDataHandlerTests.class, TuleapProjectConfigurationDeserializerTests.class,
 		TuleapTrackerConfigurationDeserializerTests.class, TuleapWorkflowTests.class,
 		TuleapTrackerConfigurationTests.class, TaskRepositoryCredentialsTest.class, ServerResponseTest.class,
-		TuleapBacklogItemDeserializerTest.class })
+		TuleapBacklogItemDeserializerTest.class, TuleapBacklogItemTypeDeserializerTests.class,
+		TuleapMilestoneTypeDeserializerTests.class })
 public final class AllTuleapEclipseTests {
 
 	/**
