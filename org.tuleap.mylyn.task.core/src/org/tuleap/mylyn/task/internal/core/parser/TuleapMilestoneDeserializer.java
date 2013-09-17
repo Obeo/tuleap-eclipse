@@ -93,10 +93,9 @@ public class TuleapMilestoneDeserializer extends AbstractTuleapDeserializer<Tule
 
 		elt = jsonObject.get(SUBMILESTONES);
 		if (elt != null) {
-			JsonArray submilestones = jsonObject.get(SUBMILESTONES).getAsJsonArray();
+			JsonArray submilestones = elt.getAsJsonArray();
 			for (JsonElement submilestone : submilestones) {
-				TuleapMilestone sub = deserialize(submilestone, type,
-						jsonDeserializationContext);
+				TuleapMilestone sub = deserialize(submilestone, type, jsonDeserializationContext);
 				milestone.addSubMilestone(sub);
 			}
 		}
