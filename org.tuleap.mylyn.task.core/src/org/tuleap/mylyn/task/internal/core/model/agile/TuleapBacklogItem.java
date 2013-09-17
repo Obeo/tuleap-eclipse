@@ -13,8 +13,56 @@ package org.tuleap.mylyn.task.internal.core.model.agile;
 /**
  * A backlog item in a milestone.
  * 
- * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
+ * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class TuleapBacklogItem {
-	// TODO
+public class TuleapBacklogItem extends AbstractTuleapAgileElement {
+
+	/**
+	 * The initial effort.
+	 */
+	private float initialEffort;
+
+	/**
+	 * The id of the milestone's type.
+	 */
+	private int typeId;
+
+	/**
+	 * Initial effort.
+	 * 
+	 * @return the initialEffort
+	 */
+	public float getInitialEffort() {
+		return initialEffort;
+	}
+
+	/**
+	 * Initial effort setter.
+	 * 
+	 * @param initialEffort
+	 *            the initialEffort to set
+	 */
+	public void setInitialEffort(float initialEffort) {
+		this.initialEffort = initialEffort;
+	}
+
+	/**
+	 * typeId getter.
+	 * 
+	 * @return the typeId
+	 */
+	public int getTypeId() {
+		return typeId;
+	}
+
+	/**
+	 * typeId setter.
+	 * 
+	 * @param typeId
+	 *            the typeId to set
+	 */
+	public void setTypeId(int typeId) {
+		this.typeId = typeId;
+	}
+
 }

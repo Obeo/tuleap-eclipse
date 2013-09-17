@@ -11,8 +11,8 @@
 package org.tuleap.mylyn.task.internal.core.parser;
 
 import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
@@ -24,57 +24,17 @@ import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public class TuleapBacklogItemDeserializer implements JsonDeserializer<TuleapBacklogItem> {
+public class TuleapBacklogItemDeserializer extends AbstractTuleapDeserializer<TuleapBacklogItem> {
 
 	/**
-	 * The key used for the name of the project.
+	 * The key used for the initial effort of the backlog item.
 	 */
-	private static final String LABEL = "label"; //$NON-NLS-1$
+	private static final String INITIAL_EFFORT = "initial_effort"; //$NON-NLS-1$
 
 	/**
-	 * The key used for the identifier of the project.
+	 * The key used for the type id of the backlog item.
 	 */
-	private static final String ID = "id"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the name of the project.
-	 */
-	private static final String START_DATE = "start_date"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the name of the project.
-	 */
-	private static final String DURATION = "duration"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the name of the project.
-	 */
-	private static final String CAPACITY = "capacity"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the name of the project.
-	 */
-	private static final String URL = "url"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the name of the project.
-	 */
-	private static final String HTML_URL = "html_url"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the name of the project.
-	 */
-	private static final String MILESTONE_TYPE_ID = "milestone_type_id"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the name of the project.
-	 */
-	private static final String VALUES = "values"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the name of the project.
-	 */
-	private static final String SUBMILESTONES = "submilestones"; //$NON-NLS-1$
+	private static final String TYPE_ID = "backlog_item_type_id"; //$NON-NLS-1$
 
 	/**
 	 * {@inheritDoc}
@@ -82,11 +42,33 @@ public class TuleapBacklogItemDeserializer implements JsonDeserializer<TuleapBac
 	 * @see com.google.gson.JsonDeserializer#deserialize(com.google.gson.JsonElement, java.lang.reflect.Type,
 	 *      com.google.gson.JsonDeserializationContext)
 	 */
-	public TuleapBacklogItem deserialize(JsonElement arg0, Type arg1, JsonDeserializationContext arg2)
+	@Override
+	public TuleapBacklogItem deserialize(JsonElement element, Type type, JsonDeserializationContext context)
 			throws JsonParseException {
-		TuleapBacklogItem milestone = new TuleapBacklogItem();
+		TuleapBacklogItem backlogItem = super.deserialize(element, type, context);
 
-		return milestone;
+		JsonObject jsonObject = element.getAsJsonObject();
+
+		JsonElement initialEffortElement = jsonObject.get(INITIAL_EFFORT);
+		if (initialEffortElement != null) {
+			float initialEffort = initialEffortElement.getAsFloat();
+			backlogItem.setInitialEffort(initialEffort);
+		}
+
+		int typeId = jsonObject.get(TYPE_ID).getAsInt();
+		backlogItem.setTypeId(typeId);
+
+		return backlogItem;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.tuleap.mylyn.task.internal.core.parser.AbstractTuleapDeserializer#buildPojo()
+	 */
+	@Override
+	protected TuleapBacklogItem buildPojo() {
+		return new TuleapBacklogItem();
 	}
 
 }
