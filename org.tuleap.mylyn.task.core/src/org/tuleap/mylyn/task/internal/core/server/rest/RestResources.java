@@ -25,7 +25,7 @@ import org.tuleap.mylyn.task.internal.core.server.ServerResponse;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 
 /**
- * Builder class that instantiates the accessibles JSON services.
+ * Builder class that instantiates the accessible JSON services.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
@@ -237,7 +237,7 @@ public final class RestResources {
 	}
 
 	/**
-	 * Provides access to the {code /projects} HTTP resource.
+	 * Provides access to the {code /projects/:projectId/backlog_item_types} HTTP resource.
 	 * 
 	 * @param projectId
 	 *            the project id
@@ -249,7 +249,7 @@ public final class RestResources {
 	}
 
 	/**
-	 * Provides access to the {code /projects} HTTP resource.
+	 * Provides access to the {code /projects/:projectId/milestone_types} HTTP resource.
 	 * 
 	 * @param projectId
 	 *            the project id
