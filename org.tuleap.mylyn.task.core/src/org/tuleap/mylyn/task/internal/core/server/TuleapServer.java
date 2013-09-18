@@ -38,13 +38,17 @@ import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerReport;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItemType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
 import org.tuleap.mylyn.task.internal.core.net.TuleapAttachmentDescriptor;
+import org.tuleap.mylyn.task.internal.core.parser.TuleapBacklogItemDeserializer;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapBacklogItemTypeDeserializer;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
+import org.tuleap.mylyn.task.internal.core.parser.TuleapMilestoneDeserializer;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapMilestoneTypeDeserializer;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.server.rest.ICredentials;
@@ -52,8 +56,11 @@ import org.tuleap.mylyn.task.internal.core.server.rest.RestArtifacts;
 import org.tuleap.mylyn.task.internal.core.server.rest.RestProjects;
 import org.tuleap.mylyn.task.internal.core.server.rest.RestProjectsBacklogItemTypes;
 import org.tuleap.mylyn.task.internal.core.server.rest.RestProjectsMilestoneTypes;
+import org.tuleap.mylyn.task.internal.core.server.rest.RestProjectsTopPlannings;
 import org.tuleap.mylyn.task.internal.core.server.rest.RestProjectsTrackers;
 import org.tuleap.mylyn.task.internal.core.server.rest.RestResources;
+import org.tuleap.mylyn.task.internal.core.server.rest.RestTopPlanningsBacklogItems;
+import org.tuleap.mylyn.task.internal.core.server.rest.RestTopPlanningsMilestones;
 import org.tuleap.mylyn.task.internal.core.server.rest.TuleapRestConnector;
 
 /**
@@ -652,5 +659,70 @@ public class TuleapServer {
 			return result;
 		}
 		return null;
+	}
+
+	/**
+	 * Retrieve the top planning(s) of a given project.
+	 * 
+	 * @param projectId
+	 *            The project id
+	 * @param monitor
+	 *            The monitor to use
+	 * @return A list of the top plannings of the project.
+	 * @throws CoreException
+	 *             If anything goes wrong.
+	 */
+	public List<TuleapTopPlanning> getTopPlannings(int projectId, IProgressMonitor monitor)
+			throws CoreException {
+		List<TuleapTopPlanning> result = Lists.newArrayList();
+		RestResources restResources = tuleapRestConnector.resources(credentials);
+
+		// 1- Retrieve the list of top planning ids
+		RestProjectsTopPlannings projectTopPlannings = restResources.projectsTopPlannings(projectId);
+		projectTopPlannings.checkGet(Collections.<String, String> emptyMap());
+		ServerResponse topPlanningsResponse = projectTopPlannings
+				.get(Collections.<String, String> emptyMap());
+		// Contains a JSON array of integers
+		JsonParser parser = new JsonParser();
+		String jsonTopPlanningIds = topPlanningsResponse.getBody();
+		JsonArray topPlanningIds = parser.parse(jsonTopPlanningIds).getAsJsonArray();
+		for (JsonElement element : topPlanningIds) {
+			TuleapTopPlanning topPlanning = new TuleapTopPlanning();
+			int topPlanningId = element.getAsInt();
+			topPlanning.setId(topPlanningId);
+
+			// 2- Retrieve the milestones of this top planning
+			RestTopPlanningsMilestones restMilestones = restResources.topPlanningsMilestones(topPlanningId);
+			restMilestones.checkGet(Collections.<String, String> emptyMap());
+			ServerResponse milestonesResponse = restMilestones.get(Collections.<String, String> emptyMap());
+			// TODO Pagination
+			String jsonMilestones = milestonesResponse.getBody();
+			// Contains a JSON array of milestones
+			JsonArray milestonesArray = parser.parse(jsonMilestones).getAsJsonArray();
+			for (JsonElement milestoneElement : milestonesArray) {
+				TuleapMilestone milestone = new TuleapMilestoneDeserializer().deserialize(milestoneElement,
+						TuleapMilestone.class, null);
+				topPlanning.addMilestone(milestone);
+			}
+
+			// 3- Retrieve the backlog items of this top planning
+			RestTopPlanningsBacklogItems restBacklogItems = restResources
+					.topPlanningsBacklogItems(topPlanningId);
+			restBacklogItems.checkGet(Collections.<String, String> emptyMap());
+			ServerResponse backlogItemsResponse = restBacklogItems.get(Collections
+					.<String, String> emptyMap());
+			// TODO Pagination
+			String jsonBacklogItems = backlogItemsResponse.getBody();
+			// Contains a JSON array of backlog items
+			JsonArray backlogItemsArray = parser.parse(jsonBacklogItems).getAsJsonArray();
+			for (JsonElement backlogItemElement : backlogItemsArray) {
+				TuleapBacklogItem backlogItem = new TuleapBacklogItemDeserializer().deserialize(
+						backlogItemElement, TuleapBacklogItem.class, null);
+				topPlanning.addBacklogItem(backlogItem);
+			}
+			result.add(topPlanning);
+		}
+
+		return result;
 	}
 }
