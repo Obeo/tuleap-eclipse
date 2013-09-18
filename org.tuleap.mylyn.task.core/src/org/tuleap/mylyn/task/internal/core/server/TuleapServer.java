@@ -549,41 +549,36 @@ public class TuleapServer {
 
 		// Send a request with OPTIONS to ensure that we can and have the right to retrieve the
 		// backlogItemType
-		if (restResources != null) {
 
-			RestProjectsBacklogItemTypes restProjectsBacklogItemTypes = restResources
-					.projectsBacklogItemTypes(projectId);
-			restProjectsBacklogItemTypes.checkGet(Collections.<String, String> emptyMap());
+		RestProjectsBacklogItemTypes restProjectsBacklogItemTypes = restResources
+				.projectsBacklogItemTypes(projectId);
+		restProjectsBacklogItemTypes.checkGet(Collections.<String, String> emptyMap());
 
-			ServerResponse response = restProjectsBacklogItemTypes.get(Collections
-					.<String, String> emptyMap());
+		ServerResponse response = restProjectsBacklogItemTypes.get(Collections.<String, String> emptyMap());
 
-			if (ITuleapServerStatus.OK != response.getStatus()) {
-				// Invalid login? server error?
-				String message = this.jsonParser.getErrorMessage(response.getBody());
-				throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, message));
-			}
-
-			// Analyze the server response
-			String jsonResponse = response.getBody();
-			JsonParser theJsonParser = new JsonParser();
-			JsonArray jsonArray = theJsonParser.parse(jsonResponse).getAsJsonArray();
-
-			GsonBuilder gsonBuilder = new GsonBuilder();
-			gsonBuilder.registerTypeAdapter(TuleapBacklogItemType.class,
-					new TuleapBacklogItemTypeDeserializer());
-
-			List<TuleapBacklogItemType> result = Lists.newArrayList();
-			for (JsonElement jsonElement : jsonArray) {
-				Gson gson = gsonBuilder.create();
-				TuleapBacklogItemType tuleapBacklogItemType = gson.fromJson(jsonElement,
-						TuleapBacklogItemType.class);
-
-				result.add(tuleapBacklogItemType);
-			}
-			return result;
+		if (ITuleapServerStatus.OK != response.getStatus()) {
+			// Invalid login? server error?
+			String message = this.jsonParser.getErrorMessage(response.getBody());
+			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, message));
 		}
-		return null;
+
+		// Analyze the server response
+		String jsonResponse = response.getBody();
+		JsonParser theJsonParser = new JsonParser();
+		JsonArray jsonArray = theJsonParser.parse(jsonResponse).getAsJsonArray();
+
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		gsonBuilder.registerTypeAdapter(TuleapBacklogItemType.class, new TuleapBacklogItemTypeDeserializer());
+
+		List<TuleapBacklogItemType> result = Lists.newArrayList();
+		for (JsonElement jsonElement : jsonArray) {
+			Gson gson = gsonBuilder.create();
+			TuleapBacklogItemType tuleapBacklogItemType = gson.fromJson(jsonElement,
+					TuleapBacklogItemType.class);
+
+			result.add(tuleapBacklogItemType);
+		}
+		return result;
 	}
 
 	/**
@@ -604,39 +599,35 @@ public class TuleapServer {
 
 		// Send a request with OPTIONS to ensure that we can and have the right to retrieve the
 		// backlogItemType
-		if (restResources != null) {
 
-			RestProjectsMilestoneTypes restProjectsMilestoneTypes = restResources
-					.projectsMilestoneTypes(projectId);
-			restProjectsMilestoneTypes.checkGet(Collections.<String, String> emptyMap());
+		RestProjectsMilestoneTypes restProjectsMilestoneTypes = restResources
+				.projectsMilestoneTypes(projectId);
+		restProjectsMilestoneTypes.checkGet(Collections.<String, String> emptyMap());
 
-			ServerResponse response = restProjectsMilestoneTypes.get(Collections.<String, String> emptyMap());
+		ServerResponse response = restProjectsMilestoneTypes.get(Collections.<String, String> emptyMap());
 
-			if (ITuleapServerStatus.OK != response.getStatus()) {
-				// Invalid login? server error?
-				String message = this.jsonParser.getErrorMessage(response.getBody());
-				throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, message));
-			}
-
-			// Analyze the server response
-			String jsonResponse = response.getBody();
-			JsonParser theJsonParser = new JsonParser();
-			JsonArray jsonArray = theJsonParser.parse(jsonResponse).getAsJsonArray();
-
-			GsonBuilder gsonBuilder = new GsonBuilder();
-			gsonBuilder.registerTypeAdapter(TuleapMilestoneType.class, new TuleapMilestoneTypeDeserializer());
-
-			List<TuleapMilestoneType> result = Lists.newArrayList();
-			for (JsonElement jsonElement : jsonArray) {
-				Gson gson = gsonBuilder.create();
-				TuleapMilestoneType tuleapMilestoneType = gson.fromJson(jsonElement,
-						TuleapMilestoneType.class);
-
-				result.add(tuleapMilestoneType);
-			}
-			return result;
+		if (ITuleapServerStatus.OK != response.getStatus()) {
+			// Invalid login? server error?
+			String message = this.jsonParser.getErrorMessage(response.getBody());
+			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, message));
 		}
-		return null;
+
+		// Analyze the server response
+		String jsonResponse = response.getBody();
+		JsonParser theJsonParser = new JsonParser();
+		JsonArray jsonArray = theJsonParser.parse(jsonResponse).getAsJsonArray();
+
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		gsonBuilder.registerTypeAdapter(TuleapMilestoneType.class, new TuleapMilestoneTypeDeserializer());
+
+		List<TuleapMilestoneType> result = Lists.newArrayList();
+		for (JsonElement jsonElement : jsonArray) {
+			Gson gson = gsonBuilder.create();
+			TuleapMilestoneType tuleapMilestoneType = gson.fromJson(jsonElement, TuleapMilestoneType.class);
+
+			result.add(tuleapMilestoneType);
+		}
+		return result;
 	}
 
 	/**
