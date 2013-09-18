@@ -32,6 +32,7 @@ import org.tuleap.mylyn.task.internal.core.parser.TuleapMilestoneDeserializer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 //CHECKSTYLE:OFF
 
@@ -57,9 +58,19 @@ public class TuleapMilestoneDeserializerTests {
 	private static final String MILESTONES_DATA_200 = "release200"; //$NON-NLS-1$
 
 	/**
-	 * The content of the second tracker json file.
+	 * Data set release milestone 300.
+	 */
+	private static final String MILESTONES_DATA_300 = "release300"; //$NON-NLS-1$
+
+	/**
+	 * The content of the release 200 json file.
 	 */
 	private static String release200;
+
+	/**
+	 * The content of the release 300 json file.
+	 */
+	private static String release300;
 
 	/**
 	 * Reads the content of the file at the given url and returns it.
@@ -135,6 +146,8 @@ public class TuleapMilestoneDeserializerTests {
 
 			if (url.getPath().endsWith(MILESTONES_DATA_200 + JSON_EXTENSION)) {
 				release200 = content;
+			} else if (url.getPath().endsWith(MILESTONES_DATA_300 + JSON_EXTENSION)) {
+				release300 = content;
 			}
 		}
 	}
@@ -160,10 +173,10 @@ public class TuleapMilestoneDeserializerTests {
 	}
 
 	/**
-	 * Test the parsing of the data set 1.
+	 * Test the parsing of the data set of the release 200.
 	 */
 	@Test
-	public void testData1Parsing() {
+	public void testRelease200Parsing() {
 		TuleapMilestone tuleapMilestone = this.parse(release200);
 		assertNotNull(tuleapMilestone);
 
@@ -325,6 +338,61 @@ public class TuleapMilestoneDeserializerTests {
 		assertNotNull(value);
 		assertEquals(26.5, ((Number)value).floatValue(), 0);
 
+	}
+
+	/**
+	 * Test the parsing of the data set of the release 300.
+	 */
+	@Test
+	public void testRelease300Parsing() {
+		TuleapMilestone tuleapMilestone = this.parse(release300);
+		assertNotNull(tuleapMilestone);
+
+		assertEquals(300, tuleapMilestone.getId());
+		assertEquals("Release TU", tuleapMilestone.getLabel()); //$NON-NLS-1$
+		assertEquals(12345678, tuleapMilestone.getStartDate());
+		assertEquals(50, tuleapMilestone.getDuration(), 0);
+		assertEquals(100, tuleapMilestone.getCapacity(), 0);
+		assertEquals("/milestones/300", tuleapMilestone.getUrl()); //$NON-NLS-1$
+		assertEquals("/milestones?id=300&group_id=3", tuleapMilestone.getHtmlUrl()); //$NON-NLS-1$
+		assertEquals(901, tuleapMilestone.getTypeId());
+
+		assertNotNull(tuleapMilestone.getValues());
+
+		Object value = tuleapMilestone.getValue(Integer.valueOf(955));
+		assertNotNull(value);
+		assertEquals("Bonjour,\nC'est un test unitaire.", value); //$NON-NLS-1$
+
+		value = tuleapMilestone.getValue(Integer.valueOf(956));
+		assertNotNull(value);
+		assertEquals("je suis une valeur calculee", value); //$NON-NLS-1$
+
+		value = tuleapMilestone.getValue(Integer.valueOf(957));
+		assertNotNull(value);
+		assertEquals(9610, ((Number)value).intValue());
+
+		value = tuleapMilestone.getValue(Integer.valueOf(958));
+		assertNotNull(value);
+		assertTrue(value instanceof int[]);
+		assertEquals(0, ((int[])value)[0]);
+		assertEquals(1, ((int[])value)[1]);
+
+		value = tuleapMilestone.getValue(Integer.valueOf(959));
+		assertNotNull(value);
+		assertTrue(value instanceof int[]);
+		assertEquals(0, ((int[])value)[0]);
+		assertEquals(2, ((int[])value)[1]);
+
+		value = tuleapMilestone.getValue(Integer.valueOf(960));
+		assertNotNull(value);
+		assertEquals(20120101, ((Number)value).longValue());
+
+		value = tuleapMilestone.getValue(Integer.valueOf(961));
+		assertNotNull(value);
+		assertEquals("first, second, third", value); //$NON-NLS-1$
+
+		// TODO
+		// value = tuleapMilestone.getValue(Integer.valueOf(962));
 	}
 
 }

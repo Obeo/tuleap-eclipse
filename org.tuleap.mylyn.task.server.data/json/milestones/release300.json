@@ -1,0 +1,40 @@
+{
+  "id" : 300,
+  "label" : "Release TU",
+  "start_date" : 12345678,
+  "duration" : 50,
+  "capacity" : 100,
+  "url" : "/milestones/300",
+  "html_url" : "/milestones?id=300&group_id=3",
+  "milestone_type_id" : 901,
+  "values" : [
+    {
+      "field_id" : 955,
+      "value" : "Bonjour,\nC'est un test unitaire."
+    },
+    {
+      "field_id" : 956,
+      "value" : "je suis une valeur calculee"
+    },
+    {
+      "field_id" : 957,
+      "bind_value_id" : 9610
+    },
+    {
+      "field_id" : 958,
+      "bind_value_ids" : [0, 1]
+    },
+    {
+      "field_id" : 959,
+      "bind_value_ids" : [0, 2]
+    },
+    {
+      "field_id" : 960,
+      "value" : 20120101
+    },
+    {
+      "field_id" : 961,
+      "value" : "first, second, third"
+    }
+  ]
+} 
