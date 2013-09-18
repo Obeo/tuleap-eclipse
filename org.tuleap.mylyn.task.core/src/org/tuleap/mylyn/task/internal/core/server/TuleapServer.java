@@ -234,7 +234,7 @@ public class TuleapServer {
 				}
 
 				// Retrieve Milestone types for the project
-				List<TuleapMilestoneType> milestoneTypes = getMiletoneTypes(projectConfig.getIdentifier(),
+				List<TuleapMilestoneType> milestoneTypes = getMilestoneTypes(projectConfig.getIdentifier(),
 						null);
 				for (TuleapMilestoneType tuleapMilestoneType : milestoneTypes) {
 					projectConfig.addMilestoneType(tuleapMilestoneType);
@@ -539,15 +539,13 @@ public class TuleapServer {
 	 * @param monitor
 	 *            Used to monitor the progress
 	 * @return the list of the project's BacklogItem Types
+	 * @throws CoreException
+	 *             In case of error during the retrieval of the BacklogItem Types
 	 */
-	public List<TuleapBacklogItemType> getBacklogitemTypes(int projectId, IProgressMonitor monitor) {
+	public List<TuleapBacklogItemType> getBacklogitemTypes(int projectId, IProgressMonitor monitor)
+			throws CoreException {
 		// Test the connection
-		RestResources restResources = null;
-		try {
-			restResources = tuleapRestConnector.resources(credentials);
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
+		RestResources restResources = tuleapRestConnector.resources(credentials);
 
 		// Send a request with OPTIONS to ensure that we can and have the right to retrieve the
 		// backlogItemType
@@ -555,12 +553,7 @@ public class TuleapServer {
 
 			RestProjectsBacklogItemTypes restProjectsBacklogItemTypes = restResources
 					.projectsBacklogItemTypes(projectId);
-
-			try {
-				restProjectsBacklogItemTypes.checkGet(Collections.<String, String> emptyMap());
-			} catch (CoreException e1) {
-				e1.printStackTrace();
-			}
+			restProjectsBacklogItemTypes.checkGet(Collections.<String, String> emptyMap());
 
 			ServerResponse response = restProjectsBacklogItemTypes.get(Collections
 					.<String, String> emptyMap());
@@ -568,11 +561,7 @@ public class TuleapServer {
 			if (ITuleapServerStatus.OK != response.getStatus()) {
 				// Invalid login? server error?
 				String message = this.jsonParser.getErrorMessage(response.getBody());
-				try {
-					throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, message));
-				} catch (CoreException e) {
-					e.printStackTrace();
-				}
+				throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, message));
 			}
 
 			// Analyze the server response
@@ -605,15 +594,13 @@ public class TuleapServer {
 	 * @param monitor
 	 *            Used to monitor the progress
 	 * @return the list of the project's Milestone Types
+	 * @throws CoreException
+	 *             In case of error during the retrieval of the Milestone Types
 	 */
-	public List<TuleapMilestoneType> getMiletoneTypes(int projectId, IProgressMonitor monitor) {
+	public List<TuleapMilestoneType> getMilestoneTypes(int projectId, IProgressMonitor monitor)
+			throws CoreException {
 		// Test the connection
-		RestResources restResources = null;
-		try {
-			restResources = tuleapRestConnector.resources(credentials);
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
+		RestResources restResources = tuleapRestConnector.resources(credentials);
 
 		// Send a request with OPTIONS to ensure that we can and have the right to retrieve the
 		// backlogItemType
@@ -621,23 +608,14 @@ public class TuleapServer {
 
 			RestProjectsMilestoneTypes restProjectsMilestoneTypes = restResources
 					.projectsMilestoneTypes(projectId);
-
-			try {
-				restProjectsMilestoneTypes.checkGet(Collections.<String, String> emptyMap());
-			} catch (CoreException e1) {
-				e1.printStackTrace();
-			}
+			restProjectsMilestoneTypes.checkGet(Collections.<String, String> emptyMap());
 
 			ServerResponse response = restProjectsMilestoneTypes.get(Collections.<String, String> emptyMap());
 
 			if (ITuleapServerStatus.OK != response.getStatus()) {
 				// Invalid login? server error?
 				String message = this.jsonParser.getErrorMessage(response.getBody());
-				try {
-					throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, message));
-				} catch (CoreException e) {
-					e.printStackTrace();
-				}
+				throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, message));
 			}
 
 			// Analyze the server response
