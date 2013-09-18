@@ -1,192 +1,242 @@
 [
     {
-      "id" : 801,
-      "label" : "Epics",
-      "description" : "The description of epics",
-      "url" : "localhost:3001/api/v3.14/backlog_item_types/801",
-      "project_id" : 3,
-      "fields" : [
-          {
-            "field_id" : 850,
-            "label" : "Status",
-            "values" : [
-                {
-                  "field_value_id" : 8500,
-                  "field_value_label" : "To be done"
-                }, {
-                  "field_value_id" : 8501,
-                  "field_value_label" : "On going"
-                }, {
-                  "field_value_id" : 8502,
-                  "field_value_label" : "Delivered"
-                }
-            ]
-          }, {
-            "field_id" : 851,
-            "label" : "Remaining Effort",
-            "type" : "computed",
-            "permissions" : [
-              "read"
-            ]
-          }, {
-            "field_id" : 852,
-            "label" : "Summary",
-            "type" : "string",
-            "permissions" : [
-                "read", "create", "update"
-            ]
-          }, {
-            "field_id" : 853,
-            "label" : "Stories",
-            "type" : "string",
-            "permissions" : [
-                "read", "create", "update"
-            ]
-          }
-      ],
-      "semantic" : {
-        "title" : {
-          "field_id" : 852
-        },
-        "status" : {
-          "field_id" : 850,
-          "open_status_field_values_ids" : [
-              8500, 8501
-          ]
+        "id": 801,
+        "label": "Epics",
+        "description": "The description of epics",
+        "url": "localhost:3001/api/v3.14/backlog_item_types/801",
+        "project_id": 3,
+        "fields": [
+            {
+                "field_id": 850,
+                "label": "Status",
+                "type": "sb",
+                "permissions": [],
+                "values": [
+                    {
+                        "field_value_id": 8500,
+                        "field_value_label": "To be done"
+                    },
+                    {
+                        "field_value_id": 8501,
+                        "field_value_label": "On going"
+                    },
+                    {
+                        "field_value_id": 8502,
+                        "field_value_label": "Delivered"
+                    }
+                ]
+            },
+            {
+                "field_id": 851,
+                "label": "Remaining Effort",
+                "type": "computed",
+                "permissions": [
+                    "read"
+                ]
+            },
+            {
+                "field_id": 852,
+                "label": "Summary",
+                "type": "string",
+                "permissions": [
+                    "read",
+                    "create",
+                    "update"
+                ]
+            },
+            {
+                "field_id": 853,
+                "label": "Stories",
+                "type": "string",
+                "permissions": [
+                    "read",
+                    "create",
+                    "update"
+                ]
+            }
+        ],
+        "semantic": {
+            "title": {
+                "field_id": 852
+            },
+            "status": {
+                "field_id": 850,
+                "open_status_field_values_ids": [
+                    8500,
+                    8501
+                ]
+            }
         }
-      }
-    }, {
-      "id" : 802,
-      "label" : "User Stories",
-      "description" : "The description of user stories",
-      "url" : "localhost:3001/api/v3.14/backlog_item_types/802",
-      "project_id" : 3,
-      "fields" : [
-          {
-            "field_id" : 860,
-            "label" : "As a",
-            "short_name" : "as_a",
-            "type" : "sb",
-            "values" : [
-                {
-                  "field_value_id" : 8600,
-                  "field_value_label" : "Admin"
-                }, {
-                  "field_value_id" : 8601,
-                  "field_value_label" : "Product Owner"
-                }, {
-                  "field_value_id" : 8602,
-                  "field_value_label" : "Scrum Team"
-                }, {
-                  "field_value_id" : 8603,
-                  "field_value_label" : "System Architect"
-                }, {
-                  "field_value_id" : 8604,
-                  "field_value_label" : "Tracker creator"
-                }, {
-                  "field_value_id" : 8605,
-                  "field_value_label" : "Tarcker user"
-                }, {
-                  "field_value_id" : 8606,
-                  "field_value_label" : "User"
-                }
-            ],
-            "permissions" : [
-                "read", "create", "update"
-            ]
-          }, {
-            "field_id" : 861,
-            "label" : "I want to",
-            "type" : "string",
-            "permissions" : [
-                "read", "create", "update"
-            ]
-          }, {
-            "field_id" : 862,
-            "label" : "So that",
-            "type" : "text",
-            "permissions" : [
-                "read", "create", "update"
-            ]
-          }, {
-            "field_id" : 863,
-            "label" : "Acceptance criteria",
-            "type" : "text",
-            "permissions" : [
-                "read", "create", "update"
-            ]
-          }, {
-            "field_id" : 864,
-            "label" : "Tasks",
-            "type" : "art_link",
-            "permissions" : [
-                "read", "create", "update"
-            ]
-          }, {
-            "field_id" : 865,
-            "label" : "Iteration",
-            "type" : "string",
-            "permissions" : [
-                "read", "create", "update"
-            ]
-          }, {
-            "field_id" : 866,
-            "label" : "Story points",
-            "type" : "float",
-            "permissions" : [
-                "read", "create", "update"
-            ]
-          }, {
-            "field_id" : 867,
-            "label" : "Remaining Effort",
-            "type" : "computed",
-            "permissions" : [
-              "read"
-            ]
-          }, {
-            "field_id" : 868,
-            "label" : "Status",
-            "type" : "sb",
-            "values" : [
-                {
-                  "field_value_id" : 8610,
-                  "field_value_label" : "To be done"
-                }, {
-                  "field_value_id" : 8611,
-                  "field_value_label" : "On going"
-                }, {
-                  "field_value_id" : 8612,
-                  "field_value_label" : "Done"
-                }, {
-                  "field_value_id" : 8613,
-                  "field_value_label" : "Canceled"
-                }
-            ],
-            "permissions" : [
-                "read", "create", "update"
-            ]
-          }, {
-            "field_id" : 869,
-            "label" : "Attachments",
-            "type" : "file",
-            "permissions" : [
-                "read", "create", "update"
-            ]
-          }
-      ],
-      "semantic" : {
-        "title" : {
-          "field_id" : 861
-        },
-        "status" : {
-          "field_id" : 868,
-          "open_status_field_values_ids" : [
-              8610, 8611
-          ]
-        },
-        "initial_effort" : {
-          "field_id" : 866
+    },
+    {
+        "id": 802,
+        "label": "User Stories",
+        "description": "The description of user stories",
+        "url": "localhost:3001/api/v3.14/backlog_item_types/802",
+        "project_id": 3,
+        "fields": [
+            {
+                "field_id": 860,
+                "label": "As a",
+                "short_name": "as_a",
+                "type": "sb",
+                "values": [
+                    {
+                        "field_value_id": 8600,
+                        "field_value_label": "Admin"
+                    },
+                    {
+                        "field_value_id": 8601,
+                        "field_value_label": "Product Owner"
+                    },
+                    {
+                        "field_value_id": 8602,
+                        "field_value_label": "Scrum Team"
+                    },
+                    {
+                        "field_value_id": 8603,
+                        "field_value_label": "System Architect"
+                    },
+                    {
+                        "field_value_id": 8604,
+                        "field_value_label": "Tracker creator"
+                    },
+                    {
+                        "field_value_id": 8605,
+                        "field_value_label": "Tarcker user"
+                    },
+                    {
+                        "field_value_id": 8606,
+                        "field_value_label": "User"
+                    }
+                ],
+                "permissions": [
+                    "read",
+                    "create",
+                    "update"
+                ]
+            },
+            {
+                "field_id": 861,
+                "label": "I want to",
+                "type": "string",
+                "permissions": [
+                    "read",
+                    "create",
+                    "update"
+                ]
+            },
+            {
+                "field_id": 862,
+                "label": "So that",
+                "type": "text",
+                "permissions": [
+                    "read",
+                    "create",
+                    "update"
+                ]
+            },
+            {
+                "field_id": 863,
+                "label": "Acceptance criteria",
+                "type": "text",
+                "permissions": [
+                    "read",
+                    "create",
+                    "update"
+                ]
+            },
+            {
+                "field_id": 864,
+                "label": "Tasks",
+                "type": "art_link",
+                "permissions": [
+                    "read",
+                    "create",
+                    "update"
+                ]
+            },
+            {
+                "field_id": 865,
+                "label": "Iteration",
+                "type": "string",
+                "permissions": [
+                    "read",
+                    "create",
+                    "update"
+                ]
+            },
+            {
+                "field_id": 866,
+                "label": "Story points",
+                "type": "float",
+                "permissions": [
+                    "read",
+                    "create",
+                    "update"
+                ]
+            },
+            {
+                "field_id": 867,
+                "label": "Remaining Effort",
+                "type": "computed",
+                "permissions": [
+                    "read"
+                ]
+            },
+            {
+                "field_id": 868,
+                "label": "Status",
+                "type": "sb",
+                "values": [
+                    {
+                        "field_value_id": 8610,
+                        "field_value_label": "To be done"
+                    },
+                    {
+                        "field_value_id": 8611,
+                        "field_value_label": "On going"
+                    },
+                    {
+                        "field_value_id": 8612,
+                        "field_value_label": "Done"
+                    },
+                    {
+                        "field_value_id": 8613,
+                        "field_value_label": "Canceled"
+                    }
+                ],
+                "permissions": [
+                    "read",
+                    "create",
+                    "update"
+                ]
+            },
+            {
+                "field_id": 869,
+                "label": "Attachments",
+                "type": "file",
+                "permissions": [
+                    "read",
+                    "create",
+                    "update"
+                ]
+            }
+        ],
+        "semantic": {
+            "title": {
+                "field_id": 861
+            },
+            "status": {
+                "field_id": 868,
+                "open_status_field_values_ids": [
+                    8610,
+                    8611
+                ]
+            },
+            "initial_effort": {
+                "field_id": 866
+            }
         }
-      }
     }
 ]

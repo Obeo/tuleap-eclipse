@@ -1,147 +1,185 @@
 [
     {
-      "id" : 901,
-      "label" : "Releases",
-      "description" : "The description of Releases",
-      "url" : "localhost:3001/api/v3.14/milestone_types/901",
-      "project_id" : 3,
-      "fields" : [
-          {
-            "field_id" : 950,
-            "label" : "Title",
-            "type" : "string",
-            "permissions" : [
-                "read", "create", "update"
-            ]
-          }, {
-            "field_id" : 951,
-            "label" : "Status",
-            "values" : [
-                {
-                  "field_value_id" : 9510,
-                  "field_value_label" : "Planned"
-                }, {
-                  "field_value_id" : 9511,
-                  "field_value_label" : "On going"
-                }, {
-                  "field_value_id" : 9512,
-                  "field_value_label" : "Delivered"
-                }
-            ]
-          }, {
-            "field_id" : 952,
-            "label" : "Remaining Effort",
-            "type" : "float",
-            "permissions" : [
-              "read"
-            ]
-          }, {
-            "field_id" : 953,
-            "label" : "Version",
-            "type" : "string",
-            "permissions" : [
-                "read", "create", "update"
-            ]
-          }, {
-            "field_id" : 954,
-            "label" : "In release",
-            "type" : "art_link",
-            "permissions" : [
-                "read", "create", "update"
-            ]
-          }
-      ],
-      "semantic" : {
-        "title" : {
-          "field_id" : 950
-        },
-        "status" : {
-          "field_id" : 951,
-          "open_status_field_values_ids" : [
-              9510, 9511, 9512
-          ]
+        "id": 901,
+        "label": "Releases",
+        "description": "The description of Releases",
+        "url": "localhost:3001/api/v3.14/milestone_types/901",
+        "project_id": 3,
+        "fields": [
+            {
+                "field_id": 950,
+                "label": "Title",
+                "type": "string",
+                "permissions": [
+                    "read",
+                    "create",
+                    "update"
+                ]
+            },
+            {
+                "field_id": 951,
+                "label": "Status",
+                "type": "sb",
+                "permissions": [],
+                "values": [
+                    {
+                        "field_value_id": 9510,
+                        "field_value_label": "Planned"
+                    },
+                    {
+                        "field_value_id": 9511,
+                        "field_value_label": "On going"
+                    },
+                    {
+                        "field_value_id": 9512,
+                        "field_value_label": "Delivered"
+                    }
+                ]
+            },
+            {
+                "field_id": 952,
+                "label": "Remaining Effort",
+                "type": "float",
+                "permissions": [
+                    "read"
+                ]
+            },
+            {
+                "field_id": 953,
+                "label": "Version",
+                "type": "string",
+                "permissions": [
+                    "read",
+                    "create",
+                    "update"
+                ]
+            },
+            {
+                "field_id": 954,
+                "label": "In release",
+                "type": "art_link",
+                "permissions": [
+                    "read",
+                    "create",
+                    "update"
+                ]
+            }
+        ],
+        "semantic": {
+            "title": {
+                "field_id": 950
+            },
+            "status": {
+                "field_id": 951,
+                "open_status_field_values_ids": [
+                    9510,
+                    9511
+                ]
+            }
         }
-      }
-    }, {
-      "id" : 902,
-      "label" : "Sprints",
-      "description" : "The description of sprints",
-      "url" : "localhost:3001/api/v3.14/milestone_types/902",
-      "project_id" : 3,
-      "fields" : [
-          {
-            "field_id" : 960,
-            "label" : "Name",
-            "type" : "string",
-            "permissions" : [
-                "read", "create", "update"
-            ]
-          }, {
-            "field_id" : 961,
-            "label" : "Status",
-            "type" : "sb",
-            "values" : [
-                {
-                  "field_value_id" : 9610,
-                  "field_value_label" : "Planned"
-                }, {
-                  "field_value_id" : 9611,
-                  "field_value_label" : "Current"
-                }, {
-                  "field_value_id" : 9612,
-                  "field_value_label" : "Done"
-                }
-            ],
-            "permissions" : [
-                "read", "create", "update"
-            ]
-          }, {
-            "field_id" : 962,
-            "label" : "Linked Artifacts",
-            "type" : "art_link",
-            "permissions" : [
-                "read", "update", "delete"
-            ]
-          }, {
-            "field_id" : 963,
-            "label" : "Start date",
-            "type" : "date",
-            "permissions" : [
-                "read", "create", "update"
-            ]
-          }, {
-            "field_id" : 964,
-            "label" : "Duration",
-            "type" : "float",
-            "permissions" : [
-                "read", "create", "update"
-            ]
-          }, {
-            "field_id" : 965,
-            "label" : "Capacity",
-            "type" : "float",
-            "permissions" : [
-                "read", "create", "update"
-            ]
-          }, {
-            "field_id" : 966,
-            "label" : "Remaining Effort",
-            "type" : "float",
-            "permissions" : [
-              "read"
-            ]
-          }
-      ],
-      "semantic" : {
-        "title" : {
-          "field_id" : 960
-        },
-        "status" : {
-          "field_id" : 961,
-          "open_status_field_values_ids" : [
-              9610, 9611, 9612
-          ]
+    },
+    {
+        "id": 902,
+        "label": "Sprints",
+        "description": "The description of sprints",
+        "url": "localhost:3001/api/v3.14/milestone_types/902",
+        "project_id": 3,
+        "fields": [
+            {
+                "field_id": 960,
+                "label": "Name",
+                "type": "string",
+                "permissions": [
+                    "read",
+                    "create",
+                    "update"
+                ]
+            },
+            {
+                "field_id": 961,
+                "label": "Status",
+                "type": "sb",
+                "values": [
+                    {
+                        "field_value_id": 9610,
+                        "field_value_label": "Planned"
+                    },
+                    {
+                        "field_value_id": 9611,
+                        "field_value_label": "Current"
+                    },
+                    {
+                        "field_value_id": 9612,
+                        "field_value_label": "Done"
+                    }
+                ],
+                "permissions": [
+                    "read",
+                    "create",
+                    "update"
+                ]
+            },
+            {
+                "field_id": 962,
+                "label": "Linked Artifacts",
+                "type": "art_link",
+                "permissions": [
+                    "read",
+                    "create",
+                    "update"
+                ]
+            },
+            {
+                "field_id": 963,
+                "label": "Start date",
+                "type": "date",
+                "permissions": [
+                    "read",
+                    "create",
+                    "update"
+                ]
+            },
+            {
+                "field_id": 964,
+                "label": "Duration",
+                "type": "float",
+                "permissions": [
+                    "read",
+                    "create",
+                    "update"
+                ]
+            },
+            {
+                "field_id": 965,
+                "label": "Capacity",
+                "type": "float",
+                "permissions": [
+                    "read",
+                    "create",
+                    "update"
+                ]
+            },
+            {
+                "field_id": 966,
+                "label": "Remaining Effort",
+                "type": "float",
+                "permissions": [
+                    "read"
+                ]
+            }
+        ],
+        "semantic": {
+            "title": {
+                "field_id": 960
+            },
+            "status": {
+                "field_id": 961,
+                "open_status_field_values_ids": [
+                    9610,
+                    9611,
+                    9612
+                ]
+            }
         }
-      }
     }
 ]
