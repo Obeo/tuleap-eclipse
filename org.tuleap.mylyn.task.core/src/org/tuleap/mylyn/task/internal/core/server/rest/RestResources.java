@@ -188,7 +188,7 @@ public final class RestResources {
 	 *            Id of the milestone.
 	 * @return A resource that gives access to the {code /milestones} HTTP resource.
 	 */
-	public RestMilestones milestones(int milestoneId) {
+	public RestMilestones milestone(int milestoneId) {
 		return new RestMilestones(serverUrl, apiVersion, credentials, milestoneId);
 	}
 
@@ -257,5 +257,16 @@ public final class RestResources {
 	 */
 	public RestProjectsMilestoneTypes projectsMilestoneTypes(int projectId) {
 		return new RestProjectsMilestoneTypes(serverUrl, apiVersion, credentials, projectId);
+	}
+
+	/**
+	 * Provides access to the {code /milestones/:id/backlog_items} HTTP resource.
+	 * 
+	 * @param milestoneId
+	 *            the top planning id
+	 * @return A resource that gives access to the {code /top_plannings/:id/backlog_items} HTTP resource.
+	 */
+	public RestMilestonesBacklogItems milestonesBacklogItems(int milestoneId) {
+		return new RestMilestonesBacklogItems(serverUrl, apiVersion, credentials, milestoneId);
 	}
 }

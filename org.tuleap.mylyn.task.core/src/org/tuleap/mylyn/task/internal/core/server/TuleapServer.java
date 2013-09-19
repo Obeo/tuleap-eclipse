@@ -53,6 +53,8 @@ import org.tuleap.mylyn.task.internal.core.parser.TuleapMilestoneTypeDeserialize
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.server.rest.ICredentials;
 import org.tuleap.mylyn.task.internal.core.server.rest.RestArtifacts;
+import org.tuleap.mylyn.task.internal.core.server.rest.RestMilestones;
+import org.tuleap.mylyn.task.internal.core.server.rest.RestMilestonesBacklogItems;
 import org.tuleap.mylyn.task.internal.core.server.rest.RestProjects;
 import org.tuleap.mylyn.task.internal.core.server.rest.RestProjectsBacklogItemTypes;
 import org.tuleap.mylyn.task.internal.core.server.rest.RestProjectsMilestoneTypes;
@@ -513,22 +515,29 @@ public class TuleapServer {
 	}
 
 	/**
-	 * TODO document me.
+	 * Retrieves a milestone from its id.
 	 * 
 	 * @param milestoneId
 	 *            milestone id
 	 * @param monitor
 	 *            progress monitor to use
-	 * @return TODO
+	 * @return a milestone
+	 * @throws CoreException
+	 *             If anything goes wrong.
 	 */
-	public TuleapMilestone getMilestone(int milestoneId, IProgressMonitor monitor) {
-		// RestResources restResources = tuleapRestConnector.resources(credentials);
-		// RestMilestones restMilestones = restResources.milestones(milestoneId);
-		// restMilestones.checkGet();
+	public TuleapMilestone getMilestone(int milestoneId, IProgressMonitor monitor) throws CoreException {
+		RestResources restResources = tuleapRestConnector.resources(credentials);
+		RestMilestones restMilestones = restResources.milestone(milestoneId);
+		restMilestones.checkGet(Collections.<String, String> emptyMap());
 
-		// ServerResponse resp = restMilestones.get();
-		// TODO Exploiter server Response pour construire le POJO Milestone
-		return null;
+		ServerResponse milestoneResponse = restMilestones.get(Collections.<String, String> emptyMap());
+		JsonParser parser = new JsonParser();
+		String jsonMilestoneId = milestoneResponse.getBody();
+		JsonElement milestoneElement = parser.parse(jsonMilestoneId);
+		TuleapMilestone milestone = new TuleapMilestoneDeserializer().deserialize(milestoneElement,
+				TuleapMilestone.class, null);
+
+		return milestone;
 	}
 
 	/**
@@ -694,4 +703,39 @@ public class TuleapServer {
 
 		return result;
 	}
+
+	/**
+	 * Retrieve the backlog items of a given milestone.
+	 * 
+	 * @param milestoneId
+	 *            The milestone id
+	 * @param monitor
+	 *            The monitor to use
+	 * @return A list of backlog items of the milestone.
+	 * @throws CoreException
+	 *             If anything goes wrong.
+	 */
+	public List<TuleapBacklogItem> getBacklogItems(int milestoneId, IProgressMonitor monitor)
+			throws CoreException {
+		List<TuleapBacklogItem> result = Lists.newArrayList();
+		RestResources restResources = tuleapRestConnector.resources(credentials);
+
+		// 1- Retrieve the list of backlog items ids
+		RestMilestonesBacklogItems milestoneBacklogItems = restResources.milestonesBacklogItems(milestoneId);
+		milestoneBacklogItems.checkGet(Collections.<String, String> emptyMap());
+		ServerResponse backlogItemsResponse = milestoneBacklogItems.get(Collections
+				.<String, String> emptyMap());
+		// Contains a JSON array of integers
+		JsonParser parser = new JsonParser();
+		String jsonBacklogItemIds = backlogItemsResponse.getBody();
+		JsonArray backlogItemIds = parser.parse(jsonBacklogItemIds).getAsJsonArray();
+		for (JsonElement backlogItemId : backlogItemIds) {
+			TuleapBacklogItemDeserializer deserializer = new TuleapBacklogItemDeserializer();
+			TuleapBacklogItem backlogItem = deserializer.deserialize(backlogItemId, TuleapBacklogItem.class,
+					null);
+			result.add(backlogItem);
+		}
+		return result;
+	}
+
 }
