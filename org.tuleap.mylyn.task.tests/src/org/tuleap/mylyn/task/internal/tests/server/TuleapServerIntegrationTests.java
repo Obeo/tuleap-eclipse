@@ -235,6 +235,35 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 	}
 
 	/**
+	 * Test of backlog items retrieval.
+	 */
+	@Test
+	public void testGetMilestones() {
+		TestLogger logger = new TestLogger();
+		TuleapRestConnector restConnector = new TuleapRestConnector(this.getServerUrl(), "v3.14", logger); //$NON-NLS-1$
+		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
+		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
+
+		TuleapServer tuleapServer = new TuleapServer(restConnector, tuleapJsonParser, tuleapJsonSerializer,
+				this.repository, logger);
+		try {
+			List<TuleapMilestone> milestoneItems = tuleapServer.getSubMilestones(200, null);
+			assertEquals(3, milestoneItems.size());
+
+			List<TuleapBacklogItem> backlogItems = tuleapServer.getBacklogItems(200, null);
+			assertEquals(0, backlogItems.size());
+
+			milestoneItems = tuleapServer.getSubMilestones(201, null);
+			assertEquals(0, milestoneItems.size());
+
+			backlogItems = tuleapServer.getBacklogItems(201, null);
+			assertEquals(2, backlogItems.size());
+		} catch (CoreException e) {
+			fail(e.getMessage());
+		}
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.tuleap.mylyn.task.internal.tests.AbstractTuleapTests#getServerUrl()

@@ -260,11 +260,22 @@ public final class RestResources {
 	}
 
 	/**
+	 * Provides access to the {code /milestones/:id/submilestones} HTTP resource.
+	 * 
+	 * @param milestoneId
+	 *            the milestone id
+	 * @return A resource that gives access to the {code /milestones/:id/submilestones} HTTP resource.
+	 */
+	public RestMilestonesSubmilestones milestonesSubmilestones(int milestoneId) {
+		return new RestMilestonesSubmilestones(serverUrl, apiVersion, credentials, milestoneId);
+	}
+
+	/**
 	 * Provides access to the {code /milestones/:id/backlog_items} HTTP resource.
 	 * 
 	 * @param milestoneId
-	 *            the top planning id
-	 * @return A resource that gives access to the {code /top_plannings/:id/backlog_items} HTTP resource.
+	 *            the milestone id
+	 * @return A resource that gives access to the {code /milestones/:id/backlog_items} HTTP resource.
 	 */
 	public RestMilestonesBacklogItems milestonesBacklogItems(int milestoneId) {
 		return new RestMilestonesBacklogItems(serverUrl, apiVersion, credentials, milestoneId);

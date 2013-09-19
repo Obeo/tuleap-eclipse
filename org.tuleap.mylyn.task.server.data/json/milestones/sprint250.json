@@ -1,6 +1,6 @@
 {
   "id" : 250,
-  "label" : "Sprint 1"
+  "label" : "Sprint 1",
   "start_date" : 12345678,
   "duration" : 15,
   "capacity" : 24.5,

@@ -55,6 +55,7 @@ import org.tuleap.mylyn.task.internal.core.server.rest.ICredentials;
 import org.tuleap.mylyn.task.internal.core.server.rest.RestArtifacts;
 import org.tuleap.mylyn.task.internal.core.server.rest.RestMilestones;
 import org.tuleap.mylyn.task.internal.core.server.rest.RestMilestonesBacklogItems;
+import org.tuleap.mylyn.task.internal.core.server.rest.RestMilestonesSubmilestones;
 import org.tuleap.mylyn.task.internal.core.server.rest.RestProjects;
 import org.tuleap.mylyn.task.internal.core.server.rest.RestProjectsBacklogItemTypes;
 import org.tuleap.mylyn.task.internal.core.server.rest.RestProjectsMilestoneTypes;
@@ -734,6 +735,41 @@ public class TuleapServer {
 			TuleapBacklogItem backlogItem = deserializer.deserialize(backlogItemId, TuleapBacklogItem.class,
 					null);
 			result.add(backlogItem);
+		}
+		return result;
+	}
+
+	/**
+	 * Retrieve the backlog items of a given milestone.
+	 * 
+	 * @param milestoneId
+	 *            The milestone id
+	 * @param monitor
+	 *            The monitor to use
+	 * @return A list of backlog items of the milestone.
+	 * @throws CoreException
+	 *             If anything goes wrong.
+	 */
+	public List<TuleapMilestone> getSubMilestones(int milestoneId, IProgressMonitor monitor)
+			throws CoreException {
+		List<TuleapMilestone> result = Lists.newArrayList();
+		RestResources restResources = tuleapRestConnector.resources(credentials);
+
+		// 1- Retrieve the list of milestone ids
+		RestMilestonesSubmilestones milestoneSubmilestones = restResources
+				.milestonesSubmilestones(milestoneId);
+		milestoneSubmilestones.checkGet(Collections.<String, String> emptyMap());
+		ServerResponse milestonesResponse = milestoneSubmilestones.get(Collections
+				.<String, String> emptyMap());
+		// Contains a JSON array of integers
+		JsonParser parser = new JsonParser();
+		String jsonMilestoneIds = milestonesResponse.getBody();
+		JsonArray milestoneIds = parser.parse(jsonMilestoneIds).getAsJsonArray();
+		for (JsonElement currentMilestoneId : milestoneIds) {
+			TuleapMilestoneDeserializer deserializer = new TuleapMilestoneDeserializer();
+			TuleapMilestone milestone = deserializer.deserialize(currentMilestoneId, TuleapMilestone.class,
+					null);
+			result.add(milestone);
 		}
 		return result;
 	}

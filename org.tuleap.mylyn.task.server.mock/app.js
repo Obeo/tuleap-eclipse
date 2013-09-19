@@ -114,6 +114,18 @@ app.get('/api/v3.14/top_plannings/:topPlanningId/milestones', auth, top_planning
 app.options('/api/v3.14/top_plannings/:topPlanningId/backlog_items', auth, top_plannings.optionsBacklogItems);
 app.get('/api/v3.14/top_plannings/:topPlanningId/backlog_items', auth, top_plannings.backlogItems);
 
+// Milestones
+var milestones = require('./controllers/milestones.js');
+//Getting the list of milestones
+app.options('/api/v3.14/milestones', auth, milestones.optionsList);
+app.get('/api/v3.14/milestones', auth, milestones.list);
+//Getting the sub-milestones of a milestone
+app.options('/api/v3.14/milestones/:milestoneId/submilestones', auth, milestones.optionsSubmilestones);
+app.get('/api/v3.14/milestones/:milestoneId/submilestones', auth, milestones.submilestones);
+//Getting the backlog items of a milestone
+app.options('/api/v3.14/milestones/:milestoneId/backlog_items', auth, milestones.optionsBacklogItems);
+app.get('/api/v3.14/milestones/:milestoneId/backlog_items', auth, milestones.backlogItems);
+
 
 // --------------- API-DOCS ---------------
 var apiDocs = require('./controllers/api-docs.js');
