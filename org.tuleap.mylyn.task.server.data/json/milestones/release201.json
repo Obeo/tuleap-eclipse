@@ -1,11 +1,11 @@
 {
-  "id" : 300,
+  "id" : 201,
   "label" : "Release TU",
   "start_date" : 12345678,
   "duration" : 50,
   "capacity" : 100,
-  "url" : "/milestones/300",
-  "html_url" : "/milestones?id=300&group_id=3",
+  "url" : "/milestones/201",
+  "html_url" : "/milestones?id=201&group_id=3",
   "milestone_type_id" : 901,
   "values" : [
     {

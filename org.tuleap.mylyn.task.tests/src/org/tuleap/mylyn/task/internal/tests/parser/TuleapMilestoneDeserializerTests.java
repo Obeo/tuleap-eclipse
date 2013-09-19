@@ -58,9 +58,9 @@ public class TuleapMilestoneDeserializerTests {
 	private static final String MILESTONES_DATA_200 = "release200"; //$NON-NLS-1$
 
 	/**
-	 * Data set release milestone 300.
+	 * Data set release milestone 201.
 	 */
-	private static final String MILESTONES_DATA_300 = "release300"; //$NON-NLS-1$
+	private static final String MILESTONES_DATA_201 = "release201"; //$NON-NLS-1$
 
 	/**
 	 * The content of the release 200 json file.
@@ -68,9 +68,9 @@ public class TuleapMilestoneDeserializerTests {
 	private static String release200;
 
 	/**
-	 * The content of the release 300 json file.
+	 * The content of the release 201 json file.
 	 */
-	private static String release300;
+	private static String release201;
 
 	/**
 	 * Reads the content of the file at the given url and returns it.
@@ -146,8 +146,8 @@ public class TuleapMilestoneDeserializerTests {
 
 			if (url.getPath().endsWith(MILESTONES_DATA_200 + JSON_EXTENSION)) {
 				release200 = content;
-			} else if (url.getPath().endsWith(MILESTONES_DATA_300 + JSON_EXTENSION)) {
-				release300 = content;
+			} else if (url.getPath().endsWith(MILESTONES_DATA_201 + JSON_EXTENSION)) {
+				release201 = content;
 			}
 		}
 	}
@@ -344,17 +344,17 @@ public class TuleapMilestoneDeserializerTests {
 	 * Test the parsing of the data set of the release 300.
 	 */
 	@Test
-	public void testRelease300Parsing() {
-		TuleapMilestone tuleapMilestone = this.parse(release300);
+	public void testRelease201Parsing() {
+		TuleapMilestone tuleapMilestone = this.parse(release201);
 		assertNotNull(tuleapMilestone);
 
-		assertEquals(300, tuleapMilestone.getId());
+		assertEquals(201, tuleapMilestone.getId());
 		assertEquals("Release TU", tuleapMilestone.getLabel()); //$NON-NLS-1$
 		assertEquals(12345678, tuleapMilestone.getStartDate());
 		assertEquals(50, tuleapMilestone.getDuration(), 0);
 		assertEquals(100, tuleapMilestone.getCapacity(), 0);
-		assertEquals("/milestones/300", tuleapMilestone.getUrl()); //$NON-NLS-1$
-		assertEquals("/milestones?id=300&group_id=3", tuleapMilestone.getHtmlUrl()); //$NON-NLS-1$
+		assertEquals("/milestones/201", tuleapMilestone.getUrl()); //$NON-NLS-1$
+		assertEquals("/milestones?id=201&group_id=3", tuleapMilestone.getHtmlUrl()); //$NON-NLS-1$
 		assertEquals(901, tuleapMilestone.getTypeId());
 
 		assertNotNull(tuleapMilestone.getValues());
