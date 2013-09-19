@@ -225,9 +225,8 @@ public class TuleapMilestoneTypeDeserializer implements JsonDeserializer<TuleapM
 	 */
 	private void createSemanticStatus(JsonObject fieldSemantic, TuleapMultiSelectBox multiSelectBoxField,
 			int fieldValueId, TuleapSelectBoxItem selectBoxItem) {
-		JsonObject semanticStatus = null;
 		if (fieldSemantic.get(STATUS) != null) {
-			semanticStatus = fieldSemantic.get(STATUS).getAsJsonObject();
+			JsonObject semanticStatus = fieldSemantic.get(STATUS).getAsJsonObject();
 			if (multiSelectBoxField.getIdentifier() == semanticStatus.get(JSON_FIELD_ID).getAsInt()) {
 				JsonArray openStatus = semanticStatus.get(JSON_OPEN_STATUS_IDS).getAsJsonArray();
 				for (int j = 0; j < openStatus.size(); j++) {
@@ -249,9 +248,8 @@ public class TuleapMilestoneTypeDeserializer implements JsonDeserializer<TuleapM
 	 */
 	private void createSemanticContributors(JsonObject fieldSemantic, TuleapMultiSelectBox multiSelectBoxField) {
 		if (fieldSemantic != null) {
-			JsonObject semanticContributor = null;
 			if (fieldSemantic.get(JSON_CONTRIBUTORS) != null) {
-				semanticContributor = fieldSemantic.get(JSON_CONTRIBUTORS).getAsJsonObject();
+				JsonObject semanticContributor = fieldSemantic.get(JSON_CONTRIBUTORS).getAsJsonObject();
 				if (semanticContributor.get(JSON_FIELD_ID).getAsInt() == multiSelectBoxField.getIdentifier()) {
 					multiSelectBoxField.setSemanticContributor(true);
 				}
@@ -326,12 +324,14 @@ public class TuleapMilestoneTypeDeserializer implements JsonDeserializer<TuleapM
 	 *            The semantic field
 	 */
 	private void createTuleapStringField(TuleapMilestoneType tuleapmilestoneType, JsonObject fieldSemantic) {
-		JsonObject semanticTitle = fieldSemantic.get("title").getAsJsonObject(); //$NON-NLS-1$
-		for (AbstractTuleapField tuleapSemanticField : tuleapmilestoneType.getFields()) {
-			if (tuleapSemanticField.getIdentifier() == semanticTitle.get(JSON_FIELD_ID).getAsInt()
-					&& tuleapSemanticField instanceof TuleapString) {
-				TuleapString stringfield = (TuleapString)tuleapSemanticField;
-				stringfield.setSemanticTitle(true);
+		if (fieldSemantic.get("title") != null) { //$NON-NLS-1$
+			JsonObject semanticTitle = fieldSemantic.get("title").getAsJsonObject(); //$NON-NLS-1$
+			for (AbstractTuleapField tuleapSemanticField : tuleapmilestoneType.getFields()) {
+				if (tuleapSemanticField.getIdentifier() == semanticTitle.get(JSON_FIELD_ID).getAsInt()
+						&& tuleapSemanticField instanceof TuleapString) {
+					TuleapString stringfield = (TuleapString)tuleapSemanticField;
+					stringfield.setSemanticTitle(true);
+				}
 			}
 		}
 	}
