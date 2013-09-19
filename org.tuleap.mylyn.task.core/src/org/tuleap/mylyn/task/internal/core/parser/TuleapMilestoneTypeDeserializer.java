@@ -47,17 +47,22 @@ public class TuleapMilestoneTypeDeserializer implements JsonDeserializer<TuleapM
 	/**
 	 * The field Id key word.
 	 */
-	private final String jsonFieldId = "field_id"; //$NON-NLS-1$
+	private static final String JSON_FIELD_ID = "field_id"; //$NON-NLS-1$
 
 	/**
 	 * The contributors key word.
 	 */
-	private final String jsonContributors = "contributors"; //$NON-NLS-1$
+	private static final String JSON_CONTRIBUTORS = "contributors"; //$NON-NLS-1$
 
 	/**
 	 * The field open status key word.
 	 */
-	private final String jsonOpenStatusIds = "open_status_field_values_ids"; //$NON-NLS-1$
+	private static final String JSON_OPEN_STATUS_IDS = "open_status_field_values_ids"; //$NON-NLS-1$
+
+	/**
+	 * The status key word.
+	 */
+	private static final String STATUS = "status"; //$NON-NLS-1$
 
 	/**
 	 * {@inheritDoc}
@@ -81,7 +86,7 @@ public class TuleapMilestoneTypeDeserializer implements JsonDeserializer<TuleapM
 			JsonObject field = (JsonObject)milestoneTypeFieldsArray.get(i);
 
 			// the field id
-			int fieldId = field.get(jsonFieldId).getAsInt();
+			int fieldId = field.get(JSON_FIELD_ID).getAsInt();
 
 			// the field type
 			String fieldType = field.get("type").getAsString(); //$NON-NLS-1$
@@ -157,7 +162,9 @@ public class TuleapMilestoneTypeDeserializer implements JsonDeserializer<TuleapM
 		}
 
 		// the semantic title part
-		this.createTuleapStringField(tuleapmilestoneType, fieldSemantic);
+		if (fieldSemantic != null) {
+			this.createTuleapStringField(tuleapmilestoneType, fieldSemantic);
+		}
 		return tuleapmilestoneType;
 	}
 
@@ -185,15 +192,10 @@ public class TuleapMilestoneTypeDeserializer implements JsonDeserializer<TuleapM
 				TuleapSelectBoxItem selectBoxItem = new TuleapSelectBoxItem(fieldValueId);
 				selectBoxItem.setLabel(fieldValueLabel);
 				multiSelectBoxField.addItem(selectBoxItem);
+
 				// the semantic status part
-				JsonObject semanticStatus = fieldSemantic.get("status").getAsJsonObject(); //$NON-NLS-1$
-				if (multiSelectBoxField.getIdentifier() == semanticStatus.get(jsonFieldId).getAsInt()) {
-					JsonArray openStatus = semanticStatus.get(jsonOpenStatusIds).getAsJsonArray();
-					for (int j = 0; j < openStatus.size(); j++) {
-						if (fieldValueId == openStatus.get(j).getAsInt()) {
-							multiSelectBoxField.getOpenStatus().add(selectBoxItem);
-						}
-					}
+				if (fieldSemantic != null) {
+					this.createSemanticStatus(fieldSemantic, multiSelectBoxField, fieldValueId, selectBoxItem);
 				}
 			}
 		}
@@ -204,11 +206,57 @@ public class TuleapMilestoneTypeDeserializer implements JsonDeserializer<TuleapM
 		}
 
 		// the semantic contributors part
-		JsonObject semanticContributor = fieldSemantic.get(jsonContributors).getAsJsonObject();
-		if (semanticContributor.get(jsonFieldId).getAsInt() == multiSelectBoxField.getIdentifier()) {
-			multiSelectBoxField.setSemanticContributor(true);
-		}
+		this.createSemanticContributors(fieldSemantic, multiSelectBoxField);
+
 		return multiSelectBoxField;
+	}
+
+	/**
+	 * Deals with the semantic status JSON field.
+	 * 
+	 * @param fieldSemantic
+	 *            the semantic field
+	 * @param multiSelectBoxField
+	 *            the multi-select box field
+	 * @param fieldValueId
+	 *            the field value Identifier
+	 * @param selectBoxItem
+	 *            the select box item
+	 */
+	private void createSemanticStatus(JsonObject fieldSemantic, TuleapMultiSelectBox multiSelectBoxField,
+			int fieldValueId, TuleapSelectBoxItem selectBoxItem) {
+		JsonObject semanticStatus = null;
+		if (fieldSemantic.get(STATUS) != null) {
+			semanticStatus = fieldSemantic.get(STATUS).getAsJsonObject();
+			if (multiSelectBoxField.getIdentifier() == semanticStatus.get(JSON_FIELD_ID).getAsInt()) {
+				JsonArray openStatus = semanticStatus.get(JSON_OPEN_STATUS_IDS).getAsJsonArray();
+				for (int j = 0; j < openStatus.size(); j++) {
+					if (fieldValueId == openStatus.get(j).getAsInt()) {
+						multiSelectBoxField.getOpenStatus().add(selectBoxItem);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Deals with the semantic contributors JSON field.
+	 * 
+	 * @param fieldSemantic
+	 *            the semantic field
+	 * @param multiSelectBoxField
+	 *            the multi-select box field
+	 */
+	private void createSemanticContributors(JsonObject fieldSemantic, TuleapMultiSelectBox multiSelectBoxField) {
+		if (fieldSemantic != null) {
+			JsonObject semanticContributor = null;
+			if (fieldSemantic.get(JSON_CONTRIBUTORS) != null) {
+				semanticContributor = fieldSemantic.get(JSON_CONTRIBUTORS).getAsJsonObject();
+				if (semanticContributor.get(JSON_FIELD_ID).getAsInt() == multiSelectBoxField.getIdentifier()) {
+					multiSelectBoxField.setSemanticContributor(true);
+				}
+			}
+		}
 	}
 
 	/**
@@ -240,11 +288,11 @@ public class TuleapMilestoneTypeDeserializer implements JsonDeserializer<TuleapM
 				selectBoxField.addItem(selectBoxItem);
 
 				// the semantic status part
-				JsonObject semanticStatus = fieldSemantic.get("status").getAsJsonObject(); //$NON-NLS-1$
-				for (int z = 0; z < semanticStatus.get(jsonOpenStatusIds).getAsJsonArray().size(); z++) {
-					if (selectBoxField.getIdentifier() == semanticStatus.get(jsonFieldId).getAsInt()
-							&& fieldValueId == semanticStatus.get(jsonOpenStatusIds).getAsJsonArray().get(z)
-									.getAsInt()) {
+				JsonObject semanticStatus = fieldSemantic.get(STATUS).getAsJsonObject();
+				for (int z = 0; z < semanticStatus.get(JSON_OPEN_STATUS_IDS).getAsJsonArray().size(); z++) {
+					if (selectBoxField.getIdentifier() == semanticStatus.get(JSON_FIELD_ID).getAsInt()
+							&& fieldValueId == semanticStatus.get(JSON_OPEN_STATUS_IDS).getAsJsonArray().get(
+									z).getAsInt()) {
 						selectBoxField.getOpenStatus().add(selectBoxItem);
 					}
 				}
@@ -257,8 +305,8 @@ public class TuleapMilestoneTypeDeserializer implements JsonDeserializer<TuleapM
 		}
 
 		// the semantic contributors part
-		if (fieldSemantic.get(jsonContributors) != null
-				&& fieldSemantic.get(jsonContributors).getAsJsonObject().get(jsonFieldId).getAsInt() == selectBoxField
+		if (fieldSemantic.get(JSON_CONTRIBUTORS) != null
+				&& fieldSemantic.get(JSON_CONTRIBUTORS).getAsJsonObject().get(JSON_FIELD_ID).getAsInt() == selectBoxField
 						.getIdentifier()) {
 			selectBoxField.setSemanticContributor(true);
 		}
@@ -280,7 +328,7 @@ public class TuleapMilestoneTypeDeserializer implements JsonDeserializer<TuleapM
 	private void createTuleapStringField(TuleapMilestoneType tuleapmilestoneType, JsonObject fieldSemantic) {
 		JsonObject semanticTitle = fieldSemantic.get("title").getAsJsonObject(); //$NON-NLS-1$
 		for (AbstractTuleapField tuleapSemanticField : tuleapmilestoneType.getFields()) {
-			if (tuleapSemanticField.getIdentifier() == semanticTitle.get(jsonFieldId).getAsInt()
+			if (tuleapSemanticField.getIdentifier() == semanticTitle.get(JSON_FIELD_ID).getAsInt()
 					&& tuleapSemanticField instanceof TuleapString) {
 				TuleapString stringfield = (TuleapString)tuleapSemanticField;
 				stringfield.setSemanticTitle(true);
@@ -301,7 +349,7 @@ public class TuleapMilestoneTypeDeserializer implements JsonDeserializer<TuleapM
 		if (workflowJsonElement != null) {
 			JsonObject workflowJsonObject = workflowJsonElement.getAsJsonObject();
 
-			if (workflowJsonObject.get(jsonFieldId).getAsInt() == selectBoxField.getIdentifier()) {
+			if (workflowJsonObject.get(JSON_FIELD_ID).getAsInt() == selectBoxField.getIdentifier()) {
 				// the workflow transitions
 				JsonArray transitionsJsonArray = workflowJsonObject.get("transitions").getAsJsonArray(); //$NON-NLS-1$
 				for (JsonElement transitionJsonElement : transitionsJsonArray) {
