@@ -15,21 +15,12 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.runtime.Platform;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.osgi.framework.Bundle;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItemType;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapMultiSelectBox;
@@ -48,110 +39,6 @@ import static org.junit.Assert.assertTrue;
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
 public class TuleapBacklogItemTypeDeserializerTests {
-	/**
-	 * The identifier of the server data bundle.
-	 */
-	private static final String SERVER_DATA_BUNDLE_ID = "org.tuleap.mylyn.task.server.data"; //$NON-NLS-1$
-
-	/**
-	 * The name of the first BacklogItem Type file.
-	 */
-	private static final String EPICS = "epics.json"; //$NON-NLS-1$
-
-	/**
-	 * The name of the second BacklogItem Type file.
-	 */
-	private static final String USER_STORIES = "user_stories.json"; //$NON-NLS-1$
-
-	/**
-	 * The content of the first BacklogItem Type file.
-	 */
-	private static String epics;
-
-	/**
-	 * The content of the second BacklogItem Type file.
-	 */
-	private static String userStories;
-
-	/**
-	 * Reads the content of the file at the given url and returns it.
-	 * 
-	 * @param url
-	 *            The url of the file in the bundle.
-	 * @return The content of the file
-	 */
-	private static String readFileFromURL(URL url) {
-		String result = ""; //$NON-NLS-1$
-
-		InputStream openStream = null;
-		InputStreamReader inputStreamReader = null;
-		BufferedReader bufferedReader = null;
-		try {
-			openStream = url.openStream();
-		} catch (IOException e) {
-			// do nothing, openStream is null
-		}
-
-		if (openStream != null) {
-			inputStreamReader = new InputStreamReader(openStream);
-			bufferedReader = new BufferedReader(inputStreamReader);
-
-			StringBuilder stringBuilder = new StringBuilder();
-
-			String line = null;
-			try {
-				while ((line = bufferedReader.readLine()) != null) {
-					stringBuilder.append(line);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			try {
-				bufferedReader.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-				try {
-					inputStreamReader.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				} finally {
-					try {
-						openStream.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-
-			result = stringBuilder.toString();
-		}
-
-		return result;
-	}
-
-	/**
-	 * Loads the json files from the server data tracker into the appropriate variables.
-	 */
-	@BeforeClass
-	public static void staticSetUp() {
-		Bundle serverDataBundle = Platform.getBundle(SERVER_DATA_BUNDLE_ID);
-		if (serverDataBundle == null) {
-			return;
-		}
-		Enumeration<URL> entries = serverDataBundle.findEntries("/json/backlog_item_types", "*.json", true); //$NON-NLS-1$//$NON-NLS-2$
-		while (entries.hasMoreElements()) {
-			URL url = entries.nextElement();
-			String content = readFileFromURL(url);
-
-			if (url.getPath().endsWith(EPICS)) {
-				epics = content;
-			} else if (url.getPath().endsWith(USER_STORIES)) {
-				userStories = content;
-			}
-		}
-	}
 
 	/**
 	 * Parse the content of the file and return the matching configuration.
@@ -178,6 +65,7 @@ public class TuleapBacklogItemTypeDeserializerTests {
 	 */
 	@Test
 	public void testEpicsParsing() {
+		String epics = ParserUtil.loadFile("/json/backlog_item_types/epics.json"); //$NON-NLS-1$
 		TuleapBacklogItemType tuleapBacklogItemType = this.parse(epics);
 		assertNotNull(tuleapBacklogItemType);
 		assertEquals(801, tuleapBacklogItemType.getIdentifier());
@@ -248,6 +136,7 @@ public class TuleapBacklogItemTypeDeserializerTests {
 	 */
 	@Test
 	public void testFirstPartUserStoriesParsing() {
+		String userStories = ParserUtil.loadFile("/json/backlog_item_types/user_stories.json"); //$NON-NLS-1$
 		TuleapBacklogItemType tuleapBacklogItemType = this.parse(userStories);
 		assertNotNull(tuleapBacklogItemType);
 		assertEquals(802, tuleapBacklogItemType.getIdentifier());
@@ -321,6 +210,7 @@ public class TuleapBacklogItemTypeDeserializerTests {
 	 */
 	@Test
 	public void testSecondpartUserStoriesParsing() {
+		String userStories = ParserUtil.loadFile("/json/backlog_item_types/user_stories.json"); //$NON-NLS-1$
 		TuleapBacklogItemType tuleapBacklogItemType = this.parse(userStories);
 		assertNotNull(tuleapBacklogItemType);
 		assertEquals(802, tuleapBacklogItemType.getIdentifier());

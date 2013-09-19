@@ -15,21 +15,12 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.runtime.Platform;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.osgi.framework.Bundle;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapMultiSelectBox;
@@ -48,136 +39,13 @@ import static org.junit.Assert.assertTrue;
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
 public class TuleapMilestoneTypeDeserializerTests {
-	/**
-	 * The identifier of the server data bundle.
-	 */
-	private static final String SERVER_DATA_BUNDLE_ID = "org.tuleap.mylyn.task.server.data"; //$NON-NLS-1$
-
-	/**
-	 * The name of the first Milestone Type file.
-	 */
-	private static final String RELEASES = "releases.json"; //$NON-NLS-1$
-
-	/**
-	 * The name of the second Milestone Type file.
-	 */
-	private static final String SPRINTS = "sprints.json"; //$NON-NLS-1$
-
-	/**
-	 * The content of the first Milestone Type file.
-	 */
-	private static String releases;
-
-	/**
-	 * The content of the second Milestone Type file.
-	 */
-	private static String sprints;
-
-	/**
-	 * Reads the content of the file at the given url and returns it.
-	 * 
-	 * @param url
-	 *            The url of the file in the bundle.
-	 * @return The content of the file
-	 */
-	private static String readFileFromURL(URL url) {
-		String result = ""; //$NON-NLS-1$
-
-		InputStream openStream = null;
-		InputStreamReader inputStreamReader = null;
-		BufferedReader bufferedReader = null;
-		try {
-			openStream = url.openStream();
-		} catch (IOException e) {
-			// do nothing, openStream is null
-		}
-
-		if (openStream != null) {
-			inputStreamReader = new InputStreamReader(openStream);
-			bufferedReader = new BufferedReader(inputStreamReader);
-
-			StringBuilder stringBuilder = new StringBuilder();
-
-			String line = null;
-			try {
-				while ((line = bufferedReader.readLine()) != null) {
-					stringBuilder.append(line);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			try {
-				bufferedReader.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-				try {
-					inputStreamReader.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				} finally {
-					try {
-						openStream.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-
-			result = stringBuilder.toString();
-		}
-
-		return result;
-	}
-
-	/**
-	 * Loads the json files from the server data tracker into the appropriate variables.
-	 */
-	@BeforeClass
-	public static void staticSetUp() {
-		Bundle serverDataBundle = Platform.getBundle(SERVER_DATA_BUNDLE_ID);
-		if (serverDataBundle == null) {
-			return;
-		}
-		Enumeration<URL> entries = serverDataBundle.findEntries("/json/milestone_types", "*.json", true); //$NON-NLS-1$//$NON-NLS-2$
-		while (entries.hasMoreElements()) {
-			URL url = entries.nextElement();
-			String content = readFileFromURL(url);
-
-			if (url.getPath().endsWith(RELEASES)) {
-				releases = content;
-			} else if (url.getPath().endsWith(SPRINTS)) {
-				sprints = content;
-			}
-		}
-	}
-
-	/**
-	 * Parse the content of the file and return the matching configuration.
-	 * 
-	 * @param fileContent
-	 *            The content of the file
-	 * @return The Tuleap BacklogItem Type matching the content of the file
-	 */
-	private TuleapMilestoneType parse(String fileContent) {
-		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(TuleapMilestoneType.class, new TuleapMilestoneTypeDeserializer());
-
-		JsonParser jsonParser = new JsonParser();
-		JsonObject jsonObject = jsonParser.parse(fileContent).getAsJsonObject();
-
-		Gson gson = gsonBuilder.create();
-		TuleapMilestoneType tuleapMilestoneType = gson.fromJson(jsonObject, TuleapMilestoneType.class);
-
-		return tuleapMilestoneType;
-	}
 
 	/**
 	 * Test the parsing of the first file.
 	 */
 	@Test
 	public void testReleasesParsing() {
+		String releases = ParserUtil.loadFile("/json/milestone_types/releases.json"); //$NON-NLS-1$
 		TuleapMilestoneType tuleapMilestoneType = this.parse(releases);
 		assertNotNull(tuleapMilestoneType);
 		assertEquals(901, tuleapMilestoneType.getIdentifier());
@@ -256,6 +124,7 @@ public class TuleapMilestoneTypeDeserializerTests {
 	 */
 	@Test
 	public void testSprintsParsing() {
+		String sprints = ParserUtil.loadFile("/json/milestone_types/sprints.json"); //$NON-NLS-1$
 		TuleapMilestoneType tuleapMilestoneType = this.parse(sprints);
 		assertNotNull(tuleapMilestoneType);
 		assertEquals(902, tuleapMilestoneType.getIdentifier());
@@ -341,6 +210,26 @@ public class TuleapMilestoneTypeDeserializerTests {
 		List<Boolean> seventhPermissions = fieldPermissionsFilling(true, false, false);
 
 		this.basicFieldTest(seventhField, null, "Remaining Effort", 966, seventhPermissions); //$NON-NLS-1$
+	}
+
+	/**
+	 * Parse the content of the file and return the matching configuration.
+	 * 
+	 * @param fileContent
+	 *            The content of the file
+	 * @return The Tuleap BacklogItem Type matching the content of the file
+	 */
+	private TuleapMilestoneType parse(String fileContent) {
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		gsonBuilder.registerTypeAdapter(TuleapMilestoneType.class, new TuleapMilestoneTypeDeserializer());
+
+		JsonParser jsonParser = new JsonParser();
+		JsonObject jsonObject = jsonParser.parse(fileContent).getAsJsonObject();
+
+		Gson gson = gsonBuilder.create();
+		TuleapMilestoneType tuleapMilestoneType = gson.fromJson(jsonObject, TuleapMilestoneType.class);
+
+		return tuleapMilestoneType;
 	}
 
 	/**
