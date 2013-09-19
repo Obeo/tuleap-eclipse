@@ -184,7 +184,7 @@ public class TuleapMilestoneTypeDeserializerTests {
 		assertEquals("Releases", tuleapMilestoneType.getName()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/milestone_types/901", tuleapMilestoneType.getUrl()); //$NON-NLS-1$
 		Collection<AbstractTuleapField> fields = tuleapMilestoneType.getFields();
-		assertEquals(5, fields.size());
+		assertEquals(13, fields.size());
 		Iterator<AbstractTuleapField> iterator = fields.iterator();
 
 		// testing the first field
