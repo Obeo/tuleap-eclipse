@@ -53,7 +53,7 @@ public class TaskRepositoryCredentials implements ICredentials {
 	public String getPassword() {
 		// return repository.getCredentials(AuthenticationType.REPOSITORY).getPassword();
 		// TODO SBE Fix the login!
-		return "admin";
+		return "password";
 	}
 
 }
