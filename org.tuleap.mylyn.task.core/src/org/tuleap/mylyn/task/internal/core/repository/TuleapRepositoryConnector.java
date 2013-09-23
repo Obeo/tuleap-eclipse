@@ -300,7 +300,12 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 						.getRepositoryUrl(), String.valueOf(tuleapArtifact.getId()));
 				artifactTaskDataConverter.populateTaskData(taskData, tuleapArtifact);
 
-				collector.accept(taskData);
+				try {
+					collector.accept(taskData);
+				} catch (IllegalArgumentException exception) {
+					// Do not log, the query has been deleted while it was executed, see:
+					// org.eclipse.mylyn.internal.tasks.core.TaskList.getValidElement(IRepositoryElement)
+				}
 			}
 		} else {
 			TuleapRestClient restClient = this.clientManager.getRestClient(taskRepository);
