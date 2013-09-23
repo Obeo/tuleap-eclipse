@@ -69,6 +69,33 @@ public class TuleapSoapClient {
 	}
 
 	/**
+	 * Validate the credentials with the server.
+	 * 
+	 * @param monitor
+	 *            The progress monitor
+	 * @return <code>true</code> if the credentials are valid and if the URL is valid, <code>false</code>
+	 *         otherwise
+	 * @throws CoreException
+	 *             In case of error during the validation of the connection
+	 */
+	public IStatus validateConnection(IProgressMonitor monitor) throws CoreException {
+		TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(this.location);
+		try {
+			IStatus status = tuleapSoapConnector.validateConnection(monitor);
+			return status;
+		} catch (MalformedURLException e) {
+			IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
+			throw new CoreException(status);
+		} catch (RemoteException e) {
+			IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
+			throw new CoreException(status);
+		} catch (ServiceException e) {
+			IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
+			throw new CoreException(status);
+		}
+	}
+
+	/**
 	 * Returns the configuration of the Tuleap server.
 	 * 
 	 * @param monitor
@@ -239,17 +266,5 @@ public class TuleapSoapClient {
 	 */
 	public TaskRepository getTaskRepository() {
 		return this.taskRepository;
-	}
-
-	/**
-	 * Validate the credentials with the server.
-	 * 
-	 * @param monitor
-	 *            The progress monitor
-	 * @return <code>true</code> if the credentials are valid and if the URL is valid, <code>false</code>
-	 *         otherwise
-	 */
-	public IStatus validateConnection(IProgressMonitor monitor) {
-		return null;
 	}
 }
