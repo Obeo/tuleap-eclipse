@@ -160,24 +160,6 @@ public class TuleapSoapConnector {
 	}
 
 	/**
-	 * The constructor.
-	 * 
-	 * @param location
-	 *            The location of the tracker.
-	 * @param codendiAPIPortType
-	 *            The Tuleap Codendi API.
-	 * @param tuleapTrackerAPI
-	 *            The Tuleap tracker API.
-	 */
-	public TuleapSoapConnector(AbstractWebLocation location, CodendiAPIPortType codendiAPIPortType,
-			TuleapTrackerV5APIPortType tuleapTrackerAPI) {
-		this.codendiAPIPort = codendiAPIPortType;
-		this.tuleapTrackerV5APIPort = tuleapTrackerAPI;
-		this.trackerLocation = location;
-		this.ensureProxySettingsRegistration();
-	}
-
-	/**
 	 * Logs the user in the Tuleap server.
 	 * 
 	 * @param monitor

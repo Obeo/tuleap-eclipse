@@ -80,8 +80,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			response = new RepositoryResponse(ResponseKind.TASK_CREATED, artifactId);
 		} else {
 			tuleapSoapClient.updateArtifact(artifact, monitor);
-			response = new RepositoryResponse(ResponseKind.TASK_UPDATED, String.valueOf(artifact
-					.getId()));
+			response = new RepositoryResponse(ResponseKind.TASK_UPDATED, String.valueOf(artifact.getId()));
 		}
 
 		return response;
@@ -182,7 +181,8 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		if (repositoryConfiguration != null) {
 			// Update the available attributes for the tasks
 			TuleapSoapClient tuleapSoapClient = this.connector.getClientManager().getSoapClient(repository);
-			tuleapSoapClient.updateAttributes(monitor, false);
+			// TODO SBE update the configuration!
+			// tuleapSoapClient.updateAttributes(monitor, false);
 
 			// Sets the creation date and last modification date.
 			if (this.connector instanceof AbstractRepositoryConnector
@@ -255,7 +255,8 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			throws CoreException {
 		TuleapSoapClient tuleapSoapClient = this.connector.getClientManager().getSoapClient(taskRepository);
 
-		tuleapSoapClient.updateAttributes(monitor, false);
+		// TODO SBE update the configuration!
+		// tuleapSoapClient.updateAttributes(monitor, false);
 		TuleapArtifact tuleapArtifact = tuleapSoapClient.getArtifact(taskId, monitor);
 		if (tuleapArtifact != null) {
 			TaskData taskData = this.createTaskDataFromArtifact(tuleapSoapClient, taskRepository,

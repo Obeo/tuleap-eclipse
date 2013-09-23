@@ -23,6 +23,8 @@ import org.tuleap.mylyn.task.internal.core.client.rest.ITuleapAPIVersions;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestConnector;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
+import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapParser;
+import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapSerializer;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
@@ -72,7 +74,10 @@ public class TuleapValidator {
 					10);
 
 			ILog logger = Platform.getLog(Platform.getBundle(TuleapTasksUIPlugin.PLUGIN_ID));
-			TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(taskRepository, location, logger);
+			TuleapSoapParser tuleapSoapParser = new TuleapSoapParser();
+			TuleapSoapSerializer tuleapSoapSerializer = new TuleapSoapSerializer();
+			TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(taskRepository, location,
+					tuleapSoapParser, tuleapSoapSerializer, logger);
 			status = tuleapSoapClient.validateConnection(monitor);
 
 			if (status.isOK()) {

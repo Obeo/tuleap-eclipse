@@ -11,7 +11,6 @@
 package org.tuleap.mylyn.task.internal.core.parser;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -19,29 +18,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
-import org.tuleap.mylyn.task.internal.core.data.TuleapTaskMapper;
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapDate;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapFileUpload;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapFloat;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapInteger;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapMultiSelectBox;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
-import org.tuleap.mylyn.task.internal.core.repository.TuleapAttributeMapper;
 
 /**
  * This class is used to encapsulate all the logic of the JSON parsing.
@@ -246,7 +230,7 @@ public class TuleapJsonParser {
 	 * @return The Tuleap configuration matching the JSON representation
 	 */
 	public TuleapTrackerConfiguration getTrackerConfiguration(String jsonResponse) {
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -257,7 +241,7 @@ public class TuleapJsonParser {
 	 * @return The list of the Tulea tracker's configuration
 	 */
 	public List<TuleapTrackerConfiguration> getTrackerConfigurations(String jsonResponse) {
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -271,104 +255,10 @@ public class TuleapJsonParser {
 	 *            The JSON response representing an artifact
 	 * @return a new TaksData populated with the data from the JSON String interpreted according to the given
 	 *         configuration.
-	 * @throws CoreException
-	 *             If a problem occurs, such as the impossibility to retrieve the configuration of the
-	 *             artifact's tracker.
 	 */
-	public TaskData parseArtifact(TaskRepository taskRepository, ITuleapRepositoryConnector connector,
-			String json) throws CoreException {
-		JsonParser jsonParser = new JsonParser();
-		JsonObject obj = jsonParser.parse(json).getAsJsonObject();
-		int artifactId = obj.get(ID).getAsInt();
-		int trackerId = obj.get(TRACKER_ID).getAsInt();
-
-		TuleapServerConfiguration config = connector.getRepositoryConfiguration(taskRepository
-				.getRepositoryUrl());
-		TuleapTrackerConfiguration trackerConfig = config.getTrackerConfiguration(trackerId);
-
-		// Check that the given configuration is that of the right tracker
-		if (trackerConfig == null) {
-			throw new CoreException(new Status(Status.ERROR, TuleapCoreActivator.PLUGIN_ID,
-					"Unable to find the configuration of tracker " + trackerId)); // TODO [i18n] //$NON-NLS-1$
-		}
-
-		int submittedBy = obj.get(SUBMITTED_BY).getAsInt();
-		int submittedOn = obj.get(SUBMITTED_ON).getAsInt();
-		int lastUpdatedOn = obj.get(LAST_UPDATED_ON).getAsInt();
-		String kind = obj.get(KIND).getAsString();
-		String url = obj.get(URL).getAsString();
-
-		String milestoneUrl = null;
-		JsonElement milestoneUrlElt = obj.get(MILESTONE_URL);
-		if (milestoneUrlElt != null) {
-			milestoneUrl = milestoneUrlElt.getAsString();
-		}
-		String htmlUrl = obj.get(HTML_URL).getAsString();
-		JsonArray fields = obj.get(VALUES).getAsJsonArray();
-
-		TaskData taskData = new TaskData(new TuleapAttributeMapper(taskRepository, connector), taskRepository
-				.getConnectorKind(), taskRepository.getRepositoryUrl(), String.valueOf(artifactId));
-		// Populate the task data using task mappers
-		TuleapTaskMapper mapper = new TuleapTaskMapper(taskData, trackerConfig);
-		mapper.initializeEmptyTaskData();
-		mapper.setTrackerId(trackerId);
-		mapper.setCreationDate(new Date(1000L * submittedOn));
-		mapper.setModificationDate(new Date(1000L * lastUpdatedOn));
-		mapper.setTaskUrl(url);
-
-		// TODO Manage task key
-		// mapper.setTaskKey(?);
-
-		for (JsonElement element : fields) {
-			JsonObject field = element.getAsJsonObject();
-			int fieldId = field.get(FIELD_ID).getAsInt();
-			String fieldLabel = field.get(FIELD_LABEL).getAsString();
-			JsonObject fieldValue = field.get(FIELD_VALUE).getAsJsonObject();
-			AbstractTuleapField fieldConfig = trackerConfig.getFieldById(fieldId);
-			// TODO Manage the case of special fields, such as status and so on for which the id used in mylyn
-			// TaskData is not the one used in tuleap
-			if (fieldConfig instanceof TuleapSelectBox) {
-				TuleapSelectBox selectBox = (TuleapSelectBox)fieldConfig;
-				JsonObject bindValue = fieldValue.get(BIND_VALUE).getAsJsonObject();
-				int bindValueId = bindValue.get(BIND_VALUE_ID).getAsInt();
-				if (selectBox.isSemanticStatus()) {
-					mapper.setStatus(String.valueOf(bindValueId));
-				} else if (selectBox.isSemanticContributor()) {
-					mapper.setAssignedTo(Collections.singleton(Integer.valueOf(bindValueId)));
-				} else {
-					mapper.setSelectBoxValue(bindValueId, fieldId);
-				}
-			} else if (fieldConfig instanceof TuleapMultiSelectBox) {
-				TuleapMultiSelectBox selectBox = (TuleapMultiSelectBox)fieldConfig;
-				JsonArray bindValues = fieldValue.get(BIND_VALUES).getAsJsonArray();
-				Set<Integer> valueIds = Sets.newHashSet();
-				for (JsonElement bindValue : bindValues) {
-					JsonObject object = bindValue.getAsJsonObject();
-					int bindValueId = object.get(BIND_VALUE_ID).getAsInt();
-					valueIds.add(Integer.valueOf(bindValueId));
-				}
-				if (selectBox.isSemanticStatus()) {
-					// TODO Support multiple status?
-					mapper.setStatus(valueIds.iterator().next().toString());
-				} else if (selectBox.isSemanticContributor()) {
-					mapper.setAssignedTo(valueIds);
-				} else {
-					mapper.setMultiSelectBoxValues(valueIds, fieldId);
-				}
-			} else if (fieldConfig instanceof TuleapFileUpload) {
-				// TODO is there something to do here?
-			} else if (fieldConfig instanceof TuleapInteger) {
-				mapper.setValue(String.valueOf(fieldValue.get(VALUE).getAsInt()), fieldId);
-			} else if (fieldConfig instanceof TuleapFloat) {
-				mapper.setValue(String.valueOf(fieldValue.get(VALUE).getAsFloat()), fieldId);
-			} else if (fieldConfig instanceof TuleapDate) {
-				// TODO mapper.setValue(String.valueOf(fieldValue.get(VALUE).getAsInt()), fieldId);
-			} else {
-				mapper.setValue(fieldValue.get(VALUE).getAsString(), fieldId);
-			}
-		}
-
-		return taskData;
+	public TuleapArtifact parseArtifact(TaskRepository taskRepository, ITuleapRepositoryConnector connector,
+			String json) {
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -381,13 +271,10 @@ public class TuleapJsonParser {
 	 * @param json
 	 *            The JSON response representing an artifact
 	 * @return a POJO populated with the data from the JSON String.
-	 * @throws CoreException
-	 *             If a problem occurs.
 	 */
-	public TaskData parseMilestone(TaskRepository taskRepository, ITuleapRepositoryConnector connector,
-			String json) throws CoreException {
-		// TODO
-		return null;
+	public TuleapMilestone parseMilestone(TaskRepository taskRepository,
+			ITuleapRepositoryConnector connector, String json) {
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -398,6 +285,6 @@ public class TuleapJsonParser {
 	 * @return The error message
 	 */
 	public String getErrorMessage(String jsonResponse) {
-		return null;
+		throw new UnsupportedOperationException();
 	}
 }

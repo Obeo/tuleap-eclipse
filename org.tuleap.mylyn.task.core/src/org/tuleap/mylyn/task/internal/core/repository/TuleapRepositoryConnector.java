@@ -36,6 +36,7 @@ import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
@@ -44,11 +45,13 @@ import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
+import org.tuleap.mylyn.task.internal.core.data.converter.ArtifactTaskDataConverter;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
@@ -283,15 +286,22 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			TaskDataCollector collector, ISynchronizationSession session, IProgressMonitor monitor) {
 		// Populate the collector with the task data resulting from the query
 		String queryKind = query.getAttribute(ITuleapConstants.QUERY_KIND);
-		if (ITuleapConstants.QUERY_KIND_ALL_FROM_TRACKER.equals(queryKind)) {
+		if (ITuleapConstants.QUERY_KIND_ALL_FROM_TRACKER.equals(queryKind)
+				|| ITuleapConstants.QUERY_KIND_REPORT.equals(queryKind)
+				|| ITuleapConstants.QUERY_KIND_CUSTOM.equals(queryKind)) {
 			TuleapSoapClient soapClient = this.clientManager.getSoapClient(taskRepository);
-			soapClient.getSearchHits(query, collector, monitor);
-		} else if (ITuleapConstants.QUERY_KIND_REPORT.equals(queryKind)) {
-			TuleapSoapClient soapClient = this.clientManager.getSoapClient(taskRepository);
-			soapClient.getSearchHits(query, collector, monitor);
-		} else if (ITuleapConstants.QUERY_KIND_CUSTOM.equals(queryKind)) {
-			TuleapSoapClient soapClient = this.clientManager.getSoapClient(taskRepository);
-			soapClient.getSearchHits(query, collector, monitor);
+			List<TuleapArtifact> artifacts = soapClient.getArtifactsFromQuery(query, monitor);
+			for (TuleapArtifact tuleapArtifact : artifacts) {
+				ArtifactTaskDataConverter artifactTaskDataConverter = new ArtifactTaskDataConverter();
+				TaskAttributeMapper attributeMapper = this.getTaskDataHandler().getAttributeMapper(
+						taskRepository);
+
+				TaskData taskData = new TaskData(attributeMapper, this.getConnectorKind(), taskRepository
+						.getRepositoryUrl(), String.valueOf(tuleapArtifact.getId()));
+				artifactTaskDataConverter.populateTaskData(taskData, tuleapArtifact);
+
+				collector.accept(taskData);
+			}
 		} else {
 			TuleapRestClient restClient = this.clientManager.getRestClient(taskRepository);
 			String projectIdStr = query.getAttribute(ITuleapConstants.QUERY_GROUP_ID);
@@ -333,6 +343,8 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 						.getTuleapServerConfiguration(monitor);
 
 				// TODO SBE merge configurations!
+
+				// put the configuration in this.repositoryConfigurations
 			} catch (CoreException e) {
 				TuleapCoreActivator.log(e, true);
 			}

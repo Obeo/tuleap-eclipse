@@ -23,7 +23,7 @@ import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public class MilestonePlanningTaskDataConverter {
+public class MilestonePlanningTaskDataConverter extends AbstractElementTaskDataConverter<TuleapMilestone> {
 
 	/**
 	 * The configuration of the server.
@@ -48,6 +48,7 @@ public class MilestonePlanningTaskDataConverter {
 	 * @param milestone
 	 *            The updated milestone.
 	 */
+	@Override
 	public void populateTaskData(TaskData taskData, TuleapMilestone milestone) {
 		MilestonePlanningWrapper milestonePlanningWrapper = new MilestonePlanningWrapper(taskData.getRoot());
 		for (TuleapMilestone subMilestone : milestone.getSubMilestones()) {
@@ -75,8 +76,13 @@ public class MilestonePlanningTaskDataConverter {
 	 * @return The updated milestone POJO.
 	 */
 	public TuleapMilestone createMilestonePlanning(TaskData taskData) {
-		// TODO
-		return null;
+		TuleapMilestone tuleapMilestone = new TuleapMilestone();
+
+		// find the configuration of the milestone (milestone type)
+		// tuleapMilestone = this.populateConfigurableFields(tuleapMilestone, taskData, configuration);
+		// TODO populate the rest of the fields using the configuration...
+
+		return tuleapMilestone;
 	}
 
 }
