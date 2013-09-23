@@ -37,7 +37,7 @@ public class TuleapBacklogItemDeserializerTest {
 	public void testDeserializeEpic300() {
 		String epic = ParserUtil.loadFile("/json/backlog_items/epic300.json"); //$NON-NLS-1$
 		TuleapBacklogItem item = parse(epic);
-		assertEquals(300, item.getElementId());
+		assertEquals(300, item.getId());
 		assertEquals("An important Epic", item.getLabel()); //$NON-NLS-1$
 		assertEquals("/backlog_items/300", item.getUrl()); //$NON-NLS-1$
 		assertEquals("/backlog_items?id=300&group_id=3", item.getHtmlUrl()); //$NON-NLS-1$
@@ -60,7 +60,7 @@ public class TuleapBacklogItemDeserializerTest {
 	public void testDeserializeEpic301() {
 		String epic = ParserUtil.loadFile("/json/backlog_items/epic301.json"); //$NON-NLS-1$
 		TuleapBacklogItem item = parse(epic);
-		assertEquals(301, item.getElementId());
+		assertEquals(301, item.getId());
 		assertEquals("Another important Epic", item.getLabel()); //$NON-NLS-1$
 		assertEquals("/backlog_items/301", item.getUrl()); //$NON-NLS-1$
 		assertEquals("/backlog_items?id=301&group_id=3", item.getHtmlUrl()); //$NON-NLS-1$
@@ -83,7 +83,7 @@ public class TuleapBacklogItemDeserializerTest {
 	public void testDeserializeEpic302() {
 		String epic = ParserUtil.loadFile("/json/backlog_items/epic302.json"); //$NON-NLS-1$
 		TuleapBacklogItem item = parse(epic);
-		assertEquals(302, item.getElementId());
+		assertEquals(302, item.getId());
 		assertEquals("Some nice Epic", item.getLabel()); //$NON-NLS-1$
 		assertEquals("/backlog_items/302", item.getUrl()); //$NON-NLS-1$
 		assertEquals("/backlog_items?id=302&group_id=3", item.getHtmlUrl()); //$NON-NLS-1$
@@ -105,7 +105,7 @@ public class TuleapBacklogItemDeserializerTest {
 	public void testDeserializeUserStory350() {
 		String userStory = ParserUtil.loadFile("/json/backlog_items/userStory350.json"); //$NON-NLS-1$
 		TuleapBacklogItem item = parse(userStory);
-		assertEquals(350, item.getElementId());
+		assertEquals(350, item.getId());
 		assertEquals("An important User Story", item.getLabel()); //$NON-NLS-1$
 		assertEquals("/backlog_items/350", item.getUrl()); //$NON-NLS-1$
 		assertEquals("/backlog_items?id=350&group_id=3", item.getHtmlUrl()); //$NON-NLS-1$
@@ -134,7 +134,7 @@ public class TuleapBacklogItemDeserializerTest {
 	public void testDeserializeUserStory351() {
 		String userStory = ParserUtil.loadFile("/json/backlog_items/userStory351.json"); //$NON-NLS-1$
 		TuleapBacklogItem item = parse(userStory);
-		assertEquals(351, item.getElementId());
+		assertEquals(351, item.getId());
 		//		assertEquals("Another important User Story", item.getLabel()); //$NON-NLS-1$
 		//		assertEquals("/backlog_items/351", item.getUrl()); //$NON-NLS-1$
 		//		assertEquals("/backlog_items?id=351&group_id=3", item.getHtmlUrl()); //$NON-NLS-1$
@@ -163,7 +163,7 @@ public class TuleapBacklogItemDeserializerTest {
 	public void testDeserializeUserStory352() {
 		String userStory = ParserUtil.loadFile("/json/backlog_items/userStory352.json"); //$NON-NLS-1$
 		TuleapBacklogItem item = parse(userStory);
-		assertEquals(352, item.getElementId());
+		assertEquals(352, item.getId());
 		assertEquals("A nice User Story", item.getLabel()); //$NON-NLS-1$
 		assertEquals("/backlog_items/352", item.getUrl()); //$NON-NLS-1$
 		assertEquals("/backlog_items?id=352&group_id=3", item.getHtmlUrl()); //$NON-NLS-1$

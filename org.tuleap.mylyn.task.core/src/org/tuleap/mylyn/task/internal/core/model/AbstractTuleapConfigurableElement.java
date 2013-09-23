@@ -30,7 +30,7 @@ public abstract class AbstractTuleapConfigurableElement {
 	/**
 	 * The id of the element.
 	 */
-	private int elementId;
+	private int id;
 
 	/**
 	 * The human-readable label of the element.
@@ -84,7 +84,7 @@ public abstract class AbstractTuleapConfigurableElement {
 	 * This constructor is used for the creation of the configurable elements that have been synchronized on
 	 * the server. Those elements must have an identifier assigned by the server.
 	 * 
-	 * @param elementId
+	 * @param id
 	 *            The identifier of the element
 	 * @param label
 	 *            The label of the element
@@ -97,9 +97,9 @@ public abstract class AbstractTuleapConfigurableElement {
 	 * @param lastModificationDate
 	 *            The last modification date of the element
 	 */
-	public AbstractTuleapConfigurableElement(int elementId, String label, String url, String htmlUrl,
+	public AbstractTuleapConfigurableElement(int id, String label, String url, String htmlUrl,
 			Date creationDate, Date lastModificationDate) {
-		this.elementId = elementId;
+		this.id = id;
 		this.label = label;
 		this.url = url;
 		this.htmlUrl = htmlUrl;
@@ -112,8 +112,8 @@ public abstract class AbstractTuleapConfigurableElement {
 	 * 
 	 * @return the id
 	 */
-	public int getElementId() {
-		return elementId;
+	public int getId() {
+		return id;
 	}
 
 	/**

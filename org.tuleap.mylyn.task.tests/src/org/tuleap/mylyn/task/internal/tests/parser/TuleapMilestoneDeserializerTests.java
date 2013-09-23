@@ -179,7 +179,7 @@ public class TuleapMilestoneDeserializerTests {
 		TuleapMilestone tuleapMilestone = this.parse(release200);
 		assertNotNull(tuleapMilestone);
 
-		assertEquals(200, tuleapMilestone.getElementId());
+		assertEquals(200, tuleapMilestone.getId());
 		assertEquals("Release 0.9", tuleapMilestone.getLabel()); //$NON-NLS-1$
 		assertEquals(12345678, tuleapMilestone.getStartDate());
 		assertEquals(50, tuleapMilestone.getDuration(), 0);
@@ -348,7 +348,7 @@ public class TuleapMilestoneDeserializerTests {
 		TuleapMilestone tuleapMilestone = this.parse(release201);
 		assertNotNull(tuleapMilestone);
 
-		assertEquals(201, tuleapMilestone.getElementId());
+		assertEquals(201, tuleapMilestone.getId());
 		//		assertEquals("Release TU", tuleapMilestone.getLabel()); //$NON-NLS-1$
 		// assertEquals(12345678, tuleapMilestone.getStartDate());
 		// assertEquals(50, tuleapMilestone.getDuration(), 0);

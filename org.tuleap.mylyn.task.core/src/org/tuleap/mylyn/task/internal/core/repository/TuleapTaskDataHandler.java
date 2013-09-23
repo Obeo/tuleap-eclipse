@@ -81,7 +81,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		} else {
 			tuleapSoapClient.updateArtifact(artifact, monitor);
 			response = new RepositoryResponse(ResponseKind.TASK_UPDATED, String.valueOf(artifact
-					.getElementId()));
+					.getId()));
 		}
 
 		return response;
@@ -283,7 +283,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		// Create the default attributes
 		TaskData taskData = new TaskData(this.getAttributeMapper(taskRepository),
 				ITuleapConstants.CONNECTOR_KIND, taskRepository.getRepositoryUrl(), String
-						.valueOf(tuleapArtifact.getElementId()));
+						.valueOf(tuleapArtifact.getId()));
 
 		// Structure
 		// tuleapClient.updateAttributes(monitor, false);
