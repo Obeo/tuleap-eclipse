@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.internal.core.server;
+package org.tuleap.mylyn.task.internal.core.client.rest;
 
 /**
  * The versions of the API of the server.

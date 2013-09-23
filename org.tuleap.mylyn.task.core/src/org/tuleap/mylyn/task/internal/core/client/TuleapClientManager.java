@@ -20,12 +20,12 @@ import org.eclipse.mylyn.tasks.core.IRepositoryListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
+import org.tuleap.mylyn.task.internal.core.client.rest.ITuleapAPIVersions;
+import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
+import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestConnector;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
-import org.tuleap.mylyn.task.internal.core.server.ITuleapAPIVersions;
-import org.tuleap.mylyn.task.internal.core.server.TuleapRestClient;
-import org.tuleap.mylyn.task.internal.core.server.rest.TuleapRestConnector;
 
 /**
  * The Tuleap client manager will create new clients for a given Mylyn tasks repository or find existing ones.

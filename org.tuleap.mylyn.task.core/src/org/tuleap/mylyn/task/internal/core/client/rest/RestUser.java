@@ -8,25 +8,19 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.internal.core.server.rest;
+package org.tuleap.mylyn.task.internal.core.client.rest;
 
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.restlet.data.Method;
-import org.tuleap.mylyn.task.internal.core.server.ServerResponse;
 
 /**
- * JSON Resource for the {@code /api/<version>/top_plannings/:topPlanningId/backlog_items} URL.
+ * JSON Resource for the {@code /api/<version>} URL.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class RestTopPlanningsBacklogItems extends AbstractAuthenticatedRestResource {
-
-	/**
-	 * The project id.
-	 */
-	protected int topPlanningId;
+public class RestUser extends AbstractAuthenticatedRestResource {
 
 	/**
 	 * Constructor.
@@ -37,41 +31,38 @@ public class RestTopPlanningsBacklogItems extends AbstractAuthenticatedRestResou
 	 *            Version of the REST API to use.
 	 * @param credentials
 	 *            The credentials to use.
-	 * @param topPlanningId
-	 *            The id of the project.
 	 */
-	protected RestTopPlanningsBacklogItems(String serverUrl, String apiVersion, ICredentials credentials,
-			int topPlanningId) {
+	protected RestUser(String serverUrl, String apiVersion, ICredentials credentials) {
 		super(serverUrl, apiVersion, credentials);
-		this.topPlanningId = topPlanningId;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.server.rest.AbstractRestResource#getUrl()
+	 * @see org.tuleap.mylyn.task.internal.core.client.rest.AbstractRestResource#getUrl()
 	 */
 	@Override
 	protected String getUrl() {
-		return URL.TOP_PLANNINGS + "/" + topPlanningId + URL.BACKLOG_ITEMS; //$NON-NLS-1$
+		return URL.USER;
 	}
 
 	/**
-	 * Sends an GET request to the {@code /api/<version>/top_plannings/:topPlanningId/backlog_items} URL and
-	 * returns the response.
+	 * Sends an GET request to the {@code /api/<version>/user} URL and returns the response.
 	 * 
 	 * @param headers
 	 *            Headers to use for sending the request, just in case. There is no reason why this map
 	 *            shouldn't be empty.
+	 * @param data
+	 *            The data to send in the request.
 	 * @return The received server response, as is.
 	 */
-	public ServerResponse get(Map<String, String> headers) {
-		return sendRequest(Method.GET, headers, EMPTY_BODY);
+	public ServerResponse get(Map<String, String> headers, String data) {
+		return sendRequest(Method.GET, headers, data);
 	}
 
 	/**
-	 * Sends an OPTIONS request to the {@code /api/<version>/top_plannings/:topPlanningId/backlog_items} URL
-	 * and checks that the GET operation is allowed in the response provided by the server.
+	 * Sends an OPTIONS request to the {@code /api/<version>/user} URL and checks that the GET operation is
+	 * allowed in the response provided by the server.
 	 * 
 	 * @param headers
 	 *            Headers to use for sending the request, just in case. There is no reason why this map

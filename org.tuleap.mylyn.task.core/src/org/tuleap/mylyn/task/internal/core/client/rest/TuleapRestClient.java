@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.internal.core.server;
+package org.tuleap.mylyn.task.internal.core.client.rest;
 
 // By design, tThis class should have no dependency to
 // - com.google.json
@@ -46,19 +46,6 @@ import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapMilestoneDeserializer;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapMilestoneTypeDeserializer;
-import org.tuleap.mylyn.task.internal.core.server.rest.ICredentials;
-import org.tuleap.mylyn.task.internal.core.server.rest.RestMilestones;
-import org.tuleap.mylyn.task.internal.core.server.rest.RestMilestonesBacklogItems;
-import org.tuleap.mylyn.task.internal.core.server.rest.RestMilestonesSubmilestones;
-import org.tuleap.mylyn.task.internal.core.server.rest.RestProjects;
-import org.tuleap.mylyn.task.internal.core.server.rest.RestProjectsBacklogItemTypes;
-import org.tuleap.mylyn.task.internal.core.server.rest.RestProjectsMilestoneTypes;
-import org.tuleap.mylyn.task.internal.core.server.rest.RestProjectsTopPlannings;
-import org.tuleap.mylyn.task.internal.core.server.rest.RestProjectsTrackers;
-import org.tuleap.mylyn.task.internal.core.server.rest.RestResources;
-import org.tuleap.mylyn.task.internal.core.server.rest.RestTopPlanningsBacklogItems;
-import org.tuleap.mylyn.task.internal.core.server.rest.RestTopPlanningsMilestones;
-import org.tuleap.mylyn.task.internal.core.server.rest.TuleapRestConnector;
 
 /**
  * This class will be used to communicate with the server with a higher level of abstraction than raw HTTP

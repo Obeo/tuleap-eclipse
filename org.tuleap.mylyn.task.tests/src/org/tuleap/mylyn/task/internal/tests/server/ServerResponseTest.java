@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
-import org.tuleap.mylyn.task.internal.core.server.ServerResponse;
+import org.tuleap.mylyn.task.internal.core.client.rest.ServerResponse;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

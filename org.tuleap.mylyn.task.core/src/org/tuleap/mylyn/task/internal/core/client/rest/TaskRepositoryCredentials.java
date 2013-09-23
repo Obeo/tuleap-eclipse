@@ -8,11 +8,10 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.internal.core.server;
+package org.tuleap.mylyn.task.internal.core.client.rest;
 
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.tuleap.mylyn.task.internal.core.server.rest.ICredentials;
 
 /**
  * Credentials that fetch user data in a task repository.
@@ -39,7 +38,7 @@ public class TaskRepositoryCredentials implements ICredentials {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.server.rest.ICredentials#getUserName()
+	 * @see org.tuleap.mylyn.task.internal.core.client.rest.ICredentials#getUserName()
 	 */
 	public String getUserName() {
 		return repository.getCredentials(AuthenticationType.REPOSITORY).getUserName();
@@ -48,7 +47,7 @@ public class TaskRepositoryCredentials implements ICredentials {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.server.rest.ICredentials#getPassword()
+	 * @see org.tuleap.mylyn.task.internal.core.client.rest.ICredentials#getPassword()
 	 */
 	public String getPassword() {
 		return repository.getCredentials(AuthenticationType.REPOSITORY).getPassword();

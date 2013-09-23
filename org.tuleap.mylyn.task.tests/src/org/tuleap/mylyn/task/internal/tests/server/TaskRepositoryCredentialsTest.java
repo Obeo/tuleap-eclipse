@@ -14,7 +14,7 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.junit.Test;
-import org.tuleap.mylyn.task.internal.core.server.TaskRepositoryCredentials;
+import org.tuleap.mylyn.task.internal.core.client.rest.TaskRepositoryCredentials;
 
 import static org.junit.Assert.assertEquals;
 
@@ -27,12 +27,12 @@ public class TaskRepositoryCredentialsTest {
 
 	/**
 	 * Test method for
-	 * {@link org.tuleap.mylyn.task.internal.core.server.TaskRepositoryCredentials#getUserName()}.
+	 * {@link org.tuleap.mylyn.task.internal.core.client.rest.TaskRepositoryCredentials#getUserName()}.
 	 */
 	@Test
 	public void testGetUserName() {
 		String user = "azerty"; //$NON-NLS-1$
-		String password = "jfdk8!:#j%§§"; //$NON-NLS-1$
+		String password = "jfdk8!:#j%ï¿½ï¿½"; //$NON-NLS-1$
 		TaskRepository repo = new TaskRepository("Tuleap", "http://tuleap.net"); //$NON-NLS-1$ //$NON-NLS-2$
 		repo.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(user, password),
 				false);

@@ -8,74 +8,56 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.internal.core.server.rest;
+package org.tuleap.mylyn.task.internal.core.client.rest;
 
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.restlet.data.Method;
-import org.tuleap.mylyn.task.internal.core.server.ServerResponse;
 
 /**
- * Resource {@code /trackers}, which can optionally use an integer parameter representing the id of a
- * milestone.
+ * JSON Resource for the {@code /api/<version>/milestones/:milestoneId/submilestones} URL.
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public class RestMilestones extends AbstractAuthenticatedRestResource {
+public class RestMilestonesSubmilestones extends AbstractAuthenticatedRestResource {
 
 	/**
 	 * The milestone id.
 	 */
-	private Integer milestoneId;
+	protected int milestoneId;
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param serverUrl
-	 *            The server URL.
+	 *            URL of the rest API on the server.
 	 * @param apiVersion
-	 *            The API version.
+	 *            Version of the REST API to use.
 	 * @param credentials
-	 *            The credentials for authentication.
-	 */
-	public RestMilestones(String serverUrl, String apiVersion, ICredentials credentials) {
-		super(serverUrl, apiVersion, credentials);
-		this.milestoneId = null;
-	}
-
-	/**
-	 * Constructor with an artifact id.
-	 * 
-	 * @param serverUrl
-	 *            The server URL.
-	 * @param apiVersion
-	 *            The API version.
-	 * @param credentials
-	 *            The credentials for authentication.
+	 *            The credentials to use.
 	 * @param milestoneId
-	 *            The id of the milestone desired.
+	 *            The id of the milestone.
 	 */
-	public RestMilestones(String serverUrl, String apiVersion, ICredentials credentials, int milestoneId) {
+	protected RestMilestonesSubmilestones(String serverUrl, String apiVersion, ICredentials credentials,
+			int milestoneId) {
 		super(serverUrl, apiVersion, credentials);
-		this.milestoneId = Integer.valueOf(milestoneId);
+		this.milestoneId = milestoneId;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.server.rest.AbstractRestResource#getUrl()
+	 * @see org.tuleap.mylyn.task.internal.core.client.rest.AbstractRestResource#getUrl()
 	 */
 	@Override
 	protected String getUrl() {
-		if (milestoneId != null) {
-			return URL.MILESTONES + SLASH + milestoneId;
-		}
-		return URL.MILESTONES;
+		return URL.MILESTONES + "/" + milestoneId + URL.SUBMILESTONES; //$NON-NLS-1$
 	}
 
 	/**
-	 * Sends an GET request to the {@code /api/<version>/artifacts</:id>} URL and returns the response.
+	 * Sends an GET request to the {@code /api/<version>/milestones/:milestoneId/backlog_items} URL and
+	 * returns the response.
 	 * 
 	 * @param headers
 	 *            Headers to use for sending the request, just in case. There is no reason why this map
@@ -87,8 +69,8 @@ public class RestMilestones extends AbstractAuthenticatedRestResource {
 	}
 
 	/**
-	 * Sends an OPTIONS request to the {@code /api/<version>/artifacts</:artifactId>} URL and checks that the
-	 * GET operation is allowed in the response provided by the server.
+	 * Sends an OPTIONS request to the {@code /api/<version>/milestones/:milestoneId/backlog_items} URL and
+	 * checks that the GET operation is allowed in the response provided by the server.
 	 * 
 	 * @param headers
 	 *            Headers to use for sending the request, just in case. There is no reason why this map
@@ -99,4 +81,5 @@ public class RestMilestones extends AbstractAuthenticatedRestResource {
 	public void checkGet(Map<String, String> headers) throws CoreException {
 		checkAccreditation(Method.GET, headers);
 	}
+
 }

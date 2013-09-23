@@ -8,13 +8,12 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.internal.core.server.rest;
+package org.tuleap.mylyn.task.internal.core.client.rest;
 
 import java.util.HashMap;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
-import org.tuleap.mylyn.task.internal.core.server.ServerResponse;
 
 /**
  * This class will be used to establish the connection with the HTTP based Tuleap server.

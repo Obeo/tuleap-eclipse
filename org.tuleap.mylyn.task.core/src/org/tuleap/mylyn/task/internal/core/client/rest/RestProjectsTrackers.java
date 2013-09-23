@@ -8,20 +8,24 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.internal.core.server.rest;
+package org.tuleap.mylyn.task.internal.core.client.rest;
 
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.restlet.data.Method;
-import org.tuleap.mylyn.task.internal.core.server.ServerResponse;
 
 /**
  * JSON Resource for the {@code /api/<version>} URL.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class RestUser extends AbstractAuthenticatedRestResource {
+public class RestProjectsTrackers extends AbstractAuthenticatedRestResource {
+
+	/**
+	 * The project id.
+	 */
+	protected int projectId;
 
 	/**
 	 * Constructor.
@@ -32,38 +36,41 @@ public class RestUser extends AbstractAuthenticatedRestResource {
 	 *            Version of the REST API to use.
 	 * @param credentials
 	 *            The credentials to use.
+	 * @param projectId
+	 *            The id of the project.
 	 */
-	protected RestUser(String serverUrl, String apiVersion, ICredentials credentials) {
+	protected RestProjectsTrackers(String serverUrl, String apiVersion, ICredentials credentials,
+			int projectId) {
 		super(serverUrl, apiVersion, credentials);
+		this.projectId = projectId;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.server.rest.AbstractRestResource#getUrl()
+	 * @see org.tuleap.mylyn.task.internal.core.client.rest.AbstractRestResource#getUrl()
 	 */
 	@Override
 	protected String getUrl() {
-		return URL.USER;
+		return URL.PROJECTS + "/" + projectId + URL.TRACKERS; //$NON-NLS-1$
 	}
 
 	/**
-	 * Sends an GET request to the {@code /api/<version>/user} URL and returns the response.
+	 * Sends an GET request to the {@code /api/<version>/projects/:projectId/trackers} URL and returns the
+	 * response.
 	 * 
 	 * @param headers
 	 *            Headers to use for sending the request, just in case. There is no reason why this map
 	 *            shouldn't be empty.
-	 * @param data
-	 *            The data to send in the request.
 	 * @return The received server response, as is.
 	 */
-	public ServerResponse get(Map<String, String> headers, String data) {
-		return sendRequest(Method.GET, headers, data);
+	public ServerResponse get(Map<String, String> headers) {
+		return sendRequest(Method.GET, headers, EMPTY_BODY);
 	}
 
 	/**
-	 * Sends an OPTIONS request to the {@code /api/<version>/user} URL and checks that the GET operation is
-	 * allowed in the response provided by the server.
+	 * Sends an OPTIONS request to the {@code /api/<version>/projects/:projectId/trackers} URL and checks that
+	 * the GET operation is allowed in the response provided by the server.
 	 * 
 	 * @param headers
 	 *            Headers to use for sending the request, just in case. There is no reason why this map

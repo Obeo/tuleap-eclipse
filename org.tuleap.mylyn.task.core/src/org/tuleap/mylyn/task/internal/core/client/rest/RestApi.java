@@ -8,26 +8,36 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.internal.core.server.rest;
+package org.tuleap.mylyn.task.internal.core.client.rest;
+
 
 /**
- * Represents credentials that can be used for HTTP Basic authentication.
+ * JSON Resource for the {@code /api/<version>} URL.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public interface ICredentials {
+public class RestApi extends AbstractRestResource {
 
 	/**
-	 * User name getter.
+	 * Constructor.
 	 * 
-	 * @return The user name.
+	 * @param serverUrl
+	 *            URL of the rest API on the server.
+	 * @param apiVersion
+	 *            Version of the REST API to use.
 	 */
-	String getUserName();
+	protected RestApi(String serverUrl, String apiVersion) {
+		super(serverUrl, apiVersion);
+	}
 
 	/**
-	 * Password getter.
+	 * {@inheritDoc}
 	 * 
-	 * @return The password.
+	 * @see org.tuleap.mylyn.task.internal.core.client.rest.AbstractRestResource#getUrl()
 	 */
-	String getPassword();
+	@Override
+	protected String getUrl() {
+		return ""; //$NON-NLS-1$
+	}
+
 }

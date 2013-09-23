@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.internal.core.server.rest;
+package org.tuleap.mylyn.task.internal.core.client.rest;
 
 import org.restlet.data.ChallengeResponse;
 import org.restlet.data.ChallengeScheme;
@@ -44,7 +44,7 @@ public abstract class AbstractAuthenticatedRestResource extends AbstractRestReso
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.server.rest.AbstractRestResource#getChallengeResponse()
+	 * @see org.tuleap.mylyn.task.internal.core.client.rest.AbstractRestResource#getChallengeResponse()
 	 */
 	@Override
 	protected ChallengeResponse getChallengeResponse() {

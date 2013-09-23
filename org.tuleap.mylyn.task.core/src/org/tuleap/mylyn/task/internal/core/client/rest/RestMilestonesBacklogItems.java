@@ -8,25 +8,24 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.internal.core.server.rest;
+package org.tuleap.mylyn.task.internal.core.client.rest;
 
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.restlet.data.Method;
-import org.tuleap.mylyn.task.internal.core.server.ServerResponse;
 
 /**
- * JSON Resource for the {@code /api/<version>} URL.
+ * JSON Resource for the {@code /api/<version>/milestones/:milestoneId/backlog_items} URL.
  * 
- * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
+ * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public class RestProjectsTrackers extends AbstractAuthenticatedRestResource {
+public class RestMilestonesBacklogItems extends AbstractAuthenticatedRestResource {
 
 	/**
-	 * The project id.
+	 * The milestone id.
 	 */
-	protected int projectId;
+	protected int milestoneId;
 
 	/**
 	 * Constructor.
@@ -37,28 +36,28 @@ public class RestProjectsTrackers extends AbstractAuthenticatedRestResource {
 	 *            Version of the REST API to use.
 	 * @param credentials
 	 *            The credentials to use.
-	 * @param projectId
-	 *            The id of the project.
+	 * @param milestoneId
+	 *            The id of the milestone.
 	 */
-	protected RestProjectsTrackers(String serverUrl, String apiVersion, ICredentials credentials,
-			int projectId) {
+	protected RestMilestonesBacklogItems(String serverUrl, String apiVersion, ICredentials credentials,
+			int milestoneId) {
 		super(serverUrl, apiVersion, credentials);
-		this.projectId = projectId;
+		this.milestoneId = milestoneId;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.server.rest.AbstractRestResource#getUrl()
+	 * @see org.tuleap.mylyn.task.internal.core.client.rest.AbstractRestResource#getUrl()
 	 */
 	@Override
 	protected String getUrl() {
-		return URL.PROJECTS + "/" + projectId + URL.TRACKERS; //$NON-NLS-1$
+		return URL.MILESTONES + "/" + milestoneId + URL.BACKLOG_ITEMS; //$NON-NLS-1$
 	}
 
 	/**
-	 * Sends an GET request to the {@code /api/<version>/projects/:projectId/trackers} URL and returns the
-	 * response.
+	 * Sends an GET request to the {@code /api/<version>/milestones/:milestoneId/backlog_items} URL and
+	 * returns the response.
 	 * 
 	 * @param headers
 	 *            Headers to use for sending the request, just in case. There is no reason why this map
@@ -70,8 +69,8 @@ public class RestProjectsTrackers extends AbstractAuthenticatedRestResource {
 	}
 
 	/**
-	 * Sends an OPTIONS request to the {@code /api/<version>/projects/:projectId/trackers} URL and checks that
-	 * the GET operation is allowed in the response provided by the server.
+	 * Sends an OPTIONS request to the {@code /api/<version>/milestones/:milestoneId/backlog_items} URL and
+	 * checks that the GET operation is allowed in the response provided by the server.
 	 * 
 	 * @param headers
 	 *            Headers to use for sending the request, just in case. There is no reason why this map

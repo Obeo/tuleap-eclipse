@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.internal.core.server.rest;
+package org.tuleap.mylyn.task.internal.core.client.rest;
 
 import com.google.common.collect.Maps;
 
@@ -18,10 +18,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
-import org.tuleap.mylyn.task.internal.core.server.ITuleapAPIVersions;
-import org.tuleap.mylyn.task.internal.core.server.ITuleapHeaders;
-import org.tuleap.mylyn.task.internal.core.server.ITuleapServerStatus;
-import org.tuleap.mylyn.task.internal.core.server.ServerResponse;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 
 /**

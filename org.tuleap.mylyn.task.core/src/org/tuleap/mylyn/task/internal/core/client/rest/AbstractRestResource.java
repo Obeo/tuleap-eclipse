@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.internal.core.server.rest;
+package org.tuleap.mylyn.task.internal.core.client.rest;
 
 import com.google.common.collect.Maps;
 
@@ -38,10 +38,6 @@ import org.restlet.engine.http.header.HeaderConstants;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
-import org.tuleap.mylyn.task.internal.core.server.ITuleapAPIVersions;
-import org.tuleap.mylyn.task.internal.core.server.ITuleapHeaders;
-import org.tuleap.mylyn.task.internal.core.server.ITuleapServerStatus;
-import org.tuleap.mylyn.task.internal.core.server.ServerResponse;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 
 /**

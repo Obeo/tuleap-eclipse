@@ -8,13 +8,12 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.internal.core.server.rest;
+package org.tuleap.mylyn.task.internal.core.client.rest;
 
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.restlet.data.Method;
-import org.tuleap.mylyn.task.internal.core.server.ServerResponse;
 
 /**
  * JSON Resource for the {@code /api/<version>} URL.
@@ -49,7 +48,7 @@ public class RestProjectsBacklogItemTypes extends AbstractAuthenticatedRestResou
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.server.rest.AbstractRestResource#getUrl()
+	 * @see org.tuleap.mylyn.task.internal.core.client.rest.AbstractRestResource#getUrl()
 	 */
 	@Override
 	protected String getUrl() {

@@ -8,25 +8,24 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.internal.core.server.rest;
+package org.tuleap.mylyn.task.internal.core.client.rest;
 
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.restlet.data.Method;
-import org.tuleap.mylyn.task.internal.core.server.ServerResponse;
 
 /**
- * JSON Resource for the {@code /api/<version>/milestones/:milestoneId/submilestones} URL.
+ * JSON Resource for the {@code /api/<version>} URL.
  * 
- * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+ * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
-public class RestMilestonesSubmilestones extends AbstractAuthenticatedRestResource {
+public class RestProjectsMilestoneTypes extends AbstractAuthenticatedRestResource {
 
 	/**
-	 * The milestone id.
+	 * The project id.
 	 */
-	protected int milestoneId;
+	protected int projectId;
 
 	/**
 	 * Constructor.
@@ -37,28 +36,28 @@ public class RestMilestonesSubmilestones extends AbstractAuthenticatedRestResour
 	 *            Version of the REST API to use.
 	 * @param credentials
 	 *            The credentials to use.
-	 * @param milestoneId
-	 *            The id of the milestone.
+	 * @param projectId
+	 *            The id of the project.
 	 */
-	protected RestMilestonesSubmilestones(String serverUrl, String apiVersion, ICredentials credentials,
-			int milestoneId) {
+	protected RestProjectsMilestoneTypes(String serverUrl, String apiVersion, ICredentials credentials,
+			int projectId) {
 		super(serverUrl, apiVersion, credentials);
-		this.milestoneId = milestoneId;
+		this.projectId = projectId;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.server.rest.AbstractRestResource#getUrl()
+	 * @see org.tuleap.mylyn.task.internal.core.client.rest.AbstractRestResource#getUrl()
 	 */
 	@Override
 	protected String getUrl() {
-		return URL.MILESTONES + "/" + milestoneId + URL.SUBMILESTONES; //$NON-NLS-1$
+		return URL.PROJECTS + "/" + projectId + URL.MILESTONE_TYPES; //$NON-NLS-1$
 	}
 
 	/**
-	 * Sends an GET request to the {@code /api/<version>/milestones/:milestoneId/backlog_items} URL and
-	 * returns the response.
+	 * Sends an GET request to the {@code /api/<version>/projects/:projectId/milestone_types} URL and returns
+	 * the response.
 	 * 
 	 * @param headers
 	 *            Headers to use for sending the request, just in case. There is no reason why this map
@@ -70,7 +69,7 @@ public class RestMilestonesSubmilestones extends AbstractAuthenticatedRestResour
 	}
 
 	/**
-	 * Sends an OPTIONS request to the {@code /api/<version>/milestones/:milestoneId/backlog_items} URL and
+	 * Sends an OPTIONS request to the {@code /api/<version>/projects/:projectId/milestone_types} URL and
 	 * checks that the GET operation is allowed in the response provided by the server.
 	 * 
 	 * @param headers
