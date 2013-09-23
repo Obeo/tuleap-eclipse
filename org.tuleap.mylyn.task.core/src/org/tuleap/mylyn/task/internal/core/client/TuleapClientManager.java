@@ -23,7 +23,6 @@ import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
-import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.server.ITuleapAPIVersions;
 import org.tuleap.mylyn.task.internal.core.server.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.server.rest.TuleapRestConnector;
@@ -37,11 +36,6 @@ import org.tuleap.mylyn.task.internal.core.server.rest.TuleapRestConnector;
 public class TuleapClientManager implements IRepositoryListener {
 
 	/**
-	 * The Tuleap repository connector.
-	 */
-	private ITuleapRepositoryConnector repositoryConnector;
-
-	/**
 	 * The SOAP client cache.
 	 */
 	private Map<TaskRepository, TuleapSoapClient> soapClientCache = new HashMap<TaskRepository, TuleapSoapClient>();
@@ -50,16 +44,6 @@ public class TuleapClientManager implements IRepositoryListener {
 	 * The REST client cache.
 	 */
 	private Map<TaskRepository, TuleapRestClient> restClientCache = new HashMap<TaskRepository, TuleapRestClient>();
-
-	/**
-	 * The constructor.
-	 * 
-	 * @param connector
-	 *            The Tuleap repository connector.
-	 */
-	public TuleapClientManager(ITuleapRepositoryConnector connector) {
-		this.repositoryConnector = connector;
-	}
 
 	/**
 	 * Returns the SOAP client for the given task repository. The reference to the created client should not

@@ -253,7 +253,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 */
 	public TuleapClientManager getClientManager() {
 		if (clientManager == null) {
-			clientManager = new TuleapClientManager(this);
+			clientManager = new TuleapClientManager();
 		}
 		return clientManager;
 	}
