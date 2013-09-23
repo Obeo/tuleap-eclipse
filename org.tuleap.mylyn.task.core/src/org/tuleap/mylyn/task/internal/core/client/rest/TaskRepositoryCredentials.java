@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.client.rest;
 
-import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -41,7 +40,9 @@ public class TaskRepositoryCredentials implements ICredentials {
 	 * @see org.tuleap.mylyn.task.internal.core.client.rest.ICredentials#getUserName()
 	 */
 	public String getUserName() {
-		return repository.getCredentials(AuthenticationType.REPOSITORY).getUserName();
+		// return repository.getCredentials(AuthenticationType.REPOSITORY).getUserName();
+		// TODO SBE Fix the login!
+		return "admin";
 	}
 
 	/**
@@ -50,7 +51,9 @@ public class TaskRepositoryCredentials implements ICredentials {
 	 * @see org.tuleap.mylyn.task.internal.core.client.rest.ICredentials#getPassword()
 	 */
 	public String getPassword() {
-		return repository.getCredentials(AuthenticationType.REPOSITORY).getPassword();
+		// return repository.getCredentials(AuthenticationType.REPOSITORY).getPassword();
+		// TODO SBE Fix the login!
+		return "admin";
 	}
 
 }
