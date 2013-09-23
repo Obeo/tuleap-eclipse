@@ -84,7 +84,7 @@ public class TuleapClientManager implements IRepositoryListener {
 		ILog logger = Platform.getLog(Platform.getBundle(TuleapCoreActivator.PLUGIN_ID));
 
 		// Create the SOAP client
-		TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(taskRepository, webLocation);
+		TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(taskRepository, webLocation, logger);
 		this.soapClientCache.put(taskRepository, tuleapSoapClient);
 
 		// Create the REST client

@@ -72,7 +72,7 @@ public class TuleapValidator {
 					10);
 
 			ILog logger = Platform.getLog(Platform.getBundle(TuleapTasksUIPlugin.PLUGIN_ID));
-			TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(taskRepository, location);
+			TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(taskRepository, location, logger);
 			status = tuleapSoapClient.validateConnection(monitor);
 
 			if (status.isOK()) {

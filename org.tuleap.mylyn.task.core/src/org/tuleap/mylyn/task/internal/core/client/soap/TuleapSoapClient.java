@@ -16,6 +16,7 @@ import java.rmi.RemoteException;
 import javax.xml.rpc.ServiceException;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -47,16 +48,24 @@ public class TuleapSoapClient {
 	private TaskRepository taskRepository;
 
 	/**
+	 * The logger.
+	 */
+	private ILog logger;
+
+	/**
 	 * The constructor.
 	 * 
 	 * @param repository
 	 *            The task repository
 	 * @param weblocation
 	 *            The location of the tracker
+	 * @param logger
+	 *            the logger
 	 */
-	public TuleapSoapClient(TaskRepository repository, AbstractWebLocation weblocation) {
+	public TuleapSoapClient(TaskRepository repository, AbstractWebLocation weblocation, ILog logger) {
 		this.location = weblocation;
 		this.taskRepository = repository;
+		this.logger = logger;
 	}
 
 	/**
