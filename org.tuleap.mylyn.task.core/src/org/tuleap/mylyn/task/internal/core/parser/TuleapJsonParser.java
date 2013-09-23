@@ -33,13 +33,13 @@ import org.tuleap.mylyn.task.internal.core.data.TuleapTaskMapper;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapDate;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapFileUpload;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapFloat;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapInteger;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapMultiSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapAttributeMapper;
 

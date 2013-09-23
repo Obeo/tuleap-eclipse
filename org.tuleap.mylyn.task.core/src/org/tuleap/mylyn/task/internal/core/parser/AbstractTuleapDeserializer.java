@@ -19,8 +19,14 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-import org.tuleap.mylyn.task.internal.core.model.agile.AbstractTuleapAgileElement;
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableElement;
+import org.tuleap.mylyn.task.internal.core.model.LiteralFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.MultiSelectFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.SingleSelectFieldValue;
 
 /**
  * This class is used to deserialize a JSON representation of a Tuleap object.
@@ -29,7 +35,7 @@ import org.tuleap.mylyn.task.internal.core.model.agile.AbstractTuleapAgileElemen
  *            The type of the agile element to deserialize.
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapAgileElement> implements JsonDeserializer<T> {
+public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapConfigurableElement> implements JsonDeserializer<T> {
 
 	/**
 	 * The key used for the id of the POJO.
@@ -86,19 +92,14 @@ public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapAgileEl
 			JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
 
 		JsonObject jsonObject = rootJsonElement.getAsJsonObject();
-		T pojo = buildPojo();
 
 		int id = jsonObject.get(ID).getAsInt();
-		pojo.setId(id);
-
 		String label = jsonObject.get(LABEL).getAsString();
-		pojo.setLabel(label);
-
 		String url = jsonObject.get(URL).getAsString();
-		pojo.setUrl(url);
-
 		String htmlUrl = jsonObject.get(HTML_URL).getAsString();
-		pojo.setHtmlUrl(htmlUrl);
+
+		// TODO Fix the date
+		T pojo = buildPojo(id, label, url, htmlUrl, new Date(), new Date());
 
 		JsonArray fields = jsonObject.get(VALUES).getAsJsonArray();
 		for (JsonElement field : fields) {
@@ -109,29 +110,29 @@ public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapAgileEl
 				if (jsonValue.isJsonPrimitive()) {
 					JsonPrimitive primitive = jsonValue.getAsJsonPrimitive();
 					if (primitive.isString()) {
-						pojo.getValues().put(Integer.valueOf(fieldId), primitive.getAsString());
+						pojo.addFieldValue(new LiteralFieldValue(fieldId, primitive.getAsString()));
 					} else if (primitive.isNumber()) {
-						pojo.getValues().put(Integer.valueOf(fieldId), primitive.getAsNumber());
+						pojo.addFieldValue(new LiteralFieldValue(fieldId, String.valueOf(primitive
+								.getAsNumber())));
 					} else if (primitive.isBoolean()) {
-						pojo.getValues().put(Integer.valueOf(fieldId),
-								Boolean.valueOf(primitive.getAsBoolean()));
+						pojo.addFieldValue(new LiteralFieldValue(fieldId, String.valueOf(primitive
+								.getAsBoolean())));
 					}
 				}
 			} else {
 				JsonElement jsonBindValueId = jsonField.get(FIELD_BIND_VALUE_ID);
 				if (jsonBindValueId != null) {
 					int bindValueId = jsonBindValueId.getAsInt();
-					pojo.getValues().put(Integer.valueOf(fieldId), Integer.valueOf(bindValueId));
+					pojo.addFieldValue(new SingleSelectFieldValue(fieldId, bindValueId));
 				} else {
 					JsonElement jsonBindValueIds = jsonField.get(FIELD_BIND_VALUE_IDS);
 					if (jsonBindValueIds != null) {
 						JsonArray jsonIds = jsonBindValueIds.getAsJsonArray();
-						int[] ids = new int[jsonIds.size()];
-						int i = 0;
+						List<Integer> bindValueIds = new ArrayList<Integer>();
 						for (JsonElement idElement : jsonIds) {
-							ids[i++] = idElement.getAsInt();
+							bindValueIds.add(Integer.valueOf(idElement.getAsInt()));
 						}
-						pojo.getValues().put(Integer.valueOf(fieldId), ids);
+						pojo.addFieldValue(new MultiSelectFieldValue(fieldId, bindValueIds));
 					} else {
 						// TODO Files
 					}
@@ -145,8 +146,21 @@ public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapAgileEl
 	/**
 	 * Instantiates the relevant class of POJO to fill.
 	 * 
+	 * @param id
+	 *            The identifier
+	 * @param label
+	 *            The label
+	 * @param url
+	 *            The url
+	 * @param htmlUrl
+	 *            The HTML URL
+	 * @param creationDate
+	 *            The creation date
+	 * @param lastModificationDate
+	 *            The last modification date
 	 * @return The POJO.
 	 */
-	protected abstract T buildPojo();
+	protected abstract T buildPojo(int id, String label, String url, String htmlUrl, Date creationDate,
+			Date lastModificationDate);
 
 }

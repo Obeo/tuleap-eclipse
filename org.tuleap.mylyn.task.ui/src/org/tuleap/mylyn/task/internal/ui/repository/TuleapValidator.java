@@ -10,19 +10,21 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.ui.repository;
 
-import java.net.MalformedURLException;
-import java.rmi.RemoteException;
-
-import javax.xml.rpc.ServiceException;
-
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
-import org.tuleap.mylyn.task.internal.core.net.TuleapSoapConnector;
+import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
+import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
+import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
+import org.tuleap.mylyn.task.internal.core.server.ITuleapAPIVersions;
+import org.tuleap.mylyn.task.internal.core.server.TuleapRestClient;
+import org.tuleap.mylyn.task.internal.core.server.rest.TuleapRestConnector;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.ui.TuleapTasksUIPlugin;
@@ -69,16 +71,19 @@ public class TuleapValidator {
 			monitor.beginTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.ValidateConnection"), //$NON-NLS-1$
 					10);
 
-			// TODO ask for the TuleapServer in the constructor!
-			TuleapSoapConnector trackerSoapConnector = new TuleapSoapConnector(location);
-			try {
-				status = trackerSoapConnector.validateConnection(monitor);
-			} catch (MalformedURLException e) {
-				status = new Status(IStatus.ERROR, TuleapTasksUIPlugin.PLUGIN_ID, e.getMessage(), e);
-			} catch (RemoteException e) {
-				status = new Status(IStatus.ERROR, TuleapTasksUIPlugin.PLUGIN_ID, e.getMessage(), e);
-			} catch (ServiceException e) {
-				status = new Status(IStatus.ERROR, TuleapTasksUIPlugin.PLUGIN_ID, e.getMessage(), e);
+			ILog logger = Platform.getLog(Platform.getBundle(TuleapTasksUIPlugin.PLUGIN_ID));
+			TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(taskRepository, location);
+			status = tuleapSoapClient.validateConnection(monitor);
+
+			if (status.isOK()) {
+				TuleapJsonParser jsonParser = new TuleapJsonParser();
+				TuleapJsonSerializer jsonSerializer = new TuleapJsonSerializer();
+				TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(taskRepository.getUrl(),
+						ITuleapAPIVersions.V1_0, logger);
+				TuleapRestClient tuleapRestClient = new TuleapRestClient(tuleapRestConnector, jsonParser,
+						jsonSerializer, taskRepository, logger);
+
+				status = tuleapRestClient.validateConnection(monitor);
 			}
 		}
 		return status;

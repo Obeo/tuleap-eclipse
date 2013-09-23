@@ -13,10 +13,20 @@ package org.tuleap.mylyn.task.internal.core.client;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.ILog;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.tasks.core.IRepositoryListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
+import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
+import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
+import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
+import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
+import org.tuleap.mylyn.task.internal.core.server.ITuleapAPIVersions;
+import org.tuleap.mylyn.task.internal.core.server.TuleapRestClient;
+import org.tuleap.mylyn.task.internal.core.server.rest.TuleapRestConnector;
 
 /**
  * The Tuleap client manager will create new clients for a given Mylyn tasks repository or find existing ones.
@@ -24,7 +34,7 @@ import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
-public class TuleapClientManager implements ITuleapClientManager, IRepositoryListener {
+public class TuleapClientManager implements IRepositoryListener {
 
 	/**
 	 * The Tuleap repository connector.
@@ -32,9 +42,14 @@ public class TuleapClientManager implements ITuleapClientManager, IRepositoryLis
 	private ITuleapRepositoryConnector repositoryConnector;
 
 	/**
-	 * The client cache.
+	 * The SOAP client cache.
 	 */
-	private Map<TaskRepository, ITuleapClient> clientCache = new HashMap<TaskRepository, ITuleapClient>();
+	private Map<TaskRepository, TuleapSoapClient> soapClientCache = new HashMap<TaskRepository, TuleapSoapClient>();
+
+	/**
+	 * The REST client cache.
+	 */
+	private Map<TaskRepository, TuleapRestClient> restClientCache = new HashMap<TaskRepository, TuleapRestClient>();
 
 	/**
 	 * The constructor.
@@ -47,30 +62,29 @@ public class TuleapClientManager implements ITuleapClientManager, IRepositoryLis
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Returns the SOAP client for the given task repository. The reference to the created client should not
+	 * be kept by those calling this operation since the client can be re-created if the settings of the
+	 * repository are modified.
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.client.ITuleapClientManager#getClient(org.eclipse.mylyn.tasks.core.TaskRepository)
+	 * @param taskRepository
+	 *            The task repository
+	 * @return The SOAP client for the given task repository
 	 */
-	public ITuleapClient getClient(TaskRepository taskRepository) {
-		ITuleapClient tuleapClient = this.clientCache.get(taskRepository);
-		if (tuleapClient == null) {
-			tuleapClient = this.createClient(taskRepository);
-			this.clientCache.put(taskRepository, tuleapClient);
-		}
-		return tuleapClient;
+	public TuleapSoapClient getSoapClient(TaskRepository taskRepository) {
+		return this.soapClientCache.get(taskRepository);
 	}
 
 	/**
-	 * Creates a new Tuleap client for the given Mylyn tasks repository.
+	 * Returns the REST client for the given task repository. The reference to the created client should not
+	 * be kept by those calling this operation since the client can be re-created if the settings of the
+	 * repository are modified.
 	 * 
 	 * @param taskRepository
-	 *            The Mylyn tasks repository
-	 * @return A new Tuleap client for the given Mylyn tasks repository.
+	 *            The task repository
+	 * @return The REST client for the given task repository
 	 */
-	protected ITuleapClient createClient(TaskRepository taskRepository) {
-		return TuleapClientFactory.getDefault().createClient(taskRepository,
-				new TaskRepositoryLocationFactory().createWebLocation(taskRepository),
-				this.repositoryConnector);
+	public TuleapRestClient getRestClient(TaskRepository taskRepository) {
+		return this.restClientCache.get(taskRepository);
 	}
 
 	/**
@@ -78,8 +92,25 @@ public class TuleapClientManager implements ITuleapClientManager, IRepositoryLis
 	 * 
 	 * @see org.eclipse.mylyn.tasks.core.IRepositoryListener#repositoryAdded(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
-	public void repositoryAdded(TaskRepository repository) {
-		// Do nothing for now
+	public void repositoryAdded(TaskRepository taskRepository) {
+		// Create both clients
+		AbstractWebLocation webLocation = new TaskRepositoryLocationFactory()
+				.createWebLocation(taskRepository);
+
+		ILog logger = Platform.getLog(Platform.getBundle(TuleapCoreActivator.PLUGIN_ID));
+
+		// Create the SOAP client
+		TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(taskRepository, webLocation);
+		this.soapClientCache.put(taskRepository, tuleapSoapClient);
+
+		// Create the REST client
+		TuleapJsonParser jsonParser = new TuleapJsonParser();
+		TuleapJsonSerializer jsonSerializer = new TuleapJsonSerializer();
+		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(taskRepository.getUrl(),
+				ITuleapAPIVersions.V1_0, logger);
+		TuleapRestClient tuleapRestClient = new TuleapRestClient(tuleapRestConnector, jsonParser,
+				jsonSerializer, taskRepository, logger);
+		this.restClientCache.put(taskRepository, tuleapRestClient);
 	}
 
 	/**
@@ -87,9 +118,10 @@ public class TuleapClientManager implements ITuleapClientManager, IRepositoryLis
 	 * 
 	 * @see org.eclipse.mylyn.tasks.core.IRepositoryListener#repositoryRemoved(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
-	public void repositoryRemoved(TaskRepository repository) {
+	public void repositoryRemoved(TaskRepository taskRepository) {
 		// Force the re-creation of the client if the repository changes
-		this.clientCache.remove(repository);
+		this.restClientCache.remove(taskRepository);
+		this.soapClientCache.remove(taskRepository);
 	}
 
 	/**
@@ -97,9 +129,10 @@ public class TuleapClientManager implements ITuleapClientManager, IRepositoryLis
 	 * 
 	 * @see org.eclipse.mylyn.tasks.core.IRepositoryListener#repositorySettingsChanged(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
-	public void repositorySettingsChanged(TaskRepository repository) {
-		// Force the re-creation of the client if the repository changes
-		this.clientCache.remove(repository);
+	public void repositorySettingsChanged(TaskRepository taskRepository) {
+		// Force the re-creation of the clients if the repository changes
+		this.repositoryAdded(taskRepository);
+		this.repositoryRemoved(taskRepository);
 	}
 
 	/**
@@ -108,8 +141,9 @@ public class TuleapClientManager implements ITuleapClientManager, IRepositoryLis
 	 * @see org.eclipse.mylyn.tasks.core.IRepositoryListener#repositoryUrlChanged(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      java.lang.String)
 	 */
-	public void repositoryUrlChanged(TaskRepository repository, String oldUrl) {
-		// Force the re-creation of the client if the repository changes
-		this.clientCache.remove(repository);
+	public void repositoryUrlChanged(TaskRepository taskRepository, String oldUrl) {
+		// Force the re-creation of the clients if the repository changes
+		this.repositoryAdded(taskRepository);
+		this.repositoryRemoved(taskRepository);
 	}
 }

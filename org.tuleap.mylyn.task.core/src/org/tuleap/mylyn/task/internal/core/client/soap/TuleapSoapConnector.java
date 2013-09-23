@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.internal.core.net;
+package org.tuleap.mylyn.task.internal.core.client.soap;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.StringTokenizer;
 
 import javax.xml.rpc.ServiceException;
 
@@ -39,22 +38,15 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
-import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
-import org.tuleap.mylyn.task.internal.core.client.ITuleapClient;
 import org.tuleap.mylyn.task.internal.core.config.ITuleapConfigurationConstants;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
-import org.tuleap.mylyn.task.internal.core.model.TuleapArtifact;
-import org.tuleap.mylyn.task.internal.core.model.TuleapArtifactComment;
-import org.tuleap.mylyn.task.internal.core.model.TuleapAttachment;
+import org.tuleap.mylyn.task.internal.core.model.TuleapAttachmentDescriptor;
+import org.tuleap.mylyn.task.internal.core.model.TuleapElementComment;
 import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerReport;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapArtifactLink;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapComputedValue;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapDate;
@@ -67,6 +59,9 @@ import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapText;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerReport;
 import org.tuleap.mylyn.task.internal.core.model.workflow.TuleapWorkflow;
 import org.tuleap.mylyn.task.internal.core.model.workflow.TuleapWorkflowTransition;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapTaskDataHandler;
@@ -637,8 +632,6 @@ public class TuleapSoapConnector {
 	 *            The query to run
 	 * @param collector
 	 *            The task data collector
-	 * @param mapper
-	 *            The task attribute mapper
 	 * @param taskDataHandler
 	 *            The task data handler
 	 * @param tuleapClient
@@ -649,8 +642,8 @@ public class TuleapSoapConnector {
 	 *            The progress monitor
 	 * @return The number of tasks processed
 	 */
-	public int performQuery(IRepositoryQuery query, TaskDataCollector collector, TaskAttributeMapper mapper,
-			TuleapTaskDataHandler taskDataHandler, ITuleapClient tuleapClient, int maxHits,
+	public int performQuery(IRepositoryQuery query, TaskDataCollector collector,
+			TuleapTaskDataHandler taskDataHandler, TuleapSoapClient tuleapClient, int maxHits,
 			IProgressMonitor monitor) {
 		ArtifactQueryResult artifactQueryResult = null;
 		int trackerId = -1;
@@ -719,19 +712,21 @@ public class TuleapSoapConnector {
 
 				if (projectName != null && trackerName != null) {
 					for (Artifact artifact : artifacts) {
-						TuleapArtifact tuleapArtifact = new TuleapArtifact(artifact, trackerName, projectName);
-
-						tuleapArtifact = this.populateArtifact(tuleapArtifact, trackerFields, artifact,
-								monitor);
-
-						TaskData taskData = taskDataHandler.createTaskDataFromArtifact(tuleapClient,
-								tuleapClient.getTaskRepository(), tuleapArtifact, monitor);
-						try {
-							collector.accept(taskData);
-						} catch (IllegalArgumentException e) {
-							// Do not log, the query does not exists anymore, see
-							// org.eclipse.mylyn.internal.tasks.core.TaskList.getValidElement(IRepositoryElement)
-						}
+						// TuleapArtifact tuleapArtifact = new TuleapArtifact(artifact, trackerName,
+						// projectName);
+						//
+						// tuleapArtifact = this.populateArtifact(tuleapArtifact, trackerFields, artifact,
+						// monitor);
+						//
+						// TaskData taskData = taskDataHandler.createTaskDataFromArtifact(tuleapClient,
+						// tuleapClient.getTaskRepository(), tuleapArtifact, monitor);
+						// try {
+						// collector.accept(taskData);
+						// } catch (IllegalArgumentException e) {
+						// // Do not log, the query does not exists anymore, see
+						// //
+						// org.eclipse.mylyn.internal.tasks.core.TaskList.getValidElement(IRepositoryElement)
+						// }
 					}
 				}
 			} catch (NumberFormatException e) {
@@ -795,7 +790,7 @@ public class TuleapSoapConnector {
 							// We can't display the burndown chart
 							String value = artifactFieldValue.getField_value().getValue();
 							if (value != null) {
-								tuleapArtifact.putValue(artifactFieldValue.getField_name(), value);
+								// tuleapArtifact.putValue(artifactFieldValue.getField_name(), value);
 							}
 							found = true;
 						}
@@ -817,7 +812,7 @@ public class TuleapSoapConnector {
 			for (ArtifactComments artifactComment : artifactComments) {
 				int submittedBy = artifactComment.getSubmitted_by();
 				TuleapPerson commentedBy = this.getPersonFromId(submittedBy);
-				TuleapArtifactComment comment = new TuleapArtifactComment(artifactComment.getBody(),
+				TuleapElementComment comment = new TuleapElementComment(artifactComment.getBody(),
 						commentedBy.getEmail(), commentedBy.getRealName(), artifactComment.getSubmitted_on());
 				tuleapArtifact.addComment(comment);
 			}
@@ -852,7 +847,7 @@ public class TuleapSoapConnector {
 				cpt++;
 			}
 		}
-		tuleapArtifact.putValue(artifactFieldValue.getField_name(), value);
+		// tuleapArtifact.putValue(artifactFieldValue.getField_name(), value);
 	}
 
 	/**
@@ -867,15 +862,15 @@ public class TuleapSoapConnector {
 			ArtifactFieldValue artifactFieldValue) {
 		FieldValue fieldValue = artifactFieldValue.getField_value();
 		TrackerFieldBindValue[] bindValues = fieldValue.getBind_value();
-		if (bindValues == null || bindValues.length == 0) {
-			tuleapArtifact.putValue(artifactFieldValue.getField_name(), String
-					.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID));
-		} else {
-			for (TrackerFieldBindValue bindValue : bindValues) {
-				tuleapArtifact.putValue(artifactFieldValue.getField_name(), String.valueOf(bindValue
-						.getBind_value_id()));
-			}
-		}
+		// if (bindValues == null || bindValues.length == 0) {
+		// tuleapArtifact.putValue(artifactFieldValue.getField_name(), String
+		// .valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID));
+		// } else {
+		// for (TrackerFieldBindValue bindValue : bindValues) {
+		// tuleapArtifact.putValue(artifactFieldValue.getField_name(), String.valueOf(bindValue
+		// .getBind_value_id()));
+		// }
+		// }
 	}
 
 	/**
@@ -901,9 +896,9 @@ public class TuleapSoapConnector {
 				String description = fieldValueFileInfo.getDescription();
 				String type = fieldValueFileInfo.getFiletype();
 
-				TuleapAttachment tuleapAttachment = new TuleapAttachment(id, filename, uploadedBy, Long
-						.valueOf(filesize), description, type);
-				tuleapArtifact.putAttachment(artifactFieldValue.getField_name(), tuleapAttachment);
+				// AttachmentFieldValue tuleapAttachment = new AttachmentFieldValue(id, filename, uploadedBy,
+				// Long.valueOf(filesize), description, type);
+				// tuleapArtifact.putAttachment(artifactFieldValue.getField_name(), tuleapAttachment);
 			}
 		}
 	}
@@ -1006,11 +1001,11 @@ public class TuleapSoapConnector {
 		}
 
 		if (project != null && tracker != null) {
-			tuleapArtifact = new TuleapArtifact(artifact, tracker.getName(), project.getGroup_name());
-			TrackerField[] trackerFields = tuleapTrackerV5APIPort.getTrackerFields(sessionHash, project
-					.getGroup_id(), tracker.getTracker_id());
-			tuleapArtifact = this.populateArtifact(tuleapArtifact, trackerFields, artifact, monitor);
-			monitor.worked(fifty);
+			// tuleapArtifact = new TuleapArtifact(artifact, tracker.getName(), project.getGroup_name());
+			// TrackerField[] trackerFields = tuleapTrackerV5APIPort.getTrackerFields(sessionHash, project
+			// .getGroup_id(), tracker.getTracker_id());
+			// tuleapArtifact = this.populateArtifact(tuleapArtifact, trackerFields, artifact, monitor);
+			// monitor.worked(fifty);
 		}
 
 		this.logout();
@@ -1146,13 +1141,13 @@ public class TuleapSoapConnector {
 			monitor.worked(1);
 		}
 
-		String newComment = artifact.getValue(TaskAttribute.COMMENT_NEW);
-		if (newComment == null) {
-			newComment = TuleapMylynTasksMessages.getString("TuleapSoapConnector.DefaultComment"); //$NON-NLS-1$
-		}
-		tuleapTrackerV5APIPort.updateArtifact(sessionHash, groupId, artifact.getTrackerId(),
-				artifact.getId(), valuesList.toArray(new ArtifactFieldValue[valuesList.size()]), newComment,
-				ITuleapConstants.UTF8);
+		// String newComment = artifact.getValue(TaskAttribute.COMMENT_NEW);
+		// if (newComment == null) {
+		//			newComment = TuleapMylynTasksMessages.getString("TuleapSoapConnector.DefaultComment"); //$NON-NLS-1$
+		// }
+		// tuleapTrackerV5APIPort.updateArtifact(sessionHash, groupId, artifact.getTrackerId(),
+		// artifact.getId(), valuesList.toArray(new ArtifactFieldValue[valuesList.size()]), newComment,
+		// ITuleapConstants.UTF8);
 
 		monitor.worked(fifty);
 
@@ -1224,58 +1219,58 @@ public class TuleapSoapConnector {
 				|| ITuleapConfigurationConstants.SB.equals(trackerField.getType())
 				|| ITuleapConfigurationConstants.CB.equals(trackerField.getType())) {
 			// Regular select box, multi-select box or checkbox
-			String fieldId = Integer.valueOf(trackerField.getField_id()).toString();
-			List<String> values = artifact.getValues(fieldId);
-			List<TrackerFieldBindValue> bindValues = new ArrayList<TrackerFieldBindValue>();
-			for (String value : values) {
-				if ("".equals(value)) { //$NON-NLS-1$
-					bindValues.add(new TrackerFieldBindValue(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID,
-							"")); //$NON-NLS-1$
-				} else {
-					TrackerFieldBindValue[] trackerFieldBindValues = trackerField.getValues();
-					for (TrackerFieldBindValue trackerFieldBindValue : trackerFieldBindValues) {
-						if (value.equals(trackerFieldBindValue.getBind_value_label())) {
-							bindValues.add(new TrackerFieldBindValue(
-									trackerFieldBindValue.getBind_value_id(), trackerFieldBindValue
-											.getBind_value_label()));
-						}
-					}
-				}
-			}
-			FieldValue fieldValue = new FieldValue(
-					"", new FieldValueFileInfo[] {}, bindValues.toArray(new TrackerFieldBindValue[bindValues.size()])); //$NON-NLS-1$
-			artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(),
-					trackerField.getLabel(), fieldValue);
+			// String fieldId = Integer.valueOf(trackerField.getField_id()).toString();
+			// List<String> values = artifact.getValues(fieldId);
+			// List<TrackerFieldBindValue> bindValues = new ArrayList<TrackerFieldBindValue>();
+			// for (String value : values) {
+			//				if ("".equals(value)) { //$NON-NLS-1$
+			// bindValues.add(new TrackerFieldBindValue(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID,
+			//							"")); //$NON-NLS-1$
+			// } else {
+			// TrackerFieldBindValue[] trackerFieldBindValues = trackerField.getValues();
+			// for (TrackerFieldBindValue trackerFieldBindValue : trackerFieldBindValues) {
+			// if (value.equals(trackerFieldBindValue.getBind_value_label())) {
+			// bindValues.add(new TrackerFieldBindValue(
+			// trackerFieldBindValue.getBind_value_id(), trackerFieldBindValue
+			// .getBind_value_label()));
+			// }
+			// }
+			// }
+			// }
+			// FieldValue fieldValue = new FieldValue(
+			//					"", new FieldValueFileInfo[] {}, bindValues.toArray(new TrackerFieldBindValue[bindValues.size()])); //$NON-NLS-1$
+			// artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(),
+			// trackerField.getLabel(), fieldValue);
 		} else if (ITuleapConfigurationConstants.TBL.equals(trackerField.getType())) {
-			String fieldId = Integer.valueOf(trackerField.getField_id()).toString();
-			String value = artifact.getValue(fieldId);
-
-			List<TrackerFieldBindValue> bindValues = new ArrayList<TrackerFieldBindValue>();
-
-			StringTokenizer stringTokenizer = new StringTokenizer(value, ","); //$NON-NLS-1$
-			while (stringTokenizer.hasMoreTokens()) {
-				String nextToken = stringTokenizer.nextToken();
-				bindValues.add(new TrackerFieldBindValue(-1, nextToken.trim()));
-			}
-			FieldValue fieldValue = new FieldValue(
-					"", new FieldValueFileInfo[] {}, bindValues.toArray(new TrackerFieldBindValue[bindValues.size()])); //$NON-NLS-1$
-			artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(),
-					trackerField.getLabel(), fieldValue);
+			// String fieldId = Integer.valueOf(trackerField.getField_id()).toString();
+			// String value = artifact.getValue(fieldId);
+			//
+			// List<TrackerFieldBindValue> bindValues = new ArrayList<TrackerFieldBindValue>();
+			//
+			//			StringTokenizer stringTokenizer = new StringTokenizer(value, ","); //$NON-NLS-1$
+			// while (stringTokenizer.hasMoreTokens()) {
+			// String nextToken = stringTokenizer.nextToken();
+			// bindValues.add(new TrackerFieldBindValue(-1, nextToken.trim()));
+			// }
+			// FieldValue fieldValue = new FieldValue(
+			//					"", new FieldValueFileInfo[] {}, bindValues.toArray(new TrackerFieldBindValue[bindValues.size()])); //$NON-NLS-1$
+			// artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(),
+			// trackerField.getLabel(), fieldValue);
 		} else if (this.shouldConsider(trackerField.getType())) {
 			// Any other value (string, text, integer, float)
-			String fieldId = Integer.valueOf(trackerField.getField_id()).toString();
-			boolean hasKey = artifact.getKeys().contains(fieldId);
-			List<String> values = artifact.getValues(fieldId);
-			String composedValue = this.sanitizeMultipleValues(values);
-
-			if (hasKey && canSubmitValue(trackerField.getType(), composedValue)) {
-				if (composedValue != null && composedValue.length() > 0) {
-					FieldValue fieldValue = new FieldValue(composedValue, new FieldValueFileInfo[] {},
-							new TrackerFieldBindValue[] {});
-					artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField
-							.getLabel(), fieldValue);
-				}
-			}
+			// String fieldId = Integer.valueOf(trackerField.getField_id()).toString();
+			// boolean hasKey = artifact.getKeys().contains(fieldId);
+			// List<String> values = artifact.getValues(fieldId);
+			// String composedValue = this.sanitizeMultipleValues(values);
+			//
+			// if (hasKey && canSubmitValue(trackerField.getType(), composedValue)) {
+			// if (composedValue != null && composedValue.length() > 0) {
+			// FieldValue fieldValue = new FieldValue(composedValue, new FieldValueFileInfo[] {},
+			// new TrackerFieldBindValue[] {});
+			// artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField
+			// .getLabel(), fieldValue);
+			// }
+			// }
 		}
 
 		return artifactFieldValue;
@@ -1293,13 +1288,13 @@ public class TuleapSoapConnector {
 	private ArtifactFieldValue getArtifactTitle(TrackerField trackerField, TuleapArtifact artifact) {
 		// The title of the artifact
 		ArtifactFieldValue artifactFieldValue = null;
-		String value = artifact.getValue(TaskAttribute.SUMMARY);
-		if (value != null && value.length() > 0) {
-			FieldValue fieldValue = new FieldValue(value, new FieldValueFileInfo[] {},
-					new TrackerFieldBindValue[] {});
-			artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(),
-					trackerField.getLabel(), fieldValue);
-		}
+		// String value = artifact.getValue(TaskAttribute.SUMMARY);
+		// if (value != null && value.length() > 0) {
+		// FieldValue fieldValue = new FieldValue(value, new FieldValueFileInfo[] {},
+		// new TrackerFieldBindValue[] {});
+		// artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(),
+		// trackerField.getLabel(), fieldValue);
+		// }
 		return artifactFieldValue;
 	}
 
@@ -1315,30 +1310,30 @@ public class TuleapSoapConnector {
 	private ArtifactFieldValue getArtifactStatus(TrackerField trackerField, TuleapArtifact artifact) {
 		// The status of the artifact
 		ArtifactFieldValue artifactFieldValue = null;
-		String value = artifact.getValue(TaskAttribute.STATUS);
-		if (value != null && value.length() > 0) {
-			FieldValue fieldValue = null;
-
-			if (ITuleapConfigurationConstants.MSB.equals(trackerField.getType())
-					|| ITuleapConfigurationConstants.SB.equals(trackerField.getType())
-					|| ITuleapConfigurationConstants.CB.equals(trackerField.getType())) {
-				TrackerFieldBindValue[] trackerFieldBindValues = trackerField.getValues();
-				for (TrackerFieldBindValue trackerFieldBindValue : trackerFieldBindValues) {
-					if (trackerFieldBindValue.getBind_value_label().equals(value)) {
-						fieldValue = new FieldValue("", new FieldValueFileInfo[] {}, //$NON-NLS-1$
-								new TrackerFieldBindValue[] {new TrackerFieldBindValue(trackerFieldBindValue
-										.getBind_value_id(), trackerFieldBindValue.getBind_value_label()), });
-						break;
-					}
-				}
-			} else {
-				fieldValue = new FieldValue(value, new FieldValueFileInfo[] {},
-						new TrackerFieldBindValue[] {});
-			}
-
-			artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(),
-					trackerField.getLabel(), fieldValue);
-		}
+		// String value = artifact.getValue(TaskAttribute.STATUS);
+		// if (value != null && value.length() > 0) {
+		// FieldValue fieldValue = null;
+		//
+		// if (ITuleapConfigurationConstants.MSB.equals(trackerField.getType())
+		// || ITuleapConfigurationConstants.SB.equals(trackerField.getType())
+		// || ITuleapConfigurationConstants.CB.equals(trackerField.getType())) {
+		// TrackerFieldBindValue[] trackerFieldBindValues = trackerField.getValues();
+		// for (TrackerFieldBindValue trackerFieldBindValue : trackerFieldBindValues) {
+		// if (trackerFieldBindValue.getBind_value_label().equals(value)) {
+		//						fieldValue = new FieldValue("", new FieldValueFileInfo[] {}, //$NON-NLS-1$
+		// new TrackerFieldBindValue[] {new TrackerFieldBindValue(trackerFieldBindValue
+		// .getBind_value_id(), trackerFieldBindValue.getBind_value_label()), });
+		// break;
+		// }
+		// }
+		// } else {
+		// fieldValue = new FieldValue(value, new FieldValueFileInfo[] {},
+		// new TrackerFieldBindValue[] {});
+		// }
+		//
+		// artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(),
+		// trackerField.getLabel(), fieldValue);
+		// }
 		return artifactFieldValue;
 	}
 
@@ -1352,35 +1347,35 @@ public class TuleapSoapConnector {
 	 * @return The artifact field value matching the contributors of the artifact
 	 */
 	private ArtifactFieldValue getArtifactContributors(TrackerField trackerField, TuleapArtifact artifact) {
-		ArtifactFieldValue artifactFieldValue;
+		ArtifactFieldValue artifactFieldValue = null;
 		// The contributor of the artifact
-		List<String> values = artifact.getValues(TaskAttribute.USER_ASSIGNED);
-		List<TrackerFieldBindValue> bindValues = new ArrayList<TrackerFieldBindValue>();
-
-		if (values != null) {
-			for (String value : values) {
-				if ("".equals(value)) { //$NON-NLS-1$
-					bindValues.add(new TrackerFieldBindValue(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID,
-							"")); //$NON-NLS-1$
-				} else {
-					TrackerFieldBindValue[] trackerFieldBindValues = trackerField.getValues();
-					for (TrackerFieldBindValue trackerFieldBindValue : trackerFieldBindValues) {
-						if (value.equals(trackerFieldBindValue.getBind_value_label())) {
-							bindValues.add(new TrackerFieldBindValue(
-									trackerFieldBindValue.getBind_value_id(), trackerFieldBindValue
-											.getBind_value_label()));
-						}
-					}
-				}
-			}
-		} else {
-			bindValues.add(new TrackerFieldBindValue(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID, "")); //$NON-NLS-1$
-		}
-
-		FieldValue fieldValue = new FieldValue(
-				"", new FieldValueFileInfo[] {}, bindValues.toArray(new TrackerFieldBindValue[bindValues.size()])); //$NON-NLS-1$
-		artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField.getLabel(),
-				fieldValue);
+		// List<String> values = artifact.getValues(TaskAttribute.USER_ASSIGNED);
+		// List<TrackerFieldBindValue> bindValues = new ArrayList<TrackerFieldBindValue>();
+		//
+		// if (values != null) {
+		// for (String value : values) {
+		//				if ("".equals(value)) { //$NON-NLS-1$
+		// bindValues.add(new TrackerFieldBindValue(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID,
+		//							"")); //$NON-NLS-1$
+		// } else {
+		// TrackerFieldBindValue[] trackerFieldBindValues = trackerField.getValues();
+		// for (TrackerFieldBindValue trackerFieldBindValue : trackerFieldBindValues) {
+		// if (value.equals(trackerFieldBindValue.getBind_value_label())) {
+		// bindValues.add(new TrackerFieldBindValue(
+		// trackerFieldBindValue.getBind_value_id(), trackerFieldBindValue
+		// .getBind_value_label()));
+		// }
+		// }
+		// }
+		// }
+		// } else {
+		//			bindValues.add(new TrackerFieldBindValue(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID, "")); //$NON-NLS-1$
+		// }
+		//
+		// FieldValue fieldValue = new FieldValue(
+		//				"", new FieldValueFileInfo[] {}, bindValues.toArray(new TrackerFieldBindValue[bindValues.size()])); //$NON-NLS-1$
+		// artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField.getLabel(),
+		// fieldValue);
 		return artifactFieldValue;
 	}
 
@@ -1396,15 +1391,15 @@ public class TuleapSoapConnector {
 	private ArtifactFieldValue getArtifactDate(TrackerField trackerField, TuleapArtifact artifact) {
 		ArtifactFieldValue artifactFieldValue = null;
 		// Convert the date into a valid timestamp
-		String value = artifact.getValue(Integer.valueOf(trackerField.getField_id()).toString());
-		if (value != null && value.length() > 0) {
-			// FIXME Bug date creation / upload
-			int date = Long.valueOf(Long.valueOf(value).longValue() / 1000).intValue();
-			FieldValue fieldValue = new FieldValue(Integer.valueOf(date).toString(),
-					new FieldValueFileInfo[] {}, new TrackerFieldBindValue[] {});
-			artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(),
-					trackerField.getLabel(), fieldValue);
-		}
+		// String value = artifact.getValue(Integer.valueOf(trackerField.getField_id()).toString());
+		// if (value != null && value.length() > 0) {
+		// // FIXME Bug date creation / upload
+		// int date = Long.valueOf(Long.valueOf(value).longValue() / 1000).intValue();
+		// FieldValue fieldValue = new FieldValue(Integer.valueOf(date).toString(),
+		// new FieldValueFileInfo[] {}, new TrackerFieldBindValue[] {});
+		// artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(),
+		// trackerField.getLabel(), fieldValue);
+		// }
 		return artifactFieldValue;
 	}
 

@@ -14,7 +14,7 @@ import java.util.Collection;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

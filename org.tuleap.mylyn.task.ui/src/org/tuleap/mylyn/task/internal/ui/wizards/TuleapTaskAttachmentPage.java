@@ -32,12 +32,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.tuleap.mylyn.task.internal.core.client.ITuleapClient;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskMapper;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapFileUpload;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
@@ -139,8 +138,8 @@ public class TuleapTaskAttachmentPage extends TaskAttachmentPage {
 				.getConnectorKind());
 		if (repositoryConnector instanceof TuleapRepositoryConnector) {
 			TuleapRepositoryConnector tuleapRepositoryConnector = (TuleapRepositoryConnector)repositoryConnector;
-			ITuleapClient client = tuleapRepositoryConnector.getClientManager().getClient(taskRepository);
-			TuleapServerConfiguration repositoryConfiguration = client.getRepositoryConfiguration();
+			TuleapServerConfiguration repositoryConfiguration = tuleapRepositoryConnector
+					.getRepositoryConfiguration(taskRepository.getRepositoryUrl());
 
 			TaskAttribute attribute = this.getModel().getAttribute();
 			TaskData taskData = attribute.getTaskData();

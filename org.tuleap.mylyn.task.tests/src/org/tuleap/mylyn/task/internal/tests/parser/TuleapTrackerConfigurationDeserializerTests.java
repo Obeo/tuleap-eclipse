@@ -26,11 +26,11 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
-import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapMultiSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapTrackerConfigurationDeserializer;
 
 import static org.junit.Assert.assertEquals;

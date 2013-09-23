@@ -23,7 +23,6 @@ import com.google.gson.JsonParser;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
@@ -31,28 +30,23 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
+import org.tuleap.mylyn.task.internal.core.model.TuleapAttachmentDescriptor;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerReport;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItemType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
-import org.tuleap.mylyn.task.internal.core.net.TuleapAttachmentDescriptor;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapBacklogItemDeserializer;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapBacklogItemTypeDeserializer;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapMilestoneDeserializer;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapMilestoneTypeDeserializer;
-import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.server.rest.ICredentials;
-import org.tuleap.mylyn.task.internal.core.server.rest.RestArtifacts;
 import org.tuleap.mylyn.task.internal.core.server.rest.RestMilestones;
 import org.tuleap.mylyn.task.internal.core.server.rest.RestMilestonesBacklogItems;
 import org.tuleap.mylyn.task.internal.core.server.rest.RestMilestonesSubmilestones;
@@ -78,7 +72,7 @@ import org.tuleap.mylyn.task.internal.core.server.rest.TuleapRestConnector;
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public class TuleapServer {
+public class TuleapRestClient {
 
 	/**
 	 * The version number of the best api supported.
@@ -129,7 +123,7 @@ public class TuleapServer {
 	 * @param logger
 	 *            The logger
 	 */
-	public TuleapServer(TuleapRestConnector tuleapRestConnector, TuleapJsonParser jsonParser,
+	public TuleapRestClient(TuleapRestConnector tuleapRestConnector, TuleapJsonParser jsonParser,
 			TuleapJsonSerializer jsonSerializer, TaskRepository taskRepository, ILog logger) {
 		this.tuleapRestConnector = tuleapRestConnector;
 		this.jsonParser = jsonParser;
@@ -277,28 +271,19 @@ public class TuleapServer {
 	 * @throws CoreException
 	 *             In case of error during the retrieval of the artifact
 	 */
-	public TaskData getArtifact(int artifactId, ITuleapRepositoryConnector connector, IProgressMonitor monitor)
-			throws CoreException {
-		// TODO [SBE] See if the parameter connector should be a class attribute instead of a parameter
-		// Test the connection
-		RestResources restResources = tuleapRestConnector.resources(credentials);
-
-		// Send a request with OPTIONS to ensure that we can and have the right to retrieve the artifact
-		RestArtifacts restArtifacts = restResources.artifacts(artifactId);
-		restArtifacts.checkGet(Collections.<String, String> emptyMap());
-
-		// Retrieve the artifact
-		ServerResponse response = restArtifacts.get(Collections.<String, String> emptyMap());
-
-		if (ITuleapServerStatus.OK != response.getStatus()) {
-			// Invalid login? server error?
-			String message = this.jsonParser.getErrorMessage(response.getBody());
-			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, message));
-		}
-		// Create the task data
-		String json = response.getBody();
-		return jsonParser.parseArtifact(taskRepository, connector, json);
-	}
+	/*
+	 * public TaskData getArtifact(int artifactId, ITuleapRepositoryConnector connector, IProgressMonitor
+	 * monitor) throws CoreException { // TODO [SBE] See if the parameter connector should be a class
+	 * attribute instead of a parameter // Test the connection RestResources restResources =
+	 * tuleapRestConnector.resources(credentials); // Send a request with OPTIONS to ensure that we can and
+	 * have the right to retrieve the artifact RestArtifacts restArtifacts =
+	 * restResources.artifacts(artifactId); restArtifacts.checkGet(Collections.<String, String> emptyMap());
+	 * // Retrieve the artifact ServerResponse response = restArtifacts.get(Collections.<String, String>
+	 * emptyMap()); if (ITuleapServerStatus.OK != response.getStatus()) { // Invalid login? server error?
+	 * String message = this.jsonParser.getErrorMessage(response.getBody()); throw new CoreException(new
+	 * Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, message)); } // Create the task data String json =
+	 * response.getBody(); return jsonParser.parseArtifact(taskRepository, connector, json); }
+	 */
 
 	/**
 	 * Updates the artifact represented by the given task data with the given task data.
@@ -310,23 +295,13 @@ public class TuleapServer {
 	 * @throws CoreException
 	 *             In case of error during the update of the artifact
 	 */
-	public void updateArtifact(TaskData taskData, IProgressMonitor monitor) throws CoreException {
-		// Test the connection
-
-		// Try to log in
-
-		// Send a request with OPTIONS to ensure that we can and have the right to update the artifact
-
-		// Compute the change to send
-
-		// Send the update to the server for the attribute of the task
-
-		// See if we need to update additional tasks (cardwall, planning, etc)
-
-		// Send the update of the other artifacts
-
-		// Try to log out
-	}
+	/*
+	 * public void updateArtifact(TaskData taskData, IProgressMonitor monitor) throws CoreException { // Test
+	 * the connection // Try to log in // Send a request with OPTIONS to ensure that we can and have the right
+	 * to update the artifact // Compute the change to send // Send the update to the server for the attribute
+	 * of the task // See if we need to update additional tasks (cardwall, planning, etc) // Send the update
+	 * of the other artifacts // Try to log out }
+	 */
 
 	/**
 	 * Creates the artifact on the server.
@@ -339,22 +314,12 @@ public class TuleapServer {
 	 * @throws CoreException
 	 *             In case of error during the creation of the artifact
 	 */
-	public int createArtifact(TaskData taskData, IProgressMonitor monitor) throws CoreException {
-		// Test the connection
-
-		// Try to log in
-
-		// Send a request with OPTIONS to ensure that we can and have the right to create the artifact
-
-		// Create the artifact
-
-		// See if we need to update additional tasks (cardwall, planning, etc)
-
-		// Send the update of the other artifacts
-
-		// Try to log out
-		return -1;
-	}
+	/*
+	 * public int createArtifact(TaskData taskData, IProgressMonitor monitor) throws CoreException { // Test
+	 * the connection // Try to log in // Send a request with OPTIONS to ensure that we can and have the right
+	 * to create the artifact // Create the artifact // See if we need to update additional tasks (cardwall,
+	 * planning, etc) // Send the update of the other artifacts // Try to log out return -1; }
+	 */
 
 	/**
 	 * Returns all the reports of the tracker with the given tracker identifier.
@@ -367,18 +332,12 @@ public class TuleapServer {
 	 * @throws CoreException
 	 *             In case of error during the retrieval of the reports
 	 */
-	public List<TuleapTrackerReport> getReports(int trackerId, IProgressMonitor monitor) throws CoreException {
-		// Test the connection
-
-		// Try to log in
-
-		// Send a request with OPTIONS to ensure that we can and have the right to retrieve the reports
-
-		// Retrieve the reports
-
-		// Try to log out
-		return null;
-	}
+	/*
+	 * public List<TuleapTrackerReport> getReports(int trackerId, IProgressMonitor monitor) throws
+	 * CoreException { // Test the connection // Try to log in // Send a request with OPTIONS to ensure that
+	 * we can and have the right to retrieve the reports // Retrieve the reports // Try to log out return
+	 * null; }
+	 */
 
 	/**
 	 * Runs the report on the server for the tracker with the given tracker identifier.
@@ -395,23 +354,12 @@ public class TuleapServer {
 	 * @throws CoreException
 	 *             In case of error during the report execution
 	 */
-	public int executeReport(int trackerId, int reportId, TaskDataCollector collector,
-			IProgressMonitor monitor) throws CoreException {
-		// Test the connection
-
-		// Try to log in
-
-		// Send a request with OPTIONS to ensure that we can and have the right to run a report
-
-		// Run the report
-
-		// Create the task data from the result
-
-		// Put them in the task data collector
-
-		// Try to log out
-		return -1;
-	}
+	/*
+	 * public int executeReport(int trackerId, int reportId, TaskDataCollector collector, IProgressMonitor
+	 * monitor) throws CoreException { // Test the connection // Try to log in // Send a request with OPTIONS
+	 * to ensure that we can and have the right to run a report // Run the report // Create the task data from
+	 * the result // Put them in the task data collector // Try to log out return -1; }
+	 */
 
 	/**
 	 * Runs the query on the server for the tracker with the given tracker identifier.
@@ -428,23 +376,13 @@ public class TuleapServer {
 	 * @throws CoreException
 	 *             In case of error during the query execution
 	 */
-	public int executeQuery(int trackerId, Map<String, String> criteras, TaskDataCollector collector,
-			IProgressMonitor monitor) throws CoreException {
-		// Test the connection
-
-		// Try to log in
-
-		// Send a request with OPTIONS to ensure that we can and have the right to run a query
-
-		// Run the report
-
-		// Create the task data from the result
-
-		// Put them in the task data collector
-
-		// Try to log out
-		return -1;
-	}
+	/*
+	 * public int executeQuery(int trackerId, Map<String, String> criteras, TaskDataCollector collector,
+	 * IProgressMonitor monitor) throws CoreException { // Test the connection // Try to log in // Send a
+	 * request with OPTIONS to ensure that we can and have the right to run a query // Run the report //
+	 * Create the task data from the result // Put them in the task data collector // Try to log out return
+	 * -1; }
+	 */
 
 	/**
 	 * Retrieve the content of the attachment with the given attachment identifier.
@@ -666,9 +604,8 @@ public class TuleapServer {
 		String jsonTopPlanningIds = topPlanningsResponse.getBody();
 		JsonArray topPlanningIds = parser.parse(jsonTopPlanningIds).getAsJsonArray();
 		for (JsonElement element : topPlanningIds) {
-			TuleapTopPlanning topPlanning = new TuleapTopPlanning();
 			int topPlanningId = element.getAsInt();
-			topPlanning.setId(topPlanningId);
+			TuleapTopPlanning topPlanning = new TuleapTopPlanning(topPlanningId);
 
 			// 2- Retrieve the milestones of this top planning
 			RestTopPlanningsMilestones restMilestones = restResources.topPlanningsMilestones(topPlanningId);

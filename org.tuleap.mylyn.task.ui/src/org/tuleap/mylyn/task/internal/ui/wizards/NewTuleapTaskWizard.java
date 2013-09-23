@@ -15,7 +15,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard;
 import org.eclipse.ui.INewWizard;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapTaskMapping;
 import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
 

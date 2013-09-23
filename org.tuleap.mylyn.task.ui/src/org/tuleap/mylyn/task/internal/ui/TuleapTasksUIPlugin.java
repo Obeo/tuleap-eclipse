@@ -19,12 +19,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.IRepositoryListener;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.tuleap.mylyn.task.internal.core.client.ITuleapClientManager;
+import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
@@ -69,11 +68,8 @@ public class TuleapTasksUIPlugin extends AbstractUIPlugin {
 				.getRepositoryConnector(ITuleapConstants.CONNECTOR_KIND);
 		if (repositoryConnector instanceof TuleapRepositoryConnector) {
 			TuleapRepositoryConnector tuleapRepositoryConnector = (TuleapRepositoryConnector)repositoryConnector;
-			ITuleapClientManager clientManager = tuleapRepositoryConnector.getClientManager();
-			if (clientManager instanceof IRepositoryListener) {
-				IRepositoryListener listener = (IRepositoryListener)clientManager;
-				TasksUi.getRepositoryManager().addListener(listener);
-			}
+			TuleapClientManager clientManager = tuleapRepositoryConnector.getClientManager();
+			TasksUi.getRepositoryManager().addListener(clientManager);
 		}
 	}
 
@@ -83,12 +79,9 @@ public class TuleapTasksUIPlugin extends AbstractUIPlugin {
 				.getRepositoryConnector(ITuleapConstants.CONNECTOR_KIND);
 		if (repositoryConnector instanceof TuleapRepositoryConnector) {
 			TuleapRepositoryConnector tuleapRepositoryConnector = (TuleapRepositoryConnector)repositoryConnector;
-			ITuleapClientManager clientManager = tuleapRepositoryConnector.getClientManager();
-			if (clientManager instanceof IRepositoryListener) {
-				IRepositoryListener listener = (IRepositoryListener)clientManager;
-				TasksUi.getRepositoryManager().addListener(listener);
-				TasksUi.getRepositoryManager().removeListener(listener);
-			}
+			TuleapClientManager clientManager = tuleapRepositoryConnector.getClientManager();
+			TasksUi.getRepositoryManager().addListener(clientManager);
+			TasksUi.getRepositoryManager().removeListener(clientManager);
 		}
 
 		Iterator<Image> imageIterator = imageMap.values().iterator();

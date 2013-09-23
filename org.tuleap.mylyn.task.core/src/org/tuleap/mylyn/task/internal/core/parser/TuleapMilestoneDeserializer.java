@@ -17,6 +17,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
+import java.util.Date;
 
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
 
@@ -101,17 +102,18 @@ public class TuleapMilestoneDeserializer extends AbstractTuleapDeserializer<Tule
 		}
 
 		return milestone;
-
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.parser.AbstractTuleapDeserializer#buildPojo()
+	 * @see org.tuleap.mylyn.task.internal.core.parser.AbstractTuleapDeserializer#buildPojo(int,
+	 *      java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date)
 	 */
 	@Override
-	protected TuleapMilestone buildPojo() {
-		return new TuleapMilestone();
+	protected TuleapMilestone buildPojo(int id, String label, String url, String htmlUrl, Date creationDate,
+			Date lastModificationDate) {
+		return new TuleapMilestone(id, label, url, htmlUrl, creationDate, lastModificationDate);
 	}
 
 }

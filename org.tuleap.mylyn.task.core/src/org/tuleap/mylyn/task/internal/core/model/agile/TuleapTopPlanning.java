@@ -20,17 +20,41 @@ import java.util.List;
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class TuleapTopPlanning extends AbstractTuleapAgileElement {
+public class TuleapTopPlanning {
+
+	/**
+	 * The identifier.
+	 */
+	private int id;
 
 	/**
 	 * The top planning's milestones.
 	 */
-	protected final List<TuleapMilestone> milestones = Lists.newArrayList();
+	private final List<TuleapMilestone> milestones = Lists.newArrayList();
 
 	/**
 	 * The top planning's backlog items.
 	 */
-	protected final List<TuleapBacklogItem> backlogItems = Lists.newArrayList();
+	private final List<TuleapBacklogItem> backlogItems = Lists.newArrayList();
+
+	/**
+	 * The constructor.
+	 * 
+	 * @param id
+	 *            The identifier
+	 */
+	public TuleapTopPlanning(int id) {
+		this.id = id;
+	}
+
+	/**
+	 * Returns the id.
+	 * 
+	 * @return The id
+	 */
+	public int getId() {
+		return this.id;
+	}
 
 	/**
 	 * Provides an immutable view of the top planning's milestones.

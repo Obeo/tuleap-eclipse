@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.internal.core.client;
+package org.tuleap.mylyn.task.internal.core.client.soap;
 
 import java.net.MalformedURLException;
 import java.rmi.RemoteException;
@@ -20,18 +20,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
-import org.tuleap.mylyn.task.internal.core.model.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
-import org.tuleap.mylyn.task.internal.core.net.TuleapSoapConnector;
-import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
-import org.tuleap.mylyn.task.internal.core.repository.TuleapTaskDataHandler;
-import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
 
 /**
  * The Mylyn Tuleap client is in charge of the connection with the repository and it will realize the request
@@ -40,22 +34,12 @@ import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
-public class TuleapClient implements ITuleapClient {
+public class TuleapSoapClient {
 
 	/**
 	 * The location of the repository.
 	 */
 	private AbstractWebLocation location;
-
-	/**
-	 * The Tuleap repository connector.
-	 */
-	private ITuleapRepositoryConnector repositoryConnector;
-
-	/**
-	 * The configuration of the repository.
-	 */
-	private TuleapServerConfiguration configuration;
 
 	/**
 	 * The task repository.
@@ -69,15 +53,24 @@ public class TuleapClient implements ITuleapClient {
 	 *            The task repository
 	 * @param weblocation
 	 *            The location of the tracker
-	 * @param connector
-	 *            The Tuleap repository connector
 	 */
-	public TuleapClient(TaskRepository repository, AbstractWebLocation weblocation,
-			ITuleapRepositoryConnector connector) {
+	public TuleapSoapClient(TaskRepository repository, AbstractWebLocation weblocation) {
 		this.location = weblocation;
 		this.taskRepository = repository;
-		this.repositoryConnector = connector;
-		this.configuration = new TuleapServerConfiguration(this.location.getUrl());
+	}
+
+	/**
+	 * Returns the configuration of the Tuleap server.
+	 * 
+	 * @param monitor
+	 *            Used to monitor the progress
+	 * @return The configuration of the server
+	 * @throws CoreException
+	 *             In case of error during the retrieval of the configuration
+	 */
+	public TuleapServerConfiguration getTuleapServerConfiguration(IProgressMonitor monitor)
+			throws CoreException {
+		return null;
 	}
 
 	/**
@@ -87,18 +80,19 @@ public class TuleapClient implements ITuleapClient {
 	 *      org.eclipse.mylyn.tasks.core.data.TaskDataCollector,
 	 *      org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper, org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public boolean getSearchHits(IRepositoryQuery query, TaskDataCollector collector,
-			TaskAttributeMapper mapper, IProgressMonitor monitor) {
+	public boolean getSearchHits(IRepositoryQuery query, TaskDataCollector collector, IProgressMonitor monitor) {
 		// Get the result of the query
 		int hit = 0;
-		if (this.repositoryConnector instanceof AbstractRepositoryConnector
-				&& ((AbstractRepositoryConnector)this.repositoryConnector).getTaskDataHandler() instanceof TuleapTaskDataHandler) {
-			AbstractRepositoryConnector abstractRepositoryConnector = (AbstractRepositoryConnector)this.repositoryConnector;
-			TuleapSoapConnector trackerSoapConnector = new TuleapSoapConnector(this.location);
-			hit = trackerSoapConnector.performQuery(query, collector, mapper,
-					(TuleapTaskDataHandler)abstractRepositoryConnector.getTaskDataHandler(), this,
-					TaskDataCollector.MAX_HITS, monitor);
-		}
+		// if (this.repositoryConnector instanceof AbstractRepositoryConnector
+		// && ((AbstractRepositoryConnector)this.repositoryConnector).getTaskDataHandler() instanceof
+		// TuleapTaskDataHandler) {
+		// AbstractRepositoryConnector abstractRepositoryConnector =
+		// (AbstractRepositoryConnector)this.repositoryConnector;
+		// TuleapSoapConnector trackerSoapConnector = new TuleapSoapConnector(this.location);
+		// hit = trackerSoapConnector.performQuery(query, collector,
+		// (TuleapTaskDataHandler)abstractRepositoryConnector.getTaskDataHandler(), this,
+		// TaskDataCollector.MAX_HITS, monitor);
+		// }
 		return hit > 0;
 	}
 
@@ -109,10 +103,10 @@ public class TuleapClient implements ITuleapClient {
 	 *      boolean)
 	 */
 	public void updateAttributes(IProgressMonitor monitor, boolean forceRefresh) {
-		if (!this.hasAttributes() || forceRefresh) {
-			this.updateAttributes(monitor);
-			this.configuration.setLastUpdate(System.currentTimeMillis());
-		}
+		// if (!this.hasAttributes() || forceRefresh) {
+		// this.updateAttributes(monitor);
+		// this.configuration.setLastUpdate(System.currentTimeMillis());
+		// }
 	}
 
 	/**
@@ -120,9 +114,9 @@ public class TuleapClient implements ITuleapClient {
 	 * 
 	 * @return <code>true</code> if attributes have already been set once, <code>false</code> otherwise.
 	 */
-	public boolean hasAttributes() {
-		return this.configuration.getLastUpdate() != 0;
-	}
+	// public boolean hasAttributes() {
+	// return this.configuration.getLastUpdate() != 0;
+	// }
 
 	/**
 	 * Updates the known attributes of the Tuleap repository.
@@ -131,18 +125,18 @@ public class TuleapClient implements ITuleapClient {
 	 *            The progress monitor
 	 */
 	private void updateAttributes(IProgressMonitor monitor) {
-		TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(location);
-
-		TuleapServerConfiguration newConfiguration = tuleapSoapConnector
-				.getTuleapInstanceConfiguration(monitor);
-		if (newConfiguration != null) {
-			this.configuration = newConfiguration;
-		} else {
-			TuleapCoreActivator.log(TuleapMylynTasksMessages.getString(
-					"TuleapClient.FailToRetrieveTheConfiguration", this.location.getUrl()), false); //$NON-NLS-1$
-		}
-
-		this.repositoryConnector.putRepositoryConfiguration(this.location.getUrl(), configuration);
+		// TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(location);
+		//
+		// TuleapServerConfiguration newConfiguration = tuleapSoapConnector
+		// .getTuleapInstanceConfiguration(monitor);
+		// if (newConfiguration != null) {
+		// this.configuration = newConfiguration;
+		// } else {
+		// TuleapCoreActivator.log(TuleapMylynTasksMessages.getString(
+		//					"TuleapSoapClient.FailToRetrieveTheConfiguration", this.location.getUrl()), false); //$NON-NLS-1$
+		// }
+		//
+		// this.repositoryConnector.putRepositoryConfiguration(this.location.getUrl(), configuration);
 	}
 
 	/**
@@ -177,7 +171,7 @@ public class TuleapClient implements ITuleapClient {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.client.ITuleapClient#createArtifact(org.tuleap.mylyn.task.internal.core.model.TuleapArtifact,
+	 * @see org.tuleap.mylyn.task.internal.core.client.ITuleapClient#createArtifact(org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact,
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public String createArtifact(TuleapArtifact artifact, IProgressMonitor monitor) throws CoreException {
@@ -201,7 +195,7 @@ public class TuleapClient implements ITuleapClient {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.client.ITuleapClient#updateArtifact(org.tuleap.mylyn.task.internal.core.model.TuleapArtifact,
+	 * @see org.tuleap.mylyn.task.internal.core.client.ITuleapClient#updateArtifact(org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact,
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public void updateArtifact(TuleapArtifact artifact, IProgressMonitor monitor) throws CoreException {
@@ -220,14 +214,14 @@ public class TuleapClient implements ITuleapClient {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.client.ITuleapClient#getRepositoryConfiguration()
-	 */
-	public TuleapServerConfiguration getRepositoryConfiguration() {
-		return this.configuration;
-	}
+	// /**
+	// * {@inheritDoc}
+	// *
+	// * @see org.tuleap.mylyn.task.internal.core.client.ITuleapClient#getRepositoryConfiguration()
+	// */
+	// public TuleapServerConfiguration getRepositoryConfiguration() {
+	// return this.configuration;
+	// }
 
 	/**
 	 * {@inheritDoc}
@@ -236,5 +230,17 @@ public class TuleapClient implements ITuleapClient {
 	 */
 	public TaskRepository getTaskRepository() {
 		return this.taskRepository;
+	}
+
+	/**
+	 * Validate the credentials with the server.
+	 * 
+	 * @param monitor
+	 *            The progress monitor
+	 * @return <code>true</code> if the credentials are valid and if the URL is valid, <code>false</code>
+	 *         otherwise
+	 */
+	public IStatus validateConnection(IProgressMonitor monitor) {
+		return null;
 	}
 }

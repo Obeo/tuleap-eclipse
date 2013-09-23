@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
+
 /**
  * This class will hold the configuration of a Tuleap server instance.
  * 

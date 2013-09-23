@@ -36,21 +36,20 @@ import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
-import org.tuleap.mylyn.task.internal.core.client.ITuleapClient;
-import org.tuleap.mylyn.task.internal.core.client.ITuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
+import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
+import org.tuleap.mylyn.task.internal.core.server.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 
@@ -70,7 +69,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	/**
 	 * The Tuleap client manager.
 	 */
-	private ITuleapClientManager clientManager;
+	private TuleapClientManager clientManager;
 
 	/**
 	 * The repository configuration file.
@@ -252,7 +251,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 * 
 	 * @see org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector#getClientManager()
 	 */
-	public ITuleapClientManager getClientManager() {
+	public TuleapClientManager getClientManager() {
 		if (clientManager == null) {
 			clientManager = new TuleapClientManager(this);
 		}
@@ -268,7 +267,6 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	@Override
 	public void updateNewTaskFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData) {
 		// Let's do the job in the task data handler
-		System.out.println();
 	}
 
 	/**
@@ -281,14 +279,24 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	public IStatus performQuery(TaskRepository repository, IRepositoryQuery query,
+	public IStatus performQuery(TaskRepository taskRepository, IRepositoryQuery query,
 			TaskDataCollector collector, ISynchronizationSession session, IProgressMonitor monitor) {
 		// Populate the collector with the task data resulting from the query
-		ITuleapClient client = this.getClientManager().getClient(repository);
-		TaskAttributeMapper mapper = this.getTaskDataHandler().getAttributeMapper(repository);
-		boolean hitReceived = client.getSearchHits(query, collector, mapper, monitor);
-		if (!hitReceived) {
-			// Something went wrong?
+		String queryKind = query.getAttribute(ITuleapConstants.QUERY_KIND);
+		if (ITuleapConstants.QUERY_KIND_ALL_FROM_TRACKER.equals(queryKind)) {
+			TuleapSoapClient soapClient = this.clientManager.getSoapClient(taskRepository);
+			soapClient.getSearchHits(query, collector, monitor);
+		} else if (ITuleapConstants.QUERY_KIND_REPORT.equals(queryKind)) {
+			TuleapSoapClient soapClient = this.clientManager.getSoapClient(taskRepository);
+			soapClient.getSearchHits(query, collector, monitor);
+		} else if (ITuleapConstants.QUERY_KIND_CUSTOM.equals(queryKind)) {
+			TuleapSoapClient soapClient = this.clientManager.getSoapClient(taskRepository);
+			soapClient.getSearchHits(query, collector, monitor);
+		} else {
+			TuleapRestClient restClient = this.clientManager.getRestClient(taskRepository);
+			String projectIdStr = query.getAttribute(ITuleapConstants.QUERY_GROUP_ID);
+			int projectId = Integer.valueOf(projectIdStr).intValue();
+			// TODO CNO create the task data representing the top level plannings and set their attributes.
 		}
 		return Status.OK_STATUS;
 	}
@@ -313,12 +321,24 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 * @see org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector#getRepositoryConfiguration(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      boolean, org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public TuleapServerConfiguration getRepositoryConfiguration(TaskRepository repository,
+	public TuleapServerConfiguration getRepositoryConfiguration(TaskRepository taskRepository,
 			boolean forceRefresh, IProgressMonitor monitor) {
-		// TODO Returns and/or update the configuration of the given repository.
-		ITuleapClient client = this.getClientManager().getClient(repository);
-		client.updateAttributes(monitor, forceRefresh);
-		return this.repositoryConfigurations.get(repository.getRepositoryUrl());
+		if (forceRefresh) {
+			TuleapRestClient tuleapRestClient = this.clientManager.getRestClient(taskRepository);
+			TuleapSoapClient tuleapSoapClient = this.clientManager.getSoapClient(taskRepository);
+			try {
+				TuleapServerConfiguration tuleapServerConfigurationRest = tuleapRestClient
+						.getTuleapServerConfiguration(monitor);
+				TuleapServerConfiguration tuleapServerConfigurationSoap = tuleapSoapClient
+						.getTuleapServerConfiguration(monitor);
+
+				// TODO SBE merge configurations!
+			} catch (CoreException e) {
+				TuleapCoreActivator.log(e, true);
+			}
+
+		}
+		return this.repositoryConfigurations.get(taskRepository.getRepositoryUrl());
 	}
 
 	/**
@@ -439,7 +459,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 * {@inheritDoc}
 	 * 
 	 * @see org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector#putRepositoryConfiguration(java.lang.String,
-	 *      org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration)
+	 *      org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration)
 	 */
 	public void putRepositoryConfiguration(String repositoryUrl, TuleapServerConfiguration configuration) {
 		this.repositoryConfigurations.put(repositoryUrl, configuration);

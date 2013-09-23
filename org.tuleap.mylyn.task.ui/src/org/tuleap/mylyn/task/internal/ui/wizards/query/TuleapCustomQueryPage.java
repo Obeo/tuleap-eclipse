@@ -35,10 +35,8 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
-import org.tuleap.mylyn.task.internal.core.client.ITuleapClient;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapArtifactLink;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapComputedValue;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapDate;
@@ -50,6 +48,7 @@ import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapText;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.ui.TuleapTasksUIPlugin;
@@ -256,9 +255,9 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 
 		if (this.trackerId != -1 && this.groupId != -1) {
 			final TuleapRepositoryConnector repositoryConnector = (TuleapRepositoryConnector)connector;
-			ITuleapClient client = repositoryConnector.getClientManager().getClient(this.getTaskRepository());
-			tuleapTrackerConfiguration = client.getRepositoryConfiguration().getTrackerConfiguration(
-					this.trackerId);
+			TuleapServerConfiguration repositoryConfiguration = repositoryConnector
+					.getRepositoryConfiguration(this.getTaskRepository().getRepositoryUrl());
+			tuleapTrackerConfiguration = repositoryConfiguration.getTrackerConfiguration(this.trackerId);
 
 			if (tuleapTrackerConfiguration == null) {
 				reloadConfiguration(repositoryConnector);

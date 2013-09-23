@@ -13,14 +13,17 @@ package org.tuleap.mylyn.task.internal.core.model.agile;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
+import java.util.Date;
 import java.util.List;
+
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableElement;
 
 /**
  * A milestone with its backlog items and its sub-milestones.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class TuleapMilestone extends AbstractTuleapAgileElement {
+public class TuleapMilestone extends AbstractTuleapConfigurableElement {
 
 	/**
 	 * The milestone's start date.
@@ -51,6 +54,34 @@ public class TuleapMilestone extends AbstractTuleapAgileElement {
 	 * The milestone's backlog items (including those assigned to sub-milestones).
 	 */
 	private List<TuleapBacklogItem> backlogItems = Lists.newArrayList();
+
+	/**
+	 * The constructor.
+	 */
+	public TuleapMilestone() {
+		super();
+	}
+
+	/**
+	 * The constructor.
+	 * 
+	 * @param elementId
+	 *            The identifier
+	 * @param label
+	 *            The label
+	 * @param url
+	 *            The API URL
+	 * @param htmlUrl
+	 *            The URL
+	 * @param creationDate
+	 *            The creation date
+	 * @param lastModificationDate
+	 *            The last modification
+	 */
+	public TuleapMilestone(int elementId, String label, String url, String htmlUrl, Date creationDate,
+			Date lastModificationDate) {
+		super(elementId, label, url, htmlUrl, creationDate, lastModificationDate);
+	}
 
 	/**
 	 * Start date getter.

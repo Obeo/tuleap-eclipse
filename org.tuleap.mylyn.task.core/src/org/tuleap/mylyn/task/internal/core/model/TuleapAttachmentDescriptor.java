@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.internal.core.net;
+package org.tuleap.mylyn.task.internal.core.model;
 
 import java.io.InputStream;
 

@@ -11,11 +11,11 @@
 package org.tuleap.mylyn.task.internal.core.model;
 
 /**
- * Utility class used to store a comment on a Tuleap artifact.
+ * Utility class used to store a comment.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public class TuleapArtifactComment {
+public class TuleapElementComment {
 	/**
 	 * The name of the person who wrote the comment.
 	 */
@@ -48,7 +48,7 @@ public class TuleapArtifactComment {
 	 * @param submittedOnTimestamp
 	 *            The timestamp of the date when the comment has been submitted.
 	 */
-	public TuleapArtifactComment(String commentBody, String userEmail, String realName,
+	public TuleapElementComment(String commentBody, String userEmail, String realName,
 			int submittedOnTimestamp) {
 		super();
 		this.body = commentBody;

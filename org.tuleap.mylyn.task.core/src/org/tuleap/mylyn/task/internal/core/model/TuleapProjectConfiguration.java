@@ -23,6 +23,7 @@ import java.util.Map;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItemType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 
 /**
  * This class will hold the configuration of a Tuleap project.

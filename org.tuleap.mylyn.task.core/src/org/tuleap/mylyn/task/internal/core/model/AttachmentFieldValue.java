@@ -10,18 +10,17 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model;
 
-
 /**
  * This class will represents an attachement.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public class TuleapAttachment {
+public class AttachmentFieldValue extends AbstractFieldValue {
 
 	/**
-	 * The identifier.
+	 * The identifier of the file.
 	 */
-	private String id;
+	private String attachmentId;
 
 	/**
 	 * The name.
@@ -51,8 +50,10 @@ public class TuleapAttachment {
 	/**
 	 * The constructor.
 	 * 
-	 * @param identifier
-	 *            The identifier
+	 * @param fieldId
+	 *            The identifier of the field
+	 * @param attachmentId
+	 *            The identifier of the file
 	 * @param name
 	 *            The name
 	 * @param uploadedBy
@@ -64,9 +65,10 @@ public class TuleapAttachment {
 	 * @param type
 	 *            The content type
 	 */
-	public TuleapAttachment(String identifier, String name, TuleapPerson uploadedBy, Long filesize,
-			String desc, String type) {
-		this.id = identifier;
+	public AttachmentFieldValue(int fieldId, String attachmentId, String name, TuleapPerson uploadedBy,
+			Long filesize, String desc, String type) {
+		super(fieldId);
+		this.attachmentId = attachmentId;
 		this.filename = name;
 		this.person = uploadedBy;
 		this.size = filesize;
@@ -75,12 +77,12 @@ public class TuleapAttachment {
 	}
 
 	/**
-	 * Returns the identifier.
+	 * Returns the identifier of the file.
 	 * 
-	 * @return The identifier
+	 * @return The identifier of the file
 	 */
-	public String getId() {
-		return id;
+	public String getAttachmentId() {
+		return attachmentId;
 	}
 
 	/**

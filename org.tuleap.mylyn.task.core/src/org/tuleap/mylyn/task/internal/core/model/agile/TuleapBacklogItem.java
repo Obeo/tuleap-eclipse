@@ -10,12 +10,16 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model.agile;
 
+import java.util.Date;
+
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableElement;
+
 /**
  * A backlog item in a milestone.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class TuleapBacklogItem extends AbstractTuleapAgileElement {
+public class TuleapBacklogItem extends AbstractTuleapConfigurableElement {
 
 	/**
 	 * The initial effort.
@@ -32,6 +36,34 @@ public class TuleapBacklogItem extends AbstractTuleapAgileElement {
 	 * item is NOT assigned to any milestone.
 	 */
 	private Integer assignedMilestoneId;
+
+	/**
+	 * The constructor.
+	 */
+	public TuleapBacklogItem() {
+		super();
+	}
+
+	/**
+	 * The constructor.
+	 * 
+	 * @param elementId
+	 *            The identifier
+	 * @param label
+	 *            The label
+	 * @param url
+	 *            The API URL
+	 * @param htmlUrl
+	 *            The URL
+	 * @param creationDate
+	 *            The creation date
+	 * @param lastModificationDate
+	 *            The last modification
+	 */
+	public TuleapBacklogItem(int elementId, String label, String url, String htmlUrl, Date creationDate,
+			Date lastModificationDate) {
+		super(elementId, label, url, htmlUrl, creationDate, lastModificationDate);
+	}
 
 	/**
 	 * Initial effort.

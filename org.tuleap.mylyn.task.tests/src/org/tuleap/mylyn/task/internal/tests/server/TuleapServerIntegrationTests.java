@@ -20,12 +20,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
-import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
-import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItemType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
@@ -33,11 +29,10 @@ import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
-import org.tuleap.mylyn.task.internal.core.server.TuleapServer;
+import org.tuleap.mylyn.task.internal.core.server.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.server.rest.TuleapRestConnector;
 import org.tuleap.mylyn.task.internal.tests.AbstractTuleapTests;
 import org.tuleap.mylyn.task.internal.tests.TestLogger;
-import org.tuleap.mylyn.task.internal.tests.mocks.MockedTuleapRepositoryConnector;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -60,7 +55,7 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
 		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
 
-		TuleapServer tuleapServer = new TuleapServer(tuleapRestConnector, tuleapJsonParser,
+		TuleapRestClient tuleapServer = new TuleapRestClient(tuleapRestConnector, tuleapJsonParser,
 				tuleapJsonSerializer, this.repository, logger);
 		try {
 			IStatus connectionStatus = tuleapServer.validateConnection(new NullProgressMonitor());
@@ -86,7 +81,7 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
 		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
 
-		TuleapServer tuleapServer = new TuleapServer(tuleapRestConnector, tuleapJsonParser,
+		TuleapRestClient tuleapServer = new TuleapRestClient(tuleapRestConnector, tuleapJsonParser,
 				tuleapJsonSerializer, this.repository, logger);
 		try {
 			tuleapServer.validateConnection(new NullProgressMonitor());
@@ -94,41 +89,6 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 		} catch (CoreException e) {
 			assertEquals(IStatus.ERROR, e.getStatus().getSeverity());
 			assertEquals("Error 401: Unauthorized", e.getMessage()); //$NON-NLS-1$ 
-		}
-	}
-
-	/**
-	 * Test the retrieval of an existing artifact.
-	 */
-	@Test
-	public void testGetExistingArtifact() {
-		TuleapServerConfiguration config = new TuleapServerConfiguration(getServerUrl());
-		// The artifact test data need the project Id 3 and the trackers 0, 1 and 4
-		TuleapProjectConfiguration projectConfig = new TuleapProjectConfiguration("Project 3", 3); //$NON-NLS-1$
-		config.addProject(projectConfig);
-		TuleapTrackerConfiguration trackerConfig0 = new TuleapTrackerConfiguration(0, getServerUrl());
-		projectConfig.addTracker(trackerConfig0);
-		TuleapTrackerConfiguration trackerConfig1 = new TuleapTrackerConfiguration(0, getServerUrl());
-		projectConfig.addTracker(trackerConfig1);
-		TuleapTrackerConfiguration trackerConfig4 = new TuleapTrackerConfiguration(0, getServerUrl());
-		projectConfig.addTracker(trackerConfig4);
-
-		this.connector = new MockedTuleapRepositoryConnector(config);
-
-		TestLogger logger = new TestLogger();
-		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(this.getServerUrl(), "v3.14", //$NON-NLS-1$
-				logger);
-		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
-		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
-
-		TuleapServer tuleapServer = new TuleapServer(tuleapRestConnector, tuleapJsonParser,
-				tuleapJsonSerializer, this.repository, logger);
-		try {
-			TaskData taskData = tuleapServer.getArtifact(1, this.connector, null);
-			System.out.println(taskData.getRoot());
-			// TODO Check the TaskData content
-		} catch (CoreException e) {
-			fail(e.getMessage());
 		}
 	}
 
@@ -142,8 +102,8 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
 		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
 
-		TuleapServer tuleapServer = new TuleapServer(restConnector, tuleapJsonParser, tuleapJsonSerializer,
-				this.repository, logger);
+		TuleapRestClient tuleapServer = new TuleapRestClient(restConnector, tuleapJsonParser,
+				tuleapJsonSerializer, this.repository, logger);
 		try {
 			List<TuleapTopPlanning> topPlannings = tuleapServer.getTopPlannings(3, null);
 			assertEquals(1, topPlannings.size());
@@ -168,8 +128,8 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
 		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
 
-		TuleapServer tuleapServer = new TuleapServer(restConnector, tuleapJsonParser, tuleapJsonSerializer,
-				this.repository, logger);
+		TuleapRestClient tuleapServer = new TuleapRestClient(restConnector, tuleapJsonParser,
+				tuleapJsonSerializer, this.repository, logger);
 		try {
 			List<TuleapMilestoneType> milestoneTypes = tuleapServer.getMilestoneTypes(3, null);
 			assertEquals(2, milestoneTypes.size());
@@ -205,8 +165,8 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
 		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
 
-		TuleapServer tuleapServer = new TuleapServer(restConnector, tuleapJsonParser, tuleapJsonSerializer,
-				this.repository, logger);
+		TuleapRestClient tuleapServer = new TuleapRestClient(restConnector, tuleapJsonParser,
+				tuleapJsonSerializer, this.repository, logger);
 		try {
 			List<TuleapBacklogItemType> backlogItemTypes = tuleapServer.getBacklogitemTypes(3, null);
 			assertEquals(2, backlogItemTypes.size());
@@ -244,8 +204,8 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
 		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
 
-		TuleapServer tuleapServer = new TuleapServer(restConnector, tuleapJsonParser, tuleapJsonSerializer,
-				this.repository, logger);
+		TuleapRestClient tuleapServer = new TuleapRestClient(restConnector, tuleapJsonParser,
+				tuleapJsonSerializer, this.repository, logger);
 		try {
 			List<TuleapMilestone> milestoneItems = tuleapServer.getSubMilestones(200, null);
 			assertEquals(3, milestoneItems.size());

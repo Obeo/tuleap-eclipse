@@ -105,13 +105,13 @@ public final class RestResources {
 					} else {
 						// Error, invalid behavior of the server, invalid location
 						status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
-								TuleapMylynTasksMessages.getString("TuleapServer.InvalidAPILocation", //$NON-NLS-1$
+								TuleapMylynTasksMessages.getString("RestResources.InvalidAPILocation", //$NON-NLS-1$
 										bestSupportedApiVersion));
 					}
 				} else {
 					// Error, invalid behavior of the server, no new location
 					status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
-							TuleapMylynTasksMessages.getString("TuleapServer.MissingAPILocation", //$NON-NLS-1$
+							TuleapMylynTasksMessages.getString("RestResources.MissingAPILocation", //$NON-NLS-1$
 									bestSupportedApiVersion));
 				}
 				break;
@@ -121,18 +121,18 @@ public final class RestResources {
 				// TODO How to deserialize the body here?
 				String goneErrorMessage = serverResponse.getBody();
 				status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, TuleapMylynTasksMessages
-						.getString("TuleapServer.MissingCompatibleAPI", bestSupportedApiVersion, //$NON-NLS-1$
+						.getString("RestResources.MissingCompatibleAPI", bestSupportedApiVersion, //$NON-NLS-1$
 								goneErrorMessage));
 				break;
 			case ITuleapServerStatus.NOT_FOUND:
 				// If we receive a 404 Not Found, the URL of server is invalid or the server is offline
 				status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, TuleapMylynTasksMessages
-						.getString("TuleapServer.APINotFound")); //$NON-NLS-1$
+						.getString("RestResources.APINotFound")); //$NON-NLS-1$
 				break;
 			default:
 				// Unknown error, invalid behavior of the server?
 				status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, TuleapMylynTasksMessages
-						.getString("TuleapServer.InvalidBehavior", Integer //$NON-NLS-1$
+						.getString("RestResources.InvalidBehavior", Integer //$NON-NLS-1$
 								.valueOf(serverResponse.getStatus())));
 				break;
 		}

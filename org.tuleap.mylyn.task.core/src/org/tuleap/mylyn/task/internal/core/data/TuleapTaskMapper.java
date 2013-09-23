@@ -29,13 +29,13 @@ import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.agile.core.data.AbstractTaskMapper;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
-import org.tuleap.mylyn.task.internal.core.model.TuleapArtifactComment;
-import org.tuleap.mylyn.task.internal.core.model.TuleapAttachment;
+import org.tuleap.mylyn.task.internal.core.model.AttachmentFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.TuleapElementComment;
 import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
-import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.AbstractTuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 
@@ -224,12 +224,13 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 * @param tuleapAttachment
 	 *            The attachment
 	 */
-	public void addAttachment(String tuleapFieldName, TuleapAttachment tuleapAttachment) {
+	public void addAttachment(String tuleapFieldName, AttachmentFieldValue tuleapAttachment) {
 		TaskAttribute attribute = taskData.getRoot().createAttribute(
-				TaskAttribute.PREFIX_ATTACHMENT + tuleapFieldName + "---" + tuleapAttachment.getId()); //$NON-NLS-1$
+				TaskAttribute.PREFIX_ATTACHMENT + tuleapFieldName + "---" //$NON-NLS-1$
+						+ tuleapAttachment.getAttachmentId());
 		attribute.getMetaData().defaults().setType(TaskAttribute.TYPE_ATTACHMENT);
 		TaskAttachmentMapper taskAttachment = TaskAttachmentMapper.createFrom(attribute);
-		taskAttachment.setAttachmentId(tuleapAttachment.getId());
+		taskAttachment.setAttachmentId(tuleapAttachment.getAttachmentId());
 
 		TuleapPerson person = tuleapAttachment.getPerson();
 		IRepositoryPerson iRepositoryPerson = trackerConfiguration.getPerson(person.getEmail());
@@ -643,7 +644,7 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 * @param tuleapArtifactComment
 	 *            The comment to add
 	 */
-	public void addComment(TuleapArtifactComment tuleapArtifactComment) {
+	public void addComment(TuleapElementComment tuleapArtifactComment) {
 		int count = getNumberOfCommentAttributes();
 		TaskAttribute attribute = taskData.getRoot().createAttribute(
 				TaskAttribute.PREFIX_COMMENT + String.valueOf(count));

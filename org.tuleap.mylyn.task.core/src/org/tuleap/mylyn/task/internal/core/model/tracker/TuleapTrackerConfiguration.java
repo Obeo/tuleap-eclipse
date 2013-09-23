@@ -8,12 +8,14 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.internal.core.model;
+package org.tuleap.mylyn.task.internal.core.model.tracker;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapFieldContainerConfig;
 
 /**
  * The repository configuration will hold the latest known configuration of a given repository. This

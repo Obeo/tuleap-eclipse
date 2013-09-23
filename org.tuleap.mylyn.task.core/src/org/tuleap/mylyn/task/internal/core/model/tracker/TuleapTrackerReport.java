@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.internal.core.model;
+package org.tuleap.mylyn.task.internal.core.model.tracker;
 
 /**
  * This utility class represents a report available for a tracker.

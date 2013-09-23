@@ -10,12 +10,13 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model.agile;
 
+
 /**
  * Configuration of a Planning in Tuleap.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class TuleapPlanningConfiguration extends AbstractTuleapAgileElement {
+public class TuleapPlanningConfiguration {
 
 	/**
 	 * The id of the project that contains this planning.

@@ -21,7 +21,6 @@ import java.lang.reflect.Type;
 
 import org.tuleap.mylyn.task.internal.core.config.ITuleapConfigurationConstants;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
-import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapArtifactLink;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapComputedValue;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapDate;
@@ -34,6 +33,7 @@ import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapText;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.workflow.TuleapWorkflowTransition;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 

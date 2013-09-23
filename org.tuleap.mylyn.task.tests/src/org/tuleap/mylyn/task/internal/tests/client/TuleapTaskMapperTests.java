@@ -25,7 +25,6 @@ import org.tuleap.mylyn.task.internal.core.data.TuleapTaskMapper;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapDate;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapFloat;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapInteger;
@@ -35,12 +34,12 @@ import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapText;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.workflow.TuleapWorkflowTransition;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapAttributeMapper;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
-import org.tuleap.mylyn.task.internal.tests.mocks.MockedTuleapRepositoryConnector;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -887,7 +886,8 @@ public class TuleapTaskMapperTests {
 		this.tuleapProjectConfiguration = new TuleapProjectConfiguration(projectName, projectId);
 		this.tuleapProjectConfiguration.addTracker(tuleapTrackerConfiguration);
 		tuleapServerConfiguration.addProject(tuleapProjectConfiguration);
-		this.repositoryConnector = new MockedTuleapRepositoryConnector(tuleapServerConfiguration);
+		// this.repositoryConnector = new MockedTuleapRepositoryConnector(tuleapServerConfiguration);
+		fail("Fix the test ");
 
 		this.attributeMapper = new TuleapAttributeMapper(repository, repositoryConnector);
 		this.taskData = new TaskData(attributeMapper, connectorKind, repositoryUrl, "task1"); //$NON-NLS-1$

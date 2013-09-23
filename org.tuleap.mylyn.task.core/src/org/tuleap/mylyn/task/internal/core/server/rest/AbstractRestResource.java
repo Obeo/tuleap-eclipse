@@ -175,7 +175,7 @@ public abstract class AbstractRestResource {
 	 * @return The received serve response, as is.
 	 */
 	protected ServerResponse sendRequest(Method method, Map<String, String> headers, String data) {
-		// TODO Support proxies! (AbstractWebLocation in TuleapServer?)
+		// TODO Support proxies! (AbstractWebLocation in TuleapRestClient?)
 		Request request = new Request(method, getFullUrl());
 
 		Preference<CharacterSet> preferenceCharset = new Preference<CharacterSet>(CharacterSet.UTF_8);
@@ -203,7 +203,7 @@ public abstract class AbstractRestResource {
 		Object object = request.getAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
 		if (object == null) {
 			object = new Form();
-			// TODO Utiliser headers pour récupérer les attributs non standards (pagination)
+			// TODO Utiliser headers pour rï¿½cupï¿½rer les attributs non standards (pagination)
 			request.getAttributes().put(HeaderConstants.ATTRIBUTE_HEADERS, object);
 		}
 
@@ -293,12 +293,12 @@ public abstract class AbstractRestResource {
 		if (!yesYouCan) {
 			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
 					TuleapMylynTasksMessages.getString(
-							"TuleapServer.CannotPerformOperation", getUrl(), method))); //$NON-NLS-1$
+							"AbstractRestResource.CannotPerformOperation", getUrl(), method))); //$NON-NLS-1$
 		}
 		if (!yesYouAreAllowed) {
 			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
 					TuleapMylynTasksMessages.getString(
-							"TuleapServer.NotAuthorizedToPerformOperation", getUrl(), method))); //$NON-NLS-1$
+							"AbstractRestResource.NotAuthorizedToPerformOperation", getUrl(), method))); //$NON-NLS-1$
 		}
 	}
 

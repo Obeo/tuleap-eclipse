@@ -12,7 +12,7 @@ package org.tuleap.mylyn.task.internal.core.repository;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.tuleap.mylyn.task.internal.core.client.ITuleapClientManager;
+import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 
 /**
@@ -27,7 +27,7 @@ public interface ITuleapRepositoryConnector {
 	 * 
 	 * @return The Tuleap client manager.
 	 */
-	ITuleapClientManager getClientManager();
+	TuleapClientManager getClientManager();
 
 	/**
 	 * Returns the configuration of the Tuleap repository.
@@ -49,8 +49,8 @@ public interface ITuleapRepositoryConnector {
 	 *            the progress monitor
 	 * @return The configuration of the Tuleap repository.
 	 */
-	TuleapServerConfiguration getRepositoryConfiguration(TaskRepository taskRepository,
-			boolean forceRefresh, IProgressMonitor monitor);
+	TuleapServerConfiguration getRepositoryConfiguration(TaskRepository taskRepository, boolean forceRefresh,
+			IProgressMonitor monitor);
 
 	/**
 	 * Puts the repository configuration in the cache.
