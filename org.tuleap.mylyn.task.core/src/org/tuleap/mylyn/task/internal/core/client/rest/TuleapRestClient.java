@@ -174,7 +174,7 @@ public class TuleapRestClient {
 			// For each project that has the tracker service
 			for (TuleapProjectConfiguration projectConfig : projectConfigurations) {
 				// TODO Comment the tracker part while there is no REST API for trackers
-				if (projectConfig.hasService("trackers")) { //$NON-NLS-1$
+				if (projectConfig.hasService(ITuleapProjectServices.TRACKERS)) {
 					// Check that we can get the list of trackers for this project
 					RestProjectsTrackers restTrackers = restResources.projectsTrackers(projectConfig
 							.getIdentifier());
@@ -217,20 +217,21 @@ public class TuleapRestClient {
 					}
 				}
 
-				// Retrieve Milestone types for the project
-				List<TuleapMilestoneType> milestoneTypes = getMilestoneTypes(projectConfig.getIdentifier(),
-						null);
-				for (TuleapMilestoneType tuleapMilestoneType : milestoneTypes) {
-					projectConfig.addMilestoneType(tuleapMilestoneType);
-				}
+				if (projectConfig.hasService(ITuleapProjectServices.AGILE_DASHBOARD)) {
+					// Retrieve Milestone types for the project
+					List<TuleapMilestoneType> milestoneTypes = getMilestoneTypes(projectConfig
+							.getIdentifier(), null);
+					for (TuleapMilestoneType tuleapMilestoneType : milestoneTypes) {
+						projectConfig.addMilestoneType(tuleapMilestoneType);
+					}
 
-				// Retrieve BacklogItem types for the project
-				List<TuleapBacklogItemType> backLogItemTypes = getBacklogitemTypes(projectConfig
-						.getIdentifier(), null);
-				for (TuleapBacklogItemType tuleapBacklogItemType : backLogItemTypes) {
-					projectConfig.addBacklogItemType(tuleapBacklogItemType);
+					// Retrieve BacklogItem types for the project
+					List<TuleapBacklogItemType> backLogItemTypes = getBacklogitemTypes(projectConfig
+							.getIdentifier(), null);
+					for (TuleapBacklogItemType tuleapBacklogItemType : backLogItemTypes) {
+						projectConfig.addBacklogItemType(tuleapBacklogItemType);
+					}
 				}
-
 			}
 		} else {
 			// Invalid login? server error?
