@@ -17,6 +17,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 import org.tuleap.mylyn.task.internal.core.client.rest.ITuleapAPIVersions;
@@ -28,8 +30,8 @@ import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapSerializer;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
-import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.ui.TuleapTasksUIPlugin;
+import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
 
 /**
  * The Tuleap validator will be used inside of the repository setting page in orde rto check the
@@ -65,31 +67,39 @@ public class TuleapValidator {
 	 * @return A status indicating if the validation went well.
 	 */
 	public IStatus validate(IProgressMonitor monitor) throws CoreException {
-		IStatus status = new Status(IStatus.ERROR, TuleapTasksUIPlugin.PLUGIN_ID, TuleapMylynTasksMessages
+		IStatus status = new Status(IStatus.ERROR, TuleapTasksUIPlugin.PLUGIN_ID, TuleapMylynTasksUIMessages
 				.getString("TuleapValidator.InvalidRepositoryConnector")); //$NON-NLS-1$ 
 		if (ITuleapConstants.CONNECTOR_KIND.equals(this.taskRepository.getConnectorKind())) {
 			AbstractWebLocation location = new TaskRepositoryLocationFactory()
 					.createWebLocation(taskRepository);
-			monitor.beginTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.ValidateConnection"), //$NON-NLS-1$
+			monitor.beginTask(TuleapMylynTasksUIMessages.getString("TuleapValidator.ValidateConnection"), //$NON-NLS-1$
 					10);
 
-			ILog logger = Platform.getLog(Platform.getBundle(TuleapTasksUIPlugin.PLUGIN_ID));
-			TuleapSoapParser tuleapSoapParser = new TuleapSoapParser();
-			TuleapSoapSerializer tuleapSoapSerializer = new TuleapSoapSerializer();
-			TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(taskRepository, location,
-					tuleapSoapParser, tuleapSoapSerializer, logger);
-			status = tuleapSoapClient.validateConnection(monitor);
+			AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
+			if (credentials != null) {
+				ILog logger = Platform.getLog(Platform.getBundle(TuleapTasksUIPlugin.PLUGIN_ID));
+				TuleapSoapParser tuleapSoapParser = new TuleapSoapParser();
+				TuleapSoapSerializer tuleapSoapSerializer = new TuleapSoapSerializer();
+				TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(taskRepository, location,
+						tuleapSoapParser, tuleapSoapSerializer, logger);
+				status = tuleapSoapClient.validateConnection(monitor);
 
-			if (status.isOK()) {
-				TuleapJsonParser jsonParser = new TuleapJsonParser();
-				TuleapJsonSerializer jsonSerializer = new TuleapJsonSerializer();
-				TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(taskRepository
-						.getRepositoryLabel(), ITuleapAPIVersions.V1_0, logger);
-				TuleapRestClient tuleapRestClient = new TuleapRestClient(tuleapRestConnector, jsonParser,
-						jsonSerializer, taskRepository, logger);
+				if (status.isOK()) {
+					TuleapJsonParser jsonParser = new TuleapJsonParser();
+					TuleapJsonSerializer jsonSerializer = new TuleapJsonSerializer();
+					TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(taskRepository
+							.getRepositoryLabel(), ITuleapAPIVersions.V1_0, logger);
+					TuleapRestClient tuleapRestClient = new TuleapRestClient(tuleapRestConnector, jsonParser,
+							jsonSerializer, taskRepository, logger);
 
-				status = tuleapRestClient.validateConnection(monitor);
+					status = tuleapRestClient.validateConnection(monitor);
+				}
+			} else {
+				// No credentials -> invalid
+				status = new Status(IStatus.ERROR, TuleapTasksUIPlugin.PLUGIN_ID, TuleapMylynTasksUIMessages
+						.getString("TuleapValidator.MissingCredentials")); //$NON-NLS-1$ 
 			}
+
 		}
 		return status;
 	}
