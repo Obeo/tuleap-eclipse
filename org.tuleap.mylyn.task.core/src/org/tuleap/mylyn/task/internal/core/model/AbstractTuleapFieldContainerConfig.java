@@ -21,6 +21,7 @@ import org.tuleap.mylyn.task.internal.core.model.field.AbstractTuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapFileUpload;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapFloat;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
+import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
 
 /**
  * Super-class of tuleap elements that contain configurable fields (trackers, backlog items, milestones,
@@ -74,6 +75,11 @@ public abstract class AbstractTuleapFieldContainerConfig implements Serializable
 	 * The configuration of the project containing the tracker.
 	 */
 	protected TuleapProjectConfiguration tuleapProjectConfiguration;
+
+	/**
+	 * The title field.
+	 */
+	protected TuleapString titleField;
 
 	/**
 	 * The cached status field.
@@ -245,6 +251,8 @@ public abstract class AbstractTuleapFieldContainerConfig implements Serializable
 			}
 		} else if (field instanceof TuleapFileUpload) {
 			attachmentField = (TuleapFileUpload)field;
+		} else if (field instanceof TuleapString && ((TuleapString)field).isSemanticTitle()) {
+			this.titleField = (TuleapString)field;
 		}
 	}
 
@@ -283,6 +291,15 @@ public abstract class AbstractTuleapFieldContainerConfig implements Serializable
 	 */
 	public TuleapProjectConfiguration getTuleapProjectConfiguration() {
 		return tuleapProjectConfiguration;
+	}
+
+	/**
+	 * Provides access to the cached title field. To use only after configuration creation.
+	 * 
+	 * @return The field with the "title" semantic or null if sucj field doesn't exists.
+	 */
+	public TuleapString getTitleField() {
+		return this.titleField;
 	}
 
 	/**

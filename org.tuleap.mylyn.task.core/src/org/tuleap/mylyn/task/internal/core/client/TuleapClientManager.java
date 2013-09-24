@@ -61,7 +61,7 @@ public class TuleapClientManager implements IRepositoryListener {
 		if (tuleapSoapClient == null && this.restClientCache.get(taskRepository) == null) {
 			this.refreshClients(taskRepository);
 		}
-		return tuleapSoapClient;
+		return this.soapClientCache.get(taskRepository);
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class TuleapClientManager implements IRepositoryListener {
 		if (tuleapRestClient == null && this.soapClientCache.get(taskRepository) == null) {
 			this.refreshClients(taskRepository);
 		}
-		return tuleapRestClient;
+		return this.restClientCache.get(taskRepository);
 	}
 
 	/**
@@ -114,7 +114,7 @@ public class TuleapClientManager implements IRepositoryListener {
 		TuleapJsonParser jsonParser = new TuleapJsonParser();
 		TuleapJsonSerializer jsonSerializer = new TuleapJsonSerializer();
 		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(
-				taskRepository.getRepositoryLabel(), ITuleapAPIVersions.V1_0, logger);
+				taskRepository.getRepositoryLabel(), ITuleapAPIVersions.BEST_VERSION, logger);
 		TuleapRestClient tuleapRestClient = new TuleapRestClient(tuleapRestConnector, jsonParser,
 				jsonSerializer, taskRepository, logger);
 		this.restClientCache.put(taskRepository, tuleapRestClient);

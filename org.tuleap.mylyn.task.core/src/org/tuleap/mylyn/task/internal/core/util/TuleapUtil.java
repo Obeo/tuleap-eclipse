@@ -174,14 +174,14 @@ public final class TuleapUtil {
 	 * 
 	 * @param projectName
 	 *            The name of the project
-	 * @param trackerId
-	 *            The id of the tracker.
+	 * @param trackerName
+	 *            The name of the tracker.
 	 * @param artifactId
 	 *            The id of the artifact
 	 * @return The task data id
 	 */
-	public static String getTaskDataId(String projectName, String trackerId, int artifactId) {
-		return projectName + ITuleapConstants.TRACKER_ID_SEPARATOR + trackerId
+	public static String getTaskDataId(String projectName, String trackerName, int artifactId) {
+		return projectName + ITuleapConstants.TRACKER_ID_SEPARATOR + trackerName
 				+ ITuleapConstants.TASK_DATA_ID_SEPARATOR + Integer.valueOf(artifactId).toString();
 	}
 

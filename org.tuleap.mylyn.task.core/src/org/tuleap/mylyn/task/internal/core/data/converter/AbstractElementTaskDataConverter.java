@@ -17,11 +17,29 @@ import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapFieldContainerCon
 /**
  * Common ancestor of all the task data converter.
  * 
- * @param <T>
+ * @param <ELEMENT>
  *            The kind of {@link AbstractTuleapConfigurableElement} to use.
+ * @param <CONFIGURATION>
+ *            The kind of {@link AbstractTuleapFieldContainerConfig} to use.
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public abstract class AbstractElementTaskDataConverter<T extends AbstractTuleapConfigurableElement> {
+public abstract class AbstractElementTaskDataConverter<ELEMENT extends AbstractTuleapConfigurableElement, CONFIGURATION extends AbstractTuleapFieldContainerConfig> {
+
+	/**
+	 * The configuration of the kind of elements.
+	 */
+	protected final CONFIGURATION configuration;
+
+	/**
+	 * The constructor.
+	 * 
+	 * @param configuration
+	 *            The configuration
+	 */
+	public AbstractElementTaskDataConverter(CONFIGURATION configuration) {
+		this.configuration = configuration;
+	}
+
 	/**
 	 * Fills the task data related to the given milestone POJO.
 	 * 
@@ -30,22 +48,19 @@ public abstract class AbstractElementTaskDataConverter<T extends AbstractTuleapC
 	 * @param element
 	 *            The element to use to populate the task data
 	 */
-	public abstract void populateTaskData(TaskData taskData, T element);
+	public abstract void populateTaskData(TaskData taskData, ELEMENT element);
 
 	/**
 	 * Populate the configurable fields for the given element.
 	 * 
-	 * @param elementToPopulate
+	 * @param element
 	 *            The element to populate
 	 * @param taskData
 	 *            The task data to use
-	 * @param tuleapFieldContainerConfig
-	 *            The configuration to use to populate the fields
 	 * @return The element to populate
 	 */
-	protected T populateConfigurableFields(T elementToPopulate, TaskData taskData,
-			AbstractTuleapFieldContainerConfig tuleapFieldContainerConfig) {
+	protected ELEMENT populateConfigurableFields(ELEMENT element, TaskData taskData) {
 		// to do
-		return elementToPopulate;
+		return element;
 	}
 }

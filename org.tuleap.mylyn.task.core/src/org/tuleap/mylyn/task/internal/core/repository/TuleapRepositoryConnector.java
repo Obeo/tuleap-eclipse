@@ -298,13 +298,14 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			TuleapTrackerConfiguration trackerConfiguration = repositoryConfiguration
 					.getTrackerConfiguration(trackerId);
 
+			ArtifactTaskDataConverter artifactTaskDataConverter = new ArtifactTaskDataConverter(
+					trackerConfiguration);
+			TaskAttributeMapper attributeMapper = this.getTaskDataHandler()
+					.getAttributeMapper(taskRepository);
+
 			List<TuleapArtifact> artifacts = soapClient.getArtifactsFromQuery(query, trackerConfiguration,
 					monitor);
 			for (TuleapArtifact tuleapArtifact : artifacts) {
-				ArtifactTaskDataConverter artifactTaskDataConverter = new ArtifactTaskDataConverter();
-				TaskAttributeMapper attributeMapper = this.getTaskDataHandler().getAttributeMapper(
-						taskRepository);
-
 				TaskData taskData = new TaskData(attributeMapper, this.getConnectorKind(), taskRepository
 						.getRepositoryUrl(), String.valueOf(tuleapArtifact.getId()));
 				artifactTaskDataConverter.populateTaskData(taskData, tuleapArtifact);
@@ -347,7 +348,14 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 */
 	public TuleapServerConfiguration getRepositoryConfiguration(TaskRepository taskRepository,
 			boolean forceRefresh, IProgressMonitor monitor) {
-		if (forceRefresh) {
+		boolean shouldRefresh = forceRefresh;
+
+		// If we don't have any value, force the refresh
+		if (!shouldRefresh && this.repositoryConfigurations.get(taskRepository.getRepositoryUrl()) == null) {
+			shouldRefresh = true;
+		}
+
+		if (shouldRefresh) {
 			TuleapRestClient tuleapRestClient = this.clientManager.getRestClient(taskRepository);
 			TuleapSoapClient tuleapSoapClient = this.clientManager.getSoapClient(taskRepository);
 			try {

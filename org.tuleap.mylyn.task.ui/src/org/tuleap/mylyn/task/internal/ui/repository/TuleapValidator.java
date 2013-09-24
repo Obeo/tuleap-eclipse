@@ -88,7 +88,7 @@ public class TuleapValidator {
 					TuleapJsonParser jsonParser = new TuleapJsonParser();
 					TuleapJsonSerializer jsonSerializer = new TuleapJsonSerializer();
 					TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(taskRepository
-							.getRepositoryLabel(), ITuleapAPIVersions.V1_0, logger);
+							.getRepositoryLabel(), ITuleapAPIVersions.BEST_VERSION, logger);
 					TuleapRestClient tuleapRestClient = new TuleapRestClient(tuleapRestConnector, jsonParser,
 							jsonSerializer, taskRepository, logger);
 

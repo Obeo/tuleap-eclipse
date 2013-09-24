@@ -22,6 +22,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -202,8 +203,6 @@ public class TuleapSoapConnector {
 		URL url = new URL(soapv1url);
 		codendiAPIPort = locator.getCodendiAPIPort(url);
 
-		monitor.subTask(LOGIN_MESSAGE);
-
 		session = codendiAPIPort.login(username, password);
 		sessionHash = session.getSession_hash();
 
@@ -292,6 +291,8 @@ public class TuleapSoapConnector {
 	public TuleapServerConfiguration getTuleapServerConfiguration(IProgressMonitor monitor) {
 		TuleapServerConfiguration tuleapServerConfiguration = new TuleapServerConfiguration(
 				this.trackerLocation.getUrl());
+		tuleapServerConfiguration.setLastUpdate(new Date().getTime());
+
 		try {
 			this.login(monitor);
 
@@ -690,7 +691,8 @@ public class TuleapSoapConnector {
 		try {
 			this.login(monitor);
 
-			monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.RetrieveComments")); //$NON-NLS-1$
+			monitor.subTask(TuleapMylynTasksMessages.getString(
+					"TuleapSoapConnector.RetrieveComments", Integer.valueOf(artifactId))); //$NON-NLS-1$
 			ArtifactComments[] artifactComments = tuleapTrackerV5APIPort.getArtifactComments(sessionHash,
 					artifactId);
 			for (ArtifactComments artifactComment : artifactComments) {

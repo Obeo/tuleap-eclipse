@@ -114,9 +114,9 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 
 		// The group id and the tracker id
 		setProjectId(trackerConfiguration.getTuleapProjectConfiguration().getIdentifier());
-		// setProjectName(trackerConfiguration.getTuleapProjectConfiguration().getName());
+		setProjectName(trackerConfiguration.getTuleapProjectConfiguration().getName());
 		setTrackerId(trackerConfiguration.getIdentifier());
-		// setTrackerName(trackerConfiguration.getName());
+		setTrackerName(trackerConfiguration.getName());
 
 		createCreationDateTaskAttribute();
 		createLastUpdateDateTaskAttribute();

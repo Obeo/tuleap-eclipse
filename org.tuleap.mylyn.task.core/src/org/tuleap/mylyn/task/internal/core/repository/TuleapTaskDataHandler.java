@@ -177,13 +177,8 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 		boolean isInitialized = false;
 		TuleapServerConfiguration repositoryConfiguration = connector.getRepositoryConfiguration(repository,
-				false, monitor);
+				true, monitor);
 		if (repositoryConfiguration != null) {
-			// Update the available attributes for the tasks
-			TuleapSoapClient tuleapSoapClient = this.connector.getClientManager().getSoapClient(repository);
-			// TODO SBE update the configuration!
-			// tuleapSoapClient.updateAttributes(monitor, false);
-
 			// Sets the creation date and last modification date.
 			if (this.connector instanceof AbstractRepositoryConnector
 					&& ((AbstractRepositoryConnector)this.connector).getTaskMapping(taskData) instanceof TaskMapper
@@ -234,25 +229,6 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 */
 	public TaskData getTaskData(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
-		return downloadTaskData(taskRepository, taskId, monitor);
-	}
-
-	/**
-	 * Downloads the Tuleap artifact and convert it to a Mylyn task data.
-	 * 
-	 * @param taskRepository
-	 *            The Mylyn tasks repository
-	 * @param taskId
-	 *            The ID of the task to download
-	 * @param monitor
-	 *            The progress monitor
-	 * @return The Mylyn task data with the information obtained from the Tuleap artifact matching the given
-	 *         task ID obtained from the Tuleap client.
-	 * @throws CoreException
-	 *             If repository file configuration is not accessible
-	 */
-	public TaskData downloadTaskData(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
-			throws CoreException {
 		TuleapSoapClient tuleapSoapClient = this.connector.getClientManager().getSoapClient(taskRepository);
 
 		// TODO SBE update the configuration!
@@ -290,22 +266,18 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				ITuleapConstants.CONNECTOR_KIND, taskRepository.getRepositoryUrl(), String
 						.valueOf(tuleapArtifact.getId()));
 
-		// Structure
-		// tuleapClient.updateAttributes(monitor, false);
-		// TuleapServerConfiguration repositoryConfiguration = tuleapClient.getRepositoryConfiguration();
-		// TuleapTrackerConfiguration trackerConfiguration = repositoryConfiguration
-		// .getTrackerConfiguration(tuleapArtifact.getTrackerId());
+		// // Structure
 		// TuleapTaskMapper mapper = new TuleapTaskMapper(taskData, trackerConfiguration);
 		// mapper.initializeEmptyTaskData();
 		// mapper.setTaskKey(tuleapArtifact.getUniqueName());
 		// this.createOperations(taskData, trackerConfiguration,
 		// tuleapArtifact.getValue(TaskAttribute.STATUS));
-
-		// Date
+		//
+		// // Date
 		// mapper.setCreationDate(tuleapArtifact.getCreationDate());
 		// mapper.setModificationDate(tuleapArtifact.getLastModificationDate());
-
-		// URL
+		//
+		// // URL
 		// if (this.connector instanceof AbstractRepositoryConnector) {
 		// AbstractRepositoryConnector abstractRepositoryConnector =
 		// (AbstractRepositoryConnector)this.connector;
@@ -313,11 +285,11 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		// Integer.valueOf(tuleapArtifact.getId()).toString());
 		// mapper.setTaskUrl(taskUrl);
 		// }
-
-		// Task key
+		//
+		// // Task key
 		// mapper.setTaskKey(Integer.valueOf(tuleapArtifact.getId()).toString());
-
-		// Comments
+		//
+		// // Comments
 		// List<TuleapElementComment> comments = tuleapArtifact.getComments();
 		// for (TuleapElementComment comment : comments) {
 		// mapper.addComment(comment);

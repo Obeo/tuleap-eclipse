@@ -21,6 +21,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -162,6 +163,7 @@ public class TuleapRestClient {
 
 		TuleapServerConfiguration tuleapServerConfiguration = new TuleapServerConfiguration(
 				this.taskRepository.getRepositoryUrl());
+		tuleapServerConfiguration.setLastUpdate(new Date().getTime());
 
 		// Check that we can get the list of projects
 		RestProjects restProjects = restResources.projects();

@@ -53,9 +53,15 @@ public class TuleapSoapParser {
 			Artifact artifactToParse) {
 		int artifactId = artifactToParse.getArtifact_id();
 		int trackerId = artifactToParse.getTracker_id();
+
+		// TODO SBE Is the label property really useful for anybody? (since we have a title field already)
 		String label = null;
-		String url = null;
-		String htmlUrl = null;
+
+		// TODO SBE Useless for the SOAP API
+		String url = ""; //$NON-NLS-1$
+
+		// TODO SBE Compute it!
+		String htmlUrl = "";
 
 		int submittedOn = artifactToParse.getSubmitted_on();
 		Date creationDate = this.getDateFromTimestamp(submittedOn);
@@ -101,11 +107,16 @@ public class TuleapSoapParser {
 						List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
 
 						FieldValueFileInfo[] fileInfo = artifactFieldValue.getField_value().getFile_info();
-						for (FieldValueFileInfo fieldValueFileInfo : fileInfo) {
-							attachments.add(new AttachmentValue(fieldValueFileInfo.getId(),
-									fieldValueFileInfo.getFilename(), fieldValueFileInfo.getSubmitted_by(),
-									fieldValueFileInfo.getFilesize(), fieldValueFileInfo.getDescription(),
-									fieldValueFileInfo.getFiletype()));
+						// Yes this array can be null... don't ask
+						if (fileInfo != null) {
+							for (FieldValueFileInfo fieldValueFileInfo : fileInfo) {
+								attachments
+										.add(new AttachmentValue(fieldValueFileInfo.getId(),
+												fieldValueFileInfo.getFilename(), fieldValueFileInfo
+														.getSubmitted_by(), fieldValueFileInfo.getFilesize(),
+												fieldValueFileInfo.getDescription(), fieldValueFileInfo
+														.getFiletype()));
+							}
 						}
 
 						abstractFieldValue = new AttachmentFieldValue(abstractTuleapField.getIdentifier(),

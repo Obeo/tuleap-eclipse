@@ -14,30 +14,25 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.agile.core.data.planning.BacklogItemWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.MilestonePlanningWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.SubMilestoneWrapper;
-import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
 
 /**
  * Class to convert a milestone to task data and task data to milestone.
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public class MilestonePlanningTaskDataConverter extends AbstractElementTaskDataConverter<TuleapMilestone> {
-
-	/**
-	 * The configuration of the server.
-	 */
-	private TuleapServerConfiguration config;
+public class MilestonePlanningTaskDataConverter extends AbstractElementTaskDataConverter<TuleapMilestone, TuleapMilestoneType> {
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param config
-	 *            The configuration of the server.
+	 * @param configuration
+	 *            The configuration of the milestones.
 	 */
-	public MilestonePlanningTaskDataConverter(TuleapServerConfiguration config) {
-		this.config = config;
+	public MilestonePlanningTaskDataConverter(TuleapMilestoneType configuration) {
+		super(configuration);
 	}
 
 	/**
