@@ -111,6 +111,11 @@ public interface ITuleapConstants {
 	String QUERY_KIND_REPORT = "tuleap_query_report"; //$NON-NLS-1$
 
 	/**
+	 * The key used to specify that the query will execute a top level planning.
+	 */
+	String QUERY_KIND_TOP_LEVEL_PLANNING = "tuleap_query_topLevelPlanning"; //$NON-NLS-1$
+
+	/**
 	 * The id of the report to run.
 	 */
 	String QUERY_REPORT_ID = "tuleap_query_report_id"; //$NON-NLS-1$

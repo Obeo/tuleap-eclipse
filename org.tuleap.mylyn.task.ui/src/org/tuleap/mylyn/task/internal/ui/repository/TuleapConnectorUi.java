@@ -34,11 +34,11 @@ import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapUtil;
 import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
 import org.tuleap.mylyn.task.internal.ui.wizards.NewTuleapTaskWizard;
-import org.tuleap.mylyn.task.internal.ui.wizards.TuleapProjectPage;
 import org.tuleap.mylyn.task.internal.ui.wizards.TuleapTaskAttachmentPage;
 import org.tuleap.mylyn.task.internal.ui.wizards.TuleapTrackerPage;
 import org.tuleap.mylyn.task.internal.ui.wizards.query.TuleapCustomQueryPage;
 import org.tuleap.mylyn.task.internal.ui.wizards.query.TuleapQueryPage;
+import org.tuleap.mylyn.task.internal.ui.wizards.query.TuleapQueryProjectPage;
 
 /**
  * Utility class managing all the user interface related operations with the Tuleap repository.
@@ -167,7 +167,7 @@ public class TuleapConnectorUi extends AbstractRepositoryConnectorUi {
 			}
 		} else {
 			// new query
-			wizard.addPage(new TuleapProjectPage(taskRepository));
+			wizard.addPage(new TuleapQueryProjectPage(taskRepository));
 			wizard.addPage(new TuleapTrackerPage(taskRepository));
 			wizard.addPage(new TuleapQueryPage(taskRepository));
 		}
