@@ -364,6 +364,9 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 				for (TuleapProjectConfiguration tuleapProjectConfiguration : allProjectConfigurations) {
 					tuleapServerConfigurationRest.addProject(tuleapProjectConfiguration);
 				}
+
+				this.repositoryConfigurations.put(taskRepository.getRepositoryUrl(),
+						tuleapServerConfigurationRest);
 			} catch (CoreException e) {
 				TuleapCoreActivator.log(e, true);
 			}
