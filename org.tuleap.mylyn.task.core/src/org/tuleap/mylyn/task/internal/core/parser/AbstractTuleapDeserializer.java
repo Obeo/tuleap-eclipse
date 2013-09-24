@@ -19,6 +19,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -81,6 +82,11 @@ public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapConfigu
 	 * The key used to retrieve the list of bind value ids.
 	 */
 	private static final String FIELD_BIND_VALUE_IDS = "bind_value_ids"; //$NON-NLS-1$
+
+	/**
+	 * The pattern used to format date following the ISO8601 standard.
+	 */
+	protected SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"); //$NON-NLS-1$
 
 	/**
 	 * {@inheritDoc}
