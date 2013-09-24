@@ -52,16 +52,16 @@ public class MilestonePlanningTaskDataConverter extends AbstractElementTaskDataC
 	public void populateTaskData(TaskData taskData, TuleapMilestone milestone) {
 		MilestonePlanningWrapper milestonePlanningWrapper = new MilestonePlanningWrapper(taskData.getRoot());
 		for (TuleapMilestone subMilestone : milestone.getSubMilestones()) {
-			SubMilestoneWrapper subMilestoneWrapper = milestonePlanningWrapper.addSubMilestone();
-			subMilestoneWrapper.setId(subMilestone.getId());
+			SubMilestoneWrapper subMilestoneWrapper = milestonePlanningWrapper.addSubMilestone(subMilestone
+					.getId());
 			subMilestoneWrapper.setLabel(subMilestone.getLabel());
 			subMilestoneWrapper.setStartDate(new java.util.Date(subMilestone.getStartDate()));
 			subMilestoneWrapper.setDuration(subMilestone.getDuration());
 			subMilestoneWrapper.setCapacity(subMilestone.getCapacity());
 		}
 		for (TuleapBacklogItem backlogItem : milestone.getBacklogItems()) {
-			BacklogItemWrapper backlogItemWrapper = milestonePlanningWrapper.addBacklogItem();
-			backlogItemWrapper.setId(backlogItem.getId());
+			BacklogItemWrapper backlogItemWrapper = milestonePlanningWrapper.addBacklogItem(backlogItem
+					.getId());
 			backlogItemWrapper.setAssignedMilestoneId(milestone.getId());
 			backlogItemWrapper.setLabel(backlogItem.getLabel());
 			backlogItemWrapper.setInitialEffort(backlogItem.getInitialEffort());
