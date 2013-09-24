@@ -12,6 +12,7 @@ package org.tuleap.mylyn.task.internal.core.client.soap;
 
 import java.net.MalformedURLException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.rpc.ServiceException;
@@ -24,9 +25,13 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
+import org.tuleap.mylyn.task.internal.core.model.TuleapElementComment;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
+import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Artifact;
 
 /**
  * The Mylyn Tuleap client is in charge of the connection with the repository and it will realize the request
@@ -123,7 +128,8 @@ public class TuleapSoapClient {
 	 */
 	public TuleapServerConfiguration getTuleapServerConfiguration(IProgressMonitor monitor)
 			throws CoreException {
-		return null;
+		TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(this.location);
+		return tuleapSoapConnector.getTuleapServerConfiguration(monitor);
 	}
 
 	/**
@@ -131,23 +137,34 @@ public class TuleapSoapClient {
 	 * 
 	 * @param query
 	 *            The query to run
+	 * @param tuleapTrackerConfiguration
+	 *            The configuration used to analyze the data from the SOAP responses
 	 * @param monitor
 	 *            the progress monitor
 	 * @return The list of the Tuleap artifact
 	 */
-	public List<TuleapArtifact> getArtifactsFromQuery(IRepositoryQuery query, IProgressMonitor monitor) {
-		// Get the result of the query
-		// if (this.repositoryConnector instanceof AbstractRepositoryConnector
-		// && ((AbstractRepositoryConnector)this.repositoryConnector).getTaskDataHandler() instanceof
-		// TuleapTaskDataHandler) {
-		// AbstractRepositoryConnector abstractRepositoryConnector =
-		// (AbstractRepositoryConnector)this.repositoryConnector;
-		// TuleapSoapConnector trackerSoapConnector = new TuleapSoapConnector(this.location);
-		// hit = trackerSoapConnector.performQuery(query, collector,
-		// (TuleapTaskDataHandler)abstractRepositoryConnector.getTaskDataHandler(), this,
-		// TaskDataCollector.MAX_HITS, monitor);
-		// }
-		return null;
+	public List<TuleapArtifact> getArtifactsFromQuery(IRepositoryQuery query,
+			TuleapTrackerConfiguration tuleapTrackerConfiguration, IProgressMonitor monitor) {
+		List<TuleapArtifact> artifacts = new ArrayList<TuleapArtifact>();
+
+		TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(location);
+		List<Artifact> artifactsToConvert = tuleapSoapConnector.performQuery(query,
+				TaskDataCollector.MAX_HITS, monitor);
+		for (Artifact artifactToParse : artifactsToConvert) {
+			TuleapArtifact tuleapArtifact = this.tuleapSoapParser.parseArtifact(tuleapTrackerConfiguration,
+					artifactToParse);
+
+			// Retrieve comments
+			List<TuleapElementComment> comments = tuleapSoapConnector.getComments(tuleapArtifact.getId(),
+					monitor);
+			for (TuleapElementComment tuleapElementComment : comments) {
+				tuleapArtifact.addComment(tuleapElementComment);
+			}
+
+			artifacts.add(tuleapArtifact);
+		}
+
+		return artifacts;
 	}
 
 	/**
@@ -155,20 +172,27 @@ public class TuleapSoapClient {
 	 * 
 	 * @param taskId
 	 *            The identifier of the artifact
+	 * @param tuleapServerConfiguration
+	 *            The configuration of the Tuleap server
 	 * @param monitor
 	 *            The progress monitor
 	 * @return The Tuleap Artifact with the data from the server
 	 * @throws CoreException
 	 *             In case of issue during the retrieval of the artifact
 	 */
-	public TuleapArtifact getArtifact(String taskId, IProgressMonitor monitor) throws CoreException {
+	public TuleapArtifact getArtifact(String taskId, TuleapServerConfiguration tuleapServerConfiguration,
+			IProgressMonitor monitor) throws CoreException {
 		TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(this.location);
-		int trackerId = -1;
+
 		int artifactId = Integer.valueOf(taskId).intValue();
+
 		if (artifactId != -1) {
 			TuleapArtifact tuleapArtifact;
 			try {
-				tuleapArtifact = tuleapSoapConnector.getArtifact(trackerId, artifactId, monitor);
+				Artifact artifact = tuleapSoapConnector.getArtifact(artifactId, monitor);
+
+				tuleapArtifact = this.tuleapSoapParser.parseArtifact(tuleapServerConfiguration
+						.getTrackerConfiguration(artifact.getTracker_id()), artifact);
 			} catch (MalformedURLException e) {
 				IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
 				throw new CoreException(status);

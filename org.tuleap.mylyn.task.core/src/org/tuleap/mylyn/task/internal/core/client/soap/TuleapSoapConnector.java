@@ -38,7 +38,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.config.ITuleapConfigurationConstants;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
@@ -64,7 +63,6 @@ import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfigurat
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerReport;
 import org.tuleap.mylyn.task.internal.core.model.workflow.TuleapWorkflow;
 import org.tuleap.mylyn.task.internal.core.model.workflow.TuleapWorkflowTransition;
-import org.tuleap.mylyn.task.internal.core.repository.TuleapTaskDataHandler;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapUtil;
@@ -291,7 +289,7 @@ public class TuleapSoapConnector {
 	 *            The progress monitor
 	 * @return The configuration of the Tuleap instance.
 	 */
-	public TuleapServerConfiguration getTuleapInstanceConfiguration(IProgressMonitor monitor) {
+	public TuleapServerConfiguration getTuleapServerConfiguration(IProgressMonitor monitor) {
 		TuleapServerConfiguration tuleapServerConfiguration = new TuleapServerConfiguration(
 				this.trackerLocation.getUrl());
 		try {
@@ -607,29 +605,20 @@ public class TuleapSoapConnector {
 	}
 
 	/**
-	 * Performs the given query on the Tuleap tracker, collects the task data resulting from the evaluation of
-	 * the query and return the number of tasks found.
+	 * Performs the given query on the Tuleap tracker and return the tasks found.
 	 * 
 	 * @param query
 	 *            The query to run
-	 * @param collector
-	 *            The task data collector
-	 * @param taskDataHandler
-	 *            The task data handler
-	 * @param tuleapClient
-	 *            The Tuleap client
 	 * @param maxHits
 	 *            The maximum number of tasks that should be processed
 	 * @param monitor
 	 *            The progress monitor
-	 * @return The number of tasks processed
+	 * @return The tasks found
 	 */
-	public int performQuery(IRepositoryQuery query, TaskDataCollector collector,
-			TuleapTaskDataHandler taskDataHandler, TuleapSoapClient tuleapClient, int maxHits,
-			IProgressMonitor monitor) {
-		ArtifactQueryResult artifactQueryResult = null;
+	public List<Artifact> performQuery(IRepositoryQuery query, int maxHits, IProgressMonitor monitor) {
+		List<Artifact> artifactsFound = new ArrayList<Artifact>();
+
 		int trackerId = -1;
-		int groupId = -1;
 
 		try {
 			this.login(monitor);
@@ -639,16 +628,13 @@ public class TuleapSoapConnector {
 			String queryTrackerId = query.getAttribute(ITuleapConstants.QUERY_TRACKER_ID);
 			trackerId = Integer.valueOf(queryTrackerId).intValue();
 
-			String queryGroupId = query.getAttribute(ITuleapConstants.QUERY_GROUP_ID);
-			groupId = Integer.valueOf(queryGroupId).intValue();
-
+			ArtifactQueryResult artifactQueryResult = null;
 			if (ITuleapConstants.QUERY_KIND_REPORT.equals(query.getAttribute(ITuleapConstants.QUERY_KIND))) {
 				// Run the report on the server
 				String queryReportId = query.getAttribute(ITuleapConstants.QUERY_REPORT_ID);
 				int reportId = Integer.valueOf(queryReportId).intValue();
 				artifactQueryResult = tuleapTrackerV5APIPort.getArtifactsFromReport(sessionHash, reportId, 0,
 						maxHits);
-
 			} else {
 				List<Criteria> criterias = new ArrayList<Criteria>();
 				if (ITuleapConstants.QUERY_KIND_ALL_FROM_TRACKER.equals(query
@@ -667,49 +653,8 @@ public class TuleapSoapConnector {
 
 			try {
 				Artifact[] artifacts = artifactQueryResult.getArtifacts();
-
-				final int fifty = 50;
-				monitor.worked(fifty);
-
-				TrackerField[] trackerFields = tuleapTrackerV5APIPort.getTrackerFields(sessionHash, groupId,
-						trackerId);
-
-				String projectName = null;
-				String trackerName = null;
-
-				Group[] groups = codendiAPIPort.getMyProjects(sessionHash);
-				for (Group group : groups) {
-					if (projectName == null && trackerName == null) {
-						Tracker[] trackers = tuleapTrackerV5APIPort.getTrackerList(sessionHash, group
-								.getGroup_id());
-						for (Tracker tracker : trackers) {
-							if (trackerId == tracker.getTracker_id()) {
-								projectName = group.getGroup_name();
-								trackerName = tracker.getName();
-								break;
-							}
-						}
-					}
-				}
-
-				if (projectName != null && trackerName != null) {
-					for (Artifact artifact : artifacts) {
-						// TuleapArtifact tuleapArtifact = new TuleapArtifact(artifact, trackerName,
-						// projectName);
-						//
-						// tuleapArtifact = this.populateArtifact(tuleapArtifact, trackerFields, artifact,
-						// monitor);
-						//
-						// TaskData taskData = taskDataHandler.createTaskDataFromArtifact(tuleapClient,
-						// tuleapClient.getTaskRepository(), tuleapArtifact, monitor);
-						// try {
-						// collector.accept(taskData);
-						// } catch (IllegalArgumentException e) {
-						// // Do not log, the query does not exists anymore, see
-						// //
-						// org.eclipse.mylyn.internal.tasks.core.TaskList.getValidElement(IRepositoryElement)
-						// }
-					}
+				for (Artifact artifact : artifacts) {
+					artifactsFound.add(artifact);
 				}
 			} catch (NumberFormatException e) {
 				TuleapCoreActivator.log(e, true);
@@ -727,162 +672,45 @@ public class TuleapSoapConnector {
 
 		this.logout();
 
-		if (artifactQueryResult != null) {
-			return artifactQueryResult.getTotal_artifacts_number();
-		}
-
-		return 0;
+		return artifactsFound;
 	}
 
 	/**
-	 * Populate the fields of the Tuleap artifact thanks to the data from the artifact.
+	 * Returns the comments of the artifact with the given identifier.
 	 * 
-	 * @param tuleapArtifact
-	 *            The Tuleap artifact to populate.
-	 * @param trackerFields
-	 *            The fields to populate in the Tuleap artifact.
-	 * @param artifact
-	 *            The artifact downloaded containing the data.
+	 * @param artifactId
+	 *            The identifier of the artifact
 	 * @param monitor
-	 *            The progress monitor.
-	 * @return The Tuleap artifact populated.
+	 *            The progress monitor
+	 * @return The comments of the artifact with the given identifier
 	 */
-	private TuleapArtifact populateArtifact(TuleapArtifact tuleapArtifact, TrackerField[] trackerFields,
-			Artifact artifact, IProgressMonitor monitor) {
-		// try {
+	public List<TuleapElementComment> getComments(int artifactId, IProgressMonitor monitor) {
+		List<TuleapElementComment> comments = new ArrayList<TuleapElementComment>();
+
 		try {
-			for (TrackerField trackerField : trackerFields) {
-				boolean found = false;
-				for (ArtifactFieldValue artifactFieldValue : artifact.getValue()) {
-					if (artifactFieldValue.getField_name().equals(trackerField.getShort_name())
-							&& artifactFieldValue.getField_label().equals(trackerField.getLabel())) {
-						// Let's handle attachments differently
-						if (ITuleapConfigurationConstants.FILE.equals(trackerField.getType())) {
-							this.populateArtifactForFileField(tuleapArtifact, artifactFieldValue);
-							found = true;
-						} else if (ITuleapConfigurationConstants.MSB.equals(trackerField.getType())
-								|| ITuleapConfigurationConstants.SB.equals(trackerField.getType())
-								|| ITuleapConfigurationConstants.CB.equals(trackerField.getType())) {
-							this.populateArtifactForBoundField(tuleapArtifact, artifactFieldValue);
-							found = true;
-						} else if (ITuleapConfigurationConstants.TBL.equals(trackerField.getType())) {
-							this.populateArtifactForOpenList(tuleapArtifact, artifactFieldValue);
-							found = true;
-						} else if (!ITuleapConfigurationConstants.BURNDOWN.equals(trackerField.getType())) {
-							// We can't display the burndown chart
-							String value = artifactFieldValue.getField_value().getValue();
-							if (value != null) {
-								// tuleapArtifact.putValue(artifactFieldValue.getField_name(), value);
-							}
-							found = true;
-						}
-						monitor.worked(1);
-					}
-				}
+			this.login(monitor);
 
-				if (!found) {
-					// Submitted on/by, artifact id, burndown chart
-					monitor.worked(1);
-				}
-			}
-			monitor.worked(5);
-
-			// Retrieve comments
 			monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.RetrieveComments")); //$NON-NLS-1$
 			ArtifactComments[] artifactComments = tuleapTrackerV5APIPort.getArtifactComments(sessionHash,
-					artifact.getArtifact_id());
+					artifactId);
 			for (ArtifactComments artifactComment : artifactComments) {
 				int submittedBy = artifactComment.getSubmitted_by();
 				TuleapPerson commentedBy = this.getPersonFromId(submittedBy);
 				TuleapElementComment comment = new TuleapElementComment(artifactComment.getBody(),
 						commentedBy.getEmail(), commentedBy.getRealName(), artifactComment.getSubmitted_on());
-				tuleapArtifact.addComment(comment);
+				comments.add(comment);
 			}
+		} catch (MalformedURLException e) {
+			TuleapCoreActivator.log(e, true);
 		} catch (RemoteException e) {
+			TuleapCoreActivator.log(e, true);
+		} catch (ServiceException e) {
 			TuleapCoreActivator.log(e, true);
 		}
 
-		return tuleapArtifact;
-	}
+		this.logout();
 
-	/**
-	 * Populates the tuleap artifact for the artifact field value of an open list field.
-	 * 
-	 * @param tuleapArtifact
-	 *            The Tuleap Artifact
-	 * @param artifactFieldValue
-	 *            The artifact field value of an open list field.
-	 */
-	private void populateArtifactForOpenList(TuleapArtifact tuleapArtifact,
-			ArtifactFieldValue artifactFieldValue) {
-		String value = ""; //$NON-NLS-1$
-		int cpt = 0;
-
-		TrackerFieldBindValue[] bindValues = artifactFieldValue.getField_value().getBind_value();
-		if (bindValues != null) {
-			for (TrackerFieldBindValue trackerFieldBindValue : bindValues) {
-				if (cpt < bindValues.length - 1) {
-					value = value + trackerFieldBindValue.getBind_value_label() + ", "; //$NON-NLS-1$
-				} else {
-					value = value + trackerFieldBindValue.getBind_value_label();
-				}
-				cpt++;
-			}
-		}
-		// tuleapArtifact.putValue(artifactFieldValue.getField_name(), value);
-	}
-
-	/**
-	 * Populates the tuleap artifact for the artifact field value of a binded field.
-	 * 
-	 * @param tuleapArtifact
-	 *            The Tuleap Artifact
-	 * @param artifactFieldValue
-	 *            The artifact field value of a binded field.
-	 */
-	private void populateArtifactForBoundField(TuleapArtifact tuleapArtifact,
-			ArtifactFieldValue artifactFieldValue) {
-		FieldValue fieldValue = artifactFieldValue.getField_value();
-		TrackerFieldBindValue[] bindValues = fieldValue.getBind_value();
-		// if (bindValues == null || bindValues.length == 0) {
-		// tuleapArtifact.putValue(artifactFieldValue.getField_name(), String
-		// .valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID));
-		// } else {
-		// for (TrackerFieldBindValue bindValue : bindValues) {
-		// tuleapArtifact.putValue(artifactFieldValue.getField_name(), String.valueOf(bindValue
-		// .getBind_value_id()));
-		// }
-		// }
-	}
-
-	/**
-	 * Populates the tuleap artifact for the artifact field value of a file field.
-	 * 
-	 * @param tuleapArtifact
-	 *            The Tuleap Artifact
-	 * @param artifactFieldValue
-	 *            The artifact field value of a file field.
-	 */
-	private void populateArtifactForFileField(TuleapArtifact tuleapArtifact,
-			ArtifactFieldValue artifactFieldValue) {
-		// compute the description of the attachment
-		FieldValue fieldValue = artifactFieldValue.getField_value();
-		FieldValueFileInfo[] fileInfo = fieldValue.getFile_info();
-		if (fileInfo != null) {
-			for (FieldValueFileInfo fieldValueFileInfo : fileInfo) {
-				int filesize = fieldValueFileInfo.getFilesize();
-				String id = fieldValueFileInfo.getId();
-				String filename = fieldValueFileInfo.getFilename();
-				int submittedBy = fieldValueFileInfo.getSubmitted_by();
-				TuleapPerson uploadedBy = this.getPersonFromId(submittedBy);
-				String description = fieldValueFileInfo.getDescription();
-				String type = fieldValueFileInfo.getFiletype();
-
-				// AttachmentFieldValue tuleapAttachment = new AttachmentFieldValue(id, filename, uploadedBy,
-				// Long.valueOf(filesize), description, type);
-				// tuleapArtifact.putAttachment(artifactFieldValue.getField_name(), tuleapAttachment);
-			}
-		}
+		return comments;
 	}
 
 	/**
@@ -943,8 +771,6 @@ public class TuleapSoapConnector {
 	/**
 	 * Returns the Tuleap Artifact with the given artifact id on the tracker with the given tracker id.
 	 * 
-	 * @param trackerId
-	 *            The tracer id
 	 * @param artifactId
 	 *            The artifact id
 	 * @param monitor
@@ -957,42 +783,15 @@ public class TuleapSoapConnector {
 	 * @throws MalformedURLException
 	 *             If the URL is invalid
 	 */
-	public TuleapArtifact getArtifact(int trackerId, int artifactId, IProgressMonitor monitor)
-			throws MalformedURLException, RemoteException, ServiceException {
-		TuleapArtifact tuleapArtifact = null;
+	public Artifact getArtifact(int artifactId, IProgressMonitor monitor) throws MalformedURLException,
+			RemoteException, ServiceException {
 		this.login(monitor);
-		final int fifty = 50;
 
 		Artifact artifact = tuleapTrackerV5APIPort.getArtifact(sessionHash, -1, -1, artifactId);
 
-		Group project = null;
-		Tracker tracker = null;
-
-		Group[] groups = codendiAPIPort.getMyProjects(sessionHash);
-		for (Group group : groups) {
-			if (project == null && tracker == null) {
-				Tracker[] trackers = tuleapTrackerV5APIPort.getTrackerList(sessionHash, group.getGroup_id());
-				for (Tracker aTracker : trackers) {
-					if (artifact.getTracker_id() == aTracker.getTracker_id()) {
-						project = group;
-						tracker = aTracker;
-						break;
-					}
-				}
-			}
-		}
-
-		if (project != null && tracker != null) {
-			// tuleapArtifact = new TuleapArtifact(artifact, tracker.getName(), project.getGroup_name());
-			// TrackerField[] trackerFields = tuleapTrackerV5APIPort.getTrackerFields(sessionHash, project
-			// .getGroup_id(), tracker.getTracker_id());
-			// tuleapArtifact = this.populateArtifact(tuleapArtifact, trackerFields, artifact, monitor);
-			// monitor.worked(fifty);
-		}
-
 		this.logout();
 
-		return tuleapArtifact;
+		return artifact;
 	}
 
 	/**

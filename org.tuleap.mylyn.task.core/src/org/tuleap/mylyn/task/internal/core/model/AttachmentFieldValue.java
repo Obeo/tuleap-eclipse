@@ -10,123 +10,39 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model;
 
+import java.util.List;
+
 /**
- * This class will represents an attachement.
+ * This class will represents an attachment.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class AttachmentFieldValue extends AbstractFieldValue {
 
 	/**
-	 * The identifier of the file.
+	 * The description of the file attached.
 	 */
-	private String attachmentId;
-
-	/**
-	 * The name.
-	 */
-	private String filename;
-
-	/**
-	 * The author.
-	 */
-	private TuleapPerson person;
-
-	/**
-	 * The size.
-	 */
-	private Long size;
-
-	/**
-	 * The description.
-	 */
-	private String description;
-
-	/**
-	 * The content type.
-	 */
-	private String contentType;
+	private List<AttachmentValue> attachments;
 
 	/**
 	 * The constructor.
 	 * 
 	 * @param fieldId
 	 *            The identifier of the field
-	 * @param attachmentId
-	 *            The identifier of the file
-	 * @param name
-	 *            The name
-	 * @param uploadedBy
-	 *            The author
-	 * @param filesize
-	 *            The size
-	 * @param desc
-	 *            The description
-	 * @param type
-	 *            The content type
+	 * @param attachments
+	 *            The attachments
 	 */
-	public AttachmentFieldValue(int fieldId, String attachmentId, String name, TuleapPerson uploadedBy,
-			Long filesize, String desc, String type) {
+	public AttachmentFieldValue(int fieldId, List<AttachmentValue> attachments) {
 		super(fieldId);
-		this.attachmentId = attachmentId;
-		this.filename = name;
-		this.person = uploadedBy;
-		this.size = filesize;
-		this.description = desc;
-		this.contentType = type;
+		this.attachments = attachments;
 	}
 
 	/**
-	 * Returns the identifier of the file.
+	 * Returns the description of the file attached.
 	 * 
-	 * @return The identifier of the file
+	 * @return The description of the file attached
 	 */
-	public String getAttachmentId() {
-		return attachmentId;
-	}
-
-	/**
-	 * Returns the author.
-	 * 
-	 * @return The author
-	 */
-	public TuleapPerson getPerson() {
-		return person;
-	}
-
-	/**
-	 * Returns the filename.
-	 * 
-	 * @return The filename
-	 */
-	public String getFilename() {
-		return filename;
-	}
-
-	/**
-	 * Returns the size.
-	 * 
-	 * @return The size
-	 */
-	public Long getSize() {
-		return size;
-	}
-
-	/**
-	 * Returns the description.
-	 * 
-	 * @return The description
-	 */
-	public String getDescription() {
-		return description;
-	}
-
-	/**
-	 * returns the content type.
-	 * 
-	 * @return The content type
-	 */
-	public String getContentType() {
-		return contentType;
+	public List<AttachmentValue> getAttachments() {
+		return this.attachments;
 	}
 }

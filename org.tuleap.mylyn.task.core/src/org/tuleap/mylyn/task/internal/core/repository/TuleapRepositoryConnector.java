@@ -290,7 +290,16 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 				|| ITuleapConstants.QUERY_KIND_REPORT.equals(queryKind)
 				|| ITuleapConstants.QUERY_KIND_CUSTOM.equals(queryKind)) {
 			TuleapSoapClient soapClient = this.clientManager.getSoapClient(taskRepository);
-			List<TuleapArtifact> artifacts = soapClient.getArtifactsFromQuery(query, monitor);
+
+			int trackerId = Integer.valueOf(query.getAttribute(ITuleapConstants.QUERY_TRACKER_ID)).intValue();
+
+			TuleapServerConfiguration repositoryConfiguration = this
+					.getRepositoryConfiguration(taskRepository.getRepositoryUrl());
+			TuleapTrackerConfiguration trackerConfiguration = repositoryConfiguration
+					.getTrackerConfiguration(trackerId);
+
+			List<TuleapArtifact> artifacts = soapClient.getArtifactsFromQuery(query, trackerConfiguration,
+					monitor);
 			for (TuleapArtifact tuleapArtifact : artifacts) {
 				ArtifactTaskDataConverter artifactTaskDataConverter = new ArtifactTaskDataConverter();
 				TaskAttributeMapper attributeMapper = this.getTaskDataHandler().getAttributeMapper(
@@ -350,6 +359,11 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 				// TODO SBE merge configurations!
 
 				// put the configuration in this.repositoryConfigurations
+				List<TuleapProjectConfiguration> allProjectConfigurations = tuleapServerConfigurationSoap
+						.getAllProjectConfigurations();
+				for (TuleapProjectConfiguration tuleapProjectConfiguration : allProjectConfigurations) {
+					tuleapServerConfigurationRest.addProject(tuleapProjectConfiguration);
+				}
 			} catch (CoreException e) {
 				TuleapCoreActivator.log(e, true);
 			}

@@ -22,16 +22,14 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
-import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.agile.core.data.AbstractTaskMapper;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
-import org.tuleap.mylyn.task.internal.core.model.AttachmentFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.AttachmentValue;
 import org.tuleap.mylyn.task.internal.core.model.TuleapElementComment;
-import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.field.AbstractTuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
@@ -224,28 +222,29 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 * @param tuleapAttachment
 	 *            The attachment
 	 */
-	public void addAttachment(String tuleapFieldName, AttachmentFieldValue tuleapAttachment) {
-		TaskAttribute attribute = taskData.getRoot().createAttribute(
-				TaskAttribute.PREFIX_ATTACHMENT + tuleapFieldName + "---" //$NON-NLS-1$
-						+ tuleapAttachment.getAttachmentId());
-		attribute.getMetaData().defaults().setType(TaskAttribute.TYPE_ATTACHMENT);
-		TaskAttachmentMapper taskAttachment = TaskAttachmentMapper.createFrom(attribute);
-		taskAttachment.setAttachmentId(tuleapAttachment.getAttachmentId());
-
-		TuleapPerson person = tuleapAttachment.getPerson();
-		IRepositoryPerson iRepositoryPerson = trackerConfiguration.getPerson(person.getEmail());
-		if (iRepositoryPerson == null) {
-			iRepositoryPerson = taskData.getAttributeMapper().getTaskRepository().createPerson(
-					person.getEmail());
-			iRepositoryPerson.setName(person.getRealName());
-			trackerConfiguration.registerPerson(iRepositoryPerson);
-		}
-		taskAttachment.setAuthor(iRepositoryPerson);
-		taskAttachment.setFileName(tuleapAttachment.getFilename());
-		taskAttachment.setLength(tuleapAttachment.getSize());
-		taskAttachment.setDescription(tuleapAttachment.getDescription());
-		taskAttachment.setContentType(tuleapAttachment.getContentType());
-		taskAttachment.applyTo(attribute);
+	public void addAttachment(String tuleapFieldName, AttachmentValue tuleapAttachment) {
+		// TODO SBE migrate to TuleapArtifactTaskDataConverter!!
+		// TaskAttribute attribute = taskData.getRoot().createAttribute(
+		//				TaskAttribute.PREFIX_ATTACHMENT + tuleapFieldName + "---" //$NON-NLS-1$
+		// + tuleapAttachment.getAttachmentId());
+		// attribute.getMetaData().defaults().setType(TaskAttribute.TYPE_ATTACHMENT);
+		// TaskAttachmentMapper taskAttachment = TaskAttachmentMapper.createFrom(attribute);
+		// taskAttachment.setAttachmentId(tuleapAttachment.getAttachmentId());
+		//
+		// TuleapPerson person = tuleapAttachment.getPerson();
+		// IRepositoryPerson iRepositoryPerson = trackerConfiguration.getPerson(person.getEmail());
+		// if (iRepositoryPerson == null) {
+		// iRepositoryPerson = taskData.getAttributeMapper().getTaskRepository().createPerson(
+		// person.getEmail());
+		// iRepositoryPerson.setName(person.getRealName());
+		// trackerConfiguration.registerPerson(iRepositoryPerson);
+		// }
+		// taskAttachment.setAuthor(iRepositoryPerson);
+		// taskAttachment.setFileName(tuleapAttachment.getFilename());
+		// taskAttachment.setLength(tuleapAttachment.getSize());
+		// taskAttachment.setDescription(tuleapAttachment.getDescription());
+		// taskAttachment.setContentType(tuleapAttachment.getContentType());
+		// taskAttachment.applyTo(attribute);
 	}
 
 	/**

@@ -257,7 +257,11 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 		// TODO SBE update the configuration!
 		// tuleapSoapClient.updateAttributes(monitor, false);
-		TuleapArtifact tuleapArtifact = tuleapSoapClient.getArtifact(taskId, monitor);
+
+		TuleapServerConfiguration tuleapServerConfiguration = this.connector
+				.getRepositoryConfiguration(taskRepository.getRepositoryUrl());
+		TuleapArtifact tuleapArtifact = tuleapSoapClient.getArtifact(taskId, tuleapServerConfiguration,
+				monitor);
 		if (tuleapArtifact != null) {
 			TaskData taskData = this.createTaskDataFromArtifact(tuleapSoapClient, taskRepository,
 					tuleapArtifact, monitor);
