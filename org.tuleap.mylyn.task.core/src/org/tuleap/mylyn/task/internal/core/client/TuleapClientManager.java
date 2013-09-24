@@ -57,7 +57,11 @@ public class TuleapClientManager implements IRepositoryListener {
 	 * @return The SOAP client for the given task repository
 	 */
 	public TuleapSoapClient getSoapClient(TaskRepository taskRepository) {
-		return this.soapClientCache.get(taskRepository);
+		TuleapSoapClient tuleapSoapClient = this.soapClientCache.get(taskRepository);
+		if (tuleapSoapClient == null && this.restClientCache.get(taskRepository) == null) {
+			this.refreshClients(taskRepository);
+		}
+		return tuleapSoapClient;
 	}
 
 	/**
@@ -70,7 +74,11 @@ public class TuleapClientManager implements IRepositoryListener {
 	 * @return The REST client for the given task repository
 	 */
 	public TuleapRestClient getRestClient(TaskRepository taskRepository) {
-		return this.restClientCache.get(taskRepository);
+		TuleapRestClient tuleapRestClient = this.restClientCache.get(taskRepository);
+		if (tuleapRestClient == null && this.soapClientCache.get(taskRepository) == null) {
+			this.refreshClients(taskRepository);
+		}
+		return tuleapRestClient;
 	}
 
 	/**
@@ -79,6 +87,16 @@ public class TuleapClientManager implements IRepositoryListener {
 	 * @see org.eclipse.mylyn.tasks.core.IRepositoryListener#repositoryAdded(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
 	public void repositoryAdded(TaskRepository taskRepository) {
+		this.refreshClients(taskRepository);
+	}
+
+	/**
+	 * Refresh both REST and SOAP clients for the given task repository.
+	 * 
+	 * @param taskRepository
+	 *            The task repository
+	 */
+	private void refreshClients(TaskRepository taskRepository) {
 		// Create both clients
 		AbstractWebLocation webLocation = new TaskRepositoryLocationFactory()
 				.createWebLocation(taskRepository);
