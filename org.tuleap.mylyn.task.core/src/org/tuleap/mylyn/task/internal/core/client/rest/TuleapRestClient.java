@@ -160,7 +160,8 @@ public class TuleapRestClient {
 		// Test the connection
 		RestResources restResources = tuleapRestConnector.resources(credentials);
 
-		TuleapServerConfiguration tuleapServerConfiguration = null;
+		TuleapServerConfiguration tuleapServerConfiguration = new TuleapServerConfiguration(
+				this.taskRepository.getRepositoryUrl());
 
 		// Check that we can get the list of projects
 		RestProjects restProjects = restResources.projects();
@@ -176,6 +177,8 @@ public class TuleapRestClient {
 
 			// For each project that has the tracker service
 			for (TuleapProjectConfiguration projectConfig : projectConfigurations) {
+				tuleapServerConfiguration.addProject(projectConfig);
+
 				// TODO SBE Restore this code!
 
 				// if (projectConfig.hasService(ITuleapProjectServices.TRACKERS)) {
