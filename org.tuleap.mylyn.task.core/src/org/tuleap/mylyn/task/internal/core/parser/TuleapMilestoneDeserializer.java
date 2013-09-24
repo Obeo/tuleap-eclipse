@@ -17,6 +17,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
@@ -55,6 +57,11 @@ public class TuleapMilestoneDeserializer extends AbstractTuleapDeserializer<Tule
 	private static final String SUBMILESTONES = "submilestones"; //$NON-NLS-1$
 
 	/**
+	 * The pattern used to format date following the ISO8601 standard.
+	 */
+	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"); //$NON-NLS-1$
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see com.google.gson.JsonDeserializer#deserialize(com.google.gson.JsonElement, java.lang.reflect.Type,
@@ -70,8 +77,12 @@ public class TuleapMilestoneDeserializer extends AbstractTuleapDeserializer<Tule
 
 		JsonElement elt = jsonObject.get(START_DATE);
 		if (elt != null) {
-			long startDate = elt.getAsLong();
-			milestone.setStartDate(startDate);
+			String startDate = elt.getAsString();
+			try {
+				milestone.setStartDate(dateFormat.parse(startDate)); //$NON-NLS-1$
+			} catch (ParseException e) {
+				// TODO manage the exception properly
+			}
 		}
 
 		elt = jsonObject.get(DURATION);

@@ -28,7 +28,7 @@ public class TuleapMilestone extends AbstractTuleapConfigurableElement {
 	/**
 	 * The milestone's start date.
 	 */
-	private long startDate;
+	private Date startDate;
 
 	/**
 	 * The milestone's duration.
@@ -88,7 +88,7 @@ public class TuleapMilestone extends AbstractTuleapConfigurableElement {
 	 * 
 	 * @return the startDate
 	 */
-	public long getStartDate() {
+	public Date getStartDate() {
 		return startDate;
 	}
 
@@ -98,7 +98,7 @@ public class TuleapMilestone extends AbstractTuleapConfigurableElement {
 	 * @param startDate
 	 *            the startDate to set
 	 */
-	public void setStartDate(long startDate) {
+	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
 

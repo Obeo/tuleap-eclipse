@@ -1,7 +1,7 @@
 {
   "id" : 250,
   "label" : "Sprint 1",
-  "start_date" : 12345678,
+  "start_date" : "2013-09-23T11:44:18.963Z",
   "duration" : 15,
   "capacity" : 24.5,
   "url" : "/milestones/300",

@@ -50,7 +50,7 @@ public class MilestonePlanningTaskDataConverter extends AbstractElementTaskDataC
 			SubMilestoneWrapper subMilestoneWrapper = milestonePlanningWrapper.addSubMilestone(subMilestone
 					.getId());
 			subMilestoneWrapper.setLabel(subMilestone.getLabel());
-			subMilestoneWrapper.setStartDate(new java.util.Date(subMilestone.getStartDate()));
+			subMilestoneWrapper.setStartDate(subMilestone.getStartDate());
 			subMilestoneWrapper.setDuration(subMilestone.getDuration());
 			subMilestoneWrapper.setCapacity(subMilestone.getCapacity());
 		}

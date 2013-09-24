@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Enumeration;
 
 import org.eclipse.core.runtime.Platform;
@@ -70,6 +72,11 @@ public class TuleapMilestoneDeserializerTests {
 	 * The content of the release 201 json file.
 	 */
 	private static String release201;
+
+	/**
+	 * The pattern used to format date following the ISO8601 standard.
+	 */
+	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"); //$NON-NLS-1$
 
 	/**
 	 * Reads the content of the file at the given url and returns it.
@@ -173,15 +180,17 @@ public class TuleapMilestoneDeserializerTests {
 
 	/**
 	 * Test the parsing of the data set of the release 200.
+	 * 
+	 * @throws ParseException
 	 */
 	@Test
-	public void testRelease200Parsing() {
+	public void testRelease200Parsing() throws ParseException {
 		TuleapMilestone tuleapMilestone = this.parse(release200);
 		assertNotNull(tuleapMilestone);
 
 		assertEquals(200, tuleapMilestone.getId());
 		assertEquals("Release 0.9", tuleapMilestone.getLabel()); //$NON-NLS-1$
-		assertEquals(12345678, tuleapMilestone.getStartDate());
+		assertEquals(dateFormat.parse("2013-09-23T11:44:18.963Z"), tuleapMilestone.getStartDate());
 		assertEquals(50, tuleapMilestone.getDuration(), 0);
 		assertEquals(100, tuleapMilestone.getCapacity(), 0);
 		assertEquals("/milestones/200", tuleapMilestone.getUrl()); //$NON-NLS-1$
