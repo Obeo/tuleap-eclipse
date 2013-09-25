@@ -18,6 +18,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskMapper;
 import org.tuleap.mylyn.task.internal.core.model.AbstractFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
+import org.tuleap.mylyn.task.internal.core.model.AttachmentFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.AttachmentValue;
 import org.tuleap.mylyn.task.internal.core.model.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.MultiSelectFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.SingleSelectFieldValue;
@@ -102,18 +104,20 @@ public class ArtifactTaskDataConverter extends AbstractElementTaskDataConverter<
 
 		// Persons
 		AbstractTuleapSelectBox contributorField = this.configuration.getContributorField();
-		AbstractFieldValue abstractFieldValue = tuleapArtifact.getFieldValue(Integer.valueOf(contributorField
-				.getIdentifier()));
-		if (abstractFieldValue instanceof SingleSelectFieldValue) {
-			SingleSelectFieldValue singleSelectFieldValue = (SingleSelectFieldValue)abstractFieldValue;
+		if (contributorField != null) {
+			AbstractFieldValue abstractFieldValue = tuleapArtifact.getFieldValue(Integer
+					.valueOf(contributorField.getIdentifier()));
+			if (abstractFieldValue instanceof SingleSelectFieldValue) {
+				SingleSelectFieldValue singleSelectFieldValue = (SingleSelectFieldValue)abstractFieldValue;
 
-			List<Integer> assignedToBindValueIds = new ArrayList<Integer>();
-			assignedToBindValueIds.add(Integer.valueOf(singleSelectFieldValue.getBindValueId()));
+				List<Integer> assignedToBindValueIds = new ArrayList<Integer>();
+				assignedToBindValueIds.add(Integer.valueOf(singleSelectFieldValue.getBindValueId()));
 
-			tuleapTaskMapper.setAssignedTo(assignedToBindValueIds);
-		} else if (abstractFieldValue instanceof MultiSelectFieldValue) {
-			MultiSelectFieldValue multiSelectFieldValue = (MultiSelectFieldValue)abstractFieldValue;
-			tuleapTaskMapper.setAssignedTo(multiSelectFieldValue.getBindValueIds());
+				tuleapTaskMapper.setAssignedTo(assignedToBindValueIds);
+			} else if (abstractFieldValue instanceof MultiSelectFieldValue) {
+				MultiSelectFieldValue multiSelectFieldValue = (MultiSelectFieldValue)abstractFieldValue;
+				tuleapTaskMapper.setAssignedTo(multiSelectFieldValue.getBindValueIds());
+			}
 		}
 
 		// Comments
@@ -124,7 +128,17 @@ public class ArtifactTaskDataConverter extends AbstractElementTaskDataConverter<
 
 		// Attachments
 		TuleapFileUpload attachmentField = this.configuration.getAttachmentField();
-		// TODO SBE Bring back the support for attachments
+		if (attachmentField != null) {
+			AbstractFieldValue attachmentFieldValue = tuleapArtifact.getFieldValue(Integer
+					.valueOf(attachmentField.getIdentifier()));
+			if (attachmentFieldValue instanceof AttachmentFieldValue) {
+				AttachmentFieldValue aFieldValue = (AttachmentFieldValue)attachmentFieldValue;
+				List<AttachmentValue> attachments = aFieldValue.getAttachments();
+				for (AttachmentValue attachment : attachments) {
+					tuleapTaskMapper.addAttachment(attachmentField.getName(), attachment);
+				}
+			}
+		}
 
 		// Additional fields
 		Collection<AbstractTuleapField> fields = this.configuration.getFields();
