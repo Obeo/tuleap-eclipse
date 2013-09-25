@@ -163,7 +163,7 @@ public interface ITuleapConstants {
 	/**
 	 * The identifier of the none binding.
 	 */
-	int TRACKER_FIELD_NONE_BINDING_ID = 100;
+	int CONFIGURABLE_FIELD_NONE_BINDING_ID = 100;
 
 	/**
 	 * The attributes query separator.

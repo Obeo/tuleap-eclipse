@@ -135,7 +135,7 @@ public class TuleapWorkflowTests {
 		assertEquals(item2, iterator.next());
 		assertEquals(item3, iterator.next());
 
-		accessibleStates = workflow.accessibleStates(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID);
+		accessibleStates = workflow.accessibleStates(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID);
 		iterator = accessibleStates.iterator();
 		assertEquals(1, accessibleStates.size());
 		assertEquals(item1, accessibleStates.iterator().next());
@@ -170,7 +170,7 @@ public class TuleapWorkflowTests {
 		assertFalse(workflow.addTransition(invalidTransition));
 
 		// From default state, invalid because to an unknown id
-		invalidTransition.setFrom(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID);
+		invalidTransition.setFrom(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID);
 		invalidTransition.setTo(unusedId);
 		assertFalse(workflow.addTransition(invalidTransition));
 
@@ -188,7 +188,7 @@ public class TuleapWorkflowTests {
 		item2Id = 2;
 		item3Id = 3;
 
-		item100 = new TuleapSelectBoxItem(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID);
+		item100 = new TuleapSelectBoxItem(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID);
 		selectBox.addItem(item100);
 
 		item1 = new TuleapSelectBoxItem(item1Id);
@@ -203,7 +203,7 @@ public class TuleapWorkflowTests {
 		workflow = new TuleapWorkflow(selectBox);
 
 		transition100To1 = new TuleapWorkflowTransition();
-		transition100To1.setFrom(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID);
+		transition100To1.setFrom(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID);
 		transition100To1.setTo(item1Id);
 
 		transition1To2 = new TuleapWorkflowTransition();

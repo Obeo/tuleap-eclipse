@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.parser;
 
+import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -24,10 +25,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.tuleap.mylyn.task.internal.core.data.BoundFieldValue;
+import org.tuleap.mylyn.task.internal.core.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableElement;
-import org.tuleap.mylyn.task.internal.core.model.LiteralFieldValue;
-import org.tuleap.mylyn.task.internal.core.model.MultiSelectFieldValue;
-import org.tuleap.mylyn.task.internal.core.model.SingleSelectFieldValue;
 
 /**
  * This class is used to deserialize a JSON representation of a Tuleap object.
@@ -129,7 +129,8 @@ public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapConfigu
 				JsonElement jsonBindValueId = jsonField.get(FIELD_BIND_VALUE_ID);
 				if (jsonBindValueId != null) {
 					int bindValueId = jsonBindValueId.getAsInt();
-					pojo.addFieldValue(new SingleSelectFieldValue(fieldId, bindValueId));
+					pojo.addFieldValue(new BoundFieldValue(fieldId, Lists.newArrayList(Integer
+							.valueOf(bindValueId))));
 				} else {
 					JsonElement jsonBindValueIds = jsonField.get(FIELD_BIND_VALUE_IDS);
 					if (jsonBindValueIds != null) {
@@ -138,7 +139,7 @@ public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapConfigu
 						for (JsonElement idElement : jsonIds) {
 							bindValueIds.add(Integer.valueOf(idElement.getAsInt()));
 						}
-						pojo.addFieldValue(new MultiSelectFieldValue(fieldId, bindValueIds));
+						pojo.addFieldValue(new BoundFieldValue(fieldId, bindValueIds));
 					} else {
 						// TODO Files
 					}

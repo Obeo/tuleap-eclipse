@@ -100,7 +100,7 @@ public class TuleapSelectBox extends AbstractTuleapSelectBox {
 			// otherwise the select box will always be empty...
 			// If there is a workflow, the default value "100" is never available, a real state must be
 			// selected.
-			int stateId = ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID;
+			int stateId = ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID;
 			String stateLabel = ""; //$NON-NLS-1$
 			attribute.clearOptions();
 			if (item != null) {

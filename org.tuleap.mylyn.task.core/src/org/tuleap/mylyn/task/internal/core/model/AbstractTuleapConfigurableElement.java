@@ -18,6 +18,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.tuleap.mylyn.task.internal.core.data.AbstractFieldValue;
+
 /**
  * Ancestor of all tuleap configurable elements that have and ID, a REST URL, and an HTML URL.
  * 

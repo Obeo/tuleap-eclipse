@@ -10,19 +10,20 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.client.soap;
 
+import com.google.common.collect.Lists;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import org.tuleap.mylyn.task.internal.core.model.AbstractFieldValue;
+import org.tuleap.mylyn.task.internal.core.data.AbstractFieldValue;
+import org.tuleap.mylyn.task.internal.core.data.AttachmentFieldValue;
+import org.tuleap.mylyn.task.internal.core.data.AttachmentValue;
+import org.tuleap.mylyn.task.internal.core.data.BoundFieldValue;
+import org.tuleap.mylyn.task.internal.core.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
-import org.tuleap.mylyn.task.internal.core.model.AttachmentFieldValue;
-import org.tuleap.mylyn.task.internal.core.model.AttachmentValue;
-import org.tuleap.mylyn.task.internal.core.model.LiteralFieldValue;
-import org.tuleap.mylyn.task.internal.core.model.MultiSelectFieldValue;
-import org.tuleap.mylyn.task.internal.core.model.SingleSelectFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.TuleapElementComment;
 import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
@@ -64,8 +65,8 @@ public class TuleapSoapParser {
 		// TODO SBE Useless for the SOAP API
 		String url = ""; //$NON-NLS-1$
 
-		// TODO SBE Compute it!
-		String htmlUrl = "";
+		// TODO SBE Compute the HTML URL!
+		String htmlUrl = ""; //$NON-NLS-1$
 
 		int submittedOn = artifactToParse.getSubmitted_on();
 		Date creationDate = this.getDateFromTimestamp(submittedOn);
@@ -92,8 +93,8 @@ public class TuleapSoapParser {
 							bindValueId = bindValue[0].getBind_value_id();
 						}
 
-						abstractFieldValue = new SingleSelectFieldValue(abstractTuleapField.getIdentifier(),
-								bindValueId);
+						abstractFieldValue = new BoundFieldValue(abstractTuleapField.getIdentifier(), Lists
+								.newArrayList(Integer.valueOf(bindValueId)));
 					} else if (abstractTuleapField instanceof TuleapMultiSelectBox) {
 						// Multi-select box?
 						List<Integer> bindValueIds = new ArrayList<Integer>();
@@ -104,7 +105,7 @@ public class TuleapSoapParser {
 							bindValueIds.add(Integer.valueOf(trackerFieldBindValue.getBind_value_id()));
 						}
 
-						abstractFieldValue = new MultiSelectFieldValue(abstractTuleapField.getIdentifier(),
+						abstractFieldValue = new BoundFieldValue(abstractTuleapField.getIdentifier(),
 								bindValueIds);
 					} else if (abstractTuleapField instanceof TuleapFileUpload) {
 						// File attachment?

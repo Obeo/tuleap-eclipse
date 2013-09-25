@@ -1004,7 +1004,7 @@ public class TuleapSoapConnector {
 			// List<TrackerFieldBindValue> bindValues = new ArrayList<TrackerFieldBindValue>();
 			// for (String value : values) {
 			//				if ("".equals(value)) { //$NON-NLS-1$
-			// bindValues.add(new TrackerFieldBindValue(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID,
+			// bindValues.add(new TrackerFieldBindValue(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID,
 			//							"")); //$NON-NLS-1$
 			// } else {
 			// TrackerFieldBindValue[] trackerFieldBindValues = trackerField.getValues();
@@ -1135,7 +1135,7 @@ public class TuleapSoapConnector {
 		// if (values != null) {
 		// for (String value : values) {
 		//				if ("".equals(value)) { //$NON-NLS-1$
-		// bindValues.add(new TrackerFieldBindValue(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID,
+		// bindValues.add(new TrackerFieldBindValue(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID,
 		//							"")); //$NON-NLS-1$
 		// } else {
 		// TrackerFieldBindValue[] trackerFieldBindValues = trackerField.getValues();
@@ -1149,7 +1149,7 @@ public class TuleapSoapConnector {
 		// }
 		// }
 		// } else {
-		//			bindValues.add(new TrackerFieldBindValue(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID, "")); //$NON-NLS-1$
+		//			bindValues.add(new TrackerFieldBindValue(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID, "")); //$NON-NLS-1$
 		// }
 		//
 		// FieldValue fieldValue = new FieldValue(

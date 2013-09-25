@@ -294,7 +294,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 			attribute.putOption(String.valueOf(item.getIdentifier()), item.getLabel());
 		}
 		if (items.size() > 0) {
-			attribute.putOption(String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID), ""); //$NON-NLS-1$
+			attribute.putOption(String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID), ""); //$NON-NLS-1$
 		}
 	}
 
@@ -312,7 +312,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 			options.put(String.valueOf(item.getIdentifier()), item.getLabel());
 		}
 		if (items.size() > 0) {
-			options.put(String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID), ""); //$NON-NLS-1$
+			options.put(String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID), ""); //$NON-NLS-1$
 		}
 		return options;
 	}

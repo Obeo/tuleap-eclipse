@@ -12,6 +12,7 @@ package org.tuleap.mylyn.task.internal.core.data;
 
 import com.google.common.collect.Lists;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
@@ -28,14 +29,13 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.agile.core.data.AbstractTaskMapper;
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableFieldsConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
-import org.tuleap.mylyn.task.internal.core.model.AttachmentValue;
 import org.tuleap.mylyn.task.internal.core.model.TuleapElementComment;
 import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.field.AbstractTuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 
@@ -46,6 +46,9 @@ import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class TuleapTaskMapper extends AbstractTaskMapper {
+
+	// TODO SBE Remove all references to tracker and artifact
+	// TODO SBE compute another identifier? remove project name and tracker name?
 
 	/**
 	 * The identifier of an invalid tracker.
@@ -91,34 +94,35 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 			TaskAttribute.TASK_KIND));
 
 	/**
-	 * The tracker configuration.
+	 * The configuration.
 	 */
-	protected final TuleapTrackerConfiguration trackerConfiguration;
+	protected final AbstractTuleapConfigurableFieldsConfiguration tuleapConfigurableFieldsConfiguration;
 
 	/**
 	 * The constructor.
 	 * 
 	 * @param taskData
 	 *            The task data
-	 * @param tuleapTrackerConfiguration
-	 *            The tracker configuration.
+	 * @param tuleapConfigurableFieldsConfiguration
+	 *            The configuration.
 	 */
-	public TuleapTaskMapper(TaskData taskData, TuleapTrackerConfiguration tuleapTrackerConfiguration) {
+	public TuleapTaskMapper(TaskData taskData,
+			AbstractTuleapConfigurableFieldsConfiguration tuleapConfigurableFieldsConfiguration) {
 		super(taskData);
-		this.trackerConfiguration = tuleapTrackerConfiguration;
+		this.tuleapConfigurableFieldsConfiguration = tuleapConfigurableFieldsConfiguration;
 	}
 
 	/**
-	 * Initialize an empty task data from the given Tuleap tracker configuration.
+	 * Initialize an empty task data from the given configuration.
 	 */
 	public void initializeEmptyTaskData() {
 		createTaskKindTaskAttribute();
 
 		// The group id and the tracker id
-		setProjectId(trackerConfiguration.getTuleapProjectConfiguration().getIdentifier());
-		setProjectName(trackerConfiguration.getTuleapProjectConfiguration().getName());
-		setTrackerId(trackerConfiguration.getIdentifier());
-		setTrackerName(trackerConfiguration.getName());
+		setProjectId(tuleapConfigurableFieldsConfiguration.getTuleapProjectConfiguration().getIdentifier());
+		setProjectName(tuleapConfigurableFieldsConfiguration.getTuleapProjectConfiguration().getName());
+		setTrackerId(tuleapConfigurableFieldsConfiguration.getIdentifier());
+		setTrackerName(tuleapConfigurableFieldsConfiguration.getName());
 
 		createCreationDateTaskAttribute();
 		createLastUpdateDateTaskAttribute();
@@ -129,7 +133,7 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 
 		// Default attributes
 		TaskAttribute root = taskData.getRoot();
-		Collection<AbstractTuleapField> fields = trackerConfiguration.getFields();
+		Collection<AbstractTuleapField> fields = tuleapConfigurableFieldsConfiguration.getFields();
 		for (AbstractTuleapField abstractTuleapField : fields) {
 			if (abstractTuleapField.needsTaskAttributeForInitialization()) {
 				abstractTuleapField.createTaskAttribute(root);
@@ -207,7 +211,7 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 */
 	private void createTaskKindTaskAttribute() {
 		TaskAttribute attribute = taskData.getRoot().createAttribute(TaskAttribute.TASK_KIND);
-		String name = trackerConfiguration.getName();
+		String name = tuleapConfigurableFieldsConfiguration.getName();
 		if (name != null) {
 			attribute.setValue(name);
 		} else {
@@ -233,12 +237,13 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 		taskAttachment.setAttachmentId(tuleapAttachment.getAttachmentId());
 
 		TuleapPerson person = tuleapAttachment.getPerson();
-		IRepositoryPerson iRepositoryPerson = trackerConfiguration.getPerson(person.getEmail());
+		IRepositoryPerson iRepositoryPerson = tuleapConfigurableFieldsConfiguration.getPerson(person
+				.getEmail());
 		if (iRepositoryPerson == null) {
 			iRepositoryPerson = taskData.getAttributeMapper().getTaskRepository().createPerson(
 					person.getEmail());
 			iRepositoryPerson.setName(person.getRealName());
-			trackerConfiguration.registerPerson(iRepositoryPerson);
+			tuleapConfigurableFieldsConfiguration.registerPerson(iRepositoryPerson);
 		}
 		taskAttachment.setAuthor(iRepositoryPerson);
 		taskAttachment.setFileName(tuleapAttachment.getFilename());
@@ -386,7 +391,8 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 		if (attribute != null) {
 			attribute.clearValues();
 			attribute.setValue(value);
-			if (trackerConfiguration.hasClosedStatusMeaning(value) && getCompletionDate() == null) {
+			if (tuleapConfigurableFieldsConfiguration.hasClosedStatusMeaning(value)
+					&& getCompletionDate() == null) {
 				// Sets the completion date
 				// Hypothesis: the last update date is up to date, which is reasonable since it appears early
 				// in the JSON objects.
@@ -414,14 +420,14 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 */
 	private void updateStatusSelectBox(String value, TaskAttribute attribute) {
 		// update the options of the status field
-		AbstractTuleapSelectBox field = trackerConfiguration.getStatusField();
+		AbstractTuleapSelectBox field = tuleapConfigurableFieldsConfiguration.getStatusField();
 		if (field instanceof TuleapSelectBox) {
 			TuleapSelectBox selectBox = (TuleapSelectBox)field;
 			if (selectBox.hasWorkflow()) {
 				String currentOption = attribute.getOption(value);
 				attribute.clearOptions();
 				if (currentOption != null
-						&& !String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(value)) {
+						&& !String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID).equals(value)) {
 					// currentOption can only be null if the workflow forbids the current modification...
 					attribute.putOption(value, currentOption);
 				}
@@ -603,14 +609,14 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 		// ITuleapConstants -> 100 nothing selected
 		TaskAttribute attribute = getMappedAttributeById(fieldId);
 		if (attribute != null) {
-			if (valueId == ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID) {
+			if (valueId == ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID) {
 				attribute.clearValues();
 			} else {
 				attribute.setValue(String.valueOf(valueId));
 			}
 		}
 		// Take the workflow of the select box into account if it exists
-		AbstractTuleapField field = trackerConfiguration.getFieldById(fieldId);
+		AbstractTuleapField field = tuleapConfigurableFieldsConfiguration.getFieldById(fieldId);
 		if (field instanceof TuleapSelectBox) {
 			TuleapSelectBox selectBox = (TuleapSelectBox)field;
 			selectBox.updateOptionsWithWorkflow(attribute);
@@ -631,7 +637,7 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 		if (attribute != null) {
 			attribute.clearValues();
 			for (Integer valueId : valuesId) {
-				if (valueId.intValue() != ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID) {
+				if (valueId.intValue() != ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID) {
 					attribute.addValue(String.valueOf(valueId));
 				}
 			}
@@ -661,13 +667,13 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 		taskComment.setCreationDate(creationDate);
 		taskComment.setText(tuleapArtifactComment.getBody());
 		if (tuleapArtifactComment.getEmail() != null) {
-			IRepositoryPerson iRepositoryPerson = trackerConfiguration.getPerson(tuleapArtifactComment
-					.getEmail());
+			IRepositoryPerson iRepositoryPerson = tuleapConfigurableFieldsConfiguration
+					.getPerson(tuleapArtifactComment.getEmail());
 			if (iRepositoryPerson == null) {
 				iRepositoryPerson = taskData.getAttributeMapper().getTaskRepository().createPerson(
 						tuleapArtifactComment.getEmail());
 				iRepositoryPerson.setName(tuleapArtifactComment.getName());
-				trackerConfiguration.registerPerson(iRepositoryPerson);
+				tuleapConfigurableFieldsConfiguration.registerPerson(iRepositoryPerson);
 			}
 			taskComment.setAuthor(iRepositoryPerson);
 		}
@@ -695,22 +701,30 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 * 
 	 * @return The set of the field values, never null but potentially empty.
 	 */
-	public Set<AbstractTuleapFieldValue> getFieldValues() {
+	public Set<AbstractFieldValue> getFieldValues() {
+		// FIXME SBE Support full task key in the task dependency fields!!!!!!!
+		/*
+		 * /!\HACKISH/!\ We may have, as the id of the task, an identifier (ie: 917) or a complex identifier
+		 * (ie: MyRepository:MyProject[116] #917 - My Task Name). We will try to parse the value as an
+		 * integer, if it fails, then we know that we have a complex identifier, in that case, we will parse
+		 * the identifier from this complex identifier and use it.
+		 */
+
 		// returns all the tuleap field value in order to send them to the server
 		// attachments are not uploaded with the same mechanism so no need to return them here
 		// do not return the fields computed by tuleap or mylyn: creation date, completion date, id, etc
-		Set<AbstractTuleapFieldValue> result = new LinkedHashSet<AbstractTuleapFieldValue>();
+		Set<AbstractFieldValue> result = new LinkedHashSet<AbstractFieldValue>();
 		// For the moment, we return all known values.
 		// Later, an improvement will be to return only those values that have changed.
 		for (TaskAttribute attribute : taskData.getRoot().getAttributes().values()) {
 			if (mustBeSentToServer(attribute)) {
 				if (attribute.getOptions().isEmpty()) {
-					TuleapLiteralFieldValue fieldValue = new TuleapLiteralFieldValue(attribute.getValue(),
-							Integer.parseInt(attribute.getId()));
+					LiteralFieldValue fieldValue = new LiteralFieldValue(Integer.parseInt(attribute.getId()),
+							attribute.getValue());
 					result.add(fieldValue);
 				} else {
 					// select box or multi select box (or check box)
-					Set<Integer> valueIds = new LinkedHashSet<Integer>();
+					List<Integer> valueIds = new ArrayList<Integer>();
 					for (String strValue : attribute.getValues()) {
 						try {
 							valueIds.add(Integer.valueOf(strValue));
@@ -718,8 +732,8 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 							// TODO Add log about non integer value
 						}
 					}
-					TuleapBoundFieldValue boundFieldValue = new TuleapBoundFieldValue(valueIds, Integer
-							.parseInt(attribute.getId()));
+					BoundFieldValue boundFieldValue = new BoundFieldValue(
+							Integer.parseInt(attribute.getId()), valueIds);
 					result.add(boundFieldValue);
 				}
 			}

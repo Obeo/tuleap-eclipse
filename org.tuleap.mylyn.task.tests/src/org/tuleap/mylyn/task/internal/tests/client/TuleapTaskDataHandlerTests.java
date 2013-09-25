@@ -1352,7 +1352,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(3)));
 		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		for (Entry<String, String> entry : entrySet) {
-			if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
+			if (String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
 			} else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(firstItemLabel));
@@ -1409,7 +1409,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 
 		TuleapWorkflow tuleapWorkflow = tuleapSelectBox.getWorkflow();
 		TuleapWorkflowTransition aTransition = new TuleapWorkflowTransition();
-		aTransition.setFrom(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID);
+		aTransition.setFrom(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID);
 		aTransition.setTo(secondSelectBoxItemId);
 		tuleapWorkflow.addTransition(aTransition);
 
@@ -1551,7 +1551,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(3)));
 		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		for (Entry<String, String> entry : entrySet) {
-			if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
+			if (String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
 			} else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(firstItemLabel));
@@ -1658,7 +1658,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(3)));
 		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		for (Entry<String, String> entry : entrySet) {
-			if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
+			if (String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
 			} else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(firstItemLabel));
@@ -1804,7 +1804,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(3)));
 		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		for (Entry<String, String> entry : entrySet) {
-			if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
+			if (String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
 			} else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(firstItemLabel));
@@ -1865,7 +1865,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(2)));
 		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		for (Entry<String, String> entry : entrySet) {
-			if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
+			if (String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
 			} else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(firstItemLabel));
@@ -1932,7 +1932,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(3)));
 		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		for (Entry<String, String> entry : entrySet) {
-			if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
+			if (String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
 			} else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(firstItemLabel));
@@ -2003,7 +2003,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(3)));
 		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		for (Entry<String, String> entry : entrySet) {
-			if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
+			if (String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
 			} else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(firstItemLabel));
@@ -2110,7 +2110,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(3)));
 		Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		for (Entry<String, String> entry : entrySet) {
-			if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
+			if (String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
 			} else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 				assertThat(entry.getValue(), is(firstItemLabel));
@@ -2777,7 +2777,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		// assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(3)));
 		// Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		// for (Entry<String, String> entry : entrySet) {
-		// if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
+		// if (String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 		//				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
 		// } else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 		// assertThat(entry.getValue(), is(firstItemLabel));
@@ -2842,7 +2842,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		// assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(2)));
 		// Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		// for (Entry<String, String> entry : entrySet) {
-		// if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
+		// if (String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 		//				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
 		// } else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 		// assertThat(entry.getValue(), is(firstItemLabel));
@@ -3000,7 +3000,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		// assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(3)));
 		// Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		// for (Entry<String, String> entry : entrySet) {
-		// if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
+		// if (String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 		//				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
 		// } else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 		// assertThat(entry.getValue(), is(firstItemLabel));
@@ -3073,7 +3073,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		// assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(3)));
 		// Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		// for (Entry<String, String> entry : entrySet) {
-		// if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
+		// if (String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 		//				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
 		// } else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 		// assertThat(entry.getValue(), is(firstItemLabel));
@@ -3146,7 +3146,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		// assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(3)));
 		// Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		// for (Entry<String, String> entry : entrySet) {
-		// if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
+		// if (String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 		//				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
 		// } else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 		// assertThat(entry.getValue(), is(firstItemLabel));
@@ -3228,7 +3228,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		// assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(4)));
 		// Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		// for (Entry<String, String> entry : entrySet) {
-		// if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
+		// if (String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 		//				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
 		// } else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 		// assertThat(entry.getValue(), is(firstItemLabel));
@@ -3309,7 +3309,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		// assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(3)));
 		// Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		// for (Entry<String, String> entry : entrySet) {
-		// if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
+		// if (String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 		//				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
 		// } else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 		// assertThat(entry.getValue(), is(firstItemLabel));
@@ -3381,7 +3381,7 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		// assertThat(Integer.valueOf(taskAttribute.getOptions().size()), is(Integer.valueOf(3)));
 		// Set<Entry<String, String>> entrySet = taskAttribute.getOptions().entrySet();
 		// for (Entry<String, String> entry : entrySet) {
-		// if (String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
+		// if (String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID).equals(entry.getKey())) {
 		//				assertThat(entry.getValue(), is("")); //$NON-NLS-1$
 		// } else if (String.valueOf(firstSelectBoxItemId).equals(entry.getKey())) {
 		// assertThat(entry.getValue(), is(firstItemLabel));

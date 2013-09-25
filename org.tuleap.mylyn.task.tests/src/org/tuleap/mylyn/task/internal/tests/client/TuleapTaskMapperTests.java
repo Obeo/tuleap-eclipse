@@ -340,7 +340,7 @@ public class TuleapTaskMapperTests {
 		assertEquals(lbl, att.getOption("2")); //$NON-NLS-1$
 		lbl = getLabelFromId(3);
 		assertEquals(lbl, att.getOption("3")); //$NON-NLS-1$
-		assertEquals("", att.getOption(String.valueOf(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID))); //$NON-NLS-1$ 
+		assertEquals("", att.getOption(String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID))); //$NON-NLS-1$ 
 	}
 
 	/**
@@ -378,7 +378,7 @@ public class TuleapTaskMapperTests {
 		// We create 4 transitions:
 		// 100 -> 0 -> 1 -> 2 -> 3 & 2 -> 1
 		TuleapWorkflowTransition transition = new TuleapWorkflowTransition();
-		transition.setFrom(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID);
+		transition.setFrom(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID);
 		transition.setTo(0);
 		selectBox.getWorkflow().addTransition(transition);
 		transition = new TuleapWorkflowTransition();
@@ -775,7 +775,7 @@ public class TuleapTaskMapperTests {
 
 		// 100 -> 0 -> 1 <-> 2 -> 3
 		TuleapWorkflowTransition transition = new TuleapWorkflowTransition();
-		transition.setFrom(ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID);
+		transition.setFrom(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID);
 		transition.setTo(0);
 		result.getWorkflow().addTransition(transition);
 		transition = new TuleapWorkflowTransition();

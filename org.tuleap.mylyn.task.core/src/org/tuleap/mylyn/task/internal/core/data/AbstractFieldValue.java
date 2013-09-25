@@ -8,7 +8,8 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.internal.core.model;
+package org.tuleap.mylyn.task.internal.core.data;
+
 
 /**
  * This is the common ancestor of all the four kind of field values that can be found in a Tuleap configurable
@@ -19,7 +20,7 @@ package org.tuleap.mylyn.task.internal.core.model;
  * <li>multi-select box and checkbox values</li>
  * <li>file attachment values</li>
  * </ul>
- * Those values can be used inside of the {@link AbstractTuleapConfigurableElement}.
+ * Those values can be used inside of the AbstractTuleapConfigurableElement.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */

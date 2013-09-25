@@ -71,7 +71,7 @@ public class TuleapWorkflow implements Serializable {
 	 *         registered, {@code false} otherwise.
 	 */
 	public boolean addTransition(TuleapWorkflowTransition transition) {
-		if (ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID == transition.getFrom()) {
+		if (ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID == transition.getFrom()) {
 			return addInitialStateTransition(transition.getTo());
 		}
 		boolean result = false;
@@ -108,7 +108,7 @@ public class TuleapWorkflow implements Serializable {
 	 * @return The list of accessible state from the given state.
 	 */
 	public Collection<TuleapSelectBoxItem> accessibleStates(int from) {
-		if (ITuleapConstants.TRACKER_FIELD_NONE_BINDING_ID == from) {
+		if (ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID == from) {
 			return Collections.unmodifiableCollection(initialStates);
 		}
 		return transitions.get(selectBox.getItem(String.valueOf(from)));

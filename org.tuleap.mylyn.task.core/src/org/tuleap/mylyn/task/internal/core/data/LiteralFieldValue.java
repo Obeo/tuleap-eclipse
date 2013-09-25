@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,41 +8,40 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.internal.core.model;
-
-import java.util.List;
+package org.tuleap.mylyn.task.internal.core.data;
 
 /**
- * This class will represents an attachment.
+ * This object represents a literal value. Among the possible literal values we can find string, int, float,
+ * text, date, boolean, artifact links, open list...
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public class AttachmentFieldValue extends AbstractFieldValue {
+public class LiteralFieldValue extends AbstractFieldValue {
 
 	/**
-	 * The description of the file attached.
+	 * The value of the field.
 	 */
-	private List<AttachmentValue> attachments;
+	private String fieldValue;
 
 	/**
 	 * The constructor.
 	 * 
 	 * @param fieldId
 	 *            The identifier of the field
-	 * @param attachments
-	 *            The attachments
+	 * @param fieldValue
+	 *            The value of the field
 	 */
-	public AttachmentFieldValue(int fieldId, List<AttachmentValue> attachments) {
+	public LiteralFieldValue(int fieldId, String fieldValue) {
 		super(fieldId);
-		this.attachments = attachments;
+		this.fieldValue = fieldValue;
 	}
 
 	/**
-	 * Returns the description of the file attached.
+	 * Returns the value of the field.
 	 * 
-	 * @return The description of the file attached
+	 * @return the fieldValue
 	 */
-	public List<AttachmentValue> getAttachments() {
-		return this.attachments;
+	public String getFieldValue() {
+		return this.fieldValue;
 	}
 }

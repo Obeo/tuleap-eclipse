@@ -8,39 +8,43 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.internal.core.model;
+package org.tuleap.mylyn.task.internal.core.data;
+
+import java.util.List;
 
 /**
- * This class represent the value of a single selection field.
+ * Utility class used to store the identifiers of the value selected for a select box, checkbox or
+ * multi-select box.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public class SingleSelectFieldValue extends AbstractFieldValue {
+public class BoundFieldValue extends AbstractFieldValue {
 
 	/**
-	 * The identifier of the bound value.
+	 * The list of value ids.
 	 */
-	private int bindValueId;
+	private List<Integer> valueIds;
 
 	/**
 	 * The constructor.
 	 * 
 	 * @param fieldId
 	 *            The identifier of the field
-	 * @param bindValueId
-	 *            The identifier of the bound value selected
+	 * @param valueIds
+	 *            The list of value ids
 	 */
-	public SingleSelectFieldValue(int fieldId, int bindValueId) {
+	public BoundFieldValue(int fieldId, List<Integer> valueIds) {
 		super(fieldId);
-		this.bindValueId = bindValueId;
+		this.valueIds = valueIds;
 	}
 
 	/**
-	 * Returns the bind value id.
+	 * Returns the value ids.
 	 * 
-	 * @return The bind value id
+	 * @return The value ids
 	 */
-	public int getBindValueId() {
-		return this.bindValueId;
+	public List<Integer> getValueIds() {
+		return this.valueIds;
 	}
+
 }

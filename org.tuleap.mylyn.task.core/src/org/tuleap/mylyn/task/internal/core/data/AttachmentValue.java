@@ -8,7 +8,9 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.internal.core.model;
+package org.tuleap.mylyn.task.internal.core.data;
+
+import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
 
 /**
  * This class is used to represent an attachment in a {@link AttachmentFieldValue}.

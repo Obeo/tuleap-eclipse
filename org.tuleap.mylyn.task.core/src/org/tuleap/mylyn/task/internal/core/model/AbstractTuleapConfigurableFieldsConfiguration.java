@@ -29,7 +29,7 @@ import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public abstract class AbstractTuleapFieldContainerConfig implements Serializable {
+public abstract class AbstractTuleapConfigurableFieldsConfiguration implements Serializable {
 
 	/**
 	 * Serial version UID.
@@ -114,7 +114,7 @@ public abstract class AbstractTuleapFieldContainerConfig implements Serializable
 	 * @param repositoryURL
 	 *            The URL of the repository.
 	 */
-	public AbstractTuleapFieldContainerConfig(int identifier, String repositoryURL) {
+	public AbstractTuleapConfigurableFieldsConfiguration(int identifier, String repositoryURL) {
 		this.identifier = identifier;
 		this.url = repositoryURL;
 	}
@@ -131,7 +131,7 @@ public abstract class AbstractTuleapFieldContainerConfig implements Serializable
 	 * @param repositoryDescription
 	 *            The description of the repository
 	 */
-	public AbstractTuleapFieldContainerConfig(String repositoryURL, String repositoryName,
+	public AbstractTuleapConfigurableFieldsConfiguration(String repositoryURL, String repositoryName,
 			String repositoryItemName, String repositoryDescription) {
 		this.url = repositoryURL;
 		this.label = repositoryName;

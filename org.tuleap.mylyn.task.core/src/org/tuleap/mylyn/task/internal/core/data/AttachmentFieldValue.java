@@ -10,44 +10,39 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.data;
 
-import java.util.Set;
+import java.util.List;
 
 /**
- * This class will store the values of a bindable field.
- * <ul>
- * <li>selectbox</li>
- * <li>multi selectbox</li>
- * <li>checkbox</li>
- * </ul>
+ * This class will represents an attachment.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public class TuleapBoundFieldValue extends AbstractTuleapFieldValue {
+public class AttachmentFieldValue extends AbstractFieldValue {
 
 	/**
-	 * The identifier of the values selected for the field.
+	 * The description of the file attached.
 	 */
-	private Set<Integer> valuesId;
+	private List<AttachmentValue> attachments;
 
 	/**
 	 * The constructor.
 	 * 
-	 * @param valuesId
-	 *            The identifier of the values of the field
 	 * @param fieldId
-	 *            the identifier of the field
+	 *            The identifier of the field
+	 * @param attachments
+	 *            The attachments
 	 */
-	public TuleapBoundFieldValue(Set<Integer> valuesId, int fieldId) {
+	public AttachmentFieldValue(int fieldId, List<AttachmentValue> attachments) {
 		super(fieldId);
+		this.attachments = attachments;
 	}
 
 	/**
-	 * Returns the identifier of the values selected for the field.
+	 * Returns the description of the file attached.
 	 * 
-	 * @return The identifier of the values selected for the field
+	 * @return The description of the file attached
 	 */
-	public Set<Integer> getValuesId() {
-		return this.valuesId;
+	public List<AttachmentValue> getAttachments() {
+		return this.attachments;
 	}
-
 }
