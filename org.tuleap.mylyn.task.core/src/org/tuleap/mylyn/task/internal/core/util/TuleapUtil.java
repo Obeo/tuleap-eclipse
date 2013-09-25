@@ -10,21 +10,7 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.util;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.util.Date;
-import java.util.zip.CRC32;
-import java.util.zip.CheckedInputStream;
-
-import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 
 /**
  * Utility class containing various simple static utility methods.
@@ -58,6 +44,7 @@ public final class TuleapUtil {
 	 * @return A new {@link java.util.Date} from the given long representing the date in seconds.
 	 */
 	public static Date parseDate(long seconds) {
+		// TODO SBE Remove this, it is only used in the unit test!
 		return new Date(seconds * 1000L);
 	}
 
@@ -69,89 +56,8 @@ public final class TuleapUtil {
 	 * @return A new long from the given {@link java.util.Date} representing the timestamp.
 	 */
 	public static long parseDate(Date date) {
+		// TODO SBE Move this since it is only used once!
 		return date.getTime() / 1000L;
-	}
-
-	/**
-	 * Download a file from an URL.
-	 * 
-	 * @param url
-	 *            File to download
-	 * @param file
-	 *            Path to save file
-	 */
-	public static void download(String url, File file) {
-		ReadableByteChannel rbc = null;
-		FileOutputStream fos = null;
-		try {
-			rbc = Channels.newChannel(new URL(url).openStream());
-			fos = new FileOutputStream(file);
-			fos.getChannel().transferFrom(rbc, 0, TRANSFER_COUNT);
-		} catch (UnknownHostException e) {
-			TuleapCoreActivator.log(TuleapMylynTasksMessages.getString("TuleapUtil.UnknownHost", url), true); //$NON-NLS-1$
-		} catch (IOException e) {
-			TuleapCoreActivator.log(e, true);
-		} finally {
-			if (fos != null) {
-				try {
-					fos.close();
-				} catch (IOException e) {
-					TuleapCoreActivator.log(e, true);
-				} finally {
-					if (rbc != null) {
-						try {
-							rbc.close();
-						} catch (IOException e) {
-							TuleapCoreActivator.log(e, true);
-						}
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * Calculate the file's checksum.
-	 * 
-	 * @param file
-	 *            File
-	 * @return The checksum of the given file
-	 */
-	public static long getChecksum(File file) {
-		long checksum = -1;
-
-		FileInputStream inputStream = null;
-		CheckedInputStream check = null;
-		BufferedInputStream in = null;
-		try {
-			inputStream = new FileInputStream(file);
-			check = new CheckedInputStream(inputStream, new CRC32());
-			in = new BufferedInputStream(check);
-			while (in.read() != -1) {
-				// Read file in completely
-			}
-			checksum = check.getChecksum().getValue();
-		} catch (FileNotFoundException e) {
-			TuleapCoreActivator.log(e, true);
-		} catch (IOException e) {
-			TuleapCoreActivator.log(e, true);
-		} finally {
-			try {
-				if (in != null) {
-					in.close();
-				}
-				if (check != null) {
-					check.close();
-				}
-				if (inputStream != null) {
-					inputStream.close();
-				}
-			} catch (IOException e) {
-				TuleapCoreActivator.log(e, true);
-			}
-		}
-
-		return checksum;
 	}
 
 	/**
@@ -170,19 +76,32 @@ public final class TuleapUtil {
 	}
 
 	/**
-	 * Returns the task data id from the given tracker id and the given artifact id.
+	 * Returns the task data key from the project name, the configuration name (tracker name) and the given
+	 * artifact id.
 	 * 
 	 * @param projectName
 	 *            The name of the project
-	 * @param trackerName
-	 *            The name of the tracker.
+	 * @param configurationName
+	 *            The name of the configuration.
 	 * @param artifactId
 	 *            The id of the artifact
 	 * @return The task data id
 	 */
-	public static String getTaskDataId(String projectName, String trackerName, int artifactId) {
-		return projectName + ITuleapConstants.TRACKER_ID_SEPARATOR + trackerName
+	public static String getTaskDataKey(String projectName, String configurationName, int artifactId) {
+		return projectName + ITuleapConstants.CONFIGURATION_NAME_SEPARATOR + configurationName
 				+ ITuleapConstants.TASK_DATA_ID_SEPARATOR + Integer.valueOf(artifactId).toString();
+	}
+
+	/**
+	 * Returns the task data id.
+	 * 
+	 * @return The task data id
+	 */
+	public static String getTaskDataId() {
+		// TODO SBE Change the identifier of the task from an integer to a string!
+		// This task data id should be computed with the id of the project, the id of the tracker and the id
+		// of the element
+		throw new UnsupportedOperationException();
 	}
 
 	/**

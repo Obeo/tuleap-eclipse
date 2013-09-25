@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.data.converter;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -22,6 +23,7 @@ import org.tuleap.mylyn.task.internal.core.model.MultiSelectFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.SingleSelectFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.TuleapElementComment;
 import org.tuleap.mylyn.task.internal.core.model.field.AbstractTuleapSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.field.TuleapFileUpload;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
@@ -57,7 +59,7 @@ public class ArtifactTaskDataConverter extends AbstractElementTaskDataConverter<
 		tuleapTaskMapper.initializeEmptyTaskData();
 
 		// Task Key
-		String taskKey = TuleapUtil.getTaskDataId(this.configuration.getTuleapProjectConfiguration()
+		String taskKey = TuleapUtil.getTaskDataKey(this.configuration.getTuleapProjectConfiguration()
 				.getName(), this.configuration.getName(), tuleapArtifact.getId());
 		tuleapTaskMapper.setTaskKey(taskKey);
 
@@ -90,7 +92,7 @@ public class ArtifactTaskDataConverter extends AbstractElementTaskDataConverter<
 
 				TuleapSelectBoxItem item = statusField.getItem(String.valueOf(bindValueId));
 				if (item != null) {
-					tuleapTaskMapper.setStatus(item.getLabel());
+					tuleapTaskMapper.setStatus(String.valueOf(item.getIdentifier()));
 				}
 			} else if (fieldValue instanceof MultiSelectFieldValue) {
 				// If we have multiple status, we don't care, we take the first one for now.
@@ -99,6 +101,7 @@ public class ArtifactTaskDataConverter extends AbstractElementTaskDataConverter<
 		}
 
 		// Persons
+		// TODO SBE Bring back the support for the assigned personns
 
 		// Comments
 		List<TuleapElementComment> comments = tuleapArtifact.getComments();
@@ -107,11 +110,43 @@ public class ArtifactTaskDataConverter extends AbstractElementTaskDataConverter<
 		}
 
 		// Attachments
+		TuleapFileUpload attachmentField = this.configuration.getAttachmentField();
+		// TODO SBE Bring back the support for attachments
 
 		// Additional fields
 		Collection<AbstractTuleapField> fields = this.configuration.getFields();
 		for (AbstractTuleapField abstractTuleapField : fields) {
-			// do stuff
+			boolean isTitle = titleField != null
+					&& abstractTuleapField.getIdentifier() == titleField.getIdentifier();
+			boolean isStatus = statusField != null
+					&& abstractTuleapField.getIdentifier() == statusField.getIdentifier();
+			boolean isAttachment = attachmentField != null
+					&& abstractTuleapField.getIdentifier() == attachmentField.getIdentifier();
+
+			if (!isTitle && !isStatus && !isAttachment) {
+				AbstractFieldValue fieldValue = tuleapArtifact.getFieldValue(Integer
+						.valueOf(abstractTuleapField.getIdentifier()));
+
+				if (fieldValue instanceof LiteralFieldValue) {
+					LiteralFieldValue literalFieldValue = (LiteralFieldValue)fieldValue;
+					tuleapTaskMapper.setValue(literalFieldValue.getFieldValue(), literalFieldValue
+							.getFieldId());
+				} else if (fieldValue instanceof SingleSelectFieldValue) {
+					SingleSelectFieldValue singleSelectFieldValue = (SingleSelectFieldValue)fieldValue;
+					tuleapTaskMapper.setValue(String.valueOf(singleSelectFieldValue.getBindValueId()),
+							singleSelectFieldValue.getFieldId());
+				} else if (fieldValue instanceof MultiSelectFieldValue) {
+					MultiSelectFieldValue multiSelectFieldValue = (MultiSelectFieldValue)fieldValue;
+					List<Integer> bindValueIds = multiSelectFieldValue.getBindValueIds();
+
+					List<String> values = new ArrayList<String>();
+					for (Integer bindValueId : bindValueIds) {
+						values.add(bindValueId.toString());
+					}
+
+					tuleapTaskMapper.setValues(values, multiSelectFieldValue.getFieldId());
+				}
+			}
 		}
 	}
 

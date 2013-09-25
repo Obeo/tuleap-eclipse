@@ -39,7 +39,7 @@ public class TuleapUtilTests {
 	 */
 	@Test
 	public void testGetTaskDataId() {
-		String taskDataId = TuleapUtil.getTaskDataId("Mylyn", "Bugs", 134); //$NON-NLS-1$ //$NON-NLS-2$
+		String taskDataId = TuleapUtil.getTaskDataKey("Mylyn", "Bugs", 134); //$NON-NLS-1$ //$NON-NLS-2$
 		assertEquals("Mylyn:Bugs-134", taskDataId); //$NON-NLS-1$
 	}
 

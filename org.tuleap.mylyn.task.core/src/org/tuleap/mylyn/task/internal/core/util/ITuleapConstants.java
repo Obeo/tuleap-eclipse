@@ -83,7 +83,7 @@ public interface ITuleapConstants {
 	/**
 	 * The separator between the project name and the tracker id.
 	 */
-	String TRACKER_ID_SEPARATOR = ":"; //$NON-NLS-1$
+	String CONFIGURATION_NAME_SEPARATOR = ":"; //$NON-NLS-1$
 
 	/**
 	 * The separator used in the id of the task data.
