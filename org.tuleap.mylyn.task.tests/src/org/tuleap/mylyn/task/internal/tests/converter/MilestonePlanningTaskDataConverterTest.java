@@ -54,7 +54,7 @@ public class MilestonePlanningTaskDataConverterTest {
 		//
 		// TuleapBacklogItem item200 = new TuleapBacklogItem();
 		// item200.setId(200);
-		// item200.setAssignedMilestoneId(Integer.valueOf(milestone.getId()));
+		// item200.setAssignedMilestoneId(submilestone100.getId());
 		// item200.setInitialEffort(201);
 		//		item200.setLabel("item200"); //$NON-NLS-1$
 		// milestone.addBacklogItem(item200);

@@ -46,9 +46,11 @@ import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.data.converter.ArtifactTaskDataConverter;
+import org.tuleap.mylyn.task.internal.core.data.converter.MilestonePlanningTaskDataConverter;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
@@ -286,6 +288,11 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			TaskDataCollector collector, ISynchronizationSession session, IProgressMonitor monitor) {
 		// Populate the collector with the task data resulting from the query
 		String queryKind = query.getAttribute(ITuleapConstants.QUERY_KIND);
+
+		TuleapServerConfiguration repositoryConfiguration = this.getRepositoryConfiguration(taskRepository
+				.getRepositoryUrl());
+		TaskAttributeMapper attributeMapper = this.getTaskDataHandler().getAttributeMapper(taskRepository);
+
 		if (ITuleapConstants.QUERY_KIND_ALL_FROM_TRACKER.equals(queryKind)
 				|| ITuleapConstants.QUERY_KIND_REPORT.equals(queryKind)
 				|| ITuleapConstants.QUERY_KIND_CUSTOM.equals(queryKind)) {
@@ -293,15 +300,11 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 			int trackerId = Integer.valueOf(query.getAttribute(ITuleapConstants.QUERY_TRACKER_ID)).intValue();
 
-			TuleapServerConfiguration repositoryConfiguration = this.getRepositoryConfiguration(
-					taskRepository, true, monitor);
 			TuleapTrackerConfiguration trackerConfiguration = repositoryConfiguration
 					.getTrackerConfiguration(trackerId);
 
 			ArtifactTaskDataConverter artifactTaskDataConverter = new ArtifactTaskDataConverter(
 					trackerConfiguration);
-			TaskAttributeMapper attributeMapper = this.getTaskDataHandler()
-					.getAttributeMapper(taskRepository);
 
 			List<TuleapArtifact> artifacts = soapClient.getArtifactsFromQuery(query, trackerConfiguration,
 					monitor);
@@ -317,11 +320,30 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 					// org.eclipse.mylyn.internal.tasks.core.TaskList.getValidElement(IRepositoryElement)
 				}
 			}
-		} else {
+		} else if (ITuleapConstants.QUERY_KIND_TOP_LEVEL_PLANNING.equals(queryKind)) {
+			int projectId = Integer.valueOf(query.getAttribute(ITuleapConstants.QUERY_GROUP_ID)).intValue();
+
+			MilestonePlanningTaskDataConverter planningTaskDataConverter = new MilestonePlanningTaskDataConverter(
+					null);
+
 			TuleapRestClient restClient = this.clientManager.getRestClient(taskRepository);
-			String projectIdStr = query.getAttribute(ITuleapConstants.QUERY_GROUP_ID);
-			int projectId = Integer.valueOf(projectIdStr).intValue();
-			// TODO CNO create the task data representing the top level plannings and set their attributes.
+			try {
+				List<TuleapTopPlanning> topPlannings = restClient.getTopPlannings(projectId, monitor);
+				for (TuleapTopPlanning tuleapTopPlanning : topPlannings) {
+					TaskData taskData = new TaskData(attributeMapper, this.getConnectorKind(), taskRepository
+							.getRepositoryUrl(), String.valueOf(tuleapTopPlanning.getId()));
+					planningTaskDataConverter.populateTaskData(taskData, tuleapTopPlanning);
+					try {
+						collector.accept(taskData);
+					} catch (IllegalArgumentException exception) {
+						// Do not log, the query has been deleted while it was executed, see:
+						// org.eclipse.mylyn.internal.tasks.core.TaskList.getValidElement(IRepositoryElement)
+					}
+				}
+			} catch (CoreException e) {
+				// TODO: getTopPlannings() on TuleapRestClient should not throw a CoreException => no
+				// try/catch block.
+			}
 		}
 		return Status.OK_STATUS;
 	}

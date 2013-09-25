@@ -46,10 +46,6 @@ import org.tuleap.mylyn.task.internal.ui.wizards.TuleapProjectLabelProvider;
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
 public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
-	/**
-	 * The hinted height of the viewer containing the list of the projects.
-	 */
-	private static final int HEIGHT_HINT = 250;
 
 	/**
 	 * The widget where the available projects will be displayed.
@@ -105,18 +101,13 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 	@Override
 	protected void createPageContent(SectionComposite parent) {
 		Composite composite = new Composite(parent.getContent(), SWT.NONE);
-		composite.setLayout(new GridLayout());
+		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
+		gridData.grabExcessVerticalSpace = false;
+		composite.setLayoutData(gridData);
+		composite.setLayout(new GridLayout(1, false));
 
 		projectsTree = new FilteredTree(composite, SWT.SINGLE | SWT.BORDER, new PatternFilter(), true);
-		GridData gridData = new GridData();
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
-		gridData.heightHint = HEIGHT_HINT;
-		gridData.widthHint = SWT.DEFAULT;
 
-		projectsTree.setLayoutData(gridData);
 		TreeViewer viewer = projectsTree.getViewer();
 		viewer.setLabelProvider(new TuleapProjectLabelProvider());
 		viewer.setContentProvider(new TuleapProjectContentProvider());
@@ -224,7 +215,7 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 		query.setSummary(this.getQueryTitle());
 		query.setAttribute(ITuleapConstants.QUERY_GROUP_ID, String.valueOf(getProjectSelected()
 				.getIdentifier()));
-		if (isWizardForArtifacts) {
+		if (!isWizardForArtifacts) {
 			query.setAttribute(ITuleapConstants.QUERY_KIND, ITuleapConstants.QUERY_KIND_TOP_LEVEL_PLANNING);
 		} else {
 			query.setAttribute(ITuleapConstants.QUERY_KIND, ITuleapConstants.QUERY_KIND_ALL_FROM_TRACKER);
