@@ -28,6 +28,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskMapper;
+import org.tuleap.mylyn.task.internal.core.data.converter.ArtifactTaskDataConverter;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.AbstractTuleapSelectBox;
@@ -231,16 +232,23 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			throws CoreException {
 		TuleapSoapClient tuleapSoapClient = this.connector.getClientManager().getSoapClient(taskRepository);
 
-		// TODO SBE update the configuration!
-		// tuleapSoapClient.updateAttributes(monitor, false);
+		TuleapServerConfiguration tuleapServerConfiguration = this.connector.getRepositoryConfiguration(
+				taskRepository, true, monitor);
 
-		TuleapServerConfiguration tuleapServerConfiguration = this.connector
-				.getRepositoryConfiguration(taskRepository.getRepositoryUrl());
 		TuleapArtifact tuleapArtifact = tuleapSoapClient.getArtifact(taskId, tuleapServerConfiguration,
 				monitor);
 		if (tuleapArtifact != null) {
-			TaskData taskData = this.createTaskDataFromArtifact(tuleapSoapClient, taskRepository,
-					tuleapArtifact, monitor);
+			TuleapTrackerConfiguration trackerConfiguration = tuleapServerConfiguration
+					.getTrackerConfiguration(tuleapArtifact.getTrackerId());
+
+			ArtifactTaskDataConverter artifactTaskDataConverter = new ArtifactTaskDataConverter(
+					trackerConfiguration);
+			TaskAttributeMapper attributeMapper = this.getAttributeMapper(taskRepository);
+
+			TaskData taskData = new TaskData(attributeMapper, ITuleapConstants.CONNECTOR_KIND, taskRepository
+					.getRepositoryUrl(), String.valueOf(tuleapArtifact.getId()));
+			artifactTaskDataConverter.populateTaskData(taskData, tuleapArtifact);
+
 			return taskData;
 		}
 		return null;
