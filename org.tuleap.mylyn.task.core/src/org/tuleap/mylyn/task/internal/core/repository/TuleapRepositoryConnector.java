@@ -293,8 +293,8 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 			int trackerId = Integer.valueOf(query.getAttribute(ITuleapConstants.QUERY_TRACKER_ID)).intValue();
 
-			TuleapServerConfiguration repositoryConfiguration = this
-					.getRepositoryConfiguration(taskRepository.getRepositoryUrl());
+			TuleapServerConfiguration repositoryConfiguration = this.getRepositoryConfiguration(
+					taskRepository, true, monitor);
 			TuleapTrackerConfiguration trackerConfiguration = repositoryConfiguration
 					.getTrackerConfiguration(trackerId);
 
@@ -335,6 +335,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	@Override
 	public void updateRepositoryConfiguration(TaskRepository taskRepository, IProgressMonitor monitor)
 			throws CoreException {
+		// TODO SBE Redefine the update strategy of the configuration!!!
 		if (taskRepository != null) {
 			this.getRepositoryConfiguration(taskRepository, true, monitor);
 		}
@@ -348,6 +349,9 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 */
 	public TuleapServerConfiguration getRepositoryConfiguration(TaskRepository taskRepository,
 			boolean forceRefresh, IProgressMonitor monitor) {
+
+		// TODO SBE Redefine the update strategy of the configuration!!!
+
 		boolean shouldRefresh = forceRefresh;
 
 		// If we don't have any value, force the refresh
@@ -515,6 +519,8 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 * @return The repository configuration matching the given url.
 	 */
 	public TuleapServerConfiguration getRepositoryConfiguration(String repositoryUrl) {
+		// TODO SBE Redefine the update strategy of the configuration!!!
+		// TODO SBE Is this even useful???
 		this.readRepositoryConfigurationFile();
 		return repositoryConfigurations.get(repositoryUrl);
 	}
