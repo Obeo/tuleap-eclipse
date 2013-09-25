@@ -62,7 +62,7 @@ public class MilestonePlanningTaskDataConverter extends AbstractElementTaskDataC
 	 */
 	@Override
 	public void populateTaskData(TaskData taskData, TuleapMilestone milestone) {
-		super.populateConfigurableFields(milestone, taskData);
+		super.populateTaskDataConfigurableFields(taskData, milestone);
 		this.populatePlanning(taskData, milestone);
 
 		// TODO CNO Realize the cardwall of the milestone
