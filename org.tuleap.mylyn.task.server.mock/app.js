@@ -48,8 +48,6 @@ app.all('/*', function (req, res, next) {
 
 // Authenticator
 var auth = express.basicAuth(function(user, pass) {
-  console.log("user = " + user);
-  console.log("password = " + pass);
   return user === 'admin' && pass === 'password';
 });
 
