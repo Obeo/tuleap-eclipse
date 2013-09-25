@@ -12,6 +12,7 @@ package org.tuleap.mylyn.task.internal.core.model;
 
 import com.google.common.collect.Maps;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -21,7 +22,12 @@ import java.util.Map;
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class TuleapGroup {
+public class TuleapGroup implements Serializable {
+
+	/**
+	 * The serial version UID.
+	 */
+	private static final long serialVersionUID = 2221608706409707022L;
 
 	/**
 	 * The group identifier.

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model;
 
+import com.google.common.collect.Maps;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +44,11 @@ public class TuleapServerConfiguration implements Serializable {
 	private long lastUpdate;
 
 	/**
+	 * Users indexed by id.
+	 */
+	private final Map<Integer, TuleapPerson> personsById = Maps.newHashMap();
+
+	/**
 	 * This map contains the ID of the projects of the Tuleap instance and their matching configuration.
 	 */
 	private Map<Integer, TuleapProjectConfiguration> projectId2projectConfiguration = new HashMap<Integer, TuleapProjectConfiguration>();
@@ -65,6 +72,7 @@ public class TuleapServerConfiguration implements Serializable {
 	public void addProject(TuleapProjectConfiguration tuleapProjectConfiguration) {
 		this.projectId2projectConfiguration.put(Integer.valueOf(tuleapProjectConfiguration.getIdentifier()),
 				tuleapProjectConfiguration);
+		tuleapProjectConfiguration.setServerConfiguration(this);
 	}
 
 	/**
@@ -133,6 +141,40 @@ public class TuleapServerConfiguration implements Serializable {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Retrieve a registered user by id.
+	 * 
+	 * @param id
+	 *            the user id.
+	 * @return The person registered for this id, or null if none is found.
+	 */
+	public TuleapPerson getUser(int id) {
+		return personsById.get(Integer.valueOf(id));
+	}
+
+	/**
+	 * Indicates whether a user is registered.
+	 * 
+	 * @param id
+	 *            the user id.
+	 * @return {@code true} if and only if this id matches a registered user.
+	 */
+	public boolean isRegistered(int id) {
+		return personsById.containsKey(Integer.valueOf(id));
+	}
+
+	/**
+	 * Register a user.
+	 * 
+	 * @param person
+	 *            The user.
+	 */
+	public void register(TuleapPerson person) {
+		if (person != null) {
+			personsById.put(Integer.valueOf(person.getId()), person);
+		}
 	}
 
 }

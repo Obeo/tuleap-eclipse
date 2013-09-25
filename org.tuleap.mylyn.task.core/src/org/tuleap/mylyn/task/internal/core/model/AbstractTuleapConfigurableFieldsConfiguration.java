@@ -12,11 +12,9 @@ package org.tuleap.mylyn.task.internal.core.model;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.tuleap.mylyn.task.internal.core.model.field.AbstractTuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapFileUpload;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapFloat;
@@ -100,11 +98,6 @@ public abstract class AbstractTuleapConfigurableFieldsConfiguration implements S
 	 * The attachment field.
 	 */
 	protected TuleapFileUpload attachmentField;
-
-	/**
-	 * A cache for the repository persons available.
-	 */
-	protected Map<String, IRepositoryPerson> personsByEmail = new HashMap<String, IRepositoryPerson>();
 
 	/**
 	 * The default constructor.
@@ -367,28 +360,5 @@ public abstract class AbstractTuleapConfigurableFieldsConfiguration implements S
 	 */
 	public AbstractTuleapField getFieldById(int id) {
 		return fields.get(Integer.valueOf(id));
-	}
-
-	/**
-	 * Returns the person registered in the local cache for the given email (which must be the person's id).
-	 * 
-	 * @param email
-	 *            the person's email, which must also be his id
-	 * @return The person registered for this email, or null if none is registered for this email.
-	 */
-	public IRepositoryPerson getPerson(String email) {
-		return personsByEmail.get(email);
-	}
-
-	/**
-	 * Register the given person for the given email in a local cache.
-	 * 
-	 * @param person
-	 *            The person
-	 * @return The given person, for fluency.
-	 */
-	public IRepositoryPerson registerPerson(IRepositoryPerson person) {
-		personsByEmail.put(person.getPersonId(), person);
-		return person;
 	}
 }

@@ -17,14 +17,9 @@ package org.tuleap.mylyn.task.internal.core.model;
  */
 public class TuleapElementComment {
 	/**
-	 * The name of the person who wrote the comment.
+	 * The person who submitted the comment.
 	 */
-	private String name;
-
-	/**
-	 * The email of the user who has submitted the comment.
-	 */
-	private String email;
+	private TuleapPerson submitter;
 
 	/**
 	 * The timestamp of the date when the comment was submitted.
@@ -41,19 +36,15 @@ public class TuleapElementComment {
 	 * 
 	 * @param commentBody
 	 *            The body of the comment.
-	 * @param userEmail
-	 *            The email of the user who wrote the comment.
-	 * @param realName
-	 *            The name of the person who has commented
+	 * @param submitter
+	 *            The user who submitted the comment.
 	 * @param submittedOnTimestamp
 	 *            The timestamp of the date when the comment has been submitted.
 	 */
-	public TuleapElementComment(String commentBody, String userEmail, String realName,
-			int submittedOnTimestamp) {
+	public TuleapElementComment(String commentBody, TuleapPerson submitter, int submittedOnTimestamp) {
 		super();
 		this.body = commentBody;
-		this.email = userEmail;
-		this.name = realName;
+		this.submitter = submitter;
 		this.submittedOn = submittedOnTimestamp;
 	}
 
@@ -67,21 +58,12 @@ public class TuleapElementComment {
 	}
 
 	/**
-	 * Returns the email of the user who wrote the comment.
+	 * Returns the person who has submitted the comment.
 	 * 
-	 * @return The email of the user who wrote the comment.
+	 * @return The person who has submitted the comment.
 	 */
-	public String getEmail() {
-		return this.email;
-	}
-
-	/**
-	 * Returns the name of the person who has commented.
-	 * 
-	 * @return The name of the person who has commented
-	 */
-	public String getName() {
-		return this.name;
+	public TuleapPerson getSubmitter() {
+		return this.submitter;
 	}
 
 	/**

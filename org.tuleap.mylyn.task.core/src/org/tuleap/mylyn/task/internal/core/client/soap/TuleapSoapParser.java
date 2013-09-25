@@ -26,7 +26,7 @@ import org.tuleap.mylyn.task.internal.core.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapElementComment;
 import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
-import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapFileUpload;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapMultiSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
@@ -112,13 +112,13 @@ public class TuleapSoapParser {
 						List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
 
 						FieldValueFileInfo[] fileInfo = artifactFieldValue.getField_value().getFile_info();
-						TuleapProjectConfiguration projectConfiguration = tuleapTrackerConfiguration
-								.getTuleapProjectConfiguration();
-						// Yes this array can be null... don't ask
+						TuleapServerConfiguration serverConfiguration = tuleapTrackerConfiguration
+								.getTuleapProjectConfiguration().getServerConfiguration();
+						// Yes, this array can be null.
 						if (fileInfo != null) {
 							for (FieldValueFileInfo fieldValueFileInfo : fileInfo) {
 								int submitterId = fieldValueFileInfo.getSubmitted_by();
-								TuleapPerson submitter = projectConfiguration.getUser(submitterId);
+								TuleapPerson submitter = serverConfiguration.getUser(submitterId);
 								attachments.add(new AttachmentValue(fieldValueFileInfo.getId(),
 										fieldValueFileInfo.getFilename(), submitter, fieldValueFileInfo
 												.getFilesize(), fieldValueFileInfo.getDescription(),

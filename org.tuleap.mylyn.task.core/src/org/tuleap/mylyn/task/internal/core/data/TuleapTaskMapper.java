@@ -22,7 +22,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.mylyn.internal.tasks.core.RepositoryPerson;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
@@ -32,6 +34,7 @@ import org.tuleap.mylyn.task.agile.core.data.AbstractTaskMapper;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableFieldsConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapElementComment;
+import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.field.AbstractTuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
@@ -235,16 +238,11 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 		TaskAttachmentMapper taskAttachment = TaskAttachmentMapper.createFrom(attribute);
 		taskAttachment.setAttachmentId(tuleapAttachment.getAttachmentId());
 
-		// TuleapPerson person = tuleapAttachment.getPerson();
-		// IRepositoryPerson iRepositoryPerson = tuleapConfigurableFieldsConfiguration.getPerson(person
-		// .getEmail());
-		// if (iRepositoryPerson == null) {
-		// iRepositoryPerson = taskData.getAttributeMapper().getTaskRepository().createPerson(
-		// person.getEmail());
-		// iRepositoryPerson.setName(person.getRealName());
-		// tuleapConfigurableFieldsConfiguration.registerPerson(iRepositoryPerson);
-		// }
-		// taskAttachment.setAuthor(iRepositoryPerson);
+		TuleapPerson person = tuleapAttachment.getPerson();
+		RepositoryPerson repositoryPerson = new RepositoryPerson(taskData.getAttributeMapper()
+				.getTaskRepository(), person.getEmail());
+		repositoryPerson.setName(person.getUserName());
+		taskAttachment.setAuthor(repositoryPerson);
 		taskAttachment.setFileName(tuleapAttachment.getFilename());
 		taskAttachment.setLength(Long.valueOf(tuleapAttachment.getSize()));
 		taskAttachment.setDescription(tuleapAttachment.getDescription());
@@ -667,16 +665,12 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 		Date creationDate = calendar.getTime();
 		taskComment.setCreationDate(creationDate);
 		taskComment.setText(tuleapArtifactComment.getBody());
-		if (tuleapArtifactComment.getEmail() != null) {
-			IRepositoryPerson iRepositoryPerson = tuleapConfigurableFieldsConfiguration
-					.getPerson(tuleapArtifactComment.getEmail());
-			if (iRepositoryPerson == null) {
-				iRepositoryPerson = taskData.getAttributeMapper().getTaskRepository().createPerson(
-						tuleapArtifactComment.getEmail());
-				iRepositoryPerson.setName(tuleapArtifactComment.getName());
-				tuleapConfigurableFieldsConfiguration.registerPerson(iRepositoryPerson);
-			}
-			taskComment.setAuthor(iRepositoryPerson);
+		TuleapPerson submitter = tuleapArtifactComment.getSubmitter();
+		if (submitter != null) {
+			TaskRepository taskRepository = attribute.getTaskData().getAttributeMapper().getTaskRepository();
+			IRepositoryPerson repositoryPerson = new RepositoryPerson(taskRepository, submitter.getEmail());
+			repositoryPerson.setName(submitter.getUserName());
+			taskComment.setAuthor(repositoryPerson);
 		}
 		taskComment.applyTo(attribute);
 	}

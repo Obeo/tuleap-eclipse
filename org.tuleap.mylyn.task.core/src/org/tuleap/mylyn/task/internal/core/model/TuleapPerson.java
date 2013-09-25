@@ -10,12 +10,20 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model;
 
+import java.io.Serializable;
+
 /**
  * A Tuleap user.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public class TuleapPerson {
+public class TuleapPerson implements Serializable {
+
+	/**
+	 * The serial vesion UID.
+	 */
+	private static final long serialVersionUID = 6934279209396555434L;
+
 	/**
 	 * The user name.
 	 */

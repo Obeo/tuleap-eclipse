@@ -79,9 +79,9 @@ public class TuleapProjectConfiguration implements Serializable {
 	private final Map<Integer, TuleapGroup> groupsById = Maps.newHashMap();
 
 	/**
-	 * Users indexed by id.
+	 * The parent server configuration.
 	 */
-	private final Map<Integer, TuleapPerson> personsById = Maps.newHashMap();
+	private TuleapServerConfiguration serverConfiguration;
 
 	/**
 	 * The constructor.
@@ -303,18 +303,33 @@ public class TuleapProjectConfiguration implements Serializable {
 	public void addUserToUserGroup(TuleapGroup group, TuleapPerson member) {
 		Assert.isNotNull(group);
 		Assert.isNotNull(member);
-		group.addMember(member);
-		personsById.put(Integer.valueOf(member.getId()), member);
+		TuleapGroup groupToUse;
+		if (groupsById.containsKey(Integer.valueOf(group.getId()))) {
+			groupToUse = groupsById.get(Integer.valueOf(group.getId()));
+		} else {
+			groupsById.put(Integer.valueOf(group.getId()), group);
+			groupToUse = group;
+		}
+		groupToUse.addMember(member);
+		serverConfiguration.register(member);
 	}
 
 	/**
-	 * Return the person for this ID, or null if it is not registered in the configuration.
+	 * The parent server configuration setter.
 	 * 
-	 * @param userId
-	 *            the user id
-	 * @return The corresponding TuleapPerson, or null if this given id is not registered.
+	 * @param serverConfiguration
+	 *            The parent server configuration.
 	 */
-	public TuleapPerson getUser(int userId) {
-		return personsById.get(Integer.valueOf(userId));
+	protected void setServerConfiguration(TuleapServerConfiguration serverConfiguration) {
+		this.serverConfiguration = serverConfiguration;
+	}
+
+	/**
+	 * The parent server configuration.
+	 * 
+	 * @return The parent server configuration.
+	 */
+	public TuleapServerConfiguration getServerConfiguration() {
+		return serverConfiguration;
 	}
 }

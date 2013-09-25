@@ -163,13 +163,12 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			throws CoreException {
 		TuleapSoapClient tuleapSoapClient = this.connector.getClientManager().getSoapClient(taskRepository);
 
-		TuleapServerConfiguration tuleapServerConfiguration = this.connector.getRepositoryConfiguration(
+		TuleapServerConfiguration serverConfiguration = this.connector.getRepositoryConfiguration(
 				taskRepository, true, monitor);
 
-		TuleapArtifact tuleapArtifact = tuleapSoapClient.getArtifact(taskId, tuleapServerConfiguration,
-				monitor);
+		TuleapArtifact tuleapArtifact = tuleapSoapClient.getArtifact(taskId, serverConfiguration, monitor);
 		if (tuleapArtifact != null) {
-			TuleapTrackerConfiguration trackerConfiguration = tuleapServerConfiguration
+			TuleapTrackerConfiguration trackerConfiguration = serverConfiguration
 					.getTrackerConfiguration(tuleapArtifact.getTrackerId());
 
 			ArtifactTaskDataConverter artifactTaskDataConverter = new ArtifactTaskDataConverter(

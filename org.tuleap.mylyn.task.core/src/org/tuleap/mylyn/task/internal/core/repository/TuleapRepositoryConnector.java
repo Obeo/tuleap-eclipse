@@ -306,8 +306,8 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			ArtifactTaskDataConverter artifactTaskDataConverter = new ArtifactTaskDataConverter(
 					trackerConfiguration);
 
-			List<TuleapArtifact> artifacts = soapClient.getArtifactsFromQuery(query, trackerConfiguration,
-					monitor);
+			List<TuleapArtifact> artifacts = soapClient.getArtifactsFromQuery(query, repositoryConfiguration,
+					trackerConfiguration, monitor);
 			for (TuleapArtifact tuleapArtifact : artifacts) {
 				TaskData taskData = new TaskData(attributeMapper, this.getConnectorKind(), taskRepository
 						.getRepositoryUrl(), String.valueOf(tuleapArtifact.getId()));

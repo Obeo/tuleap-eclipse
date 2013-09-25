@@ -47,6 +47,7 @@ import org.tuleap.mylyn.task.internal.core.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapAttachmentDescriptor;
 import org.tuleap.mylyn.task.internal.core.model.TuleapElementComment;
+import org.tuleap.mylyn.task.internal.core.model.TuleapGroup;
 import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
@@ -128,7 +129,7 @@ public class TuleapSoapConnector {
 	/**
 	 * The location of the tracker.
 	 */
-	private AbstractWebLocation trackerLocation;
+	private final AbstractWebLocation trackerLocation;
 
 	/**
 	 * The common SOAP API.
@@ -292,9 +293,9 @@ public class TuleapSoapConnector {
 	 * @return The configuration of the Tuleap instance.
 	 */
 	public TuleapServerConfiguration getTuleapServerConfiguration(IProgressMonitor monitor) {
-		TuleapServerConfiguration tuleapServerConfiguration = new TuleapServerConfiguration(
-				this.trackerLocation.getUrl());
-		tuleapServerConfiguration.setLastUpdate(new Date().getTime());
+		TuleapServerConfiguration serverConfiguration = new TuleapServerConfiguration(this.trackerLocation
+				.getUrl());
+		serverConfiguration.setLastUpdate(new Date().getTime());
 
 		try {
 			this.login(monitor);
@@ -316,18 +317,41 @@ public class TuleapSoapConnector {
 					// The project does not have any trackers, we won't log the error so we catch it
 				}
 
-				if (trackers.length > 0) {
-					TuleapProjectConfiguration tuleapProjectConfiguration = new TuleapProjectConfiguration(
-							group.getGroup_name(), groupId);
-					tuleapServerConfiguration.addProject(tuleapProjectConfiguration);
+				TuleapProjectConfiguration projectConfiguration = new TuleapProjectConfiguration(group
+						.getGroup_name(), groupId);
+				serverConfiguration.addProject(projectConfiguration);
 
+				if (trackers.length > 0) {
 					for (Tracker tracker : trackers) {
 						monitor.worked(5);
 						monitor.setTaskName(TuleapMylynTasksMessages.getString(
 								"TuleapSoapConnector.AnalyzingTracker", tracker.getName())); //$NON-NLS-1$
 						TuleapTrackerConfiguration tuleapTrackerConfiguration = this
 								.getTuleapTrackerConfiguration(tracker, monitor);
-						tuleapProjectConfiguration.addTracker(tuleapTrackerConfiguration);
+						projectConfiguration.addTracker(tuleapTrackerConfiguration);
+					}
+				}
+
+				// Retrieve all the user groups we are allowed to see
+				Ugroup[] ugroups = codendiAPIPort.getProjectGroupsAndUsers(sessionHash, groupId);
+				for (Ugroup ugroup : ugroups) {
+					TuleapGroup tuleapGroup = new TuleapGroup(ugroup.getUgroup_id(), ugroup.getName());
+					UGroupMember[] members = ugroup.getMembers();
+					for (UGroupMember member : members) {
+						int userId = member.getUser_id();
+						UserInfo userInfo;
+						if (userId == ITuleapConstants.ANONYMOUS_USER_INFO_IDENTIFIER) {
+							userInfo = new UserInfo(Integer.valueOf(userId).toString(),
+									ITuleapConstants.ANONYMOUS_USER_INFO_USERNAME, Integer.valueOf(
+											ITuleapConstants.ANONYMOUS_USER_INFO_IDENTIFIER).toString(),
+									ITuleapConstants.ANONYMOUS_USER_INFO_REAL_NAME,
+									ITuleapConstants.ANONYMOUS_USER_INFO_EMAIL,
+									ITuleapConstants.ANONYMOUS_USER_INFO_LDAP_IDENTIFIER);
+						} else {
+							userInfo = codendiAPIPort.getUserInfo(sessionHash, userId);
+						}
+						projectConfiguration.addUserToUserGroup(tuleapGroup, new TuleapPerson(userInfo
+								.getUsername(), userInfo.getReal_name(), userId, userInfo.getEmail()));
 					}
 				}
 			}
@@ -340,7 +364,7 @@ public class TuleapSoapConnector {
 		}
 
 		this.logout();
-		return tuleapServerConfiguration;
+		return serverConfiguration;
 	}
 
 	/**
@@ -487,18 +511,23 @@ public class TuleapSoapConnector {
 						.getProjectGroupsAndUsers(sessionHash, groupId);
 				for (Ugroup ugroup : projectGroupsAndUsers) {
 					// FIXME Waiting for a fix from Tuleap -> https://tuleap.net/plugins/tracker/?aid=2234
-					String uGroupName = ugroup.getName();
-					String groupMembers = "group_members"; //$NON-NLS-1$
-					String groupAdmin = "group_admins"; //$NON-NLS-1$
-					if ("project_members".equals(uGroupName) //$NON-NLS-1$
-							&& (trackerFieldBindValue.getBind_value_label().contains(uGroupName) || trackerFieldBindValue
-									.getBind_value_label().contains(groupMembers))) {
-						addUsersToMultiSelectBox(tuleapField, ugroup);
-					} else if ("project_admins".equals(uGroupName) //$NON-NLS-1$
-							&& (trackerFieldBindValue.getBind_value_label().contains(uGroupName) || trackerFieldBindValue
-									.getBind_value_label().contains(groupAdmin))) {
-						addUsersToMultiSelectBox(tuleapField, ugroup);
-					} else if (trackerFieldBindValue.getBind_value_label().contains(uGroupName)) {
+					// String uGroupName = ugroup.getName();
+					//					String groupMembers = "group_members"; //$NON-NLS-1$
+					//					String groupAdmin = "group_admins"; //$NON-NLS-1$
+					//					if ("project_members".equals(uGroupName) //$NON-NLS-1$
+					// && (trackerFieldBindValue.getBind_value_label().contains(uGroupName) ||
+					// trackerFieldBindValue
+					// .getBind_value_label().contains(groupMembers))) {
+					// addUsersToMultiSelectBox(tuleapField, ugroup);
+					//					} else if ("project_admins".equals(uGroupName) //$NON-NLS-1$
+					// && (trackerFieldBindValue.getBind_value_label().contains(uGroupName) ||
+					// trackerFieldBindValue
+					// .getBind_value_label().contains(groupAdmin))) {
+					// addUsersToMultiSelectBox(tuleapField, ugroup);
+					// } else if (trackerFieldBindValue.getBind_value_id() == ugroup.getUgroup_id()) {
+					// addUsersToMultiSelectBox(tuleapField, ugroup);
+					// }
+					if (trackerFieldBindValue.getBind_value_id() == ugroup.getUgroup_id()) {
 						addUsersToMultiSelectBox(tuleapField, ugroup);
 					}
 				}
@@ -613,13 +642,16 @@ public class TuleapSoapConnector {
 	 * 
 	 * @param query
 	 *            The query to run
+	 * @param serverConfiguration
+	 *            The user registry
 	 * @param maxHits
 	 *            The maximum number of tasks that should be processed
 	 * @param monitor
 	 *            The progress monitor
 	 * @return The tasks found
 	 */
-	public List<CommentedArtifact> performQuery(IRepositoryQuery query, int maxHits, IProgressMonitor monitor) {
+	public List<CommentedArtifact> performQuery(IRepositoryQuery query,
+			TuleapServerConfiguration serverConfiguration, int maxHits, IProgressMonitor monitor) {
 		List<CommentedArtifact> artifactsFound = new ArrayList<CommentedArtifact>();
 
 		int trackerId = -1;
@@ -661,7 +693,7 @@ public class TuleapSoapConnector {
 					// Retrieve comments
 					int artifactId = artifact.getArtifact_id();
 					List<TuleapElementComment> comments = getArtifactCommentsWhileLoggedIn(artifactId,
-							monitor);
+							serverConfiguration, monitor);
 					artifactsFound.add(new CommentedArtifact(artifact, comments));
 				}
 			} catch (NumberFormatException e) {
@@ -688,6 +720,8 @@ public class TuleapSoapConnector {
 	 * 
 	 * @param artifactId
 	 *            Id of the artifact.
+	 * @param serverConfiguration
+	 *            The user registry
 	 * @param monitor
 	 *            To use for progress reporting, can be null.
 	 * @return The list of comments of the artifact
@@ -695,7 +729,7 @@ public class TuleapSoapConnector {
 	 *             In case a remote exception occurs
 	 */
 	private List<TuleapElementComment> getArtifactCommentsWhileLoggedIn(int artifactId,
-			IProgressMonitor monitor) throws RemoteException {
+			TuleapServerConfiguration serverConfiguration, IProgressMonitor monitor) throws RemoteException {
 		List<TuleapElementComment> comments = new ArrayList<TuleapElementComment>();
 		if (monitor != null) {
 			monitor.subTask(TuleapMylynTasksMessages.getString(
@@ -704,10 +738,10 @@ public class TuleapSoapConnector {
 		ArtifactComments[] artifactComments = tuleapTrackerV5APIPort.getArtifactComments(sessionHash,
 				artifactId);
 		for (ArtifactComments artifactComment : artifactComments) {
-			int submittedBy = artifactComment.getSubmitted_by();
-			TuleapPerson commentedBy = this.getPersonFromId(submittedBy);
-			TuleapElementComment comment = new TuleapElementComment(artifactComment.getBody(), commentedBy
-					.getEmail(), commentedBy.getRealName(), artifactComment.getSubmitted_on());
+			int submitterId = artifactComment.getSubmitted_by();
+			TuleapPerson submitter = serverConfiguration.getUser(submitterId);
+			TuleapElementComment comment = new TuleapElementComment(artifactComment.getBody(), submitter,
+					artifactComment.getSubmitted_on());
 			comments.add(comment);
 		}
 		return comments;
@@ -773,6 +807,8 @@ public class TuleapSoapConnector {
 	 * 
 	 * @param artifactId
 	 *            The artifact id
+	 * @param serverConfiguration
+	 *            The user registry
 	 * @param monitor
 	 *            The progress monitor
 	 * @return The Tuleap Artifact
@@ -783,13 +819,14 @@ public class TuleapSoapConnector {
 	 * @throws MalformedURLException
 	 *             If the URL is invalid
 	 */
-	public CommentedArtifact getArtifact(int artifactId, IProgressMonitor monitor)
-			throws MalformedURLException, RemoteException, ServiceException {
+	public CommentedArtifact getArtifact(int artifactId, TuleapServerConfiguration serverConfiguration,
+			IProgressMonitor monitor) throws MalformedURLException, RemoteException, ServiceException {
 		this.login(monitor);
 
 		Artifact artifact = tuleapTrackerV5APIPort.getArtifact(sessionHash, -1, -1, artifactId);
 
-		List<TuleapElementComment> comments = getArtifactCommentsWhileLoggedIn(artifactId, monitor);
+		List<TuleapElementComment> comments = getArtifactCommentsWhileLoggedIn(artifactId,
+				serverConfiguration, monitor);
 
 		this.logout();
 
@@ -1285,36 +1322,6 @@ public class TuleapSoapConnector {
 		this.logout();
 
 		return reports;
-	}
-
-	/**
-	 * Returns the user information from the given identifier.
-	 * 
-	 * @param identifier
-	 *            The identifier
-	 * @return The user information from the given identifier
-	 */
-	private TuleapPerson getPersonFromId(int identifier) {
-		try {
-			UserInfo userInfo = null;
-			// if the user is anonymous, do not ask the server
-			if (identifier == ITuleapConstants.ANONYMOUS_USER_INFO_IDENTIFIER) {
-				userInfo = new UserInfo(Integer.valueOf(identifier).toString(),
-						ITuleapConstants.ANONYMOUS_USER_INFO_USERNAME, Integer.valueOf(
-								ITuleapConstants.ANONYMOUS_USER_INFO_IDENTIFIER).toString(),
-						ITuleapConstants.ANONYMOUS_USER_INFO_REAL_NAME,
-						ITuleapConstants.ANONYMOUS_USER_INFO_EMAIL,
-						ITuleapConstants.ANONYMOUS_USER_INFO_LDAP_IDENTIFIER);
-			} else {
-				userInfo = codendiAPIPort.getUserInfo(sessionHash, identifier);
-			}
-			return new TuleapPerson(userInfo.getUsername(), userInfo.getReal_name(), Integer
-					.parseInt(userInfo.getId()), userInfo.getEmail());
-		} catch (RemoteException e) {
-			TuleapCoreActivator.log(e, true);
-		}
-
-		return null;
 	}
 
 	/**
