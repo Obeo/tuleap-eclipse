@@ -29,7 +29,7 @@ public class AttachmentValue {
 	/**
 	 * The author.
 	 */
-	private int person;
+	private TuleapPerson person;
 
 	/**
 	 * The size.
@@ -62,8 +62,8 @@ public class AttachmentValue {
 	 * @param type
 	 *            The content type
 	 */
-	public AttachmentValue(String attachmentId, String name, int uploadedBy, int filesize, String desc,
-			String type) {
+	public AttachmentValue(String attachmentId, String name, TuleapPerson uploadedBy, int filesize,
+			String desc, String type) {
 		this.attachmentId = attachmentId;
 		this.filename = name;
 		this.person = uploadedBy;
@@ -86,7 +86,7 @@ public class AttachmentValue {
 	 * 
 	 * @return The identifier of the author
 	 */
-	public int getPerson() {
+	public TuleapPerson getPerson() {
 		return person;
 	}
 

@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.Assert;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItemType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
@@ -76,6 +77,11 @@ public class TuleapProjectConfiguration implements Serializable {
 	 * User groups indexed by id.
 	 */
 	private final Map<Integer, TuleapGroup> groupsById = Maps.newHashMap();
+
+	/**
+	 * Users indexed by id.
+	 */
+	private final Map<Integer, TuleapPerson> personsById = Maps.newHashMap();
 
 	/**
 	 * The constructor.
@@ -284,5 +290,31 @@ public class TuleapProjectConfiguration implements Serializable {
 	 */
 	public Collection<TuleapGroup> getAllGroups() {
 		return Collections.unmodifiableCollection(groupsById.values());
+	}
+
+	/**
+	 * Adds a user to a user group.
+	 * 
+	 * @param group
+	 *            The user group.
+	 * @param member
+	 *            The user to add to the group.
+	 */
+	public void addUserToUserGroup(TuleapGroup group, TuleapPerson member) {
+		Assert.isNotNull(group);
+		Assert.isNotNull(member);
+		group.addMember(member);
+		personsById.put(Integer.valueOf(member.getId()), member);
+	}
+
+	/**
+	 * Return the person for this ID, or null if it is not registered in the configuration.
+	 * 
+	 * @param userId
+	 *            the user id
+	 * @return The corresponding TuleapPerson, or null if this given id is not registered.
+	 */
+	public TuleapPerson getUser(int userId) {
+		return personsById.get(Integer.valueOf(userId));
 	}
 }

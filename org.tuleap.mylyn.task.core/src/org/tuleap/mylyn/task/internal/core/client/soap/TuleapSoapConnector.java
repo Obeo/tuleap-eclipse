@@ -616,8 +616,8 @@ public class TuleapSoapConnector {
 	 *            The progress monitor
 	 * @return The tasks found
 	 */
-	public List<Artifact> performQuery(IRepositoryQuery query, int maxHits, IProgressMonitor monitor) {
-		List<Artifact> artifactsFound = new ArrayList<Artifact>();
+	public List<CommentedArtifact> performQuery(IRepositoryQuery query, int maxHits, IProgressMonitor monitor) {
+		List<CommentedArtifact> artifactsFound = new ArrayList<CommentedArtifact>();
 
 		int trackerId = -1;
 
@@ -655,7 +655,11 @@ public class TuleapSoapConnector {
 			try {
 				Artifact[] artifacts = artifactQueryResult.getArtifacts();
 				for (Artifact artifact : artifacts) {
-					artifactsFound.add(artifact);
+					// Retrieve comments
+					int artifactId = artifact.getArtifact_id();
+					List<TuleapElementComment> comments = getArtifactCommentsWhileLoggedIn(artifactId,
+							monitor);
+					artifactsFound.add(new CommentedArtifact(artifact, comments));
 				}
 			} catch (NumberFormatException e) {
 				TuleapCoreActivator.log(e, true);
@@ -677,41 +681,32 @@ public class TuleapSoapConnector {
 	}
 
 	/**
-	 * Returns the comments of the artifact with the given identifier.
+	 * Retrieve an artifact's comments. This method must be called during a valid SOAP session.
 	 * 
 	 * @param artifactId
-	 *            The identifier of the artifact
+	 *            Id of the artifact.
 	 * @param monitor
-	 *            The progress monitor
-	 * @return The comments of the artifact with the given identifier
+	 *            To use for progress reporting, can be null.
+	 * @return The list of comments of the artifact
+	 * @throws RemoteException
+	 *             In case a remote exception occurs
 	 */
-	public List<TuleapElementComment> getComments(int artifactId, IProgressMonitor monitor) {
+	private List<TuleapElementComment> getArtifactCommentsWhileLoggedIn(int artifactId,
+			IProgressMonitor monitor) throws RemoteException {
 		List<TuleapElementComment> comments = new ArrayList<TuleapElementComment>();
-
-		try {
-			this.login(monitor);
-
+		if (monitor != null) {
 			monitor.subTask(TuleapMylynTasksMessages.getString(
 					"TuleapSoapConnector.RetrieveComments", Integer.valueOf(artifactId))); //$NON-NLS-1$
-			ArtifactComments[] artifactComments = tuleapTrackerV5APIPort.getArtifactComments(sessionHash,
-					artifactId);
-			for (ArtifactComments artifactComment : artifactComments) {
-				int submittedBy = artifactComment.getSubmitted_by();
-				TuleapPerson commentedBy = this.getPersonFromId(submittedBy);
-				TuleapElementComment comment = new TuleapElementComment(artifactComment.getBody(),
-						commentedBy.getEmail(), commentedBy.getRealName(), artifactComment.getSubmitted_on());
-				comments.add(comment);
-			}
-		} catch (MalformedURLException e) {
-			TuleapCoreActivator.log(e, true);
-		} catch (RemoteException e) {
-			TuleapCoreActivator.log(e, true);
-		} catch (ServiceException e) {
-			TuleapCoreActivator.log(e, true);
 		}
-
-		this.logout();
-
+		ArtifactComments[] artifactComments = tuleapTrackerV5APIPort.getArtifactComments(sessionHash,
+				artifactId);
+		for (ArtifactComments artifactComment : artifactComments) {
+			int submittedBy = artifactComment.getSubmitted_by();
+			TuleapPerson commentedBy = this.getPersonFromId(submittedBy);
+			TuleapElementComment comment = new TuleapElementComment(artifactComment.getBody(), commentedBy
+					.getEmail(), commentedBy.getRealName(), artifactComment.getSubmitted_on());
+			comments.add(comment);
+		}
 		return comments;
 	}
 
@@ -785,15 +780,17 @@ public class TuleapSoapConnector {
 	 * @throws MalformedURLException
 	 *             If the URL is invalid
 	 */
-	public Artifact getArtifact(int artifactId, IProgressMonitor monitor) throws MalformedURLException,
-			RemoteException, ServiceException {
+	public CommentedArtifact getArtifact(int artifactId, IProgressMonitor monitor)
+			throws MalformedURLException, RemoteException, ServiceException {
 		this.login(monitor);
 
 		Artifact artifact = tuleapTrackerV5APIPort.getArtifact(sessionHash, -1, -1, artifactId);
 
+		List<TuleapElementComment> comments = getArtifactCommentsWhileLoggedIn(artifactId, monitor);
+
 		this.logout();
 
-		return artifact;
+		return new CommentedArtifact(artifact, comments);
 	}
 
 	/**

@@ -85,7 +85,7 @@ public class TuleapGroup {
 	 * @param member
 	 *            the member to add, must be non-null.
 	 */
-	public void addMember(TuleapPerson member) {
+	protected void addMember(TuleapPerson member) {
 		membersById.put(Integer.valueOf(member.getId()), member);
 	}
 

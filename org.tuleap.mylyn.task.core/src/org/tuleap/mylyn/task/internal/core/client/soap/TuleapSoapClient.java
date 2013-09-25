@@ -27,11 +27,9 @@ import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
-import org.tuleap.mylyn.task.internal.core.model.TuleapElementComment;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
-import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Artifact;
 
 /**
  * The Mylyn Tuleap client is in charge of the connection with the repository and it will realize the request
@@ -148,19 +146,11 @@ public class TuleapSoapClient {
 		List<TuleapArtifact> artifacts = new ArrayList<TuleapArtifact>();
 
 		TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(location);
-		List<Artifact> artifactsToConvert = tuleapSoapConnector.performQuery(query,
+		List<CommentedArtifact> artifactsToConvert = tuleapSoapConnector.performQuery(query,
 				TaskDataCollector.MAX_HITS, monitor);
-		for (Artifact artifactToParse : artifactsToConvert) {
+		for (CommentedArtifact artifactToParse : artifactsToConvert) {
 			TuleapArtifact tuleapArtifact = this.tuleapSoapParser.parseArtifact(tuleapTrackerConfiguration,
 					artifactToParse);
-
-			// Retrieve comments
-			List<TuleapElementComment> comments = tuleapSoapConnector.getComments(tuleapArtifact.getId(),
-					monitor);
-			for (TuleapElementComment tuleapElementComment : comments) {
-				tuleapArtifact.addComment(tuleapElementComment);
-			}
-
 			artifacts.add(tuleapArtifact);
 		}
 
@@ -189,10 +179,10 @@ public class TuleapSoapClient {
 		if (artifactId != -1) {
 			TuleapArtifact tuleapArtifact;
 			try {
-				Artifact artifact = tuleapSoapConnector.getArtifact(artifactId, monitor);
+				CommentedArtifact artifact = tuleapSoapConnector.getArtifact(artifactId, monitor);
 
 				tuleapArtifact = this.tuleapSoapParser.parseArtifact(tuleapServerConfiguration
-						.getTrackerConfiguration(artifact.getTracker_id()), artifact);
+						.getTrackerConfiguration(artifact.getArtifact().getTracker_id()), artifact);
 			} catch (MalformedURLException e) {
 				IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
 				throw new CoreException(status);

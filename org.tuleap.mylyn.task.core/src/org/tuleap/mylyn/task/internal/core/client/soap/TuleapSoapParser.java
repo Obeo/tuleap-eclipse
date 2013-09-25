@@ -23,6 +23,9 @@ import org.tuleap.mylyn.task.internal.core.model.AttachmentValue;
 import org.tuleap.mylyn.task.internal.core.model.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.MultiSelectFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.SingleSelectFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.TuleapElementComment;
+import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
+import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapFileUpload;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapMultiSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
@@ -45,12 +48,13 @@ public class TuleapSoapParser {
 	 * 
 	 * @param tuleapTrackerConfiguration
 	 *            The configuration of the Tuleap tracker
-	 * @param artifactToParse
-	 *            The SOAP data to parse
+	 * @param commentedArtifact
+	 *            The SOAP artifact to parse + the related comments.
 	 * @return The TuleapArtifact representing the artifact
 	 */
 	public TuleapArtifact parseArtifact(TuleapTrackerConfiguration tuleapTrackerConfiguration,
-			Artifact artifactToParse) {
+			CommentedArtifact commentedArtifact) {
+		Artifact artifactToParse = commentedArtifact.getArtifact();
 		int artifactId = artifactToParse.getArtifact_id();
 		int trackerId = artifactToParse.getTracker_id();
 
@@ -107,15 +111,17 @@ public class TuleapSoapParser {
 						List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
 
 						FieldValueFileInfo[] fileInfo = artifactFieldValue.getField_value().getFile_info();
+						TuleapProjectConfiguration projectConfiguration = tuleapTrackerConfiguration
+								.getTuleapProjectConfiguration();
 						// Yes this array can be null... don't ask
 						if (fileInfo != null) {
 							for (FieldValueFileInfo fieldValueFileInfo : fileInfo) {
-								attachments
-										.add(new AttachmentValue(fieldValueFileInfo.getId(),
-												fieldValueFileInfo.getFilename(), fieldValueFileInfo
-														.getSubmitted_by(), fieldValueFileInfo.getFilesize(),
-												fieldValueFileInfo.getDescription(), fieldValueFileInfo
-														.getFiletype()));
+								int submitterId = fieldValueFileInfo.getSubmitted_by();
+								TuleapPerson submitter = projectConfiguration.getUser(submitterId);
+								attachments.add(new AttachmentValue(fieldValueFileInfo.getId(),
+										fieldValueFileInfo.getFilename(), submitter, fieldValueFileInfo
+												.getFilesize(), fieldValueFileInfo.getDescription(),
+										fieldValueFileInfo.getFiletype()));
 							}
 						}
 
@@ -129,6 +135,10 @@ public class TuleapSoapParser {
 					tuleapArtifact.addFieldValue(abstractFieldValue);
 				}
 			}
+		}
+
+		for (TuleapElementComment comment : commentedArtifact.getComments()) {
+			tuleapArtifact.addComment(comment);
 		}
 
 		return tuleapArtifact;
