@@ -101,7 +101,20 @@ public class ArtifactTaskDataConverter extends AbstractElementTaskDataConverter<
 		}
 
 		// Persons
-		// TODO SBE Bring back the support for the assigned personns
+		AbstractTuleapSelectBox contributorField = this.configuration.getContributorField();
+		AbstractFieldValue abstractFieldValue = tuleapArtifact.getFieldValue(Integer.valueOf(contributorField
+				.getIdentifier()));
+		if (abstractFieldValue instanceof SingleSelectFieldValue) {
+			SingleSelectFieldValue singleSelectFieldValue = (SingleSelectFieldValue)abstractFieldValue;
+
+			List<Integer> assignedToBindValueIds = new ArrayList<Integer>();
+			assignedToBindValueIds.add(Integer.valueOf(singleSelectFieldValue.getBindValueId()));
+
+			tuleapTaskMapper.setAssignedTo(assignedToBindValueIds);
+		} else if (abstractFieldValue instanceof MultiSelectFieldValue) {
+			MultiSelectFieldValue multiSelectFieldValue = (MultiSelectFieldValue)abstractFieldValue;
+			tuleapTaskMapper.setAssignedTo(multiSelectFieldValue.getBindValueIds());
+		}
 
 		// Comments
 		List<TuleapElementComment> comments = tuleapArtifact.getComments();
@@ -122,8 +135,10 @@ public class ArtifactTaskDataConverter extends AbstractElementTaskDataConverter<
 					&& abstractTuleapField.getIdentifier() == statusField.getIdentifier();
 			boolean isAttachment = attachmentField != null
 					&& abstractTuleapField.getIdentifier() == attachmentField.getIdentifier();
+			boolean isContributor = contributorField != null
+					&& abstractTuleapField.getIdentifier() == contributorField.getIdentifier();
 
-			if (!isTitle && !isStatus && !isAttachment) {
+			if (!isTitle && !isStatus && !isAttachment && !isContributor) {
 				AbstractFieldValue fieldValue = tuleapArtifact.getFieldValue(Integer
 						.valueOf(abstractTuleapField.getIdentifier()));
 

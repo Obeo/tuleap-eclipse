@@ -518,7 +518,7 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 * @param valueIds
 	 *            The identifier of the field values selected
 	 */
-	public void setAssignedTo(Set<Integer> valueIds) {
+	public void setAssignedTo(List<Integer> valueIds) {
 		TaskAttribute attribute = getMappedAttribute(TaskAttribute.USER_ASSIGNED);
 		if (attribute != null) {
 			List<String> values = Lists.newArrayList();

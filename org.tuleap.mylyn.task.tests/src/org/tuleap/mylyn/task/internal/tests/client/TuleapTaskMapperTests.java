@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.tests.client;
 
-import java.util.Collections;
-import java.util.HashSet;
+import com.google.common.collect.Lists;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -562,7 +562,7 @@ public class TuleapTaskMapperTests {
 		int id = 408;
 		tuleapTrackerConfiguration.addField(newSemanticContributorSingle(id));
 		mapper.initializeEmptyTaskData();
-		mapper.setAssignedTo(Collections.singleton(Integer.valueOf(1)));
+		mapper.setAssignedTo(Lists.newArrayList(Integer.valueOf(1)));
 
 		assertEquals("1", taskData.getRoot().getAttribute(TaskAttribute.USER_ASSIGNED).getValue()); //$NON-NLS-1$
 	}
@@ -575,7 +575,7 @@ public class TuleapTaskMapperTests {
 		int id = 408;
 		tuleapTrackerConfiguration.addField(newSemanticContributorMultiple(id));
 		mapper.initializeEmptyTaskData();
-		Set<Integer> valueIds = new HashSet<Integer>();
+		List<Integer> valueIds = new ArrayList<Integer>();
 		valueIds.add(Integer.valueOf(117));
 		valueIds.add(Integer.valueOf(1023));
 		mapper.setAssignedTo(valueIds);
