@@ -27,28 +27,40 @@ public class TuleapBacklogItem extends AbstractTuleapConfigurableElement {
 	private float initialEffort;
 
 	/**
-	 * The id of the milestone's type.
-	 */
-	private int typeId;
-
-	/**
 	 * The id of the milestone to which the backlog item is assigned. {@code null} indicates that the backlog
 	 * item is NOT assigned to any milestone.
 	 */
 	private Integer assignedMilestoneId;
 
 	/**
-	 * The constructor.
+	 * The constructor used when we are trying to create a new backlog item locally.
+	 * 
+	 * @param backlogItemTypeId
+	 *            The identifier of the backlog item type
 	 */
-	public TuleapBacklogItem() {
-		super();
+	public TuleapBacklogItem(int backlogItemTypeId) {
+		super(backlogItemTypeId);
 	}
 
 	/**
-	 * The constructor.
+	 * The constructor used when we are updating an existing artifact.
 	 * 
-	 * @param elementId
+	 * @param backlogItemId
+	 *            The identifier of the backlog item
+	 * @param backlogItemTypeId
+	 *            The identifier of the backlog item type
+	 */
+	public TuleapBacklogItem(int backlogItemId, int backlogItemTypeId) {
+		super(backlogItemId, backlogItemTypeId);
+	}
+
+	/**
+	 * The constructor used to create a backlog item retrieved from the server.
+	 * 
+	 * @param backlogItemId
 	 *            The identifier
+	 * @param backlogItemTypeId
+	 *            The identifier of the backlog item type
 	 * @param label
 	 *            The label
 	 * @param url
@@ -60,9 +72,9 @@ public class TuleapBacklogItem extends AbstractTuleapConfigurableElement {
 	 * @param lastModificationDate
 	 *            The last modification
 	 */
-	public TuleapBacklogItem(int elementId, String label, String url, String htmlUrl, Date creationDate,
-			Date lastModificationDate) {
-		super(elementId, label, url, htmlUrl, creationDate, lastModificationDate);
+	public TuleapBacklogItem(int backlogItemId, int backlogItemTypeId, String label, String url,
+			String htmlUrl, Date creationDate, Date lastModificationDate) {
+		super(backlogItemId, backlogItemTypeId, label, url, htmlUrl, creationDate, lastModificationDate);
 	}
 
 	/**
@@ -82,25 +94,6 @@ public class TuleapBacklogItem extends AbstractTuleapConfigurableElement {
 	 */
 	public void setInitialEffort(float initialEffort) {
 		this.initialEffort = initialEffort;
-	}
-
-	/**
-	 * typeId getter.
-	 * 
-	 * @return the typeId
-	 */
-	public int getTypeId() {
-		return typeId;
-	}
-
-	/**
-	 * typeId setter.
-	 * 
-	 * @param typeId
-	 *            the typeId to set
-	 */
-	public void setTypeId(int typeId) {
-		this.typeId = typeId;
 	}
 
 	/**

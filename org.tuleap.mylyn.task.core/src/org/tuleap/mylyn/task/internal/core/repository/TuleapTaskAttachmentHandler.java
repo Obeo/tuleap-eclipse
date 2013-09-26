@@ -251,7 +251,7 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 			TaskData taskData = attachmentAttribute.getTaskData();
 			TuleapTaskMapper tuleapTaskMapper = new TuleapTaskMapper(taskData, configuration);
 
-			int trackerId = tuleapTaskMapper.getTrackerId();
+			int trackerId = tuleapTaskMapper.getConfigurationId();
 
 			List<TuleapProjectConfiguration> allProjectConfigurations = repositoryConfiguration
 					.getAllProjectConfigurations();

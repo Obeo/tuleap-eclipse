@@ -17,6 +17,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.agile.core.data.planning.BacklogItemWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.MilestonePlanningWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.SubMilestoneWrapper;
+import org.tuleap.mylyn.task.internal.core.data.TuleapTaskMapper;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
@@ -26,6 +27,7 @@ import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
  * Class to convert a milestone to task data and task data to milestone.
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+ * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class MilestonePlanningTaskDataConverter extends AbstractElementTaskDataConverter<TuleapMilestone, TuleapMilestoneType> {
 
@@ -141,11 +143,23 @@ public class MilestonePlanningTaskDataConverter extends AbstractElementTaskDataC
 	 * @return The updated milestone POJO.
 	 */
 	public TuleapMilestone createTuleapMilestone(TaskData taskData) {
-		TuleapMilestone tuleapMilestone = new TuleapMilestone();
+		TuleapTaskMapper mapper = new TuleapTaskMapper(taskData, this.configuration);
 
-		// find the configuration of the milestone (milestone type)
-		// tuleapMilestone = this.populateConfigurableFields(tuleapMilestone, taskData, configuration);
-		// TODO populate the rest of the fields using the configuration...
+		TuleapMilestone tuleapMilestone = null;
+
+		if (taskData.isNew()) {
+			int configurationId = mapper.getConfigurationId();
+			tuleapMilestone = new TuleapMilestone(configurationId);
+		} else {
+			int id = mapper.getId();
+			int configurationId = mapper.getConfigurationId();
+			tuleapMilestone = new TuleapMilestone(id, configurationId);
+		}
+
+		// Configurable fields
+		tuleapMilestone = this.populateElementConfigurableFields(taskData, tuleapMilestone);
+
+		// TODO SBE populate the backlog items etc...
 
 		return tuleapMilestone;
 	}

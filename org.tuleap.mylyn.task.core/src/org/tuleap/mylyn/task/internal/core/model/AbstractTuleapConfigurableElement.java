@@ -35,6 +35,11 @@ public abstract class AbstractTuleapConfigurableElement {
 	private int id;
 
 	/**
+	 * The identifier of the configuration of the element.
+	 */
+	private int configurationId;
+
+	/**
 	 * The human-readable label of the element.
 	 */
 	private String label;
@@ -76,10 +81,28 @@ public abstract class AbstractTuleapConfigurableElement {
 
 	/**
 	 * This constructor is used for the creation of the configurable elements that have not been synchronized
-	 * on the server yet.
+	 * on the server yet. We need the identifier of the configuration to know the details of the artifact to
+	 * update.
+	 * 
+	 * @param configurationId
+	 *            The identifier of the configuration
 	 */
-	public AbstractTuleapConfigurableElement() {
-		// do nothing
+	public AbstractTuleapConfigurableElement(int configurationId) {
+		this.configurationId = configurationId;
+	}
+
+	/**
+	 * This constructor is used for the update of an existing element. We know the identifier of the element
+	 * and the identifier of its configuration.
+	 * 
+	 * @param elementId
+	 *            The identifier of the element
+	 * @param configurationId
+	 *            The identifier of the configuration of the element
+	 */
+	public AbstractTuleapConfigurableElement(int elementId, int configurationId) {
+		this.id = elementId;
+		this.configurationId = configurationId;
 	}
 
 	/**
@@ -88,6 +111,8 @@ public abstract class AbstractTuleapConfigurableElement {
 	 * 
 	 * @param id
 	 *            The identifier of the element
+	 * @param configurationId
+	 *            The identifier of the configuration of the element
 	 * @param label
 	 *            The label of the element
 	 * @param url
@@ -99,8 +124,8 @@ public abstract class AbstractTuleapConfigurableElement {
 	 * @param lastModificationDate
 	 *            The last modification date of the element
 	 */
-	public AbstractTuleapConfigurableElement(int id, String label, String url, String htmlUrl,
-			Date creationDate, Date lastModificationDate) {
+	public AbstractTuleapConfigurableElement(int id, int configurationId, String label, String url,
+			String htmlUrl, Date creationDate, Date lastModificationDate) {
 		this.id = id;
 		this.label = label;
 		this.url = url;
@@ -116,6 +141,15 @@ public abstract class AbstractTuleapConfigurableElement {
 	 */
 	public int getId() {
 		return id;
+	}
+
+	/**
+	 * Returns the identifier of the configuration.
+	 * 
+	 * @return The identifier of the configuration
+	 */
+	public int getConfigurationId() {
+		return configurationId;
 	}
 
 	/**

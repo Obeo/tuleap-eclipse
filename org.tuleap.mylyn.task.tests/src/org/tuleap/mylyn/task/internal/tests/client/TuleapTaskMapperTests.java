@@ -153,7 +153,7 @@ public class TuleapTaskMapperTests {
 		assertFalse(metadata.isReadOnly());
 
 		assertEquals(projectId, mapper.getProjectId());
-		assertEquals(trackerId, mapper.getTrackerId());
+		assertEquals(trackerId, mapper.getConfigurationId());
 
 		// Also check that project id & tracker id task attributes are correctly created since they will be
 		// useful to mylyn

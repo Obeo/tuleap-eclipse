@@ -866,7 +866,7 @@ public class TuleapSoapConnector {
 				Tracker[] trackerList = tuleapTrackerV5APIPort.getTrackerList(sessionHash, group
 						.getGroup_id());
 				for (Tracker tracker : trackerList) {
-					if (artifact.getTrackerId() == tracker.getTracker_id()) {
+					if (artifact.getConfigurationId() == tracker.getTracker_id()) {
 						groupId = group.getGroup_id();
 						break;
 					}
@@ -878,12 +878,12 @@ public class TuleapSoapConnector {
 
 		List<ArtifactFieldValue> valuesList = new ArrayList<ArtifactFieldValue>();
 		TrackerField[] trackerFields = tuleapTrackerV5APIPort.getTrackerFields(sessionHash, groupId, artifact
-				.getTrackerId());
+				.getConfigurationId());
 		monitor.worked(10);
 
 		monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.RetrievingTrackerSemantic")); //$NON-NLS-1$
 		TrackerStructure trackerStructure = tuleapTrackerV5APIPort.getTrackerStructure(sessionHash, groupId,
-				artifact.getTrackerId());
+				artifact.getConfigurationId());
 		monitor.worked(10);
 		for (TrackerField trackerField : trackerFields) {
 			if (trackerStructure != null) {
@@ -895,8 +895,8 @@ public class TuleapSoapConnector {
 			}
 			monitor.worked(1);
 		}
-		int artifactId = tuleapTrackerV5APIPort.addArtifact(sessionHash, groupId, artifact.getTrackerId(),
-				valuesList.toArray(new ArtifactFieldValue[valuesList.size()]));
+		int artifactId = tuleapTrackerV5APIPort.addArtifact(sessionHash, groupId, artifact
+				.getConfigurationId(), valuesList.toArray(new ArtifactFieldValue[valuesList.size()]));
 
 		taskDataId = String.valueOf(artifactId);
 		monitor.worked(fifty);
@@ -935,7 +935,7 @@ public class TuleapSoapConnector {
 				Tracker[] trackerList = tuleapTrackerV5APIPort.getTrackerList(sessionHash, group
 						.getGroup_id());
 				for (Tracker tracker : trackerList) {
-					if (artifact.getTrackerId() == tracker.getTracker_id()) {
+					if (artifact.getConfigurationId() == tracker.getTracker_id()) {
 						groupId = group.getGroup_id();
 						break;
 					}
@@ -946,12 +946,12 @@ public class TuleapSoapConnector {
 		monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.RetrievingTrackerFields")); //$NON-NLS-1$
 		List<ArtifactFieldValue> valuesList = new ArrayList<ArtifactFieldValue>();
 		TrackerField[] trackerFields = tuleapTrackerV5APIPort.getTrackerFields(sessionHash, groupId, artifact
-				.getTrackerId());
+				.getConfigurationId());
 		monitor.worked(10);
 
 		monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.RetrievingTrackerSemantic")); //$NON-NLS-1$
 		TrackerStructure trackerStructure = tuleapTrackerV5APIPort.getTrackerStructure(sessionHash, groupId,
-				artifact.getTrackerId());
+				artifact.getConfigurationId());
 		monitor.worked(10);
 		for (TrackerField trackerField : trackerFields) {
 			if (trackerStructure != null) {
@@ -968,8 +968,8 @@ public class TuleapSoapConnector {
 		if (newComment == null) {
 			newComment = TuleapMylynTasksMessages.getString("TuleapSoapConnector.DefaultComment"); //$NON-NLS-1$
 		}
-		tuleapTrackerV5APIPort.updateArtifact(sessionHash, groupId, artifact.getTrackerId(),
-				artifact.getId(), valuesList.toArray(new ArtifactFieldValue[valuesList.size()]), newComment,
+		tuleapTrackerV5APIPort.updateArtifact(sessionHash, groupId, artifact.getConfigurationId(), artifact
+				.getId(), valuesList.toArray(new ArtifactFieldValue[valuesList.size()]), newComment,
 				ITuleapConstants.UTF8);
 
 		monitor.worked(fifty);

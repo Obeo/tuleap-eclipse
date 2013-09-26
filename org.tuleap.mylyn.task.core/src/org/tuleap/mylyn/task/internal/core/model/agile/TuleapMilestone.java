@@ -41,11 +41,6 @@ public class TuleapMilestone extends AbstractTuleapConfigurableElement {
 	private float capacity;
 
 	/**
-	 * The id of the milestone's type.
-	 */
-	private int typeId;
-
-	/**
 	 * The milestone's sub-milestones.
 	 */
 	private List<TuleapMilestone> subMilestones = Lists.newArrayList();
@@ -56,17 +51,34 @@ public class TuleapMilestone extends AbstractTuleapConfigurableElement {
 	private List<TuleapBacklogItem> backlogItems = Lists.newArrayList();
 
 	/**
-	 * The constructor.
+	 * The constructor used when we are creating a new milestone.
+	 * 
+	 * @param milestoneTypeId
+	 *            The identifier of the milestone type
 	 */
-	public TuleapMilestone() {
-		super();
+	public TuleapMilestone(int milestoneTypeId) {
+		super(milestoneTypeId);
 	}
 
 	/**
-	 * The constructor.
+	 * The constructor used when we are updating a milestone.
 	 * 
-	 * @param elementId
-	 *            The identifier
+	 * @param milestoneId
+	 *            The identifier of the milestone
+	 * @param milestoneTypeId
+	 *            The identifier of the milestone type
+	 */
+	public TuleapMilestone(int milestoneId, int milestoneTypeId) {
+		super(milestoneId, milestoneTypeId);
+	}
+
+	/**
+	 * The constructor used when we are retrieving a milestone from the server.
+	 * 
+	 * @param milestoneId
+	 *            The identifier of the milestone
+	 * @param milestoneTypeId
+	 *            The identifier of the milestone type
 	 * @param label
 	 *            The label
 	 * @param url
@@ -78,9 +90,9 @@ public class TuleapMilestone extends AbstractTuleapConfigurableElement {
 	 * @param lastModificationDate
 	 *            The last modification
 	 */
-	public TuleapMilestone(int elementId, String label, String url, String htmlUrl, Date creationDate,
-			Date lastModificationDate) {
-		super(elementId, label, url, htmlUrl, creationDate, lastModificationDate);
+	public TuleapMilestone(int milestoneId, int milestoneTypeId, String label, String url, String htmlUrl,
+			Date creationDate, Date lastModificationDate) {
+		super(milestoneId, milestoneTypeId, label, url, htmlUrl, creationDate, lastModificationDate);
 	}
 
 	/**
@@ -138,25 +150,6 @@ public class TuleapMilestone extends AbstractTuleapConfigurableElement {
 	 */
 	public void setCapacity(float capacity) {
 		this.capacity = capacity;
-	}
-
-	/**
-	 * typeId getter.
-	 * 
-	 * @return the typeId
-	 */
-	public int getTypeId() {
-		return typeId;
-	}
-
-	/**
-	 * typeId setter.
-	 * 
-	 * @param typeId
-	 *            the typeId to set
-	 */
-	public void setTypeId(int typeId) {
-		this.typeId = typeId;
 	}
 
 	/**

@@ -27,6 +27,7 @@ import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
  * 
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+ * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class TuleapMilestoneDeserializer extends AbstractTuleapDeserializer<TuleapMilestone> {
 
@@ -48,7 +49,7 @@ public class TuleapMilestoneDeserializer extends AbstractTuleapDeserializer<Tule
 	/**
 	 * The key used to retrieve the type id of the milestone.
 	 */
-	private static final String TYPE_ID = "milestone_type_id"; //$NON-NLS-1$
+	private static final String MILESTONE_TYPE_ID = "milestone_type_id"; //$NON-NLS-1$
 
 	/**
 	 * The key used to retrieve the sub-milestones.
@@ -91,12 +92,6 @@ public class TuleapMilestoneDeserializer extends AbstractTuleapDeserializer<Tule
 			milestone.setCapacity(capacity);
 		}
 
-		elt = jsonObject.get(TYPE_ID);
-		if (elt != null) {
-			int typeId = elt.getAsInt();
-			milestone.setTypeId(typeId);
-		}
-
 		elt = jsonObject.get(SUBMILESTONES);
 		if (elt != null) {
 			JsonArray submilestones = elt.getAsJsonArray();
@@ -109,16 +104,21 @@ public class TuleapMilestoneDeserializer extends AbstractTuleapDeserializer<Tule
 		return milestone;
 	}
 
+	@Override
+	protected TuleapMilestone buildPojo(int id, int configurationId, String label, String url,
+			String htmlUrl, Date creationDate, Date lastModificationDate) {
+		return new TuleapMilestone(id, configurationId, label, url, htmlUrl, creationDate,
+				lastModificationDate);
+	}
+
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.parser.AbstractTuleapDeserializer#buildPojo(int,
-	 *      java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date)
+	 * @see org.tuleap.mylyn.task.internal.core.parser.AbstractTuleapDeserializer#getTypeIdKey()
 	 */
 	@Override
-	protected TuleapMilestone buildPojo(int id, String label, String url, String htmlUrl, Date creationDate,
-			Date lastModificationDate) {
-		return new TuleapMilestone(id, label, url, htmlUrl, creationDate, lastModificationDate);
+	protected String getTypeIdKey() {
+		return MILESTONE_TYPE_ID;
 	}
 
 }

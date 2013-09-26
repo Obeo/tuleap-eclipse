@@ -70,7 +70,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			Set<TaskAttribute> oldAttributes, IProgressMonitor monitor) throws CoreException {
 		RepositoryResponse response = null;
 
-		int trackerId = new TuleapTaskMapper(taskData, null).getTrackerId();
+		int trackerId = new TuleapTaskMapper(taskData, null).getConfigurationId();
 
 		TuleapServerConfiguration tuleapServerConfiguration = this.connector.getRepositoryConfiguration(
 				taskRepository, true, monitor);
@@ -169,7 +169,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		TuleapArtifact tuleapArtifact = tuleapSoapClient.getArtifact(taskId, serverConfiguration, monitor);
 		if (tuleapArtifact != null) {
 			TuleapTrackerConfiguration trackerConfiguration = serverConfiguration
-					.getTrackerConfiguration(tuleapArtifact.getTrackerId());
+					.getTrackerConfiguration(tuleapArtifact.getConfigurationId());
 
 			ArtifactTaskDataConverter artifactTaskDataConverter = new ArtifactTaskDataConverter(
 					trackerConfiguration);

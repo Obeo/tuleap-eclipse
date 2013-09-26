@@ -57,12 +57,16 @@ public class ArtifactTaskDataConverter extends AbstractElementTaskDataConverter<
 	public TuleapArtifact createTuleapArtifact(TaskData taskData) {
 		TuleapTaskMapper tuleapTaskMapper = new TuleapTaskMapper(taskData, this.configuration);
 
-		int artifactId = tuleapTaskMapper.getArtifactId();
-		int trackerId = tuleapTaskMapper.getTrackerId();
+		TuleapArtifact tuleapArtifact = null;
+		if (taskData.isNew()) {
+			int trackerId = tuleapTaskMapper.getConfigurationId();
+			tuleapArtifact = new TuleapArtifact(trackerId);
+		} else {
+			int artifactId = tuleapTaskMapper.getId();
+			int trackerId = tuleapTaskMapper.getConfigurationId();
+			tuleapArtifact = new TuleapArtifact(artifactId, trackerId);
+		}
 
-		// FIXME SBE This is completely useless but it is needed by the SOAP API§§§§!!!!!!
-		TuleapArtifact tuleapArtifact = new TuleapArtifact(artifactId, trackerId, null, null, null, null,
-				null);
 		Set<AbstractFieldValue> fieldValues = tuleapTaskMapper.getFieldValues();
 		for (AbstractFieldValue abstractFieldValue : fieldValues) {
 			tuleapArtifact.addFieldValue(abstractFieldValue);

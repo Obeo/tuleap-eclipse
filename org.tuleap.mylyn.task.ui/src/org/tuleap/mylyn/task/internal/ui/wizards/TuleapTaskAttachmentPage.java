@@ -144,7 +144,7 @@ public class TuleapTaskAttachmentPage extends TaskAttachmentPage {
 			TaskAttribute attribute = this.getModel().getAttribute();
 			TaskData taskData = attribute.getTaskData();
 			TuleapTaskMapper tuleapTaskMapper = new TuleapTaskMapper(taskData, null);
-			int trackerId = tuleapTaskMapper.getTrackerId();
+			int trackerId = tuleapTaskMapper.getConfigurationId();
 
 			List<String> attachmentFieldsName = new ArrayList<String>();
 

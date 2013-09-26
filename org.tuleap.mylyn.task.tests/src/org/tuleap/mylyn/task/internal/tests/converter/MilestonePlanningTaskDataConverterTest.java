@@ -17,7 +17,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.junit.Before;
 import org.junit.Test;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
 
 import static org.junit.Assert.fail;
 
@@ -42,7 +41,7 @@ public class MilestonePlanningTaskDataConverterTest {
 
 		Date testDate = new Date();
 
-		TuleapMilestone milestone = new TuleapMilestone();
+		// TuleapMilestone milestone = new TuleapMilestone();
 		// milestone.setId(50);
 		// TuleapMilestone submilestone100 = new TuleapMilestone();
 		// submilestone100.setId(100);

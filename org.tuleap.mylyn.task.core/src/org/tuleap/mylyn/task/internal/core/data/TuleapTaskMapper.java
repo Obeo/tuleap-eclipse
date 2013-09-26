@@ -270,7 +270,7 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 * 
 	 * @return The identifier of the tracker or INVALID_TRACKER otherwise.
 	 */
-	public int getTrackerId() {
+	public int getConfigurationId() {
 		TaskAttribute trackerIdAtt = taskData.getRoot().getMappedAttribute(TRACKER_ID);
 		if (trackerIdAtt == null) {
 			return INVALID_TRACKER_ID;
@@ -322,7 +322,7 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 * 
 	 * @return The identifier of the artifact
 	 */
-	public int getArtifactId() {
+	public int getId() {
 		// TODO SBE Test with a newly created artifact for potential number format exception
 		// TODO SBE Be careful when the identifier will be changed
 		return Integer.valueOf(taskData.getTaskId()).intValue();

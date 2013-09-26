@@ -35,6 +35,7 @@ import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableEleme
  * @param <T>
  *            The type of the agile element to deserialize.
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+ * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapConfigurableElement> implements JsonDeserializer<T> {
 
@@ -103,9 +104,10 @@ public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapConfigu
 		String label = jsonObject.get(LABEL).getAsString();
 		String url = jsonObject.get(URL).getAsString();
 		String htmlUrl = jsonObject.get(HTML_URL).getAsString();
+		int configurationId = jsonObject.get(this.getTypeIdKey()).getAsInt();
 
-		// TODO Fix the date
-		T pojo = buildPojo(id, label, url, htmlUrl, new Date(), new Date());
+		// TODO Fix the dates from the parsing
+		T pojo = buildPojo(id, configurationId, label, url, htmlUrl, new Date(), new Date());
 
 		JsonArray fields = jsonObject.get(VALUES).getAsJsonArray();
 		for (JsonElement field : fields) {
@@ -155,6 +157,8 @@ public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapConfigu
 	 * 
 	 * @param id
 	 *            The identifier
+	 * @param configurationId
+	 *            The identifier of the configuration
 	 * @param label
 	 *            The label
 	 * @param url
@@ -167,7 +171,14 @@ public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapConfigu
 	 *            The last modification date
 	 * @return The POJO.
 	 */
-	protected abstract T buildPojo(int id, String label, String url, String htmlUrl, Date creationDate,
-			Date lastModificationDate);
+	protected abstract T buildPojo(int id, int configurationId, String label, String url, String htmlUrl,
+			Date creationDate, Date lastModificationDate);
+
+	/**
+	 * Returns the key of the type id.
+	 * 
+	 * @return The key of the type id
+	 */
+	protected abstract String getTypeIdKey();
 
 }

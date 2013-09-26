@@ -195,7 +195,7 @@ public class TuleapMilestoneDeserializerTests {
 		assertEquals(100, tuleapMilestone.getCapacity(), 0);
 		assertEquals("/milestones/200", tuleapMilestone.getUrl()); //$NON-NLS-1$
 		assertEquals("/milestones?id=200&group_id=3", tuleapMilestone.getHtmlUrl()); //$NON-NLS-1$
-		assertEquals(901, tuleapMilestone.getTypeId());
+		assertEquals(901, tuleapMilestone.getConfigurationId());
 
 		// assertNotNull(tuleapMilestone.getValues());
 		//

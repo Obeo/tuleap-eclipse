@@ -35,7 +35,7 @@ public class TuleapBacklogItemDeserializer extends AbstractTuleapDeserializer<Tu
 	/**
 	 * The key used for the type id of the backlog item.
 	 */
-	private static final String TYPE_ID = "backlog_item_type_id"; //$NON-NLS-1$
+	private static final String BACKLOG_ITEM_TYPE_ID = "backlog_item_type_id"; //$NON-NLS-1$
 
 	/**
 	 * The key used for the assigned milestone id.
@@ -67,22 +67,30 @@ public class TuleapBacklogItemDeserializer extends AbstractTuleapDeserializer<Tu
 			backlogItem.setAssignedMilestoneId(Integer.valueOf(assignedMilestoneId));
 		}
 
-		int typeId = jsonObject.get(TYPE_ID).getAsInt();
-		backlogItem.setTypeId(typeId);
-
 		return backlogItem;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.parser.AbstractTuleapDeserializer#buildPojo(int,
+	 * @see org.tuleap.mylyn.task.internal.core.parser.AbstractTuleapDeserializer#buildPojo(int, int,
 	 *      java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date)
 	 */
 	@Override
-	protected TuleapBacklogItem buildPojo(int id, String label, String url, String htmlUrl,
-			Date creationDate, Date lastModificationDate) {
-		return new TuleapBacklogItem(id, label, url, htmlUrl, creationDate, lastModificationDate);
+	protected TuleapBacklogItem buildPojo(int id, int configurationId, String label, String url,
+			String htmlUrl, Date creationDate, Date lastModificationDate) {
+		return new TuleapBacklogItem(id, configurationId, label, url, htmlUrl, creationDate,
+				lastModificationDate);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.tuleap.mylyn.task.internal.core.parser.AbstractTuleapDeserializer#getTypeIdKey()
+	 */
+	@Override
+	protected String getTypeIdKey() {
+		return BACKLOG_ITEM_TYPE_ID;
 	}
 
 }

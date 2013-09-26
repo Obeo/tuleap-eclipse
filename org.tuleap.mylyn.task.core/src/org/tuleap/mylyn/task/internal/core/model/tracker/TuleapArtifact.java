@@ -23,15 +23,25 @@ import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableEleme
 public class TuleapArtifact extends AbstractTuleapConfigurableElement {
 
 	/**
-	 * The identifier of the tracker.
+	 * The default constructor used to create a new Tuleap artifact locally.
+	 * 
+	 * @param trackerId
+	 *            The identifier of the tracker.
 	 */
-	private int trackerId;
+	public TuleapArtifact(int trackerId) {
+		super(trackerId);
+	}
 
 	/**
-	 * The default constructor used to create a new Tuleap artifact locally.
+	 * The default constructor used to update an existing artifact.
+	 * 
+	 * @param artifactId
+	 *            The identifier of the artifact
+	 * @param trackerId
+	 *            The identifier of the tracker
 	 */
-	public TuleapArtifact() {
-		super();
+	public TuleapArtifact(int artifactId, int trackerId) {
+		super(artifactId, trackerId);
 	}
 
 	/**
@@ -54,16 +64,6 @@ public class TuleapArtifact extends AbstractTuleapConfigurableElement {
 	 */
 	public TuleapArtifact(int artifactId, int trackerId, String label, String url, String htmlUrl,
 			Date creationDate, Date lastModificationDate) {
-		super(artifactId, label, url, htmlUrl, creationDate, lastModificationDate);
-		this.trackerId = trackerId;
-	}
-
-	/**
-	 * Returns the identifier of the tracker.
-	 * 
-	 * @return The identifier of the tracker
-	 */
-	public int getTrackerId() {
-		return this.trackerId;
+		super(artifactId, trackerId, label, url, htmlUrl, creationDate, lastModificationDate);
 	}
 }

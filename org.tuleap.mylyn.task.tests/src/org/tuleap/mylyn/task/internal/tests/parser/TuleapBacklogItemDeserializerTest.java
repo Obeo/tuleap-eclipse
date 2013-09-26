@@ -42,7 +42,7 @@ public class TuleapBacklogItemDeserializerTest {
 		assertEquals("/backlog_items/300", item.getUrl()); //$NON-NLS-1$
 		assertEquals("/backlog_items?id=300&group_id=3", item.getHtmlUrl()); //$NON-NLS-1$
 		assertEquals(30f, item.getInitialEffort(), 0f);
-		assertEquals(801, item.getTypeId());
+		assertEquals(801, item.getConfigurationId());
 		assertEquals(200, item.getAssignedMilestoneId().intValue());
 
 		assertEquals(4, item.getFieldValues().size());
@@ -65,7 +65,7 @@ public class TuleapBacklogItemDeserializerTest {
 		assertEquals("/backlog_items/301", item.getUrl()); //$NON-NLS-1$
 		assertEquals("/backlog_items?id=301&group_id=3", item.getHtmlUrl()); //$NON-NLS-1$
 		assertEquals(40.5f, item.getInitialEffort(), 0f);
-		assertEquals(801, item.getTypeId());
+		assertEquals(801, item.getConfigurationId());
 		assertEquals(201, item.getAssignedMilestoneId().intValue());
 
 		assertEquals(4, item.getFieldValues().size());
@@ -88,7 +88,7 @@ public class TuleapBacklogItemDeserializerTest {
 		assertEquals("/backlog_items/302", item.getUrl()); //$NON-NLS-1$
 		assertEquals("/backlog_items?id=302&group_id=3", item.getHtmlUrl()); //$NON-NLS-1$
 		assertEquals(25f, item.getInitialEffort(), 0f);
-		assertEquals(801, item.getTypeId());
+		assertEquals(801, item.getConfigurationId());
 		assertNull(item.getAssignedMilestoneId());
 
 		// assertEquals(3, item.getFieldValues().size());
@@ -110,7 +110,7 @@ public class TuleapBacklogItemDeserializerTest {
 		assertEquals("/backlog_items/350", item.getUrl()); //$NON-NLS-1$
 		assertEquals("/backlog_items?id=350&group_id=3", item.getHtmlUrl()); //$NON-NLS-1$
 		assertEquals(5f, item.getInitialEffort(), 0f);
-		assertEquals(802, item.getTypeId());
+		assertEquals(802, item.getConfigurationId());
 		assertEquals(250, item.getAssignedMilestoneId().intValue());
 
 		// assertEquals(9, item.getValues().size());
@@ -168,7 +168,7 @@ public class TuleapBacklogItemDeserializerTest {
 		assertEquals("/backlog_items/352", item.getUrl()); //$NON-NLS-1$
 		assertEquals("/backlog_items?id=352&group_id=3", item.getHtmlUrl()); //$NON-NLS-1$
 		assertEquals(3.5f, item.getInitialEffort(), 0f);
-		assertEquals(802, item.getTypeId());
+		assertEquals(802, item.getConfigurationId());
 		assertEquals(250, item.getAssignedMilestoneId().intValue());
 
 		// assertEquals(8, item.getValues().size());
