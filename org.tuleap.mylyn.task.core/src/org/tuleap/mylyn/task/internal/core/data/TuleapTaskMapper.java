@@ -32,7 +32,6 @@ import org.tuleap.mylyn.task.agile.core.data.AbstractTaskMapper;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableFieldsConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapElementComment;
-import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.field.AbstractTuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
@@ -91,7 +90,7 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	private static final List<String> ATTRIBUTE_IDS_NOT_TO_SEND = Collections.unmodifiableList(Arrays.asList(
 			TaskAttribute.DATE_COMPLETION, TaskAttribute.DATE_CREATION, TaskAttribute.DATE_MODIFICATION,
 			TaskAttribute.PREFIX_OPERATION + TaskAttribute.STATUS, TaskAttribute.TASK_KEY,
-			TaskAttribute.TASK_KIND));
+			TaskAttribute.TASK_KIND, TRACKER_ID, PROJECT_ID, PROJECT_NAME, TRACKER_NAME, GROUP_ID));
 
 	/**
 	 * The configuration.
@@ -236,16 +235,16 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 		TaskAttachmentMapper taskAttachment = TaskAttachmentMapper.createFrom(attribute);
 		taskAttachment.setAttachmentId(tuleapAttachment.getAttachmentId());
 
-		TuleapPerson person = tuleapAttachment.getPerson();
-		IRepositoryPerson iRepositoryPerson = tuleapConfigurableFieldsConfiguration.getPerson(person
-				.getEmail());
-		if (iRepositoryPerson == null) {
-			iRepositoryPerson = taskData.getAttributeMapper().getTaskRepository().createPerson(
-					person.getEmail());
-			iRepositoryPerson.setName(person.getRealName());
-			tuleapConfigurableFieldsConfiguration.registerPerson(iRepositoryPerson);
-		}
-		taskAttachment.setAuthor(iRepositoryPerson);
+		// TuleapPerson person = tuleapAttachment.getPerson();
+		// IRepositoryPerson iRepositoryPerson = tuleapConfigurableFieldsConfiguration.getPerson(person
+		// .getEmail());
+		// if (iRepositoryPerson == null) {
+		// iRepositoryPerson = taskData.getAttributeMapper().getTaskRepository().createPerson(
+		// person.getEmail());
+		// iRepositoryPerson.setName(person.getRealName());
+		// tuleapConfigurableFieldsConfiguration.registerPerson(iRepositoryPerson);
+		// }
+		// taskAttachment.setAuthor(iRepositoryPerson);
 		taskAttachment.setFileName(tuleapAttachment.getFilename());
 		taskAttachment.setLength(Long.valueOf(tuleapAttachment.getSize()));
 		taskAttachment.setDescription(tuleapAttachment.getDescription());
@@ -717,24 +716,28 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 		// For the moment, we return all known values.
 		// Later, an improvement will be to return only those values that have changed.
 		for (TaskAttribute attribute : taskData.getRoot().getAttributes().values()) {
-			if (mustBeSentToServer(attribute)) {
-				if (attribute.getOptions().isEmpty()) {
-					LiteralFieldValue fieldValue = new LiteralFieldValue(Integer.parseInt(attribute.getId()),
-							attribute.getValue());
-					result.add(fieldValue);
-				} else {
-					// select box or multi select box (or check box)
-					List<Integer> valueIds = new ArrayList<Integer>();
-					for (String strValue : attribute.getValues()) {
-						try {
-							valueIds.add(Integer.valueOf(strValue));
-						} catch (NumberFormatException e) {
-							// TODO Add log about non integer value
+			Collection<AbstractTuleapField> fields = this.tuleapConfigurableFieldsConfiguration.getFields();
+			for (AbstractTuleapField abstractTuleapField : fields) {
+				if (String.valueOf(abstractTuleapField.getIdentifier()).equals(attribute.getId())
+						&& shouldBeSentToTheServer(abstractTuleapField.getIdentifier())) {
+					if (attribute.getOptions().isEmpty()) {
+						LiteralFieldValue fieldValue = new LiteralFieldValue(Integer.parseInt(attribute
+								.getId()), attribute.getValue());
+						result.add(fieldValue);
+					} else {
+						// select box or multi select box (or check box)
+						List<Integer> valueIds = new ArrayList<Integer>();
+						for (String strValue : attribute.getValues()) {
+							try {
+								valueIds.add(Integer.valueOf(strValue));
+							} catch (NumberFormatException e) {
+								// TODO Add log about non integer value
+							}
 						}
+						BoundFieldValue boundFieldValue = new BoundFieldValue(Integer.parseInt(attribute
+								.getId()), valueIds);
+						result.add(boundFieldValue);
 					}
-					BoundFieldValue boundFieldValue = new BoundFieldValue(
-							Integer.parseInt(attribute.getId()), valueIds);
-					result.add(boundFieldValue);
 				}
 			}
 		}
@@ -742,24 +745,14 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	}
 
 	/**
-	 * Indicates whether the given Task Attribute needs be sent to the server, which is true for the moment if
-	 * the attribute is not a computed field like the creation, modification, or completion date, th id, and
-	 * so on.
+	 * Indicates if the attribute with the given identifier should be sent to the server.
 	 * 
-	 * @param attribute
-	 *            The candidate attribute
-	 * @return {@code true} if and only if the task attribute's modification must be sent to the server.
+	 * @param identifier
+	 *            The identifier of the attribute
+	 * @return <code>true</code> if it should be sent to the server, <code>false</code> otherwise
 	 */
-	private boolean mustBeSentToServer(TaskAttribute attribute) {
-		boolean result = true;
-		String attributeId = attribute.getId();
-		if (ATTRIBUTE_IDS_NOT_TO_SEND.contains(attributeId)) {
-			result = false;
-		}
-		if (attributeId.startsWith(TaskAttribute.PREFIX_ATTACHMENT)) {
-			result = false;
-		}
-		return result;
+	private boolean shouldBeSentToTheServer(int identifier) {
+		return !ATTRIBUTE_IDS_NOT_TO_SEND.contains(String.valueOf(identifier));
 	}
 
 	/**

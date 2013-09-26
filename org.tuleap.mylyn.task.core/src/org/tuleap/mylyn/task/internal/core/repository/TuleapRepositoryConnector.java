@@ -289,8 +289,8 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		// Populate the collector with the task data resulting from the query
 		String queryKind = query.getAttribute(ITuleapConstants.QUERY_KIND);
 
-		TuleapServerConfiguration repositoryConfiguration = this.getRepositoryConfiguration(taskRepository
-				.getRepositoryUrl());
+		TuleapServerConfiguration repositoryConfiguration = this.getRepositoryConfiguration(taskRepository,
+				true, monitor);
 		TaskAttributeMapper attributeMapper = this.getTaskDataHandler().getAttributeMapper(taskRepository);
 
 		if (ITuleapConstants.QUERY_KIND_ALL_FROM_TRACKER.equals(queryKind)

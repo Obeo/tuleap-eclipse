@@ -41,6 +41,9 @@ import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.config.ITuleapConfigurationConstants;
+import org.tuleap.mylyn.task.internal.core.data.AbstractFieldValue;
+import org.tuleap.mylyn.task.internal.core.data.BoundFieldValue;
+import org.tuleap.mylyn.task.internal.core.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapAttachmentDescriptor;
 import org.tuleap.mylyn.task.internal.core.model.TuleapElementComment;
@@ -921,13 +924,13 @@ public class TuleapSoapConnector {
 			monitor.worked(1);
 		}
 
-		// String newComment = artifact.getValue(TaskAttribute.COMMENT_NEW);
-		// if (newComment == null) {
-		//			newComment = TuleapMylynTasksMessages.getString("TuleapSoapConnector.DefaultComment"); //$NON-NLS-1$
-		// }
-		// tuleapTrackerV5APIPort.updateArtifact(sessionHash, groupId, artifact.getTrackerId(),
-		// artifact.getId(), valuesList.toArray(new ArtifactFieldValue[valuesList.size()]), newComment,
-		// ITuleapConstants.UTF8);
+		String newComment = artifact.getNewComment();
+		if (newComment == null) {
+			newComment = TuleapMylynTasksMessages.getString("TuleapSoapConnector.DefaultComment"); //$NON-NLS-1$
+		}
+		tuleapTrackerV5APIPort.updateArtifact(sessionHash, groupId, artifact.getTrackerId(),
+				artifact.getId(), valuesList.toArray(new ArtifactFieldValue[valuesList.size()]), newComment,
+				ITuleapConstants.UTF8);
 
 		monitor.worked(fifty);
 
@@ -956,101 +959,48 @@ public class TuleapSoapConnector {
 			return artifactFieldValue;
 		}
 
-		if (trackerStructure.getSemantic() != null
-				&& trackerStructure.getSemantic().getTitle() != null
-				&& trackerField.getShort_name().equals(
-						trackerStructure.getSemantic().getTitle().getField_name())) {
-			// Title
-			artifactFieldValue = this.getArtifactTitle(trackerField, artifact);
-		} else if (trackerStructure.getSemantic() != null
-				&& trackerStructure.getSemantic().getStatus() != null
-				&& trackerField.getShort_name().equals(
-						trackerStructure.getSemantic().getStatus().getField_name())) {
-			// Status
-			artifactFieldValue = this.getArtifactStatus(trackerField, artifact);
-		} else if (trackerStructure.getSemantic() != null
-				&& trackerStructure.getSemantic().getContributor() != null
-				&& trackerField.getShort_name().equals(
-						trackerStructure.getSemantic().getContributor().getField_name())) {
-			// Contributors
-			artifactFieldValue = this.getArtifactContributors(trackerField, artifact);
-		} else if (ITuleapConfigurationConstants.DATE.equals(trackerField.getType())) {
-			// Date
-			artifactFieldValue = this.getArtifactDate(trackerField, artifact);
-		} else if (ITuleapConfigurationConstants.SB.equals(trackerField.getType())
-				&& trackerField.getBinding() != null
-				&& !ITuleapConstants.TULEAP_STATIC_BINDING_ID
-						.equals(trackerField.getBinding().getBind_type())) {
-			// dynamic binding
-			artifactFieldValue = this.getArtifactSelectBoxWithDynamicBinding(trackerField, artifact);
-		} else if (ITuleapConfigurationConstants.MSB.equals(trackerField.getType())
-				&& trackerField.getBinding() != null
-				&& !ITuleapConstants.TULEAP_STATIC_BINDING_ID
-						.equals(trackerField.getBinding().getBind_type())) {
-			// dynamic binding
-			artifactFieldValue = this.getArtifactMultiSelectBoxWithDynamicBinding(trackerField, artifact);
-		} else if (ITuleapConfigurationConstants.CB.equals(trackerField.getType())
-				&& trackerField.getBinding() != null
-				&& !ITuleapConstants.TULEAP_STATIC_BINDING_ID
-						.equals(trackerField.getBinding().getBind_type())) {
-			// dynamic binding
-			artifactFieldValue = this.getArtifactMultiSelectBoxWithDynamicBinding(trackerField, artifact);
-		} else if (ITuleapConfigurationConstants.MSB.equals(trackerField.getType())
+		if (ITuleapConfigurationConstants.MSB.equals(trackerField.getType())
 				|| ITuleapConfigurationConstants.SB.equals(trackerField.getType())
 				|| ITuleapConfigurationConstants.CB.equals(trackerField.getType())) {
 			// Regular select box, multi-select box or checkbox
-			// String fieldId = Integer.valueOf(trackerField.getField_id()).toString();
-			// List<String> values = artifact.getValues(fieldId);
-			// List<TrackerFieldBindValue> bindValues = new ArrayList<TrackerFieldBindValue>();
-			// for (String value : values) {
-			//				if ("".equals(value)) { //$NON-NLS-1$
-			// bindValues.add(new TrackerFieldBindValue(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID,
-			//							"")); //$NON-NLS-1$
-			// } else {
-			// TrackerFieldBindValue[] trackerFieldBindValues = trackerField.getValues();
-			// for (TrackerFieldBindValue trackerFieldBindValue : trackerFieldBindValues) {
-			// if (value.equals(trackerFieldBindValue.getBind_value_label())) {
-			// bindValues.add(new TrackerFieldBindValue(
-			// trackerFieldBindValue.getBind_value_id(), trackerFieldBindValue
-			// .getBind_value_label()));
-			// }
-			// }
-			// }
-			// }
-			// FieldValue fieldValue = new FieldValue(
-			//					"", new FieldValueFileInfo[] {}, bindValues.toArray(new TrackerFieldBindValue[bindValues.size()])); //$NON-NLS-1$
-			// artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(),
-			// trackerField.getLabel(), fieldValue);
-		} else if (ITuleapConfigurationConstants.TBL.equals(trackerField.getType())) {
-			// String fieldId = Integer.valueOf(trackerField.getField_id()).toString();
-			// String value = artifact.getValue(fieldId);
-			//
-			// List<TrackerFieldBindValue> bindValues = new ArrayList<TrackerFieldBindValue>();
-			//
-			//			StringTokenizer stringTokenizer = new StringTokenizer(value, ","); //$NON-NLS-1$
-			// while (stringTokenizer.hasMoreTokens()) {
-			// String nextToken = stringTokenizer.nextToken();
-			// bindValues.add(new TrackerFieldBindValue(-1, nextToken.trim()));
-			// }
-			// FieldValue fieldValue = new FieldValue(
-			//					"", new FieldValueFileInfo[] {}, bindValues.toArray(new TrackerFieldBindValue[bindValues.size()])); //$NON-NLS-1$
-			// artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(),
-			// trackerField.getLabel(), fieldValue);
+			AbstractFieldValue abstractFieldValue = artifact.getFieldValue(Integer.valueOf(trackerField
+					.getField_id()));
+			if (abstractFieldValue instanceof BoundFieldValue) {
+				BoundFieldValue boundFieldValue = (BoundFieldValue)abstractFieldValue;
+				List<TrackerFieldBindValue> bindValues = new ArrayList<TrackerFieldBindValue>();
+				for (Integer value : boundFieldValue.getValueIds()) {
+					if (ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID == value.intValue()) {
+						bindValues.add(new TrackerFieldBindValue(
+								ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID, "")); //$NON-NLS-1$
+					} else {
+						TrackerFieldBindValue[] trackerFieldBindValues = trackerField.getValues();
+						for (TrackerFieldBindValue trackerFieldBindValue : trackerFieldBindValues) {
+							bindValues.add(new TrackerFieldBindValue(value.intValue(), trackerFieldBindValue
+									.getBind_value_label()));
+						}
+					}
+				}
+				FieldValue fieldValue = new FieldValue(
+						"", new FieldValueFileInfo[] {}, bindValues.toArray(new TrackerFieldBindValue[bindValues.size()])); //$NON-NLS-1$
+				artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField
+						.getLabel(), fieldValue);
+			}
 		} else if (this.shouldConsider(trackerField.getType())) {
 			// Any other value (string, text, integer, float)
-			// String fieldId = Integer.valueOf(trackerField.getField_id()).toString();
-			// boolean hasKey = artifact.getKeys().contains(fieldId);
-			// List<String> values = artifact.getValues(fieldId);
-			// String composedValue = this.sanitizeMultipleValues(values);
-			//
-			// if (hasKey && canSubmitValue(trackerField.getType(), composedValue)) {
-			// if (composedValue != null && composedValue.length() > 0) {
-			// FieldValue fieldValue = new FieldValue(composedValue, new FieldValueFileInfo[] {},
-			// new TrackerFieldBindValue[] {});
-			// artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField
-			// .getLabel(), fieldValue);
-			// }
-			// }
+			AbstractFieldValue abstractFieldValue = artifact.getFieldValue(Integer.valueOf(trackerField
+					.getField_id()));
+			if (abstractFieldValue instanceof LiteralFieldValue) {
+				LiteralFieldValue literalFieldValue = (LiteralFieldValue)abstractFieldValue;
+				String composedValue = literalFieldValue.getFieldValue();
+
+				if (composedValue != null && composedValue.length() > 0
+						&& canSubmitValue(trackerField.getType(), composedValue)) {
+					FieldValue fieldValue = new FieldValue(composedValue, new FieldValueFileInfo[] {},
+							new TrackerFieldBindValue[] {});
+					artifactFieldValue = new ArtifactFieldValue(trackerField.getShort_name(), trackerField
+							.getLabel(), fieldValue);
+				}
+			}
 		}
 
 		return artifactFieldValue;
