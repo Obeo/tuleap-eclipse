@@ -22,18 +22,25 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.core.runtime.Platform;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.osgi.framework.Bundle;
+import org.tuleap.mylyn.task.internal.core.data.AbstractFieldValue;
+import org.tuleap.mylyn.task.internal.core.data.BoundFieldValue;
+import org.tuleap.mylyn.task.internal.core.data.LiteralFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapMilestoneDeserializer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 
 //CHECKSTYLE:OFF
 
@@ -76,7 +83,7 @@ public class TuleapMilestoneDeserializerTests {
 	/**
 	 * The pattern used to format date following the ISO8601 standard.
 	 */
-	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"); //$NON-NLS-1$
+	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS"); //$NON-NLS-1$
 
 	/**
 	 * Reads the content of the file at the given url and returns it.
@@ -345,64 +352,117 @@ public class TuleapMilestoneDeserializerTests {
 		// value = subMilestone.getValue(Integer.valueOf(966));
 		// assertNotNull(value);
 		// assertEquals(26.5, ((Number)value).floatValue(), 0);
-		fail("Fix the test ");
 
 	}
 
 	/**
 	 * Test the parsing of the data set of the release 300.
 	 */
+	@SuppressWarnings("restriction")
 	@Test
-	public void testRelease201Parsing() {
+	public void testRelease201Parsing() throws Exception {
 		TuleapMilestone tuleapMilestone = this.parse(release201);
 		assertNotNull(tuleapMilestone);
 
 		assertEquals(201, tuleapMilestone.getId());
-		//		assertEquals("Release TU", tuleapMilestone.getLabel()); //$NON-NLS-1$
-		// assertEquals(12345678, tuleapMilestone.getStartDate());
-		// assertEquals(50, tuleapMilestone.getDuration(), 0);
-		// assertEquals(100, tuleapMilestone.getCapacity(), 0);
-		//		assertEquals("/milestones/201", tuleapMilestone.getUrl()); //$NON-NLS-1$
-		//		assertEquals("/milestones?id=201&group_id=3", tuleapMilestone.getHtmlUrl()); //$NON-NLS-1$
-		// assertEquals(901, tuleapMilestone.getTypeId());
-		//
-		// assertNotNull(tuleapMilestone.getValues());
-		//
-		// Object value = tuleapMilestone.getValue(Integer.valueOf(955));
-		// assertNotNull(value);
-		//		assertEquals("Bonjour,\nC'est un test unitaire.", value); //$NON-NLS-1$
-		//
-		// value = tuleapMilestone.getValue(Integer.valueOf(956));
-		// assertNotNull(value);
-		//		assertEquals("je suis une valeur calculee", value); //$NON-NLS-1$
-		//
-		// value = tuleapMilestone.getValue(Integer.valueOf(957));
-		// assertNotNull(value);
-		// assertEquals(9610, ((Number)value).intValue());
-		//
-		// value = tuleapMilestone.getValue(Integer.valueOf(958));
-		// assertNotNull(value);
-		// assertTrue(value instanceof int[]);
-		// assertEquals(0, ((int[])value)[0]);
-		// assertEquals(1, ((int[])value)[1]);
-		//
-		// value = tuleapMilestone.getValue(Integer.valueOf(959));
-		// assertNotNull(value);
-		// assertTrue(value instanceof int[]);
-		// assertEquals(0, ((int[])value)[0]);
-		// assertEquals(2, ((int[])value)[1]);
-		//
-		// value = tuleapMilestone.getValue(Integer.valueOf(960));
-		// assertNotNull(value);
-		// assertEquals(20120101, ((Number)value).longValue());
-		//
-		// value = tuleapMilestone.getValue(Integer.valueOf(961));
-		// assertNotNull(value);
-		//		assertEquals("first, second, third", value); //$NON-NLS-1$
-		fail("Fix the test ");
+		assertEquals("Release TU", tuleapMilestone.getLabel()); //$NON-NLS-1$
+		assertEquals(dateFormat.parse("20130923114418963"), tuleapMilestone.getStartDate());
+		assertEquals(50, tuleapMilestone.getDuration(), 0);
+		assertEquals(100, tuleapMilestone.getCapacity(), 0);
+		assertEquals("/milestones/201", tuleapMilestone.getUrl()); //$NON-NLS-1$
+		assertEquals("/milestones?id=201&group_id=3", tuleapMilestone.getHtmlUrl()); //$NON-NLS-1$
+		assertEquals(901, tuleapMilestone.getTypeId());
 
-		// TODO
-		// value = tuleapMilestone.getValue(Integer.valueOf(962));
+		assertNotNull(tuleapMilestone.getFieldValues());
+
+		AbstractFieldValue value = tuleapMilestone.getFieldValue(955);
+		assertTrue(value instanceof LiteralFieldValue);
+		String fieldValue = ((LiteralFieldValue)value).getFieldValue();
+		assertEquals("Bonjour,\nC'est un test unitaire.", fieldValue); //$NON-NLS-1$
+
+		value = tuleapMilestone.getFieldValue(956);
+		assertTrue(value instanceof LiteralFieldValue);
+		fieldValue = ((LiteralFieldValue)value).getFieldValue();
+		assertEquals("je suis une valeur calculee", fieldValue); //$NON-NLS-1$
+
+		value = tuleapMilestone.getFieldValue(957);
+		assertTrue(value instanceof BoundFieldValue);
+		List<Integer> valueIds = ((BoundFieldValue)value).getValueIds();
+		assertEquals(1, valueIds.size());
+		assertEquals(9610, valueIds.get(0).intValue());
+
+		value = tuleapMilestone.getFieldValue(958);
+		assertTrue(value instanceof BoundFieldValue);
+		valueIds = ((BoundFieldValue)value).getValueIds();
+		assertEquals(2, valueIds.size());
+		assertEquals(0, valueIds.get(0).intValue());
+		assertEquals(1, valueIds.get(1).intValue());
+
+		value = tuleapMilestone.getFieldValue(959);
+		assertTrue(value instanceof BoundFieldValue);
+		valueIds = ((BoundFieldValue)value).getValueIds();
+		assertEquals(0, valueIds.get(0).intValue());
+		assertEquals(2, valueIds.get(1).intValue());
+
+		value = tuleapMilestone.getFieldValue(960);
+		assertTrue(value instanceof LiteralFieldValue);
+		fieldValue = ((LiteralFieldValue)value).getFieldValue();
+		assertEquals("20120101", fieldValue); //$NON-NLS-1$
+
+		value = tuleapMilestone.getFieldValue(961);
+		assertTrue(value instanceof LiteralFieldValue);
+		fieldValue = ((LiteralFieldValue)value).getFieldValue();
+		assertEquals("first, second, third", fieldValue); //$NON-NLS-1$
+
+		List<TuleapBacklogItem> backlogItems = tuleapMilestone.getBacklogItems();
+		assertEquals(2, backlogItems.size());
+
+		// First backlog item
+		TuleapBacklogItem bi = backlogItems.get(0);
+		assertEquals(300, bi.getId());
+		assertEquals("An important Epic", bi.getLabel()); //$NON-NLS-1$
+		assertEquals(30F, bi.getInitialEffort(), 0F);
+		assertEquals("/backlog_items/300", bi.getUrl()); //$NON-NLS-1$
+		assertEquals("/backlog_items?id=300&group_id=3", bi.getHtmlUrl()); //$NON-NLS-1$
+		assertEquals(801, bi.getTypeId());
+
+		assertEquals(Integer.valueOf(200), bi.getAssignedMilestoneId());
+		Collection<AbstractFieldValue> fieldValues = bi.getFieldValues();
+		assertEquals(4, fieldValues.size());
+		Iterator<AbstractFieldValue> it = fieldValues.iterator();
+
+		value = it.next();
+		assertEquals(850, value.getFieldId());
+		assertTrue(value instanceof BoundFieldValue);
+		BoundFieldValue boundValue = (BoundFieldValue)value;
+		valueIds = boundValue.getValueIds();
+		assertEquals(1, valueIds.size());
+		assertEquals(8502, valueIds.get(0).intValue());
+
+		value = it.next();
+		assertEquals(851, value.getFieldId());
+		assertTrue(value instanceof LiteralFieldValue);
+		assertEquals("0", ((LiteralFieldValue)value).getFieldValue()); //$NON-NLS-1$
+
+		value = it.next();
+		assertEquals(852, value.getFieldId());
+		assertTrue(value instanceof LiteralFieldValue);
+		assertEquals("The summary of an important Epic", ((LiteralFieldValue)value).getFieldValue()); //$NON-NLS-1$
+
+		value = it.next();
+		assertEquals(853, value.getFieldId());
+		assertTrue(value instanceof LiteralFieldValue);
+		assertEquals("350,351", ((LiteralFieldValue)value).getFieldValue()); //$NON-NLS-1$
+
+		// second backlog item
+		bi = backlogItems.get(1);
+		assertEquals(301, bi.getId());
+		assertEquals("Another important Epic", bi.getLabel()); //$NON-NLS-1$
+		assertEquals(40.5F, bi.getInitialEffort(), 0F);
+		assertEquals("/backlog_items/301", bi.getUrl()); //$NON-NLS-1$
+		assertEquals("/backlog_items?id=301&group_id=3", bi.getHtmlUrl()); //$NON-NLS-1$
+		assertEquals(801, bi.getTypeId());
+		assertEquals(Integer.valueOf(201), bi.getAssignedMilestoneId());
 	}
 
 }

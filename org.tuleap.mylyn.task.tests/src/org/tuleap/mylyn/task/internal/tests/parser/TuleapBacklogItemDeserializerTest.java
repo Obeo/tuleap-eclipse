@@ -46,7 +46,7 @@ public class TuleapBacklogItemDeserializerTest {
 		assertEquals(200, item.getAssignedMilestoneId().intValue());
 
 		assertEquals(4, item.getFieldValues().size());
-		assertEquals(Integer.valueOf(8502), item.getFieldValue(Integer.valueOf(850)));
+		assertEquals(Integer.valueOf(8502), item.getFieldValue(850));
 		// assertEquals(0, ((Number)item.getValue(Integer.valueOf(851))).intValue());
 		//		assertEquals("The summary of an important Epic", item.getValue(Integer.valueOf(852))); //$NON-NLS-1$
 		//		assertEquals("350,351", item.getFieldValue(Integer.valueOf(853))); //$NON-NLS-1$

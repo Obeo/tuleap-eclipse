@@ -95,8 +95,7 @@ public abstract class AbstractElementTaskDataConverter<ELEMENT extends AbstractT
 		// Summary
 		TuleapString titleField = this.configuration.getTitleField();
 		if (titleField != null) {
-			AbstractFieldValue fieldValue = element
-					.getFieldValue(Integer.valueOf(titleField.getIdentifier()));
+			AbstractFieldValue fieldValue = element.getFieldValue(titleField.getIdentifier());
 			if (fieldValue instanceof LiteralFieldValue) {
 				LiteralFieldValue literalFieldValue = (LiteralFieldValue)fieldValue;
 				tuleapTaskMapper.setSummary(literalFieldValue.getFieldValue());
@@ -106,8 +105,7 @@ public abstract class AbstractElementTaskDataConverter<ELEMENT extends AbstractT
 		// Status
 		AbstractTuleapSelectBox statusField = this.configuration.getStatusField();
 		if (statusField != null) {
-			AbstractFieldValue fieldValue = element.getFieldValue(Integer
-					.valueOf(statusField.getIdentifier()));
+			AbstractFieldValue fieldValue = element.getFieldValue(statusField.getIdentifier());
 			if (fieldValue instanceof BoundFieldValue) {
 				BoundFieldValue boundFieldValue = (BoundFieldValue)fieldValue;
 				List<Integer> valueIds = boundFieldValue.getValueIds();
@@ -127,8 +125,7 @@ public abstract class AbstractElementTaskDataConverter<ELEMENT extends AbstractT
 		// Persons
 		AbstractTuleapSelectBox contributorField = this.configuration.getContributorField();
 		if (contributorField != null) {
-			AbstractFieldValue abstractFieldValue = element.getFieldValue(Integer.valueOf(contributorField
-					.getIdentifier()));
+			AbstractFieldValue abstractFieldValue = element.getFieldValue(contributorField.getIdentifier());
 			if (abstractFieldValue instanceof BoundFieldValue) {
 				BoundFieldValue boundFieldValue = (BoundFieldValue)abstractFieldValue;
 				tuleapTaskMapper.setAssignedTo(boundFieldValue.getValueIds());
@@ -144,8 +141,7 @@ public abstract class AbstractElementTaskDataConverter<ELEMENT extends AbstractT
 		// Attachments
 		TuleapFileUpload attachmentField = this.configuration.getAttachmentField();
 		if (attachmentField != null) {
-			AbstractFieldValue attachmentFieldValue = element.getFieldValue(Integer.valueOf(attachmentField
-					.getIdentifier()));
+			AbstractFieldValue attachmentFieldValue = element.getFieldValue(attachmentField.getIdentifier());
 			if (attachmentFieldValue instanceof AttachmentFieldValue) {
 				AttachmentFieldValue aFieldValue = (AttachmentFieldValue)attachmentFieldValue;
 				List<AttachmentValue> attachments = aFieldValue.getAttachments();
@@ -168,8 +164,7 @@ public abstract class AbstractElementTaskDataConverter<ELEMENT extends AbstractT
 					&& abstractTuleapField.getIdentifier() == contributorField.getIdentifier();
 
 			if (!isTitle && !isStatus && !isAttachment && !isContributor) {
-				AbstractFieldValue fieldValue = element.getFieldValue(Integer.valueOf(abstractTuleapField
-						.getIdentifier()));
+				AbstractFieldValue fieldValue = element.getFieldValue(abstractTuleapField.getIdentifier());
 
 				if (fieldValue instanceof LiteralFieldValue) {
 					LiteralFieldValue literalFieldValue = (LiteralFieldValue)fieldValue;

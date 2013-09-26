@@ -1003,8 +1003,7 @@ public class TuleapSoapConnector {
 				|| ITuleapConfigurationConstants.SB.equals(trackerField.getType())
 				|| ITuleapConfigurationConstants.CB.equals(trackerField.getType())) {
 			// Regular select box, multi-select box or checkbox
-			AbstractFieldValue abstractFieldValue = artifact.getFieldValue(Integer.valueOf(trackerField
-					.getField_id()));
+			AbstractFieldValue abstractFieldValue = artifact.getFieldValue(trackerField.getField_id());
 			if (abstractFieldValue instanceof BoundFieldValue) {
 				BoundFieldValue boundFieldValue = (BoundFieldValue)abstractFieldValue;
 				List<TrackerFieldBindValue> bindValues = new ArrayList<TrackerFieldBindValue>();
@@ -1027,8 +1026,7 @@ public class TuleapSoapConnector {
 			}
 		} else if (this.shouldConsider(trackerField.getType())) {
 			// Any other value (string, text, integer, float)
-			AbstractFieldValue abstractFieldValue = artifact.getFieldValue(Integer.valueOf(trackerField
-					.getField_id()));
+			AbstractFieldValue abstractFieldValue = artifact.getFieldValue(trackerField.getField_id());
 			if (abstractFieldValue instanceof LiteralFieldValue) {
 				LiteralFieldValue literalFieldValue = (LiteralFieldValue)abstractFieldValue;
 				String composedValue = literalFieldValue.getFieldValue();

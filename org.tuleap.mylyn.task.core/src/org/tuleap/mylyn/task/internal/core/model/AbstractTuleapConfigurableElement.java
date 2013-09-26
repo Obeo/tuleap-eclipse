@@ -252,8 +252,8 @@ public abstract class AbstractTuleapConfigurableElement {
 	 *            the field id.
 	 * @return the value of the given field.
 	 */
-	public AbstractFieldValue getFieldValue(Integer fieldTypeId) {
-		return fieldTypeIdToValue.get(fieldTypeId);
+	public AbstractFieldValue getFieldValue(int fieldTypeId) {
+		return fieldTypeIdToValue.get(Integer.valueOf(fieldTypeId));
 	}
 
 	/**
