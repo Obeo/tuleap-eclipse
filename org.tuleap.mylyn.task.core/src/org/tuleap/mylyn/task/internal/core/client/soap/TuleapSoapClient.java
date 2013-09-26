@@ -41,7 +41,7 @@ import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfigurat
 public class TuleapSoapClient {
 
 	/**
-	 * The location of the repository.
+	 * The SOAP connector.
 	 */
 	private final TuleapSoapConnector soapConnector;
 
