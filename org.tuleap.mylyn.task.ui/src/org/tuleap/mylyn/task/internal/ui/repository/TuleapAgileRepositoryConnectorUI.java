@@ -91,7 +91,8 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 				.equals(taskEditorPageFactoryId)) {
 			TaskAttribute mappedAttribute = taskData.getRoot().getMappedAttribute(
 					IMylynAgileCoreConstants.TASK_KIND_KEY);
-			if (IMylynAgileCoreConstants.TASK_KIND_TOP_PLANNING.equals(mappedAttribute.getValue())) {
+			if (mappedAttribute != null
+					&& IMylynAgileCoreConstants.TASK_KIND_TOP_PLANNING.equals(mappedAttribute.getValue())) {
 				return new String[] {ITasksUiConstants.ID_PAGE_PLANNING,
 						TuleapTaskEditorPageFactory.TULEAP_TASK_EDITOR_PAGE_FACTORY_ID, };
 			}
