@@ -179,6 +179,7 @@ public class TuleapRestClient {
 
 			// For each project that has the tracker service
 			for (TuleapProjectConfiguration projectConfig : projectConfigurations) {
+				tuleapServerConfiguration.addProject(projectConfig);
 
 				// TODO SBE Restore this code!
 
