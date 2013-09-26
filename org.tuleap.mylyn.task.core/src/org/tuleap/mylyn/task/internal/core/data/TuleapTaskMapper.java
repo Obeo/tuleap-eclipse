@@ -325,6 +325,8 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 * @return The identifier of the artifact
 	 */
 	public int getArtifactId() {
+		// TODO SBE Test with a newly created artifact for potential number format exception
+		// TODO SBE Be careful when the identifier will be changed
 		return Integer.valueOf(taskData.getTaskId()).intValue();
 	}
 
