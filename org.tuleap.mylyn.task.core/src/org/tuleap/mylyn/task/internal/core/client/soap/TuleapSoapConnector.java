@@ -511,6 +511,9 @@ public class TuleapSoapConnector {
 						.getProjectGroupsAndUsers(sessionHash, groupId);
 				for (Ugroup ugroup : projectGroupsAndUsers) {
 					// FIXME Waiting for a fix from Tuleap -> https://tuleap.net/plugins/tracker/?aid=2234
+
+					// TODO Check and remove
+					// LDE Commented after changing user management caching mechanism
 					// String uGroupName = ugroup.getName();
 					//					String groupMembers = "group_members"; //$NON-NLS-1$
 					//					String groupAdmin = "group_admins"; //$NON-NLS-1$
