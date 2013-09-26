@@ -30,6 +30,11 @@ import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
 public class TuleapTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 
 	/**
+	 * The identifier of the Tuleap task editor page factory.
+	 */
+	public static final String TULEAP_TASK_EDITOR_PAGE_FACTORY_ID = "org.tuleap.mylyn.task.ui.tuleapTaskEditorPageFactory"; //$NON-NLS-1$
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory#canCreatePageFor(org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput)

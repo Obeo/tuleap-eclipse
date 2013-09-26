@@ -19,7 +19,7 @@
          point="org.eclipse.mylyn.tasks.ui.editors">
       <pageFactory
             class="org.tuleap.mylyn.task.internal.ui.editor.TuleapTaskEditorPageFactory"
-            id="org.tuleap.mylyn.task.ui.pageFactory">
+            id="org.tuleap.mylyn.task.ui.tuleapTaskEditorPageFactory">
       </pageFactory>
    </extension>
 
