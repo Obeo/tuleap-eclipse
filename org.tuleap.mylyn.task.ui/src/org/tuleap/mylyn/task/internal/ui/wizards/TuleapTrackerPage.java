@@ -38,6 +38,7 @@ import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
+import org.tuleap.mylyn.task.internal.ui.wizards.query.TuleapQueryProjectPage;
 
 /**
  * This page will be used when a new task is created in order to let the user select the tracker for which the
@@ -139,12 +140,16 @@ public class TuleapTrackerPage extends WizardPage {
 			final List<TuleapTrackerConfiguration> allTrackerConfigurations = new ArrayList<TuleapTrackerConfiguration>();
 
 			IWizardPage previousPage = TuleapTrackerPage.this.getPreviousPage();
+
+			TuleapProjectConfiguration projectSelected = null;
 			if (previousPage instanceof TuleapProjectPage) {
-				TuleapProjectPage tuleapProjectPage = (TuleapProjectPage)previousPage;
-				TuleapProjectConfiguration projectSelected = tuleapProjectPage.getProjectSelected();
-				if (projectSelected != null) {
-					allTrackerConfigurations.addAll(projectSelected.getAllTrackerConfigurations());
-				}
+				projectSelected = ((TuleapProjectPage)previousPage).getProjectSelected();
+			} else if (previousPage instanceof TuleapQueryProjectPage) {
+				projectSelected = ((TuleapQueryProjectPage)previousPage).getProjectSelected();
+			}
+
+			if (projectSelected != null) {
+				allTrackerConfigurations.addAll(projectSelected.getAllTrackerConfigurations());
 			}
 
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {
