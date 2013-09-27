@@ -18,7 +18,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.tuleap.mylyn.task.agile.core.util.IMylynAgileCoreConstants;
 import org.tuleap.mylyn.task.agile.ui.AbstractAgileRepositoryConnectorUI;
-import org.tuleap.mylyn.task.agile.ui.editors.ITaskEditorPageFactoryConstants;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.ui.editor.TuleapTaskEditorPageFactory;
 import org.tuleap.mylyn.task.internal.ui.wizards.NewTuleapTaskWizard;
@@ -92,7 +91,7 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 			TaskAttribute mappedAttribute = taskData.getRoot().getMappedAttribute(
 					IMylynAgileCoreConstants.TASK_KIND_KEY);
 			if (mappedAttribute != null
-					&& IMylynAgileCoreConstants.TASK_KIND_TOP_PLANNING.equals(mappedAttribute.getValue())) {
+					&& IMylynAgileCoreConstants.KIND_TOP_PLANNING.equals(mappedAttribute.getValue())) {
 				return new String[] {ITasksUiConstants.ID_PAGE_PLANNING,
 						TuleapTaskEditorPageFactory.TULEAP_TASK_EDITOR_PAGE_FACTORY_ID, };
 			}
