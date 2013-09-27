@@ -371,7 +371,7 @@ public class TuleapMilestoneDeserializerTests {
 		assertEquals(100, tuleapMilestone.getCapacity(), 0);
 		assertEquals("/milestones/201", tuleapMilestone.getUrl()); //$NON-NLS-1$
 		assertEquals("/milestones?id=201&group_id=3", tuleapMilestone.getHtmlUrl()); //$NON-NLS-1$
-		assertEquals(901, tuleapMilestone.getTypeId());
+		assertEquals(901, tuleapMilestone.getConfigurationId());
 
 		assertNotNull(tuleapMilestone.getFieldValues());
 
@@ -424,7 +424,7 @@ public class TuleapMilestoneDeserializerTests {
 		assertEquals(30F, bi.getInitialEffort(), 0F);
 		assertEquals("/backlog_items/300", bi.getUrl()); //$NON-NLS-1$
 		assertEquals("/backlog_items?id=300&group_id=3", bi.getHtmlUrl()); //$NON-NLS-1$
-		assertEquals(801, bi.getTypeId());
+		assertEquals(801, bi.getConfigurationId());
 
 		assertEquals(Integer.valueOf(200), bi.getAssignedMilestoneId());
 		Collection<AbstractFieldValue> fieldValues = bi.getFieldValues();
@@ -461,7 +461,7 @@ public class TuleapMilestoneDeserializerTests {
 		assertEquals(40.5F, bi.getInitialEffort(), 0F);
 		assertEquals("/backlog_items/301", bi.getUrl()); //$NON-NLS-1$
 		assertEquals("/backlog_items?id=301&group_id=3", bi.getHtmlUrl()); //$NON-NLS-1$
-		assertEquals(801, bi.getTypeId());
+		assertEquals(801, bi.getConfigurationId());
 		assertEquals(Integer.valueOf(201), bi.getAssignedMilestoneId());
 	}
 
