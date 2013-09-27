@@ -209,4 +209,124 @@ public interface ITuleapConstants {
 	 * The LDAP identifier of an anonymous user.
 	 */
 	String ANONYMOUS_USER_INFO_LDAP_IDENTIFIER = ""; //$NON-NLS-1$
+
+	/**
+	 * The key used for the id of the POJO.
+	 */
+	String ID = "id"; //$NON-NLS-1$
+
+	/**
+	 * The key used for the label of the POJO.
+	 */
+	String LABEL = "label"; //$NON-NLS-1$
+
+	/**
+	 * The key used for the URL of the POJO.
+	 */
+	String URL = "url"; //$NON-NLS-1$
+
+	/**
+	 * The key used for the HTML URL of the POJO.
+	 */
+	String HTML_URL = "html_url"; //$NON-NLS-1$
+
+	/**
+	 * The key used for the field values of the POJO.
+	 */
+	String VALUES = "values"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the field identifier of the POJO.
+	 */
+	String FIELD_ID = "field_id"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the field value of the POJO.
+	 */
+	String FIELD_VALUE = "value"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the bind value identifier.
+	 */
+	String FIELD_BIND_VALUE_ID = "bind_value_id"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the list of bind value identifiers.
+	 */
+	String FIELD_BIND_VALUE_IDS = "bind_value_ids"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the list of file descriptions.
+	 */
+	String FILE_DESCRIPTIONS = "file_descriptions"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the file identifier.
+	 */
+	String FILE_ID = "file_id"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the person that submit the file.
+	 */
+	String SUBMITTED_BY = "submitted_by"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the file description.
+	 */
+	String DESCRIPTION = "description"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the file name.
+	 */
+	String NAME = "name"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the file size.
+	 */
+	String SIZE = "size"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the file type.
+	 */
+	String TYPE = "type"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the start date of the milestone.
+	 */
+	String START_DATE = "start_date"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the duration of the milestone.
+	 */
+	String DURATION = "duration"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the capacity of the milestone.
+	 */
+	String CAPACITY = "capacity"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the type id of the milestone.
+	 */
+	String MILESTONE_TYPE_ID = "milestone_type_id"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the sub-milestones.
+	 */
+	String SUBMILESTONES = "submilestones"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the type id of the backlogItem.
+	 */
+	String BACKLOGITEM_TYPE_ID = "backlog_item_type_id"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the initial effort of the backlogItem.
+	 */
+	String INITIAL_EFFORT = "initial_effort"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the backlogItem assigned milestone identifier.
+	 */
+	String ASSIGNED_MILESTONE_ID = "assigned_milestone_id"; //$NON-NLS-1$
 }

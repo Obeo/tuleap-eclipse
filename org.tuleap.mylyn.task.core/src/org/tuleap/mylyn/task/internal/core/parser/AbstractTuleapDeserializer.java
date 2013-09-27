@@ -28,6 +28,7 @@ import java.util.List;
 import org.tuleap.mylyn.task.internal.core.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableElement;
+import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**
  * This class is used to deserialize a JSON representation of a Tuleap object.
@@ -38,51 +39,6 @@ import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableEleme
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapConfigurableElement> implements JsonDeserializer<T> {
-
-	/**
-	 * The key used for the id of the POJO.
-	 */
-	private static final String ID = "id"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the label of the POJO.
-	 */
-	private static final String LABEL = "label"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the URL of the POJO.
-	 */
-	private static final String URL = "url"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the HTML URL of the POJO.
-	 */
-	private static final String HTML_URL = "html_url"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the field values of the POJO.
-	 */
-	private static final String VALUES = "values"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the id of a field of the POJO.
-	 */
-	private static final String FIELD_ID = "field_id"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the value of a field of the POJO.
-	 */
-	private static final String FIELD_VALUE = "value"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the bind value id.
-	 */
-	private static final String FIELD_BIND_VALUE_ID = "bind_value_id"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the list of bind value ids.
-	 */
-	private static final String FIELD_BIND_VALUE_IDS = "bind_value_ids"; //$NON-NLS-1$
 
 	/**
 	 * The pattern used to format date following the ISO8601 standard.
@@ -100,20 +56,20 @@ public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapConfigu
 
 		JsonObject jsonObject = rootJsonElement.getAsJsonObject();
 
-		int id = jsonObject.get(ID).getAsInt();
-		String label = jsonObject.get(LABEL).getAsString();
-		String url = jsonObject.get(URL).getAsString();
-		String htmlUrl = jsonObject.get(HTML_URL).getAsString();
+		int id = jsonObject.get(ITuleapConstants.ID).getAsInt();
+		String label = jsonObject.get(ITuleapConstants.LABEL).getAsString();
+		String url = jsonObject.get(ITuleapConstants.URL).getAsString();
+		String htmlUrl = jsonObject.get(ITuleapConstants.HTML_URL).getAsString();
 		int configurationId = jsonObject.get(this.getTypeIdKey()).getAsInt();
 
 		// TODO Fix the dates from the parsing
 		T pojo = buildPojo(id, configurationId, label, url, htmlUrl, new Date(), new Date());
 
-		JsonArray fields = jsonObject.get(VALUES).getAsJsonArray();
+		JsonArray fields = jsonObject.get(ITuleapConstants.VALUES).getAsJsonArray();
 		for (JsonElement field : fields) {
 			JsonObject jsonField = field.getAsJsonObject();
-			int fieldId = jsonField.get(FIELD_ID).getAsInt();
-			JsonElement jsonValue = jsonField.get(FIELD_VALUE);
+			int fieldId = jsonField.get(ITuleapConstants.FIELD_ID).getAsInt();
+			JsonElement jsonValue = jsonField.get(ITuleapConstants.FIELD_VALUE);
 			if (jsonValue != null) {
 				if (jsonValue.isJsonPrimitive()) {
 					JsonPrimitive primitive = jsonValue.getAsJsonPrimitive();
@@ -128,13 +84,13 @@ public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapConfigu
 					}
 				}
 			} else {
-				JsonElement jsonBindValueId = jsonField.get(FIELD_BIND_VALUE_ID);
+				JsonElement jsonBindValueId = jsonField.get(ITuleapConstants.FIELD_BIND_VALUE_ID);
 				if (jsonBindValueId != null) {
 					int bindValueId = jsonBindValueId.getAsInt();
 					pojo.addFieldValue(new BoundFieldValue(fieldId, Lists.newArrayList(Integer
 							.valueOf(bindValueId))));
 				} else {
-					JsonElement jsonBindValueIds = jsonField.get(FIELD_BIND_VALUE_IDS);
+					JsonElement jsonBindValueIds = jsonField.get(ITuleapConstants.FIELD_BIND_VALUE_IDS);
 					if (jsonBindValueIds != null) {
 						JsonArray jsonIds = jsonBindValueIds.getAsJsonArray();
 						List<Integer> bindValueIds = new ArrayList<Integer>();

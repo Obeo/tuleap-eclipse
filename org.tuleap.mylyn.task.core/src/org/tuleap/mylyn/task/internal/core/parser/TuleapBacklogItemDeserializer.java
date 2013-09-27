@@ -19,6 +19,7 @@ import java.lang.reflect.Type;
 import java.util.Date;
 
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
+import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**
  * This class is used to deserialize the JSON representation of a project configuration.
@@ -28,22 +29,12 @@ import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
 public class TuleapBacklogItemDeserializer extends AbstractTuleapDeserializer<TuleapBacklogItem> {
 
 	/**
-	 * The key used for the initial effort of the backlog item.
-	 */
-	private static final String INITIAL_EFFORT = "initial_effort"; //$NON-NLS-1$
-
-	/**
 	 * The key used for the type id of the backlog item.
 	 */
 	private static final String BACKLOG_ITEM_TYPE_ID = "backlog_item_type_id"; //$NON-NLS-1$
 
 	/**
-	 * The key used for the assigned milestone id.
-	 */
-	private static final String ASSIGNED_MILESTONE_ID = "assigned_milestone_id"; //$NON-NLS-1$
-
-	/**
-	 * {@inheritDoc}
+	 * {@inheritDoc}.
 	 * 
 	 * @see com.google.gson.JsonDeserializer#deserialize(com.google.gson.JsonElement, java.lang.reflect.Type,
 	 *      com.google.gson.JsonDeserializationContext)
@@ -55,13 +46,13 @@ public class TuleapBacklogItemDeserializer extends AbstractTuleapDeserializer<Tu
 
 		JsonObject jsonObject = element.getAsJsonObject();
 
-		JsonElement elt = jsonObject.get(INITIAL_EFFORT);
+		JsonElement elt = jsonObject.get(ITuleapConstants.INITIAL_EFFORT);
 		if (elt != null) {
 			float initialEffort = elt.getAsFloat();
 			backlogItem.setInitialEffort(initialEffort);
 		}
 
-		elt = jsonObject.get(ASSIGNED_MILESTONE_ID);
+		elt = jsonObject.get(ITuleapConstants.ASSIGNED_MILESTONE_ID);
 		if (elt != null) {
 			int assignedMilestoneId = elt.getAsInt();
 			backlogItem.setAssignedMilestoneId(Integer.valueOf(assignedMilestoneId));

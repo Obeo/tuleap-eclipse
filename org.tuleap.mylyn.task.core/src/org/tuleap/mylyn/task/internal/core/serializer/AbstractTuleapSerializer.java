@@ -26,6 +26,7 @@ import org.tuleap.mylyn.task.internal.core.data.AttachmentValue;
 import org.tuleap.mylyn.task.internal.core.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableElement;
+import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**
  * This class is used to serialize the JSON representation of a AbstractTuleapConfigurableElement.
@@ -34,86 +35,6 @@ import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableEleme
  * @param <T>
  */
 public abstract class AbstractTuleapSerializer<T extends AbstractTuleapConfigurableElement> implements JsonSerializer<T> {
-
-	/**
-	 * The key used for the id of the POJO.
-	 */
-	private static final String ID = "id"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the label of the POJO.
-	 */
-	private static final String LABEL = "label"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the URL of the POJO.
-	 */
-	private static final String URL = "url"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the HTML URL of the POJO.
-	 */
-	private static final String HTML_URL = "html_url"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the field values of the POJO.
-	 */
-	private static final String VALUES = "values"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the field identifier of the POJO.
-	 */
-	private static final String FIELD_ID = "field_id"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the field value of the POJO.
-	 */
-	private static final String FIELD_VALUE = "value"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the bind value identifier.
-	 */
-	private static final String FIELD_BIND_VALUE_ID = "bind_value_id"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the list of bind value identifiers.
-	 */
-	private static final String FIELD_BIND_VALUE_IDS = "bind_value_ids"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the list of file descriptions.
-	 */
-	private static final String FILE_DESCRIPTIONS = "file_descriptions"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the file identifier.
-	 */
-	private static final String FILE_ID = "file_id"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the person that submit the file.
-	 */
-	private static final String SUBMITTED_BY = "submitted_by"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the file description.
-	 */
-	private static final String DESCRIPTION = "description"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the file name.
-	 */
-	private static final String NAME = "name"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the file size.
-	 */
-	private static final String SIZE = "size"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the file type.
-	 */
-	private static final String TYPE = "type"; //$NON-NLS-1$
 
 	/**
 	 * The pattern used to format date following the ISO8601 standard.
@@ -133,48 +54,30 @@ public abstract class AbstractTuleapSerializer<T extends AbstractTuleapConfigura
 
 		JsonElement values = new JsonArray();
 		if (element.getFieldValues().size() > 0) {
-			abstractJsonObject.add(VALUES, values);
+			abstractJsonObject.add(ITuleapConstants.VALUES, values);
 		}
 		for (AbstractFieldValue field : element.getFieldValues()) {
 			JsonObject fieldObject = new JsonObject();
-			fieldObject.add(FIELD_ID, new JsonPrimitive(Integer.valueOf(field.getFieldId())));
+			fieldObject
+					.add(ITuleapConstants.FIELD_ID, new JsonPrimitive(Integer.valueOf(field.getFieldId())));
 
 			if (field instanceof LiteralFieldValue) {
-				fieldObject.add(FIELD_VALUE, new JsonPrimitive(((LiteralFieldValue)field).getFieldValue()));
+				fieldObject.add(ITuleapConstants.FIELD_VALUE, new JsonPrimitive(((LiteralFieldValue)field)
+						.getFieldValue()));
 			} else if (field instanceof BoundFieldValue) {
 				BoundFieldValue boundFieldValue = (BoundFieldValue)field;
 				if (boundFieldValue.getValueIds().size() == 1) {
-					fieldObject.add(FIELD_BIND_VALUE_ID, new JsonPrimitive(boundFieldValue.getValueIds().get(
-							0)));
+					fieldObject.add(ITuleapConstants.FIELD_BIND_VALUE_ID, new JsonPrimitive(boundFieldValue
+							.getValueIds().get(0)));
 				} else if (boundFieldValue.getValueIds().size() > 1) {
 					JsonElement fieldValues = new JsonArray();
 					for (Integer theValue : boundFieldValue.getValueIds()) {
 						fieldValues.getAsJsonArray().add(new JsonPrimitive(theValue));
 					}
-					fieldObject.add(FIELD_BIND_VALUE_IDS, fieldValues);
+					fieldObject.add(ITuleapConstants.FIELD_BIND_VALUE_IDS, fieldValues);
 				}
 			} else if (field instanceof AttachmentFieldValue) {
-
-				AttachmentFieldValue attachementFieldValue = (AttachmentFieldValue)field;
-
-				if (attachementFieldValue.getAttachments().size() > 0) {
-					JsonElement fileDescriptions = new JsonArray();
-					fieldObject.add(FILE_DESCRIPTIONS, fileDescriptions);
-					for (AttachmentValue attachmentValue : attachementFieldValue.getAttachments()) {
-						JsonObject fileDescritonObject = new JsonObject();
-						fileDescritonObject.add(FILE_ID, new JsonPrimitive(Integer.valueOf(attachmentValue
-								.getAttachmentId())));
-						fileDescritonObject.add(SUBMITTED_BY, new JsonPrimitive(Integer
-								.valueOf(attachmentValue.getPerson().getId())));
-						fileDescritonObject.add(DESCRIPTION, new JsonPrimitive(attachmentValue
-								.getDescription()));
-						fileDescritonObject.add(NAME, new JsonPrimitive(attachmentValue.getFilename()));
-						fileDescritonObject.add(SIZE, new JsonPrimitive(Integer.valueOf(attachmentValue
-								.getSize())));
-						fileDescritonObject.add(TYPE, new JsonPrimitive(attachmentValue.getContentType()));
-						fileDescriptions.getAsJsonArray().add(fileDescritonObject);
-					}
-				}
+				this.manageAttachmentFieldValues(field, fieldObject);
 			}
 			values.getAsJsonArray().add(fieldObject);
 		}
@@ -192,15 +95,47 @@ public abstract class AbstractTuleapSerializer<T extends AbstractTuleapConfigura
 	private void manageCommonAttributes(JsonObject abstractJsonObject,
 			AbstractTuleapConfigurableElement abstractelement) {
 
-		abstractJsonObject.add(ID, new JsonPrimitive(Integer.valueOf(abstractelement.getId())));
+		abstractJsonObject.add(ITuleapConstants.ID, new JsonPrimitive(Integer
+				.valueOf(abstractelement.getId())));
 		if (abstractelement.getLabel() != null) {
-			abstractJsonObject.add(LABEL, new JsonPrimitive(abstractelement.getLabel()));
+			abstractJsonObject.add(ITuleapConstants.LABEL, new JsonPrimitive(abstractelement.getLabel()));
 		}
-		if (abstractelement.getLabel() != null) {
-			abstractJsonObject.add(URL, new JsonPrimitive(abstractelement.getLabel()));
-		}
+		abstractJsonObject.add(ITuleapConstants.URL, new JsonPrimitive(abstractelement.getUrl()));
 		if (abstractelement.getHtmlUrl() != null) {
-			abstractJsonObject.add(HTML_URL, new JsonPrimitive(abstractelement.getHtmlUrl()));
+			abstractJsonObject
+					.add(ITuleapConstants.HTML_URL, new JsonPrimitive(abstractelement.getHtmlUrl()));
+		}
+	}
+
+	/**
+	 * Manage attachment field values.
+	 * 
+	 * @param field
+	 *            the Abstract Field Value
+	 * @param fieldObject
+	 *            the parent field Object
+	 */
+	private void manageAttachmentFieldValues(AbstractFieldValue field, JsonObject fieldObject) {
+		AttachmentFieldValue attachmentFieldValue = (AttachmentFieldValue)field;
+		if (attachmentFieldValue.getAttachments().size() > 0) {
+			JsonElement fileDescriptions = new JsonArray();
+			fieldObject.add(ITuleapConstants.FILE_DESCRIPTIONS, fileDescriptions);
+			for (AttachmentValue attachmentValue : attachmentFieldValue.getAttachments()) {
+				JsonObject fileDescritonObject = new JsonObject();
+				fileDescritonObject.add(ITuleapConstants.FILE_ID, new JsonPrimitive(Integer
+						.valueOf(attachmentValue.getAttachmentId())));
+				fileDescritonObject.add(ITuleapConstants.SUBMITTED_BY, new JsonPrimitive(Integer
+						.valueOf(attachmentValue.getPerson().getId())));
+				fileDescritonObject.add(ITuleapConstants.DESCRIPTION, new JsonPrimitive(attachmentValue
+						.getDescription()));
+				fileDescritonObject.add(ITuleapConstants.NAME, new JsonPrimitive(attachmentValue
+						.getFilename()));
+				fileDescritonObject.add(ITuleapConstants.SIZE, new JsonPrimitive(Integer
+						.valueOf(attachmentValue.getSize())));
+				fileDescritonObject.add(ITuleapConstants.TYPE, new JsonPrimitive(attachmentValue
+						.getContentType()));
+				fileDescriptions.getAsJsonArray().add(fileDescritonObject);
+			}
 		}
 	}
 }

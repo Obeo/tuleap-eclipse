@@ -21,6 +21,7 @@ import java.text.ParseException;
 import java.util.Date;
 
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
+import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**
  * This class is used to deserialize the JSON representation of a tracker configuration.
@@ -31,31 +32,12 @@ import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
  */
 public class TuleapMilestoneDeserializer extends AbstractTuleapDeserializer<TuleapMilestone> {
 
-	/**
-	 * The key used to retrieve the start date of the milestone.
-	 */
-	private static final String START_DATE = "start_date"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the duration of the milestone.
-	 */
-	private static final String DURATION = "duration"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the capacity of the milestone.
-	 */
-	private static final String CAPACITY = "capacity"; //$NON-NLS-1$
 
 	/**
 	 * The key used to retrieve the type id of the milestone.
 	 */
 	private static final String MILESTONE_TYPE_ID = "milestone_type_id"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the sub-milestones.
-	 */
-	private static final String SUBMILESTONES = "submilestones"; //$NON-NLS-1$
-
+ 
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -70,7 +52,7 @@ public class TuleapMilestoneDeserializer extends AbstractTuleapDeserializer<Tule
 
 		JsonObject jsonObject = rootJsonElement.getAsJsonObject();
 
-		JsonElement elt = jsonObject.get(START_DATE);
+		JsonElement elt = jsonObject.get(ITuleapConstants.START_DATE);
 		if (elt != null) {
 			String startDate = elt.getAsString();
 			try {
@@ -80,19 +62,19 @@ public class TuleapMilestoneDeserializer extends AbstractTuleapDeserializer<Tule
 			}
 		}
 
-		elt = jsonObject.get(DURATION);
+		elt = jsonObject.get(ITuleapConstants.DURATION);
 		if (elt != null) {
 			float duration = elt.getAsFloat();
 			milestone.setDuration(duration);
 		}
 
-		elt = jsonObject.get(CAPACITY);
+		elt = jsonObject.get(ITuleapConstants.CAPACITY);
 		if (elt != null) {
 			float capacity = elt.getAsFloat();
 			milestone.setCapacity(capacity);
 		}
 
-		elt = jsonObject.get(SUBMILESTONES);
+		elt = jsonObject.get(ITuleapConstants.SUBMILESTONES);
 		if (elt != null) {
 			JsonArray submilestones = elt.getAsJsonArray();
 			for (JsonElement submilestone : submilestones) {

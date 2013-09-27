@@ -19,6 +19,7 @@ import com.google.gson.JsonSerializationContext;
 import java.lang.reflect.Type;
 
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
+import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**
  * This class is used to serialize the JSON representation of a milestone.
@@ -26,31 +27,6 @@ import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
 public class TuleapMilestoneSerializer extends AbstractTuleapSerializer<TuleapMilestone> {
-
-	/**
-	 * The key used to retrieve the start date of the milestone.
-	 */
-	private static final String START_DATE = "start_date"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the duration of the milestone.
-	 */
-	private static final String DURATION = "duration"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the capacity of the milestone.
-	 */
-	private static final String CAPACITY = "capacity"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the type id of the milestone.
-	 */
-	private static final String TYPE_ID = "milestone_type_id"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the sub-milestones.
-	 */
-	private static final String SUBMILESTONES = "submilestones"; //$NON-NLS-1$
 
 	/**
 	 * {@inheritDoc}
@@ -63,32 +39,28 @@ public class TuleapMilestoneSerializer extends AbstractTuleapSerializer<TuleapMi
 			JsonSerializationContext jsonSerializationContext) {
 
 		JsonObject milestoneObject = new JsonObject();
-
-		// Serialize the object's simple attributes
-		// manageSimpleAttributes(milestoneObject, milestone);
 		milestoneObject = (JsonObject)super.serialize(milestone, type, jsonSerializationContext);
-		// Serialize the object's complex attributes
-		if (milestone.getStartDate() != null) {
-			milestoneObject.add(START_DATE, new JsonPrimitive(dateFormat.format(milestone.getStartDate())));
-		}
-		milestoneObject.add(DURATION, new JsonPrimitive(Float.valueOf(milestone.getDuration())));
 
-		milestoneObject.add(CAPACITY, new JsonPrimitive(Float.valueOf(milestone.getCapacity())));
-		milestoneObject.add(TYPE_ID, new JsonPrimitive(Integer.valueOf(milestone.getTypeId())));
+		if (milestone.getStartDate() != null) {
+			milestoneObject.add(ITuleapConstants.START_DATE, new JsonPrimitive(dateFormat.format(milestone
+					.getStartDate())));
+		}
+		milestoneObject.add(ITuleapConstants.DURATION, new JsonPrimitive(Float.valueOf(milestone
+				.getDuration())));
+		milestoneObject.add(ITuleapConstants.CAPACITY, new JsonPrimitive(Float.valueOf(milestone
+				.getCapacity())));
+		milestoneObject.add(ITuleapConstants.MILESTONE_TYPE_ID, new JsonPrimitive(Integer.valueOf(milestone
+				.getTypeId())));
 
 		JsonElement subMilestones = new JsonArray();
-
-		// if the milestone has Submilestones, we create the "submilestones" JSON attribute
 		if (milestone.getSubMilestones().size() > 0) {
-			milestoneObject.add(SUBMILESTONES, subMilestones);
+			milestoneObject.add(ITuleapConstants.SUBMILESTONES, subMilestones);
 		}
-
 		for (TuleapMilestone subMilestone : milestone.getSubMilestones()) {
 			JsonObject submilestoneObject = (JsonObject)this.serialize(subMilestone, type,
 					jsonSerializationContext);
 			subMilestones.getAsJsonArray().add(submilestoneObject);
 		}
-
 		return milestoneObject;
 	}
 }
