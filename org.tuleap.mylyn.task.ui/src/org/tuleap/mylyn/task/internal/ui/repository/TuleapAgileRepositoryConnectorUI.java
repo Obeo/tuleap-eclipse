@@ -18,6 +18,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.tuleap.mylyn.task.agile.core.util.IMylynAgileCoreConstants;
 import org.tuleap.mylyn.task.agile.ui.AbstractAgileRepositoryConnectorUI;
+import org.tuleap.mylyn.task.agile.ui.editors.ITaskEditorPageFactoryConstants;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.ui.editor.TuleapTaskEditorPageFactory;
 import org.tuleap.mylyn.task.internal.ui.wizards.NewTuleapTaskWizard;
