@@ -34,5 +34,6 @@ Export-Package: org.tuleap.mylyn.task.internal.tests;x-internal:=true,
  org.tuleap.mylyn.task.internal.tests.converter;x-internal:=true,
  org.tuleap.mylyn.task.internal.tests.model;x-internal:=true,
  org.tuleap.mylyn.task.internal.tests.parser;x-internal:=true,
+ org.tuleap.mylyn.task.internal.tests.serializer;x-internal:=true,
  org.tuleap.mylyn.task.internal.tests.server;x-internal:=true,
  org.tuleap.mylyn.task.internal.tests.validator;x-internal:=true
