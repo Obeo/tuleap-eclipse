@@ -198,8 +198,8 @@ public class TuleapMilestoneDeserializerTests {
 		assertEquals(200, tuleapMilestone.getId());
 		assertEquals("Release 0.9", tuleapMilestone.getLabel()); //$NON-NLS-1$
 		assertEquals(dateFormat.parse("2013-09-23T11:44:18.963Z"), tuleapMilestone.getStartDate());
-		assertEquals(50, tuleapMilestone.getDuration(), 0);
-		assertEquals(100, tuleapMilestone.getCapacity(), 0);
+		assertEquals(50, tuleapMilestone.getDuration().floatValue(), 0);
+		assertEquals(100, tuleapMilestone.getCapacity().floatValue(), 0);
 		assertEquals("/milestones/200", tuleapMilestone.getUrl()); //$NON-NLS-1$
 		assertEquals("/milestones?id=200&group_id=3", tuleapMilestone.getHtmlUrl()); //$NON-NLS-1$
 		assertEquals(901, tuleapMilestone.getConfigurationId());

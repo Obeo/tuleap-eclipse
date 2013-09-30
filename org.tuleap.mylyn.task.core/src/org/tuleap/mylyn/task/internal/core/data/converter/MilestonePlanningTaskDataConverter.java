@@ -86,8 +86,12 @@ public class MilestonePlanningTaskDataConverter extends AbstractElementTaskDataC
 					.getId());
 			subMilestoneWrapper.setLabel(subMilestone.getLabel());
 			subMilestoneWrapper.setStartDate(subMilestone.getStartDate());
-			subMilestoneWrapper.setDuration(subMilestone.getDuration());
-			subMilestoneWrapper.setCapacity(subMilestone.getCapacity());
+			if (subMilestone.getDuration() != null) {
+				subMilestoneWrapper.setDuration(subMilestone.getDuration().floatValue());
+			}
+			if (subMilestone.getCapacity() != null) {
+				subMilestoneWrapper.setCapacity(subMilestone.getCapacity().floatValue());
+			}
 		}
 		for (TuleapBacklogItem backlogItem : getBacklogItems(pojo)) {
 			BacklogItemWrapper backlogItemWrapper = milestonePlanningWrapper.addBacklogItem(backlogItem
@@ -97,7 +101,10 @@ public class MilestonePlanningTaskDataConverter extends AbstractElementTaskDataC
 				backlogItemWrapper.setAssignedMilestoneId(assignedMilestoneId.intValue());
 			}
 			backlogItemWrapper.setLabel(backlogItem.getLabel());
-			backlogItemWrapper.setInitialEffort(backlogItem.getInitialEffort());
+			if (backlogItem.getInitialEffort() != null) {
+				backlogItemWrapper.setInitialEffort(backlogItem.getInitialEffort().floatValue());
+			}
+
 		}
 	}
 
