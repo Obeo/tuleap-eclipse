@@ -181,26 +181,25 @@ public class TuleapMilestoneSerializerTests {
 	public static void staticSetUp() throws ParseException {
 		milestone = new TuleapMilestone(
 				200,
+				901,
 				"the first milestone", "/milestones/200", "/milestones?id=200&group_id=3", dateFormat.parse("2013-09-23T11:44:18.963Z"), //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$
 				dateFormat.parse("2013-09-24T11:44:18.963Z")); //$NON-NLS-1$
 		milestone.setDuration(Float.valueOf(50));
 		milestone.setCapacity(Float.valueOf(100));
-		milestone.setTypeId(901);
+
 		milestone.setStartDate(dateFormat.parse("2013-09-23T11:44:18.963Z"));
 
-		firstSubMilestone = new TuleapMilestone(201, "the first SubMilestone", "", "", //$NON-NLS-2$//$NON-NLS-3$
+		firstSubMilestone = new TuleapMilestone(201, 902, "the first SubMilestone", "", "", //$NON-NLS-2$//$NON-NLS-3$
 				new Date(), new Date());
 		firstSubMilestone.setDuration(Float.valueOf(60));
 		firstSubMilestone.setCapacity(Float.valueOf(120));
 		firstSubMilestone.setStartDate(new Date());
-		firstSubMilestone.setTypeId(902);
 
-		secondSubMilestone = new TuleapMilestone(202, "the second SubMilestone", "", "", //$NON-NLS-2$ //$NON-NLS-3$
+		secondSubMilestone = new TuleapMilestone(202, 903, "the second SubMilestone", "", "", //$NON-NLS-2$ //$NON-NLS-3$
 				new Date(), new Date());
 		secondSubMilestone.setDuration(Float.valueOf(700));
 		secondSubMilestone.setCapacity(Float.valueOf(130));
 		secondSubMilestone.setStartDate(new Date());
-		secondSubMilestone.setTypeId(903);
 
 		List<Integer> valueIds = new ArrayList<Integer>();
 		valueIds.add(new Integer(1));

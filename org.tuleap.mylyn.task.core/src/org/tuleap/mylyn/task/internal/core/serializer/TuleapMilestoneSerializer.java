@@ -52,7 +52,7 @@ public class TuleapMilestoneSerializer extends AbstractTuleapSerializer<TuleapMi
 			milestoneObject.add(ITuleapConstants.CAPACITY, new JsonPrimitive(milestone.getCapacity()));
 		}
 		milestoneObject.add(ITuleapConstants.MILESTONE_TYPE_ID, new JsonPrimitive(Integer.valueOf(milestone
-				.getTypeId())));
+				.getConfigurationId())));
 
 		JsonElement subMilestones = new JsonArray();
 		if (milestone.getSubMilestones().size() > 0) {

@@ -44,7 +44,7 @@ public class TuleapBacklogItemSerializer extends AbstractTuleapSerializer<Tuleap
 					.getInitialEffort()));
 		}
 		backlogItemObject.add(ITuleapConstants.BACKLOGITEM_TYPE_ID, new JsonPrimitive(Integer
-				.valueOf(backlogItem.getTypeId())));
+				.valueOf(backlogItem.getConfigurationId())));
 		backlogItemObject.add(ITuleapConstants.ASSIGNED_MILESTONE_ID, new JsonPrimitive(backlogItem
 				.getAssignedMilestoneId()));
 		return backlogItemObject;

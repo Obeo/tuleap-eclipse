@@ -150,10 +150,10 @@ public class TuleapBacklogItemSerializerTests {
 	public static void staticSetUp() throws ParseException {
 		backlogItem = new TuleapBacklogItem(
 				200,
+				901,
 				"the first backlog item", "/backlogItemss/200", "/backlogItemss?id=200&group_id=3", dateFormat.parse("2013-09-23T11:44:18.963Z"), //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$
 				dateFormat.parse("2013-09-24T11:44:18.963Z")); //$NON-NLS-1$
 		backlogItem.setAssignedMilestoneId(Integer.valueOf(500));
-		backlogItem.setTypeId(901);
 		backlogItem.setInitialEffort(Float.valueOf(10));
 
 		List<Integer> valueIds = new ArrayList<Integer>();
