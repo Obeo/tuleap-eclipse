@@ -11,9 +11,10 @@
 package org.tuleap.mylyn.task.internal.tests.client.soap;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.client.soap.CommentedArtifact;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapParser;
@@ -22,9 +23,15 @@ import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
+import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Artifact;
+import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactFieldValue;
 
-import static org.junit.Assert.fail;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 
 /**
  * This class is used for the unit tests of the Tuleap SOAP parser class. The goal is to ensure that the
@@ -56,14 +63,16 @@ public class TuleapSoapParserTests {
 	/**
 	 * Prepare the configuration of the server.
 	 */
-	@BeforeClass
+	@Before
 	public void setUp() {
 		this.tuleapServerConfiguration = new TuleapServerConfiguration(this.repositoryUrl);
 
 		TuleapProjectConfiguration tuleapProjectConfiguration = new TuleapProjectConfiguration(projectName,
 				projectId);
 
-		TuleapTrackerConfiguration firstCrackerConfiguration = null;
+		// The first tracker does not have a single field.
+		TuleapTrackerConfiguration firstCrackerConfiguration = new TuleapTrackerConfiguration(123, null,
+				null, null, null, System.currentTimeMillis());
 		tuleapProjectConfiguration.addTracker(firstCrackerConfiguration);
 
 		this.tuleapServerConfiguration.addProject(tuleapProjectConfiguration);
@@ -85,11 +94,25 @@ public class TuleapSoapParserTests {
 	 */
 	@Test
 	public void testParseArtifactWithoutFields() {
-		int trackerId = 0;
+		int artifactId = 456;
+		int trackerId = 123;
+		int userId = 789;
+		String htmlUrl = this.repositoryUrl + ITuleapConstants.REPOSITORY_TASK_URL_SEPARATOR + artifactId;
+
 		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.tuleapServerConfiguration
 				.getTrackerConfiguration(trackerId);
 
+		Date creationDate = new Date();
+		Date lastUpdateDate = new Date();
+
 		Artifact artifact = new Artifact();
+		artifact.setArtifact_id(artifactId);
+		artifact.setTracker_id(trackerId);
+		artifact.setSubmitted_by(userId);
+		artifact.setSubmitted_on(Long.valueOf(creationDate.getTime() / 1000).intValue());
+		artifact.setLast_update_date(Long.valueOf(lastUpdateDate.getTime() / 1000).intValue());
+		artifact.setValue(new ArtifactFieldValue[0]);
+
 		List<TuleapElementComment> comments = new ArrayList<TuleapElementComment>();
 
 		CommentedArtifact commentedArtifact = new CommentedArtifact(artifact, comments);
@@ -98,6 +121,16 @@ public class TuleapSoapParserTests {
 		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTrackerConfiguration,
 				commentedArtifact);
 
-		fail("the unit test fails");
+		assertThat(tuleapArtifact, is(notNullValue()));
+		assertThat(tuleapArtifact.getId(), is(artifactId));
+		assertThat(tuleapArtifact.getConfigurationId(), is(trackerId));
+		assertThat(tuleapArtifact.getCreationDate().toString(), is(creationDate.toString()));
+		assertThat(tuleapArtifact.getLastModificationDate().toString(), is(lastUpdateDate.toString()));
+		assertThat(tuleapArtifact.getHtmlUrl(), is(htmlUrl));
+		assertThat(tuleapArtifact.getUrl(), is(nullValue()));
+		assertThat(tuleapArtifact.getNewComment(), is(nullValue()));
+		assertThat(tuleapArtifact.getComments(), empty());
+		assertThat(tuleapArtifact.getFieldValues(), empty());
+		assertThat(tuleapArtifact.getLabel(), is(nullValue()));
 	}
 }

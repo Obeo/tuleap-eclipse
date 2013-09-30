@@ -31,6 +31,7 @@ public class TuleapValidatorTests extends AbstractTuleapTests {
 	 */
 	@Test
 	public void testUserConnection() {
+		fail("refactor to not use the connection, dependency injection of the clients!");
 		TuleapValidator validator = new TuleapValidator(this.repository);
 		try {
 			validator.validate(new NullProgressMonitor());
