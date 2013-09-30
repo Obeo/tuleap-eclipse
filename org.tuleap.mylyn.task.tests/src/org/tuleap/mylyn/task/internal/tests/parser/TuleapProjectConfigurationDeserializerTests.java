@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapProjectConfigurationDeserializer;
@@ -37,69 +36,6 @@ import static org.junit.Assert.assertTrue;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class TuleapProjectConfigurationDeserializerTests {
-
-	/**
-	 * Folder prefix.
-	 */
-	private static final String FOLDER_PREFIX = "/json/projects/"; //$NON-NLS-1$
-
-	/**
-	 * The prefix of all the individual project files.
-	 */
-	private static final String PROJECT_FILE_PREFIX = "project-"; //$NON-NLS-1$
-
-	/**
-	 * The extension of the project files.
-	 */
-	private static final String JSON_EXTENSION = ".json"; //$NON-NLS-1$
-
-	/**
-	 * The name of the projects file.
-	 */
-	private static final String PROJECTS_FILE_NAME = "projects.json"; //$NON-NLS-1$
-
-	/**
-	 * The content of the first project json file.
-	 */
-	private static String project0;
-
-	/**
-	 * The content of the second project json file.
-	 */
-	private static String project1;
-
-	/**
-	 * The content of the third project json file.
-	 */
-	private static String project2;
-
-	/**
-	 * The content of the fourth project json file.
-	 */
-	private static String project3;
-
-	/**
-	 * The content of the fifth project json file.
-	 */
-	private static String project4;
-
-	/**
-	 * The content of the array of projects json file.
-	 */
-	private static String projects;
-
-	/**
-	 * Loads the json files from the server data project into the appropriate variables.
-	 */
-	@BeforeClass
-	public static void staticSetUp() {
-		projects = ParserUtil.loadFile(FOLDER_PREFIX + PROJECTS_FILE_NAME);
-		project0 = ParserUtil.loadFile(FOLDER_PREFIX + PROJECT_FILE_PREFIX + 0 + JSON_EXTENSION);
-		project1 = ParserUtil.loadFile(FOLDER_PREFIX + PROJECT_FILE_PREFIX + 1 + JSON_EXTENSION);
-		project2 = ParserUtil.loadFile(FOLDER_PREFIX + PROJECT_FILE_PREFIX + 2 + JSON_EXTENSION);
-		project3 = ParserUtil.loadFile(FOLDER_PREFIX + PROJECT_FILE_PREFIX + 3 + JSON_EXTENSION);
-		project4 = ParserUtil.loadFile(FOLDER_PREFIX + PROJECT_FILE_PREFIX + 4 + JSON_EXTENSION);
-	}
 
 	/**
 	 * Parse the content of the file and return the matching configuration.
@@ -128,6 +64,7 @@ public class TuleapProjectConfigurationDeserializerTests {
 	 */
 	@Test
 	public void testProject0Parsing() {
+		String project0 = ParserUtil.loadFile("/projects/project-0.json");
 		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project0);
 		assertNotNull(tuleapProjectConfiguration);
 		assertEquals(0, tuleapProjectConfiguration.getIdentifier());
@@ -143,6 +80,7 @@ public class TuleapProjectConfigurationDeserializerTests {
 	 */
 	@Test
 	public void testProject1Parsing() {
+		String project1 = ParserUtil.loadFile("/projects/project-1.json");
 		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project1);
 		assertNotNull(tuleapProjectConfiguration);
 		assertEquals(1, tuleapProjectConfiguration.getIdentifier());
@@ -158,6 +96,7 @@ public class TuleapProjectConfigurationDeserializerTests {
 	 */
 	@Test
 	public void testProject2Parsing() {
+		String project2 = ParserUtil.loadFile("/projects/project-2.json");
 		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project2);
 		assertNotNull(tuleapProjectConfiguration);
 		assertEquals(2, tuleapProjectConfiguration.getIdentifier());
@@ -173,6 +112,7 @@ public class TuleapProjectConfigurationDeserializerTests {
 	 */
 	@Test
 	public void testProject3Parsing() {
+		String project3 = ParserUtil.loadFile("/projects/project-3.json");
 		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project3);
 		assertNotNull(tuleapProjectConfiguration);
 		assertEquals(3, tuleapProjectConfiguration.getIdentifier());
@@ -198,6 +138,7 @@ public class TuleapProjectConfigurationDeserializerTests {
 	 */
 	@Test
 	public void testProject4Parsing() {
+		String project4 = ParserUtil.loadFile("/projects/project-4.json");
 		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project4);
 		assertNotNull(tuleapProjectConfiguration);
 		assertEquals(4, tuleapProjectConfiguration.getIdentifier());
@@ -214,6 +155,7 @@ public class TuleapProjectConfigurationDeserializerTests {
 	 */
 	@Test
 	public void testProjectsParsing() {
+		String projects = ParserUtil.loadFile("/projects/projects.json");
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(TuleapProjectConfiguration.class,
 				new TuleapProjectConfigurationDeserializer());

@@ -65,7 +65,7 @@ public class TuleapBacklogItemTypeDeserializerTests {
 	 */
 	@Test
 	public void testEpicsParsing() {
-		String epics = ParserUtil.loadFile("/json/backlog_item_types/epics.json"); //$NON-NLS-1$
+		String epics = ParserUtil.loadFile("/backlog_item_types/epics.json"); //$NON-NLS-1$
 		TuleapBacklogItemType tuleapBacklogItemType = this.parse(epics);
 		assertNotNull(tuleapBacklogItemType);
 		assertEquals(801, tuleapBacklogItemType.getIdentifier());
@@ -136,7 +136,7 @@ public class TuleapBacklogItemTypeDeserializerTests {
 	 */
 	@Test
 	public void testFirstPartUserStoriesParsing() {
-		String userStories = ParserUtil.loadFile("/json/backlog_item_types/user_stories.json"); //$NON-NLS-1$
+		String userStories = ParserUtil.loadFile("/backlog_item_types/user_stories.json"); //$NON-NLS-1$
 		TuleapBacklogItemType tuleapBacklogItemType = this.parse(userStories);
 		assertNotNull(tuleapBacklogItemType);
 		assertEquals(802, tuleapBacklogItemType.getIdentifier());
@@ -180,7 +180,7 @@ public class TuleapBacklogItemTypeDeserializerTests {
 		this.fieldItemsTest(firstField, theFifthFirstItem, "Tracker creator"); //$NON-NLS-1$
 
 		TuleapSelectBoxItem theSixthFirstItem = theFirstItemsIterator.next();
-		this.fieldItemsTest(firstField, theSixthFirstItem, "Tarcker user"); //$NON-NLS-1$
+		this.fieldItemsTest(firstField, theSixthFirstItem, "Tracker user"); //$NON-NLS-1$
 
 		TuleapSelectBoxItem theSeventhFirstItem = theFirstItemsIterator.next();
 		this.fieldItemsTest(firstField, theSeventhFirstItem, "User"); //$NON-NLS-1$
@@ -210,7 +210,7 @@ public class TuleapBacklogItemTypeDeserializerTests {
 	 */
 	@Test
 	public void testSecondpartUserStoriesParsing() {
-		String userStories = ParserUtil.loadFile("/json/backlog_item_types/user_stories.json"); //$NON-NLS-1$
+		String userStories = ParserUtil.loadFile("/backlog_item_types/user_stories.json"); //$NON-NLS-1$
 		TuleapBacklogItemType tuleapBacklogItemType = this.parse(userStories);
 		assertNotNull(tuleapBacklogItemType);
 		assertEquals(802, tuleapBacklogItemType.getIdentifier());

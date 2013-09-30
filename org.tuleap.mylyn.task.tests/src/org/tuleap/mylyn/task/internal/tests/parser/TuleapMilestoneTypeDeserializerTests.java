@@ -45,7 +45,7 @@ public class TuleapMilestoneTypeDeserializerTests {
 	 */
 	@Test
 	public void testReleasesParsing() {
-		String releases = ParserUtil.loadFile("/json/milestone_types/releases.json"); //$NON-NLS-1$
+		String releases = ParserUtil.loadFile("/milestone_types/releases.json"); //$NON-NLS-1$
 		TuleapMilestoneType tuleapMilestoneType = this.parse(releases);
 		assertNotNull(tuleapMilestoneType);
 		assertEquals(901, tuleapMilestoneType.getIdentifier());
@@ -119,7 +119,7 @@ public class TuleapMilestoneTypeDeserializerTests {
 	 */
 	@Test
 	public void testSprintsParsing() {
-		String sprints = ParserUtil.loadFile("/json/milestone_types/sprints.json"); //$NON-NLS-1$
+		String sprints = ParserUtil.loadFile("/milestone_types/sprints.json"); //$NON-NLS-1$
 		TuleapMilestoneType tuleapMilestoneType = this.parse(sprints);
 		assertNotNull(tuleapMilestoneType);
 		assertEquals(902, tuleapMilestoneType.getIdentifier());

@@ -16,9 +16,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 
-import org.eclipse.core.runtime.Platform;
-import org.osgi.framework.Bundle;
-
 /**
  * Utility class to load file contents as strings.
  * 
@@ -44,19 +41,14 @@ public final class ParserUtil {
 	 * 
 	 * @param path
 	 *            The path of the file to load.
-	 * @return The content of the given file as a String, or unll if it cannot be found.
+	 * @return The content of the given file as a String, or null if it cannot be found.
 	 */
 	public static String loadFile(String path) {
-		Bundle serverDataBundle = Platform.getBundle(SERVER_DATA_BUNDLE_ID);
-		if (serverDataBundle == null) {
+		URL url = ParserUtil.class.getResource(path);
+		if (url == null) {
 			return null;
 		}
-		String result = null;
-		URL entry = serverDataBundle.getEntry(path);
-		if (entry != null) {
-			result = readFileFromURL(entry);
-		}
-		return result;
+		return readFileFromURL(url);
 	}
 
 	/**

@@ -23,7 +23,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapMultiSelectBox;
@@ -44,86 +43,6 @@ import static org.junit.Assert.assertTrue;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class TuleapTrackerConfigurationDeserializerTests {
-
-	/**
-	 * Folder prefix.
-	 */
-	private static final String FOLDER_PREFIX = "/json/trackers/"; //$NON-NLS-1$
-
-	/**
-	 * The prefix of all the individual tracker files.
-	 */
-	private static final String TRACKER_FILE_PREFIX = "tracker-"; //$NON-NLS-1$
-
-	/**
-	 * The extension of the project files.
-	 */
-	private static final String JSON_EXTENSION = ".json"; //$NON-NLS-1$
-
-	/**
-	 * The name of the first trackers group file.
-	 */
-	private static final String TRACKERS_FILE_NAME_PART1 = "trackers_part_1.json"; //$NON-NLS-1$
-
-	/**
-	 * The name of the second trackers group file.
-	 */
-	private static final String TRACKERS_FILE_NAME_PART2 = "trackers_part_2.json"; //$NON-NLS-1$
-
-	/**
-	 * The content of the first tracker json file.
-	 */
-	private static String tracker0;
-
-	/**
-	 * The content of the second tracker json file.
-	 */
-	private static String tracker1;
-
-	/**
-	 * The content of the third tracker json file.
-	 */
-	private static String tracker2;
-
-	/**
-	 * The content of the fourth tracker json file.
-	 */
-	private static String tracker3;
-
-	/**
-	 * The content of the fifth tracker json file.
-	 */
-	private static String tracker4;
-
-	/**
-	 * The content of the sixth tracker json file.
-	 */
-	private static String tracker5;
-
-	/**
-	 * The content of the array of the first trackers group json file.
-	 */
-	private static String firstTrackersGroup;
-
-	/**
-	 * The content of the array of the second trackers group json file.
-	 */
-	private static String secondTrackersGroup;
-
-	/**
-	 * Loads the json files from the server data tracker into the appropriate variables.
-	 */
-	@BeforeClass
-	public static void staticSetUp() {
-		firstTrackersGroup = ParserUtil.loadFile(FOLDER_PREFIX + TRACKERS_FILE_NAME_PART1);
-		secondTrackersGroup = ParserUtil.loadFile(FOLDER_PREFIX + TRACKERS_FILE_NAME_PART2);
-		tracker0 = ParserUtil.loadFile(FOLDER_PREFIX + TRACKER_FILE_PREFIX + 0 + JSON_EXTENSION);
-		tracker1 = ParserUtil.loadFile(FOLDER_PREFIX + TRACKER_FILE_PREFIX + 1 + JSON_EXTENSION);
-		tracker2 = ParserUtil.loadFile(FOLDER_PREFIX + TRACKER_FILE_PREFIX + 2 + JSON_EXTENSION);
-		tracker3 = ParserUtil.loadFile(FOLDER_PREFIX + TRACKER_FILE_PREFIX + 3 + JSON_EXTENSION);
-		tracker4 = ParserUtil.loadFile(FOLDER_PREFIX + TRACKER_FILE_PREFIX + 4 + JSON_EXTENSION);
-		tracker5 = ParserUtil.loadFile(FOLDER_PREFIX + TRACKER_FILE_PREFIX + 5 + JSON_EXTENSION);
-	}
 
 	/**
 	 * Parse the content of the file and return the matching configuration.
@@ -152,6 +71,7 @@ public class TuleapTrackerConfigurationDeserializerTests {
 	 */
 	@Test
 	public void testTracker0Parsing() {
+		String tracker0 = ParserUtil.loadFile("/trackers/tracker-0.json");
 		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker0);
 		assertNotNull(tuleapTrackerConfiguration);
 		assertEquals(0, tuleapTrackerConfiguration.getIdentifier());
@@ -182,6 +102,7 @@ public class TuleapTrackerConfigurationDeserializerTests {
 	 */
 	@Test
 	public void testTracker1Parsing() {
+		String tracker1 = ParserUtil.loadFile("/trackers/tracker-1.json");
 		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker1);
 		assertNotNull(tuleapTrackerConfiguration);
 		assertEquals(1, tuleapTrackerConfiguration.getIdentifier());
@@ -266,6 +187,7 @@ public class TuleapTrackerConfigurationDeserializerTests {
 	 */
 	@Test
 	public void testTracker2Parsing() {
+		String tracker2 = ParserUtil.loadFile("/trackers/tracker-2.json");
 		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker2);
 		assertNotNull(tuleapTrackerConfiguration);
 		assertEquals(2, tuleapTrackerConfiguration.getIdentifier());
@@ -297,6 +219,7 @@ public class TuleapTrackerConfigurationDeserializerTests {
 	 */
 	@Test
 	public void testTracker3Parsing() {
+		String tracker3 = ParserUtil.loadFile("/trackers/tracker-3.json");
 		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker3);
 		assertNotNull(tuleapTrackerConfiguration);
 		assertEquals(3, tuleapTrackerConfiguration.getIdentifier());
@@ -328,6 +251,7 @@ public class TuleapTrackerConfigurationDeserializerTests {
 	 */
 	@Test
 	public void testTracker4Parsing() {
+		String tracker4 = ParserUtil.loadFile("/trackers/tracker-4.json");
 		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker4);
 		assertNotNull(tuleapTrackerConfiguration);
 		assertEquals(4, tuleapTrackerConfiguration.getIdentifier());
@@ -358,6 +282,7 @@ public class TuleapTrackerConfigurationDeserializerTests {
 	 */
 	@Test
 	public void testTracker5Parsing() {
+		String tracker5 = ParserUtil.loadFile("/trackers/tracker-5.json");
 		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker5);
 		assertNotNull(tuleapTrackerConfiguration);
 		assertEquals(5, tuleapTrackerConfiguration.getIdentifier());
@@ -388,6 +313,7 @@ public class TuleapTrackerConfigurationDeserializerTests {
 	 */
 	@Test
 	public void testFirstTrackersGroupParsing() {
+		String firstTrackersGroup = ParserUtil.loadFile("/trackers/trackers_part_1.json");
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(TuleapTrackerConfiguration.class,
 				new TuleapTrackerConfigurationDeserializer());
@@ -448,6 +374,7 @@ public class TuleapTrackerConfigurationDeserializerTests {
 	 */
 	@Test
 	public void testSecondTrackersGroupParsing() {
+		String secondTrackersGroup = ParserUtil.loadFile("/trackers/trackers_part_2.json");
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(TuleapTrackerConfiguration.class,
 				new TuleapTrackerConfigurationDeserializer());

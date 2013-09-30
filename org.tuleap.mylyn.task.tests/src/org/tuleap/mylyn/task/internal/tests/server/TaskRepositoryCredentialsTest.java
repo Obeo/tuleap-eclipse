@@ -13,6 +13,7 @@ package org.tuleap.mylyn.task.internal.tests.server;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.client.rest.TaskRepositoryCredentials;
 
@@ -29,8 +30,10 @@ public class TaskRepositoryCredentialsTest {
 	 * Test method for
 	 * {@link org.tuleap.mylyn.task.internal.core.client.rest.TaskRepositoryCredentials#getUserName()}.
 	 */
+	@Ignore("To refactor once actual REST communication happens")
 	@Test
 	public void testGetUserName() {
+		// TODO Refactor once a perennial mechanism of credentials is in place
 		String user = "azerty"; //$NON-NLS-1$
 		String password = "jfdk8!:#j%��"; //$NON-NLS-1$
 		TaskRepository repo = new TaskRepository("Tuleap", "http://tuleap.net"); //$NON-NLS-1$ //$NON-NLS-2$

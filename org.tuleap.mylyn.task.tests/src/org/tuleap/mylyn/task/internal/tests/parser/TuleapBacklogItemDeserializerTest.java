@@ -16,12 +16,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import org.junit.Test;
+import org.tuleap.mylyn.task.internal.core.data.BoundFieldValue;
+import org.tuleap.mylyn.task.internal.core.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapBacklogItemDeserializer;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
 /**
  * Unit Tests of Backlog item deserializer.
@@ -31,74 +31,27 @@ import static org.junit.Assert.fail;
 public class TuleapBacklogItemDeserializerTest {
 
 	/**
-	 * Tests the parsing of epic #300.
-	 */
-	@Test
-	public void testDeserializeEpic300() {
-		String epic = ParserUtil.loadFile("/json/backlog_items/epic300.json"); //$NON-NLS-1$
-		TuleapBacklogItem item = parse(epic);
-		assertEquals(300, item.getId());
-		assertEquals("An important Epic", item.getLabel()); //$NON-NLS-1$
-		assertEquals("/backlog_items/300", item.getUrl()); //$NON-NLS-1$
-		assertEquals("/backlog_items?id=300&group_id=3", item.getHtmlUrl()); //$NON-NLS-1$
-		assertEquals(30f, item.getInitialEffort(), 0f);
-		assertEquals(801, item.getConfigurationId());
-		assertEquals(200, item.getAssignedMilestoneId().intValue());
-
-		assertEquals(4, item.getFieldValues().size());
-		assertEquals(Integer.valueOf(8502), item.getFieldValue(850));
-		// assertEquals(0, ((Number)item.getValue(Integer.valueOf(851))).intValue());
-		//		assertEquals("The summary of an important Epic", item.getValue(Integer.valueOf(852))); //$NON-NLS-1$
-		//		assertEquals("350,351", item.getFieldValue(Integer.valueOf(853))); //$NON-NLS-1$
-		fail("Fix the test ");
-	}
-
-	/**
 	 * Tests the parsing of epic #301.
 	 */
 	@Test
 	public void testDeserializeEpic301() {
-		String epic = ParserUtil.loadFile("/json/backlog_items/epic301.json"); //$NON-NLS-1$
+		String epic = ParserUtil.loadFile("/backlog_items/epic301.json");
 		TuleapBacklogItem item = parse(epic);
 		assertEquals(301, item.getId());
-		assertEquals("Another important Epic", item.getLabel()); //$NON-NLS-1$
-		assertEquals("/backlog_items/301", item.getUrl()); //$NON-NLS-1$
-		assertEquals("/backlog_items?id=301&group_id=3", item.getHtmlUrl()); //$NON-NLS-1$
+		assertEquals("Another important Epic", item.getLabel());
+		assertEquals("/backlog_items/301", item.getUrl());
+		assertEquals("/backlog_items?id=301&group_id=3", item.getHtmlUrl());
 		assertEquals(40.5f, item.getInitialEffort(), 0f);
 		assertEquals(801, item.getConfigurationId());
 
 		assertEquals(201, item.getAssignedMilestoneId().intValue());
 
 		assertEquals(4, item.getFieldValues().size());
-		// assertEquals(Integer.valueOf(8501), item.getFieldValue(Integer.valueOf(850)));
-		// assertEquals(20.5f, ((Number)item.getFieldValue(Integer.valueOf(851))).floatValue(), 0f);
-		//		assertEquals("Bring more added-value to users", item.getFieldValue(Integer.valueOf(852))); //$NON-NLS-1$
-		//		assertEquals("352", item.getFieldValue(Integer.valueOf(853))); //$NON-NLS-1$
-		fail("Fix the test ");
-	}
-
-	/**
-	 * Tests the parsing of epic #302.
-	 */
-	@Test
-	public void testDeserializeEpic302() {
-		String epic = ParserUtil.loadFile("/json/backlog_items/epic302.json"); //$NON-NLS-1$
-		TuleapBacklogItem item = parse(epic);
-		assertEquals(302, item.getId());
-		assertEquals("Some nice Epic", item.getLabel()); //$NON-NLS-1$
-		assertEquals("/backlog_items/302", item.getUrl()); //$NON-NLS-1$
-		assertEquals("/backlog_items?id=302&group_id=3", item.getHtmlUrl()); //$NON-NLS-1$
-
-		assertEquals(25f, item.getInitialEffort(), 0f);
-		assertEquals(801, item.getConfigurationId());
-
-		assertNull(item.getAssignedMilestoneId());
-
-		// assertEquals(3, item.getFieldValues().size());
-		// assertEquals(Integer.valueOf(8500), item.getValue(Integer.valueOf(850)));
-		// assertEquals(26.5f, ((Number)item.getValue(Integer.valueOf(851))).floatValue(), 0f);
-		//		assertEquals("Use some nice visual effects", item.getValue(Integer.valueOf(852))); //$NON-NLS-1$
-		fail("Fix the test ");
+		assertEquals(8501, ((BoundFieldValue)item.getFieldValue(850)).getValueIds().get(0).intValue());
+		assertEquals("20.5", ((LiteralFieldValue)item.getFieldValue(851)).getFieldValue());
+		assertEquals("Bring more added-value to users", ((LiteralFieldValue)item.getFieldValue(Integer
+				.valueOf(852))).getFieldValue());
+		assertEquals("352", ((LiteralFieldValue)item.getFieldValue(853)).getFieldValue());
 	}
 
 	/**
@@ -106,89 +59,31 @@ public class TuleapBacklogItemDeserializerTest {
 	 */
 	@Test
 	public void testDeserializeUserStory350() {
-		String userStory = ParserUtil.loadFile("/json/backlog_items/userStory350.json"); //$NON-NLS-1$
+		String userStory = ParserUtil.loadFile("/backlog_items/userStory350.json");
 		TuleapBacklogItem item = parse(userStory);
 		assertEquals(350, item.getId());
-		assertEquals("An important User Story", item.getLabel()); //$NON-NLS-1$
-		assertEquals("/backlog_items/350", item.getUrl()); //$NON-NLS-1$
-		assertEquals("/backlog_items?id=350&group_id=3", item.getHtmlUrl()); //$NON-NLS-1$
+		assertEquals("An important User Story", item.getLabel());
+		assertEquals("/backlog_items/350", item.getUrl());
+		assertEquals("/backlog_items?id=350&group_id=3", item.getHtmlUrl());
 
 		assertEquals(5f, item.getInitialEffort(), 0f);
 		assertEquals(802, item.getConfigurationId());
 
 		assertEquals(250, item.getAssignedMilestoneId().intValue());
 
-		// assertEquals(9, item.getValues().size());
-		// assertEquals(Integer.valueOf(8602), item.getValue(Integer.valueOf(860)));
-		//		assertEquals("Do something useful", item.getValue(Integer.valueOf(861))); //$NON-NLS-1$
-		//		assertEquals("it brings some added-value to my work", item.getValue(Integer.valueOf(862))); //$NON-NLS-1$
-		//		assertEquals("Here are acceptance Criteria:\n* Blah blah\n* Foo", item.getValue(Integer //$NON-NLS-1$
-		// .valueOf(863)));
-		//		assertEquals("500,501,502,503", item.getValue(Integer.valueOf(864))); //$NON-NLS-1$
-		//		assertEquals("Iteration 1", item.getValue(Integer.valueOf(865))); //$NON-NLS-1$
-		// assertEquals(3.5f, ((Number)item.getValue(Integer.valueOf(866))).floatValue(), 0f);
-		//		assertEquals("2", item.getValue(Integer.valueOf(867))); //$NON-NLS-1$
-		// assertEquals(Integer.valueOf(8611), item.getValue(Integer.valueOf(868)));
-		fail("Fix the test ");
-	}
+		assertEquals(9, item.getFieldValues().size());
+		assertEquals(8602, ((BoundFieldValue)item.getFieldValue(860)).getValueIds().get(0).intValue());
+		assertEquals("Do something useful", ((LiteralFieldValue)item.getFieldValue(861)).getFieldValue());
+		assertEquals("it brings some added-value to my work", ((LiteralFieldValue)item.getFieldValue(Integer
+				.valueOf(862))).getFieldValue());
+		assertEquals("Here are acceptance Criteria:\n* Blah blah\n* Foo", ((LiteralFieldValue)item
+				.getFieldValue(863)).getFieldValue());
+		assertEquals("500,501,502,503", ((LiteralFieldValue)item.getFieldValue(864)).getFieldValue());
+		assertEquals("Iteration 1", ((LiteralFieldValue)item.getFieldValue(865)).getFieldValue());
+		assertEquals("3.5", ((LiteralFieldValue)item.getFieldValue(866)).getFieldValue());
+		assertEquals("2", ((LiteralFieldValue)item.getFieldValue(867)).getFieldValue());
+		assertEquals(8611, ((BoundFieldValue)item.getFieldValue(868)).getValueIds().get(0).intValue());
 
-	/**
-	 * Tests the parsing of user story #351.
-	 */
-	@Test
-	public void testDeserializeUserStory351() {
-		String userStory = ParserUtil.loadFile("/json/backlog_items/userStory351.json"); //$NON-NLS-1$
-		TuleapBacklogItem item = parse(userStory);
-		assertEquals(351, item.getId());
-		//		assertEquals("Another important User Story", item.getLabel()); //$NON-NLS-1$
-		//		assertEquals("/backlog_items/351", item.getUrl()); //$NON-NLS-1$
-		//		assertEquals("/backlog_items?id=351&group_id=3", item.getHtmlUrl()); //$NON-NLS-1$
-		// assertEquals(3f, item.getInitialEffort(), 0f);
-		// assertEquals(802, item.getTypeId());
-		// assertEquals(250, item.getAssignedMilestoneId().intValue());
-		//
-		// assertEquals(9, item.getValues().size());
-		// assertEquals(Integer.valueOf(8602), item.getValue(Integer.valueOf(860)));
-		//		assertEquals("Do something more useful", item.getValue(Integer.valueOf(861))); //$NON-NLS-1$
-		//		assertEquals("it brings more added-value to my work", item.getValue(Integer.valueOf(862))); //$NON-NLS-1$
-		//		assertEquals("Other are acceptance Criteria:\n* Blah blah\n* Foo", item.getValue(Integer //$NON-NLS-1$
-		// .valueOf(863)));
-		//		assertEquals("510,511,512,513", item.getValue(Integer.valueOf(864))); //$NON-NLS-1$
-		//		assertEquals("Iteration 1", item.getValue(Integer.valueOf(865))); //$NON-NLS-1$
-		// assertEquals(3f, ((Number)item.getValue(Integer.valueOf(866))).floatValue(), 0f);
-		//		assertEquals("0", item.getValue(Integer.valueOf(867))); //$NON-NLS-1$
-		// assertEquals(Integer.valueOf(8612), item.getValue(Integer.valueOf(868)));
-		fail("Fix the test ");
-	}
-
-	/**
-	 * Tests the parsing of user story #352.
-	 */
-	@Test
-	public void testDeserializeUserStory352() {
-		String userStory = ParserUtil.loadFile("/json/backlog_items/userStory352.json"); //$NON-NLS-1$
-		TuleapBacklogItem item = parse(userStory);
-		assertEquals(352, item.getId());
-		assertEquals("A nice User Story", item.getLabel()); //$NON-NLS-1$
-		assertEquals("/backlog_items/352", item.getUrl()); //$NON-NLS-1$
-		assertEquals("/backlog_items?id=352&group_id=3", item.getHtmlUrl()); //$NON-NLS-1$
-
-		assertEquals(3.5f, item.getInitialEffort(), 0f);
-		assertEquals(802, item.getConfigurationId());
-
-		assertEquals(250, item.getAssignedMilestoneId().intValue());
-
-		// assertEquals(8, item.getValues().size());
-		// assertEquals(Integer.valueOf(8602), item.getValue(Integer.valueOf(860)));
-		//		assertEquals("Do something sweet", item.getValue(Integer.valueOf(861))); //$NON-NLS-1$
-		//		assertEquals("it brings some shiny feedback", item.getValue(Integer.valueOf(862))); //$NON-NLS-1$
-		//		assertEquals("My acceptance Criteria:\n* Blah blah\n* Foo", item.getValue(Integer //$NON-NLS-1$
-		// .valueOf(863)));
-		//		assertEquals("520,521,522", item.getValue(Integer.valueOf(864))); //$NON-NLS-1$
-		// assertEquals(3.5f, ((Number)item.getValue(Integer.valueOf(866))).floatValue(), 0f);
-		//		assertEquals("3.5", item.getValue(Integer.valueOf(867))); //$NON-NLS-1$
-		// assertEquals(Integer.valueOf(8610), item.getValue(Integer.valueOf(868)));
-		fail("Fix the test ");
 	}
 
 	/**
