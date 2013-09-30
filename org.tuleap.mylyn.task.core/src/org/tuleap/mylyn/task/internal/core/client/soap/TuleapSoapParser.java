@@ -32,6 +32,7 @@ import org.tuleap.mylyn.task.internal.core.model.field.TuleapMultiSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
+import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Artifact;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactFieldValue;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.FieldValueFileInfo;
@@ -59,14 +60,14 @@ public class TuleapSoapParser {
 		int artifactId = artifactToParse.getArtifact_id();
 		int trackerId = artifactToParse.getTracker_id();
 
-		// TODO SBE Is the label property really useful for anybody? (since we have a title field already)
+		// Useless for regular artifacts (agile only)
 		String label = null;
+		String url = null;
 
-		// TODO SBE Useless for the SOAP API
-		String url = ""; //$NON-NLS-1$
-
-		// TODO SBE Compute the HTML URL!
-		String htmlUrl = ""; //$NON-NLS-1$
+		String repositoryUrl = tuleapTrackerConfiguration.getTuleapProjectConfiguration()
+				.getServerConfiguration().getUrl();
+		String htmlUrl = repositoryUrl + ITuleapConstants.REPOSITORY_TASK_URL_SEPARATOR
+				+ String.valueOf(artifactId);
 
 		int submittedOn = artifactToParse.getSubmitted_on();
 		Date creationDate = this.getDateFromTimestamp(submittedOn);
