@@ -127,6 +127,7 @@ public abstract class AbstractTuleapConfigurableElement {
 	public AbstractTuleapConfigurableElement(int id, int configurationId, String label, String url,
 			String htmlUrl, Date creationDate, Date lastModificationDate) {
 		this.id = id;
+		this.configurationId = configurationId;
 		this.label = label;
 		this.url = url;
 		this.htmlUrl = htmlUrl;
