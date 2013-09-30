@@ -26,7 +26,13 @@ import org.tuleap.mylyn.task.internal.core.model.TuleapElementComment;
 import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.field.TuleapArtifactLink;
+import org.tuleap.mylyn.task.internal.core.model.field.TuleapDate;
+import org.tuleap.mylyn.task.internal.core.model.field.TuleapFloat;
+import org.tuleap.mylyn.task.internal.core.model.field.TuleapInteger;
+import org.tuleap.mylyn.task.internal.core.model.field.TuleapOpenList;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
+import org.tuleap.mylyn.task.internal.core.model.field.TuleapText;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
@@ -41,6 +47,8 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
+
+import static org.junit.Assert.fail;
 
 /**
  * This class is used for the unit tests of the Tuleap SOAP parser class. The goal is to ensure that the
@@ -90,8 +98,56 @@ public class TuleapSoapParserTests {
 		tuleapString.setName("string field name"); //$NON-NLS-1$
 		secondTrackerConfiguration.addField(tuleapString);
 
+		// The third tracker has one text field
+		TuleapTrackerConfiguration thirdTrackerConfiguration = new TuleapTrackerConfiguration(2, null, null,
+				null, null, System.currentTimeMillis());
+		TuleapText tuleapText = new TuleapText(12);
+		tuleapText.setName("text field name"); //$NON-NLS-1$
+		thirdTrackerConfiguration.addField(tuleapText);
+
+		// The fourth tracker has one integer field
+		TuleapTrackerConfiguration fourthTrackerConfiguration = new TuleapTrackerConfiguration(3, null, null,
+				null, null, System.currentTimeMillis());
+		TuleapInteger tuleapInteger = new TuleapInteger(12);
+		tuleapInteger.setName("integer field name"); //$NON-NLS-1$
+		fourthTrackerConfiguration.addField(tuleapInteger);
+
+		// The fifth tracker has one float field
+		TuleapTrackerConfiguration fifthTrackerConfiguration = new TuleapTrackerConfiguration(4, null, null,
+				null, null, System.currentTimeMillis());
+		TuleapFloat tuleapFloat = new TuleapFloat(12);
+		tuleapFloat.setName("float field name"); //$NON-NLS-1$
+		fifthTrackerConfiguration.addField(tuleapFloat);
+
+		// The sixth tracker has one date field
+		TuleapTrackerConfiguration sixthTrackerConfiguration = new TuleapTrackerConfiguration(5, null, null,
+				null, null, System.currentTimeMillis());
+		TuleapDate tuleapDate = new TuleapDate(12);
+		tuleapDate.setName("date field name"); //$NON-NLS-1$
+		sixthTrackerConfiguration.addField(tuleapDate);
+
+		// The seventh tracker has one open list field
+		TuleapTrackerConfiguration seventhTrackerConfiguration = new TuleapTrackerConfiguration(6, null,
+				null, null, null, System.currentTimeMillis());
+		TuleapOpenList tuleapOpenList = new TuleapOpenList(12);
+		tuleapOpenList.setName("open list field name"); //$NON-NLS-1$
+		seventhTrackerConfiguration.addField(tuleapOpenList);
+
+		// The eighth tracker has one open list field
+		TuleapTrackerConfiguration eighthTrackerConfiguration = new TuleapTrackerConfiguration(7, null, null,
+				null, null, System.currentTimeMillis());
+		TuleapArtifactLink tuleapArtifactLink = new TuleapArtifactLink(12);
+		tuleapArtifactLink.setName("artifact links field name"); //$NON-NLS-1$
+		eighthTrackerConfiguration.addField(tuleapArtifactLink);
+
 		tuleapProjectConfiguration.addTracker(firstTrackerConfiguration);
 		tuleapProjectConfiguration.addTracker(secondTrackerConfiguration);
+		tuleapProjectConfiguration.addTracker(thirdTrackerConfiguration);
+		tuleapProjectConfiguration.addTracker(fourthTrackerConfiguration);
+		tuleapProjectConfiguration.addTracker(fifthTrackerConfiguration);
+		tuleapProjectConfiguration.addTracker(sixthTrackerConfiguration);
+		tuleapProjectConfiguration.addTracker(seventhTrackerConfiguration);
+		tuleapProjectConfiguration.addTracker(eighthTrackerConfiguration);
 
 		this.tuleapServerConfiguration.addProject(tuleapProjectConfiguration);
 	}
@@ -220,6 +276,55 @@ public class TuleapSoapParserTests {
 	}
 
 	/**
+	 * Creates a literal field value for the artifact.
+	 * 
+	 * @param field
+	 *            The field from the configuration that we will "instanciate"
+	 * @param fieldValue
+	 *            The value that we will store in the artifact
+	 * @return The literal field value created
+	 */
+	private ArtifactFieldValue createLiteralFieldValue(AbstractTuleapField field, String fieldValue) {
+		ArtifactFieldValue artifactFieldValue = new ArtifactFieldValue();
+		String fieldName = field.getName();
+		FieldValue fValue = new FieldValue();
+		fValue.setValue(fieldValue);
+
+		artifactFieldValue.setField_name(fieldName);
+		artifactFieldValue.setField_value(fValue);
+		return artifactFieldValue;
+	}
+
+	/**
+	 * Test a literal field value.
+	 * 
+	 * @param artifactId
+	 *            The identifier of the artifact
+	 * @param field
+	 *            The field from the configuration
+	 * @param fieldValue
+	 *            The value expected
+	 * @param tuleapArtifact
+	 *            The tuleap artifact containing the field value
+	 */
+	private void testLiteralFieldValue(int artifactId, AbstractTuleapField field, String fieldValue,
+			TuleapArtifact tuleapArtifact) {
+		assertThat(tuleapArtifact, is(notNullValue()));
+		assertThat(tuleapArtifact.getId(), is(artifactId));
+		assertThat(tuleapArtifact.getFieldValues(), hasSize(1));
+
+		Collection<AbstractFieldValue> fieldValues = tuleapArtifact.getFieldValues();
+		AbstractFieldValue abstractFieldValue = fieldValues.iterator().next();
+
+		assertThat(abstractFieldValue, is(notNullValue()));
+		assertThat(abstractFieldValue.getFieldId(), is(field.getIdentifier()));
+		assertThat(abstractFieldValue, is(instanceOf(LiteralFieldValue.class)));
+
+		LiteralFieldValue literalFieldValue = (LiteralFieldValue)abstractFieldValue;
+		assertThat(literalFieldValue.getFieldValue(), is(fieldValue));
+	}
+
+	/**
 	 * This test will try to parse an artifact from a tracker with only a string field. The goal is to ensure
 	 * that the field is properly created in the TuleapArtifact. This test will use the tracker with the
 	 * identifier 1.
@@ -239,20 +344,13 @@ public class TuleapSoapParserTests {
 				creationDate, lastUpdateDate, new ArrayList<TuleapElementComment>());
 
 		// Add a string
-		ArtifactFieldValue[] value = new ArtifactFieldValue[1];
+		Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
+		AbstractTuleapField field = fields.iterator().next();
 
-		ArtifactFieldValue artifactFieldValue = new ArtifactFieldValue();
-		String fieldLabel = "string field label"; //$NON-NLS-1$
-		String fieldName = "string field name"; //$NON-NLS-1$
 		String fieldValue = "string field value"; //$NON-NLS-1$
-		FieldValue fValue = new FieldValue();
-		fValue.setValue(fieldValue);
 
-		artifactFieldValue.setField_label(fieldLabel);
-		artifactFieldValue.setField_name(fieldName);
-		artifactFieldValue.setField_value(fValue);
-
-		value[0] = artifactFieldValue;
+		ArtifactFieldValue[] value = new ArtifactFieldValue[] {this
+				.createLiteralFieldValue(field, fieldValue), };
 
 		commentedArtifact.getArtifact().setValue(value);
 
@@ -260,21 +358,328 @@ public class TuleapSoapParserTests {
 		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTrackerConfiguration,
 				commentedArtifact);
 
-		assertThat(tuleapArtifact, is(notNullValue()));
-		assertThat(tuleapArtifact.getId(), is(artifactId));
-		assertThat(tuleapArtifact.getFieldValues(), hasSize(1));
+		this.testLiteralFieldValue(artifactId, field, fieldValue, tuleapArtifact);
+	}
 
-		Collection<AbstractFieldValue> fieldValues = tuleapArtifact.getFieldValues();
-		AbstractFieldValue abstractFieldValue = fieldValues.iterator().next();
+	/**
+	 * This test will try to parse an artifact from a tracker with only a text field. The goal is to ensure
+	 * that the field is properly created in the Tuleap artifact. this test will use the tracker with the
+	 * identifier 2.
+	 */
+	@Test
+	public void testParseArtifactWithText() {
+		int artifactId = 456;
+		int trackerId = 2;
+		int userId = 789;
+		Date creationDate = new Date();
+		Date lastUpdateDate = new Date();
 
+		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.tuleapServerConfiguration
+				.getTrackerConfiguration(trackerId);
+
+		CommentedArtifact commentedArtifact = this.createCommentedArtifact(artifactId, trackerId, userId,
+				creationDate, lastUpdateDate, new ArrayList<TuleapElementComment>());
+
+		// Add a string
 		Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
 		AbstractTuleapField field = fields.iterator().next();
 
-		assertThat(abstractFieldValue, is(notNullValue()));
-		assertThat(abstractFieldValue.getFieldId(), is(field.getIdentifier()));
-		assertThat(abstractFieldValue, is(instanceOf(LiteralFieldValue.class)));
+		String fieldValue = "text field value"; //$NON-NLS-1$
 
-		LiteralFieldValue literalFieldValue = (LiteralFieldValue)abstractFieldValue;
-		assertThat(literalFieldValue.getFieldValue(), is(fieldValue));
+		ArtifactFieldValue[] value = new ArtifactFieldValue[] {this
+				.createLiteralFieldValue(field, fieldValue), };
+
+		commentedArtifact.getArtifact().setValue(value);
+
+		TuleapSoapParser tuleapSoapParser = new TuleapSoapParser();
+		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTrackerConfiguration,
+				commentedArtifact);
+
+		this.testLiteralFieldValue(artifactId, field, fieldValue, tuleapArtifact);
+	}
+
+	/**
+	 * This test will try to parse an artifact from a tracker with only an integer field. The goal is to
+	 * ensure that the field is properly created in the Tuleap artifact. this test will use the tracker with
+	 * the identifier 3.
+	 */
+	@Test
+	public void testParseArtifactWithInteger() {
+		int artifactId = 456;
+		int trackerId = 3;
+		int userId = 789;
+		Date creationDate = new Date();
+		Date lastUpdateDate = new Date();
+
+		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.tuleapServerConfiguration
+				.getTrackerConfiguration(trackerId);
+
+		CommentedArtifact commentedArtifact = this.createCommentedArtifact(artifactId, trackerId, userId,
+				creationDate, lastUpdateDate, new ArrayList<TuleapElementComment>());
+
+		// Add a string
+		Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
+		AbstractTuleapField field = fields.iterator().next();
+
+		String fieldValue = "12"; //$NON-NLS-1$
+
+		ArtifactFieldValue[] value = new ArtifactFieldValue[] {this
+				.createLiteralFieldValue(field, fieldValue), };
+
+		commentedArtifact.getArtifact().setValue(value);
+
+		TuleapSoapParser tuleapSoapParser = new TuleapSoapParser();
+		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTrackerConfiguration,
+				commentedArtifact);
+
+		this.testLiteralFieldValue(artifactId, field, fieldValue, tuleapArtifact);
+	}
+
+	/**
+	 * This test will try to parse an artifact from a tracker with only a float field. The goal is to ensure
+	 * that the field is properly created in the Tuleap artifact. this test will use the tracker with the
+	 * identifier 4.
+	 */
+	@Test
+	public void testParseArtifactWithFloat() {
+		int artifactId = 456;
+		int trackerId = 4;
+		int userId = 789;
+		Date creationDate = new Date();
+		Date lastUpdateDate = new Date();
+
+		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.tuleapServerConfiguration
+				.getTrackerConfiguration(trackerId);
+
+		CommentedArtifact commentedArtifact = this.createCommentedArtifact(artifactId, trackerId, userId,
+				creationDate, lastUpdateDate, new ArrayList<TuleapElementComment>());
+
+		// Add a string
+		Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
+		AbstractTuleapField field = fields.iterator().next();
+
+		String fieldValue = "12.5"; //$NON-NLS-1$
+
+		ArtifactFieldValue[] value = new ArtifactFieldValue[] {this
+				.createLiteralFieldValue(field, fieldValue), };
+
+		commentedArtifact.getArtifact().setValue(value);
+
+		TuleapSoapParser tuleapSoapParser = new TuleapSoapParser();
+		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTrackerConfiguration,
+				commentedArtifact);
+
+		this.testLiteralFieldValue(artifactId, field, fieldValue, tuleapArtifact);
+	}
+
+	/**
+	 * This test will try to parse an artifact from a tracker with only a date field. The goal is to ensure
+	 * that the field is properly created in the Tuleap artifact. this test will use the tracker with the
+	 * identifier 5.
+	 */
+	@Test
+	public void testParseArtifactWithDate() {
+		int artifactId = 456;
+		int trackerId = 5;
+		int userId = 789;
+		Date creationDate = new Date();
+		Date lastUpdateDate = new Date();
+
+		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.tuleapServerConfiguration
+				.getTrackerConfiguration(trackerId);
+
+		CommentedArtifact commentedArtifact = this.createCommentedArtifact(artifactId, trackerId, userId,
+				creationDate, lastUpdateDate, new ArrayList<TuleapElementComment>());
+
+		// Add a string
+		Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
+		AbstractTuleapField field = fields.iterator().next();
+
+		String fieldValue = "2013-09-23T11:44:18.963Z"; //$NON-NLS-1$
+
+		ArtifactFieldValue[] value = new ArtifactFieldValue[] {this
+				.createLiteralFieldValue(field, fieldValue), };
+
+		commentedArtifact.getArtifact().setValue(value);
+
+		TuleapSoapParser tuleapSoapParser = new TuleapSoapParser();
+		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTrackerConfiguration,
+				commentedArtifact);
+
+		this.testLiteralFieldValue(artifactId, field, fieldValue, tuleapArtifact);
+	}
+
+	/**
+	 * This test will try to parse an artifact from a tracker with only an artifact links field. The goal is
+	 * to ensure that the field is properly created in the Tuleap artifact. this test will use the tracker
+	 * with the identifier 6.
+	 */
+	@Test
+	public void testParseArtifactWithArtifactLinks() {
+		int artifactId = 456;
+		int trackerId = 6;
+		int userId = 789;
+		Date creationDate = new Date();
+		Date lastUpdateDate = new Date();
+
+		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.tuleapServerConfiguration
+				.getTrackerConfiguration(trackerId);
+
+		CommentedArtifact commentedArtifact = this.createCommentedArtifact(artifactId, trackerId, userId,
+				creationDate, lastUpdateDate, new ArrayList<TuleapElementComment>());
+
+		// Add a string
+		Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
+		AbstractTuleapField field = fields.iterator().next();
+
+		String fieldValue = "141, 218, 21, 8197"; //$NON-NLS-1$
+
+		ArtifactFieldValue[] value = new ArtifactFieldValue[] {this
+				.createLiteralFieldValue(field, fieldValue), };
+
+		commentedArtifact.getArtifact().setValue(value);
+
+		TuleapSoapParser tuleapSoapParser = new TuleapSoapParser();
+		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTrackerConfiguration,
+				commentedArtifact);
+
+		this.testLiteralFieldValue(artifactId, field, fieldValue, tuleapArtifact);
+	}
+
+	/**
+	 * This test will try to parse an artifact from a tracker with only an open list field. The goal is to
+	 * ensure that the field is properly created in the Tuleap artifact. this test will use the tracker with
+	 * the identifier 7.
+	 */
+	@Test
+	public void testParseArtifactWithOpenList() {
+		int artifactId = 456;
+		int trackerId = 7;
+		int userId = 789;
+		Date creationDate = new Date();
+		Date lastUpdateDate = new Date();
+
+		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.tuleapServerConfiguration
+				.getTrackerConfiguration(trackerId);
+
+		CommentedArtifact commentedArtifact = this.createCommentedArtifact(artifactId, trackerId, userId,
+				creationDate, lastUpdateDate, new ArrayList<TuleapElementComment>());
+
+		// Add a string
+		Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
+		AbstractTuleapField field = fields.iterator().next();
+
+		String fieldValue = "this, is, a, list, of, tags"; //$NON-NLS-1$
+
+		ArtifactFieldValue[] value = new ArtifactFieldValue[] {this
+				.createLiteralFieldValue(field, fieldValue), };
+
+		commentedArtifact.getArtifact().setValue(value);
+
+		TuleapSoapParser tuleapSoapParser = new TuleapSoapParser();
+		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTrackerConfiguration,
+				commentedArtifact);
+
+		this.testLiteralFieldValue(artifactId, field, fieldValue, tuleapArtifact);
+	}
+
+	/**
+	 * This test will try to parse an artifact from a tracker with only a select box field. The goal is to
+	 * ensure that the field is properly created in the Tuleap artifact. this test will use the tracker with
+	 * the identifier 8.
+	 */
+	@Test
+	public void testParseArtifactWithSelectBox() {
+		fail();
+	}
+
+	/**
+	 * This test will try to parse an artifact from a tracker with only a multi-select box field. The goal is
+	 * to ensure that the field is properly created in the Tuleap artifact. this test will use the tracker
+	 * with the identifier 9.
+	 */
+	@Test
+	public void testParseArtifactWithMultiSelectBox() {
+		fail();
+	}
+
+	/**
+	 * This test will try to parse an artifact from a tracker with only a checkbox field. The goal is to
+	 * ensure that the field is properly created in the Tuleap artifact. this test will use the tracker with
+	 * the identifier 10.
+	 */
+	@Test
+	public void testParseArtifactWithCheckbox() {
+		fail();
+	}
+
+	/**
+	 * This test will try to parse an artifact from a tracker with only an user bound select box field. The
+	 * goal is to ensure that the field is properly created in the Tuleap artifact. this test will use the
+	 * tracker with the identifier 11.
+	 */
+	@Test
+	public void testParseArtifactWithUserBoundSelectBox() {
+		fail();
+	}
+
+	/**
+	 * This test will try to parse an artifact from a tracker with only an user bound multi-select box field.
+	 * The goal is to ensure that the field is properly created in the Tuleap artifact. this test will use the
+	 * tracker with the identifier 12.
+	 */
+	@Test
+	public void testParseArtifactWithUserBoundMultiSelectBox() {
+		fail();
+	}
+
+	/**
+	 * This test will try to parse an artifact from a tracker with only an user bound checkbox field. The goal
+	 * is to ensure that the field is properly created in the Tuleap artifact. this test will use the tracker
+	 * with the identifier 13.
+	 */
+	@Test
+	public void testParseArtifactWithUserBoundCheckBox() {
+		fail();
+	}
+
+	/**
+	 * This test will try to parse an artifact from a tracker with only a file attachments field. The goal is
+	 * to ensure that the field is properly created in the Tuleap artifact. this test will use the tracker
+	 * with the identifier 14.
+	 */
+	@Test
+	public void testParseArtifactWithFileAttachments() {
+		fail();
+	}
+
+	/**
+	 * This test will try to parse an artifact from a tracker with only a title field. The goal is to ensure
+	 * that the field is properly created in the Tuleap artifact. this test will use the tracker with the
+	 * identifier 15.
+	 */
+	@Test
+	public void testParseArtifactWithTitleSemantic() {
+		fail();
+	}
+
+	/**
+	 * This test will try to parse an artifact from a tracker with only a status field. The goal is to ensure
+	 * that the field is properly created in the Tuleap artifact. this test will use the tracker with the
+	 * identifier 16.
+	 */
+	@Test
+	public void testParseArtifactWithStatusSemantic() {
+		fail();
+	}
+
+	/**
+	 * This test will try to parse an artifact from a tracker with only an assigned to field. The goal is to
+	 * ensure that the field is properly created in the Tuleap artifact. this test will use the tracker with
+	 * the identifier 17.
+	 */
+	@Test
+	public void testParseArtifactWithAssignedToSemantic() {
+		fail();
 	}
 }
