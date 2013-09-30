@@ -28,6 +28,11 @@ import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
 public class TuleapMilestoneTypeDeserializer extends AbstractTuleapConfigurationDeserializer<TuleapMilestoneType> {
 
 	/**
+	 * The cardwall url key word.
+	 */
+	private static final String CARDWALL_URL = "cardwall_url"; //$NON-NLS-1$
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see com.google.gson.JsonDeserializer#deserialize(com.google.gson.JsonElement, java.lang.reflect.Type,
@@ -44,6 +49,11 @@ public class TuleapMilestoneTypeDeserializer extends AbstractTuleapConfiguration
 		String description = null;
 		long lastUpdateDate = System.currentTimeMillis();
 		String cardwallUrl = null;
+
+		JsonElement jsonElement = jsonObject.get(CARDWALL_URL);
+		if (jsonElement != null) {
+			cardwallUrl = jsonElement.getAsString();
+		}
 
 		TuleapMilestoneType tuleapMilestoneType = new TuleapMilestoneType(identifier, url, label, itemName,
 				description, lastUpdateDate, cardwallUrl);

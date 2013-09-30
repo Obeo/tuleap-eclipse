@@ -58,9 +58,74 @@ public abstract class AbstractTuleapConfigurationDeserializer<CONFIGURATION_TYPE
 	private static final String LABEL = "label"; //$NON-NLS-1$
 
 	/**
-	 * The field Id key word.
+	 * The fields key word.
 	 */
-	private static final String JSON_FIELD_ID = "field_id"; //$NON-NLS-1$
+	private static final String FIELDS = "fields"; //$NON-NLS-1$
+
+	/**
+	 * The type key word.
+	 */
+	private static final String TYPE = "type"; //$NON-NLS-1$
+
+	/**
+	 * The permissions key word.
+	 */
+	private static final String PERMISSIONS = "permissions"; //$NON-NLS-1$
+
+	/**
+	 * The create key word.
+	 */
+	private static final String CREATE = "create"; //$NON-NLS-1$
+
+	/**
+	 * The values key word.
+	 */
+	private static final String VALUES = "values"; //$NON-NLS-1$
+
+	/**
+	 * The binding key word.
+	 */
+	private static final String BINDING = "binding"; //$NON-NLS-1$
+
+	/**
+	 * The field id key word.
+	 */
+	private static final String FIELD_ID = "field_id"; //$NON-NLS-1$
+
+	/**
+	 * The field value id key word.
+	 */
+	private static final String FIELD_VALUE_ID = "field_value_id"; //$NON-NLS-1$
+
+	/**
+	 * The field value label key word.
+	 */
+	private static final String FIELD_VALUE_LABEL = "field_value_label"; //$NON-NLS-1$
+
+	/**
+	 * The bind type key word.
+	 */
+	private static final String BIND_TYPE = "bind_type"; //$NON-NLS-1$
+
+	/**
+	 * The title key word.
+	 */
+	private static final String TITLE = "title"; //$NON-NLS-1$
+
+	/**
+	 * The from field value id key word.
+	 */
+	private static final String FROM_FIELD_VALUE_ID = "from_field_value_id"; //$NON-NLS-1$
+
+	/**
+	 * The to field value id key word.
+	 */
+	private static final String TO_FIELD_VALUE_ID = "to_field_value_id"; //$NON-NLS-1$
+
+	/**
+	 * The transitions key word.
+	 */
+	private static final String TRANSITIONS = "transitions"; //$NON-NLS-1$
 
 	/**
 	 * The contributors key word.
@@ -121,17 +186,17 @@ public abstract class AbstractTuleapConfigurationDeserializer<CONFIGURATION_TYPE
 	 */
 	protected CONFIGURATION_TYPE populateConfigurableFields(CONFIGURATION_TYPE configuration,
 			JsonObject jsonObject) {
-		JsonArray milestoneTypeFieldsArray = jsonObject.get("fields").getAsJsonArray(); //$NON-NLS-1$
+		JsonArray milestoneTypeFieldsArray = jsonObject.get(FIELDS).getAsJsonArray();
 
 		JsonObject fieldSemantic = jsonObject.get(ITuleapConfigurationConstants.SEMANTIC).getAsJsonObject();
 		for (int i = 0; i < milestoneTypeFieldsArray.size(); i++) {
 			JsonObject field = (JsonObject)milestoneTypeFieldsArray.get(i);
 
 			// the field id
-			int fieldId = field.get(JSON_FIELD_ID).getAsInt();
+			int fieldId = field.get(FIELD_ID).getAsInt();
 
 			// the field type
-			String fieldType = field.get("type").getAsString(); //$NON-NLS-1$
+			String fieldType = field.get(TYPE).getAsString();
 			AbstractTuleapField tuleapField = null;
 			if (ITuleapConfigurationConstants.STRING.equals(fieldType)) {
 				tuleapField = new TuleapString(fieldId);
@@ -165,11 +230,11 @@ public abstract class AbstractTuleapConfigurationDeserializer<CONFIGURATION_TYPE
 				tuleapField.setLabel(field.get(LABEL).getAsString());
 
 				// the field permissions
-				JsonArray permissions = field.get("permissions").getAsJsonArray(); //$NON-NLS-1$
+				JsonArray permissions = field.get(PERMISSIONS).getAsJsonArray();
 				String[] permissionsArray = new String[permissions.size()];
 
 				for (int j = 0; j < permissions.size(); j++) {
-					if ("create".equals(permissions.get(j).getAsString())) { //$NON-NLS-1$
+					if (CREATE.equals(permissions.get(j).getAsString())) {
 						permissionsArray[j] = ITuleapConstants.PERMISSION_SUBMIT;
 					} else {
 						permissionsArray[j] = permissions.get(j).getAsString();
@@ -181,11 +246,11 @@ public abstract class AbstractTuleapConfigurationDeserializer<CONFIGURATION_TYPE
 				// The Multi Select Box case
 				JsonArray fieldValuesArray = null;
 				JsonObject fieldBinding = null;
-				JsonElement valuesElement = field.get("values"); //$NON-NLS-1$ 
+				JsonElement valuesElement = field.get(VALUES);
 				if (valuesElement != null) {
 					fieldValuesArray = valuesElement.getAsJsonArray();
 				}
-				JsonElement bindingElement = field.get("binding"); //$NON-NLS-1$ 
+				JsonElement bindingElement = field.get(BINDING);
 				if (bindingElement != null) {
 					fieldBinding = bindingElement.getAsJsonObject();
 				}
@@ -230,8 +295,8 @@ public abstract class AbstractTuleapConfigurationDeserializer<CONFIGURATION_TYPE
 		if (fieldValuesArray != null) {
 			for (int i = 0; i < fieldValuesArray.size(); i++) {
 				JsonObject value = (JsonObject)fieldValuesArray.get(i);
-				int fieldValueId = value.get("field_value_id").getAsInt(); //$NON-NLS-1$
-				String fieldValueLabel = value.get("field_value_label").getAsString(); //$NON-NLS-1$
+				int fieldValueId = value.get(FIELD_VALUE_ID).getAsInt();
+				String fieldValueLabel = value.get(FIELD_VALUE_LABEL).getAsString();
 				TuleapSelectBoxItem selectBoxItem = new TuleapSelectBoxItem(fieldValueId);
 				selectBoxItem.setLabel(fieldValueLabel);
 				multiSelectBoxField.addItem(selectBoxItem);
@@ -245,7 +310,7 @@ public abstract class AbstractTuleapConfigurationDeserializer<CONFIGURATION_TYPE
 
 		// the binding
 		if (fieldBinding != null) {
-			multiSelectBoxField.setBinding(fieldBinding.get("bind_type").getAsString()); //$NON-NLS-1$
+			multiSelectBoxField.setBinding(fieldBinding.get(BIND_TYPE).getAsString());
 		}
 
 		// the semantic contributors part
@@ -270,7 +335,7 @@ public abstract class AbstractTuleapConfigurationDeserializer<CONFIGURATION_TYPE
 			int fieldValueId, TuleapSelectBoxItem selectBoxItem) {
 		if (fieldSemantic.get(STATUS) != null) {
 			JsonObject semanticStatus = fieldSemantic.get(STATUS).getAsJsonObject();
-			if (multiSelectBoxField.getIdentifier() == semanticStatus.get(JSON_FIELD_ID).getAsInt()) {
+			if (multiSelectBoxField.getIdentifier() == semanticStatus.get(FIELD_ID).getAsInt()) {
 				JsonArray openStatus = semanticStatus.get(JSON_OPEN_STATUS_IDS).getAsJsonArray();
 				for (int j = 0; j < openStatus.size(); j++) {
 					if (fieldValueId == openStatus.get(j).getAsInt()) {
@@ -293,7 +358,7 @@ public abstract class AbstractTuleapConfigurationDeserializer<CONFIGURATION_TYPE
 		if (fieldSemantic != null) {
 			if (fieldSemantic.get(JSON_CONTRIBUTORS) != null) {
 				JsonObject semanticContributor = fieldSemantic.get(JSON_CONTRIBUTORS).getAsJsonObject();
-				if (semanticContributor.get(JSON_FIELD_ID).getAsInt() == multiSelectBoxField.getIdentifier()) {
+				if (semanticContributor.get(FIELD_ID).getAsInt() == multiSelectBoxField.getIdentifier()) {
 					multiSelectBoxField.setSemanticContributor(true);
 				}
 			}
@@ -322,8 +387,8 @@ public abstract class AbstractTuleapConfigurationDeserializer<CONFIGURATION_TYPE
 		if (fieldValuesArray != null) {
 			for (int i = 0; i < fieldValuesArray.size(); i++) {
 				JsonObject value = (JsonObject)fieldValuesArray.get(i);
-				int fieldValueId = value.get("field_value_id").getAsInt(); //$NON-NLS-1$
-				String fieldValueLabel = value.get("field_value_label").getAsString(); //$NON-NLS-1$
+				int fieldValueId = value.get(FIELD_VALUE_ID).getAsInt();
+				String fieldValueLabel = value.get(FIELD_VALUE_LABEL).getAsString();
 				TuleapSelectBoxItem selectBoxItem = new TuleapSelectBoxItem(fieldValueId);
 				selectBoxItem.setLabel(fieldValueLabel);
 				selectBoxField.addItem(selectBoxItem);
@@ -331,7 +396,7 @@ public abstract class AbstractTuleapConfigurationDeserializer<CONFIGURATION_TYPE
 				// the semantic status part
 				JsonObject semanticStatus = fieldSemantic.get(STATUS).getAsJsonObject();
 				for (int z = 0; z < semanticStatus.get(JSON_OPEN_STATUS_IDS).getAsJsonArray().size(); z++) {
-					if (selectBoxField.getIdentifier() == semanticStatus.get(JSON_FIELD_ID).getAsInt()
+					if (selectBoxField.getIdentifier() == semanticStatus.get(FIELD_ID).getAsInt()
 							&& fieldValueId == semanticStatus.get(JSON_OPEN_STATUS_IDS).getAsJsonArray().get(
 									z).getAsInt()) {
 						selectBoxField.getOpenStatus().add(selectBoxItem);
@@ -342,12 +407,12 @@ public abstract class AbstractTuleapConfigurationDeserializer<CONFIGURATION_TYPE
 
 		// the binding
 		if (fieldBinding != null) {
-			selectBoxField.setBinding(fieldBinding.get("bind_type").getAsString()); //$NON-NLS-1$
+			selectBoxField.setBinding(fieldBinding.get(BIND_TYPE).getAsString());
 		}
 
 		// the semantic contributors part
 		if (fieldSemantic.get(JSON_CONTRIBUTORS) != null
-				&& fieldSemantic.get(JSON_CONTRIBUTORS).getAsJsonObject().get(JSON_FIELD_ID).getAsInt() == selectBoxField
+				&& fieldSemantic.get(JSON_CONTRIBUTORS).getAsJsonObject().get(FIELD_ID).getAsInt() == selectBoxField
 						.getIdentifier()) {
 			selectBoxField.setSemanticContributor(true);
 		}
@@ -367,10 +432,10 @@ public abstract class AbstractTuleapConfigurationDeserializer<CONFIGURATION_TYPE
 	 *            The semantic field
 	 */
 	private void createTuleapStringField(CONFIGURATION_TYPE configuration, JsonObject fieldSemantic) {
-		if (fieldSemantic.get("title") != null) { //$NON-NLS-1$
-			JsonObject semanticTitle = fieldSemantic.get("title").getAsJsonObject(); //$NON-NLS-1$
+		if (fieldSemantic.get(TITLE) != null) {
+			JsonObject semanticTitle = fieldSemantic.get(TITLE).getAsJsonObject();
 			for (AbstractTuleapField tuleapSemanticField : configuration.getFields()) {
-				if (tuleapSemanticField.getIdentifier() == semanticTitle.get(JSON_FIELD_ID).getAsInt()
+				if (tuleapSemanticField.getIdentifier() == semanticTitle.get(FIELD_ID).getAsInt()
 						&& tuleapSemanticField instanceof TuleapString) {
 					TuleapString stringfield = (TuleapString)tuleapSemanticField;
 					stringfield.setSemanticTitle(true);
@@ -392,14 +457,14 @@ public abstract class AbstractTuleapConfigurationDeserializer<CONFIGURATION_TYPE
 		if (workflowJsonElement != null) {
 			JsonObject workflowJsonObject = workflowJsonElement.getAsJsonObject();
 
-			if (workflowJsonObject.get(JSON_FIELD_ID).getAsInt() == selectBoxField.getIdentifier()) {
+			if (workflowJsonObject.get(FIELD_ID).getAsInt() == selectBoxField.getIdentifier()) {
 				// the workflow transitions
-				JsonArray transitionsJsonArray = workflowJsonObject.get("transitions").getAsJsonArray(); //$NON-NLS-1$
+				JsonArray transitionsJsonArray = workflowJsonObject.get(TRANSITIONS).getAsJsonArray();
 				for (JsonElement transitionJsonElement : transitionsJsonArray) {
 					if (transitionJsonElement instanceof JsonObject) {
 						JsonObject transitionJsonObject = (JsonObject)transitionJsonElement;
-						int from = transitionJsonObject.get("from_field_value_id").getAsInt(); //$NON-NLS-1$
-						int to = transitionJsonObject.get("to_field_value_id").getAsInt(); //$NON-NLS-1$
+						int from = transitionJsonObject.get(FROM_FIELD_VALUE_ID).getAsInt();
+						int to = transitionJsonObject.get(TO_FIELD_VALUE_ID).getAsInt();
 
 						TuleapWorkflowTransition workflowTransition = new TuleapWorkflowTransition();
 						workflowTransition.setFrom(from);
