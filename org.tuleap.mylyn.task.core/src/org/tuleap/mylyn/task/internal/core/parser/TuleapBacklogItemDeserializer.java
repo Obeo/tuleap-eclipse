@@ -48,7 +48,7 @@ public class TuleapBacklogItemDeserializer extends AbstractTuleapDeserializer<Tu
 
 		JsonElement elt = jsonObject.get(ITuleapConstants.INITIAL_EFFORT);
 		if (elt != null) {
-			float initialEffort = elt.getAsFloat();
+			Float initialEffort = Float.valueOf(elt.getAsFloat());
 			backlogItem.setInitialEffort(initialEffort);
 		}
 

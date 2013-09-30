@@ -33,12 +33,12 @@ public class TuleapMilestone extends AbstractTuleapConfigurableElement {
 	/**
 	 * The milestone's duration.
 	 */
-	private float duration;
+	private Float duration;
 
 	/**
 	 * The milestone's capacity.
 	 */
-	private float capacity;
+	private Float capacity;
 
 	/**
 	 * The milestone's sub-milestones.
@@ -119,7 +119,7 @@ public class TuleapMilestone extends AbstractTuleapConfigurableElement {
 	 * 
 	 * @return the duration
 	 */
-	public float getDuration() {
+	public Float getDuration() {
 		return duration;
 	}
 
@@ -129,7 +129,7 @@ public class TuleapMilestone extends AbstractTuleapConfigurableElement {
 	 * @param duration
 	 *            the duration to set
 	 */
-	public void setDuration(float duration) {
+	public void setDuration(Float duration) {
 		this.duration = duration;
 	}
 
@@ -138,7 +138,7 @@ public class TuleapMilestone extends AbstractTuleapConfigurableElement {
 	 * 
 	 * @return the capacity
 	 */
-	public float getCapacity() {
+	public Float getCapacity() {
 		return capacity;
 	}
 
@@ -148,7 +148,7 @@ public class TuleapMilestone extends AbstractTuleapConfigurableElement {
 	 * @param capacity
 	 *            the capacity to set
 	 */
-	public void setCapacity(float capacity) {
+	public void setCapacity(Float capacity) {
 		this.capacity = capacity;
 	}
 

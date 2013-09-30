@@ -24,7 +24,7 @@ public class TuleapBacklogItem extends AbstractTuleapConfigurableElement {
 	/**
 	 * The initial effort.
 	 */
-	private float initialEffort;
+	private Float initialEffort;
 
 	/**
 	 * The id of the milestone to which the backlog item is assigned. {@code null} indicates that the backlog
@@ -82,7 +82,7 @@ public class TuleapBacklogItem extends AbstractTuleapConfigurableElement {
 	 * 
 	 * @return the initialEffort
 	 */
-	public float getInitialEffort() {
+	public Float getInitialEffort() {
 		return initialEffort;
 	}
 
@@ -92,7 +92,7 @@ public class TuleapBacklogItem extends AbstractTuleapConfigurableElement {
 	 * @param initialEffort
 	 *            the initialEffort to set
 	 */
-	public void setInitialEffort(float initialEffort) {
+	public void setInitialEffort(Float initialEffort) {
 		this.initialEffort = initialEffort;
 	}
 

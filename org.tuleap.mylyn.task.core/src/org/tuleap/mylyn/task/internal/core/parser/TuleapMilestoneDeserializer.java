@@ -64,13 +64,13 @@ public class TuleapMilestoneDeserializer extends AbstractTuleapDeserializer<Tule
 
 		elt = jsonObject.get(ITuleapConstants.DURATION);
 		if (elt != null) {
-			float duration = elt.getAsFloat();
+			Float duration = Float.valueOf(elt.getAsFloat());
 			milestone.setDuration(duration);
 		}
 
 		elt = jsonObject.get(ITuleapConstants.CAPACITY);
 		if (elt != null) {
-			float capacity = elt.getAsFloat();
+			Float capacity = Float.valueOf(elt.getAsFloat());
 			milestone.setCapacity(capacity);
 		}
 
