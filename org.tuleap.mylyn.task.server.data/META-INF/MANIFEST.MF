@@ -4,4 +4,5 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.tuleap.mylyn.task.server.data
 Bundle-Version: 2.0.0.qualifier
 Bundle-Vendor: %Vendor-Name
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Localization: plugin
