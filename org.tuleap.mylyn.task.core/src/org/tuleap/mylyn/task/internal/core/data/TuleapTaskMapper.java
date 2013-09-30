@@ -22,7 +22,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.mylyn.internal.tasks.core.RepositoryPerson;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
@@ -239,8 +238,8 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 		taskAttachment.setAttachmentId(tuleapAttachment.getAttachmentId());
 
 		TuleapPerson person = tuleapAttachment.getPerson();
-		RepositoryPerson repositoryPerson = new RepositoryPerson(taskData.getAttributeMapper()
-				.getTaskRepository(), person.getEmail());
+		IRepositoryPerson repositoryPerson = taskData.getAttributeMapper().getTaskRepository().createPerson(
+				person.getEmail());
 		repositoryPerson.setName(person.getUserName());
 		taskAttachment.setAuthor(repositoryPerson);
 		taskAttachment.setFileName(tuleapAttachment.getFilename());
@@ -668,7 +667,7 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 		TuleapPerson submitter = tuleapArtifactComment.getSubmitter();
 		if (submitter != null) {
 			TaskRepository taskRepository = attribute.getTaskData().getAttributeMapper().getTaskRepository();
-			IRepositoryPerson repositoryPerson = new RepositoryPerson(taskRepository, submitter.getEmail());
+			IRepositoryPerson repositoryPerson = taskRepository.createPerson(submitter.getEmail());
 			repositoryPerson.setName(submitter.getUserName());
 			taskComment.setAuthor(repositoryPerson);
 		}
