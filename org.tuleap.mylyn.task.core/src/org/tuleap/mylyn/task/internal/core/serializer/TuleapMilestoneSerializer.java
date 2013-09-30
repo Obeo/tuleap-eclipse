@@ -45,10 +45,12 @@ public class TuleapMilestoneSerializer extends AbstractTuleapSerializer<TuleapMi
 			milestoneObject.add(ITuleapConstants.START_DATE, new JsonPrimitive(dateFormat.format(milestone
 					.getStartDate())));
 		}
-		milestoneObject.add(ITuleapConstants.DURATION, new JsonPrimitive(Float.valueOf(milestone
-				.getDuration())));
-		milestoneObject.add(ITuleapConstants.CAPACITY, new JsonPrimitive(Float.valueOf(milestone
-				.getCapacity())));
+		if (milestone.getDuration() != null) {
+			milestoneObject.add(ITuleapConstants.DURATION, new JsonPrimitive(milestone.getDuration()));
+		}
+		if (milestone.getCapacity() != null) {
+			milestoneObject.add(ITuleapConstants.CAPACITY, new JsonPrimitive(milestone.getCapacity()));
+		}
 		milestoneObject.add(ITuleapConstants.MILESTONE_TYPE_ID, new JsonPrimitive(Integer.valueOf(milestone
 				.getTypeId())));
 

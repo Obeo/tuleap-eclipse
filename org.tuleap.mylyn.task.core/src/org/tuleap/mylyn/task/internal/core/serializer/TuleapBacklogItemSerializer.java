@@ -39,9 +39,10 @@ public class TuleapBacklogItemSerializer extends AbstractTuleapSerializer<Tuleap
 
 		JsonObject backlogItemObject = new JsonObject();
 		backlogItemObject = (JsonObject)super.serialize(backlogItem, type, jsonSerializationContext);
-
-		backlogItemObject.add(ITuleapConstants.INITIAL_EFFORT, new JsonPrimitive(Float.valueOf(backlogItem
-				.getInitialEffort())));
+		if (backlogItem.getInitialEffort() != null) {
+			backlogItemObject.add(ITuleapConstants.INITIAL_EFFORT, new JsonPrimitive(backlogItem
+					.getInitialEffort()));
+		}
 		backlogItemObject.add(ITuleapConstants.BACKLOGITEM_TYPE_ID, new JsonPrimitive(Integer
 				.valueOf(backlogItem.getTypeId())));
 		backlogItemObject.add(ITuleapConstants.ASSIGNED_MILESTONE_ID, new JsonPrimitive(backlogItem
