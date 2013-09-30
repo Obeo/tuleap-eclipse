@@ -41,8 +41,6 @@ import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactFieldValue;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.FieldValue;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -248,10 +246,10 @@ public class TuleapSoapParserTests {
 
 		assertThat(tuleapArtifact.getUrl(), is(nullValue()));
 		assertThat(tuleapArtifact.getNewComment(), is(nullValue()));
-		assertThat(tuleapArtifact.getFieldValues(), empty());
+		assertThat(tuleapArtifact.getFieldValues().size(), is(0));
 		assertThat(tuleapArtifact.getLabel(), is(nullValue()));
 
-		assertThat(tuleapArtifact.getComments(), hasSize(comments.size()));
+		assertThat(tuleapArtifact.getComments().size(), is(comments.size()));
 		assertThat(tuleapArtifact.getComments().get(0).getBody(), is(firstCommentBody));
 		assertThat(tuleapArtifact.getComments().get(0).getSubmittedOn(), is(firstCommentSubmitDate));
 		assertThat(tuleapArtifact.getComments().get(0).getSubmitter().getId(), is(firstCommentSubmitter
@@ -311,7 +309,7 @@ public class TuleapSoapParserTests {
 			TuleapArtifact tuleapArtifact) {
 		assertThat(tuleapArtifact, is(notNullValue()));
 		assertThat(tuleapArtifact.getId(), is(artifactId));
-		assertThat(tuleapArtifact.getFieldValues(), hasSize(1));
+		assertThat(tuleapArtifact.getFieldValues().size(), is(1));
 
 		Collection<AbstractFieldValue> fieldValues = tuleapArtifact.getFieldValues();
 		AbstractFieldValue abstractFieldValue = fieldValues.iterator().next();

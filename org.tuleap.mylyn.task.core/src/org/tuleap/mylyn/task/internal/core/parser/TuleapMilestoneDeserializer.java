@@ -32,12 +32,11 @@ import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
  */
 public class TuleapMilestoneDeserializer extends AbstractTuleapDeserializer<TuleapMilestone> {
 
-
 	/**
 	 * The key used to retrieve the type id of the milestone.
 	 */
 	private static final String MILESTONE_TYPE_ID = "milestone_type_id"; //$NON-NLS-1$
- 
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -47,7 +46,6 @@ public class TuleapMilestoneDeserializer extends AbstractTuleapDeserializer<Tule
 	@Override
 	public TuleapMilestone deserialize(JsonElement rootJsonElement, Type type,
 			JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-
 		TuleapMilestone milestone = super.deserialize(rootJsonElement, type, jsonDeserializationContext);
 
 		JsonObject jsonObject = rootJsonElement.getAsJsonObject();
