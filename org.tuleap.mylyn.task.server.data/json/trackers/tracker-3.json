@@ -1,6 +1,6 @@
 {
   "id": 3,
-  "name": "Sprint",
+  "label": "Sprint",
   "unix_name": "sprint",
   "description": "The description of the sprints tracker",
   "url": "localhost:3001/api/v3.14/trackers/3",

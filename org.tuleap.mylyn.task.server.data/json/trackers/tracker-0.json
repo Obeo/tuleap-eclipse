@@ -1,6 +1,6 @@
 {
   "id": 0,
-  "name": "Product",
+  "label": "Product",
   "unix_name": "product",
   "description": "The description of the products tracker",
   "url": "localhost:3001/api/v3.14/trackers/0",

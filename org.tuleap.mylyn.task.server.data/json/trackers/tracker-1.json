@@ -1,6 +1,6 @@
 {
   "id": 1,
-  "name": "Bugs",
+  "label": "Bugs",
   "unix_name": "bugs",
   "description": "The description of the bugs tracker",
   "url": "localhost:3001/api/v3.14/trackers/1",

@@ -1,6 +1,6 @@
 {
   "id": 4,
-  "name": "Tests",
+  "label": "Tests",
   "unix_name": "tests",
   "description": "The description of the tests tracker",
   "url": "localhost:3001/api/v3.14/trackers/4",

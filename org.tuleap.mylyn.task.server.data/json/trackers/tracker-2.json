@@ -1,6 +1,6 @@
 {
   "id": 2,
-  "name": "Release",
+  "label": "Release",
   "unix_name": "release",
   "description": "The description of the releases tracker",
   "url": "localhost:3001/api/v3.14/trackers/2",

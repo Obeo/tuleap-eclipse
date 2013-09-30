@@ -1,6 +1,6 @@
 {
   "id": 5,
-  "name": "User Stories",
+  "label": "User Stories",
   "unix_name": "user-stories",
   "description": "The description of the user stories tracker",
   "url": "localhost:3001/api/v3.14/trackers/5",

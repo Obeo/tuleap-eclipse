@@ -1,7 +1,7 @@
 [
   {
     "id": 0,
-    "name": "Product",
+    "label": "Product",
     "unix_name": "product",
     "description": "The description of the products tracker",
     "url": "localhost:3001/api/v3.14/trackers/0",
@@ -31,7 +31,7 @@
   },
   {
     "id": 1,
-    "name": "Bugs",
+    "label": "Bugs",
     "unix_name": "bugs",
     "description": "The description of the bugs tracker",
     "url": "localhost:3001/api/v3.14/trackers/1",
@@ -355,7 +355,7 @@
   },
   {
     "id": 2,
-    "name": "Release",
+    "label": "Release",
     "unix_name": "release",
     "description": "The description of the releases tracker",
     "url": "localhost:3001/api/v3.14/trackers/2",
@@ -454,7 +454,7 @@
   },
   {
     "id": 3,
-    "name": "Sprint",
+    "label": "Sprint",
     "unix_name": "sprint",
     "description": "The description of the sprints tracker",
     "url": "localhost:3001/api/v3.14/trackers/3",
@@ -556,7 +556,7 @@
   },
   {
     "id": 4,
-    "name": "Tests",
+    "label": "Tests",
     "unix_name": "tests",
     "description": "The description of the tests tracker",
     "url": "localhost:3001/api/v3.14/trackers/4",
