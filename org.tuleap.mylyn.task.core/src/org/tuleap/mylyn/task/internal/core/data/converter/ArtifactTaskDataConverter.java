@@ -15,7 +15,7 @@ import java.util.Set;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.internal.core.data.AbstractFieldValue;
-import org.tuleap.mylyn.task.internal.core.data.TuleapTaskMapper;
+import org.tuleap.mylyn.task.internal.core.data.TuleapConfigurableElementMapper;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 
@@ -55,19 +55,20 @@ public class ArtifactTaskDataConverter extends AbstractElementTaskDataConverter<
 	 * @return The tuleap artifact POJO.
 	 */
 	public TuleapArtifact createTuleapArtifact(TaskData taskData) {
-		TuleapTaskMapper tuleapTaskMapper = new TuleapTaskMapper(taskData, this.configuration);
+		TuleapConfigurableElementMapper tuleapConfigurableElementMapper = new TuleapConfigurableElementMapper(
+				taskData, this.configuration);
 
 		TuleapArtifact tuleapArtifact = null;
 		if (taskData.isNew()) {
-			int trackerId = tuleapTaskMapper.getConfigurationId();
+			int trackerId = tuleapConfigurableElementMapper.getConfigurationId();
 			tuleapArtifact = new TuleapArtifact(trackerId);
 		} else {
-			int artifactId = tuleapTaskMapper.getId();
-			int trackerId = tuleapTaskMapper.getConfigurationId();
+			int artifactId = tuleapConfigurableElementMapper.getId();
+			int trackerId = tuleapConfigurableElementMapper.getConfigurationId();
 			tuleapArtifact = new TuleapArtifact(artifactId, trackerId);
 		}
 
-		Set<AbstractFieldValue> fieldValues = tuleapTaskMapper.getFieldValues();
+		Set<AbstractFieldValue> fieldValues = tuleapConfigurableElementMapper.getFieldValues();
 		for (AbstractFieldValue abstractFieldValue : fieldValues) {
 			tuleapArtifact.addFieldValue(abstractFieldValue);
 		}

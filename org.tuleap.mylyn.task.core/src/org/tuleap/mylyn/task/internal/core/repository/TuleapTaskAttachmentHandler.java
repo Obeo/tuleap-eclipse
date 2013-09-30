@@ -35,7 +35,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapConnector;
-import org.tuleap.mylyn.task.internal.core.data.TuleapTaskMapper;
+import org.tuleap.mylyn.task.internal.core.data.TuleapConfigurableElementMapper;
 import org.tuleap.mylyn.task.internal.core.model.TuleapAttachmentDescriptor;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
@@ -249,15 +249,17 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 		// If the attachement attribute is available, let's use it
 		if (attachmentAttribute != null) {
 			TaskData taskData = attachmentAttribute.getTaskData();
-			TuleapTaskMapper tuleapTaskMapper = new TuleapTaskMapper(taskData, configuration);
+			TuleapConfigurableElementMapper tuleapConfigurableElementMapper = new TuleapConfigurableElementMapper(
+					taskData, configuration);
 
-			int trackerId = tuleapTaskMapper.getConfigurationId();
+			int configurationId = tuleapConfigurableElementMapper.getConfigurationId();
 
 			List<TuleapProjectConfiguration> allProjectConfigurations = repositoryConfiguration
 					.getAllProjectConfigurations();
 			for (TuleapProjectConfiguration tuleapProjectConfiguration : allProjectConfigurations) {
+				// TODO SBE Support upload of attachments for agile elements
 				TuleapTrackerConfiguration trackerConfiguration = tuleapProjectConfiguration
-						.getTrackerConfiguration(trackerId);
+						.getTrackerConfiguration(configurationId);
 				if (trackerConfiguration != null) {
 					configuration = trackerConfiguration;
 				}

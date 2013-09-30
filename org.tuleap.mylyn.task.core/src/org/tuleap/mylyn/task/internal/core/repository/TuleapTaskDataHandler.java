@@ -27,7 +27,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
-import org.tuleap.mylyn.task.internal.core.data.TuleapTaskMapper;
+import org.tuleap.mylyn.task.internal.core.data.TuleapConfigurableElementMapper;
 import org.tuleap.mylyn.task.internal.core.data.converter.ArtifactTaskDataConverter;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
@@ -70,12 +70,12 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			Set<TaskAttribute> oldAttributes, IProgressMonitor monitor) throws CoreException {
 		RepositoryResponse response = null;
 
-		int trackerId = new TuleapTaskMapper(taskData, null).getConfigurationId();
+		int configurationId = new TuleapConfigurableElementMapper(taskData, null).getConfigurationId();
 
 		TuleapServerConfiguration tuleapServerConfiguration = this.connector.getRepositoryConfiguration(
 				taskRepository, true, monitor);
 		TuleapTrackerConfiguration tuleapTrackerConfiguration = tuleapServerConfiguration
-				.getTrackerConfiguration(trackerId);
+				.getTrackerConfiguration(configurationId);
 
 		ArtifactTaskDataConverter artifactTaskDataConverter = new ArtifactTaskDataConverter(
 				tuleapTrackerConfiguration);
@@ -119,13 +119,14 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 				TuleapTrackerConfiguration trackerConfiguration = tuleapTaskMapping.getTracker();
 				if (trackerConfiguration != null) {
-					TuleapTaskMapper mapper = new TuleapTaskMapper(taskData, trackerConfiguration);
-					mapper.initializeEmptyTaskData();
+					TuleapConfigurableElementMapper tuleapConfigurableElementMapper = new TuleapConfigurableElementMapper(
+							taskData, trackerConfiguration);
+					tuleapConfigurableElementMapper.initializeEmptyTaskData();
 
 					Date now = new Date();
-					mapper.setCreationDate(now);
-					mapper.setModificationDate(now);
-					mapper.setSummary(TuleapMylynTasksMessages.getString(
+					tuleapConfigurableElementMapper.setCreationDate(now);
+					tuleapConfigurableElementMapper.setModificationDate(now);
+					tuleapConfigurableElementMapper.setSummary(TuleapMylynTasksMessages.getString(
 							"TuleapTaskDataHandler.DefaultNewTitle", trackerConfiguration.getItemName())); //$NON-NLS-1$
 
 					isInitialized = true;

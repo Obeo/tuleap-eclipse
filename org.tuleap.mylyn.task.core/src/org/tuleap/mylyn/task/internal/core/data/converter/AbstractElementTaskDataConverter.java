@@ -20,7 +20,7 @@ import org.tuleap.mylyn.task.internal.core.data.AttachmentFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.AttachmentValue;
 import org.tuleap.mylyn.task.internal.core.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.LiteralFieldValue;
-import org.tuleap.mylyn.task.internal.core.data.TuleapTaskMapper;
+import org.tuleap.mylyn.task.internal.core.data.TuleapConfigurableElementMapper;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableElement;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableFieldsConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
@@ -77,20 +77,21 @@ public abstract class AbstractElementTaskDataConverter<ELEMENT extends AbstractT
 	 * @return The task data configured
 	 */
 	protected TaskData populateTaskDataConfigurableFields(TaskData taskData, ELEMENT element) {
-		TuleapTaskMapper tuleapTaskMapper = new TuleapTaskMapper(taskData, this.configuration);
-		tuleapTaskMapper.initializeEmptyTaskData();
+		TuleapConfigurableElementMapper tuleapConfigurableElementMapper = new TuleapConfigurableElementMapper(
+				taskData, this.configuration);
+		tuleapConfigurableElementMapper.initializeEmptyTaskData();
 
 		// Task Key
 		String taskKey = TuleapUtil.getTaskDataKey(this.configuration.getTuleapProjectConfiguration()
 				.getName(), this.configuration.getName(), element.getId());
-		tuleapTaskMapper.setTaskKey(taskKey);
+		tuleapConfigurableElementMapper.setTaskKey(taskKey);
 
 		// URL
-		tuleapTaskMapper.setTaskUrl(element.getHtmlUrl());
+		tuleapConfigurableElementMapper.setTaskUrl(element.getHtmlUrl());
 
 		// Dates
-		tuleapTaskMapper.setCreationDate(element.getCreationDate());
-		tuleapTaskMapper.setModificationDate(element.getLastModificationDate());
+		tuleapConfigurableElementMapper.setCreationDate(element.getCreationDate());
+		tuleapConfigurableElementMapper.setModificationDate(element.getLastModificationDate());
 
 		// Summary
 		TuleapString titleField = this.configuration.getTitleField();
@@ -98,7 +99,7 @@ public abstract class AbstractElementTaskDataConverter<ELEMENT extends AbstractT
 			AbstractFieldValue fieldValue = element.getFieldValue(titleField.getIdentifier());
 			if (fieldValue instanceof LiteralFieldValue) {
 				LiteralFieldValue literalFieldValue = (LiteralFieldValue)fieldValue;
-				tuleapTaskMapper.setSummary(literalFieldValue.getFieldValue());
+				tuleapConfigurableElementMapper.setSummary(literalFieldValue.getFieldValue());
 			}
 		}
 
@@ -117,7 +118,7 @@ public abstract class AbstractElementTaskDataConverter<ELEMENT extends AbstractT
 
 				if (valuesString.size() > 0) {
 					// Only support one status
-					tuleapTaskMapper.setStatus(valuesString.get(0));
+					tuleapConfigurableElementMapper.setStatus(valuesString.get(0));
 				}
 			}
 		}
@@ -128,14 +129,14 @@ public abstract class AbstractElementTaskDataConverter<ELEMENT extends AbstractT
 			AbstractFieldValue abstractFieldValue = element.getFieldValue(contributorField.getIdentifier());
 			if (abstractFieldValue instanceof BoundFieldValue) {
 				BoundFieldValue boundFieldValue = (BoundFieldValue)abstractFieldValue;
-				tuleapTaskMapper.setAssignedTo(boundFieldValue.getValueIds());
+				tuleapConfigurableElementMapper.setAssignedTo(boundFieldValue.getValueIds());
 			}
 		}
 
 		// Comments
 		List<TuleapElementComment> comments = element.getComments();
 		for (TuleapElementComment comment : comments) {
-			tuleapTaskMapper.addComment(comment);
+			tuleapConfigurableElementMapper.addComment(comment);
 		}
 
 		// Attachments
@@ -146,7 +147,7 @@ public abstract class AbstractElementTaskDataConverter<ELEMENT extends AbstractT
 				AttachmentFieldValue aFieldValue = (AttachmentFieldValue)attachmentFieldValue;
 				List<AttachmentValue> attachments = aFieldValue.getAttachments();
 				for (AttachmentValue attachment : attachments) {
-					tuleapTaskMapper.addAttachment(attachmentField.getName(), attachment);
+					tuleapConfigurableElementMapper.addAttachment(attachmentField.getName(), attachment);
 				}
 			}
 		}
@@ -168,8 +169,8 @@ public abstract class AbstractElementTaskDataConverter<ELEMENT extends AbstractT
 
 				if (fieldValue instanceof LiteralFieldValue) {
 					LiteralFieldValue literalFieldValue = (LiteralFieldValue)fieldValue;
-					tuleapTaskMapper.setValue(literalFieldValue.getFieldValue(), literalFieldValue
-							.getFieldId());
+					tuleapConfigurableElementMapper.setValue(literalFieldValue.getFieldValue(),
+							literalFieldValue.getFieldId());
 				} else if (fieldValue instanceof BoundFieldValue) {
 					BoundFieldValue boundFieldValue = (BoundFieldValue)fieldValue;
 					List<Integer> bindValueIds = boundFieldValue.getValueIds();
@@ -179,7 +180,7 @@ public abstract class AbstractElementTaskDataConverter<ELEMENT extends AbstractT
 						values.add(bindValueId.toString());
 					}
 
-					tuleapTaskMapper.setValues(values, boundFieldValue.getFieldId());
+					tuleapConfigurableElementMapper.setValues(values, boundFieldValue.getFieldId());
 				}
 			}
 		}

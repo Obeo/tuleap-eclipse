@@ -41,20 +41,16 @@ import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 
 /**
- * The Tuleap Task Mapper will be used to manipulate the task data model from Mylyn with a higher level of
- * abstraction.
+ * The Tuleap Configurable Element Mapper will be used to manipulate the task data model from Mylyn with a
+ * higher level of abstraction.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public class TuleapTaskMapper extends AbstractTaskMapper {
-
-	// TODO SBE Remove all references to tracker and artifact
-	// TODO SBE compute another identifier? remove project name and tracker name?
-
+public class TuleapConfigurableElementMapper extends AbstractTaskMapper {
 	/**
-	 * The identifier of an invalid tracker.
+	 * The identifier of an invalid configuration.
 	 */
-	public static final int INVALID_TRACKER_ID = -1;
+	public static final int INVALID_CONFIGURATION_ID = -1;
 
 	/**
 	 * The identifier of an invalid project.
@@ -62,29 +58,14 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	public static final int INVALID_PROJECT_ID = -1;
 
 	/**
-	 * The identifier of the group id task attribute.
+	 * The identifier of the configuration id task attribute.
 	 */
-	public static final String GROUP_ID = "tuleap_task_data_group_id"; //$NON-NLS-1$
-
-	/**
-	 * The identifier of the tracker id task attribute.
-	 */
-	public static final String TRACKER_ID = "tuleap_task_data_tracker_id"; //$NON-NLS-1$
+	public static final String CONFIGURATION_ID = "mtc_configuration_id"; //$NON-NLS-1$
 
 	/**
 	 * The identifier of the project name task attribute.
 	 */
-	public static final String PROJECT_ID = "tuleap_task_data_project_id"; //$NON-NLS-1$
-
-	/**
-	 * The identifier of the project name task attribute.
-	 */
-	public static final String PROJECT_NAME = "tuleap_task_data_project_name"; //$NON-NLS-1$
-
-	/**
-	 * The identifier of the tracker name task attribute.
-	 */
-	public static final String TRACKER_NAME = "tuleap_task_data_tracker_name"; //$NON-NLS-1$
+	public static final String PROJECT_ID = "mtc_project_id"; //$NON-NLS-1$
 
 	/**
 	 * List of attribute Ids that need not be sent to the server for update.
@@ -92,7 +73,7 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	private static final List<String> ATTRIBUTE_IDS_NOT_TO_SEND = Collections.unmodifiableList(Arrays.asList(
 			TaskAttribute.DATE_COMPLETION, TaskAttribute.DATE_CREATION, TaskAttribute.DATE_MODIFICATION,
 			TaskAttribute.PREFIX_OPERATION + TaskAttribute.STATUS, TaskAttribute.TASK_KEY,
-			TaskAttribute.TASK_KIND, TRACKER_ID, PROJECT_ID, PROJECT_NAME, TRACKER_NAME, GROUP_ID));
+			TaskAttribute.TASK_KIND, CONFIGURATION_ID, PROJECT_ID));
 
 	/**
 	 * The configuration.
@@ -107,7 +88,7 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 * @param tuleapConfigurableFieldsConfiguration
 	 *            The configuration.
 	 */
-	public TuleapTaskMapper(TaskData taskData,
+	public TuleapConfigurableElementMapper(TaskData taskData,
 			AbstractTuleapConfigurableFieldsConfiguration tuleapConfigurableFieldsConfiguration) {
 		super(taskData);
 		this.tuleapConfigurableFieldsConfiguration = tuleapConfigurableFieldsConfiguration;
@@ -119,11 +100,9 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	public void initializeEmptyTaskData() {
 		createTaskKindTaskAttribute();
 
-		// The group id and the tracker id
+		// The project id and the configuration id
 		setProjectId(tuleapConfigurableFieldsConfiguration.getTuleapProjectConfiguration().getIdentifier());
-		setProjectName(tuleapConfigurableFieldsConfiguration.getTuleapProjectConfiguration().getName());
-		setTrackerId(tuleapConfigurableFieldsConfiguration.getIdentifier());
-		setTrackerName(tuleapConfigurableFieldsConfiguration.getName());
+		setConfigurationId(tuleapConfigurableFieldsConfiguration.getIdentifier());
 
 		createCreationDateTaskAttribute();
 		createLastUpdateDateTaskAttribute();
@@ -160,7 +139,7 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	private void createCreationDateTaskAttribute() {
 		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.DATE_CREATION);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
-		metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.CreationDate")); //$NON-NLS-1$
+		metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapConfigurableElementMapper.CreationDate")); //$NON-NLS-1$
 		metaData.setType(TaskAttribute.TYPE_DATE);
 	}
 
@@ -170,7 +149,8 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	private void createLastUpdateDateTaskAttribute() {
 		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.DATE_MODIFICATION);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
-		metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.LastModificationDate")); //$NON-NLS-1$
+		metaData.setLabel(TuleapMylynTasksMessages
+				.getString("TuleapConfigurableElementMapper.LastModificationDate")); //$NON-NLS-1$
 		metaData.setType(TaskAttribute.TYPE_DATE);
 	}
 
@@ -190,7 +170,8 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	private void createCompletionDateTaskAttribute() {
 		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.DATE_COMPLETION);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
-		metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.CompletionDate")); //$NON-NLS-1$
+		metaData.setLabel(TuleapMylynTasksMessages
+				.getString("TuleapConfigurableElementMapper.CompletionDate")); //$NON-NLS-1$
 		metaData.setType(TaskAttribute.TYPE_DATE);
 	}
 
@@ -202,7 +183,7 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	private TaskAttribute createNewCommentTaskAttribute() {
 		TaskAttribute attribute = taskData.getRoot().createAttribute(TaskAttribute.COMMENT_NEW);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
-		metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.NewComment")); //$NON-NLS-1$
+		metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapConfigurableElementMapper.NewComment")); //$NON-NLS-1$
 		metaData.setType(TaskAttribute.TYPE_LONG_RICH_TEXT);
 		return attribute;
 	}
@@ -217,7 +198,7 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 			attribute.setValue(name);
 		} else {
 			attribute.setValue(TuleapMylynTasksMessages
-					.getString("TuleapTaskDataHandler.DefaultConfigurationName")); //$NON-NLS-1$
+					.getString("TuleapConfigurableElementMapper.DefaultConfigurationName")); //$NON-NLS-1$
 		}
 	}
 
@@ -250,31 +231,31 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	}
 
 	/**
-	 * Sets the identifier of the tracker.
+	 * Sets the identifier of the configuration of the element (tracker id, backlog item type id, etc).
 	 * 
-	 * @param trackerId
-	 *            The identifier of the tracker
+	 * @param configurationId
+	 *            The identifier of the configuration of the element
 	 */
-	public void setTrackerId(int trackerId) {
+	private void setConfigurationId(int configurationId) {
 		// should not appear in the attribute part so no task attribute type!
-		TaskAttribute trackerIdAtt = taskData.getRoot().getMappedAttribute(TRACKER_ID);
-		if (trackerIdAtt == null) {
-			trackerIdAtt = taskData.getRoot().createMappedAttribute(TRACKER_ID);
+		TaskAttribute configurationIdAtt = taskData.getRoot().getMappedAttribute(CONFIGURATION_ID);
+		if (configurationIdAtt == null) {
+			configurationIdAtt = taskData.getRoot().createMappedAttribute(CONFIGURATION_ID);
 		}
-		taskData.getAttributeMapper().setIntegerValue(trackerIdAtt, Integer.valueOf(trackerId));
+		taskData.getAttributeMapper().setIntegerValue(configurationIdAtt, Integer.valueOf(configurationId));
 	}
 
 	/**
-	 * Returns the identifier of the tracker or INVALID_TRACKER otherwise.
+	 * Returns the identifier of the configuration or INVALID_CONFIGURATION_ID otherwise.
 	 * 
-	 * @return The identifier of the tracker or INVALID_TRACKER otherwise.
+	 * @return The identifier of the configuration or INVALID_CONFIGURATION_ID otherwise.
 	 */
 	public int getConfigurationId() {
-		TaskAttribute trackerIdAtt = taskData.getRoot().getMappedAttribute(TRACKER_ID);
-		if (trackerIdAtt == null) {
-			return INVALID_TRACKER_ID;
+		TaskAttribute configurationIdAtt = taskData.getRoot().getMappedAttribute(CONFIGURATION_ID);
+		if (configurationIdAtt == null) {
+			return INVALID_CONFIGURATION_ID;
 		}
-		return taskData.getAttributeMapper().getIntegerValue(trackerIdAtt).intValue();
+		return taskData.getAttributeMapper().getIntegerValue(configurationIdAtt).intValue();
 	}
 
 	/**
@@ -283,7 +264,7 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 * @param projectId
 	 *            The identifier of the project
 	 */
-	public void setProjectId(int projectId) {
+	private void setProjectId(int projectId) {
 		// should not appear in the attribute part so no task attribute type!
 		TaskAttribute projectIdAtt = taskData.getRoot().getMappedAttribute(PROJECT_ID);
 		if (projectIdAtt == null) {
@@ -768,115 +749,6 @@ public class TuleapTaskMapper extends AbstractTaskMapper {
 	 */
 	private TaskAttribute getStatusTaskAttribute() {
 		return taskData.getRoot().getAttribute(TaskAttribute.STATUS);
-	}
-
-	/**
-	 * Sets the project name of the task data.
-	 * 
-	 * @param projectName
-	 *            The project name
-	 */
-	public void setProjectName(String projectName) {
-		TaskAttribute attribute = this.getWriteableAttribute(TuleapTaskMapper.PROJECT_NAME, null);
-		if (attribute != null) {
-			this.taskData.getAttributeMapper().setValue(attribute, projectName);
-		}
-	}
-
-	/**
-	 * Returns the project name of the task data.
-	 * 
-	 * @return The project name of the task data
-	 */
-	public String getProjectName() {
-		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(TuleapTaskMapper.PROJECT_NAME);
-		if (attribute != null) {
-			return taskData.getAttributeMapper().getValueLabel(attribute);
-		}
-		return ""; //$NON-NLS-1$
-	}
-
-	/**
-	 * Sets the tracker name of the task data.
-	 * 
-	 * @param trackerName
-	 *            The tracker name
-	 */
-	public void setTrackerName(String trackerName) {
-		TaskAttribute attribute = this.getWriteableAttribute(TuleapTaskMapper.TRACKER_NAME, null);
-		if (attribute != null) {
-			this.taskData.getAttributeMapper().setValue(attribute, trackerName);
-		}
-	}
-
-	/**
-	 * Returns the tracker name of the task data.
-	 * 
-	 * @return The tracker name of the task data
-	 */
-	public String getTrackerName() {
-		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(TuleapTaskMapper.TRACKER_NAME);
-		if (attribute != null) {
-			return taskData.getAttributeMapper().getValueLabel(attribute);
-		}
-		return ""; //$NON-NLS-1$
-	}
-
-	/**
-	 * Sets the group id of the task data.
-	 * 
-	 * @param groupId
-	 *            The group id
-	 */
-	public void setGroupId(int groupId) {
-		this.setIntValue(TuleapTaskMapper.GROUP_ID, groupId);
-	}
-
-	/**
-	 * Returns the group id of the task data or -1 if it can't be found.
-	 * 
-	 * @return The group id of the task data or -1 if it can"t be found
-	 */
-	public int getGroupId() {
-		return this.getIntValue(TuleapTaskMapper.GROUP_ID);
-	}
-
-	/**
-	 * Sets a value of type "int" in the task data for an attribute with the given key. If the attribute does
-	 * not exist, it will be created.
-	 * 
-	 * @param taskAttributeKey
-	 *            The key of the task data attribute
-	 * @param value
-	 *            The int value to set
-	 */
-	private void setIntValue(String taskAttributeKey, int value) {
-		TaskAttribute attribute = this.getWriteableAttribute(taskAttributeKey, null);
-		if (attribute != null) {
-			this.taskData.getAttributeMapper().setValue(attribute, Integer.valueOf(value).toString());
-		}
-	}
-
-	/**
-	 * Returns the value of type int for the task data attribute with the given key.
-	 * 
-	 * @param taskAttributeKey
-	 *            The key of the task data attribute
-	 * @return The value of type int for the task data attribute with the given key
-	 */
-	private int getIntValue(String taskAttributeKey) {
-		int value = -1;
-
-		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(taskAttributeKey);
-		if (attribute != null) {
-			String valueLabel = taskData.getAttributeMapper().getValueLabel(attribute);
-			try {
-				return Integer.valueOf(valueLabel).intValue();
-			} catch (NumberFormatException e) {
-				// do not log
-			}
-		}
-		return value;
 	}
 
 	/**

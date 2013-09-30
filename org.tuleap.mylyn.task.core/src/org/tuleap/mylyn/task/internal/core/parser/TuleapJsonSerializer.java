@@ -13,7 +13,7 @@ package org.tuleap.mylyn.task.internal.core.parser;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import org.tuleap.mylyn.task.internal.core.data.TuleapTaskMapper;
+import org.tuleap.mylyn.task.internal.core.data.TuleapConfigurableElementMapper;
 
 /**
  * Utility class to hide all the logic of the JSON serialization.
@@ -24,11 +24,11 @@ public class TuleapJsonSerializer {
 	/**
 	 * Serializes in JSON the fields of the Tuleap artifact.
 	 * 
-	 * @param tuleapTaskMapper
-	 *            The Tuleap task mapper
+	 * @param tuleapConfigurableElementMapper
+	 *            The Tuleap configurable element mapper
 	 * @return A JSON representation of the fields of the Tuleap artifact
 	 */
-	public String serializeArtifactFields(TuleapTaskMapper tuleapTaskMapper) {
+	public String serializeArtifactFields(TuleapConfigurableElementMapper tuleapConfigurableElementMapper) {
 		return null;
 	}
 

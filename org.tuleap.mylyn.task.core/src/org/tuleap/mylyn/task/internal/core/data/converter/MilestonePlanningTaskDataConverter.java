@@ -17,7 +17,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.agile.core.data.planning.BacklogItemWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.MilestonePlanningWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.SubMilestoneWrapper;
-import org.tuleap.mylyn.task.internal.core.data.TuleapTaskMapper;
+import org.tuleap.mylyn.task.internal.core.data.TuleapConfigurableElementMapper;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
@@ -143,16 +143,17 @@ public class MilestonePlanningTaskDataConverter extends AbstractElementTaskDataC
 	 * @return The updated milestone POJO.
 	 */
 	public TuleapMilestone createTuleapMilestone(TaskData taskData) {
-		TuleapTaskMapper mapper = new TuleapTaskMapper(taskData, this.configuration);
+		TuleapConfigurableElementMapper tuleapConfigurableElementMapper = new TuleapConfigurableElementMapper(
+				taskData, this.configuration);
 
 		TuleapMilestone tuleapMilestone = null;
 
 		if (taskData.isNew()) {
-			int configurationId = mapper.getConfigurationId();
+			int configurationId = tuleapConfigurableElementMapper.getConfigurationId();
 			tuleapMilestone = new TuleapMilestone(configurationId);
 		} else {
-			int id = mapper.getId();
-			int configurationId = mapper.getConfigurationId();
+			int id = tuleapConfigurableElementMapper.getId();
+			int configurationId = tuleapConfigurableElementMapper.getConfigurationId();
 			tuleapMilestone = new TuleapMilestone(id, configurationId);
 		}
 

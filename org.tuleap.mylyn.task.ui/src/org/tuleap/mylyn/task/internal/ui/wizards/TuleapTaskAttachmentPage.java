@@ -32,7 +32,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.tuleap.mylyn.task.internal.core.data.TuleapTaskMapper;
+import org.tuleap.mylyn.task.internal.core.data.TuleapConfigurableElementMapper;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapFileUpload;
@@ -143,13 +143,15 @@ public class TuleapTaskAttachmentPage extends TaskAttachmentPage {
 
 			TaskAttribute attribute = this.getModel().getAttribute();
 			TaskData taskData = attribute.getTaskData();
-			TuleapTaskMapper tuleapTaskMapper = new TuleapTaskMapper(taskData, null);
-			int trackerId = tuleapTaskMapper.getConfigurationId();
+			TuleapConfigurableElementMapper tuleapConfigurableElementMapper = new TuleapConfigurableElementMapper(
+					taskData, null);
+			int configurationId = tuleapConfigurableElementMapper.getConfigurationId();
 
 			List<String> attachmentFieldsName = new ArrayList<String>();
 
+			// TODO SBE Support attachment download for agile elements
 			TuleapTrackerConfiguration trackerConfiguration = repositoryConfiguration
-					.getTrackerConfiguration(trackerId);
+					.getTrackerConfiguration(configurationId);
 			Collection<AbstractTuleapField> fields = trackerConfiguration.getFields();
 			for (AbstractTuleapField abstractTuleapField : fields) {
 				if (abstractTuleapField instanceof TuleapFileUpload) {

@@ -21,7 +21,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.junit.Before;
 import org.junit.Test;
-import org.tuleap.mylyn.task.internal.core.data.TuleapTaskMapper;
+import org.tuleap.mylyn.task.internal.core.data.TuleapConfigurableElementMapper;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
@@ -125,7 +125,7 @@ public class TuleapTaskMapperTests {
 	/**
 	 * The mapper used for tests.
 	 */
-	private TuleapTaskMapper mapper;
+	private TuleapConfigurableElementMapper mapper;
 
 	/**
 	 * The attribute mapper used by the mapper under test.
@@ -157,11 +157,11 @@ public class TuleapTaskMapperTests {
 
 		// Also check that project id & tracker id task attributes are correctly created since they will be
 		// useful to mylyn
-		att = root.getAttribute(TuleapTaskMapper.PROJECT_ID);
+		att = root.getAttribute(TuleapConfigurableElementMapper.PROJECT_ID);
 		assertNotNull(att);
 		assertEquals(String.valueOf(projectId), att.getValue());
 
-		att = root.getAttribute(TuleapTaskMapper.TRACKER_ID);
+		att = root.getAttribute(TuleapConfigurableElementMapper.CONFIGURATION_ID);
 		assertNotNull(att);
 		assertEquals(String.valueOf(trackerId), att.getValue());
 
@@ -891,6 +891,6 @@ public class TuleapTaskMapperTests {
 
 		this.attributeMapper = new TuleapAttributeMapper(repository, repositoryConnector);
 		this.taskData = new TaskData(attributeMapper, connectorKind, repositoryUrl, "task1"); //$NON-NLS-1$
-		this.mapper = new TuleapTaskMapper(taskData, tuleapTrackerConfiguration);
+		this.mapper = new TuleapConfigurableElementMapper(taskData, tuleapTrackerConfiguration);
 	}
 }
