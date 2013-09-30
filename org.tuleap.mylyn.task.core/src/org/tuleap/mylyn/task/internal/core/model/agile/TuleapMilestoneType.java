@@ -30,32 +30,26 @@ public class TuleapMilestoneType extends AbstractTuleapConfigurableFieldsConfigu
 	protected String cardwallUrl;
 
 	/**
-	 * The default constructor.
-	 * 
-	 * @param milestoneTypeIdentifier
-	 *            The id of the tracker.
-	 * @param repositoryURL
-	 *            The URL of the repository.
-	 */
-	public TuleapMilestoneType(int milestoneTypeIdentifier, String repositoryURL) {
-		super(milestoneTypeIdentifier, repositoryURL);
-	}
-
-	/**
 	 * The constructor.
 	 * 
-	 * @param repositoryURL
-	 *            The URL of the repository.
-	 * @param repositoryName
-	 *            The label of the repository
-	 * @param repositoryItemName
-	 *            The item label of the repository
-	 * @param repositoryDescription
-	 *            The description of the repository
+	 * @param identifier
+	 *            The identifier of the configuration
+	 * @param url
+	 *            The URL.
+	 * @param label
+	 *            The label
+	 * @param itemName
+	 *            The item name
+	 * @param description
+	 *            The description
+	 * @param lastUpdateDate
+	 *            The date at which the configuration was last updated.
+	 * @param cardwallUrl
+	 *            The URL of the cardwall, if a cardwall is configured for this type of milestone.
 	 */
-	public TuleapMilestoneType(String repositoryURL, String repositoryName, String repositoryItemName,
-			String repositoryDescription) {
-		super(repositoryURL, repositoryName, repositoryItemName, repositoryDescription);
+	public TuleapMilestoneType(int identifier, String url, String label, String itemName, String description,
+			long lastUpdateDate, String cardwallUrl) {
+		super(identifier, url, label, itemName, description, lastUpdateDate);
 	}
 
 	/**
@@ -67,13 +61,4 @@ public class TuleapMilestoneType extends AbstractTuleapConfigurableFieldsConfigu
 		return cardwallUrl;
 	}
 
-	/**
-	 * Card wall URL setter.
-	 * 
-	 * @param cardwallUrl
-	 *            the cardwallUrl to set
-	 */
-	public void setCardwallUrl(String cardwallUrl) {
-		this.cardwallUrl = cardwallUrl;
-	}
 }

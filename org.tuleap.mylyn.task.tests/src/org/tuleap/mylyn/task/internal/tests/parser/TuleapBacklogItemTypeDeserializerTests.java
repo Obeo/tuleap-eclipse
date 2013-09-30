@@ -69,7 +69,7 @@ public class TuleapBacklogItemTypeDeserializerTests {
 		TuleapBacklogItemType tuleapBacklogItemType = this.parse(epics);
 		assertNotNull(tuleapBacklogItemType);
 		assertEquals(801, tuleapBacklogItemType.getIdentifier());
-		assertEquals("Epics", tuleapBacklogItemType.getName()); //$NON-NLS-1$
+		assertEquals("Epics", tuleapBacklogItemType.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/backlog_item_types/801", tuleapBacklogItemType.getUrl()); //$NON-NLS-1$
 		Collection<AbstractTuleapField> fields = tuleapBacklogItemType.getFields();
 		assertEquals(4, fields.size());
@@ -140,7 +140,7 @@ public class TuleapBacklogItemTypeDeserializerTests {
 		TuleapBacklogItemType tuleapBacklogItemType = this.parse(userStories);
 		assertNotNull(tuleapBacklogItemType);
 		assertEquals(802, tuleapBacklogItemType.getIdentifier());
-		assertEquals("User Stories", tuleapBacklogItemType.getName()); //$NON-NLS-1$
+		assertEquals("User Stories", tuleapBacklogItemType.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/backlog_item_types/802", tuleapBacklogItemType.getUrl()); //$NON-NLS-1$
 		//assertEquals("The description of user stories", tuleapBacklogItemType.getDescription()); //$NON-NLS-1$
 		System.out.print(tuleapBacklogItemType.getDescription());
@@ -214,7 +214,7 @@ public class TuleapBacklogItemTypeDeserializerTests {
 		TuleapBacklogItemType tuleapBacklogItemType = this.parse(userStories);
 		assertNotNull(tuleapBacklogItemType);
 		assertEquals(802, tuleapBacklogItemType.getIdentifier());
-		assertEquals("User Stories", tuleapBacklogItemType.getName()); //$NON-NLS-1$
+		assertEquals("User Stories", tuleapBacklogItemType.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/backlog_item_types/802", tuleapBacklogItemType.getUrl()); //$NON-NLS-1$
 		//assertEquals("The description of user stories", tuleapBacklogItemType.getDescription()); //$NON-NLS-1$
 		System.out.print(tuleapBacklogItemType.getDescription());

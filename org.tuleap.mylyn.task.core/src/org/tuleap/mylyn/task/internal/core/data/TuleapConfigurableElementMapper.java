@@ -193,7 +193,7 @@ public class TuleapConfigurableElementMapper extends AbstractTaskMapper {
 	 */
 	private void createTaskKindTaskAttribute() {
 		TaskAttribute attribute = taskData.getRoot().createAttribute(TaskAttribute.TASK_KIND);
-		String name = tuleapConfigurableFieldsConfiguration.getName();
+		String name = tuleapConfigurableFieldsConfiguration.getLabel();
 		if (name != null) {
 			attribute.setValue(name);
 		} else {

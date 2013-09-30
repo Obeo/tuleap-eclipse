@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.internal.tests.client;
+package org.tuleap.mylyn.task.internal.tests.repository;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -161,10 +161,8 @@ public class TuleapTaskDataHandlerTests extends TestCase {
 		this.itemName = "Bugs"; //$NON-NLS-1$
 
 		this.repository = new TaskRepository(connectorKind, repositoryUrl);
-		this.tuleapTrackerConfiguration = new TuleapTrackerConfiguration(trackerId, repositoryUrl);
-		tuleapTrackerConfiguration.setName(trackerName);
-		tuleapTrackerConfiguration.setDescription(repositoryDescription);
-		tuleapTrackerConfiguration.setItemName(itemName);
+		this.tuleapTrackerConfiguration = new TuleapTrackerConfiguration(trackerId, repositoryUrl,
+				trackerName, itemName, repositoryDescription, System.currentTimeMillis());
 
 		this.tuleapServerConfiguration = new TuleapServerConfiguration(repositoryUrl);
 

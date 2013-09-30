@@ -136,14 +136,14 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 
 			TuleapMilestoneType firstMilestoneType = milestoneTypes.get(0);
 			assertEquals(901, firstMilestoneType.getIdentifier());
-			assertEquals("Releases", firstMilestoneType.getName()); //$NON-NLS-1$
+			assertEquals("Releases", firstMilestoneType.getLabel()); //$NON-NLS-1$
 			assertEquals("localhost:3001/api/v3.14/milestone_types/901", firstMilestoneType.getUrl()); //$NON-NLS-1$
 			Collection<AbstractTuleapField> fields = firstMilestoneType.getFields();
 			assertEquals(5, fields.size());
 
 			TuleapMilestoneType secondMilestoneType = milestoneTypes.get(1);
 			assertEquals(902, secondMilestoneType.getIdentifier());
-			assertEquals("Sprints", secondMilestoneType.getName()); //$NON-NLS-1$
+			assertEquals("Sprints", secondMilestoneType.getLabel()); //$NON-NLS-1$
 			assertEquals("localhost:3001/api/v3.14/milestone_types/902", secondMilestoneType.getUrl()); //$NON-NLS-1$
 			Collection<AbstractTuleapField> theFields = secondMilestoneType.getFields();
 			assertEquals(7, theFields.size());
@@ -173,14 +173,14 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 
 			TuleapBacklogItemType firstBacklogItemType = backlogItemTypes.get(0);
 			assertEquals(801, firstBacklogItemType.getIdentifier());
-			assertEquals("Epics", firstBacklogItemType.getName()); //$NON-NLS-1$
+			assertEquals("Epics", firstBacklogItemType.getLabel()); //$NON-NLS-1$
 			assertEquals("localhost:3001/api/v3.14/backlog_item_types/801", firstBacklogItemType.getUrl()); //$NON-NLS-1$
 			Collection<AbstractTuleapField> fields = firstBacklogItemType.getFields();
 			assertEquals(4, fields.size());
 
 			TuleapBacklogItemType secondBacklogItemType = backlogItemTypes.get(1);
 			assertEquals(802, secondBacklogItemType.getIdentifier());
-			assertEquals("User Stories", secondBacklogItemType.getName()); //$NON-NLS-1$
+			assertEquals("User Stories", secondBacklogItemType.getLabel()); //$NON-NLS-1$
 			assertEquals("localhost:3001/api/v3.14/backlog_item_types/802", secondBacklogItemType.getUrl()); //$NON-NLS-1$
 
 			Collection<AbstractTuleapField> theFields = secondBacklogItemType.getFields();

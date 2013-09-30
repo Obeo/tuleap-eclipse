@@ -141,6 +141,7 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 	 */
 	private TuleapTrackerConfiguration getTrackerConfigurationFromTaskKey(TaskRepository repository,
 			ITask task) {
+		// TODO SBE Use the new task id
 		String projectName = null;
 		String trackerName = null;
 
@@ -164,7 +165,7 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 					List<TuleapTrackerConfiguration> allTrackerConfigurations = tuleapProjectConfiguration
 							.getAllTrackerConfigurations();
 					for (TuleapTrackerConfiguration tuleapTrackerConfiguration : allTrackerConfigurations) {
-						if (trackerName.equals(tuleapTrackerConfiguration.getName())) {
+						if (trackerName.equals(tuleapTrackerConfiguration.getLabel())) {
 							return tuleapTrackerConfiguration;
 						}
 					}

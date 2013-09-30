@@ -37,10 +37,10 @@ public abstract class AbstractTuleapConfigurableFieldsConfiguration implements S
 	/**
 	 * The last time this configuration was updated.
 	 */
-	protected long lastUpdate;
+	protected long lastUpdateDate;
 
 	/**
-	 * The url of the repository configuration.
+	 * The url of the configuration.
 	 */
 	protected String url;
 
@@ -55,12 +55,12 @@ public abstract class AbstractTuleapConfigurableFieldsConfiguration implements S
 	protected String itemName;
 
 	/**
-	 * The description of the Tuleap tracker.
+	 * The description of the Tuleap element.
 	 */
 	protected String description;
 
 	/**
-	 * The fields of the Tuleap tracker.
+	 * The fields of the Tuleap element.
 	 */
 	protected Map<Integer, AbstractTuleapField> fields = new LinkedHashMap<Integer, AbstractTuleapField>();
 
@@ -70,7 +70,7 @@ public abstract class AbstractTuleapConfigurableFieldsConfiguration implements S
 	protected int identifier;
 
 	/**
-	 * The configuration of the project containing the tracker.
+	 * The configuration of the project containing the configuration.
 	 */
 	protected TuleapProjectConfiguration tuleapProjectConfiguration;
 
@@ -100,45 +100,29 @@ public abstract class AbstractTuleapConfigurableFieldsConfiguration implements S
 	protected TuleapFileUpload attachmentField;
 
 	/**
-	 * The default constructor.
-	 * 
-	 * @param identifier
-	 *            The id of the tracker.
-	 * @param repositoryURL
-	 *            The URL of the repository.
-	 */
-	public AbstractTuleapConfigurableFieldsConfiguration(int identifier, String repositoryURL) {
-		this.identifier = identifier;
-		this.url = repositoryURL;
-	}
-
-	/**
 	 * The constructor.
 	 * 
-	 * @param repositoryURL
-	 *            The URL of the repository.
-	 * @param repositoryName
-	 *            The label of the repository
-	 * @param repositoryItemName
-	 *            The item label of the repository
-	 * @param repositoryDescription
-	 *            The description of the repository
+	 * @param identifier
+	 *            The identifier of the configuration
+	 * @param url
+	 *            The URL.
+	 * @param label
+	 *            The label
+	 * @param itemName
+	 *            The item name
+	 * @param description
+	 *            The description
+	 * @param lastUpdateDate
+	 *            The date at which the configuration was last updated.
 	 */
-	public AbstractTuleapConfigurableFieldsConfiguration(String repositoryURL, String repositoryName,
-			String repositoryItemName, String repositoryDescription) {
-		this.url = repositoryURL;
-		this.label = repositoryName;
-		this.itemName = repositoryItemName;
-	}
-
-	/**
-	 * Set the time at which the configuration was last updated.
-	 * 
-	 * @param time
-	 *            The time at which the configuration was last updated.
-	 */
-	public void setLastUpdate(long time) {
-		this.lastUpdate = time;
+	public AbstractTuleapConfigurableFieldsConfiguration(int identifier, String url, String label,
+			String itemName, String description, long lastUpdateDate) {
+		this.identifier = identifier;
+		this.url = url;
+		this.label = label;
+		this.itemName = itemName;
+		this.description = description;
+		this.lastUpdateDate = lastUpdateDate;
 	}
 
 	/**
@@ -146,55 +130,35 @@ public abstract class AbstractTuleapConfigurableFieldsConfiguration implements S
 	 * 
 	 * @return The time at which the configuration was last updated.
 	 */
-	public long getLastUpdate() {
-		return this.lastUpdate;
+	public long getLastUpdateDate() {
+		return this.lastUpdateDate;
 	}
 
 	/**
-	 * Returns the url of the repository.
+	 * Returns the url of the configuration.
 	 * 
-	 * @return The url of the repository.
+	 * @return The url of the configuration.
 	 */
 	public String getUrl() {
 		return this.url;
 	}
 
 	/**
-	 * Returns the label of the repository.
+	 * Returns the label of the configuration.
 	 * 
-	 * @return The label of the repository.
+	 * @return The label of the configuration.
 	 */
-	public String getName() {
+	public String getLabel() {
 		return this.label;
 	}
 
 	/**
-	 * Sets the label of the configuration.
+	 * Returns the item name of the configuration.
 	 * 
-	 * @param configurationName
-	 *            The label of the configuration.
-	 */
-	public void setName(String configurationName) {
-		this.label = configurationName;
-	}
-
-	/**
-	 * Returns the item label of the repository.
-	 * 
-	 * @return The item label of the repository.
+	 * @return The item name of the configuration.
 	 */
 	public String getItemName() {
 		return this.itemName;
-	}
-
-	/**
-	 * Sets the item label of the repository.
-	 * 
-	 * @param repositoryItemName
-	 *            The item label of the repository.
-	 */
-	public void setItemName(String repositoryItemName) {
-		this.itemName = repositoryItemName;
 	}
 
 	/**
@@ -204,16 +168,6 @@ public abstract class AbstractTuleapConfigurableFieldsConfiguration implements S
 	 */
 	public String getDescription() {
 		return this.description;
-	}
-
-	/**
-	 * Sets the description of the repository.
-	 * 
-	 * @param repositoryDescription
-	 *            The description of the repository.
-	 */
-	public void setDescription(String repositoryDescription) {
-		this.description = repositoryDescription;
 	}
 
 	/**

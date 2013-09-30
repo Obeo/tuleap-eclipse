@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.internal.tests.client;
+package org.tuleap.mylyn.task.internal.tests.data;
 
 import com.google.common.collect.Lists;
 
@@ -143,7 +143,7 @@ public class TuleapTaskMapperTests {
 
 		TaskAttribute att = root.getAttribute(TaskAttribute.TASK_KIND);
 		assertNotNull(att);
-		assertEquals(tuleapTrackerConfiguration.getName(), att.getValue());
+		assertEquals(tuleapTrackerConfiguration.getLabel(), att.getValue());
 		att = root.getMappedAttribute(TaskAttribute.DATE_CREATION);
 		assertNotNull(att);
 		TaskAttributeMetaData metadata = att.getMetaData();
@@ -876,10 +876,8 @@ public class TuleapTaskMapperTests {
 		this.projectId = 987;
 
 		this.repository = new TaskRepository(connectorKind, repositoryUrl);
-		this.tuleapTrackerConfiguration = new TuleapTrackerConfiguration(trackerId, repositoryUrl);
-		tuleapTrackerConfiguration.setName(trackerName);
-		tuleapTrackerConfiguration.setDescription(repositoryDescription);
-		tuleapTrackerConfiguration.setItemName(itemName);
+		this.tuleapTrackerConfiguration = new TuleapTrackerConfiguration(trackerId, repositoryUrl,
+				trackerName, itemName, repositoryDescription, System.currentTimeMillis());
 
 		this.tuleapServerConfiguration = new TuleapServerConfiguration(repositoryUrl);
 

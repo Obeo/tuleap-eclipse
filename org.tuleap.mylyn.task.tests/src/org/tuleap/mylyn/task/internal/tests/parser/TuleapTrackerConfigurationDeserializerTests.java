@@ -155,7 +155,7 @@ public class TuleapTrackerConfigurationDeserializerTests {
 		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker0);
 		assertNotNull(tuleapTrackerConfiguration);
 		assertEquals(0, tuleapTrackerConfiguration.getIdentifier());
-		assertEquals("Product", tuleapTrackerConfiguration.getName()); //$NON-NLS-1$
+		assertEquals("Product", tuleapTrackerConfiguration.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/trackers/0", tuleapTrackerConfiguration.getUrl()); //$NON-NLS-1$
 		assertEquals("The description of the products tracker", tuleapTrackerConfiguration.getDescription()); //$NON-NLS-1$
 
@@ -185,7 +185,7 @@ public class TuleapTrackerConfigurationDeserializerTests {
 		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker1);
 		assertNotNull(tuleapTrackerConfiguration);
 		assertEquals(1, tuleapTrackerConfiguration.getIdentifier());
-		assertEquals("Bugs", tuleapTrackerConfiguration.getName()); //$NON-NLS-1$
+		assertEquals("Bugs", tuleapTrackerConfiguration.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/trackers/1", tuleapTrackerConfiguration.getUrl()); //$NON-NLS-1$
 		assertEquals("The description of the bugs tracker", tuleapTrackerConfiguration.getDescription()); //$NON-NLS-1$
 
@@ -269,7 +269,7 @@ public class TuleapTrackerConfigurationDeserializerTests {
 		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker2);
 		assertNotNull(tuleapTrackerConfiguration);
 		assertEquals(2, tuleapTrackerConfiguration.getIdentifier());
-		assertEquals("Release", tuleapTrackerConfiguration.getName()); //$NON-NLS-1$
+		assertEquals("Release", tuleapTrackerConfiguration.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/trackers/2", tuleapTrackerConfiguration.getUrl()); //$NON-NLS-1$
 		assertEquals("The description of the releases tracker", tuleapTrackerConfiguration.getDescription()); //$NON-NLS-1$
 
@@ -300,7 +300,7 @@ public class TuleapTrackerConfigurationDeserializerTests {
 		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker3);
 		assertNotNull(tuleapTrackerConfiguration);
 		assertEquals(3, tuleapTrackerConfiguration.getIdentifier());
-		assertEquals("Sprint", tuleapTrackerConfiguration.getName()); //$NON-NLS-1$
+		assertEquals("Sprint", tuleapTrackerConfiguration.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/trackers/3", tuleapTrackerConfiguration.getUrl()); //$NON-NLS-1$
 		assertEquals("The description of the sprints tracker", tuleapTrackerConfiguration.getDescription()); //$NON-NLS-1$
 
@@ -331,7 +331,7 @@ public class TuleapTrackerConfigurationDeserializerTests {
 		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker4);
 		assertNotNull(tuleapTrackerConfiguration);
 		assertEquals(4, tuleapTrackerConfiguration.getIdentifier());
-		assertEquals("Tests", tuleapTrackerConfiguration.getName()); //$NON-NLS-1$
+		assertEquals("Tests", tuleapTrackerConfiguration.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/trackers/4", tuleapTrackerConfiguration.getUrl()); //$NON-NLS-1$
 		assertEquals("The description of the tests tracker", tuleapTrackerConfiguration.getDescription()); //$NON-NLS-1$
 
@@ -361,7 +361,7 @@ public class TuleapTrackerConfigurationDeserializerTests {
 		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker5);
 		assertNotNull(tuleapTrackerConfiguration);
 		assertEquals(5, tuleapTrackerConfiguration.getIdentifier());
-		assertEquals("User Stories", tuleapTrackerConfiguration.getName()); //$NON-NLS-1$
+		assertEquals("User Stories", tuleapTrackerConfiguration.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/trackers/5", tuleapTrackerConfiguration.getUrl()); //$NON-NLS-1$
 		assertEquals(
 				"The description of the user stories tracker", tuleapTrackerConfiguration.getDescription()); //$NON-NLS-1$
@@ -409,35 +409,35 @@ public class TuleapTrackerConfigurationDeserializerTests {
 		TuleapTrackerConfiguration firstProjectConfiguration = iterator.next();
 
 		assertEquals(0, firstProjectConfiguration.getIdentifier());
-		assertEquals("Product", firstProjectConfiguration.getName()); //$NON-NLS-1$
+		assertEquals("Product", firstProjectConfiguration.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/trackers/0", firstProjectConfiguration.getUrl()); //$NON-NLS-1$
 		assertEquals("The description of the products tracker", firstProjectConfiguration.getDescription()); //$NON-NLS-1$
 
 		TuleapTrackerConfiguration secondProjectConfiguration = iterator.next();
 
 		assertEquals(1, secondProjectConfiguration.getIdentifier());
-		assertEquals("Bugs", secondProjectConfiguration.getName()); //$NON-NLS-1$
+		assertEquals("Bugs", secondProjectConfiguration.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/trackers/1", secondProjectConfiguration.getUrl()); //$NON-NLS-1$
 		assertEquals("The description of the bugs tracker", secondProjectConfiguration.getDescription()); //$NON-NLS-1$
 
 		TuleapTrackerConfiguration thirdProjectConfiguration = iterator.next();
 
 		assertEquals(2, thirdProjectConfiguration.getIdentifier());
-		assertEquals("Release", thirdProjectConfiguration.getName()); //$NON-NLS-1$
+		assertEquals("Release", thirdProjectConfiguration.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/trackers/2", thirdProjectConfiguration.getUrl()); //$NON-NLS-1$
 		assertEquals("The description of the releases tracker", thirdProjectConfiguration.getDescription()); //$NON-NLS-1$
 
 		TuleapTrackerConfiguration fourthProjectConfiguration = iterator.next();
 
 		assertEquals(3, fourthProjectConfiguration.getIdentifier());
-		assertEquals("Sprint", fourthProjectConfiguration.getName()); //$NON-NLS-1$
+		assertEquals("Sprint", fourthProjectConfiguration.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/trackers/3", fourthProjectConfiguration.getUrl()); //$NON-NLS-1$
 		assertEquals("The description of the sprints tracker", fourthProjectConfiguration.getDescription()); //$NON-NLS-1$
 
 		TuleapTrackerConfiguration fifthProjectConfiguration = iterator.next();
 
 		assertEquals(4, fifthProjectConfiguration.getIdentifier());
-		assertEquals("Tests", fifthProjectConfiguration.getName()); //$NON-NLS-1$
+		assertEquals("Tests", fifthProjectConfiguration.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/trackers/4", fifthProjectConfiguration.getUrl()); //$NON-NLS-1$
 		assertEquals("The description of the tests tracker", fifthProjectConfiguration.getDescription()); //$NON-NLS-1$
 
@@ -469,7 +469,7 @@ public class TuleapTrackerConfigurationDeserializerTests {
 		TuleapTrackerConfiguration sixthProjectConfiguration = iterator.next();
 
 		assertEquals(5, sixthProjectConfiguration.getIdentifier());
-		assertEquals("User Stories", sixthProjectConfiguration.getName()); //$NON-NLS-1$
+		assertEquals("User Stories", sixthProjectConfiguration.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/trackers/5", sixthProjectConfiguration.getUrl()); //$NON-NLS-1$
 		assertEquals(
 				"The description of the user stories tracker", sixthProjectConfiguration.getDescription()); //$NON-NLS-1$

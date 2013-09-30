@@ -49,7 +49,7 @@ public class TuleapMilestoneTypeDeserializerTests {
 		TuleapMilestoneType tuleapMilestoneType = this.parse(releases);
 		assertNotNull(tuleapMilestoneType);
 		assertEquals(901, tuleapMilestoneType.getIdentifier());
-		assertEquals("Releases", tuleapMilestoneType.getName()); //$NON-NLS-1$
+		assertEquals("Releases", tuleapMilestoneType.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/milestone_types/901", tuleapMilestoneType.getUrl()); //$NON-NLS-1$
 		Collection<AbstractTuleapField> fields = tuleapMilestoneType.getFields();
 		assertEquals(13, fields.size());
@@ -98,23 +98,18 @@ public class TuleapMilestoneTypeDeserializerTests {
 
 		// testing the third field
 		AbstractTuleapField thirdField = iterator.next();
-
 		List<Boolean> thirdPermissions = fieldPermissionsFilling(true, false, false);
 
 		this.basicFieldTest(thirdField, null, "Remaining Effort", 952, thirdPermissions); //$NON-NLS-1$
 
 		// testing the fourth field
 		AbstractTuleapField fourthField = iterator.next();
-
 		List<Boolean> fourthPermissions = fieldPermissionsFilling(true, true, true);
-
 		this.basicFieldTest(fourthField, null, "Version", 953, fourthPermissions); //$NON-NLS-1$
 
 		// testing the fifth field
 		AbstractTuleapField fifthField = iterator.next();
-
 		List<Boolean> fifthPermissions = fieldPermissionsFilling(true, true, true);
-
 		this.basicFieldTest(fifthField, null, "In release", 954, fifthPermissions); //$NON-NLS-1$
 
 	}
@@ -128,7 +123,7 @@ public class TuleapMilestoneTypeDeserializerTests {
 		TuleapMilestoneType tuleapMilestoneType = this.parse(sprints);
 		assertNotNull(tuleapMilestoneType);
 		assertEquals(902, tuleapMilestoneType.getIdentifier());
-		assertEquals("Sprints", tuleapMilestoneType.getName()); //$NON-NLS-1$
+		assertEquals("Sprints", tuleapMilestoneType.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/milestone_types/902", tuleapMilestoneType.getUrl()); //$NON-NLS-1$
 
 		Collection<AbstractTuleapField> fields = tuleapMilestoneType.getFields();
@@ -178,37 +173,27 @@ public class TuleapMilestoneTypeDeserializerTests {
 
 		// testing the third field
 		AbstractTuleapField thirdField = iterator.next();
-
 		List<Boolean> thirdPermissions = fieldPermissionsFilling(true, true, true);
-
 		this.basicFieldTest(thirdField, null, "Linked Artifacts", 962, thirdPermissions); //$NON-NLS-1$
 
 		// testing the fourth field
 		AbstractTuleapField fourthField = iterator.next();
-
 		List<Boolean> fourthPermissions = fieldPermissionsFilling(true, true, true);
-
 		this.basicFieldTest(fourthField, null, "Start date", 963, fourthPermissions); //$NON-NLS-1$
 
 		// testing the fifth field
 		AbstractTuleapField fifthField = iterator.next();
-
 		List<Boolean> fifthPermissions = fieldPermissionsFilling(true, true, true);
-
 		this.basicFieldTest(fifthField, null, "Duration", 964, fifthPermissions); //$NON-NLS-1$
 
 		// testing the sixth field
 		AbstractTuleapField sixthField = iterator.next();
-
 		List<Boolean> sixthPermissions = fieldPermissionsFilling(true, true, true);
-
 		this.basicFieldTest(sixthField, null, "Capacity", 965, sixthPermissions); //$NON-NLS-1$
 
 		// testing the seventh field
 		AbstractTuleapField seventhField = iterator.next();
-
 		List<Boolean> seventhPermissions = fieldPermissionsFilling(true, false, false);
-
 		this.basicFieldTest(seventhField, null, "Remaining Effort", 966, seventhPermissions); //$NON-NLS-1$
 	}
 

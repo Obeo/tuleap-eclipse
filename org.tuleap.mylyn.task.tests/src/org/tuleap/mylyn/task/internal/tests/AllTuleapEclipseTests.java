@@ -16,10 +16,6 @@ import junit.textui.TestRunner;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.tuleap.mylyn.task.internal.tests.client.TuleapArtifactTests;
-import org.tuleap.mylyn.task.internal.tests.client.TuleapRepositoryConnectorTests;
-import org.tuleap.mylyn.task.internal.tests.client.TuleapTaskDataHandlerTests;
-import org.tuleap.mylyn.task.internal.tests.client.TuleapUtilTests;
 import org.tuleap.mylyn.task.internal.tests.model.TuleapTrackerConfigurationTests;
 import org.tuleap.mylyn.task.internal.tests.model.TuleapWorkflowTests;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapBacklogItemDeserializerTest;
@@ -28,8 +24,12 @@ import org.tuleap.mylyn.task.internal.tests.parser.TuleapMilestoneDeserializerTe
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapMilestoneTypeDeserializerTests;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapProjectConfigurationDeserializerTests;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapTrackerConfigurationDeserializerTests;
+import org.tuleap.mylyn.task.internal.tests.repository.TuleapRepositoryConnectorTests;
+import org.tuleap.mylyn.task.internal.tests.repository.TuleapTaskDataHandlerTests;
 import org.tuleap.mylyn.task.internal.tests.server.ServerResponseTest;
 import org.tuleap.mylyn.task.internal.tests.server.TaskRepositoryCredentialsTest;
+import org.tuleap.mylyn.task.internal.tests.util.TuleapUtilTests;
+import org.tuleap.mylyn.task.internal.tests.validator.TuleapValidatorTests;
 
 /**
  * The stand alone unit tests suite.
@@ -38,12 +38,13 @@ import org.tuleap.mylyn.task.internal.tests.server.TaskRepositoryCredentialsTest
  * @since 0.7
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({TuleapArtifactTests.class, TuleapUtilTests.class, TuleapRepositoryConnectorTests.class,
+@Suite.SuiteClasses({TuleapUtilTests.class, TuleapRepositoryConnectorTests.class,
 		TuleapTaskDataHandlerTests.class, TuleapProjectConfigurationDeserializerTests.class,
 		TuleapTrackerConfigurationDeserializerTests.class, TuleapWorkflowTests.class,
 		TuleapTrackerConfigurationTests.class, TaskRepositoryCredentialsTest.class, ServerResponseTest.class,
 		TuleapBacklogItemDeserializerTest.class, TuleapBacklogItemTypeDeserializerTests.class,
-		TuleapMilestoneTypeDeserializerTests.class, TuleapMilestoneDeserializerTests.class })
+		TuleapMilestoneTypeDeserializerTests.class, TuleapMilestoneDeserializerTests.class,
+		TuleapValidatorTests.class })
 public final class AllTuleapEclipseTests {
 
 	/**

@@ -25,31 +25,23 @@ public class TuleapCardType extends AbstractTuleapConfigurableFieldsConfiguratio
 	private static final long serialVersionUID = -5407014401984400730L;
 
 	/**
-	 * The default constructor.
-	 * 
-	 * @param trackerIdentifier
-	 *            The id of the tracker.
-	 * @param repositoryURL
-	 *            The URL of the repository.
-	 */
-	public TuleapCardType(int trackerIdentifier, String repositoryURL) {
-		super(trackerIdentifier, repositoryURL);
-	}
-
-	/**
 	 * The constructor.
 	 * 
-	 * @param repositoryURL
-	 *            The URL of the repository.
-	 * @param repositoryName
-	 *            The label of the repository
-	 * @param repositoryItemName
-	 *            The item label of the repository
-	 * @param repositoryDescription
-	 *            The description of the repository
+	 * @param identifier
+	 *            The identifier of the configuration
+	 * @param url
+	 *            The URL.
+	 * @param label
+	 *            The label
+	 * @param itemName
+	 *            The item name
+	 * @param description
+	 *            The description
+	 * @param lastUpdateDate
+	 *            The date at which the configuration was last updated.
 	 */
-	public TuleapCardType(String repositoryURL, String repositoryName, String repositoryItemName,
-			String repositoryDescription) {
-		super(repositoryURL, repositoryName, repositoryItemName, repositoryDescription);
+	public TuleapCardType(int identifier, String url, String label, String itemName, String description,
+			long lastUpdateDate) {
+		super(identifier, url, label, itemName, description, lastUpdateDate);
 	}
 }

@@ -83,7 +83,7 @@ public abstract class AbstractElementTaskDataConverter<ELEMENT extends AbstractT
 
 		// Task Key
 		String taskKey = TuleapUtil.getTaskDataKey(this.configuration.getTuleapProjectConfiguration()
-				.getName(), this.configuration.getName(), element.getId());
+				.getName(), this.configuration.getLabel(), element.getId());
 		tuleapConfigurableElementMapper.setTaskKey(taskKey);
 
 		// URL

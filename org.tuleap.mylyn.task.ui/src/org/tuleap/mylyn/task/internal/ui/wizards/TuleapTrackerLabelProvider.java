@@ -28,7 +28,7 @@ public class TuleapTrackerLabelProvider extends LabelProvider {
 	@Override
 	public String getText(Object element) {
 		if (element instanceof TuleapTrackerConfiguration) {
-			return ((TuleapTrackerConfiguration)element).getName();
+			return ((TuleapTrackerConfiguration)element).getLabel();
 
 		}
 		return super.getText(element);

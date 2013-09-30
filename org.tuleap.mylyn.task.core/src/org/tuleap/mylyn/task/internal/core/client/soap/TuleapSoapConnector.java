@@ -379,13 +379,10 @@ public class TuleapSoapConnector {
 	private TuleapTrackerConfiguration getTuleapTrackerConfiguration(Tracker tracker, IProgressMonitor monitor) {
 		String trackerURL = this.trackerLocation.getUrl() + ITuleapConstants.REPOSITORY_TRACKER_URL_SEPARATOR
 				+ Integer.valueOf(tracker.getTracker_id()).toString();
-		TuleapTrackerConfiguration tuleapTrackerConfiguration = new TuleapTrackerConfiguration(tracker
-				.getTracker_id(), trackerURL);
 
-		tuleapTrackerConfiguration.setName(tracker.getName());
-		tuleapTrackerConfiguration.setItemName(tracker.getItem_name());
-		tuleapTrackerConfiguration.setDescription(tracker.getDescription());
-		tuleapTrackerConfiguration.setLastUpdate(System.currentTimeMillis());
+		TuleapTrackerConfiguration tuleapTrackerConfiguration = new TuleapTrackerConfiguration(tracker
+				.getTracker_id(), trackerURL, tracker.getName(), tracker.getItem_name(), tracker
+				.getDescription(), System.currentTimeMillis());
 
 		try {
 			monitor.subTask(TuleapMylynTasksMessages.getString(

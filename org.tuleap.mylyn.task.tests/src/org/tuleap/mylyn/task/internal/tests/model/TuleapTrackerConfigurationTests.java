@@ -123,16 +123,15 @@ public class TuleapTrackerConfigurationTests {
 	 */
 	@Before
 	public void setUp() {
-
-		tracker1 = new TuleapTrackerConfiguration(1, firstUrl);
-		tracker2 = new TuleapTrackerConfiguration(2, secondUrl);
-		tracker3 = new TuleapTrackerConfiguration(3, thirdUrl);
-		tracker4 = new TuleapTrackerConfiguration(4, fourthUrl);
-		tracker5 = new TuleapTrackerConfiguration(5, fifthUrl);
-		tracker6 = new TuleapTrackerConfiguration(6, sixthUrl);
-		tracker7 = new TuleapTrackerConfiguration(7, seventhUrl);
-		tracker8 = new TuleapTrackerConfiguration(8, eighthUrl);
-		tracker9 = new TuleapTrackerConfiguration(9, ninthUrl);
+		tracker1 = new TuleapTrackerConfiguration(1, firstUrl, null, null, null, -1);
+		tracker2 = new TuleapTrackerConfiguration(2, secondUrl, null, null, null, -1);
+		tracker3 = new TuleapTrackerConfiguration(3, thirdUrl, null, null, null, -1);
+		tracker4 = new TuleapTrackerConfiguration(4, fourthUrl, null, null, null, -1);
+		tracker5 = new TuleapTrackerConfiguration(5, fifthUrl, null, null, null, -1);
+		tracker6 = new TuleapTrackerConfiguration(6, sixthUrl, null, null, null, -1);
+		tracker7 = new TuleapTrackerConfiguration(7, seventhUrl, null, null, null, -1);
+		tracker8 = new TuleapTrackerConfiguration(8, eighthUrl, null, null, null, -1);
+		tracker9 = new TuleapTrackerConfiguration(9, ninthUrl, null, null, null, -1);
 
 	}
 
@@ -141,7 +140,6 @@ public class TuleapTrackerConfigurationTests {
 	 */
 	@Test
 	public void testParentChildrenTrackers() {
-
 		assertEquals(0, tracker1.getChildrenTrackers().size());
 		assertNull(tracker1.getParentTracker());
 
@@ -215,7 +213,6 @@ public class TuleapTrackerConfigurationTests {
 	 */
 	@Test
 	public void testChangingParentTrackerUsingSetParent() {
-
 		tracker8.setParentTracker(tracker7);
 		assertEquals(tracker7, tracker8.getParentTracker());
 		assertTrue(tracker7.getChildrenTrackers().contains(tracker8));
@@ -231,7 +228,6 @@ public class TuleapTrackerConfigurationTests {
 	 */
 	@Test
 	public void testParentChildrenTrackersUsingAddChild() {
-
 		tracker7.addChildTracker(tracker8);
 		assertEquals(tracker7, tracker8.getParentTracker());
 		assertTrue(tracker7.getChildrenTrackers().contains(tracker8));
@@ -247,7 +243,6 @@ public class TuleapTrackerConfigurationTests {
 	 */
 	@Test
 	public void testIrregularCases() {
-
 		// adding a tracker to its self as a child
 		tracker6.addChildTracker(tracker6);
 		assertEquals(0, tracker6.getChildrenTrackers().size());
