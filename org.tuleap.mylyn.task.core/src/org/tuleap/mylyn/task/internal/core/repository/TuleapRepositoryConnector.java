@@ -296,7 +296,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		if (ITuleapConstants.QUERY_KIND_ALL_FROM_TRACKER.equals(queryKind)
 				|| ITuleapConstants.QUERY_KIND_REPORT.equals(queryKind)
 				|| ITuleapConstants.QUERY_KIND_CUSTOM.equals(queryKind)) {
-			TuleapSoapClient soapClient = this.clientManager.getSoapClient(taskRepository);
+			TuleapSoapClient soapClient = this.getClientManager().getSoapClient(taskRepository);
 
 			int trackerId = Integer.valueOf(query.getAttribute(ITuleapConstants.QUERY_TRACKER_ID)).intValue();
 
@@ -382,8 +382,8 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		}
 
 		if (shouldRefresh) {
-			TuleapRestClient tuleapRestClient = this.clientManager.getRestClient(taskRepository);
-			TuleapSoapClient tuleapSoapClient = this.clientManager.getSoapClient(taskRepository);
+			TuleapRestClient tuleapRestClient = this.getClientManager().getRestClient(taskRepository);
+			TuleapSoapClient tuleapSoapClient = this.getClientManager().getSoapClient(taskRepository);
 			try {
 				TuleapServerConfiguration tuleapServerConfigurationRest = tuleapRestClient
 						.getTuleapServerConfiguration(monitor);
