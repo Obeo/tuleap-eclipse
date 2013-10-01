@@ -34,6 +34,16 @@ public class TuleapBacklogItemDeserializerTest extends AbstractDeserializerTest<
 	public void testDeserializeEpic301() {
 		String epic = ParserUtil.loadFile("/backlog_items/epic301.json");
 		TuleapBacklogItem item = parse(epic, TuleapBacklogItem.class);
+		checkEpic301(item);
+	}
+
+	/**
+	 * Checks that the given backlog item corresponds to epic 301.
+	 * 
+	 * @param item
+	 *            The backlog item
+	 */
+	public static void checkEpic301(TuleapBacklogItem item) {
 		assertEquals(301, item.getId());
 		assertEquals("Another important Epic", item.getLabel());
 		assertEquals("/backlog_items/301", item.getUrl());
@@ -52,12 +62,47 @@ public class TuleapBacklogItemDeserializerTest extends AbstractDeserializerTest<
 	}
 
 	/**
+	 * Checks that the given backlog item corresponds to epic 300.
+	 * 
+	 * @param item
+	 *            The backlog item
+	 */
+	public static void checkEpic300(TuleapBacklogItem item) {
+		assertEquals(300, item.getId());
+		assertEquals("An important Epic", item.getLabel());
+		assertEquals("/backlog_items/300", item.getUrl());
+		assertEquals("/backlog_items?id=300&group_id=3", item.getHtmlUrl());
+		assertEquals(30f, item.getInitialEffort(), 0f);
+		assertEquals(801, item.getConfigurationId());
+
+		assertEquals(200, item.getAssignedMilestoneId().intValue());
+
+		assertEquals(4, item.getFieldValues().size());
+		assertEquals(8502, ((BoundFieldValue)item.getFieldValue(850)).getValueIds().get(0).intValue());
+		assertEquals("0", ((LiteralFieldValue)item.getFieldValue(851)).getFieldValue());
+		assertEquals("The summary of an important Epic", ((LiteralFieldValue)item.getFieldValue(Integer
+				.valueOf(852))).getFieldValue());
+		assertEquals("350,351", ((LiteralFieldValue)item.getFieldValue(853)).getFieldValue());
+	}
+
+	/**
 	 * Tests the parsing of user story #350.
 	 */
 	@Test
 	public void testDeserializeUserStory350() {
 		String userStory = ParserUtil.loadFile("/backlog_items/userStory350.json");
 		TuleapBacklogItem item = parse(userStory, TuleapBacklogItem.class);
+		checkUserStory350(item);
+
+	}
+
+	/**
+	 * Checks that the given backlog item corresponds to user story 350.
+	 * 
+	 * @param item
+	 *            The backlog item
+	 */
+	public static void checkUserStory350(TuleapBacklogItem item) {
 		assertEquals(350, item.getId());
 		assertEquals("An important User Story", item.getLabel());
 		assertEquals("/backlog_items/350", item.getUrl());
@@ -80,7 +125,6 @@ public class TuleapBacklogItemDeserializerTest extends AbstractDeserializerTest<
 		assertEquals("3.5", ((LiteralFieldValue)item.getFieldValue(866)).getFieldValue());
 		assertEquals("2", ((LiteralFieldValue)item.getFieldValue(867)).getFieldValue());
 		assertEquals(8611, ((BoundFieldValue)item.getFieldValue(868)).getValueIds().get(0).intValue());
-
 	}
 
 	/**

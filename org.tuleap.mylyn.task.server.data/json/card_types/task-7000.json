@@ -15,7 +15,7 @@
     },
     {
       "field_id" : 8001,
-      "label" : "Assigned to",
+      "label" : "Assigned To",
       "type" : "msb",
       "binding" : {
         "bind_type" : "users",

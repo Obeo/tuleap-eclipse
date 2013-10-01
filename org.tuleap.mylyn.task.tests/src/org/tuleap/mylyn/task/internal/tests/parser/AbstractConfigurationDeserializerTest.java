@@ -10,10 +10,7 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.tests.parser;
 
-import org.tuleap.mylyn.task.internal.core.model.TuleapGroup;
-import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 
 /**
  * Super class of tests that deserialize project configuration parts.
@@ -25,9 +22,9 @@ import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 public abstract class AbstractConfigurationDeserializerTest<T> extends AbstractDeserializerTest<T> {
 
 	/**
-	 * The project configuration.
+	 * The project configuration provider.
 	 */
-	protected TuleapProjectConfiguration projectConfiguration;
+	private StubProjectProvider provider = new StubProjectProvider();
 
 	/**
 	 * Provides the project Configuration, after creating it if necessary. Not thread-safe.
@@ -35,28 +32,7 @@ public abstract class AbstractConfigurationDeserializerTest<T> extends AbstractD
 	 * @return The project configuration to use for tests.
 	 */
 	protected TuleapProjectConfiguration getProjectConfiguration() {
-		if (projectConfiguration == null) {
-			TuleapServerConfiguration serverConfiguration = new TuleapServerConfiguration("http://test/url");
-			projectConfiguration = new TuleapProjectConfiguration("Test", 3);
-			serverConfiguration.addProject(projectConfiguration);
-			TuleapGroup group0 = new TuleapGroup(0, "Project Admins");
-			projectConfiguration.addUserToUserGroup(group0, new TuleapPerson("jd15", "John Doe", 15,
-					"john.doe15@somewhere.com"));
-			projectConfiguration.addUserToUserGroup(group0, new TuleapPerson("jd16", "John Doe II", 16,
-					"john.doe16@somewhere.com"));
-
-			TuleapGroup group1 = new TuleapGroup(1, "Project Members");
-			projectConfiguration.addUserToUserGroup(group1, new TuleapPerson("jd15", "John Doe", 15,
-					"john.doe15@somewhere.com"));
-			projectConfiguration.addUserToUserGroup(group1, new TuleapPerson("jd16", "John Doe II", 16,
-					"john.doe16@somewhere.com"));
-			projectConfiguration.addUserToUserGroup(group1, new TuleapPerson("jd17", "John Doe III", 17,
-					"john.doe17@somewhere.com"));
-			projectConfiguration.addUserToUserGroup(group1, new TuleapPerson("jd18", "John Doe IV", 18,
-					"john.doe18@somewhere.com"));
-			projectConfiguration.addGroup(group1);
-		}
-		return projectConfiguration;
+		return provider.getProjectConfiguration();
 	}
 
 }

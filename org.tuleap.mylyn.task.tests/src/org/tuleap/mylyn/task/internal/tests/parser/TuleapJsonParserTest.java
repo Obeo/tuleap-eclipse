@@ -14,13 +14,13 @@ import java.text.ParseException;
 import java.util.List;
 
 import org.junit.Test;
-import org.tuleap.mylyn.task.internal.core.data.BoundFieldValue;
-import org.tuleap.mylyn.task.internal.core.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 /**
  * Tests of {@link TuleapJsonParser}.
@@ -28,6 +28,11 @@ import static org.junit.Assert.assertEquals;
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
 public class TuleapJsonParserTest {
+
+	/**
+	 * The project configuration provider.
+	 */
+	private StubProjectProvider provider = new StubProjectProvider();
 
 	/**
 	 * The parser to test.
@@ -44,21 +49,10 @@ public class TuleapJsonParserTest {
 		assertEquals(3, backlogItems.size());
 
 		TuleapBacklogItem item = backlogItems.get(0);
-		assertEquals(300, item.getId());
-		assertEquals("An important Epic", item.getLabel());
-		assertEquals("/backlog_items/300", item.getUrl());
-		assertEquals("/backlog_items?id=300&group_id=3", item.getHtmlUrl());
-		assertEquals(30f, item.getInitialEffort(), 0f);
-		assertEquals(801, item.getConfigurationId());
+		TuleapBacklogItemDeserializerTest.checkEpic300(item);
 
-		assertEquals(200, item.getAssignedMilestoneId().intValue());
-
-		assertEquals(4, item.getFieldValues().size());
-		assertEquals(8502, ((BoundFieldValue)item.getFieldValue(850)).getValueIds().get(0).intValue());
-		assertEquals("0", ((LiteralFieldValue)item.getFieldValue(851)).getFieldValue());
-		assertEquals("The summary of an important Epic", ((LiteralFieldValue)item.getFieldValue(Integer
-				.valueOf(852))).getFieldValue());
-		assertEquals("350,351", ((LiteralFieldValue)item.getFieldValue(853)).getFieldValue());
+		item = backlogItems.get(1);
+		TuleapBacklogItemDeserializerTest.checkEpic301(item);
 	}
 
 	/**
@@ -75,5 +69,20 @@ public class TuleapJsonParserTest {
 
 		new TuleapMilestoneDeserializerTests().checkRelease200(milestones.get(0));
 		new TuleapMilestoneDeserializerTests().checkRelease201(milestones.get(1));
+	}
+
+	/**
+	 * Checks the parsing of card types.
+	 */
+	@Test
+	public void testParseCardTypes() {
+		String json = ParserUtil.loadFile("/card_types/prj3_card_types.json");
+		List<TuleapCardType> cardTypes = parser.parseCardTypes(provider.getProjectConfiguration(), json);
+		assertEquals(1, cardTypes.size());
+		TuleapCardType cardType = cardTypes.get(0);
+		new TuleapCardTypeDeserializerTests().checkCardType7000(cardType);
+
+		// Check that the card type has been added to the project configuration
+		assertSame(cardType, provider.getProjectConfiguration().getCardType(7000));
 	}
 }

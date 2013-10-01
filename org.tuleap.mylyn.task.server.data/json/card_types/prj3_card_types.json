@@ -32,9 +32,14 @@
           ]
         },
         "permissions" : [
-            "read", "create", "update"
+            "read", "update"
         ]
       }
-    ]
+    ],
+    "semantic" : {
+      "contributors": {
+        "field_id": 8001
+      }
+    }
   }
 ]

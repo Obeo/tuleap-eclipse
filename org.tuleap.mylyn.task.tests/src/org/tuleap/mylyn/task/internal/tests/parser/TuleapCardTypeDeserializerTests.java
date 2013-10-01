@@ -28,6 +28,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -53,6 +54,19 @@ public class TuleapCardTypeDeserializerTests extends AbstractConfigurationDeseri
 	public void testCard7000Parsing() {
 		String epics = ParserUtil.loadFile("/card_types/task-7000.json"); //$NON-NLS-1$
 		TuleapCardType cardType = this.parse(epics, TuleapCardType.class);
+		checkCardType7000(cardType);
+
+		// Check that the card type has been added to the project configuration
+		assertSame(cardType, getProjectConfiguration().getCardType(7000));
+	}
+
+	/**
+	 * Checks that the given card type corresponds to the type 7000.
+	 * 
+	 * @param cardType
+	 *            The card type to test.
+	 */
+	public void checkCardType7000(TuleapCardType cardType) {
 		assertNotNull(cardType);
 		assertEquals(7000, cardType.getIdentifier());
 		assertEquals("Tasks", cardType.getLabel()); //$NON-NLS-1$
@@ -71,7 +85,7 @@ public class TuleapCardTypeDeserializerTests extends AbstractConfigurationDeseri
 		// testing the second field
 		AbstractTuleapField secondField = iterator.next();
 
-		checkBasicField(secondField, null, "Assigned to", 8001, true, false, true); //$NON-NLS-1$
+		checkBasicField(secondField, null, "Assigned To", 8001, true, false, true); //$NON-NLS-1$
 
 		// testing the first field items
 		assertTrue(secondField instanceof TuleapMultiSelectBox);

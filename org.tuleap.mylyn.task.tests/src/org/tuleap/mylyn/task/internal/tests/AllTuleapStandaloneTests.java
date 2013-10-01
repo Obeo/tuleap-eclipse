@@ -19,6 +19,7 @@ import org.junit.runners.Suite;
 import org.tuleap.mylyn.task.internal.tests.model.TuleapTrackerConfigurationTests;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapBacklogItemDeserializerTest;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapBacklogItemTypeDeserializerTests;
+import org.tuleap.mylyn.task.internal.tests.parser.TuleapCardTypeDeserializerTests;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapJsonParserTest;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapMilestoneDeserializerTests;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapMilestoneTypeDeserializerTests;
@@ -37,7 +38,7 @@ import org.tuleap.mylyn.task.internal.tests.server.ServerResponseTest;
 		TuleapTrackerConfigurationDeserializerTests.class, TuleapTrackerConfigurationTests.class,
 		TuleapBacklogItemDeserializerTest.class, TuleapBacklogItemTypeDeserializerTests.class,
 		TuleapMilestoneTypeDeserializerTests.class, TuleapMilestoneDeserializerTests.class,
-		ServerResponseTest.class, TuleapJsonParserTest.class })
+		TuleapCardTypeDeserializerTests.class, ServerResponseTest.class, TuleapJsonParserTest.class })
 public final class AllTuleapStandaloneTests {
 
 	/**
