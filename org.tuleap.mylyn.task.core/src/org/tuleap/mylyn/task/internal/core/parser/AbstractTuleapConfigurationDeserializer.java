@@ -188,7 +188,11 @@ public abstract class AbstractTuleapConfigurationDeserializer<CONFIGURATION_TYPE
 			JsonObject jsonObject) {
 		JsonArray milestoneTypeFieldsArray = jsonObject.get(FIELDS).getAsJsonArray();
 
-		JsonObject fieldSemantic = jsonObject.get(ITuleapConfigurationConstants.SEMANTIC).getAsJsonObject();
+		JsonElement eltSemantic = jsonObject.get(ITuleapConfigurationConstants.SEMANTIC);
+		JsonObject fieldSemantic = null;
+		if (eltSemantic != null) {
+			fieldSemantic = eltSemantic.getAsJsonObject();
+		}
 		for (int i = 0; i < milestoneTypeFieldsArray.size(); i++) {
 			JsonObject field = (JsonObject)milestoneTypeFieldsArray.get(i);
 

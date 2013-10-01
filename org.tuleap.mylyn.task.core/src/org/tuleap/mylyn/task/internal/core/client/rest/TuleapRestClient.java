@@ -39,12 +39,14 @@ import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItemType;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerReport;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapBacklogItemDeserializer;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapBacklogItemTypeDeserializer;
+import org.tuleap.mylyn.task.internal.core.parser.TuleapCardTypeDeserializer;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapMilestoneDeserializer;
@@ -237,6 +239,12 @@ public class TuleapRestClient {
 					// Retrieve BacklogItem types for the project
 					List<TuleapBacklogItemType> backLogItemTypes = getBacklogitemTypes(projectConfig
 							.getIdentifier(), null);
+					for (TuleapBacklogItemType tuleapBacklogItemType : backLogItemTypes) {
+						projectConfig.addBacklogItemType(tuleapBacklogItemType);
+					}
+
+					// Retrieve Card types for the project
+					List<TuleapCardType> cardTypes = getCardTypes(projectConfig.getIdentifier(), null);
 					for (TuleapBacklogItemType tuleapBacklogItemType : backLogItemTypes) {
 						projectConfig.addBacklogItemType(tuleapBacklogItemType);
 					}
@@ -596,6 +604,54 @@ public class TuleapRestClient {
 			TuleapMilestoneType tuleapMilestoneType = gson.fromJson(jsonElement, TuleapMilestoneType.class);
 
 			result.add(tuleapMilestoneType);
+		}
+		return result;
+	}
+
+	/**
+	 * Retrieves the list of the project's Milestone Types from the server with the given project id.
+	 * 
+	 * @param projectId
+	 *            the project identifier
+	 * @param monitor
+	 *            Used to monitor the progress
+	 * @return the list of the project's Milestone Types
+	 * @throws CoreException
+	 *             In case of error during the retrieval of the Milestone Types
+	 */
+	public List<TuleapCardType> getCardTypes(int projectId, IProgressMonitor monitor) throws CoreException {
+		// Test the connection
+		RestResources restResources = tuleapRestConnector.resources(credentials);
+
+		// Send a request with OPTIONS to ensure that we can and have the right to retrieve the
+		// backlogItemType
+
+		RestProjectsCardTypes restProjectsCardTypes = restResources.projectsCardTypes(projectId);
+		restProjectsCardTypes.checkGet(Collections.<String, String> emptyMap());
+
+		ServerResponse response = restProjectsCardTypes.get(Collections.<String, String> emptyMap());
+
+		if (ITuleapServerStatus.OK != response.getStatus()) {
+			// Invalid login? server error?
+			String message = this.jsonParser.getErrorMessage(response.getBody());
+			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, message));
+		}
+		// TODO Pagination?
+
+		// Analyze the server response
+		String jsonResponse = response.getBody();
+		JsonParser theJsonParser = new JsonParser();
+		JsonArray jsonArray = theJsonParser.parse(jsonResponse).getAsJsonArray();
+
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		gsonBuilder.registerTypeAdapter(TuleapCardType.class, new TuleapCardTypeDeserializer());
+
+		List<TuleapCardType> result = Lists.newArrayList();
+		for (JsonElement jsonElement : jsonArray) {
+			Gson gson = gsonBuilder.create();
+			TuleapCardType cardType = gson.fromJson(jsonElement, TuleapCardType.class);
+
+			result.add(cardType);
 		}
 		return result;
 	}
