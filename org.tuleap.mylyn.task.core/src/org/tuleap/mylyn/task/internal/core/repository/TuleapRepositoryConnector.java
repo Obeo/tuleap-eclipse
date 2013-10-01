@@ -349,8 +349,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 					}
 				}
 			} catch (CoreException e) {
-				// TODO: getTopPlannings() on TuleapRestClient should not throw a CoreException => no
-				// try/catch block.
+				TuleapCoreActivator.log(e, true);
 			}
 		}
 		return Status.OK_STATUS;
