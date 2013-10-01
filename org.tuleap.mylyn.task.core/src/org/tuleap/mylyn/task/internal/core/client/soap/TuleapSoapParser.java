@@ -154,13 +154,8 @@ public class TuleapSoapParser {
 	 * @return The date created from the timestamp
 	 */
 	private Date getDateFromTimestamp(int timestamp) {
-		try {
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTimeInMillis(Long.valueOf(timestamp).longValue() * 1000);
-			return calendar.getTime();
-		} catch (NumberFormatException e) {
-			// Empty date
-		}
-		return null;
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(Long.valueOf(timestamp).longValue() * 1000);
+		return calendar.getTime();
 	}
 }
