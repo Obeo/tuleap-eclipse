@@ -40,6 +40,7 @@ import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
+import org.tuleap.mylyn.task.internal.core.client.ITuleapQueryConstants;
 import org.tuleap.mylyn.task.internal.core.config.ITuleapConfigurationConstants;
 import org.tuleap.mylyn.task.internal.core.data.AbstractFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.BoundFieldValue;
@@ -661,25 +662,26 @@ public class TuleapSoapConnector {
 
 			monitor.subTask(TuleapMylynTasksMessages.getString("TuleapSoapConnector.ExecutingQuery")); //$NON-NLS-1$
 
-			String queryTrackerId = query.getAttribute(ITuleapConstants.QUERY_TRACKER_ID);
+			String queryTrackerId = query.getAttribute(ITuleapQueryConstants.QUERY_CONFIGURATION_ID);
 			trackerId = Integer.valueOf(queryTrackerId).intValue();
 
 			ArtifactQueryResult artifactQueryResult = null;
-			if (ITuleapConstants.QUERY_KIND_REPORT.equals(query.getAttribute(ITuleapConstants.QUERY_KIND))) {
+			if (ITuleapQueryConstants.QUERY_KIND_REPORT.equals(query
+					.getAttribute(ITuleapQueryConstants.QUERY_KIND))) {
 				// Run the report on the server
-				String queryReportId = query.getAttribute(ITuleapConstants.QUERY_REPORT_ID);
+				String queryReportId = query.getAttribute(ITuleapQueryConstants.QUERY_REPORT_ID);
 				int reportId = Integer.valueOf(queryReportId).intValue();
 				artifactQueryResult = tuleapTrackerV5APIPort.getArtifactsFromReport(sessionHash, reportId, 0,
 						maxHits);
 			} else {
 				List<Criteria> criterias = new ArrayList<Criteria>();
-				if (ITuleapConstants.QUERY_KIND_ALL_FROM_TRACKER.equals(query
-						.getAttribute(ITuleapConstants.QUERY_KIND))
-						&& query.getAttribute(ITuleapConstants.QUERY_TRACKER_ID) != null) {
+				if (ITuleapQueryConstants.QUERY_KIND_ALL_FROM_TRACKER.equals(query
+						.getAttribute(ITuleapQueryConstants.QUERY_KIND))
+						&& query.getAttribute(ITuleapQueryConstants.QUERY_CONFIGURATION_ID) != null) {
 					// Download all artifacts from the given tracker -> no criteria
-				} else if (ITuleapConstants.QUERY_KIND_CUSTOM.equals(query
-						.getAttribute(ITuleapConstants.QUERY_KIND))
-						&& query.getAttribute(ITuleapConstants.QUERY_TRACKER_ID) != null) {
+				} else if (ITuleapQueryConstants.QUERY_KIND_CUSTOM.equals(query
+						.getAttribute(ITuleapQueryConstants.QUERY_KIND))
+						&& query.getAttribute(ITuleapQueryConstants.QUERY_CONFIGURATION_ID) != null) {
 					// Custom query
 					criterias.addAll(this.getCriterias(query));
 				}
@@ -757,8 +759,8 @@ public class TuleapSoapConnector {
 	private List<Criteria> getCriterias(IRepositoryQuery query) {
 		List<Criteria> criterias = new ArrayList<Criteria>();
 		for (Entry<String, String> entry : query.getAttributes().entrySet()) {
-			if (!(entry.getKey().equals(ITuleapConstants.QUERY_KIND) || entry.getKey().equals(
-					ITuleapConstants.QUERY_TRACKER_ID))) {
+			if (!(entry.getKey().equals(ITuleapQueryConstants.QUERY_KIND) || entry.getKey().equals(
+					ITuleapQueryConstants.QUERY_CONFIGURATION_ID))) {
 				String[] attributes = this.getAttributes(entry.getValue());
 				CriteriaValueDate criteriaValueDate = null;
 				// First attribute is the value

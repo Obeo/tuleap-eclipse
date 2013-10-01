@@ -32,10 +32,10 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
+import org.tuleap.mylyn.task.internal.core.client.ITuleapQueryConstants;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
-import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
 import org.tuleap.mylyn.task.internal.ui.wizards.TuleapProjectContentProvider;
 import org.tuleap.mylyn.task.internal.ui.wizards.TuleapProjectLabelProvider;
@@ -213,12 +213,14 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 	@Override
 	public void applyTo(IRepositoryQuery query) {
 		query.setSummary(this.getQueryTitle());
-		query.setAttribute(ITuleapConstants.QUERY_GROUP_ID, String.valueOf(getProjectSelected()
+		query.setAttribute(ITuleapQueryConstants.QUERY_PROJECT_ID, String.valueOf(getProjectSelected()
 				.getIdentifier()));
 		if (!isWizardForArtifacts) {
-			query.setAttribute(ITuleapConstants.QUERY_KIND, ITuleapConstants.QUERY_KIND_TOP_LEVEL_PLANNING);
+			query.setAttribute(ITuleapQueryConstants.QUERY_KIND,
+					ITuleapQueryConstants.QUERY_KIND_TOP_LEVEL_PLANNING);
 		} else {
-			query.setAttribute(ITuleapConstants.QUERY_KIND, ITuleapConstants.QUERY_KIND_ALL_FROM_TRACKER);
+			query.setAttribute(ITuleapQueryConstants.QUERY_KIND,
+					ITuleapQueryConstants.QUERY_KIND_ALL_FROM_TRACKER);
 		}
 	}
 

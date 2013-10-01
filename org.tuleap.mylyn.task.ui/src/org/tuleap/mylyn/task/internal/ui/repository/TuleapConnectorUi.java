@@ -30,6 +30,7 @@ import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskSearchPage;
 import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
+import org.tuleap.mylyn.task.internal.core.client.ITuleapQueryConstants;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapUtil;
 import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
@@ -157,8 +158,8 @@ public class TuleapConnectorUi extends AbstractRepositoryConnectorUi {
 		wizard.setNeedsProgressMonitor(true);
 
 		if (queryToEdit != null) {
-			String queryKind = queryToEdit.getAttribute(ITuleapConstants.QUERY_KIND);
-			if (ITuleapConstants.QUERY_KIND_CUSTOM.equals(queryKind)) {
+			String queryKind = queryToEdit.getAttribute(ITuleapQueryConstants.QUERY_KIND);
+			if (ITuleapQueryConstants.QUERY_KIND_CUSTOM.equals(queryKind)) {
 				// edit an existing custom query
 				wizard.addPage(new TuleapCustomQueryPage(taskRepository, queryToEdit));
 			} else {

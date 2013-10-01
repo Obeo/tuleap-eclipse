@@ -42,6 +42,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
+import org.tuleap.mylyn.task.internal.core.client.ITuleapQueryConstants;
 import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
@@ -287,18 +288,19 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	public IStatus performQuery(TaskRepository taskRepository, IRepositoryQuery query,
 			TaskDataCollector collector, ISynchronizationSession session, IProgressMonitor monitor) {
 		// Populate the collector with the task data resulting from the query
-		String queryKind = query.getAttribute(ITuleapConstants.QUERY_KIND);
+		String queryKind = query.getAttribute(ITuleapQueryConstants.QUERY_KIND);
 
 		TuleapServerConfiguration repositoryConfiguration = this.getRepositoryConfiguration(taskRepository,
 				true, monitor);
 		TaskAttributeMapper attributeMapper = this.getTaskDataHandler().getAttributeMapper(taskRepository);
 
-		if (ITuleapConstants.QUERY_KIND_ALL_FROM_TRACKER.equals(queryKind)
-				|| ITuleapConstants.QUERY_KIND_REPORT.equals(queryKind)
-				|| ITuleapConstants.QUERY_KIND_CUSTOM.equals(queryKind)) {
+		if (ITuleapQueryConstants.QUERY_KIND_ALL_FROM_TRACKER.equals(queryKind)
+				|| ITuleapQueryConstants.QUERY_KIND_REPORT.equals(queryKind)
+				|| ITuleapQueryConstants.QUERY_KIND_CUSTOM.equals(queryKind)) {
 			TuleapSoapClient soapClient = this.getClientManager().getSoapClient(taskRepository);
 
-			int trackerId = Integer.valueOf(query.getAttribute(ITuleapConstants.QUERY_TRACKER_ID)).intValue();
+			int trackerId = Integer.valueOf(query.getAttribute(ITuleapQueryConstants.QUERY_CONFIGURATION_ID))
+					.intValue();
 
 			TuleapTrackerConfiguration trackerConfiguration = repositoryConfiguration
 					.getTrackerConfiguration(trackerId);
@@ -320,8 +322,9 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 					// org.eclipse.mylyn.internal.tasks.core.TaskList.getValidElement(IRepositoryElement)
 				}
 			}
-		} else if (ITuleapConstants.QUERY_KIND_TOP_LEVEL_PLANNING.equals(queryKind)) {
-			int projectId = Integer.valueOf(query.getAttribute(ITuleapConstants.QUERY_GROUP_ID)).intValue();
+		} else if (ITuleapQueryConstants.QUERY_KIND_TOP_LEVEL_PLANNING.equals(queryKind)) {
+			int projectId = Integer.valueOf(query.getAttribute(ITuleapQueryConstants.QUERY_PROJECT_ID))
+					.intValue();
 
 			MilestonePlanningTaskDataConverter planningTaskDataConverter = new MilestonePlanningTaskDataConverter(
 					null);

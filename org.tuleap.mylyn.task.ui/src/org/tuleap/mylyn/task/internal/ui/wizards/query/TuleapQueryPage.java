@@ -39,10 +39,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
+import org.tuleap.mylyn.task.internal.core.client.ITuleapQueryConstants;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapConnector;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerReport;
-import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.ui.TuleapTasksUIPlugin;
 import org.tuleap.mylyn.task.internal.ui.util.ITuleapUIConstants;
 import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
@@ -64,7 +64,7 @@ public class TuleapQueryPage extends AbstractRepositoryQueryPage2 {
 	/**
 	 * The identifier of the project in which the query will be performed.
 	 */
-	private int groupId = -1;
+	private int projectId = -1;
 
 	/**
 	 * The button to search the artifacts of a selected project using a report.
@@ -106,10 +106,10 @@ public class TuleapQueryPage extends AbstractRepositoryQueryPage2 {
 		this.setTitle(TuleapMylynTasksUIMessages.getString("TuleapQueryPage.Title")); //$NON-NLS-1$
 		this.setDescription(TuleapMylynTasksUIMessages.getString("TuleapQueryPage.Description")); //$NON-NLS-1$
 
-		String tracker = queryToEdit.getAttribute(ITuleapConstants.QUERY_TRACKER_ID);
+		String tracker = queryToEdit.getAttribute(ITuleapQueryConstants.QUERY_CONFIGURATION_ID);
 		this.trackerId = Integer.valueOf(tracker).intValue();
-		String group = queryToEdit.getAttribute(ITuleapConstants.QUERY_GROUP_ID);
-		this.groupId = Integer.valueOf(group).intValue();
+		String project = queryToEdit.getAttribute(ITuleapQueryConstants.QUERY_PROJECT_ID);
+		this.projectId = Integer.valueOf(project).intValue();
 	}
 
 	/**
@@ -211,7 +211,7 @@ public class TuleapQueryPage extends AbstractRepositoryQueryPage2 {
 					.getTrackerSelected();
 			if (tuleapTrackerConfiguration != null) {
 				this.trackerId = tuleapTrackerConfiguration.getIdentifier();
-				this.groupId = tuleapTrackerConfiguration.getTuleapProjectConfiguration().getIdentifier();
+				this.projectId = tuleapTrackerConfiguration.getTuleapProjectConfiguration().getIdentifier();
 			}
 		}
 
@@ -248,7 +248,7 @@ public class TuleapQueryPage extends AbstractRepositoryQueryPage2 {
 
 		// Reselect the previously selected report
 		if (this.getQuery() != null) {
-			String reportId = this.getQuery().getAttribute(ITuleapConstants.QUERY_REPORT_ID);
+			String reportId = this.getQuery().getAttribute(ITuleapQueryConstants.QUERY_REPORT_ID);
 			int report = Integer.valueOf(reportId).intValue();
 			for (TuleapTrackerReport tuleapTrackerReport : reports) {
 				if (tuleapTrackerReport.getId() == report) {
@@ -357,14 +357,14 @@ public class TuleapQueryPage extends AbstractRepositoryQueryPage2 {
 			TuleapTrackerPage tuleapTrackerPage = (TuleapTrackerPage)previousPage;
 			TuleapTrackerConfiguration tuleapTrackerConfiguration = tuleapTrackerPage.getTrackerSelected();
 			this.trackerId = tuleapTrackerConfiguration.getIdentifier();
-			this.groupId = tuleapTrackerConfiguration.getTuleapProjectConfiguration().getIdentifier();
+			this.projectId = tuleapTrackerConfiguration.getTuleapProjectConfiguration().getIdentifier();
 		}
 
 		query.setSummary(this.getQueryTitle());
-		query.setAttribute(ITuleapConstants.QUERY_TRACKER_ID, String.valueOf(this.trackerId));
-		query.setAttribute(ITuleapConstants.QUERY_GROUP_ID, String.valueOf(this.groupId));
+		query.setAttribute(ITuleapQueryConstants.QUERY_CONFIGURATION_ID, String.valueOf(this.trackerId));
+		query.setAttribute(ITuleapQueryConstants.QUERY_PROJECT_ID, String.valueOf(this.projectId));
 
-		query.setAttribute(ITuleapConstants.QUERY_KIND, ITuleapConstants.QUERY_KIND_REPORT);
+		query.setAttribute(ITuleapQueryConstants.QUERY_KIND, ITuleapQueryConstants.QUERY_KIND_REPORT);
 
 		// Report id?
 		ISelection selection = this.reportsTableViewer.getSelection();
@@ -374,7 +374,7 @@ public class TuleapQueryPage extends AbstractRepositoryQueryPage2 {
 			if (element instanceof TuleapTrackerReport) {
 				TuleapTrackerReport tuleapTrackerReport = (TuleapTrackerReport)element;
 
-				query.setAttribute(ITuleapConstants.QUERY_REPORT_ID, Integer.valueOf(
+				query.setAttribute(ITuleapQueryConstants.QUERY_REPORT_ID, Integer.valueOf(
 						tuleapTrackerReport.getId()).toString());
 			}
 		}

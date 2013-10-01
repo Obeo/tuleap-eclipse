@@ -27,7 +27,7 @@ public interface ITuleapConstants {
 	/**
 	 * The descriptor file.
 	 */
-	String TULEAP_DESCRIPTOR_FILE = "tuleap.desciptorFile"; //$NON-NLS-1$
+	String TULEAP_DESCRIPTOR_FILE = "tuleap.descriptorFile"; //$NON-NLS-1$
 
 	/**
 	 * The task separator.
@@ -89,46 +89,6 @@ public interface ITuleapConstants {
 	 * The separator used in the id of the task data.
 	 */
 	String TASK_DATA_ID_SEPARATOR = "-"; //$NON-NLS-1$
-
-	/**
-	 * The key used to specify the kind of the query.
-	 */
-	String QUERY_KIND = "tuleap_query_kind"; //$NON-NLS-1$
-
-	/**
-	 * The key used to specify that the query is looking for all artifacts from a specific tracker.
-	 */
-	String QUERY_KIND_ALL_FROM_TRACKER = "tuleap_query_all_from_tracker"; //$NON-NLS-1$
-
-	/**
-	 * The key used to specify that the query is a custom query.
-	 */
-	String QUERY_KIND_CUSTOM = "tuleap_query_custom"; //$NON-NLS-1$
-
-	/**
-	 * The key used to specify that the query will execute a report.
-	 */
-	String QUERY_KIND_REPORT = "tuleap_query_report"; //$NON-NLS-1$
-
-	/**
-	 * The key used to specify that the query will execute a top level planning.
-	 */
-	String QUERY_KIND_TOP_LEVEL_PLANNING = "tuleap_query_topLevelPlanning"; //$NON-NLS-1$
-
-	/**
-	 * The id of the report to run.
-	 */
-	String QUERY_REPORT_ID = "tuleap_query_report_id"; //$NON-NLS-1$
-
-	/**
-	 * The key used to identify the tracker id on which the query will be run.
-	 */
-	String QUERY_TRACKER_ID = "tuleap_query_tracker_id"; //$NON-NLS-1$
-
-	/**
-	 * The key used to identify the project id on which the query will be run.
-	 */
-	String QUERY_GROUP_ID = "tuleap_query_group_id"; //$NON-NLS-1$
 
 	/**
 	 * Indicates that the user can read the field.

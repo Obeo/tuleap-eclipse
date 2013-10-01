@@ -122,6 +122,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 					tuleapConfigurableElementMapper.initializeEmptyTaskData();
 
 					// TODO SBE Should we do more for other types of configuration? I don't think so... yet
+					// We won't have the other tabs available when we are creating a new item, why not...
 
 					Date now = new Date();
 					tuleapConfigurableElementMapper.setCreationDate(now);

@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
+import org.tuleap.mylyn.task.internal.core.client.ITuleapQueryConstants;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapArtifactLink;
@@ -73,7 +74,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 	/**
 	 * The identifier of the project in which the query will be performed.
 	 */
-	private int groupId = -1;
+	private int projectId = -1;
 
 	/**
 	 * The query form graphical elements.
@@ -111,7 +112,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 			previousPage = ((TuleapQueryPage)previousPage).getPreviousPage();
 			if (previousPage instanceof TuleapTrackerPage) {
 				this.trackerId = ((TuleapTrackerPage)previousPage).getTrackerSelected().getIdentifier();
-				this.groupId = ((TuleapTrackerPage)previousPage).getTrackerSelected()
+				this.projectId = ((TuleapTrackerPage)previousPage).getTrackerSelected()
 						.getTuleapProjectConfiguration().getIdentifier();
 			}
 		}
@@ -132,10 +133,11 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 
 		// Case existing query to edit, the tracker id is provided by the query attributes
 		if (queryToEdit != null) {
-			String queryTrackerId = this.getQuery().getAttribute(ITuleapConstants.QUERY_TRACKER_ID);
+			String queryTrackerId = this.getQuery()
+					.getAttribute(ITuleapQueryConstants.QUERY_CONFIGURATION_ID);
 			this.trackerId = Integer.valueOf(queryTrackerId).intValue();
-			String queryGroupId = this.getQuery().getAttribute(ITuleapConstants.QUERY_GROUP_ID);
-			this.groupId = Integer.valueOf(queryGroupId).intValue();
+			String queryProjectId = this.getQuery().getAttribute(ITuleapQueryConstants.QUERY_PROJECT_ID);
+			this.projectId = Integer.valueOf(queryProjectId).intValue();
 			this.queryTitle = queryToEdit.getSummary();
 			this.queryAttributes.putAll(this.getQuery().getAttributes());
 		}
@@ -193,11 +195,13 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 	 */
 	@Override
 	public void applyTo(IRepositoryQuery query) {
-		if (this.trackerId != -1 && this.groupId != -1) {
+		if (this.trackerId != -1 && this.projectId != -1) {
 			query.setSummary(this.getQueryTitle());
-			query.setAttribute(ITuleapConstants.QUERY_KIND, ITuleapConstants.QUERY_KIND_CUSTOM);
-			query.setAttribute(ITuleapConstants.QUERY_TRACKER_ID, Integer.valueOf(this.trackerId).toString());
-			query.setAttribute(ITuleapConstants.QUERY_GROUP_ID, Integer.valueOf(this.groupId).toString());
+			query.setAttribute(ITuleapQueryConstants.QUERY_KIND, ITuleapQueryConstants.QUERY_KIND_CUSTOM);
+			query.setAttribute(ITuleapQueryConstants.QUERY_CONFIGURATION_ID, Integer.valueOf(this.trackerId)
+					.toString());
+			query.setAttribute(ITuleapQueryConstants.QUERY_PROJECT_ID, Integer.valueOf(this.projectId)
+					.toString());
 
 			// For each field set the query attribute
 			for (TuleapCustomQueryElement element : elements) {
@@ -248,12 +252,12 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 			previousPage = ((TuleapQueryPage)previousPage).getPreviousPage();
 			if (previousPage instanceof TuleapTrackerPage) {
 				this.trackerId = ((TuleapTrackerPage)previousPage).getTrackerSelected().getIdentifier();
-				this.groupId = ((TuleapTrackerPage)previousPage).getTrackerSelected()
+				this.projectId = ((TuleapTrackerPage)previousPage).getTrackerSelected()
 						.getTuleapProjectConfiguration().getIdentifier();
 			}
 		}
 
-		if (this.trackerId != -1 && this.groupId != -1) {
+		if (this.trackerId != -1 && this.projectId != -1) {
 			final TuleapRepositoryConnector repositoryConnector = (TuleapRepositoryConnector)connector;
 			TuleapServerConfiguration repositoryConfiguration = repositoryConnector
 					.getRepositoryConfiguration(this.getTaskRepository().getRepositoryUrl());
