@@ -342,52 +342,6 @@ public abstract class AbstractTuleapConfigurationDeserializer<CONFIGURATION_TYPE
 	}
 
 	/**
-	 * Deals with the semantic status JSON field.
-	 * 
-	 * @param fieldSemantic
-	 *            the semantic field
-	 * @param multiSelectBoxField
-	 *            the multi-select box field
-	 * @param fieldValueId
-	 *            the field value Identifier
-	 * @param selectBoxItem
-	 *            the select box item
-	 */
-	private void createSemanticStatus(JsonObject fieldSemantic, TuleapMultiSelectBox multiSelectBoxField,
-			int fieldValueId, TuleapSelectBoxItem selectBoxItem) {
-		if (fieldSemantic.get(STATUS) != null) {
-			JsonObject semanticStatus = fieldSemantic.get(STATUS).getAsJsonObject();
-			if (multiSelectBoxField.getIdentifier() == semanticStatus.get(FIELD_ID).getAsInt()) {
-				JsonArray openStatus = semanticStatus.get(JSON_OPEN_STATUS_IDS).getAsJsonArray();
-				for (int j = 0; j < openStatus.size(); j++) {
-					if (fieldValueId == openStatus.get(j).getAsInt()) {
-						multiSelectBoxField.getOpenStatus().add(selectBoxItem);
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * Deals with the semantic contributors JSON field.
-	 * 
-	 * @param fieldSemantic
-	 *            the semantic field
-	 * @param multiSelectBoxField
-	 *            the multi-select box field
-	 */
-	private void createSemanticContributors(JsonObject fieldSemantic, TuleapMultiSelectBox multiSelectBoxField) {
-		if (fieldSemantic != null) {
-			if (fieldSemantic.get(JSON_CONTRIBUTORS) != null) {
-				JsonObject semanticContributor = fieldSemantic.get(JSON_CONTRIBUTORS).getAsJsonObject();
-				if (semanticContributor.get(FIELD_ID).getAsInt() == multiSelectBoxField.getIdentifier()) {
-					multiSelectBoxField.setSemanticContributor(true);
-				}
-			}
-		}
-	}
-
-	/**
 	 * Returns the TuleapSelectBox created from the parsing of the JSON elements.
 	 * 
 	 * @param configuration
@@ -457,7 +411,8 @@ public abstract class AbstractTuleapConfigurationDeserializer<CONFIGURATION_TYPE
 		}
 
 		// the semantic contributors part
-		if (fieldSemantic.get(JSON_CONTRIBUTORS) != null
+		if (fieldSemantic != null
+				&& fieldSemantic.get(JSON_CONTRIBUTORS) != null
 				&& fieldSemantic.get(JSON_CONTRIBUTORS).getAsJsonObject().get(FIELD_ID).getAsInt() == selectBoxField
 						.getIdentifier()) {
 			selectBoxField.setSemanticContributor(true);
