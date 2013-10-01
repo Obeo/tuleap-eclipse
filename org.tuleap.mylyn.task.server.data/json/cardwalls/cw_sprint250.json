@@ -148,7 +148,7 @@
           },
           {
             "field_id" : 861,
-            "bind_value_id" : "Do something more useful"
+            "value" : "Do something more useful"
           },
           {
             "field_id" : 862,
@@ -262,7 +262,7 @@
           },
           {
             "field_id" : 861,
-            "bind_value_id" : "Do something sweet"
+            "value" : "Do something sweet"
           },
           {
             "field_id" : 862,
