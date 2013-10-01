@@ -16,6 +16,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 
+import org.eclipse.core.runtime.Platform;
+import org.osgi.framework.Bundle;
+
 /**
  * Utility class to load file contents as strings.
  * 
@@ -29,7 +32,7 @@ public final class ParserUtil {
 	private static final String SERVER_DATA_BUNDLE_ID = "org.tuleap.mylyn.task.server.data"; //$NON-NLS-1$
 
 	/**
-	 * Private constructor to prevent insatntiation.
+	 * Private constructor to prevent instantiation.
 	 */
 	private ParserUtil() {
 		// Prevents instantiation
@@ -44,7 +47,13 @@ public final class ParserUtil {
 	 * @return The content of the given file as a String, or null if it cannot be found.
 	 */
 	public static String loadFile(String path) {
-		URL url = ParserUtil.class.getResource(path);
+		Bundle serverDataBundle = Platform.getBundle(SERVER_DATA_BUNDLE_ID);
+		URL url;
+		if (serverDataBundle == null) {
+			url = ParserUtil.class.getResource(path);
+		} else {
+			url = serverDataBundle.getEntry("/json" + path);
+		}
 		if (url == null) {
 			return null;
 		}
