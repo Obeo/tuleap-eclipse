@@ -77,7 +77,7 @@ public class TuleapTrackerConfigurationDeserializerTests {
 		assertEquals(0, tuleapTrackerConfiguration.getIdentifier());
 		assertEquals("Product", tuleapTrackerConfiguration.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/trackers/0", tuleapTrackerConfiguration.getUrl()); //$NON-NLS-1$
-		assertEquals("The description of the products tracker", tuleapTrackerConfiguration.getDescription()); //$NON-NLS-1$
+		//		assertEquals("The description of the products tracker", tuleapTrackerConfiguration.getDescription()); //$NON-NLS-1$
 
 		Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
 		assertEquals(1, fields.size());
@@ -88,7 +88,8 @@ public class TuleapTrackerConfigurationDeserializerTests {
 
 		assertEquals(0, firstField.getIdentifier());
 		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, firstField.getMetadataType());
-		assertEquals("title", firstField.getName()); //$NON-NLS-1$
+		// We don't keep the "short_name" information since it is useless with REST
+		//		assertEquals("title", firstField.getName()); //$NON-NLS-1$
 		assertEquals("Title", firstField.getLabel()); //$NON-NLS-1$
 
 		assertTrue(firstField.isReadable());
@@ -108,7 +109,7 @@ public class TuleapTrackerConfigurationDeserializerTests {
 		assertEquals(1, tuleapTrackerConfiguration.getIdentifier());
 		assertEquals("Bugs", tuleapTrackerConfiguration.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/trackers/1", tuleapTrackerConfiguration.getUrl()); //$NON-NLS-1$
-		assertEquals("The description of the bugs tracker", tuleapTrackerConfiguration.getDescription()); //$NON-NLS-1$
+		//		assertEquals("The description of the bugs tracker", tuleapTrackerConfiguration.getDescription()); //$NON-NLS-1$
 
 		Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
 		assertEquals(13, fields.size());
@@ -131,7 +132,8 @@ public class TuleapTrackerConfigurationDeserializerTests {
 
 		// testing the field type
 		assertEquals(TaskAttribute.TYPE_DOUBLE, fourthField.getMetadataType());
-		assertEquals("difficulty", fourthField.getName()); //$NON-NLS-1$
+		// We don't keep the "short_name" information since it is useless with REST
+		//		assertEquals("difficulty", fourthField.getName()); //$NON-NLS-1$
 		assertEquals("Difficulty", fourthField.getLabel()); //$NON-NLS-1$
 
 		// testing the field mermissions
@@ -193,7 +195,7 @@ public class TuleapTrackerConfigurationDeserializerTests {
 		assertEquals(2, tuleapTrackerConfiguration.getIdentifier());
 		assertEquals("Release", tuleapTrackerConfiguration.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/trackers/2", tuleapTrackerConfiguration.getUrl()); //$NON-NLS-1$
-		assertEquals("The description of the releases tracker", tuleapTrackerConfiguration.getDescription()); //$NON-NLS-1$
+		//		assertEquals("The description of the releases tracker", tuleapTrackerConfiguration.getDescription()); //$NON-NLS-1$
 
 		Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
 		assertEquals(5, fields.size());
@@ -205,7 +207,8 @@ public class TuleapTrackerConfigurationDeserializerTests {
 
 		assertEquals(2, secondField.getIdentifier());
 		assertEquals(TaskAttribute.TYPE_DATE, secondField.getMetadataType());
-		assertEquals("end-date", secondField.getName()); //$NON-NLS-1$
+		// We don't keep the "short_name" information since it is useless with REST
+		//		assertEquals("end-date", secondField.getName()); //$NON-NLS-1$
 		assertEquals("End Date", secondField.getLabel()); //$NON-NLS-1$
 
 		assertTrue(secondField.isReadable());
@@ -225,7 +228,7 @@ public class TuleapTrackerConfigurationDeserializerTests {
 		assertEquals(3, tuleapTrackerConfiguration.getIdentifier());
 		assertEquals("Sprint", tuleapTrackerConfiguration.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/trackers/3", tuleapTrackerConfiguration.getUrl()); //$NON-NLS-1$
-		assertEquals("The description of the sprints tracker", tuleapTrackerConfiguration.getDescription()); //$NON-NLS-1$
+		//		assertEquals("The description of the sprints tracker", tuleapTrackerConfiguration.getDescription()); //$NON-NLS-1$
 
 		Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
 		assertEquals(5, fields.size());
@@ -237,8 +240,8 @@ public class TuleapTrackerConfigurationDeserializerTests {
 
 		assertEquals(2, thirdField.getIdentifier());
 		assertEquals(TaskAttribute.TYPE_SINGLE_SELECT, thirdField.getMetadataType());
-
-		assertEquals("status", thirdField.getName()); //$NON-NLS-1$
+		// We don't keep the "short_name" information since it is useless with REST
+		//		assertEquals("status", thirdField.getName()); //$NON-NLS-1$
 		assertEquals("Status", thirdField.getLabel()); //$NON-NLS-1$
 
 		assertTrue(thirdField.isReadable());
@@ -257,7 +260,7 @@ public class TuleapTrackerConfigurationDeserializerTests {
 		assertEquals(4, tuleapTrackerConfiguration.getIdentifier());
 		assertEquals("Tests", tuleapTrackerConfiguration.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/trackers/4", tuleapTrackerConfiguration.getUrl()); //$NON-NLS-1$
-		assertEquals("The description of the tests tracker", tuleapTrackerConfiguration.getDescription()); //$NON-NLS-1$
+		// assertEquals("The description of the tests tracker", tuleapTrackerConfiguration.getDescription()); //$NON-NLS-1$
 
 		Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
 		assertEquals(3, fields.size());
@@ -269,7 +272,8 @@ public class TuleapTrackerConfigurationDeserializerTests {
 
 		assertEquals(2, thirdField.getIdentifier());
 		assertEquals(TaskAttribute.TYPE_INTEGER, thirdField.getMetadataType());
-		assertEquals("initial-effort", thirdField.getName()); //$NON-NLS-1$
+		// We don't keep the "short_name" information since it is useless with REST
+		// assertEquals("initial-effort", thirdField.getName()); //$NON-NLS-1$
 		assertEquals("Initial Effort", thirdField.getLabel()); //$NON-NLS-1$
 
 		assertTrue(thirdField.isReadable());
@@ -288,8 +292,8 @@ public class TuleapTrackerConfigurationDeserializerTests {
 		assertEquals(5, tuleapTrackerConfiguration.getIdentifier());
 		assertEquals("User Stories", tuleapTrackerConfiguration.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/trackers/5", tuleapTrackerConfiguration.getUrl()); //$NON-NLS-1$
-		assertEquals(
-				"The description of the user stories tracker", tuleapTrackerConfiguration.getDescription()); //$NON-NLS-1$
+		// assertEquals(
+		//				"The description of the user stories tracker", tuleapTrackerConfiguration.getDescription()); //$NON-NLS-1$
 
 		Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
 		assertEquals(2, fields.size());
@@ -300,7 +304,8 @@ public class TuleapTrackerConfigurationDeserializerTests {
 
 		assertEquals(1, secondField.getIdentifier());
 		assertEquals(TaskAttribute.TYPE_SINGLE_SELECT, secondField.getMetadataType());
-		assertEquals("status", secondField.getName()); //$NON-NLS-1$
+		// We don't keep the "short_name" information since it is useless with REST
+		//		assertEquals("status", secondField.getName()); //$NON-NLS-1$
 		assertEquals("Status", secondField.getLabel()); //$NON-NLS-1$
 
 		assertTrue(secondField.isReadable());
@@ -337,35 +342,35 @@ public class TuleapTrackerConfigurationDeserializerTests {
 		assertEquals(0, firstProjectConfiguration.getIdentifier());
 		assertEquals("Product", firstProjectConfiguration.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/trackers/0", firstProjectConfiguration.getUrl()); //$NON-NLS-1$
-		assertEquals("The description of the products tracker", firstProjectConfiguration.getDescription()); //$NON-NLS-1$
+		//		assertEquals("The description of the products tracker", firstProjectConfiguration.getDescription()); //$NON-NLS-1$
 
 		TuleapTrackerConfiguration secondProjectConfiguration = iterator.next();
 
 		assertEquals(1, secondProjectConfiguration.getIdentifier());
 		assertEquals("Bugs", secondProjectConfiguration.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/trackers/1", secondProjectConfiguration.getUrl()); //$NON-NLS-1$
-		assertEquals("The description of the bugs tracker", secondProjectConfiguration.getDescription()); //$NON-NLS-1$
+		//		assertEquals("The description of the bugs tracker", secondProjectConfiguration.getDescription()); //$NON-NLS-1$
 
 		TuleapTrackerConfiguration thirdProjectConfiguration = iterator.next();
 
 		assertEquals(2, thirdProjectConfiguration.getIdentifier());
 		assertEquals("Release", thirdProjectConfiguration.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/trackers/2", thirdProjectConfiguration.getUrl()); //$NON-NLS-1$
-		assertEquals("The description of the releases tracker", thirdProjectConfiguration.getDescription()); //$NON-NLS-1$
+		//		assertEquals("The description of the releases tracker", thirdProjectConfiguration.getDescription()); //$NON-NLS-1$
 
 		TuleapTrackerConfiguration fourthProjectConfiguration = iterator.next();
 
 		assertEquals(3, fourthProjectConfiguration.getIdentifier());
 		assertEquals("Sprint", fourthProjectConfiguration.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/trackers/3", fourthProjectConfiguration.getUrl()); //$NON-NLS-1$
-		assertEquals("The description of the sprints tracker", fourthProjectConfiguration.getDescription()); //$NON-NLS-1$
+		//		assertEquals("The description of the sprints tracker", fourthProjectConfiguration.getDescription()); //$NON-NLS-1$
 
 		TuleapTrackerConfiguration fifthProjectConfiguration = iterator.next();
 
 		assertEquals(4, fifthProjectConfiguration.getIdentifier());
 		assertEquals("Tests", fifthProjectConfiguration.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/trackers/4", fifthProjectConfiguration.getUrl()); //$NON-NLS-1$
-		assertEquals("The description of the tests tracker", fifthProjectConfiguration.getDescription()); //$NON-NLS-1$
+		//		assertEquals("The description of the tests tracker", fifthProjectConfiguration.getDescription()); //$NON-NLS-1$
 
 	}
 
@@ -398,7 +403,7 @@ public class TuleapTrackerConfigurationDeserializerTests {
 		assertEquals(5, sixthProjectConfiguration.getIdentifier());
 		assertEquals("User Stories", sixthProjectConfiguration.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/trackers/5", sixthProjectConfiguration.getUrl()); //$NON-NLS-1$
-		assertEquals(
-				"The description of the user stories tracker", sixthProjectConfiguration.getDescription()); //$NON-NLS-1$
+		// assertEquals(
+		//				"The description of the user stories tracker", sixthProjectConfiguration.getDescription()); //$NON-NLS-1$
 	}
 }
