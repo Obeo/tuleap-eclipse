@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.client.rest;
 
-import java.util.HashMap;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 
@@ -65,31 +63,5 @@ public class TuleapRestConnector {
 	 */
 	public RestResources resources(ICredentials credentials) throws CoreException {
 		return RestResources.builder(serverUrl, bestApiVersion, credentials);
-	}
-
-	/**
-	 * Launcher for testing.
-	 * 
-	 * @param args
-	 *            The arguments
-	 */
-	public static void main(String[] args) {
-		// TODO REMOVE THIS§§§!!!!!!!!!
-		try {
-			TuleapRestConnector connector = new TuleapRestConnector("http://localhost:3001", "v3.14", null); //$NON-NLS-1$//$NON-NLS-2$
-			ServerResponse serverResponse = connector.resources(new ICredentials() {
-
-				public String getUserName() {
-					return "admin"; //$NON-NLS-1$
-				}
-
-				public String getPassword() {
-					return "password"; //$NON-NLS-1$
-				}
-			}).user().get(new HashMap<String, String>(), ""); //$NON-NLS-1$
-			System.out.println(serverResponse.getBody());
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
 	}
 }
