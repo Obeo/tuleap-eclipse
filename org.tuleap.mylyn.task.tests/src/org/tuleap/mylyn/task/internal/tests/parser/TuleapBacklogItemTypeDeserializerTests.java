@@ -128,7 +128,6 @@ public class TuleapBacklogItemTypeDeserializerTests extends AbstractConfiguratio
 		assertEquals("User Stories", tuleapBacklogItemType.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/backlog_item_types/802", tuleapBacklogItemType.getUrl()); //$NON-NLS-1$
 		//assertEquals("The description of user stories", tuleapBacklogItemType.getDescription()); //$NON-NLS-1$
-		System.out.print(tuleapBacklogItemType.getDescription());
 		Collection<AbstractTuleapField> fields = tuleapBacklogItemType.getFields();
 		assertEquals(10, fields.size());
 
@@ -202,7 +201,6 @@ public class TuleapBacklogItemTypeDeserializerTests extends AbstractConfiguratio
 		assertEquals("User Stories", tuleapBacklogItemType.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/backlog_item_types/802", tuleapBacklogItemType.getUrl()); //$NON-NLS-1$
 		//assertEquals("The description of user stories", tuleapBacklogItemType.getDescription()); //$NON-NLS-1$
-		System.out.print(tuleapBacklogItemType.getDescription());
 		Collection<AbstractTuleapField> fields = tuleapBacklogItemType.getFields();
 		assertEquals(10, fields.size());
 

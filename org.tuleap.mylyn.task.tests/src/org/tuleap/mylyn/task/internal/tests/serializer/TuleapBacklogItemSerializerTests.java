@@ -179,7 +179,6 @@ public class TuleapBacklogItemSerializerTests {
 				new TuleapBacklogItemSerializer()).create();
 
 		jsonObject = (JsonObject)gson.toJsonTree(backlogItem);
-		System.out.print(gson.toJson(jsonObject));
 	}
 
 	/**
