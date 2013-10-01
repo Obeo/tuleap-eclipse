@@ -15,7 +15,7 @@
     },
     {
       "field_id" : 8001,
-      "label" : "Assigned To",
+      "label" : "Assigned to",
       "type" : "msb",
       "binding" : {
         "bind_type" : "users",
@@ -31,8 +31,13 @@
         ]
       },
       "permissions" : [
-          "read", "create", "update"
+          "read", "update"
       ]
     }
-  ]
+  ],
+  "semantic" : {
+    "contributors": {
+      "field_id": 8001
+    }
+  }
 }

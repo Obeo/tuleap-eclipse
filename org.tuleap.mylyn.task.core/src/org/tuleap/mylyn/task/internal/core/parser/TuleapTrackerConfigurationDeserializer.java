@@ -17,6 +17,7 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
+import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 
 /**
@@ -26,6 +27,17 @@ import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfigurat
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class TuleapTrackerConfigurationDeserializer extends AbstractTuleapConfigurationDeserializer<TuleapTrackerConfiguration> {
+
+	/**
+	 * Constructor that receives the related project Configuration.
+	 * 
+	 * @param projectConfiguration
+	 *            The project configuration;
+	 */
+	public TuleapTrackerConfigurationDeserializer(TuleapProjectConfiguration projectConfiguration) {
+		super(projectConfiguration);
+	}
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -43,11 +55,12 @@ public class TuleapTrackerConfigurationDeserializer extends AbstractTuleapConfig
 		String description = null;
 		long lastUpdateDate = System.currentTimeMillis();
 
-		TuleapTrackerConfiguration tuleapTrackerConfiguration = new TuleapTrackerConfiguration(identifier,
-				url, label, itemName, description, lastUpdateDate);
+		TuleapTrackerConfiguration trackerConfiguration = new TuleapTrackerConfiguration(identifier, url,
+				label, itemName, description, lastUpdateDate);
 
-		tuleapTrackerConfiguration = this.populateConfigurableFields(tuleapTrackerConfiguration, jsonObject);
+		trackerConfiguration = this.populateConfigurableFields(trackerConfiguration, jsonObject);
+		projectConfiguration.addTracker(trackerConfiguration);
 
-		return tuleapTrackerConfiguration;
+		return trackerConfiguration;
 	}
 }

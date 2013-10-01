@@ -17,6 +17,7 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
+import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardType;
 
 /**
@@ -25,6 +26,16 @@ import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardType;
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
 public class TuleapCardTypeDeserializer extends AbstractTuleapConfigurationDeserializer<TuleapCardType> {
+
+	/**
+	 * Constructor that receives the related project Configuration.
+	 * 
+	 * @param projectConfiguration
+	 *            The project configuration;
+	 */
+	public TuleapCardTypeDeserializer(TuleapProjectConfiguration projectConfiguration) {
+		super(projectConfiguration);
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -47,6 +58,7 @@ public class TuleapCardTypeDeserializer extends AbstractTuleapConfigurationDeser
 				lastUpdateDate);
 
 		cardType = this.populateConfigurableFields(cardType, jsonObject);
+		projectConfiguration.addCardType(cardType);
 
 		return cardType;
 	}

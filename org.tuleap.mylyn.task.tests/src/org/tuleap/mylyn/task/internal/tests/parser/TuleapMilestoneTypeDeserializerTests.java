@@ -10,10 +10,7 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.tests.parser;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.JsonDeserializer;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,7 +35,7 @@ import static org.junit.Assert.assertTrue;
  * 
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
-public class TuleapMilestoneTypeDeserializerTests {
+public class TuleapMilestoneTypeDeserializerTests extends AbstractConfigurationDeserializerTest<TuleapMilestoneType> {
 
 	/**
 	 * Test the parsing of the first file.
@@ -46,7 +43,7 @@ public class TuleapMilestoneTypeDeserializerTests {
 	@Test
 	public void testReleasesParsing() {
 		String releases = ParserUtil.loadFile("/milestone_types/releases.json"); //$NON-NLS-1$
-		TuleapMilestoneType tuleapMilestoneType = this.parse(releases);
+		TuleapMilestoneType tuleapMilestoneType = this.parse(releases, TuleapMilestoneType.class);
 		assertNotNull(tuleapMilestoneType);
 		assertEquals(901, tuleapMilestoneType.getIdentifier());
 		assertEquals("Releases", tuleapMilestoneType.getLabel()); //$NON-NLS-1$
@@ -120,7 +117,7 @@ public class TuleapMilestoneTypeDeserializerTests {
 	@Test
 	public void testSprintsParsing() {
 		String sprints = ParserUtil.loadFile("/milestone_types/sprints.json"); //$NON-NLS-1$
-		TuleapMilestoneType tuleapMilestoneType = this.parse(sprints);
+		TuleapMilestoneType tuleapMilestoneType = this.parse(sprints, TuleapMilestoneType.class);
 		assertNotNull(tuleapMilestoneType);
 		assertEquals(902, tuleapMilestoneType.getIdentifier());
 		assertEquals("Sprints", tuleapMilestoneType.getLabel()); //$NON-NLS-1$
@@ -198,23 +195,11 @@ public class TuleapMilestoneTypeDeserializerTests {
 	}
 
 	/**
-	 * Parse the content of the file and return the matching configuration.
-	 * 
-	 * @param fileContent
-	 *            The content of the file
-	 * @return The Tuleap BacklogItem Type matching the content of the file
+	 * {@inheritDoc}
 	 */
-	private TuleapMilestoneType parse(String fileContent) {
-		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(TuleapMilestoneType.class, new TuleapMilestoneTypeDeserializer());
-
-		JsonParser jsonParser = new JsonParser();
-		JsonObject jsonObject = jsonParser.parse(fileContent).getAsJsonObject();
-
-		Gson gson = gsonBuilder.create();
-		TuleapMilestoneType tuleapMilestoneType = gson.fromJson(jsonObject, TuleapMilestoneType.class);
-
-		return tuleapMilestoneType;
+	@Override
+	protected JsonDeserializer<TuleapMilestoneType> getDeserializer() {
+		return new TuleapMilestoneTypeDeserializer(getProjectConfiguration());
 	}
 
 	/**

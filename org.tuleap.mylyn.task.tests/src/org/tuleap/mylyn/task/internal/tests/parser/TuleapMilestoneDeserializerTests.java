@@ -10,10 +10,7 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.tests.parser;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.JsonDeserializer;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,7 +34,7 @@ import static org.junit.Assert.assertTrue;
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public class TuleapMilestoneDeserializerTests {
+public class TuleapMilestoneDeserializerTests extends AbstractDeserializerTest<TuleapMilestone> {
 
 	/**
 	 * The pattern used to format date following the ISO8601 standard.
@@ -45,23 +42,11 @@ public class TuleapMilestoneDeserializerTests {
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS"); //$NON-NLS-1$
 
 	/**
-	 * Parse the content of the file and return the matching milestone.
-	 * 
-	 * @param fileContent
-	 *            The content of the file
-	 * @return The Tuleap project configuration matching the content of the file
+	 * {@inheritDoc}
 	 */
-	private TuleapMilestone parse(String fileContent) {
-		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(TuleapMilestone.class, new TuleapMilestoneDeserializer());
-
-		JsonParser jsonParser = new JsonParser();
-		JsonObject jsonObject = jsonParser.parse(fileContent).getAsJsonObject();
-
-		Gson gson = gsonBuilder.create();
-		TuleapMilestone tuleapMilestone = gson.fromJson(jsonObject, TuleapMilestone.class);
-
-		return tuleapMilestone;
+	@Override
+	protected JsonDeserializer<TuleapMilestone> getDeserializer() {
+		return new TuleapMilestoneDeserializer();
 	}
 
 	/**
@@ -72,7 +57,7 @@ public class TuleapMilestoneDeserializerTests {
 	@Test
 	public void testRelease200Parsing() throws ParseException {
 		String release200 = ParserUtil.loadFile("/milestones/release200.json");
-		TuleapMilestone tuleapMilestone = this.parse(release200);
+		TuleapMilestone tuleapMilestone = this.parse(release200, TuleapMilestone.class);
 		assertNotNull(tuleapMilestone);
 
 		assertEquals(200, tuleapMilestone.getId());
@@ -168,11 +153,14 @@ public class TuleapMilestoneDeserializerTests {
 
 	/**
 	 * Test the parsing of the data set of the release 300.
+	 * 
+	 * @throws Exception
+	 *             If something goes wrong that shouldn't.
 	 */
 	@Test
 	public void testRelease201Parsing() throws Exception {
 		String release201 = ParserUtil.loadFile("/milestones/release201.json");
-		TuleapMilestone tuleapMilestone = this.parse(release201);
+		TuleapMilestone tuleapMilestone = this.parse(release201, TuleapMilestone.class);
 		assertNotNull(tuleapMilestone);
 
 		assertEquals(201, tuleapMilestone.getId());

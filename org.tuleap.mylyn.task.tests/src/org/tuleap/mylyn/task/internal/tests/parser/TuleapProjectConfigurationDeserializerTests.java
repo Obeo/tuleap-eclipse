@@ -13,8 +13,8 @@ package org.tuleap.mylyn.task.internal.tests.parser;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
@@ -35,28 +35,14 @@ import static org.junit.Assert.assertTrue;
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public class TuleapProjectConfigurationDeserializerTests {
+public class TuleapProjectConfigurationDeserializerTests extends AbstractDeserializerTest<TuleapProjectConfiguration> {
 
 	/**
-	 * Parse the content of the file and return the matching configuration.
-	 * 
-	 * @param fileContent
-	 *            The content of the file
-	 * @return The Tuleap project configuration matching the content of the file
+	 * {@inheritDoc}
 	 */
-	private TuleapProjectConfiguration parse(String fileContent) {
-		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(TuleapProjectConfiguration.class,
-				new TuleapProjectConfigurationDeserializer());
-
-		JsonParser jsonParser = new JsonParser();
-		JsonObject jsonObject = jsonParser.parse(fileContent).getAsJsonObject();
-
-		Gson gson = gsonBuilder.create();
-		TuleapProjectConfiguration tuleapProjectConfiguration = gson.fromJson(jsonObject,
-				TuleapProjectConfiguration.class);
-
-		return tuleapProjectConfiguration;
+	@Override
+	protected JsonDeserializer<TuleapProjectConfiguration> getDeserializer() {
+		return new TuleapProjectConfigurationDeserializer();
 	}
 
 	/**
@@ -65,7 +51,8 @@ public class TuleapProjectConfigurationDeserializerTests {
 	@Test
 	public void testProject0Parsing() {
 		String project0 = ParserUtil.loadFile("/projects/project-0.json");
-		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project0);
+		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project0,
+				TuleapProjectConfiguration.class);
 		assertNotNull(tuleapProjectConfiguration);
 		assertEquals(0, tuleapProjectConfiguration.getIdentifier());
 		assertEquals("Project 0", tuleapProjectConfiguration.getName()); //$NON-NLS-1$
@@ -81,7 +68,8 @@ public class TuleapProjectConfigurationDeserializerTests {
 	@Test
 	public void testProject1Parsing() {
 		String project1 = ParserUtil.loadFile("/projects/project-1.json");
-		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project1);
+		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project1,
+				TuleapProjectConfiguration.class);
 		assertNotNull(tuleapProjectConfiguration);
 		assertEquals(1, tuleapProjectConfiguration.getIdentifier());
 		assertEquals("Project 1", tuleapProjectConfiguration.getName()); //$NON-NLS-1$
@@ -97,7 +85,8 @@ public class TuleapProjectConfigurationDeserializerTests {
 	@Test
 	public void testProject2Parsing() {
 		String project2 = ParserUtil.loadFile("/projects/project-2.json");
-		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project2);
+		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project2,
+				TuleapProjectConfiguration.class);
 		assertNotNull(tuleapProjectConfiguration);
 		assertEquals(2, tuleapProjectConfiguration.getIdentifier());
 		assertEquals("Project 2", tuleapProjectConfiguration.getName()); //$NON-NLS-1$
@@ -113,7 +102,8 @@ public class TuleapProjectConfigurationDeserializerTests {
 	@Test
 	public void testProject3Parsing() {
 		String project3 = ParserUtil.loadFile("/projects/project-3.json");
-		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project3);
+		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project3,
+				TuleapProjectConfiguration.class);
 		assertNotNull(tuleapProjectConfiguration);
 		assertEquals(3, tuleapProjectConfiguration.getIdentifier());
 		assertEquals("Project 3", tuleapProjectConfiguration.getName()); //$NON-NLS-1$
@@ -139,7 +129,8 @@ public class TuleapProjectConfigurationDeserializerTests {
 	@Test
 	public void testProject4Parsing() {
 		String project4 = ParserUtil.loadFile("/projects/project-4.json");
-		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project4);
+		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project4,
+				TuleapProjectConfiguration.class);
 		assertNotNull(tuleapProjectConfiguration);
 		assertEquals(4, tuleapProjectConfiguration.getIdentifier());
 		assertEquals("Project 4", tuleapProjectConfiguration.getName()); //$NON-NLS-1$

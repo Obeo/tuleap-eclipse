@@ -10,10 +10,7 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.tests.parser;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.JsonDeserializer;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,26 +35,14 @@ import static org.junit.Assert.assertTrue;
  * 
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
-public class TuleapBacklogItemTypeDeserializerTests {
+public class TuleapBacklogItemTypeDeserializerTests extends AbstractConfigurationDeserializerTest<TuleapBacklogItemType> {
 
 	/**
-	 * Parse the content of the file and return the matching configuration.
-	 * 
-	 * @param fileContent
-	 *            The content of the file
-	 * @return The Tuleap BacklogItem Type matching the content of the file
+	 * {@inheritDoc}
 	 */
-	private TuleapBacklogItemType parse(String fileContent) {
-		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(TuleapBacklogItemType.class, new TuleapBacklogItemTypeDeserializer());
-
-		JsonParser jsonParser = new JsonParser();
-		JsonObject jsonObject = jsonParser.parse(fileContent).getAsJsonObject();
-
-		Gson gson = gsonBuilder.create();
-		TuleapBacklogItemType tuleapBacklogItemType = gson.fromJson(jsonObject, TuleapBacklogItemType.class);
-
-		return tuleapBacklogItemType;
+	@Override
+	protected JsonDeserializer<TuleapBacklogItemType> getDeserializer() {
+		return new TuleapBacklogItemTypeDeserializer(getProjectConfiguration());
 	}
 
 	/**
@@ -66,7 +51,7 @@ public class TuleapBacklogItemTypeDeserializerTests {
 	@Test
 	public void testEpicsParsing() {
 		String epics = ParserUtil.loadFile("/backlog_item_types/epics.json"); //$NON-NLS-1$
-		TuleapBacklogItemType tuleapBacklogItemType = this.parse(epics);
+		TuleapBacklogItemType tuleapBacklogItemType = this.parse(epics, TuleapBacklogItemType.class);
 		assertNotNull(tuleapBacklogItemType);
 		assertEquals(801, tuleapBacklogItemType.getIdentifier());
 		assertEquals("Epics", tuleapBacklogItemType.getLabel()); //$NON-NLS-1$
@@ -137,7 +122,7 @@ public class TuleapBacklogItemTypeDeserializerTests {
 	@Test
 	public void testFirstPartUserStoriesParsing() {
 		String userStories = ParserUtil.loadFile("/backlog_item_types/user_stories.json"); //$NON-NLS-1$
-		TuleapBacklogItemType tuleapBacklogItemType = this.parse(userStories);
+		TuleapBacklogItemType tuleapBacklogItemType = this.parse(userStories, TuleapBacklogItemType.class);
 		assertNotNull(tuleapBacklogItemType);
 		assertEquals(802, tuleapBacklogItemType.getIdentifier());
 		assertEquals("User Stories", tuleapBacklogItemType.getLabel()); //$NON-NLS-1$
@@ -211,7 +196,7 @@ public class TuleapBacklogItemTypeDeserializerTests {
 	@Test
 	public void testSecondpartUserStoriesParsing() {
 		String userStories = ParserUtil.loadFile("/backlog_item_types/user_stories.json"); //$NON-NLS-1$
-		TuleapBacklogItemType tuleapBacklogItemType = this.parse(userStories);
+		TuleapBacklogItemType tuleapBacklogItemType = this.parse(userStories, TuleapBacklogItemType.class);
 		assertNotNull(tuleapBacklogItemType);
 		assertEquals(802, tuleapBacklogItemType.getIdentifier());
 		assertEquals("User Stories", tuleapBacklogItemType.getLabel()); //$NON-NLS-1$

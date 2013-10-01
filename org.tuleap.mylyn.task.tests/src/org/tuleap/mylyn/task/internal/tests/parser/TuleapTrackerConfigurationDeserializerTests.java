@@ -13,8 +13,8 @@ package org.tuleap.mylyn.task.internal.tests.parser;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
@@ -42,28 +42,14 @@ import static org.junit.Assert.assertTrue;
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public class TuleapTrackerConfigurationDeserializerTests {
+public class TuleapTrackerConfigurationDeserializerTests extends AbstractConfigurationDeserializerTest<TuleapTrackerConfiguration> {
 
 	/**
-	 * Parse the content of the file and return the matching configuration.
-	 * 
-	 * @param fileContent
-	 *            The content of the file
-	 * @return The Tuleap project configuration matching the content of the file
+	 * {@inheritDoc}
 	 */
-	private TuleapTrackerConfiguration parse(String fileContent) {
-		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(TuleapTrackerConfiguration.class,
-				new TuleapTrackerConfigurationDeserializer());
-
-		JsonParser jsonParser = new JsonParser();
-		JsonObject jsonObject = jsonParser.parse(fileContent).getAsJsonObject();
-
-		Gson gson = gsonBuilder.create();
-		TuleapTrackerConfiguration tuleapTrackerConfiguration = gson.fromJson(jsonObject,
-				TuleapTrackerConfiguration.class);
-
-		return tuleapTrackerConfiguration;
+	@Override
+	protected JsonDeserializer<TuleapTrackerConfiguration> getDeserializer() {
+		return new TuleapTrackerConfigurationDeserializer(getProjectConfiguration());
 	}
 
 	/**
@@ -72,7 +58,8 @@ public class TuleapTrackerConfigurationDeserializerTests {
 	@Test
 	public void testTracker0Parsing() {
 		String tracker0 = ParserUtil.loadFile("/trackers/tracker-0.json");
-		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker0);
+		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker0,
+				TuleapTrackerConfiguration.class);
 		assertNotNull(tuleapTrackerConfiguration);
 		assertEquals(0, tuleapTrackerConfiguration.getIdentifier());
 		assertEquals("Product", tuleapTrackerConfiguration.getLabel()); //$NON-NLS-1$
@@ -104,7 +91,8 @@ public class TuleapTrackerConfigurationDeserializerTests {
 	@Test
 	public void testTracker1Parsing() {
 		String tracker1 = ParserUtil.loadFile("/trackers/tracker-1.json");
-		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker1);
+		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker1,
+				TuleapTrackerConfiguration.class);
 		assertNotNull(tuleapTrackerConfiguration);
 		assertEquals(1, tuleapTrackerConfiguration.getIdentifier());
 		assertEquals("Bugs", tuleapTrackerConfiguration.getLabel()); //$NON-NLS-1$
@@ -190,7 +178,8 @@ public class TuleapTrackerConfigurationDeserializerTests {
 	@Test
 	public void testTracker2Parsing() {
 		String tracker2 = ParserUtil.loadFile("/trackers/tracker-2.json");
-		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker2);
+		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker2,
+				TuleapTrackerConfiguration.class);
 		assertNotNull(tuleapTrackerConfiguration);
 		assertEquals(2, tuleapTrackerConfiguration.getIdentifier());
 		assertEquals("Release", tuleapTrackerConfiguration.getLabel()); //$NON-NLS-1$
@@ -223,7 +212,8 @@ public class TuleapTrackerConfigurationDeserializerTests {
 	@Test
 	public void testTracker3Parsing() {
 		String tracker3 = ParserUtil.loadFile("/trackers/tracker-3.json");
-		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker3);
+		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker3,
+				TuleapTrackerConfiguration.class);
 		assertNotNull(tuleapTrackerConfiguration);
 		assertEquals(3, tuleapTrackerConfiguration.getIdentifier());
 		assertEquals("Sprint", tuleapTrackerConfiguration.getLabel()); //$NON-NLS-1$
@@ -255,7 +245,8 @@ public class TuleapTrackerConfigurationDeserializerTests {
 	@Test
 	public void testTracker4Parsing() {
 		String tracker4 = ParserUtil.loadFile("/trackers/tracker-4.json");
-		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker4);
+		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker4,
+				TuleapTrackerConfiguration.class);
 		assertNotNull(tuleapTrackerConfiguration);
 		assertEquals(4, tuleapTrackerConfiguration.getIdentifier());
 		assertEquals("Tests", tuleapTrackerConfiguration.getLabel()); //$NON-NLS-1$
@@ -287,7 +278,8 @@ public class TuleapTrackerConfigurationDeserializerTests {
 	@Test
 	public void testTracker5Parsing() {
 		String tracker5 = ParserUtil.loadFile("/trackers/tracker-5.json");
-		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker5);
+		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker5,
+				TuleapTrackerConfiguration.class);
 		assertNotNull(tuleapTrackerConfiguration);
 		assertEquals(5, tuleapTrackerConfiguration.getIdentifier());
 		assertEquals("User Stories", tuleapTrackerConfiguration.getLabel()); //$NON-NLS-1$
@@ -320,8 +312,7 @@ public class TuleapTrackerConfigurationDeserializerTests {
 	public void testFirstTrackersGroupParsing() {
 		String firstTrackersGroup = ParserUtil.loadFile("/trackers/trackers_part_1.json");
 		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(TuleapTrackerConfiguration.class,
-				new TuleapTrackerConfigurationDeserializer());
+		gsonBuilder.registerTypeAdapter(TuleapTrackerConfiguration.class, getDeserializer());
 
 		JsonParser jsonParser = new JsonParser();
 		JsonArray asJsonArray = jsonParser.parse(firstTrackersGroup).getAsJsonArray();
@@ -381,8 +372,7 @@ public class TuleapTrackerConfigurationDeserializerTests {
 	public void testSecondTrackersGroupParsing() {
 		String secondTrackersGroup = ParserUtil.loadFile("/trackers/trackers_part_2.json");
 		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(TuleapTrackerConfiguration.class,
-				new TuleapTrackerConfigurationDeserializer());
+		gsonBuilder.registerTypeAdapter(TuleapTrackerConfiguration.class, getDeserializer());
 
 		JsonParser jsonParser = new JsonParser();
 		JsonArray asJsonArray = jsonParser.parse(secondTrackersGroup).getAsJsonArray();

@@ -10,10 +10,7 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.tests.parser;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.JsonDeserializer;
 
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.data.BoundFieldValue;
@@ -28,7 +25,7 @@ import static org.junit.Assert.assertEquals;
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class TuleapBacklogItemDeserializerTest {
+public class TuleapBacklogItemDeserializerTest extends AbstractDeserializerTest<TuleapBacklogItem> {
 
 	/**
 	 * Tests the parsing of epic #301.
@@ -36,7 +33,7 @@ public class TuleapBacklogItemDeserializerTest {
 	@Test
 	public void testDeserializeEpic301() {
 		String epic = ParserUtil.loadFile("/backlog_items/epic301.json");
-		TuleapBacklogItem item = parse(epic);
+		TuleapBacklogItem item = parse(epic, TuleapBacklogItem.class);
 		assertEquals(301, item.getId());
 		assertEquals("Another important Epic", item.getLabel());
 		assertEquals("/backlog_items/301", item.getUrl());
@@ -60,7 +57,7 @@ public class TuleapBacklogItemDeserializerTest {
 	@Test
 	public void testDeserializeUserStory350() {
 		String userStory = ParserUtil.loadFile("/backlog_items/userStory350.json");
-		TuleapBacklogItem item = parse(userStory);
+		TuleapBacklogItem item = parse(userStory, TuleapBacklogItem.class);
 		assertEquals(350, item.getId());
 		assertEquals("An important User Story", item.getLabel());
 		assertEquals("/backlog_items/350", item.getUrl());
@@ -87,23 +84,11 @@ public class TuleapBacklogItemDeserializerTest {
 	}
 
 	/**
-	 * Parse the content of the file and return the matching configuration.
-	 * 
-	 * @param fileContent
-	 *            The content of the file
-	 * @return The Tuleap project configuration matching the content of the file
+	 * {@inheritDoc}
 	 */
-	private TuleapBacklogItem parse(String fileContent) {
-		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(TuleapBacklogItem.class, new TuleapBacklogItemDeserializer());
-
-		JsonParser jsonParser = new JsonParser();
-		JsonObject jsonObject = jsonParser.parse(fileContent).getAsJsonObject();
-
-		Gson gson = gsonBuilder.create();
-		TuleapBacklogItem backlogItem = gson.fromJson(jsonObject, TuleapBacklogItem.class);
-
-		return backlogItem;
+	@Override
+	protected JsonDeserializer<TuleapBacklogItem> getDeserializer() {
+		return new TuleapBacklogItemDeserializer();
 	}
 
 }

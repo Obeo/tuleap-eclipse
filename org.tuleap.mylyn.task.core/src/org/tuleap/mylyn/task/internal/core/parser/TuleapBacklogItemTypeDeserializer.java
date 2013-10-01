@@ -17,6 +17,7 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
+import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItemType;
 
 /**
@@ -26,6 +27,17 @@ import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItemType;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class TuleapBacklogItemTypeDeserializer extends AbstractTuleapConfigurationDeserializer<TuleapBacklogItemType> {
+
+	/**
+	 * Constructor that receives the related project Configuration.
+	 * 
+	 * @param projectConfiguration
+	 *            The project configuration;
+	 */
+	public TuleapBacklogItemTypeDeserializer(TuleapProjectConfiguration projectConfiguration) {
+		super(projectConfiguration);
+	}
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -47,6 +59,7 @@ public class TuleapBacklogItemTypeDeserializer extends AbstractTuleapConfigurati
 				itemName, description, lastUpdateDate);
 
 		tuleapBacklogItemType = this.populateConfigurableFields(tuleapBacklogItemType, jsonObject);
+		projectConfiguration.addBacklogItemType(tuleapBacklogItemType);
 
 		return tuleapBacklogItemType;
 	}

@@ -17,6 +17,7 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
+import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
 
 /**
@@ -31,6 +32,16 @@ public class TuleapMilestoneTypeDeserializer extends AbstractTuleapConfiguration
 	 * The cardwall url key word.
 	 */
 	private static final String CARDWALL_URL = "cardwall_url"; //$NON-NLS-1$
+
+	/**
+	 * Constructor that receives the related project Configuration.
+	 * 
+	 * @param projectConfiguration
+	 *            The project configuration;
+	 */
+	public TuleapMilestoneTypeDeserializer(TuleapProjectConfiguration projectConfiguration) {
+		super(projectConfiguration);
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -55,11 +66,12 @@ public class TuleapMilestoneTypeDeserializer extends AbstractTuleapConfiguration
 			cardwallUrl = jsonElement.getAsString();
 		}
 
-		TuleapMilestoneType tuleapMilestoneType = new TuleapMilestoneType(identifier, url, label, itemName,
+		TuleapMilestoneType milestoneType = new TuleapMilestoneType(identifier, url, label, itemName,
 				description, lastUpdateDate, cardwallUrl);
 
-		tuleapMilestoneType = this.populateConfigurableFields(tuleapMilestoneType, jsonObject);
+		milestoneType = this.populateConfigurableFields(milestoneType, jsonObject);
+		projectConfiguration.addMilestoneType(milestoneType);
 
-		return tuleapMilestoneType;
+		return milestoneType;
 	}
 }

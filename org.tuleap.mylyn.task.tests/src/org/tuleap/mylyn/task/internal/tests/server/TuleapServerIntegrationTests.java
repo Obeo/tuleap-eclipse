@@ -12,7 +12,6 @@ package org.tuleap.mylyn.task.internal.tests.server;
 
 import com.google.common.collect.ImmutableList;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -23,11 +22,8 @@ import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestConnector;
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItemType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
@@ -113,82 +109,6 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 			assertEquals(2, milestones.size());
 			ImmutableList<TuleapBacklogItem> backlogItems = topPlanning.getBacklogItems();
 			assertEquals(3, backlogItems.size());
-		} catch (CoreException e) {
-			fail(e.getMessage());
-		}
-	}
-
-	/**
-	 * Test of Milestone Types retrieval.
-	 */
-	@Test
-	public void testGetMilestoneTypes() {
-		TestLogger logger = new TestLogger();
-		TuleapRestConnector restConnector = new TuleapRestConnector(this.getServerUrl(), "v3.14", logger); //$NON-NLS-1$
-		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
-		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
-
-		TuleapRestClient tuleapServer = new TuleapRestClient(restConnector, tuleapJsonParser,
-				tuleapJsonSerializer, this.repository, logger);
-		try {
-			List<TuleapMilestoneType> milestoneTypes = tuleapServer.getMilestoneTypes(3, null);
-			assertEquals(2, milestoneTypes.size());
-
-			TuleapMilestoneType firstMilestoneType = milestoneTypes.get(0);
-			assertEquals(901, firstMilestoneType.getIdentifier());
-			assertEquals("Releases", firstMilestoneType.getLabel()); //$NON-NLS-1$
-			assertEquals("localhost:3001/api/v3.14/milestone_types/901", firstMilestoneType.getUrl()); //$NON-NLS-1$
-			Collection<AbstractTuleapField> fields = firstMilestoneType.getFields();
-			assertEquals(5, fields.size());
-
-			TuleapMilestoneType secondMilestoneType = milestoneTypes.get(1);
-			assertEquals(902, secondMilestoneType.getIdentifier());
-			assertEquals("Sprints", secondMilestoneType.getLabel()); //$NON-NLS-1$
-			assertEquals("localhost:3001/api/v3.14/milestone_types/902", secondMilestoneType.getUrl()); //$NON-NLS-1$
-			Collection<AbstractTuleapField> theFields = secondMilestoneType.getFields();
-			assertEquals(7, theFields.size());
-
-			// All Milestone Type JSON deserializer tests are done in the TuleapMilestoneTypeDeserializerTests
-			// class
-		} catch (CoreException e) {
-			fail(e.getMessage());
-		}
-	}
-
-	/**
-	 * Test of BacklogItem Types retrieval.
-	 */
-	@Test
-	public void testGetBacklogItemTypes() {
-		TestLogger logger = new TestLogger();
-		TuleapRestConnector restConnector = new TuleapRestConnector(this.getServerUrl(), "v3.14", logger); //$NON-NLS-1$
-		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
-		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
-
-		TuleapRestClient tuleapServer = new TuleapRestClient(restConnector, tuleapJsonParser,
-				tuleapJsonSerializer, this.repository, logger);
-		try {
-			List<TuleapBacklogItemType> backlogItemTypes = tuleapServer.getBacklogitemTypes(3, null);
-			assertEquals(2, backlogItemTypes.size());
-
-			TuleapBacklogItemType firstBacklogItemType = backlogItemTypes.get(0);
-			assertEquals(801, firstBacklogItemType.getIdentifier());
-			assertEquals("Epics", firstBacklogItemType.getLabel()); //$NON-NLS-1$
-			assertEquals("localhost:3001/api/v3.14/backlog_item_types/801", firstBacklogItemType.getUrl()); //$NON-NLS-1$
-			Collection<AbstractTuleapField> fields = firstBacklogItemType.getFields();
-			assertEquals(4, fields.size());
-
-			TuleapBacklogItemType secondBacklogItemType = backlogItemTypes.get(1);
-			assertEquals(802, secondBacklogItemType.getIdentifier());
-			assertEquals("User Stories", secondBacklogItemType.getLabel()); //$NON-NLS-1$
-			assertEquals("localhost:3001/api/v3.14/backlog_item_types/802", secondBacklogItemType.getUrl()); //$NON-NLS-1$
-
-			Collection<AbstractTuleapField> theFields = secondBacklogItemType.getFields();
-			assertEquals(10, theFields.size());
-
-			// All Milestone Type JSON deserializer tests are done in the
-			// TuleapBacklogItemTypeDeserializerTests class
-
 		} catch (CoreException e) {
 			fail(e.getMessage());
 		}
