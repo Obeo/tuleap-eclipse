@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
@@ -70,8 +69,8 @@ public class TuleapSoapClient {
 	 * 
 	 * @param repository
 	 *            The task repository
-	 * @param weblocation
-	 *            The location of the tracker
+	 * @param tuleapSoapConnector
+	 *            The Tuleap SOAP connector
 	 * @param tuleapSoapParser
 	 *            The Tuleap SOAP parser
 	 * @param tuleapSoapSerializer
@@ -79,9 +78,9 @@ public class TuleapSoapClient {
 	 * @param logger
 	 *            the logger
 	 */
-	public TuleapSoapClient(TaskRepository repository, AbstractWebLocation weblocation,
+	public TuleapSoapClient(TaskRepository repository, TuleapSoapConnector tuleapSoapConnector,
 			TuleapSoapParser tuleapSoapParser, TuleapSoapSerializer tuleapSoapSerializer, ILog logger) {
-		this.soapConnector = new TuleapSoapConnector(weblocation);
+		this.soapConnector = tuleapSoapConnector;
 		this.taskRepository = repository;
 		this.tuleapSoapParser = tuleapSoapParser;
 		this.tuleapSoapSerializer = tuleapSoapSerializer;

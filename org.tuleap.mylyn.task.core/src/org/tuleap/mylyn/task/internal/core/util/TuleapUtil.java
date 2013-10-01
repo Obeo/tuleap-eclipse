@@ -29,6 +29,12 @@ public final class TuleapUtil {
 	public static final String TASK_DATA_ID_SEPARATOR = "-"; //$NON-NLS-1$
 
 	/**
+	 * The identifier to use for irrelevant ids. This will be used for the configuration id of Tuleap top
+	 * plannings
+	 */
+	public static final int IRRELEVANT_ID = -1;
+
+	/**
 	 * The constructor.
 	 */
 	private TuleapUtil() {

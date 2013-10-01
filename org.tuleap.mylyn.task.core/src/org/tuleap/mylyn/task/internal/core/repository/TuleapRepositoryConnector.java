@@ -338,8 +338,11 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			try {
 				List<TuleapTopPlanning> topPlannings = restClient.getTopPlannings(projectId, monitor);
 				for (TuleapTopPlanning tuleapTopPlanning : topPlannings) {
+					String taskDataId = TuleapUtil.getTaskDataId(projectId, TuleapUtil.IRRELEVANT_ID,
+							tuleapTopPlanning.getId());
+
 					TaskData taskData = new TaskData(attributeMapper, this.getConnectorKind(), taskRepository
-							.getRepositoryUrl(), String.valueOf(tuleapTopPlanning.getId()));
+							.getRepositoryUrl(), taskDataId);
 					planningTaskDataConverter.populateTaskData(taskData, tuleapTopPlanning);
 					try {
 						collector.accept(taskData);

@@ -24,6 +24,7 @@ import org.tuleap.mylyn.task.internal.core.client.rest.ITuleapAPIVersions;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestConnector;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
+import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapConnector;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapParser;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapSerializer;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
@@ -106,7 +107,9 @@ public class TuleapClientManager implements IRepositoryListener {
 		// Create the SOAP client
 		TuleapSoapParser tuleapSoapParser = new TuleapSoapParser();
 		TuleapSoapSerializer tuleapSoapSerializer = new TuleapSoapSerializer();
-		TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(taskRepository, webLocation,
+		TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(webLocation);
+
+		TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(taskRepository, tuleapSoapConnector,
 				tuleapSoapParser, tuleapSoapSerializer, logger);
 		this.soapClientCache.put(taskRepository, tuleapSoapClient);
 
