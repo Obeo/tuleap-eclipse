@@ -34,7 +34,7 @@
           },
           {
             "field_id" : 861,
-            "bind_value_id" : "Do something useful"
+            "value" : "Do something useful"
           },
           {
             "field_id" : 862,
