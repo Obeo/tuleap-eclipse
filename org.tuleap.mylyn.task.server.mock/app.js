@@ -58,70 +58,79 @@ app.get('/api/v3.14', api.get);
 
 //User
 var user = require('./controllers/user.js');
-app.options('/api/v3.14/user', auth, user.options);
+app.options('/api/v3.14/user', user.options);
 app.get('/api/v3.14/user', auth, user.get);
 
 // Projects
 var projects = require('./controllers/projects.js');
-app.options('/api/v3.14/projects', auth, projects.optionsList);
+app.options('/api/v3.14/projects', projects.optionsList);
 app.get('/api/v3.14/projects', auth, projects.list);
 
-app.options('/api/v3.14/projects/:projectId', auth, projects.options);
+app.options('/api/v3.14/projects/:projectId', projects.options);
 app.get('/api/v3.14/projects/:projectId', auth, projects.get);
 
 // Trackers
 var trackers = require('./controllers/trackers.js');
-app.options('/api/v3.14/projects/:projectId/trackers', auth, trackers.optionsList);
+app.options('/api/v3.14/projects/:projectId/trackers', trackers.optionsList);
 app.get('/api/v3.14/projects/:projectId/trackers', auth, trackers.list);
 
-app.options('/api/v3.14/trackers/:trackerId', auth, trackers.options);
+app.options('/api/v3.14/trackers/:trackerId', trackers.options);
 app.get('/api/v3.14/trackers/:trackerId', auth, trackers.get);
 
 // Artifacts
 var artifacts = require('./controllers/artifacts.js');
-app.options('/api/v3.14/artifacts/:artifactId', auth, artifacts.options);
+app.options('/api/v3.14/artifacts/:artifactId', artifacts.options);
 app.get('/api/v3.14/artifacts/:artifactId', auth, artifacts.get);
 
 // Milestone types
 var milestone_types = require('./controllers/milestone_types.js');
 // Getting all the milestone types of a project
-app.options('/api/v3.14/projects/:projectId/milestone_types', auth, milestone_types.optionsList);
+app.options('/api/v3.14/projects/:projectId/milestone_types', milestone_types.optionsList);
 app.get('/api/v3.14/projects/:projectId/milestone_types', auth, milestone_types.list);
 // Getting a milestone type by id
-app.options('/api/v3.14/milestone_types/:typeId', auth, milestone_types.options);
+app.options('/api/v3.14/milestone_types/:typeId', milestone_types.options);
 app.get('/api/v3.14/milestone_types/:typeId', auth, milestone_types.get);
 
 // Backlog item types
 var milestone_types = require('./controllers/backlog_item_types.js');
 // Getting all the milestone types of a project
-app.options('/api/v3.14/projects/:projectId/backlog_item_types', auth, milestone_types.optionsList);
+app.options('/api/v3.14/projects/:projectId/backlog_item_types', milestone_types.optionsList);
 app.get('/api/v3.14/projects/:projectId/backlog_item_types', auth, milestone_types.list);
 // Getting a milestone type by id
-app.options('/api/v3.14/backlog_item_types/:typeId', auth, milestone_types.options);
+app.options('/api/v3.14/backlog_item_types/:typeId', milestone_types.options);
 app.get('/api/v3.14/backlog_item_types/:typeId', auth, milestone_types.get);
+
+//Card types
+var card_types = require('./controllers/card_types.js');
+//Getting all the milestone types of a project
+app.options('/api/v3.14/projects/:projectId/card_types', card_types.optionsList);
+app.get('/api/v3.14/projects/:projectId/card_types', auth, card_types.list);
+//Getting a milestone type by id
+app.options('/api/v3.14/card_types/:typeId', card_types.options);
+app.get('/api/v3.14/card_types/:typeId', auth, card_types.get);
 
 // Top plannings
 var top_plannings = require('./controllers/top_plannings.js');
 // Getting the top plannings of a project
-app.options('/api/v3.14/projects/:projectId/top_plannings', auth, top_plannings.optionsList);
+app.options('/api/v3.14/projects/:projectId/top_plannings', top_plannings.optionsList);
 app.get('/api/v3.14/projects/:projectId/top_plannings', auth, top_plannings.list);
 // Getting the milestones of a top planning
-app.options('/api/v3.14/top_plannings/:topPlanningId/milestones', auth, top_plannings.optionsMilestones);
+app.options('/api/v3.14/top_plannings/:topPlanningId/milestones', top_plannings.optionsMilestones);
 app.get('/api/v3.14/top_plannings/:topPlanningId/milestones', auth, top_plannings.milestones);
 //Getting the backlog items of a top planning
-app.options('/api/v3.14/top_plannings/:topPlanningId/backlog_items', auth, top_plannings.optionsBacklogItems);
+app.options('/api/v3.14/top_plannings/:topPlanningId/backlog_items', top_plannings.optionsBacklogItems);
 app.get('/api/v3.14/top_plannings/:topPlanningId/backlog_items', auth, top_plannings.backlogItems);
 
 // Milestones
 var milestones = require('./controllers/milestones.js');
 //Getting the list of milestones
-app.options('/api/v3.14/milestones', auth, milestones.optionsList);
+app.options('/api/v3.14/milestones', milestones.optionsList);
 app.get('/api/v3.14/milestones', auth, milestones.list);
 //Getting the sub-milestones of a milestone
-app.options('/api/v3.14/milestones/:milestoneId/submilestones', auth, milestones.optionsSubmilestones);
+app.options('/api/v3.14/milestones/:milestoneId/submilestones', milestones.optionsSubmilestones);
 app.get('/api/v3.14/milestones/:milestoneId/submilestones', auth, milestones.submilestones);
 //Getting the backlog items of a milestone
-app.options('/api/v3.14/milestones/:milestoneId/backlog_items', auth, milestones.optionsBacklogItems);
+app.options('/api/v3.14/milestones/:milestoneId/backlog_items', milestones.optionsBacklogItems);
 app.get('/api/v3.14/milestones/:milestoneId/backlog_items', auth, milestones.backlogItems);
 
 

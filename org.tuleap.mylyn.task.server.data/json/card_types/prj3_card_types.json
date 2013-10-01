@@ -1,0 +1,40 @@
+[
+  {
+    "id" : 7000,
+    "label" : "Tasks",
+    "description" : "The description of tasks",
+    "url" : "/card_types/7000",
+    "project_id" : 3,
+    "fields" : [
+      {
+        "field_id" : 8000,
+        "label" : "Remaining effort",
+        "type" : "float",
+        "permissions" : [
+          "read", "create", "update"
+        ]
+      },
+      {
+        "field_id" : 8001,
+        "label" : "Assigned To",
+        "type" : "msb",
+        "binding" : {
+          "bind_type" : "users",
+          "bind_list" : [
+            {
+              "user_group_id" : 0,
+              "user_group_name" : "Project Admins"
+            },
+            {
+              "user_group_id" : 1,
+              "user_group_name" : "Project Members"
+            }
+          ]
+        },
+        "permissions" : [
+            "read", "create", "update"
+        ]
+      }
+    ]
+  }
+]
