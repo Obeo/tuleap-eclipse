@@ -22,7 +22,6 @@ import org.tuleap.mylyn.task.internal.tests.repository.TuleapRepositoryConnector
 import org.tuleap.mylyn.task.internal.tests.repository.TuleapTaskDataHandlerTests;
 import org.tuleap.mylyn.task.internal.tests.server.TaskRepositoryCredentialsTest;
 import org.tuleap.mylyn.task.internal.tests.util.TuleapUtilTests;
-import org.tuleap.mylyn.task.internal.tests.validator.TuleapValidatorTests;
 
 /**
  * The suite of unit tests that run in "eclipse plug-in" mode.
@@ -33,7 +32,7 @@ import org.tuleap.mylyn.task.internal.tests.validator.TuleapValidatorTests;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({TuleapSoapParserTests.class, TuleapUtilTests.class,
 		TuleapRepositoryConnectorTests.class, TuleapTaskDataHandlerTests.class, TuleapWorkflowTests.class,
-		TaskRepositoryCredentialsTest.class, TuleapValidatorTests.class })
+		TaskRepositoryCredentialsTest.class })
 public final class AllTuleapEclipseTests {
 
 	/**
