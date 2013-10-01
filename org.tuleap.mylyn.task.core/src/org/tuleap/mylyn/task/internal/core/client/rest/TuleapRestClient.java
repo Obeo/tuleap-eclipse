@@ -14,8 +14,6 @@ package org.tuleap.mylyn.task.internal.core.client.rest;
 // - com.google.json
 // - org.restlet
 
-import com.google.common.collect.Lists;
-
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -218,13 +216,13 @@ public class TuleapRestClient {
 
 				if (projectConfig.hasService(ITuleapProjectServices.AGILE_DASHBOARD)) {
 					// Retrieve Milestone types for the project
-					loadMilestoneTypes(projectConfig, null);
+					loadMilestoneTypes(projectConfig, monitor);
 
 					// Retrieve BacklogItem types for the project
-					loadBacklogItemTypes(projectConfig, null);
+					loadBacklogItemTypes(projectConfig, monitor);
 
 					// Retrieve Card types for the project
-					loadCardTypes(projectConfig, null);
+					loadCardTypes(projectConfig, monitor);
 				}
 			}
 		} else {
@@ -597,7 +595,6 @@ public class TuleapRestClient {
 	 */
 	public List<TuleapTopPlanning> getTopPlannings(int projectId, IProgressMonitor monitor)
 			throws CoreException {
-		List<TuleapTopPlanning> result = Lists.newArrayList();
 		RestResources restResources = tuleapRestConnector.resources(credentials);
 
 		// 1- Retrieve the list of top planning ids
@@ -638,7 +635,7 @@ public class TuleapRestClient {
 			}
 		}
 
-		return result;
+		return topPlannings;
 	}
 
 	/**
