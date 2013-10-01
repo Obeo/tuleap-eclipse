@@ -25,11 +25,6 @@ public interface ITuleapConstants {
 	String CONNECTOR_KIND = "tuleap"; //$NON-NLS-1$
 
 	/**
-	 * The descriptor file.
-	 */
-	String TULEAP_DESCRIPTOR_FILE = "tuleap.descriptorFile"; //$NON-NLS-1$
-
-	/**
 	 * The task separator.
 	 */
 	String REPOSITORY_TASK_URL_SEPARATOR = "&aid="; //$NON-NLS-1$
@@ -43,11 +38,6 @@ public interface ITuleapConstants {
 	 * The group id separator.
 	 */
 	String REPOSITORY_GROUP_ID_URL_SEPARATOR = "&group_id="; //$NON-NLS-1$
-
-	/**
-	 * The ID representing the UTC timezone.
-	 */
-	String TIMEZONE_UTC = "UTC"; //$NON-NLS-1$
 
 	/**
 	 * The ID of the default static binding.
@@ -64,31 +54,6 @@ public interface ITuleapConstants {
 	 * "https://<domainName>/plugins/tracker/?groupd_id=<groupdId>"
 	 */
 	String TULEAP_REPOSITORY_URL_STRUCTURE = "/plugins/tracker/?group_id="; //$NON-NLS-1$
-
-	/**
-	 * The suffix for the task data "leave" operation.
-	 */
-	String LEAVE_OPERATION = "leave"; //$NON-NLS-1$
-
-	/**
-	 * The url used to invoke the soap v1 services.
-	 */
-	String SOAP_V1_URL = "/soap/"; //$NON-NLS-1$
-
-	/**
-	 * The url used to invoke the soap v2 services.
-	 */
-	String SOAP_V2_URL = "/plugins/tracker/soap/"; //$NON-NLS-1$
-
-	/**
-	 * The separator between the project name and the tracker id.
-	 */
-	String CONFIGURATION_NAME_SEPARATOR = ":"; //$NON-NLS-1$
-
-	/**
-	 * The separator used in the id of the task data.
-	 */
-	String TASK_DATA_ID_SEPARATOR = "-"; //$NON-NLS-1$
 
 	/**
 	 * Indicates that the user can read the field.
@@ -109,16 +74,6 @@ public interface ITuleapConstants {
 	 * The UTF-8 constants.
 	 */
 	String UTF8 = "UTF-8"; //$NON-NLS-1$
-
-	/**
-	 * The start delimiter of the tracker id.
-	 */
-	String TRACKER_ID_START_DELIMITER = "["; //$NON-NLS-1$
-
-	/**
-	 * The end delimiter of the tracker id.
-	 */
-	String TRACKER_ID_END_DELIMITER = "]"; //$NON-NLS-1$
 
 	/**
 	 * The identifier of the none binding.

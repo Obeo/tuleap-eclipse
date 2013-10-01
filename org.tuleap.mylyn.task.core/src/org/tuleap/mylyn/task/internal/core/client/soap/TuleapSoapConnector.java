@@ -71,7 +71,6 @@ import org.tuleap.mylyn.task.internal.core.model.workflow.TuleapWorkflow;
 import org.tuleap.mylyn.task.internal.core.model.workflow.TuleapWorkflowTransition;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
-import org.tuleap.mylyn.task.internal.core.util.TuleapUtil;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.TuleapSoapServiceLocator;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.TuleapTrackerV5APILocatorImpl;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.CodendiAPIPortType;
@@ -111,6 +110,16 @@ import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TuleapTrackerV5APIPortTy
  * @since 0.7
  */
 public class TuleapSoapConnector {
+	/**
+	 * The url used to invoke the soap v1 services.
+	 */
+	private static final String SOAP_V1_URL = "/soap/"; //$NON-NLS-1$
+
+	/**
+	 * The url used to invoke the soap v2 services.
+	 */
+	private static final String SOAP_V2_URL = "/plugins/tracker/soap/"; //$NON-NLS-1$
+
 	/**
 	 * The location of the configuration file.
 	 */
@@ -193,14 +202,14 @@ public class TuleapSoapConnector {
 		if (index != -1) {
 			soapv1url = soapv1url.substring(0, index);
 		}
-		soapv1url = soapv1url + ITuleapConstants.SOAP_V1_URL;
+		soapv1url = soapv1url + SOAP_V1_URL;
 
 		String soapv2url = trackerLocation.getUrl();
 		index = soapv2url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
 		if (index != -1) {
 			soapv2url = soapv2url.substring(0, index);
 		}
-		soapv2url = soapv2url + ITuleapConstants.SOAP_V2_URL;
+		soapv2url = soapv2url + SOAP_V2_URL;
 
 		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
 		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
@@ -774,7 +783,7 @@ public class TuleapSoapConnector {
 						DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy"); //$NON-NLS-1$
 						try {
 							criteriaValueDate = new CriteriaValueDate(operation, Long.valueOf(
-									TuleapUtil.parseDate(dateFormat.parse(values))).intValue());
+									dateFormat.parse(values).getTime() / 1000L).intValue());
 						} catch (ParseException e) {
 							TuleapCoreActivator.log(e, true);
 						}

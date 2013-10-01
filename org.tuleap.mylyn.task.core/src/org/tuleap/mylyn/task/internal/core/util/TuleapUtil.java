@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.util;
 
-import java.util.Date;
-
 /**
  * Utility class containing various simple static utility methods.
  * 
@@ -19,45 +17,22 @@ import java.util.Date;
  * @since 0.7
  */
 public final class TuleapUtil {
-	/**
-	 * Max transfer count.
-	 */
-	private static final int MAX_TRANSFER_COUNT = 24;
 
 	/**
-	 * Transfer count.
+	 * The separator between the project name and the tracker id.
 	 */
-	private static final int TRANSFER_COUNT = 1 << MAX_TRANSFER_COUNT;
+	public static final String CONFIGURATION_NAME_SEPARATOR = ":"; //$NON-NLS-1$
+
+	/**
+	 * The separator used in the id of the task data.
+	 */
+	public static final String TASK_DATA_ID_SEPARATOR = "-"; //$NON-NLS-1$
 
 	/**
 	 * The constructor.
 	 */
 	private TuleapUtil() {
 		// prevent instantiation
-	}
-
-	/**
-	 * Returns a new {@link java.util.Date} from the given long representing the date in seconds.
-	 * 
-	 * @param seconds
-	 *            The timestamp in seconds
-	 * @return A new {@link java.util.Date} from the given long representing the date in seconds.
-	 */
-	public static Date parseDate(long seconds) {
-		// TODO SBE Remove this, it is only used in the unit test!
-		return new Date(seconds * 1000L);
-	}
-
-	/**
-	 * Returns a new long from the given {@link java.util.Date} representing the timestamp.
-	 * 
-	 * @param date
-	 *            The date
-	 * @return A new long from the given {@link java.util.Date} representing the timestamp.
-	 */
-	public static long parseDate(Date date) {
-		// TODO SBE Move this since it is only used once!
-		return date.getTime() / 1000L;
 	}
 
 	/**
@@ -88,20 +63,24 @@ public final class TuleapUtil {
 	 * @return The task data id
 	 */
 	public static String getTaskDataKey(String projectName, String configurationName, int artifactId) {
-		return projectName + ITuleapConstants.CONFIGURATION_NAME_SEPARATOR + configurationName
-				+ ITuleapConstants.TASK_DATA_ID_SEPARATOR + Integer.valueOf(artifactId).toString();
+		return projectName + CONFIGURATION_NAME_SEPARATOR + configurationName + TASK_DATA_ID_SEPARATOR
+				+ Integer.valueOf(artifactId).toString();
 	}
 
 	/**
 	 * Returns the task data id.
 	 * 
+	 * @param projectId
+	 *            The identifier of the project
+	 * @param configurationId
+	 *            The identifier of the configuration
+	 * @param elementId
+	 *            The identifier of the element
 	 * @return The task data id
 	 */
-	public static String getTaskDataId() {
-		// TODO SBE Change the identifier of the task from an integer to a string!
-		// This task data id should be computed with the id of the project, the id of the tracker and the id
-		// of the element
-		throw new UnsupportedOperationException();
+	public static String getTaskDataId(int projectId, int configurationId, int elementId) {
+		return String.valueOf(projectId) + CONFIGURATION_NAME_SEPARATOR + String.valueOf(configurationId)
+				+ TASK_DATA_ID_SEPARATOR + String.valueOf(elementId);
 	}
 
 	/**

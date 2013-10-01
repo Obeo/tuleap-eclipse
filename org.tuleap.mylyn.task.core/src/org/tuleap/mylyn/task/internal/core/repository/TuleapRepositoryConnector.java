@@ -58,6 +58,7 @@ import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
+import org.tuleap.mylyn.task.internal.core.util.TuleapUtil;
 
 /**
  * This class encapsulates common operation realized on the Tuleap repository.
@@ -311,8 +312,12 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			List<TuleapArtifact> artifacts = soapClient.getArtifactsFromQuery(query, repositoryConfiguration,
 					trackerConfiguration, monitor);
 			for (TuleapArtifact tuleapArtifact : artifacts) {
+				String taskDataId = TuleapUtil.getTaskDataId(trackerConfiguration
+						.getTuleapProjectConfiguration().getIdentifier(),
+						tuleapArtifact.getConfigurationId(), tuleapArtifact.getId());
+
 				TaskData taskData = new TaskData(attributeMapper, this.getConnectorKind(), taskRepository
-						.getRepositoryUrl(), String.valueOf(tuleapArtifact.getId()));
+						.getRepositoryUrl(), taskDataId);
 				artifactTaskDataConverter.populateTaskData(taskData, tuleapArtifact);
 
 				try {
