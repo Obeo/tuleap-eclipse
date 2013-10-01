@@ -52,11 +52,32 @@ public class TuleapBacklogItemTypeDeserializerTests extends AbstractConfiguratio
 	public void testEpicsParsing() {
 		String epics = ParserUtil.loadFile("/backlog_item_types/epics.json"); //$NON-NLS-1$
 		TuleapBacklogItemType tuleapBacklogItemType = this.parse(epics, TuleapBacklogItemType.class);
-		assertNotNull(tuleapBacklogItemType);
-		assertEquals(801, tuleapBacklogItemType.getIdentifier());
-		assertEquals("Epics", tuleapBacklogItemType.getLabel()); //$NON-NLS-1$
-		assertEquals("localhost:3001/api/v3.14/backlog_item_types/801", tuleapBacklogItemType.getUrl()); //$NON-NLS-1$
-		Collection<AbstractTuleapField> fields = tuleapBacklogItemType.getFields();
+		checkTypeEpics(tuleapBacklogItemType);
+	}
+
+	/**
+	 * Test the parsing of the first part of second file.
+	 */
+	@Test
+	public void testFirstPartUserStoriesParsing() {
+		String userStories = ParserUtil.loadFile("/backlog_item_types/user_stories.json"); //$NON-NLS-1$
+		TuleapBacklogItemType tuleapBacklogItemType = this.parse(userStories, TuleapBacklogItemType.class);
+		checkTypeUserStories(tuleapBacklogItemType);
+
+	}
+
+	/**
+	 * Checks the given backlog item type is "Epics".
+	 * 
+	 * @param backlogItemType
+	 *            The type to test.
+	 */
+	public void checkTypeEpics(TuleapBacklogItemType backlogItemType) {
+		assertNotNull(backlogItemType);
+		assertEquals(801, backlogItemType.getIdentifier());
+		assertEquals("Epics", backlogItemType.getLabel()); //$NON-NLS-1$
+		assertEquals("localhost:3001/api/v3.14/backlog_item_types/801", backlogItemType.getUrl()); //$NON-NLS-1$
+		Collection<AbstractTuleapField> fields = backlogItemType.getFields();
 		assertEquals(4, fields.size());
 		Iterator<AbstractTuleapField> iterator = fields.iterator();
 
@@ -117,18 +138,18 @@ public class TuleapBacklogItemTypeDeserializerTests extends AbstractConfiguratio
 	}
 
 	/**
-	 * Test the parsing of the first part of second file.
+	 * Checks the given backlog item type is "user stories".
+	 * 
+	 * @param backlogItemType
+	 *            The type to test.
 	 */
-	@Test
-	public void testFirstPartUserStoriesParsing() {
-		String userStories = ParserUtil.loadFile("/backlog_item_types/user_stories.json"); //$NON-NLS-1$
-		TuleapBacklogItemType tuleapBacklogItemType = this.parse(userStories, TuleapBacklogItemType.class);
-		assertNotNull(tuleapBacklogItemType);
-		assertEquals(802, tuleapBacklogItemType.getIdentifier());
-		assertEquals("User Stories", tuleapBacklogItemType.getLabel()); //$NON-NLS-1$
-		assertEquals("localhost:3001/api/v3.14/backlog_item_types/802", tuleapBacklogItemType.getUrl()); //$NON-NLS-1$
+	public void checkTypeUserStories(TuleapBacklogItemType backlogItemType) {
+		assertNotNull(backlogItemType);
+		assertEquals(802, backlogItemType.getIdentifier());
+		assertEquals("User Stories", backlogItemType.getLabel()); //$NON-NLS-1$
+		assertEquals("localhost:3001/api/v3.14/backlog_item_types/802", backlogItemType.getUrl()); //$NON-NLS-1$
 		//assertEquals("The description of user stories", tuleapBacklogItemType.getDescription()); //$NON-NLS-1$
-		Collection<AbstractTuleapField> fields = tuleapBacklogItemType.getFields();
+		Collection<AbstractTuleapField> fields = backlogItemType.getFields();
 		assertEquals(10, fields.size());
 
 		Iterator<AbstractTuleapField> iterator = fields.iterator();
@@ -186,7 +207,6 @@ public class TuleapBacklogItemTypeDeserializerTests extends AbstractConfiguratio
 		List<Boolean> thirdPermissions = fieldPermissionsFilling(true, true, true);
 
 		this.basicFieldTest(thirdField, null, "So that", 862, thirdPermissions); //$NON-NLS-1$
-
 	}
 
 	/**

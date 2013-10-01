@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItemType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
@@ -84,5 +85,26 @@ public class TuleapJsonParserTest {
 
 		// Check that the card type has been added to the project configuration
 		assertSame(cardType, provider.getProjectConfiguration().getCardType(7000));
+	}
+
+	/**
+	 * Checks the parsing of backlog item types.
+	 */
+	@Test
+	public void testParserBacklogItemTypeEpics() {
+		String json = ParserUtil.loadFile("/backlog_item_types/types.json");
+		List<TuleapBacklogItemType> types = parser.parseBacklogItemTypes(provider.getProjectConfiguration(),
+				json);
+		assertEquals(2, types.size());
+
+		TuleapBacklogItemType type = types.get(0);
+		new TuleapBacklogItemTypeDeserializerTests().checkTypeEpics(type);
+
+		type = types.get(1);
+		new TuleapBacklogItemTypeDeserializerTests().checkTypeUserStories(type);
+
+		assertEquals(2, provider.getProjectConfiguration().getAllBacklogItemTypes().size());
+		assertSame(types.get(0), provider.getProjectConfiguration().getBacklogItemType(801));
+		assertSame(types.get(1), provider.getProjectConfiguration().getBacklogItemType(802));
 	}
 }
