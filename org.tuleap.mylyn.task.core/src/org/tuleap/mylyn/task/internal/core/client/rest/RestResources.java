@@ -256,6 +256,17 @@ public final class RestResources {
 	}
 
 	/**
+	 * Provides access to the {code /projects/:projectId/card_types} HTTP resource.
+	 * 
+	 * @param projectId
+	 *            the project id
+	 * @return A resource that gives access to the {code /projects/:projectId/card_types} HTTP resource.
+	 */
+	public RestProjectsCardTypes projectsCardTypes(int projectId) {
+		return new RestProjectsCardTypes(serverUrl, apiVersion, credentials, projectId);
+	}
+
+	/**
 	 * Provides access to the {code /milestones/:id/submilestones} HTTP resource.
 	 * 
 	 * @param milestoneId

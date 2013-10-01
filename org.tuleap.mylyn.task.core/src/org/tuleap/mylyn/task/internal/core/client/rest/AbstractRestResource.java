@@ -348,6 +348,11 @@ public abstract class AbstractRestResource {
 		String BACKLOG_ITEMS = "/backlog_items"; //$NON-NLS-1$
 
 		/**
+		 * "/cards".
+		 */
+		String CARDS = "/cards"; //$NON-NLS-1$
+
+		/**
 		 * "/trackers".
 		 */
 		String TRACKERS = "/trackers"; //$NON-NLS-1$
@@ -373,11 +378,6 @@ public abstract class AbstractRestResource {
 		String REPORTS = "/reports"; //$NON-NLS-1$
 
 		/**
-		 * "/query".
-		 */
-		String QUERY = "/query"; //$NON-NLS-1$
-
-		/**
 		 * "/artifacts".
 		 */
 		String ARTIFACTS = "/artifacts"; //$NON-NLS-1$
@@ -401,6 +401,11 @@ public abstract class AbstractRestResource {
 		 * "/milestone_types".
 		 */
 		String MILESTONE_TYPES = "/milestone_types"; //$NON-NLS-1$
+
+		/**
+		 * "/milestone_types".
+		 */
+		String CARD_TYPES = "/card_types"; //$NON-NLS-1$
 
 	}
 }
