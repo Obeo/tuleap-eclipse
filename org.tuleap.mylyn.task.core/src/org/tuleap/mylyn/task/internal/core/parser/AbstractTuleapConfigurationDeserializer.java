@@ -452,17 +452,7 @@ public abstract class AbstractTuleapConfigurationDeserializer<CONFIGURATION_TYPE
 			String bindingType = fieldBinding.get(BIND_TYPE).getAsString();
 			selectBoxField.setBinding(bindingType);
 			if (BIND_TYPE_USERS.equals(bindingType)) {
-				JsonArray bindings = fieldBinding.get(BIND_LIST).getAsJsonArray();
-				for (JsonElement bindingElt : bindings) {
-					JsonObject binding = bindingElt.getAsJsonObject();
-					int ugroupId = binding.get(USER_GROUP_ID).getAsInt();
-					TuleapGroup group = projectConfiguration.getGroup(ugroupId);
-					for (TuleapPerson person : group.getMembers()) {
-						TuleapSelectBoxItem item = new TuleapSelectBoxItem(person.getId());
-						item.setLabel(person.getUserName());
-						selectBoxField.addItem(item);
-					}
-				}
+				fillUsers(selectBoxField, fieldBinding);
 			}
 		}
 
@@ -471,6 +461,30 @@ public abstract class AbstractTuleapConfigurationDeserializer<CONFIGURATION_TYPE
 				&& fieldSemantic.get(JSON_CONTRIBUTORS).getAsJsonObject().get(FIELD_ID).getAsInt() == selectBoxField
 						.getIdentifier()) {
 			selectBoxField.setSemanticContributor(true);
+		}
+	}
+
+	/**
+	 * Fills the users that belong to the cound user groups.
+	 * 
+	 * @param selectBoxField
+	 *            The select box in which to put the users.
+	 * @param fieldBinding
+	 *            The JSON object that contains the group bindings configuration.
+	 */
+	private void fillUsers(AbstractTuleapSelectBox selectBoxField, JsonObject fieldBinding) {
+		JsonArray bindings = fieldBinding.get(BIND_LIST).getAsJsonArray();
+		for (JsonElement bindingElt : bindings) {
+			JsonObject binding = bindingElt.getAsJsonObject();
+			int ugroupId = binding.get(USER_GROUP_ID).getAsInt();
+			TuleapGroup group = projectConfiguration.getGroup(ugroupId);
+			if (group != null) {
+				for (TuleapPerson person : group.getMembers()) {
+					TuleapSelectBoxItem item = new TuleapSelectBoxItem(person.getId());
+					item.setLabel(person.getUserName());
+					selectBoxField.addItem(item);
+				}
+			}
 		}
 	}
 
