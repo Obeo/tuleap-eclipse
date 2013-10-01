@@ -34,7 +34,7 @@
       {
         "id" : 250,
         "label" : "Sprint 1",
-        "start_date" : 12345678,
+        "start_date" : "2013-09-22T11:44:18.963Z",
         "duration" : 15,
         "capacity" : 24.5,
         "url" : "/milestones/300",
@@ -55,7 +55,7 @@
           },
           {
             "field_id" : 963,
-            "value" : 12345678
+            "value" : "2013-09-22T11:44:18.963Z"
           },
           {
             "field_id" : 964,
@@ -74,7 +74,7 @@
       {
         "id" : 251,
         "label" : "Sprint 2",
-        "start_date" : 12355678,
+        "start_date" : "2013-09-21T11:44:18.963Z",
         "duration" : 21,
         "capacity" : 28.5,
         "url" : "/milestones/301",
@@ -95,7 +95,7 @@
           },
           {
             "field_id" : 963,
-            "value" : 12355678
+            "value" : "2013-09-22T11:44:18.963Z"
           },
           {
             "field_id" : 964,
@@ -114,7 +114,7 @@
       {
         "id" : 252,
         "label" : "Sprint 3",
-        "start_date" : 12365678,
+        "start_date" : "2013-09-20T11:44:18.963Z",
         "duration" : 20,
         "capacity" : 26.5,
         "url" : "/milestones/302",
@@ -135,7 +135,7 @@
           },
           {
             "field_id" : 963,
-            "value" : 12365678
+            "value" : "2013-09-22T11:44:18.963Z"
           },
           {
             "field_id" : 964,
@@ -192,5 +192,5 @@
         "value" : "first, second, third"
       }
     ]
-  } 
+  }
 ]

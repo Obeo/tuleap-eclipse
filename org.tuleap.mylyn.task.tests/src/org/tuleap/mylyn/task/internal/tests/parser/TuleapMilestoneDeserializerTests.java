@@ -58,6 +58,29 @@ public class TuleapMilestoneDeserializerTests extends AbstractDeserializerTest<T
 	public void testRelease200Parsing() throws ParseException {
 		String release200 = ParserUtil.loadFile("/milestones/release200.json");
 		TuleapMilestone tuleapMilestone = this.parse(release200, TuleapMilestone.class);
+		checkRelease200(tuleapMilestone);
+	}
+
+	/**
+	 * Test the parsing of the data set of the release 300.
+	 * 
+	 * @throws Exception
+	 *             If something goes wrong that shouldn't.
+	 */
+	@Test
+	public void testRelease201Parsing() throws Exception {
+		String release201 = ParserUtil.loadFile("/milestones/release201.json");
+		TuleapMilestone tuleapMilestone = this.parse(release201, TuleapMilestone.class);
+		checkRelease201(tuleapMilestone);
+	}
+
+	/**
+	 * Checks the content of the given milestone corresponds to release 200. Mutualized between several tests.
+	 * 
+	 * @param tuleapMilestone
+	 * @throws ParseException
+	 */
+	public void checkRelease200(TuleapMilestone tuleapMilestone) throws ParseException {
 		assertNotNull(tuleapMilestone);
 
 		assertEquals(200, tuleapMilestone.getId());
@@ -148,19 +171,16 @@ public class TuleapMilestoneDeserializerTests extends AbstractDeserializerTest<T
 		assertEquals("/milestones/302", subMilestone.getUrl()); //$NON-NLS-1$
 		assertEquals("/milestones?id=302&group_id=3", subMilestone.getHtmlUrl()); //$NON-NLS-1$
 		assertEquals(902, subMilestone.getConfigurationId());
-
 	}
 
 	/**
-	 * Test the parsing of the data set of the release 300.
+	 * Checks the content of the given milestone corresponds to release 201. Mutualized between several test
+	 * cases.
 	 * 
-	 * @throws Exception
-	 *             If something goes wrong that shouldn't.
+	 * @param tuleapMilestone
+	 * @throws ParseException
 	 */
-	@Test
-	public void testRelease201Parsing() throws Exception {
-		String release201 = ParserUtil.loadFile("/milestones/release201.json");
-		TuleapMilestone tuleapMilestone = this.parse(release201, TuleapMilestone.class);
+	public void checkRelease201(TuleapMilestone tuleapMilestone) throws ParseException {
 		assertNotNull(tuleapMilestone);
 
 		assertEquals(201, tuleapMilestone.getId());
