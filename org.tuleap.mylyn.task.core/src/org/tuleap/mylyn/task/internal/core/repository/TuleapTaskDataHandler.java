@@ -15,7 +15,6 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
@@ -25,10 +24,10 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.data.TuleapConfigurableElementMapper;
 import org.tuleap.mylyn.task.internal.core.data.converter.ArtifactTaskDataConverter;
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableFieldsConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
@@ -108,26 +107,27 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		}
 
 		boolean isInitialized = false;
-		TuleapServerConfiguration repositoryConfiguration = connector.getRepositoryConfiguration(repository,
-				true, monitor);
+		TuleapServerConfiguration repositoryConfiguration = this.connector.getRepositoryConfiguration(
+				repository, true, monitor);
 		if (repositoryConfiguration != null) {
 			// Sets the creation date and last modification date.
-			if (this.connector instanceof AbstractRepositoryConnector
-					&& ((AbstractRepositoryConnector)this.connector).getTaskMapping(taskData) instanceof TaskMapper
-					&& initializationData instanceof TuleapTaskMapping) {
+			if (initializationData instanceof TuleapTaskMapping) {
 				TuleapTaskMapping tuleapTaskMapping = (TuleapTaskMapping)initializationData;
 
-				TuleapTrackerConfiguration trackerConfiguration = tuleapTaskMapping.getTracker();
-				if (trackerConfiguration != null) {
+				AbstractTuleapConfigurableFieldsConfiguration configuration = tuleapTaskMapping
+						.getConfiguration();
+				if (configuration != null) {
 					TuleapConfigurableElementMapper tuleapConfigurableElementMapper = new TuleapConfigurableElementMapper(
-							taskData, trackerConfiguration);
+							taskData, configuration);
 					tuleapConfigurableElementMapper.initializeEmptyTaskData();
+
+					// TODO SBE Should we do more for other types of configuration? I don't think so... yet
 
 					Date now = new Date();
 					tuleapConfigurableElementMapper.setCreationDate(now);
 					tuleapConfigurableElementMapper.setModificationDate(now);
 					tuleapConfigurableElementMapper.setSummary(TuleapMylynTasksMessages.getString(
-							"TuleapTaskDataHandler.DefaultNewTitle", trackerConfiguration.getItemName())); //$NON-NLS-1$
+							"TuleapTaskDataHandler.DefaultNewTitle", configuration.getItemName())); //$NON-NLS-1$
 
 					isInitialized = true;
 				}
@@ -203,6 +203,8 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 */
 	@Override
 	public boolean canInitializeSubTaskData(TaskRepository repository, ITask task) {
+		// TODO SBE Should we support that to improve performances? maybe but it could require improvements in
+		// the REST/SOAP API
 		return false;
 	}
 

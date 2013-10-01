@@ -89,10 +89,10 @@ public class NewTuleapTaskWizard extends NewTaskWizard implements INewWizard {
 			/**
 			 * {@inheritDoc}
 			 * 
-			 * @see org.tuleap.mylyn.task.internal.core.repository.TuleapTaskMapping#getTracker()
+			 * @see org.tuleap.mylyn.task.internal.core.repository.TuleapTaskMapping#getConfiguration()
 			 */
 			@Override
-			public TuleapTrackerConfiguration getTracker() {
+			public TuleapTrackerConfiguration getConfiguration() {
 				return trackerSelected;
 			}
 		};

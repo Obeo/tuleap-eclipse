@@ -12,18 +12,20 @@ package org.tuleap.mylyn.task.internal.tests;
 
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
-import org.eclipse.mylyn.internal.tasks.core.TaskList;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tests.util.TestFixture;
 import org.junit.After;
 import org.junit.Before;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
-import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
 
 /**
  * Utility parent class for all Mylyn Tuleap unit tests.
@@ -31,7 +33,6 @@ import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
-@SuppressWarnings("restriction")
 public abstract class AbstractTuleapTests {
 	/**
 	 * The Tuleap repository connector.
@@ -39,19 +40,9 @@ public abstract class AbstractTuleapTests {
 	protected ITuleapRepositoryConnector connector;
 
 	/**
-	 * The tasks repository manager.
-	 */
-	protected TaskRepositoryManager manager;
-
-	/**
 	 * The Mylyn tasks repository.
 	 */
 	protected TaskRepository repository;
-
-	/**
-	 * The tasks list.
-	 */
-	protected TaskList taskList;
 
 	/**
 	 * Called before every single test.
@@ -60,7 +51,6 @@ public abstract class AbstractTuleapTests {
 	public void setUp() {
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(
 				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
-		manager = TasksUiPlugin.getRepositoryManager();
 
 		try {
 			TestFixture.resetTaskListAndRepositories();
@@ -70,7 +60,11 @@ public abstract class AbstractTuleapTests {
 			e.printStackTrace();
 		}
 
-		this.connector = new TuleapRepositoryConnector();
+		AbstractRepositoryConnector repositoryConnector = TasksUi
+				.getRepositoryConnector(ITuleapConstants.CONNECTOR_KIND);
+		assertThat(repositoryConnector, is(instanceOf(ITuleapRepositoryConnector.class)));
+
+		this.connector = (ITuleapRepositoryConnector)repositoryConnector;
 		this.repository = new TaskRepository(ITuleapConstants.CONNECTOR_KIND, this.getServerUrl());
 		this.repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(
 				"admin", "password"), true); //$NON-NLS-1$ //$NON-NLS-2$
@@ -90,7 +84,7 @@ public abstract class AbstractTuleapTests {
 			// CHECKSTYLE:ON
 			e.printStackTrace();
 		}
-		manager.clearRepositories();
+		TasksUiPlugin.getRepositoryManager().clearRepositories();
 	}
 
 	/**

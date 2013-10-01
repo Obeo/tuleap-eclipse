@@ -11,8 +11,8 @@
 package org.tuleap.mylyn.task.internal.core.repository;
 
 import org.eclipse.mylyn.tasks.core.TaskMapping;
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableFieldsConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 
 /**
  * The Tuleap task mapping provides additional mapping compared to the regular TaskMapping.
@@ -30,11 +30,11 @@ public class TuleapTaskMapping extends TaskMapping {
 	}
 
 	/**
-	 * Returns the tracker in which the task is created.
+	 * Returns the configuration in which the task is created.
 	 * 
-	 * @return The tracker in which the task is created.
+	 * @return The configuration in which the task is created.
 	 */
-	public TuleapTrackerConfiguration getTracker() {
+	public AbstractTuleapConfigurableFieldsConfiguration getConfiguration() {
 		return null;
 	}
 }
