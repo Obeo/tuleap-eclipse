@@ -175,7 +175,7 @@ public class TuleapJsonParser {
 	 *            The json response
 	 * @return The milestones parsed
 	 */
-	public List<TuleapMilestone> parseTuleapMilestones(String jsonResponse) {
+	public List<TuleapMilestone> parseMilestones(String jsonResponse) {
 		List<TuleapMilestone> milestones = new ArrayList<TuleapMilestone>();
 
 		JsonParser parser = new JsonParser();

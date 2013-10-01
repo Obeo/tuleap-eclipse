@@ -615,7 +615,7 @@ public class TuleapRestClient {
 			// TODO Pagination
 			String jsonMilestones = milestonesResponse.getBody();
 
-			List<TuleapMilestone> tuleapMilestones = this.jsonParser.parseTuleapMilestones(jsonMilestones);
+			List<TuleapMilestone> tuleapMilestones = this.jsonParser.parseMilestones(jsonMilestones);
 			for (TuleapMilestone tuleapMilestone : tuleapMilestones) {
 				tuleapTopPlanning.addMilestone(tuleapMilestone);
 			}
@@ -688,7 +688,7 @@ public class TuleapRestClient {
 
 		// Contains a JSON array of integers
 		String jsonMilestoneIds = milestonesResponse.getBody();
-		return this.jsonParser.parseTuleapMilestones(jsonMilestoneIds);
+		return this.jsonParser.parseMilestones(jsonMilestoneIds);
 	}
 
 }
