@@ -13,12 +13,8 @@ package org.tuleap.mylyn.task.internal.core.client.rest;
 // By design, tThis class should have no dependency to
 // - com.google.json
 // - org.restlet
+
 import com.google.common.collect.Lists;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 
 import java.util.Collections;
 import java.util.Date;
@@ -44,13 +40,8 @@ import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerReport;
-import org.tuleap.mylyn.task.internal.core.parser.TuleapBacklogItemDeserializer;
-import org.tuleap.mylyn.task.internal.core.parser.TuleapBacklogItemTypeDeserializer;
-import org.tuleap.mylyn.task.internal.core.parser.TuleapCardTypeDeserializer;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
-import org.tuleap.mylyn.task.internal.core.parser.TuleapMilestoneDeserializer;
-import org.tuleap.mylyn.task.internal.core.parser.TuleapMilestoneTypeDeserializer;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 
 /**
@@ -177,7 +168,7 @@ public class TuleapRestClient {
 		if (ITuleapServerStatus.OK == projectsGetServerResponse.getStatus()) {
 			String projectsGetResponseBody = projectsGetServerResponse.getBody();
 			List<TuleapProjectConfiguration> projectConfigurations = this.jsonParser
-					.getProjectConfigurations(projectsGetResponseBody);
+					.parseProjectConfigurations(projectsGetResponseBody);
 
 			// For each project that has the tracker service
 			for (TuleapProjectConfiguration projectConfig : projectConfigurations) {
@@ -245,8 +236,8 @@ public class TuleapRestClient {
 
 					// Retrieve Card types for the project
 					List<TuleapCardType> cardTypes = getCardTypes(projectConfig.getIdentifier(), null);
-					for (TuleapBacklogItemType tuleapBacklogItemType : backLogItemTypes) {
-						projectConfig.addBacklogItemType(tuleapBacklogItemType);
+					for (TuleapCardType tuleapCardType : cardTypes) {
+						projectConfig.addCardType(tuleapCardType);
 					}
 				}
 			}
@@ -500,13 +491,8 @@ public class TuleapRestClient {
 		restMilestones.checkGet(Collections.<String, String> emptyMap());
 
 		ServerResponse milestoneResponse = restMilestones.get(Collections.<String, String> emptyMap());
-		JsonParser parser = new JsonParser();
-		String jsonMilestoneId = milestoneResponse.getBody();
-		JsonElement milestoneElement = parser.parse(jsonMilestoneId);
-		TuleapMilestone milestone = new TuleapMilestoneDeserializer().deserialize(milestoneElement,
-				TuleapMilestone.class, null);
 
-		return milestone;
+		return this.jsonParser.parseMilestone(milestoneResponse.getBody());
 	}
 
 	/**
@@ -541,22 +527,7 @@ public class TuleapRestClient {
 		}
 
 		// Analyze the server response
-		String jsonResponse = response.getBody();
-		JsonParser theJsonParser = new JsonParser();
-		JsonArray jsonArray = theJsonParser.parse(jsonResponse).getAsJsonArray();
-
-		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(TuleapBacklogItemType.class, new TuleapBacklogItemTypeDeserializer());
-
-		List<TuleapBacklogItemType> result = Lists.newArrayList();
-		for (JsonElement jsonElement : jsonArray) {
-			Gson gson = gsonBuilder.create();
-			TuleapBacklogItemType tuleapBacklogItemType = gson.fromJson(jsonElement,
-					TuleapBacklogItemType.class);
-
-			result.add(tuleapBacklogItemType);
-		}
-		return result;
+		return this.jsonParser.parseBacklogItemTypes(response.getBody());
 	}
 
 	/**
@@ -591,21 +562,7 @@ public class TuleapRestClient {
 		}
 
 		// Analyze the server response
-		String jsonResponse = response.getBody();
-		JsonParser theJsonParser = new JsonParser();
-		JsonArray jsonArray = theJsonParser.parse(jsonResponse).getAsJsonArray();
-
-		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(TuleapMilestoneType.class, new TuleapMilestoneTypeDeserializer());
-
-		List<TuleapMilestoneType> result = Lists.newArrayList();
-		for (JsonElement jsonElement : jsonArray) {
-			Gson gson = gsonBuilder.create();
-			TuleapMilestoneType tuleapMilestoneType = gson.fromJson(jsonElement, TuleapMilestoneType.class);
-
-			result.add(tuleapMilestoneType);
-		}
-		return result;
+		return this.jsonParser.parseMilestoneTypes(response.getBody());
 	}
 
 	/**
@@ -639,21 +596,7 @@ public class TuleapRestClient {
 		// TODO Pagination?
 
 		// Analyze the server response
-		String jsonResponse = response.getBody();
-		JsonParser theJsonParser = new JsonParser();
-		JsonArray jsonArray = theJsonParser.parse(jsonResponse).getAsJsonArray();
-
-		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(TuleapCardType.class, new TuleapCardTypeDeserializer());
-
-		List<TuleapCardType> result = Lists.newArrayList();
-		for (JsonElement jsonElement : jsonArray) {
-			Gson gson = gsonBuilder.create();
-			TuleapCardType cardType = gson.fromJson(jsonElement, TuleapCardType.class);
-
-			result.add(cardType);
-		}
-		return result;
+		return this.jsonParser.parseCardTypes(response.getBody());
 	}
 
 	/**
@@ -678,43 +621,36 @@ public class TuleapRestClient {
 		ServerResponse topPlanningsResponse = projectTopPlannings
 				.get(Collections.<String, String> emptyMap());
 		// Contains a JSON array of integers
-		JsonParser parser = new JsonParser();
-		String jsonTopPlanningIds = topPlanningsResponse.getBody();
-		JsonArray topPlanningIds = parser.parse(jsonTopPlanningIds).getAsJsonArray();
-		for (JsonElement element : topPlanningIds) {
-			int topPlanningId = element.getAsInt();
-			TuleapTopPlanning topPlanning = new TuleapTopPlanning(topPlanningId);
 
+		List<TuleapTopPlanning> topPlannings = this.jsonParser
+				.parseTopPlannings(topPlanningsResponse.getBody());
+		for (TuleapTopPlanning tuleapTopPlanning : topPlannings) {
 			// 2- Retrieve the milestones of this top planning
-			RestTopPlanningsMilestones restMilestones = restResources.topPlanningsMilestones(topPlanningId);
+			RestTopPlanningsMilestones restMilestones = restResources
+					.topPlanningsMilestones(tuleapTopPlanning.getId());
 			restMilestones.checkGet(Collections.<String, String> emptyMap());
 			ServerResponse milestonesResponse = restMilestones.get(Collections.<String, String> emptyMap());
 			// TODO Pagination
 			String jsonMilestones = milestonesResponse.getBody();
-			// Contains a JSON array of milestones
-			JsonArray milestonesArray = parser.parse(jsonMilestones).getAsJsonArray();
-			for (JsonElement milestoneElement : milestonesArray) {
-				TuleapMilestone milestone = new TuleapMilestoneDeserializer().deserialize(milestoneElement,
-						TuleapMilestone.class, null);
-				topPlanning.addMilestone(milestone);
+
+			List<TuleapMilestone> tuleapMilestones = this.jsonParser.parseTuleapMilestones(jsonMilestones);
+			for (TuleapMilestone tuleapMilestone : tuleapMilestones) {
+				tuleapTopPlanning.addMilestone(tuleapMilestone);
 			}
 
 			// 3- Retrieve the backlog items of this top planning
 			RestTopPlanningsBacklogItems restBacklogItems = restResources
-					.topPlanningsBacklogItems(topPlanningId);
+					.topPlanningsBacklogItems(tuleapTopPlanning.getId());
 			restBacklogItems.checkGet(Collections.<String, String> emptyMap());
 			ServerResponse backlogItemsResponse = restBacklogItems.get(Collections
 					.<String, String> emptyMap());
 			// TODO Pagination
 			String jsonBacklogItems = backlogItemsResponse.getBody();
-			// Contains a JSON array of backlog items
-			JsonArray backlogItemsArray = parser.parse(jsonBacklogItems).getAsJsonArray();
-			for (JsonElement backlogItemElement : backlogItemsArray) {
-				TuleapBacklogItem backlogItem = new TuleapBacklogItemDeserializer().deserialize(
-						backlogItemElement, TuleapBacklogItem.class, null);
-				topPlanning.addBacklogItem(backlogItem);
+
+			List<TuleapBacklogItem> backlogItems = this.jsonParser.parseBacklogItems(jsonBacklogItems);
+			for (TuleapBacklogItem tuleapBacklogItem : backlogItems) {
+				tuleapTopPlanning.addBacklogItem(tuleapBacklogItem);
 			}
-			result.add(topPlanning);
 		}
 
 		return result;
@@ -733,7 +669,6 @@ public class TuleapRestClient {
 	 */
 	public List<TuleapBacklogItem> getBacklogItems(int milestoneId, IProgressMonitor monitor)
 			throws CoreException {
-		List<TuleapBacklogItem> result = Lists.newArrayList();
 		RestResources restResources = tuleapRestConnector.resources(credentials);
 
 		// 1- Retrieve the list of backlog items ids
@@ -741,17 +676,10 @@ public class TuleapRestClient {
 		milestoneBacklogItems.checkGet(Collections.<String, String> emptyMap());
 		ServerResponse backlogItemsResponse = milestoneBacklogItems.get(Collections
 				.<String, String> emptyMap());
+
 		// Contains a JSON array of integers
-		JsonParser parser = new JsonParser();
 		String jsonBacklogItemIds = backlogItemsResponse.getBody();
-		JsonArray backlogItemIds = parser.parse(jsonBacklogItemIds).getAsJsonArray();
-		for (JsonElement backlogItemId : backlogItemIds) {
-			TuleapBacklogItemDeserializer deserializer = new TuleapBacklogItemDeserializer();
-			TuleapBacklogItem backlogItem = deserializer.deserialize(backlogItemId, TuleapBacklogItem.class,
-					null);
-			result.add(backlogItem);
-		}
-		return result;
+		return this.jsonParser.parseBacklogItems(jsonBacklogItemIds);
 	}
 
 	/**
@@ -767,7 +695,6 @@ public class TuleapRestClient {
 	 */
 	public List<TuleapMilestone> getSubMilestones(int milestoneId, IProgressMonitor monitor)
 			throws CoreException {
-		List<TuleapMilestone> result = Lists.newArrayList();
 		RestResources restResources = tuleapRestConnector.resources(credentials);
 
 		// 1- Retrieve the list of milestone ids
@@ -776,17 +703,10 @@ public class TuleapRestClient {
 		milestoneSubmilestones.checkGet(Collections.<String, String> emptyMap());
 		ServerResponse milestonesResponse = milestoneSubmilestones.get(Collections
 				.<String, String> emptyMap());
+
 		// Contains a JSON array of integers
-		JsonParser parser = new JsonParser();
 		String jsonMilestoneIds = milestonesResponse.getBody();
-		JsonArray milestoneIds = parser.parse(jsonMilestoneIds).getAsJsonArray();
-		for (JsonElement currentMilestoneId : milestoneIds) {
-			TuleapMilestoneDeserializer deserializer = new TuleapMilestoneDeserializer();
-			TuleapMilestone milestone = deserializer.deserialize(currentMilestoneId, TuleapMilestone.class,
-					null);
-			result.add(milestone);
-		}
-		return result;
+		return this.jsonParser.parseTuleapMilestones(jsonMilestoneIds);
 	}
 
 }

@@ -15,17 +15,18 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItemType;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
-import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
 
 /**
  * This class is used to encapsulate all the logic of the JSON parsing.
@@ -35,175 +36,13 @@ import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector
 public class TuleapJsonParser {
 
 	/**
-	 * The key used for the id.
-	 */
-	private static final String ID = "id"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the tracker id.
-	 */
-	private static final String TRACKER_ID = "tracker_id"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the URL.
-	 */
-	private static final String URL = "url"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the kind.
-	 */
-	private static final String KIND = "kind"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the milestone URL.
-	 */
-	private static final String MILESTONE_URL = "milestone_url"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the HTML URL.
-	 */
-	private static final String HTML_URL = "html_url"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the HTML URL.
-	 */
-	private static final String SUBMITTED_BY = "submitted_by"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the HTML URL.
-	 */
-	private static final String SUBMITTED_ON = "submitted_on"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the HTML URL.
-	 */
-	private static final String LAST_UPDATED_ON = "last_updated_on"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the values (i.e. the field values of a tracker).
-	 */
-	private static final String VALUES = "values"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the value.
-	 */
-	private static final String VALUE = "value"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the field id.
-	 */
-	private static final String FIELD_ID = "field_id"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the field label.
-	 */
-	private static final String FIELD_LABEL = "field_label"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the field value.
-	 */
-	private static final String FIELD_VALUE = "field_value"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the field bind value (only one).
-	 */
-	private static final String BIND_VALUE = "bind_value"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the field bind values (several).
-	 */
-	private static final String BIND_VALUES = "bind_values"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the field bind value id.
-	 */
-	private static final String BIND_VALUE_ID = "bind_value_id"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the field bind value label.
-	 */
-	private static final String BIND_VALUE_LABEL = "bind_value_label"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the field comments.
-	 */
-	private static final String COMMENTS = "comments"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the field email.
-	 */
-	private static final String EMAIL = "email"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the field body.
-	 */
-	private static final String BODY = "body"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the field files_description.
-	 */
-	private static final String FILES_DESCRIPTION = "files_description"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the field file_id.
-	 */
-	private static final String FILE_ID = "file_id"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the field description.
-	 */
-	private static final String DESCRIPTION = "description"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the field name.
-	 */
-	private static final String NAME = "name"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the field size.
-	 */
-	private static final String SIZE = "size"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the field type.
-	 */
-	private static final String TYPE = "type"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the field action.
-	 */
-	private static final String ACTION = "action"; //$NON-NLS-1$
-
-	/**
-	 * Parses the JSON representation of one Tuleap project and returns its configuration.
-	 * 
-	 * @param jsonResponse
-	 *            The JSON representation of a Tuleap project.
-	 * @return The Tuleap configuration matching the JSON representation
-	 */
-	public TuleapProjectConfiguration getProjectConfiguration(String jsonResponse) {
-		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(TuleapProjectConfiguration.class,
-				new TuleapProjectConfigurationDeserializer());
-
-		JsonParser jsonParser = new JsonParser();
-		JsonObject jsonObject = jsonParser.parse(jsonResponse).getAsJsonObject();
-
-		Gson gson = gsonBuilder.create();
-		TuleapProjectConfiguration tuleapProjectConfiguration = gson.fromJson(jsonObject,
-				TuleapProjectConfiguration.class);
-
-		return tuleapProjectConfiguration;
-	}
-
-	/**
 	 * Parses the JSON representation of a collection of Tuleap projects and returns their configuration.
 	 * 
 	 * @param jsonResponse
 	 *            The JSON representation of a collection of Tuleap projects
 	 * @return The list of the Tuleap project's configuration
 	 */
-	public List<TuleapProjectConfiguration> getProjectConfigurations(String jsonResponse) {
+	public List<TuleapProjectConfiguration> parseProjectConfigurations(String jsonResponse) {
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(TuleapProjectConfiguration.class,
 				new TuleapProjectConfigurationDeserializer());
@@ -223,58 +62,156 @@ public class TuleapJsonParser {
 	}
 
 	/**
-	 * Parses the JSON representation of one Tuleap tracker and returns its configuration.
+	 * Parse the backlog item types from the json response.
 	 * 
 	 * @param jsonResponse
-	 *            The JSON representation of a Tuleap tracker.
-	 * @return The Tuleap configuration matching the JSON representation
+	 *            The json response
+	 * @return The backlog item types parsed
 	 */
-	public TuleapTrackerConfiguration getTrackerConfiguration(String jsonResponse) {
-		throw new UnsupportedOperationException();
+	public List<TuleapBacklogItemType> parseBacklogItemTypes(String jsonResponse) {
+		JsonParser theJsonParser = new JsonParser();
+		JsonArray jsonArray = theJsonParser.parse(jsonResponse).getAsJsonArray();
+
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		gsonBuilder.registerTypeAdapter(TuleapBacklogItemType.class, new TuleapBacklogItemTypeDeserializer());
+
+		List<TuleapBacklogItemType> result = Lists.newArrayList();
+		for (JsonElement jsonElement : jsonArray) {
+			Gson gson = gsonBuilder.create();
+			TuleapBacklogItemType tuleapBacklogItemType = gson.fromJson(jsonElement,
+					TuleapBacklogItemType.class);
+
+			result.add(tuleapBacklogItemType);
+		}
+		return result;
 	}
 
 	/**
-	 * Parses the JSON representation of a collection of Tuleap trackers and returns their configuration.
+	 * Parse the milestone types from the json response.
 	 * 
 	 * @param jsonResponse
-	 *            The JSON representation of a collection of Tuleap trackers
-	 * @return The list of the Tulea tracker's configuration
+	 *            The json response
+	 * @return The milestone types parsed
 	 */
-	public List<TuleapTrackerConfiguration> getTrackerConfigurations(String jsonResponse) {
-		throw new UnsupportedOperationException();
+	public List<TuleapMilestoneType> parseMilestoneTypes(String jsonResponse) {
+		JsonParser theJsonParser = new JsonParser();
+		JsonArray jsonArray = theJsonParser.parse(jsonResponse).getAsJsonArray();
+
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		gsonBuilder.registerTypeAdapter(TuleapMilestoneType.class, new TuleapMilestoneTypeDeserializer());
+
+		List<TuleapMilestoneType> result = Lists.newArrayList();
+		for (JsonElement jsonElement : jsonArray) {
+			Gson gson = gsonBuilder.create();
+			TuleapMilestoneType tuleapMilestoneType = gson.fromJson(jsonElement, TuleapMilestoneType.class);
+
+			result.add(tuleapMilestoneType);
+		}
+		return result;
 	}
 
 	/**
-	 * Parses a JSON String representing an Artifact into a TaskData.
+	 * Parse the card types from the json response.
 	 * 
-	 * @param taskRepository
-	 *            The task repository to use
-	 * @param connector
-	 *            The repository connector to use
-	 * @param json
-	 *            The JSON response representing an artifact
-	 * @return a new TaksData populated with the data from the JSON String interpreted according to the given
-	 *         configuration.
+	 * @param jsonResponse
+	 *            The json response
+	 * @return The card types parsed
 	 */
-	public TuleapArtifact parseArtifact(TaskRepository taskRepository, ITuleapRepositoryConnector connector,
-			String json) {
-		throw new UnsupportedOperationException();
+	public List<TuleapCardType> parseCardTypes(String jsonResponse) {
+		JsonParser theJsonParser = new JsonParser();
+		JsonArray jsonArray = theJsonParser.parse(jsonResponse).getAsJsonArray();
+
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		gsonBuilder.registerTypeAdapter(TuleapCardType.class, new TuleapCardTypeDeserializer());
+
+		List<TuleapCardType> result = Lists.newArrayList();
+		for (JsonElement jsonElement : jsonArray) {
+			Gson gson = gsonBuilder.create();
+			TuleapCardType cardType = gson.fromJson(jsonElement, TuleapCardType.class);
+
+			result.add(cardType);
+		}
+		return result;
+	}
+
+	/**
+	 * Parse the top plannings from the json response.
+	 * 
+	 * @param jsonResponse
+	 *            The json response
+	 * @return The top plannings parsed
+	 */
+	public List<TuleapTopPlanning> parseTopPlannings(String jsonResponse) {
+		List<TuleapTopPlanning> result = Lists.newArrayList();
+
+		JsonParser parser = new JsonParser();
+
+		JsonArray topPlanningIds = parser.parse(jsonResponse).getAsJsonArray();
+		for (JsonElement element : topPlanningIds) {
+			int topPlanningId = element.getAsInt();
+			TuleapTopPlanning topPlanning = new TuleapTopPlanning(topPlanningId);
+			result.add(topPlanning);
+		}
+
+		return result;
+	}
+
+	/**
+	 * Parse the milestones from the json response.
+	 * 
+	 * @param jsonResponse
+	 *            The json response
+	 * @return The milestones parsed
+	 */
+	public List<TuleapMilestone> parseTuleapMilestones(String jsonResponse) {
+		List<TuleapMilestone> milestones = new ArrayList<TuleapMilestone>();
+
+		JsonParser parser = new JsonParser();
+
+		JsonArray milestonesArray = parser.parse(jsonResponse).getAsJsonArray();
+		for (JsonElement milestoneElement : milestonesArray) {
+			TuleapMilestone milestone = new TuleapMilestoneDeserializer().deserialize(milestoneElement,
+					TuleapMilestone.class, null);
+			milestones.add(milestone);
+		}
+
+		return milestones;
+	}
+
+	/**
+	 * Parse the backlog items from the json response.
+	 * 
+	 * @param jsonResponse
+	 *            The json response
+	 * @return The backlog items parsed
+	 */
+	public List<TuleapBacklogItem> parseBacklogItems(String jsonResponse) {
+		List<TuleapBacklogItem> results = new ArrayList<TuleapBacklogItem>();
+
+		JsonParser parser = new JsonParser();
+
+		// Contains a JSON array of backlog items
+		JsonArray backlogItemsArray = parser.parse(jsonResponse).getAsJsonArray();
+		for (JsonElement backlogItemElement : backlogItemsArray) {
+			TuleapBacklogItem backlogItem = new TuleapBacklogItemDeserializer().deserialize(
+					backlogItemElement, TuleapBacklogItem.class, null);
+			results.add(backlogItem);
+		}
+
+		return results;
 	}
 
 	/**
 	 * Parses a JSON String representing a milestone into a POJO.
 	 * 
-	 * @param taskRepository
-	 *            The task repository to use
-	 * @param connector
-	 *            The repository connector to use
-	 * @param json
+	 * @param jsonResponse
 	 *            The JSON response representing an artifact
 	 * @return a POJO populated with the data from the JSON String.
 	 */
-	public TuleapMilestone parseMilestone(TaskRepository taskRepository,
-			ITuleapRepositoryConnector connector, String json) {
-		throw new UnsupportedOperationException();
+	public TuleapMilestone parseMilestone(String jsonResponse) {
+		JsonParser parser = new JsonParser();
+		JsonElement milestoneElement = parser.parse(jsonResponse);
+		return new TuleapMilestoneDeserializer().deserialize(milestoneElement, TuleapMilestone.class, null);
 	}
 
 	/**
