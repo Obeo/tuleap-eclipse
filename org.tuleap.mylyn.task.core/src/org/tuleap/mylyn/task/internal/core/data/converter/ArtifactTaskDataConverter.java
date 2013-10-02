@@ -14,6 +14,7 @@ import java.util.Set;
 
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.tuleap.mylyn.task.agile.core.data.AgileTaskKindUtil;
 import org.tuleap.mylyn.task.internal.core.data.AbstractFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.TuleapConfigurableElementMapper;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
@@ -45,6 +46,8 @@ public class ArtifactTaskDataConverter extends AbstractElementTaskDataConverter<
 	@Override
 	public void populateTaskData(TaskData taskData, TuleapArtifact tuleapArtifact) {
 		super.populateTaskDataConfigurableFields(taskData, tuleapArtifact);
+
+		AgileTaskKindUtil.setAgileTaskKind(taskData, AgileTaskKindUtil.TASK_KIND_ARTIFACT);
 	}
 
 	/**

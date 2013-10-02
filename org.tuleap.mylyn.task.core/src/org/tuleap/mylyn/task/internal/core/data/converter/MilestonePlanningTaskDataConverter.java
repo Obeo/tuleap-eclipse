@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.tuleap.mylyn.task.agile.core.data.AgileTaskKindUtil;
 import org.tuleap.mylyn.task.agile.core.data.planning.BacklogItemWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.MilestonePlanningWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.SubMilestoneWrapper;
@@ -52,6 +53,8 @@ public class MilestonePlanningTaskDataConverter extends AbstractElementTaskDataC
 	public void populateTaskData(TaskData taskData, TuleapTopPlanning tuleapTopPlanning) {
 		this.populatePlanning(taskData, tuleapTopPlanning);
 
+		AgileTaskKindUtil.setAgileTaskKind(taskData, AgileTaskKindUtil.TASK_KIND_TOP_PLANNING);
+
 		// TODO CNO Realize the cardwall of the top planning
 		// this.populateCardwall(taskData, tuleapTopPlanning);
 	}
@@ -66,6 +69,8 @@ public class MilestonePlanningTaskDataConverter extends AbstractElementTaskDataC
 	public void populateTaskData(TaskData taskData, TuleapMilestone milestone) {
 		super.populateTaskDataConfigurableFields(taskData, milestone);
 		this.populatePlanning(taskData, milestone);
+
+		AgileTaskKindUtil.setAgileTaskKind(taskData, AgileTaskKindUtil.TASK_KIND_MILESTONE);
 
 		// TODO CNO Realize the cardwall of the milestone
 		// this.populateCardwall(taskData, milestone);
@@ -104,7 +109,6 @@ public class MilestonePlanningTaskDataConverter extends AbstractElementTaskDataC
 			if (backlogItem.getInitialEffort() != null) {
 				backlogItemWrapper.setInitialEffort(backlogItem.getInitialEffort().floatValue());
 			}
-
 		}
 	}
 

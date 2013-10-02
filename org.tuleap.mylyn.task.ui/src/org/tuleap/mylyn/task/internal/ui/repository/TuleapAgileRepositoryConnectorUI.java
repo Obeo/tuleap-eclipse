@@ -13,10 +13,9 @@ package org.tuleap.mylyn.task.internal.ui.repository;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
-import org.tuleap.mylyn.task.agile.core.util.IMylynAgileCoreConstants;
+import org.tuleap.mylyn.task.agile.core.data.AgileTaskKindUtil;
 import org.tuleap.mylyn.task.agile.ui.AbstractAgileRepositoryConnectorUI;
 import org.tuleap.mylyn.task.agile.ui.editors.ITaskEditorPageFactoryConstants;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
@@ -89,10 +88,8 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 	public String[] getConflictingIds(String taskEditorPageFactoryId, TaskData taskData) {
 		if (ITaskEditorPageFactoryConstants.PLANNING_TASK_EDITOR_PAGE_FACTORY_ID
 				.equals(taskEditorPageFactoryId)) {
-			TaskAttribute mappedAttribute = taskData.getRoot().getMappedAttribute(
-					IMylynAgileCoreConstants.TASK_KIND_KEY);
-			if (mappedAttribute != null
-					&& IMylynAgileCoreConstants.KIND_TOP_PLANNING.equals(mappedAttribute.getValue())) {
+			String agileTaskKind = AgileTaskKindUtil.getAgileTaskKind(taskData);
+			if (AgileTaskKindUtil.TASK_KIND_TOP_PLANNING.equals(agileTaskKind)) {
 				return new String[] {ITasksUiConstants.ID_PAGE_PLANNING,
 						TuleapTaskEditorPageFactory.TULEAP_TASK_EDITOR_PAGE_FACTORY_ID, };
 			}
