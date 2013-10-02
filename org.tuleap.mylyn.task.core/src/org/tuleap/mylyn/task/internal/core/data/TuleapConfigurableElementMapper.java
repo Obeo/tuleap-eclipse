@@ -39,6 +39,7 @@ import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
+import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
 /**
  * The Tuleap Configurable Element Mapper will be used to manipulate the task data model from Mylyn with a
@@ -139,7 +140,7 @@ public class TuleapConfigurableElementMapper extends AbstractTaskMapper {
 	private void createCreationDateTaskAttribute() {
 		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.DATE_CREATION);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
-		metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapConfigurableElementMapper.CreationDate")); //$NON-NLS-1$
+		metaData.setLabel(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.creationDateLabel));
 		metaData.setType(TaskAttribute.TYPE_DATE);
 	}
 
@@ -150,7 +151,7 @@ public class TuleapConfigurableElementMapper extends AbstractTaskMapper {
 		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.DATE_MODIFICATION);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
 		metaData.setLabel(TuleapMylynTasksMessages
-				.getString("TuleapConfigurableElementMapper.LastModificationDate")); //$NON-NLS-1$
+				.getString(TuleapMylynTasksMessagesKeys.lastModificationDateLabel));
 		metaData.setType(TaskAttribute.TYPE_DATE);
 	}
 
@@ -171,7 +172,7 @@ public class TuleapConfigurableElementMapper extends AbstractTaskMapper {
 		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.DATE_COMPLETION);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
 		metaData.setLabel(TuleapMylynTasksMessages
-				.getString("TuleapConfigurableElementMapper.CompletionDate")); //$NON-NLS-1$
+				.getString(TuleapMylynTasksMessagesKeys.completionDateLabel));
 		metaData.setType(TaskAttribute.TYPE_DATE);
 	}
 
@@ -183,7 +184,7 @@ public class TuleapConfigurableElementMapper extends AbstractTaskMapper {
 	private TaskAttribute createNewCommentTaskAttribute() {
 		TaskAttribute attribute = taskData.getRoot().createAttribute(TaskAttribute.COMMENT_NEW);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
-		metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapConfigurableElementMapper.NewComment")); //$NON-NLS-1$
+		metaData.setLabel(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.newCommentLabel));
 		metaData.setType(TaskAttribute.TYPE_LONG_RICH_TEXT);
 		return attribute;
 	}
@@ -198,7 +199,7 @@ public class TuleapConfigurableElementMapper extends AbstractTaskMapper {
 			attribute.setValue(name);
 		} else {
 			attribute.setValue(TuleapMylynTasksMessages
-					.getString("TuleapConfigurableElementMapper.DefaultConfigurationName")); //$NON-NLS-1$
+					.getString(TuleapMylynTasksMessagesKeys.defaultConfigurationName));
 		}
 	}
 
@@ -219,10 +220,12 @@ public class TuleapConfigurableElementMapper extends AbstractTaskMapper {
 		taskAttachment.setAttachmentId(tuleapAttachment.getAttachmentId());
 
 		TuleapPerson person = tuleapAttachment.getPerson();
-		IRepositoryPerson repositoryPerson = taskData.getAttributeMapper().getTaskRepository().createPerson(
-				person.getEmail());
-		repositoryPerson.setName(person.getUserName());
-		taskAttachment.setAuthor(repositoryPerson);
+		if (person != null) {
+			IRepositoryPerson repositoryPerson = taskData.getAttributeMapper().getTaskRepository()
+					.createPerson(person.getEmail());
+			repositoryPerson.setName(person.getUserName());
+			taskAttachment.setAuthor(repositoryPerson);
+		}
 		taskAttachment.setFileName(tuleapAttachment.getFilename());
 		taskAttachment.setLength(Long.valueOf(tuleapAttachment.getSize()));
 		taskAttachment.setDescription(tuleapAttachment.getDescription());

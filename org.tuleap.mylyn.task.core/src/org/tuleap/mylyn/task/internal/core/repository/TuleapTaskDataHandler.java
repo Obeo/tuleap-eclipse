@@ -33,6 +33,7 @@ import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
+import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
 /**
  * This class is in charge of the publication and retrieval of the tasks data to and from the repository.
@@ -128,7 +129,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 					tuleapConfigurableElementMapper.setCreationDate(now);
 					tuleapConfigurableElementMapper.setModificationDate(now);
 					tuleapConfigurableElementMapper.setSummary(TuleapMylynTasksMessages.getString(
-							"TuleapTaskDataHandler.DefaultNewTitle", configuration.getItemName())); //$NON-NLS-1$
+							TuleapMylynTasksMessagesKeys.defaultNewTitle, configuration.getItemName()));
 
 					isInitialized = true;
 				}

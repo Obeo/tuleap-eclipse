@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
+import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
 /**
  * Builder class that instantiates the accessible JSON services.
@@ -101,14 +102,15 @@ public final class RestResources {
 					} else {
 						// Error, invalid behavior of the server, invalid location
 						status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
-								TuleapMylynTasksMessages.getString("RestResources.InvalidAPILocation", //$NON-NLS-1$
+								TuleapMylynTasksMessages.getString(
+										TuleapMylynTasksMessagesKeys.invalidAPILocation,
 										bestSupportedApiVersion));
 					}
 				} else {
 					// Error, invalid behavior of the server, no new location
 					status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
-							TuleapMylynTasksMessages.getString("RestResources.MissingAPILocation", //$NON-NLS-1$
-									bestSupportedApiVersion));
+							TuleapMylynTasksMessages.getString(
+									TuleapMylynTasksMessagesKeys.missingAPILocation, bestSupportedApiVersion));
 				}
 				break;
 			case ITuleapServerStatus.GONE:
@@ -117,18 +119,18 @@ public final class RestResources {
 				// TODO How to deserialize the body here?
 				String goneErrorMessage = serverResponse.getBody();
 				status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, TuleapMylynTasksMessages
-						.getString("RestResources.MissingCompatibleAPI", bestSupportedApiVersion, //$NON-NLS-1$
-								goneErrorMessage));
+						.getString(TuleapMylynTasksMessagesKeys.missingCompatibleAPI,
+								bestSupportedApiVersion, goneErrorMessage));
 				break;
 			case ITuleapServerStatus.NOT_FOUND:
 				// If we receive a 404 Not Found, the URL of server is invalid or the server is offline
 				status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, TuleapMylynTasksMessages
-						.getString("RestResources.APINotFound")); //$NON-NLS-1$
+						.getString(TuleapMylynTasksMessagesKeys.aPINotFound));
 				break;
 			default:
 				// Unknown error, invalid behavior of the server?
 				status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, TuleapMylynTasksMessages
-						.getString("RestResources.InvalidBehavior", Integer //$NON-NLS-1$
+						.getString(TuleapMylynTasksMessagesKeys.invalidBehavior, Integer
 								.valueOf(serverResponse.getStatus())));
 				break;
 		}

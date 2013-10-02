@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleContext;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
+import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
 /**
  * The activator in charge of managing the lifecycle of the bundle.
@@ -112,7 +113,7 @@ public class TuleapCoreActivator extends Plugin {
 	public static void log(Exception e, boolean blocker) {
 		if (e == null) {
 			throw new NullPointerException(TuleapMylynTasksMessages
-					.getString("TuleapCoreActivator.LogNullException")); //$NON-NLS-1$
+					.getString(TuleapMylynTasksMessagesKeys.logNullException));
 		}
 
 		if (getDefault() == null) {
@@ -128,7 +129,7 @@ public class TuleapCoreActivator extends Plugin {
 				severity = IStatus.ERROR;
 			}
 			log(new Status(severity, PLUGIN_ID, severity, TuleapMylynTasksMessages
-					.getString("TuleapCoreActivator.ElementNotFound"), e)); //$NON-NLS-1$
+					.getString(TuleapMylynTasksMessagesKeys.elementNotFound), e));
 		} else {
 			int severity = IStatus.WARNING;
 			if (blocker) {
@@ -149,7 +150,7 @@ public class TuleapCoreActivator extends Plugin {
 		// We'll handle this by throwing it ourselves.
 		if (status == null) {
 			throw new NullPointerException(TuleapMylynTasksMessages
-					.getString("TuleapCoreActivator.LogNullStatus")); //$NON-NLS-1$
+					.getString(TuleapMylynTasksMessagesKeys.logNullStatus));
 		}
 
 		if (getDefault() != null) {
@@ -185,7 +186,8 @@ public class TuleapCoreActivator extends Plugin {
 			}
 			String errorMessage = message;
 			if (errorMessage == null || "".equals(errorMessage)) { //$NON-NLS-1$
-				errorMessage = TuleapMylynTasksMessages.getString("TuleapCoreActivator.UnexpectedException"); //$NON-NLS-1$
+				errorMessage = TuleapMylynTasksMessages
+						.getString(TuleapMylynTasksMessagesKeys.unexpectedException);
 			}
 			log(new Status(severity, PLUGIN_ID, errorMessage));
 		}

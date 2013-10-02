@@ -59,6 +59,7 @@ import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
+import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
 /**
  * This class encapsulates common operation realized on the Tuleap repository.
@@ -121,7 +122,8 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 */
 	@Override
 	public String getLabel() {
-		return TuleapMylynTasksMessages.getString("TuleapRepositoryConnector.Label"); //$NON-NLS-1$
+		return TuleapMylynTasksMessages
+				.getString(TuleapMylynTasksMessagesKeys.tuleapRepositoryConnectorLabel);
 	}
 
 	/**
@@ -338,8 +340,8 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			try {
 				List<TuleapTopPlanning> topPlannings = restClient.getTopPlannings(projectId, monitor);
 				for (TuleapTopPlanning tuleapTopPlanning : topPlannings) {
-					String taskDataId = TuleapTaskIdentityUtil.getTaskDataId(projectId, TuleapTaskIdentityUtil.IRRELEVANT_ID,
-							tuleapTopPlanning.getId());
+					String taskDataId = TuleapTaskIdentityUtil.getTaskDataId(projectId,
+							TuleapTaskIdentityUtil.IRRELEVANT_ID, tuleapTopPlanning.getId());
 
 					TaskData taskData = new TaskData(attributeMapper, this.getConnectorKind(), taskRepository
 							.getRepositoryUrl(), taskDataId);

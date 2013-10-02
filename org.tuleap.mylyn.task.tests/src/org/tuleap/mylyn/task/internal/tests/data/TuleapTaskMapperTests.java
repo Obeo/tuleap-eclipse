@@ -40,6 +40,7 @@ import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector
 import org.tuleap.mylyn.task.internal.core.repository.TuleapAttributeMapper;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
+import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -147,7 +148,7 @@ public class TuleapTaskMapperTests {
 		att = root.getMappedAttribute(TaskAttribute.DATE_CREATION);
 		assertNotNull(att);
 		TaskAttributeMetaData metadata = att.getMetaData();
-		assertEquals(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.CreationDate"), //$NON-NLS-1$
+		assertEquals(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.creationDateLabel),
 				metadata.getLabel());
 		assertEquals(TaskAttribute.TYPE_DATE, metadata.getType());
 		assertFalse(metadata.isReadOnly());
@@ -173,15 +174,15 @@ public class TuleapTaskMapperTests {
 		att = root.getAttribute(TaskAttribute.DATE_MODIFICATION);
 		assertNotNull(att);
 		metadata = att.getMetaData();
-		assertEquals(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.LastModificationDate"), //$NON-NLS-1$
-				metadata.getLabel());
+		assertEquals(TuleapMylynTasksMessages
+				.getString(TuleapMylynTasksMessagesKeys.lastModificationDateLabel), metadata.getLabel());
 		assertEquals(TaskAttribute.TYPE_DATE, metadata.getType());
 		assertFalse(metadata.isReadOnly());
 
 		att = root.getAttribute(TaskAttribute.DATE_COMPLETION);
 		assertNotNull(att);
 		metadata = att.getMetaData();
-		assertEquals(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.CompletionDate"), //$NON-NLS-1$
+		assertEquals(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.completionDateLabel),
 				metadata.getLabel());
 		assertEquals(TaskAttribute.TYPE_DATE, metadata.getType());
 		assertFalse(metadata.isReadOnly());
@@ -189,7 +190,7 @@ public class TuleapTaskMapperTests {
 		att = root.getAttribute(TaskAttribute.COMMENT_NEW);
 		assertNotNull(att);
 		metadata = att.getMetaData();
-		assertEquals(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.NewComment"), //$NON-NLS-1$
+		assertEquals(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.newCommentLabel),
 				metadata.getLabel());
 		assertEquals(TaskAttribute.TYPE_LONG_RICH_TEXT, metadata.getType());
 		assertFalse(metadata.isReadOnly());
@@ -330,8 +331,8 @@ public class TuleapTaskMapperTests {
 
 		TaskAttributeMetaData metadata = att.getMetaData();
 		assertEquals(TaskAttribute.TYPE_SINGLE_SELECT, metadata.getType());
-		assertEquals(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.Status"), //$NON-NLS-1$
-				metadata.getLabel());
+		assertEquals(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.statusLabel), metadata
+				.getLabel());
 		String lbl = getLabelFromId(0);
 		assertEquals(lbl, att.getOption("0")); //$NON-NLS-1$
 		lbl = getLabelFromId(1);
@@ -356,8 +357,8 @@ public class TuleapTaskMapperTests {
 		assertNotNull(att);
 		TaskAttributeMetaData metadata = att.getMetaData();
 		assertEquals(TaskAttribute.TYPE_SINGLE_SELECT, metadata.getType());
-		assertEquals(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.Status"), //$NON-NLS-1$
-				metadata.getLabel());
+		assertEquals(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.statusLabel), metadata
+				.getLabel());
 
 		// No value is assigned to the field
 		// => as if status were equal to 100, only 1 state should be accessible, state 0
@@ -443,8 +444,8 @@ public class TuleapTaskMapperTests {
 		assertNotNull(att);
 		TaskAttributeMetaData metadata = att.getMetaData();
 		assertEquals(TaskAttribute.TYPE_SINGLE_SELECT, metadata.getType());
-		assertEquals(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.AssignedToLabel"), metadata //$NON-NLS-1$
-				.getLabel());
+		assertEquals(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.assignedToLabel),
+				metadata.getLabel());
 		assertEquals(TaskAttribute.KIND_PEOPLE, metadata.getKind());
 	}
 

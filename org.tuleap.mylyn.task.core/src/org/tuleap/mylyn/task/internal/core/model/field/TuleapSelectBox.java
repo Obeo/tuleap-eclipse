@@ -19,6 +19,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 import org.tuleap.mylyn.task.internal.core.model.workflow.TuleapWorkflow;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
+import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
 /**
  * The Tuleap select box widget.
@@ -128,7 +129,7 @@ public class TuleapSelectBox extends AbstractTuleapSelectBox {
 
 		TaskAttribute operationAttribute = parent.createAttribute(TaskAttribute.OPERATION);
 		TaskOperation.applyTo(operationAttribute, TaskAttribute.STATUS, TuleapMylynTasksMessages
-				.getString("TuleapTaskDataHandler.MarkAs")); //$NON-NLS-1$
+				.getString(TuleapMylynTasksMessagesKeys.markAsLabel));
 
 		List<String> tuleapStatus = new ArrayList<String>();
 
@@ -163,7 +164,7 @@ public class TuleapSelectBox extends AbstractTuleapSelectBox {
 			attrResolvedInput.putOption(status, status);
 		}
 		TaskOperation.applyTo(attrResolvedInput, TaskAttribute.STATUS, TuleapMylynTasksMessages
-				.getString("TuleapTaskDataHandler.MarkAs")); //$NON-NLS-1$
+				.getString(TuleapMylynTasksMessagesKeys.markAsLabel));
 
 		attrResolvedInput.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID,
 				TaskAttribute.STATUS);

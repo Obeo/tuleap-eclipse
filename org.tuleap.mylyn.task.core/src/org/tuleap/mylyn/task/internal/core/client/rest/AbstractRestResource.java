@@ -39,6 +39,7 @@ import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
+import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
 /**
  * Abstract super class of all JSON resources.
@@ -288,13 +289,13 @@ public abstract class AbstractRestResource {
 		}
 		if (!yesYouCan) {
 			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
-					TuleapMylynTasksMessages.getString(
-							"AbstractRestResource.CannotPerformOperation", getUrl(), method))); //$NON-NLS-1$
+					TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.cannotPerformOperation,
+							getUrl(), method)));
 		}
 		if (!yesYouAreAllowed) {
 			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
 					TuleapMylynTasksMessages.getString(
-							"AbstractRestResource.NotAuthorizedToPerformOperation", getUrl(), method))); //$NON-NLS-1$
+							TuleapMylynTasksMessagesKeys.notAuthorizedToPerformOperation, getUrl(), method)));
 		}
 	}
 

@@ -22,6 +22,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
+import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
 /**
  * Super class of tuleap select box and multi-select box.
@@ -219,7 +220,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 		// status section etc + a mylyn operation task attribute to modify the real status field
 		TaskAttribute attribute = parent.createAttribute(TaskAttribute.STATUS);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
-		metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.Status")); //$NON-NLS-1$
+		metaData.setLabel(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.statusLabel));
 		metaData.setType(getMetadataType());
 		metaData.setKind(TaskAttribute.KIND_DEFAULT);
 
@@ -241,7 +242,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 		// people section etc
 		TaskAttribute attribute = parent.createAttribute(TaskAttribute.USER_ASSIGNED);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
-		metaData.setLabel(TuleapMylynTasksMessages.getString("TuleapTaskDataHandler.AssignedToLabel")); //$NON-NLS-1$;
+		metaData.setLabel(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.assignedToLabel)); // ;
 		metaData.setType(getMetadataType());
 		metaData.setKind(TaskAttribute.KIND_PEOPLE);
 
