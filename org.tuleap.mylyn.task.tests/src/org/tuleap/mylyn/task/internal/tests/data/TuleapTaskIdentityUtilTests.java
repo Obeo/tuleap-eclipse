@@ -36,7 +36,7 @@ public class TuleapTaskIdentityUtilTests {
 	 */
 	@Test
 	public void testGetTaskDataId() {
-		assertThat(TuleapTaskIdentityUtil.getTaskDataId(123, 17, 42), is("123:17-42"));
+		assertThat(TuleapTaskIdentityUtil.getTaskDataId(123, 17, 42), is("123:17#42"));
 	}
 
 	/**
@@ -45,7 +45,7 @@ public class TuleapTaskIdentityUtilTests {
 	@Test
 	public void testGetTaskDataIdWithIrrelevantElement() {
 		assertThat(TuleapTaskIdentityUtil.getTaskDataId(123, 17, TuleapTaskIdentityUtil.IRRELEVANT_ID),
-				is("123:17--1"));
+				is("123:17#-1"));
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class TuleapTaskIdentityUtilTests {
 	 */
 	@Test
 	public void testGetProjectIdFromTaskDataId() {
-		assertThat(TuleapTaskIdentityUtil.getProjectIdFromTaskDataId("123:17-42"), is(123));
+		assertThat(TuleapTaskIdentityUtil.getProjectIdFromTaskDataId("123:17#42"), is(123));
 	}
 
 	/**
@@ -61,13 +61,13 @@ public class TuleapTaskIdentityUtilTests {
 	 */
 	@Test
 	public void testGetIrrelevantProjectIdFromTaskDataId() {
-		assertThat(TuleapTaskIdentityUtil.getProjectIdFromTaskDataId("invalidprojectid:17-42"),
+		assertThat(TuleapTaskIdentityUtil.getProjectIdFromTaskDataId("invalidprojectid:17#42"),
 				is(TuleapTaskIdentityUtil.IRRELEVANT_ID));
-		assertThat(TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(":17-42"),
+		assertThat(TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(":17#42"),
 				is(TuleapTaskIdentityUtil.IRRELEVANT_ID));
-		assertThat(TuleapTaskIdentityUtil.getProjectIdFromTaskDataId("17-42"),
+		assertThat(TuleapTaskIdentityUtil.getProjectIdFromTaskDataId("17#42"),
 				is(TuleapTaskIdentityUtil.IRRELEVANT_ID));
-		assertThat(TuleapTaskIdentityUtil.getProjectIdFromTaskDataId("-1:17-42"),
+		assertThat(TuleapTaskIdentityUtil.getProjectIdFromTaskDataId("-1:17#42"),
 				is(TuleapTaskIdentityUtil.IRRELEVANT_ID));
 	}
 
@@ -76,7 +76,7 @@ public class TuleapTaskIdentityUtilTests {
 	 */
 	@Test
 	public void testGetConfigurationIdFromTaskDataId() {
-		assertThat(TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId("123:17-42"), is(17));
+		assertThat(TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId("123:17#42"), is(17));
 	}
 
 	/**
@@ -85,13 +85,13 @@ public class TuleapTaskIdentityUtilTests {
 	@Test
 	public void testGetIrrelevantConfigurationIdFromTaskDataId() {
 		assertThat(TuleapTaskIdentityUtil
-				.getConfigurationIdFromTaskDataId("123:irrelevantconfigurationid-42"),
+				.getConfigurationIdFromTaskDataId("123:irrelevantconfigurationid#42"),
 				is(TuleapTaskIdentityUtil.IRRELEVANT_ID));
-		assertThat(TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId("123:-42"),
+		assertThat(TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId("123:#42"),
 				is(TuleapTaskIdentityUtil.IRRELEVANT_ID));
-		assertThat(TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId("123-42"),
+		assertThat(TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId("123#42"),
 				is(TuleapTaskIdentityUtil.IRRELEVANT_ID));
-		assertThat(TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId("123:-1-42"),
+		assertThat(TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId("123:-1#42"),
 				is(TuleapTaskIdentityUtil.IRRELEVANT_ID));
 	}
 
@@ -100,7 +100,7 @@ public class TuleapTaskIdentityUtilTests {
 	 */
 	@Test
 	public void testGetElementIdFromTaskDataId() {
-		assertThat(TuleapTaskIdentityUtil.getElementIdFromTaskDataId("123:17-42"), is(42));
+		assertThat(TuleapTaskIdentityUtil.getElementIdFromTaskDataId("123:17#42"), is(42));
 	}
 
 	/**
@@ -108,13 +108,13 @@ public class TuleapTaskIdentityUtilTests {
 	 */
 	@Test
 	public void testGetIrrelevantElementIdFromTaskDataId() {
-		assertThat(TuleapTaskIdentityUtil.getElementIdFromTaskDataId("123:17-"),
+		assertThat(TuleapTaskIdentityUtil.getElementIdFromTaskDataId("123:17#"),
 				is(TuleapTaskIdentityUtil.IRRELEVANT_ID));
-		assertThat(TuleapTaskIdentityUtil.getElementIdFromTaskDataId("123:17-"),
+		assertThat(TuleapTaskIdentityUtil.getElementIdFromTaskDataId("123:17#"),
 				is(TuleapTaskIdentityUtil.IRRELEVANT_ID));
 		assertThat(TuleapTaskIdentityUtil.getElementIdFromTaskDataId("123:17"),
 				is(TuleapTaskIdentityUtil.IRRELEVANT_ID));
-		assertThat(TuleapTaskIdentityUtil.getElementIdFromTaskDataId("123:17--1"),
+		assertThat(TuleapTaskIdentityUtil.getElementIdFromTaskDataId("123:17#-1"),
 				is(TuleapTaskIdentityUtil.IRRELEVANT_ID));
 	}
 }

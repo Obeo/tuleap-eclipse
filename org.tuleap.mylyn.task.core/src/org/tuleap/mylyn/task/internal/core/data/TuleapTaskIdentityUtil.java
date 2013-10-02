@@ -27,14 +27,19 @@ public final class TuleapTaskIdentityUtil {
 	public static final int IRRELEVANT_ID = -1;
 
 	/**
-	 * The separator between the project name and the tracker id.
+	 * The separator between the project name or id and the configuration name of id.
 	 */
 	private static final String CONFIGURATION_SEPARATOR = ":"; //$NON-NLS-1$
 
 	/**
+	 * The separator used in the key of the task data.
+	 */
+	private static final String ELEMENT_NAME_SEPARATOR = "-"; //$NON-NLS-1$
+
+	/**
 	 * The separator used in the id of the task data.
 	 */
-	private static final String ELEMENT_SEPARATOR = "-"; //$NON-NLS-1$
+	private static final String ELEMENT_ID_SEPARATOR = "#"; //$NON-NLS-1$
 
 	/**
 	 * The constructor.
@@ -56,7 +61,7 @@ public final class TuleapTaskIdentityUtil {
 	 * @return The task data id
 	 */
 	public static String getTaskDataKey(String projectName, String configurationName, int artifactId) {
-		return projectName + CONFIGURATION_SEPARATOR + configurationName + ELEMENT_SEPARATOR
+		return projectName + CONFIGURATION_SEPARATOR + configurationName + ELEMENT_NAME_SEPARATOR
 				+ Integer.valueOf(artifactId).toString();
 	}
 
@@ -73,7 +78,7 @@ public final class TuleapTaskIdentityUtil {
 	 */
 	public static String getTaskDataId(int projectId, int configurationId, int elementId) {
 		return String.valueOf(projectId) + CONFIGURATION_SEPARATOR + String.valueOf(configurationId)
-				+ ELEMENT_SEPARATOR + String.valueOf(elementId);
+				+ ELEMENT_ID_SEPARATOR + String.valueOf(elementId);
 	}
 
 	/**
@@ -110,7 +115,7 @@ public final class TuleapTaskIdentityUtil {
 	 */
 	public static int getConfigurationIdFromTaskDataId(String taskDataId) {
 		int indexOfConfiguration = taskDataId.indexOf(CONFIGURATION_SEPARATOR);
-		int indexOfElement = taskDataId.indexOf(ELEMENT_SEPARATOR);
+		int indexOfElement = taskDataId.indexOf(ELEMENT_ID_SEPARATOR);
 		if (indexOfConfiguration != -1 && indexOfElement != -1) {
 			String configurationId = taskDataId.substring(indexOfConfiguration
 					+ CONFIGURATION_SEPARATOR.length(), indexOfElement);
@@ -136,9 +141,9 @@ public final class TuleapTaskIdentityUtil {
 	 * @return The identifier of the element from the task data id
 	 */
 	public static int getElementIdFromTaskDataId(String taskDataId) {
-		int indexOf = taskDataId.indexOf(ELEMENT_SEPARATOR);
+		int indexOf = taskDataId.indexOf(ELEMENT_ID_SEPARATOR);
 		if (indexOf != -1) {
-			String elementId = taskDataId.substring(indexOf + ELEMENT_SEPARATOR.length());
+			String elementId = taskDataId.substring(indexOf + ELEMENT_ID_SEPARATOR.length());
 
 			int identifier = IRRELEVANT_ID;
 
