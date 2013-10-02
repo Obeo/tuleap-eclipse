@@ -48,15 +48,6 @@ import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class TuleapConfigurableElementMapper extends AbstractTaskMapper {
-	/**
-	 * The identifier of an invalid configuration.
-	 */
-	public static final int INVALID_CONFIGURATION_ID = -1;
-
-	/**
-	 * The identifier of an invalid project.
-	 */
-	public static final int INVALID_PROJECT_ID = -1;
 
 	/**
 	 * The identifier of the configuration id task attribute.
@@ -254,11 +245,19 @@ public class TuleapConfigurableElementMapper extends AbstractTaskMapper {
 	 * @return The identifier of the configuration or INVALID_CONFIGURATION_ID otherwise.
 	 */
 	public int getConfigurationId() {
-		TaskAttribute configurationIdAtt = taskData.getRoot().getMappedAttribute(CONFIGURATION_ID);
-		if (configurationIdAtt == null) {
-			return INVALID_CONFIGURATION_ID;
+		int configurationId = TuleapTaskIdentityUtil.IRRELEVANT_ID;
+
+		if (this.taskData.isNew()) {
+			TaskAttribute configurationIdAtt = taskData.getRoot().getMappedAttribute(CONFIGURATION_ID);
+			if (configurationIdAtt != null) {
+				configurationId = taskData.getAttributeMapper().getIntegerValue(configurationIdAtt)
+						.intValue();
+			}
+		} else {
+			configurationId = TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId(taskData.getTaskId());
 		}
-		return taskData.getAttributeMapper().getIntegerValue(configurationIdAtt).intValue();
+
+		return configurationId;
 	}
 
 	/**
@@ -268,7 +267,6 @@ public class TuleapConfigurableElementMapper extends AbstractTaskMapper {
 	 *            The identifier of the project
 	 */
 	private void setProjectId(int projectId) {
-		// should not appear in the attribute part so no task attribute type!
 		TaskAttribute projectIdAtt = taskData.getRoot().getMappedAttribute(PROJECT_ID);
 		if (projectIdAtt == null) {
 			projectIdAtt = taskData.getRoot().createMappedAttribute(PROJECT_ID);
@@ -282,11 +280,18 @@ public class TuleapConfigurableElementMapper extends AbstractTaskMapper {
 	 * @return The identifier of the project
 	 */
 	public int getProjectId() {
-		TaskAttribute projectIdAtt = taskData.getRoot().getMappedAttribute(PROJECT_ID);
-		if (projectIdAtt == null) {
-			return INVALID_PROJECT_ID;
+		int projectId = TuleapTaskIdentityUtil.IRRELEVANT_ID;
+
+		if (this.taskData.isNew()) {
+			TaskAttribute projectIdAtt = taskData.getRoot().getMappedAttribute(PROJECT_ID);
+			if (projectIdAtt != null) {
+				projectId = taskData.getAttributeMapper().getIntegerValue(projectIdAtt).intValue();
+			}
+		} else {
+			projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(taskData.getTaskId());
 		}
-		return taskData.getAttributeMapper().getIntegerValue(projectIdAtt).intValue();
+
+		return projectId;
 	}
 
 	/**
@@ -306,9 +311,7 @@ public class TuleapConfigurableElementMapper extends AbstractTaskMapper {
 	 * @return The identifier of the artifact
 	 */
 	public int getId() {
-		// TODO SBE Test with a newly created artifact for potential number format exception
-		// TODO SBE Be careful when the identifier will be changed
-		return Integer.valueOf(taskData.getTaskId()).intValue();
+		return TuleapTaskIdentityUtil.getElementIdFromTaskDataId(taskData.getTaskId());
 	}
 
 	/**

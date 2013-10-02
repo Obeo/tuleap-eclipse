@@ -26,6 +26,7 @@ import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
+import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
@@ -171,9 +172,9 @@ public class TuleapSoapClient {
 	 */
 	public TuleapArtifact getArtifact(String taskId, TuleapServerConfiguration serverConfiguration,
 			IProgressMonitor monitor) throws CoreException {
-		int artifactId = Integer.valueOf(taskId).intValue();
+		int artifactId = TuleapTaskIdentityUtil.getElementIdFromTaskDataId(taskId);
 
-		if (artifactId != -1) {
+		if (artifactId != TuleapTaskIdentityUtil.IRRELEVANT_ID) {
 			TuleapArtifact tuleapArtifact;
 			try {
 				CommentedArtifact artifact = soapConnector.getArtifact(artifactId, serverConfiguration,
