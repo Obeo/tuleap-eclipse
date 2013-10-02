@@ -46,6 +46,7 @@ import org.tuleap.mylyn.task.internal.core.client.ITuleapQueryConstants;
 import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
+import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.data.converter.ArtifactTaskDataConverter;
 import org.tuleap.mylyn.task.internal.core.data.converter.MilestonePlanningTaskDataConverter;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
@@ -58,7 +59,6 @@ import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
-import org.tuleap.mylyn.task.internal.core.util.TuleapUtil;
 
 /**
  * This class encapsulates common operation realized on the Tuleap repository.
@@ -312,7 +312,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			List<TuleapArtifact> artifacts = soapClient.getArtifactsFromQuery(query, repositoryConfiguration,
 					trackerConfiguration, monitor);
 			for (TuleapArtifact tuleapArtifact : artifacts) {
-				String taskDataId = TuleapUtil.getTaskDataId(trackerConfiguration
+				String taskDataId = TuleapTaskIdentityUtil.getTaskDataId(trackerConfiguration
 						.getTuleapProjectConfiguration().getIdentifier(),
 						tuleapArtifact.getConfigurationId(), tuleapArtifact.getId());
 
@@ -338,7 +338,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			try {
 				List<TuleapTopPlanning> topPlannings = restClient.getTopPlannings(projectId, monitor);
 				for (TuleapTopPlanning tuleapTopPlanning : topPlannings) {
-					String taskDataId = TuleapUtil.getTaskDataId(projectId, TuleapUtil.IRRELEVANT_ID,
+					String taskDataId = TuleapTaskIdentityUtil.getTaskDataId(projectId, TuleapTaskIdentityUtil.IRRELEVANT_ID,
 							tuleapTopPlanning.getId());
 
 					TaskData taskData = new TaskData(attributeMapper, this.getConnectorKind(), taskRepository

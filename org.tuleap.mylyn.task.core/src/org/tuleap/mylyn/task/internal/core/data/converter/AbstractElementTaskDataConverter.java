@@ -21,6 +21,7 @@ import org.tuleap.mylyn.task.internal.core.data.AttachmentValue;
 import org.tuleap.mylyn.task.internal.core.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.TuleapConfigurableElementMapper;
+import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableElement;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableFieldsConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
@@ -28,7 +29,6 @@ import org.tuleap.mylyn.task.internal.core.model.TuleapElementComment;
 import org.tuleap.mylyn.task.internal.core.model.field.AbstractTuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapFileUpload;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
-import org.tuleap.mylyn.task.internal.core.util.TuleapUtil;
 
 /**
  * Common ancestor of all the task data converter.
@@ -82,7 +82,7 @@ public abstract class AbstractElementTaskDataConverter<ELEMENT extends AbstractT
 		tuleapConfigurableElementMapper.initializeEmptyTaskData();
 
 		// Task Key
-		String taskKey = TuleapUtil.getTaskDataKey(this.configuration.getTuleapProjectConfiguration()
+		String taskKey = TuleapTaskIdentityUtil.getTaskDataKey(this.configuration.getTuleapProjectConfiguration()
 				.getName(), this.configuration.getLabel(), element.getId());
 		tuleapConfigurableElementMapper.setTaskKey(taskKey);
 

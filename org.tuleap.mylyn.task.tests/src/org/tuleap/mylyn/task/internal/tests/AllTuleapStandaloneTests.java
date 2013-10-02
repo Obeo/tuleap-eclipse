@@ -16,6 +16,7 @@ import junit.textui.TestRunner;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+import org.tuleap.mylyn.task.internal.tests.data.TuleapTaskIdentityUtilTests;
 import org.tuleap.mylyn.task.internal.tests.model.TuleapProjectConfigurationTests;
 import org.tuleap.mylyn.task.internal.tests.model.TuleapTrackerConfigurationTests;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapBacklogItemDeserializerTest;
@@ -36,7 +37,7 @@ import org.tuleap.mylyn.task.internal.tests.server.ServerResponseTest;
  * @since 0.7
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({TuleapProjectConfigurationDeserializerTests.class,
+@Suite.SuiteClasses({TuleapTaskIdentityUtilTests.class, TuleapProjectConfigurationDeserializerTests.class,
 		TuleapTrackerConfigurationDeserializerTests.class, TuleapTrackerConfigurationTests.class,
 		TuleapBacklogItemDeserializerTest.class, TuleapBacklogItemTypeDeserializerTests.class,
 		TuleapMilestoneTypeDeserializerTests.class, TuleapMilestoneDeserializerTests.class,

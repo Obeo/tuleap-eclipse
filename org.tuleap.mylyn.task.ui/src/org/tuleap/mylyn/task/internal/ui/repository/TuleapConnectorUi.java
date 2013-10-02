@@ -32,7 +32,6 @@ import org.eclipse.mylyn.tasks.ui.wizards.ITaskSearchPage;
 import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapQueryConstants;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
-import org.tuleap.mylyn.task.internal.core.util.TuleapUtil;
 import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
 import org.tuleap.mylyn.task.internal.ui.wizards.NewTuleapTaskWizard;
 import org.tuleap.mylyn.task.internal.ui.wizards.TuleapTaskAttachmentPage;
@@ -59,13 +58,28 @@ public class TuleapConnectorUi extends AbstractRepositoryConnectorUi {
 	@Override
 	public String getAccountCreationUrl(TaskRepository taskRepository) {
 		// Account creation url : https://<domain-name>/account/register.php
-		return TuleapUtil.getDomainRepositoryURL(taskRepository.getRepositoryUrl()) + "/account/register.php"; //$NON-NLS-1$
+		return this.getDomainRepositoryURL(taskRepository.getRepositoryUrl()) + "/account/register.php"; //$NON-NLS-1$
 	}
 
 	@Override
 	public String getAccountManagementUrl(TaskRepository taskRepository) {
 		// Account management url : https://<domain-name>/my/
-		return TuleapUtil.getDomainRepositoryURL(taskRepository.getRepositoryUrl()) + "/my/"; //$NON-NLS-1$
+		return this.getDomainRepositoryURL(taskRepository.getRepositoryUrl()) + "/my/"; //$NON-NLS-1$
+	}
+
+	/**
+	 * Extract the domain name URL from the repository URL.
+	 * 
+	 * @param repositoryUrl
+	 *            The task repository url : "https://<domainName>/plugins/tracker/?group_id=<groupId>"
+	 * @return The domain name URL : "https://<domainName>/"
+	 */
+	private String getDomainRepositoryURL(String repositoryUrl) {
+		if (repositoryUrl.contains(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE)) {
+			return repositoryUrl.substring(0, repositoryUrl
+					.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE));
+		}
+		return repositoryUrl;
 	}
 
 	/**

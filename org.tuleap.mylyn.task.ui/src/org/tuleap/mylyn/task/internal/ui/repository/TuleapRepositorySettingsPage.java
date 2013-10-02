@@ -33,7 +33,6 @@ import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapSerializer;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
-import org.tuleap.mylyn.task.internal.core.util.TuleapUtil;
 import org.tuleap.mylyn.task.internal.ui.TuleapTasksUIPlugin;
 import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
 
@@ -90,7 +89,7 @@ public class TuleapRepositorySettingsPage extends AbstractRepositorySettingsPage
 		// The Tuleap tracker that the repository will respect the following pattern
 		// "https://<domainName>"
 		boolean isValid = super.isValidUrl(url);
-		return isValid && TuleapUtil.isValidUrl(url);
+		return isValid && url.matches("https://.*"); //$NON-NLS-1$
 	}
 
 	/**
