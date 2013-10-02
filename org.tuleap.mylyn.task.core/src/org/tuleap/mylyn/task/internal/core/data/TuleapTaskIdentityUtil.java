@@ -27,6 +27,11 @@ public final class TuleapTaskIdentityUtil {
 	public static final int IRRELEVANT_ID = -1;
 
 	/**
+	 * The value used to indicate that the identifier is irrelevant.
+	 */
+	private static final String IRRELEVANT_ID_VALUE = "N/A"; //$NON-NLS-1$
+
+	/**
 	 * The separator between the project name or id and the configuration name of id.
 	 */
 	private static final String CONFIGURATION_SEPARATOR = ":"; //$NON-NLS-1$
@@ -77,8 +82,23 @@ public final class TuleapTaskIdentityUtil {
 	 * @return The task data id
 	 */
 	public static String getTaskDataId(int projectId, int configurationId, int elementId) {
-		return String.valueOf(projectId) + CONFIGURATION_SEPARATOR + String.valueOf(configurationId)
-				+ ELEMENT_ID_SEPARATOR + String.valueOf(elementId);
+		String projectIdentifier = IRRELEVANT_ID_VALUE;
+		if (IRRELEVANT_ID != projectId) {
+			projectIdentifier = String.valueOf(projectId);
+		}
+
+		String configurationIdentifier = IRRELEVANT_ID_VALUE;
+		if (IRRELEVANT_ID != configurationId) {
+			configurationIdentifier = String.valueOf(configurationId);
+		}
+
+		String elementIdentifier = IRRELEVANT_ID_VALUE;
+		if (IRRELEVANT_ID != elementId) {
+			elementIdentifier = String.valueOf(elementId);
+		}
+
+		return projectIdentifier + CONFIGURATION_SEPARATOR + configurationIdentifier + ELEMENT_ID_SEPARATOR
+				+ elementIdentifier;
 	}
 
 	/**
@@ -93,15 +113,17 @@ public final class TuleapTaskIdentityUtil {
 		if (indexOf != -1) {
 			String projectId = taskDataId.substring(0, indexOf);
 
-			int identifier = IRRELEVANT_ID;
+			if (!IRRELEVANT_ID_VALUE.equals(projectId)) {
+				int identifier = IRRELEVANT_ID;
 
-			try {
-				identifier = Integer.parseInt(projectId);
-			} catch (NumberFormatException e) {
-				TuleapCoreActivator.log(e, true);
+				try {
+					identifier = Integer.parseInt(projectId);
+				} catch (NumberFormatException e) {
+					TuleapCoreActivator.log(e, true);
+				}
+
+				return identifier;
 			}
-
-			return identifier;
 		}
 		return IRRELEVANT_ID;
 	}
@@ -120,15 +142,17 @@ public final class TuleapTaskIdentityUtil {
 			String configurationId = taskDataId.substring(indexOfConfiguration
 					+ CONFIGURATION_SEPARATOR.length(), indexOfElement);
 
-			int identifier = IRRELEVANT_ID;
+			if (!IRRELEVANT_ID_VALUE.equals(configurationId)) {
+				int identifier = IRRELEVANT_ID;
 
-			try {
-				identifier = Integer.parseInt(configurationId);
-			} catch (NumberFormatException e) {
-				TuleapCoreActivator.log(e, true);
+				try {
+					identifier = Integer.parseInt(configurationId);
+				} catch (NumberFormatException e) {
+					TuleapCoreActivator.log(e, true);
+				}
+
+				return identifier;
 			}
-
-			return identifier;
 		}
 		return IRRELEVANT_ID;
 	}
@@ -145,15 +169,17 @@ public final class TuleapTaskIdentityUtil {
 		if (indexOf != -1) {
 			String elementId = taskDataId.substring(indexOf + ELEMENT_ID_SEPARATOR.length());
 
-			int identifier = IRRELEVANT_ID;
+			if (!IRRELEVANT_ID_VALUE.equals(elementId)) {
+				int identifier = IRRELEVANT_ID;
 
-			try {
-				identifier = Integer.parseInt(elementId);
-			} catch (NumberFormatException e) {
-				TuleapCoreActivator.log(e, true);
+				try {
+					identifier = Integer.parseInt(elementId);
+				} catch (NumberFormatException e) {
+					TuleapCoreActivator.log(e, true);
+				}
+
+				return identifier;
 			}
-
-			return identifier;
 		}
 		return IRRELEVANT_ID;
 	}
