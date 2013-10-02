@@ -28,6 +28,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
+import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.model.TuleapAttachmentDescriptor;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
@@ -477,6 +478,37 @@ public class TuleapRestClient {
 		ServerResponse milestoneResponse = restMilestones.get(Collections.<String, String> emptyMap());
 
 		return this.jsonParser.parseMilestone(milestoneResponse.getBody());
+	}
+
+	/**
+	 * Updates the milestone on the server.
+	 * 
+	 * @param tuleapMilestone
+	 *            The Tuleap milestone
+	 * @param monitor
+	 *            The progress monitor
+	 */
+	public void updateMilestone(TuleapMilestone tuleapMilestone, IProgressMonitor monitor) {
+		// TODO SBE update the milestone on the server
+	}
+
+	/**
+	 * Creates the Tuleap milestone on the server.
+	 * 
+	 * @param tuleapMilestone
+	 *            The tuleap milestone
+	 * @param monitor
+	 *            The progress monitor
+	 * @return The identifier of the Tuleap milestone created
+	 */
+	public String createMilestone(TuleapMilestone tuleapMilestone, IProgressMonitor monitor) {
+		int projectId = -1;
+		int configurationId = tuleapMilestone.getConfigurationId();
+
+		// TODO SBE create the milestone on the server
+
+		int milestoneId = -1;
+		return TuleapTaskIdentityUtil.getTaskDataId(projectId, configurationId, milestoneId);
 	}
 
 	/**

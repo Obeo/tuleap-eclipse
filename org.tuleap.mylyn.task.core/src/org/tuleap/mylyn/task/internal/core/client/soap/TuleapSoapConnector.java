@@ -45,6 +45,7 @@ import org.tuleap.mylyn.task.internal.core.config.ITuleapConfigurationConstants;
 import org.tuleap.mylyn.task.internal.core.data.AbstractFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.LiteralFieldValue;
+import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapAttachmentDescriptor;
 import org.tuleap.mylyn.task.internal.core.model.TuleapElementComment;
@@ -905,7 +906,7 @@ public class TuleapSoapConnector {
 		int artifactId = tuleapTrackerV5APIPort.addArtifact(sessionHash, groupId, artifact
 				.getConfigurationId(), valuesList.toArray(new ArtifactFieldValue[valuesList.size()]));
 
-		taskDataId = String.valueOf(artifactId);
+		taskDataId = TuleapTaskIdentityUtil.getTaskDataId(groupId, artifact.getConfigurationId(), artifactId);
 		monitor.worked(fifty);
 
 		this.logout();

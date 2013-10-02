@@ -25,7 +25,7 @@ import static org.junit.Assert.fail;
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public class MilestonePlanningTaskDataConverterTest {
+public class MilestoneTaskDataConverterTest {
 
 	/**
 	 * The wrapped task data.
@@ -33,11 +33,11 @@ public class MilestonePlanningTaskDataConverterTest {
 	private TaskData taskData;
 
 	/**
-	 * Tests the basic manipulation of a MilestonePlanningTaskDataConverter to ensure the TaskAttribute
-	 * structure is correct.
+	 * Tests the basic manipulation of a MilestoneTaskDataConverter to ensure the TaskAttribute structure is
+	 * correct.
 	 */
 	@Test
-	public void testMilestonePlanningCreation() {
+	public void testMilestoneCreation() {
 
 		Date testDate = new Date();
 
@@ -58,7 +58,7 @@ public class MilestonePlanningTaskDataConverterTest {
 		//		item200.setLabel("item200"); //$NON-NLS-1$
 		// milestone.addBacklogItem(item200);
 		//
-		// MilestonePlanningTaskDataConverter converter = new MilestonePlanningTaskDataConverter(null);
+		// MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(null);
 		// converter.populateTaskData(taskData, milestone);
 		//
 		// TaskAttribute root = taskData.getRoot();

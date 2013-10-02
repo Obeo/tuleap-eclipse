@@ -48,7 +48,7 @@ import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.data.converter.ArtifactTaskDataConverter;
-import org.tuleap.mylyn.task.internal.core.data.converter.MilestonePlanningTaskDataConverter;
+import org.tuleap.mylyn.task.internal.core.data.converter.MilestoneTaskDataConverter;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
@@ -333,8 +333,8 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			int projectId = Integer.valueOf(query.getAttribute(ITuleapQueryConstants.QUERY_PROJECT_ID))
 					.intValue();
 
-			MilestonePlanningTaskDataConverter planningTaskDataConverter = new MilestonePlanningTaskDataConverter(
-					null);
+			// null -> the top plannings do not have a configuration
+			MilestoneTaskDataConverter milestoneTaskDataConverter = new MilestoneTaskDataConverter(null);
 
 			TuleapRestClient restClient = this.clientManager.getRestClient(taskRepository);
 			try {
@@ -345,7 +345,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 					TaskData taskData = new TaskData(attributeMapper, this.getConnectorKind(), taskRepository
 							.getRepositoryUrl(), taskDataId);
-					planningTaskDataConverter.populateTaskData(taskData, tuleapTopPlanning);
+					milestoneTaskDataConverter.populateTaskData(taskData, tuleapTopPlanning);
 					try {
 						collector.accept(taskData);
 					} catch (IllegalArgumentException exception) {

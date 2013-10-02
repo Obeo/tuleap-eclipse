@@ -332,4 +332,46 @@ public class TuleapProjectConfiguration implements Serializable {
 	public TuleapServerConfiguration getServerConfiguration() {
 		return serverConfiguration;
 	}
+
+	/**
+	 * Returns the {@link AbstractTuleapConfigurableFieldsConfiguration} with the given identifier, or
+	 * <code>null</code> if none can be found.
+	 * 
+	 * @param configurationId
+	 *            The identifier of the configuration
+	 * @return The {@link AbstractTuleapConfigurableFieldsConfiguration} with the given identifier, or
+	 *         <code>null</code> if none can be found
+	 */
+	public AbstractTuleapConfigurableFieldsConfiguration getConfigurableFieldsConfiguration(
+			int configurationId) {
+		AbstractTuleapConfigurableFieldsConfiguration configuration = null;
+
+		Collection<TuleapTrackerConfiguration> trackerConfiguration = this.trackerId2trackerConfiguration
+				.values();
+		for (TuleapTrackerConfiguration tuleapTrackerConfiguration : trackerConfiguration) {
+			if (tuleapTrackerConfiguration.getIdentifier() == configurationId) {
+				configuration = tuleapTrackerConfiguration;
+			}
+		}
+
+		if (configuration == null) {
+			Collection<TuleapMilestoneType> milestoneTypes = this.milestoneTypesById.values();
+			for (TuleapMilestoneType tuleapMilestoneType : milestoneTypes) {
+				if (tuleapMilestoneType.getIdentifier() == configurationId) {
+					configuration = tuleapMilestoneType;
+				}
+			}
+		}
+
+		if (configuration == null) {
+			Collection<TuleapBacklogItemType> backlogItemTypes = this.backlogItemTypesById.values();
+			for (TuleapBacklogItemType tuleapBacklogItemType : backlogItemTypes) {
+				if (tuleapBacklogItemType.getIdentifier() == configurationId) {
+					configuration = tuleapBacklogItemType;
+				}
+			}
+		}
+
+		return configuration;
+	}
 }

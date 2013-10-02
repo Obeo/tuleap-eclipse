@@ -30,7 +30,7 @@ import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public class MilestonePlanningTaskDataConverter extends AbstractElementTaskDataConverter<TuleapMilestone, TuleapMilestoneType> {
+public class MilestoneTaskDataConverter extends AbstractElementTaskDataConverter<TuleapMilestone, TuleapMilestoneType> {
 
 	/**
 	 * Constructor.
@@ -38,7 +38,7 @@ public class MilestonePlanningTaskDataConverter extends AbstractElementTaskDataC
 	 * @param configuration
 	 *            The configuration of the milestones.
 	 */
-	public MilestonePlanningTaskDataConverter(TuleapMilestoneType configuration) {
+	public MilestoneTaskDataConverter(TuleapMilestoneType configuration) {
 		super(configuration);
 	}
 
