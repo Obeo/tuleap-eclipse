@@ -87,8 +87,8 @@ public class MilestonePlanningTaskDataConverter extends AbstractElementTaskDataC
 	private void populatePlanning(TaskData taskData, Object pojo) {
 		MilestonePlanningWrapper milestonePlanningWrapper = new MilestonePlanningWrapper(taskData.getRoot());
 		for (TuleapMilestone subMilestone : getSubMilestones(pojo)) {
-			SubMilestoneWrapper subMilestoneWrapper = milestonePlanningWrapper.addSubMilestone(subMilestone
-					.getId());
+			SubMilestoneWrapper subMilestoneWrapper = milestonePlanningWrapper.addSubMilestone(Integer
+					.toString(subMilestone.getId()));
 			subMilestoneWrapper.setLabel(subMilestone.getLabel());
 			subMilestoneWrapper.setStartDate(subMilestone.getStartDate());
 			if (subMilestone.getDuration() != null) {
@@ -99,11 +99,11 @@ public class MilestonePlanningTaskDataConverter extends AbstractElementTaskDataC
 			}
 		}
 		for (TuleapBacklogItem backlogItem : getBacklogItems(pojo)) {
-			BacklogItemWrapper backlogItemWrapper = milestonePlanningWrapper.addBacklogItem(backlogItem
-					.getId());
+			BacklogItemWrapper backlogItemWrapper = milestonePlanningWrapper.addBacklogItem(Integer
+					.toString(backlogItem.getId()));
 			Integer assignedMilestoneId = backlogItem.getAssignedMilestoneId();
 			if (assignedMilestoneId != null) {
-				backlogItemWrapper.setAssignedMilestoneId(assignedMilestoneId.intValue());
+				backlogItemWrapper.setAssignedMilestoneId(assignedMilestoneId.toString());
 			}
 			backlogItemWrapper.setLabel(backlogItem.getLabel());
 			if (backlogItem.getInitialEffort() != null) {
