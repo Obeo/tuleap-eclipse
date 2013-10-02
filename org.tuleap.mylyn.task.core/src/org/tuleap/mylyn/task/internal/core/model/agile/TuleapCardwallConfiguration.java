@@ -33,6 +33,16 @@ public class TuleapCardwallConfiguration {
 	private final List<TuleapCardwallColumnConfiguration> columns;
 
 	/**
+	 * Card wall swimlanes list.
+	 */
+	private final List<TuleapSwimlane> swimlanes;
+
+	/**
+	 * Card wall status list.
+	 */
+	private final List<TuleapStatus> status;
+
+	/**
 	 * Constructor.
 	 * 
 	 * @param enabled
@@ -41,6 +51,8 @@ public class TuleapCardwallConfiguration {
 	public TuleapCardwallConfiguration(boolean enabled) {
 		this.enabled = enabled;
 		this.columns = Lists.newArrayList();
+		this.swimlanes = Lists.newArrayList();
+		this.status = Lists.newArrayList();
 	}
 
 	/**
@@ -69,5 +81,43 @@ public class TuleapCardwallConfiguration {
 	 */
 	public List<TuleapCardwallColumnConfiguration> getColumnConfigurations() {
 		return ImmutableList.copyOf(columns);
+	}
+
+	/**
+	 * Add a status to the card wall.
+	 * 
+	 * @param theStatus
+	 *            The status
+	 */
+	public void addStatus(TuleapStatus theStatus) {
+		status.add(theStatus);
+	}
+
+	/**
+	 * Provides the status list of this card wall.
+	 * 
+	 * @return An unmodifiable list view of the status of this card wall.
+	 */
+	public List<TuleapStatus> getStatus() {
+		return ImmutableList.copyOf(status);
+	}
+
+	/**
+	 * Add a swimlane to the card wall.
+	 * 
+	 * @param swimlane
+	 *            The swimlane
+	 */
+	public void addSwimlane(TuleapSwimlane swimlane) {
+		swimlanes.add(swimlane);
+	}
+
+	/**
+	 * Provides the swimlanes list of this card wall.
+	 * 
+	 * @return An unmodifiable list view of the swimlanes of this card wall.
+	 */
+	public List<TuleapSwimlane> getSwimlanes() {
+		return ImmutableList.copyOf(swimlanes);
 	}
 }

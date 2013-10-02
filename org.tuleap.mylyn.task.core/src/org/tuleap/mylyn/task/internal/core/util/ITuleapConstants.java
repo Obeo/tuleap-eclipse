@@ -244,4 +244,40 @@ public interface ITuleapConstants {
 	 * The key used to retrieve the backlogItem assigned milestone identifier.
 	 */
 	String ASSIGNED_MILESTONE_ID = "assigned_milestone_id"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the type id of the card.
+	 */
+	String CARD_TYPE_ID = "card_type_id"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the color of the card.
+	 */
+	String COLOR = "color"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the status identifier of the card.
+	 */
+	String STATUS_ID = "status_id"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the status list of the cardwall.
+	 */
+	String STATUS_LIST = "status_list"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the swimlanes of the cardwall.
+	 */
+	String SWIMLANES = "swimlanes"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the backlogItem of the swimlane.
+	 */
+	String BACKLOG_ITEM = "backlog_item"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the cards of the swimlane.
+	 */
+	String CARDS = "cards"; //$NON-NLS-1$
+
 }
