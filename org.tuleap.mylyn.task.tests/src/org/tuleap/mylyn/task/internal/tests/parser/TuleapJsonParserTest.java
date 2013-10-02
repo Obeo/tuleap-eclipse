@@ -18,6 +18,7 @@ import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItemType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 
 import static org.junit.Assert.assertEquals;
@@ -91,7 +92,7 @@ public class TuleapJsonParserTest {
 	 * Checks the parsing of backlog item types.
 	 */
 	@Test
-	public void testParserBacklogItemTypeEpics() {
+	public void testParseBacklogItemTypeEpics() {
 		String json = ParserUtil.loadFile("/backlog_item_types/types.json");
 		List<TuleapBacklogItemType> types = parser.parseBacklogItemTypes(provider.getProjectConfiguration(),
 				json);
@@ -106,5 +107,26 @@ public class TuleapJsonParserTest {
 		assertEquals(2, provider.getProjectConfiguration().getAllBacklogItemTypes().size());
 		assertSame(types.get(0), provider.getProjectConfiguration().getBacklogItemType(801));
 		assertSame(types.get(1), provider.getProjectConfiguration().getBacklogItemType(802));
+	}
+
+	/**
+	 * Checks the parsing of milestone types.
+	 */
+	@Test
+	public void testParseMilestoneType() {
+		String json = ParserUtil.loadFile("/milestone_types/types.json");
+		List<TuleapMilestoneType> types = parser
+				.parseMilestoneTypes(provider.getProjectConfiguration(), json);
+		assertEquals(2, types.size());
+
+		TuleapMilestoneType type = types.get(0);
+		new TuleapMilestoneTypeDeserializerTests().checkMilestoneTypeReleases(type);
+
+		type = types.get(1);
+		new TuleapMilestoneTypeDeserializerTests().checkMilestoneTypeSprints(type);
+
+		assertEquals(2, provider.getProjectConfiguration().getAllMilestoneTypes().size());
+		assertSame(types.get(0), provider.getProjectConfiguration().getMilestoneType(901));
+		assertSame(types.get(1), provider.getProjectConfiguration().getMilestoneType(902));
 	}
 }

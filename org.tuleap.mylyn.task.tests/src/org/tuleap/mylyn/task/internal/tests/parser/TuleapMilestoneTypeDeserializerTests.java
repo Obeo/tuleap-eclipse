@@ -44,11 +44,32 @@ public class TuleapMilestoneTypeDeserializerTests extends AbstractConfigurationD
 	public void testReleasesParsing() {
 		String releases = ParserUtil.loadFile("/milestone_types/releases.json"); //$NON-NLS-1$
 		TuleapMilestoneType tuleapMilestoneType = this.parse(releases, TuleapMilestoneType.class);
-		assertNotNull(tuleapMilestoneType);
-		assertEquals(901, tuleapMilestoneType.getIdentifier());
-		assertEquals("Releases", tuleapMilestoneType.getLabel()); //$NON-NLS-1$
-		assertEquals("localhost:3001/api/v3.14/milestone_types/901", tuleapMilestoneType.getUrl()); //$NON-NLS-1$
-		Collection<AbstractTuleapField> fields = tuleapMilestoneType.getFields();
+		checkMilestoneTypeReleases(tuleapMilestoneType);
+
+	}
+
+	/**
+	 * Test the parsing of the second file.
+	 */
+	@Test
+	public void testSprintsParsing() {
+		String sprints = ParserUtil.loadFile("/milestone_types/sprints.json"); //$NON-NLS-1$
+		TuleapMilestoneType tuleapMilestoneType = this.parse(sprints, TuleapMilestoneType.class);
+		checkMilestoneTypeSprints(tuleapMilestoneType);
+	}
+
+	/**
+	 * Checks that the given milestone type represents releases.
+	 * 
+	 * @param milestoneType
+	 *            The milestone type to test
+	 */
+	public void checkMilestoneTypeReleases(TuleapMilestoneType milestoneType) {
+		assertNotNull(milestoneType);
+		assertEquals(901, milestoneType.getIdentifier());
+		assertEquals("Releases", milestoneType.getLabel()); //$NON-NLS-1$
+		assertEquals("localhost:3001/api/v3.14/milestone_types/901", milestoneType.getUrl()); //$NON-NLS-1$
+		Collection<AbstractTuleapField> fields = milestoneType.getFields();
 		assertEquals(13, fields.size());
 		Iterator<AbstractTuleapField> iterator = fields.iterator();
 
@@ -108,22 +129,21 @@ public class TuleapMilestoneTypeDeserializerTests extends AbstractConfigurationD
 		AbstractTuleapField fifthField = iterator.next();
 		List<Boolean> fifthPermissions = fieldPermissionsFilling(true, true, true);
 		this.basicFieldTest(fifthField, null, "In release", 954, fifthPermissions); //$NON-NLS-1$
-
 	}
 
 	/**
-	 * Test the parsing of the second file.
+	 * Checks that the given milestone type represents releases.
+	 * 
+	 * @param milestoneType
+	 *            The milestone type to test
 	 */
-	@Test
-	public void testSprintsParsing() {
-		String sprints = ParserUtil.loadFile("/milestone_types/sprints.json"); //$NON-NLS-1$
-		TuleapMilestoneType tuleapMilestoneType = this.parse(sprints, TuleapMilestoneType.class);
-		assertNotNull(tuleapMilestoneType);
-		assertEquals(902, tuleapMilestoneType.getIdentifier());
-		assertEquals("Sprints", tuleapMilestoneType.getLabel()); //$NON-NLS-1$
-		assertEquals("localhost:3001/api/v3.14/milestone_types/902", tuleapMilestoneType.getUrl()); //$NON-NLS-1$
+	public void checkMilestoneTypeSprints(TuleapMilestoneType milestoneType) {
+		assertNotNull(milestoneType);
+		assertEquals(902, milestoneType.getIdentifier());
+		assertEquals("Sprints", milestoneType.getLabel()); //$NON-NLS-1$
+		assertEquals("localhost:3001/api/v3.14/milestone_types/902", milestoneType.getUrl()); //$NON-NLS-1$
 
-		Collection<AbstractTuleapField> fields = tuleapMilestoneType.getFields();
+		Collection<AbstractTuleapField> fields = milestoneType.getFields();
 		assertEquals(7, fields.size());
 
 		Iterator<AbstractTuleapField> iterator = fields.iterator();
