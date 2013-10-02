@@ -14,7 +14,6 @@ import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard;
 import org.eclipse.ui.INewWizard;
-import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapTaskMapping;
 import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
@@ -72,30 +71,9 @@ public class NewTuleapTaskWizard extends NewTaskWizard implements INewWizard {
 	@Override
 	protected ITaskMapping getInitializationData() {
 		// Returns the initialization data containing the id of the tracker to use while creating the task
-		final TuleapProjectConfiguration projectSelected = this.tuleapProjectPage.getProjectSelected();
 		final TuleapTrackerConfiguration trackerSelected = this.tuleapTrackerPage.getTrackerSelected();
 
-		ITaskMapping taskMapping = new TuleapTaskMapping() {
-			/**
-			 * {@inheritDoc}
-			 * 
-			 * @see org.tuleap.mylyn.task.internal.core.repository.TuleapTaskMapping#getProject()
-			 */
-			@Override
-			public TuleapProjectConfiguration getProject() {
-				return projectSelected;
-			}
-
-			/**
-			 * {@inheritDoc}
-			 * 
-			 * @see org.tuleap.mylyn.task.internal.core.repository.TuleapTaskMapping#getConfiguration()
-			 */
-			@Override
-			public TuleapTrackerConfiguration getConfiguration() {
-				return trackerSelected;
-			}
-		};
+		ITaskMapping taskMapping = new TuleapTaskMapping(trackerSelected);
 		return taskMapping;
 	}
 
