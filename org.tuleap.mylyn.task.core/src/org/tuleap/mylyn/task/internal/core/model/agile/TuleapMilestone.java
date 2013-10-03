@@ -26,6 +26,11 @@ import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableEleme
 public class TuleapMilestone extends AbstractTuleapConfigurableElement {
 
 	/**
+	 * The value used is there are no parent milestone id.
+	 */
+	public static final int INVALID_PARENT_MILESTONE_ID = -1;
+
+	/**
 	 * The milestone's start date.
 	 */
 	private Date startDate;
@@ -39,6 +44,11 @@ public class TuleapMilestone extends AbstractTuleapConfigurableElement {
 	 * The milestone's capacity.
 	 */
 	private Float capacity;
+
+	/**
+	 * The identifier of the parent milestone.
+	 */
+	private int parentMilestoneId;
 
 	/**
 	 * The milestone's sub-milestones.
@@ -55,9 +65,12 @@ public class TuleapMilestone extends AbstractTuleapConfigurableElement {
 	 * 
 	 * @param milestoneTypeId
 	 *            The identifier of the milestone type
+	 * @param parentMilestoneId
+	 *            The identifier of the parent milestone or INVALID_PARENT_MILESTONE_ID if there are no parent
 	 */
-	public TuleapMilestone(int milestoneTypeId) {
+	public TuleapMilestone(int milestoneTypeId, int parentMilestoneId) {
 		super(milestoneTypeId);
+		this.parentMilestoneId = parentMilestoneId;
 	}
 
 	/**
@@ -65,11 +78,11 @@ public class TuleapMilestone extends AbstractTuleapConfigurableElement {
 	 * 
 	 * @param milestoneId
 	 *            The identifier of the milestone
-	 * @param milestoneTypeId
-	 *            The identifier of the milestone type
+	 * @param milestoneType
+	 *            The milestone type
 	 */
-	public TuleapMilestone(int milestoneId, int milestoneTypeId) {
-		super(milestoneId, milestoneTypeId);
+	public TuleapMilestone(int milestoneId, TuleapMilestoneType milestoneType) {
+		super(milestoneId, milestoneType.getIdentifier());
 	}
 
 	/**
@@ -93,6 +106,17 @@ public class TuleapMilestone extends AbstractTuleapConfigurableElement {
 	public TuleapMilestone(int milestoneId, int milestoneTypeId, String label, String url, String htmlUrl,
 			Date creationDate, Date lastModificationDate) {
 		super(milestoneId, milestoneTypeId, label, url, htmlUrl, creationDate, lastModificationDate);
+	}
+
+	/**
+	 * Returns the identifier of the parent milestone or INVALID_PARENT_MILESTONE_ID if there is no parent for
+	 * this milestone.
+	 * 
+	 * @return The identifier of the parent milestone or INVALID_PARENT_MILESTONE_ID if there is no parent for
+	 *         this milestone
+	 */
+	public int getParentMilestoneId() {
+		return this.parentMilestoneId;
 	}
 
 	/**

@@ -161,11 +161,12 @@ public class MilestoneTaskDataConverter extends AbstractElementTaskDataConverter
 
 		if (taskData.isNew()) {
 			int configurationId = tuleapConfigurableElementMapper.getConfigurationId();
-			tuleapMilestone = new TuleapMilestone(configurationId);
+			// TODO SBE find the identifier of the parent milestone
+			tuleapMilestone = new TuleapMilestone(configurationId,
+					TuleapMilestone.INVALID_PARENT_MILESTONE_ID);
 		} else {
 			int id = tuleapConfigurableElementMapper.getId();
-			int configurationId = tuleapConfigurableElementMapper.getConfigurationId();
-			tuleapMilestone = new TuleapMilestone(id, configurationId);
+			tuleapMilestone = new TuleapMilestone(id, this.configuration);
 		}
 
 		// Configurable fields
