@@ -252,7 +252,6 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 					isInitialized = true;
 				}
-
 			}
 		}
 		return isInitialized;
@@ -352,6 +351,8 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 */
 	@Override
 	public boolean canGetMultiTaskData(TaskRepository repository) {
+		// TODO SBE Should we support that to improve performances? maybe but it could require improvements in
+		// the REST/SOAP API
 		return false;
 	}
 
@@ -363,8 +364,6 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 */
 	@Override
 	public boolean canInitializeSubTaskData(TaskRepository repository, ITask task) {
-		// TODO SBE Should we support that to improve performances? maybe but it could require improvements in
-		// the REST/SOAP API
 		return false;
 	}
 
