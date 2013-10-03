@@ -28,6 +28,12 @@ import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 public class TuleapMilestoneSerializer extends AbstractTuleapSerializer<TuleapMilestone> {
 
 	/**
+	 * The key used to retrieve the parent identifier of the milestone.
+	 */
+
+	private static final String PARENT_MILESTONE_ID = "parent_milestone_id"; //$NON-NLS-1$
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see com.google.gson.JsonSerializer#serialize(java.lang.Object, java.lang.reflect.Type,
@@ -42,8 +48,8 @@ public class TuleapMilestoneSerializer extends AbstractTuleapSerializer<TuleapMi
 		milestoneObject.add(ITuleapConstants.MILESTONE_TYPE_ID, new JsonPrimitive(Integer.valueOf(milestone
 				.getConfigurationId())));
 		if (milestone.getParentMilestoneId() != TuleapMilestone.INVALID_PARENT_MILESTONE_ID) {
-			milestoneObject.add(ITuleapConstants.PARENT_MILESTONE_ID, new JsonPrimitive(Integer
-					.valueOf(milestone.getParentMilestoneId())));
+			milestoneObject.add(PARENT_MILESTONE_ID, new JsonPrimitive(Integer.valueOf(milestone
+					.getParentMilestoneId())));
 		}
 		if (milestone.getStartDate() != null) {
 			milestoneObject.add(ITuleapConstants.START_DATE, new JsonPrimitive(dateFormat.format(milestone

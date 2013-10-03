@@ -13,7 +13,6 @@ package org.tuleap.mylyn.task.internal.core.model.field;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
-import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**
  * The Tuleap float field.
@@ -27,6 +26,11 @@ public class TuleapFloat extends AbstractTuleapField {
 	 * The serialization ID.
 	 */
 	private static final long serialVersionUID = 563002919209031222L;
+
+	/**
+	 * The constant used to specify the id of the field with the "initial effort" semantic.
+	 */
+	private static final String INITIAL_EFFORT_FIELD_ID = "tuleap_initial_effort"; //$NON-NLS-1$
 
 	/**
 	 * Flag indicating whether this field has the semantic "initial effort".
@@ -116,7 +120,7 @@ public class TuleapFloat extends AbstractTuleapField {
 	 */
 	private TaskAttribute createInitialEffortTaskAttribute(TaskAttribute parent) {
 		// String with semantic title
-		TaskAttribute attribute = parent.createAttribute(ITuleapConstants.INITIAL_EFFORT_FIELD_ID);
+		TaskAttribute attribute = parent.createAttribute(INITIAL_EFFORT_FIELD_ID);
 		// Attributes
 		TaskAttributeMetaData attributeMetadata = attribute.getMetaData();
 		attributeMetadata.setType(getMetadataType());

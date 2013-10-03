@@ -14,8 +14,6 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
-import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
-
 /**
  * The common root of all Tuleap form elements.
  * 
@@ -28,6 +26,21 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 	 * The serialization ID.
 	 */
 	private static final long serialVersionUID = 7487047015742226549L;
+
+	/**
+	 * Indicates that the user can read the field.
+	 */
+	private static final String PERMISSION_READ = "read"; //$NON-NLS-1$
+
+	/**
+	 * Indicates that the user can update the field.
+	 */
+	private static final String PERMISSION_UPDATE = "update"; //$NON-NLS-1$
+
+	/**
+	 * Indicates that the user can submit a newly created artifact with the field set.
+	 */
+	private static final String PERMISSION_SUBMIT = "submit"; //$NON-NLS-1$
 
 	/**
 	 * The name of the form element.
@@ -178,9 +191,9 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 	 */
 	public void setPermissions(String[] permissions) {
 		List<String> list = Arrays.asList(permissions);
-		this.readable = list.contains(ITuleapConstants.PERMISSION_READ);
-		this.submitable = list.contains(ITuleapConstants.PERMISSION_SUBMIT);
-		this.updatable = list.contains(ITuleapConstants.PERMISSION_UPDATE);
+		this.readable = list.contains(PERMISSION_READ);
+		this.submitable = list.contains(PERMISSION_SUBMIT);
+		this.updatable = list.contains(PERMISSION_UPDATE);
 	}
 
 	/**

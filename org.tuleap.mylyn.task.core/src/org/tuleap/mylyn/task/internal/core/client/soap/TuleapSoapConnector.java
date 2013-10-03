@@ -134,6 +134,21 @@ public class TuleapSoapConnector {
 	private static final String CONFIG_FILE = "org/tuleap/mylyn/task/internal/core/wsdl/soap/client-config.wsdd"; //$NON-NLS-1$
 
 	/**
+	 * The UTF-8 constants.
+	 */
+	private static final String UTF8 = "UTF-8"; //$NON-NLS-1$
+
+	/**
+	 * Indicates that the user can update the field.
+	 */
+	private static final String PERMISSION_UPDATE = "update"; //$NON-NLS-1$
+
+	/**
+	 * Indicates that the user can submit a newly created artifact with the field set.
+	 */
+	private static final String PERMISSION_SUBMIT = "submit"; //$NON-NLS-1$
+
+	/**
 	 * The login message.
 	 */
 	private static final String LOGIN_MESSAGE = TuleapMylynTasksMessages
@@ -892,7 +907,7 @@ public class TuleapSoapConnector {
 		for (TrackerField trackerField : trackerFields) {
 			if (trackerStructure != null) {
 				ArtifactFieldValue artifactFieldValue = getArtifactFieldValue(trackerStructure, trackerField,
-						artifact, ITuleapConstants.PERMISSION_SUBMIT);
+						artifact, true);
 				if (artifactFieldValue != null) {
 					valuesList.add(artifactFieldValue);
 				}
@@ -962,7 +977,7 @@ public class TuleapSoapConnector {
 		for (TrackerField trackerField : trackerFields) {
 			if (trackerStructure != null) {
 				ArtifactFieldValue artifactFieldValue = getArtifactFieldValue(trackerStructure, trackerField,
-						artifact, ITuleapConstants.PERMISSION_UPDATE);
+						artifact, false);
 				if (artifactFieldValue != null) {
 					valuesList.add(artifactFieldValue);
 				}
@@ -975,8 +990,7 @@ public class TuleapSoapConnector {
 			newComment = TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.defaultComment);
 		}
 		tuleapTrackerV5APIPort.updateArtifact(sessionHash, groupId, artifact.getConfigurationId(), artifact
-				.getId(), valuesList.toArray(new ArtifactFieldValue[valuesList.size()]), newComment,
-				ITuleapConstants.UTF8);
+				.getId(), valuesList.toArray(new ArtifactFieldValue[valuesList.size()]), newComment, UTF8);
 
 		monitor.worked(fifty);
 
@@ -993,15 +1007,22 @@ public class TuleapSoapConnector {
 	 *            The field of the tracker.
 	 * @param artifact
 	 *            The artifact that should be submitted
-	 * @param permission
-	 *            The permission that should be checked.
+	 * @param newlyCreatedArtifact
+	 *            A boolean indicating if we are taking care of the creation of a new artifact (true), or the
+	 *            update of an existing one (false).
 	 * @return The artifact field value
 	 */
 	private ArtifactFieldValue getArtifactFieldValue(TrackerStructure trackerStructure,
-			TrackerField trackerField, TuleapArtifact artifact, String permission) {
+			TrackerField trackerField, TuleapArtifact artifact, boolean newlyCreatedArtifact) {
 		ArtifactFieldValue artifactFieldValue = null;
 
-		if (!Arrays.asList(trackerField.getPermissions()).contains(permission)) {
+		boolean returnEarly = false;
+		returnEarly = newlyCreatedArtifact
+				&& !Arrays.asList(trackerField.getPermissions()).contains(PERMISSION_SUBMIT);
+		returnEarly = returnEarly || !newlyCreatedArtifact
+				&& !Arrays.asList(trackerField.getPermissions()).contains(PERMISSION_UPDATE);
+
+		if (returnEarly) {
 			return artifactFieldValue;
 		}
 

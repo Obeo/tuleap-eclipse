@@ -100,9 +100,9 @@ public abstract class AbstractTuleapSerializer<T extends AbstractTuleapConfigura
 				JsonObject fileDescritonObject = new JsonObject();
 				fileDescritonObject.add(ITuleapConstants.FILE_ID, new JsonPrimitive(Integer
 						.valueOf(attachmentValue.getAttachmentId())));
-								fileDescritonObject.add(ITuleapConstants.DESCRIPTION, new JsonPrimitive(attachmentValue
+				fileDescritonObject.add(ITuleapConstants.DESCRIPTION, new JsonPrimitive(attachmentValue
 						.getDescription()));
-								fileDescriptions.getAsJsonArray().add(fileDescritonObject);
+				fileDescriptions.getAsJsonArray().add(fileDescritonObject);
 			}
 		}
 	}

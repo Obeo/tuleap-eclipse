@@ -25,36 +25,6 @@ public interface ITuleapConstants {
 	String CONNECTOR_KIND = "tuleap"; //$NON-NLS-1$
 
 	/**
-	 * The ID of the default static binding.
-	 */
-	String TULEAP_STATIC_BINDING_ID = "static"; //$NON-NLS-1$
-
-	/**
-	 * The ID of the default dynamic binding.
-	 */
-	String TULEAP_DYNAMIC_BINDING_USERS = "users"; //$NON-NLS-1$
-
-	/**
-	 * Indicates that the user can read the field.
-	 */
-	String PERMISSION_READ = "read"; //$NON-NLS-1$
-
-	/**
-	 * Indicates that the user can update the field.
-	 */
-	String PERMISSION_UPDATE = "update"; //$NON-NLS-1$
-
-	/**
-	 * Indicates that the user can submit a newly created artifact with the field set.
-	 */
-	String PERMISSION_SUBMIT = "submit"; //$NON-NLS-1$
-
-	/**
-	 * The UTF-8 constants.
-	 */
-	String UTF8 = "UTF-8"; //$NON-NLS-1$
-
-	/**
 	 * The identifier of the none binding.
 	 */
 	int CONFIGURABLE_FIELD_NONE_BINDING_ID = 100;
@@ -73,11 +43,6 @@ public interface ITuleapConstants {
 	 * The constant used to specify the label of the field to use to upload new files.
 	 */
 	String ATTACHMENT_FIELD_LABEL = "tuleap_attachment_field_label"; //$NON-NLS-1$
-
-	/**
-	 * The constant used to specify the id of the field with the "initial effort" semantic.
-	 */
-	String INITIAL_EFFORT_FIELD_ID = "tuleap_initial_effort"; //$NON-NLS-1$
 
 	/**
 	 * The identifier of an anonymous user.
@@ -269,11 +234,5 @@ public interface ITuleapConstants {
 	 */
 
 	String BODY = "body"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the parent identifier of the milestone.
-	 */
-
-	String PARENT_MILESTONE_ID = "parent_milestone_id"; //$NON-NLS-1$
 
 }

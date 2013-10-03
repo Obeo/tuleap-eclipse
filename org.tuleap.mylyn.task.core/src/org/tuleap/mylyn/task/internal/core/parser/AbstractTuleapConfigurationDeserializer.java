@@ -36,7 +36,6 @@ import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapText;
 import org.tuleap.mylyn.task.internal.core.model.workflow.TuleapWorkflowTransition;
-import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**
  * Common superclass for all the configuration deserializer.
@@ -168,6 +167,11 @@ public abstract class AbstractTuleapConfigurationDeserializer<CONFIGURATION_TYPE
 	private static final String STATUS = "status"; //$NON-NLS-1$
 
 	/**
+	 * Indicates that the user can submit a newly created artifact with the field set.
+	 */
+	private static final String PERMISSION_SUBMIT = "submit"; //$NON-NLS-1$
+
+	/**
 	 * The related project configuration.
 	 */
 	protected final TuleapProjectConfiguration projectConfiguration;
@@ -280,7 +284,7 @@ public abstract class AbstractTuleapConfigurationDeserializer<CONFIGURATION_TYPE
 
 				for (int j = 0; j < permissions.size(); j++) {
 					if (CREATE.equals(permissions.get(j).getAsString())) {
-						permissionsArray[j] = ITuleapConstants.PERMISSION_SUBMIT;
+						permissionsArray[j] = PERMISSION_SUBMIT;
 					} else {
 						permissionsArray[j] = permissions.get(j).getAsString();
 					}
