@@ -512,6 +512,19 @@ public class TuleapRestClient {
 	}
 
 	/**
+	 * Returns the Tuleap backlog item with the given identifier from the server.
+	 * 
+	 * @param backlogItemId
+	 *            The identifier of the backlog item
+	 * @param monitor
+	 *            The progress monitor
+	 * @return The Tuleap backlog item with the given identifier from the server
+	 */
+	public TuleapBacklogItem getBacklogItem(int backlogItemId, IProgressMonitor monitor) {
+		return null;
+	}
+
+	/**
 	 * Retrieves the list of the project's BacklogItem Types from the server with the given project id.
 	 * 
 	 * @param project
@@ -521,7 +534,7 @@ public class TuleapRestClient {
 	 * @throws CoreException
 	 *             In case of error during the retrieval of the BacklogItem Types
 	 */
-	protected void loadBacklogItemTypes(TuleapProjectConfiguration project, IProgressMonitor monitor)
+	private void loadBacklogItemTypes(TuleapProjectConfiguration project, IProgressMonitor monitor)
 			throws CoreException {
 		// Test the connection
 		RestResources restResources = tuleapRestConnector.resources(credentials);
@@ -555,7 +568,7 @@ public class TuleapRestClient {
 	 * @throws CoreException
 	 *             In case of error during the retrieval of the Milestone Types
 	 */
-	protected void loadMilestoneTypes(TuleapProjectConfiguration project, IProgressMonitor monitor)
+	private void loadMilestoneTypes(TuleapProjectConfiguration project, IProgressMonitor monitor)
 			throws CoreException {
 		// Test the connection
 		RestResources restResources = tuleapRestConnector.resources(credentials);
@@ -589,7 +602,7 @@ public class TuleapRestClient {
 	 * @throws CoreException
 	 *             In case of error during the retrieval of the Milestone Types
 	 */
-	protected void loadCardTypes(TuleapProjectConfiguration project, IProgressMonitor monitor)
+	private void loadCardTypes(TuleapProjectConfiguration project, IProgressMonitor monitor)
 			throws CoreException {
 		// Test the connection
 		RestResources restResources = tuleapRestConnector.resources(credentials);
