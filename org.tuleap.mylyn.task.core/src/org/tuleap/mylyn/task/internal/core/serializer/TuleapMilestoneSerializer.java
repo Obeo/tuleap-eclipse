@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.serializer;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -40,7 +39,12 @@ public class TuleapMilestoneSerializer extends AbstractTuleapSerializer<TuleapMi
 
 		JsonObject milestoneObject = new JsonObject();
 		milestoneObject = (JsonObject)super.serialize(milestone, type, jsonSerializationContext);
-
+		milestoneObject.add(ITuleapConstants.MILESTONE_TYPE_ID, new JsonPrimitive(Integer.valueOf(milestone
+				.getConfigurationId())));
+		if (milestone.getParentMilestoneId() != TuleapMilestone.INVALID_PARENT_MILESTONE_ID) {
+			milestoneObject.add(ITuleapConstants.PARENT_MILESTONE_ID, new JsonPrimitive(Integer
+					.valueOf(milestone.getParentMilestoneId())));
+		}
 		if (milestone.getStartDate() != null) {
 			milestoneObject.add(ITuleapConstants.START_DATE, new JsonPrimitive(dateFormat.format(milestone
 					.getStartDate())));
@@ -51,17 +55,10 @@ public class TuleapMilestoneSerializer extends AbstractTuleapSerializer<TuleapMi
 		if (milestone.getCapacity() != null) {
 			milestoneObject.add(ITuleapConstants.CAPACITY, new JsonPrimitive(milestone.getCapacity()));
 		}
-		milestoneObject.add(ITuleapConstants.MILESTONE_TYPE_ID, new JsonPrimitive(Integer.valueOf(milestone
-				.getConfigurationId())));
-
-		JsonElement subMilestones = new JsonArray();
-		if (milestone.getSubMilestones().size() > 0) {
-			milestoneObject.add(ITuleapConstants.SUBMILESTONES, subMilestones);
-		}
-		for (TuleapMilestone subMilestone : milestone.getSubMilestones()) {
-			JsonObject submilestoneObject = (JsonObject)this.serialize(subMilestone, type,
-					jsonSerializationContext);
-			subMilestones.getAsJsonArray().add(submilestoneObject);
+		if (milestone.getNewComment() != null) {
+			JsonObject comment = new JsonObject();
+			milestoneObject.add(ITuleapConstants.COMMENT, comment);
+			comment.add(ITuleapConstants.BODY, new JsonPrimitive(milestone.getNewComment()));
 		}
 		return milestoneObject;
 	}

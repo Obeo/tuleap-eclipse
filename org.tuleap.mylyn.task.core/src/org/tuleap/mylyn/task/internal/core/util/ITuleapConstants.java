@@ -280,4 +280,21 @@ public interface ITuleapConstants {
 	 */
 	String CARDS = "cards"; //$NON-NLS-1$
 
+	/**
+	 * The key used to retrieve the comment of the milestone.
+	 */
+	String COMMENT = "comment"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the comment body of the milestone.
+	 */
+
+	String BODY = "body"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the parent identifier of the milestone.
+	 */
+
+	String PARENT_MILESTONE_ID = "parent_milestone_id"; //$NON-NLS-1$
+
 }
