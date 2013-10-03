@@ -70,6 +70,7 @@ import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfigurat
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerReport;
 import org.tuleap.mylyn.task.internal.core.model.workflow.TuleapWorkflow;
 import org.tuleap.mylyn.task.internal.core.model.workflow.TuleapWorkflowTransition;
+import org.tuleap.mylyn.task.internal.core.repository.TuleapUrlUtil;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
@@ -112,6 +113,11 @@ import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TuleapTrackerV5APIPortTy
  * @since 0.7
  */
 public class TuleapSoapConnector {
+	/**
+	 * Part of the Tuleap repository URL.
+	 */
+	private static final String TULEAP_REPOSITORY_URL_STRUCTURE = "/plugins/tracker/"; //$NON-NLS-1$
+
 	/**
 	 * The url used to invoke the soap v1 services.
 	 */
@@ -194,19 +200,9 @@ public class TuleapSoapConnector {
 		EngineConfiguration config = new FileProvider(getClass().getClassLoader().getResourceAsStream(
 				CONFIG_FILE));
 		TuleapSoapServiceLocator locator = new TuleapSoapServiceLocator(config, this.trackerLocation);
-		String soapv1url = trackerLocation.getUrl();
-		int index = soapv1url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
-		if (index != -1) {
-			soapv1url = soapv1url.substring(0, index);
-		}
-		soapv1url = soapv1url + SOAP_V1_URL;
 
-		String soapv2url = trackerLocation.getUrl();
-		index = soapv2url.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE);
-		if (index != -1) {
-			soapv2url = soapv2url.substring(0, index);
-		}
-		soapv2url = soapv2url + SOAP_V2_URL;
+		String soapv1url = trackerLocation.getUrl() + SOAP_V1_URL;
+		String soapv2url = trackerLocation.getUrl() + SOAP_V2_URL;
 
 		String username = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getUserName();
 		String password = this.trackerLocation.getCredentials(AuthenticationType.REPOSITORY).getPassword();
@@ -385,11 +381,11 @@ public class TuleapSoapConnector {
 	 * @return The configuration of the Tuleap tracker.
 	 */
 	private TuleapTrackerConfiguration getTuleapTrackerConfiguration(Tracker tracker, IProgressMonitor monitor) {
-		String trackerURL = this.trackerLocation.getUrl() + ITuleapConstants.REPOSITORY_TRACKER_URL_SEPARATOR
-				+ Integer.valueOf(tracker.getTracker_id()).toString();
+		String trackerUrl = TuleapUrlUtil.getTrackerUrl(this.trackerLocation.getUrl(), tracker
+				.getTracker_id());
 
 		TuleapTrackerConfiguration tuleapTrackerConfiguration = new TuleapTrackerConfiguration(tracker
-				.getTracker_id(), trackerURL, tracker.getName(), tracker.getItem_name(), tracker
+				.getTracker_id(), trackerUrl, tracker.getName(), tracker.getItem_name(), tracker
 				.getDescription(), System.currentTimeMillis());
 
 		try {

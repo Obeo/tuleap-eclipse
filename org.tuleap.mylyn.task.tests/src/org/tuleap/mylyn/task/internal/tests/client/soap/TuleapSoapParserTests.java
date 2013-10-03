@@ -24,6 +24,7 @@ import org.tuleap.mylyn.task.internal.core.data.AttachmentFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.AttachmentValue;
 import org.tuleap.mylyn.task.internal.core.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.LiteralFieldValue;
+import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapElementComment;
 import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
@@ -41,7 +42,7 @@ import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapText;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
-import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
+import org.tuleap.mylyn.task.internal.core.repository.TuleapUrlUtil;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Artifact;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactFieldValue;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.FieldValue;
@@ -271,7 +272,8 @@ public class TuleapSoapParserTests {
 		assertThat(tuleapArtifact.getCreationDate().toString(), is(creationDate.toString()));
 		assertThat(tuleapArtifact.getLastModificationDate().toString(), is(lastUpdateDate.toString()));
 
-		String htmlUrl = this.repositoryUrl + ITuleapConstants.REPOSITORY_TASK_URL_SEPARATOR + artifactId;
+		String taskId = TuleapTaskIdentityUtil.getTaskDataId(projectId, trackerId, artifactId);
+		String htmlUrl = TuleapUrlUtil.getTaskUrlFromTaskId(repositoryUrl, taskId);
 		assertThat(tuleapArtifact.getHtmlUrl(), is(htmlUrl));
 
 		assertThat(tuleapArtifact.getUrl(), is(nullValue()));

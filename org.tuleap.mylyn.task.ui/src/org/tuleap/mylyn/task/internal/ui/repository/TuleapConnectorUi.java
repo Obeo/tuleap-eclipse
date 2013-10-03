@@ -31,6 +31,7 @@ import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskSearchPage;
 import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapQueryConstants;
+import org.tuleap.mylyn.task.internal.core.repository.TuleapUrlUtil;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
 import org.tuleap.mylyn.task.internal.ui.wizards.NewTuleapTaskWizard;
@@ -55,31 +56,24 @@ public class TuleapConnectorUi extends AbstractRepositoryConnectorUi {
 		// nothing
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#getAccountCreationUrl(org.eclipse.mylyn.tasks.core.TaskRepository)
+	 */
 	@Override
 	public String getAccountCreationUrl(TaskRepository taskRepository) {
-		// Account creation url : https://<domain-name>/account/register.php
-		return this.getDomainRepositoryURL(taskRepository.getRepositoryUrl()) + "/account/register.php"; //$NON-NLS-1$
-	}
-
-	@Override
-	public String getAccountManagementUrl(TaskRepository taskRepository) {
-		// Account management url : https://<domain-name>/my/
-		return this.getDomainRepositoryURL(taskRepository.getRepositoryUrl()) + "/my/"; //$NON-NLS-1$
+		return TuleapUrlUtil.getAccountCreationUrl(taskRepository);
 	}
 
 	/**
-	 * Extract the domain name URL from the repository URL.
+	 * {@inheritDoc}
 	 * 
-	 * @param repositoryUrl
-	 *            The task repository url : "https://<domainName>/plugins/tracker/?group_id=<groupId>"
-	 * @return The domain name URL : "https://<domainName>/"
+	 * @see org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#getAccountManagementUrl(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
-	private String getDomainRepositoryURL(String repositoryUrl) {
-		if (repositoryUrl.contains(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE)) {
-			return repositoryUrl.substring(0, repositoryUrl
-					.indexOf(ITuleapConstants.TULEAP_REPOSITORY_URL_STRUCTURE));
-		}
-		return repositoryUrl;
+	@Override
+	public String getAccountManagementUrl(TaskRepository taskRepository) {
+		return TuleapUrlUtil.getAccountManagementUrl(taskRepository);
 	}
 
 	/**

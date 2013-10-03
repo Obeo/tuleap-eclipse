@@ -11,6 +11,7 @@
 package org.tuleap.mylyn.task.internal.tests.repository;
 
 import org.junit.Test;
+import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
 
 import static org.junit.Assert.assertEquals;
@@ -28,11 +29,11 @@ public class TuleapRepositoryConnectorTests {
 	 */
 	@Test
 	public void testGetRepositoryUrlFromTaskUrl() {
-		final String taskUrl = "https://demo.tuleap.net/plugins/tracker/?group_id=409&aid=453"; //$NON-NLS-1$
+		final String taskUrl = "https://tuleap.net/plugins/tracker/?group_id=409&tracker=55&aid=453"; //$NON-NLS-1$
 
 		TuleapRepositoryConnector connector = new TuleapRepositoryConnector();
 		String repositoryUrl = connector.getRepositoryUrlFromTaskUrl(taskUrl);
-		assertEquals("https://demo.tuleap.net/plugins/tracker/?group_id=409", repositoryUrl); //$NON-NLS-1$
+		assertEquals("https://tuleap.net", repositoryUrl); //$NON-NLS-1$
 	}
 
 	/**
@@ -40,11 +41,11 @@ public class TuleapRepositoryConnectorTests {
 	 */
 	@Test
 	public void testGetTaskIdFromTaskUrl() {
-		final String taskUrl = "https://demo.tuleap.net/plugins/tracker/?group_id=409&aid=217"; //$NON-NLS-1$
+		final String taskUrl = "https://demo.tuleap.net/plugins/tracker/?group_id=409&tracker=55&aid=217"; //$NON-NLS-1$
 
 		TuleapRepositoryConnector connector = new TuleapRepositoryConnector();
 		String taskId = connector.getTaskIdFromTaskUrl(taskUrl);
-		assertEquals("217", taskId); //$NON-NLS-1$
+		assertEquals(TuleapTaskIdentityUtil.getTaskDataId(409, 55, 217), taskId);
 	}
 
 	/**
@@ -52,12 +53,12 @@ public class TuleapRepositoryConnectorTests {
 	 */
 	@Test
 	public void testGetTaskUrl() {
-		final String repositoryUrl = "https://demo.tuleap.net/plugins/tracker/?group_id=409"; //$NON-NLS-1$
-		final String taskId = "821"; //$NON-NLS-1$
+		final String repositoryUrl = "https://tuleap.net"; //$NON-NLS-1$
+		final String taskId = TuleapTaskIdentityUtil.getTaskDataId(409, 31, 821);
 
 		TuleapRepositoryConnector connector = new TuleapRepositoryConnector();
 		String taskUrl = connector.getTaskUrl(repositoryUrl, taskId);
-		assertEquals("https://demo.tuleap.net/plugins/tracker/?group_id=409&aid=821", taskUrl); //$NON-NLS-1$
+		assertEquals("https://tuleap.net/plugins/tracker/?group_id=409&tracker=31&aid=821", taskUrl); //$NON-NLS-1$
 	}
 
 }

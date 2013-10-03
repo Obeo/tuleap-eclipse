@@ -23,6 +23,7 @@ import org.tuleap.mylyn.task.internal.core.data.AttachmentFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.AttachmentValue;
 import org.tuleap.mylyn.task.internal.core.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.LiteralFieldValue;
+import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapElementComment;
 import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
@@ -32,7 +33,7 @@ import org.tuleap.mylyn.task.internal.core.model.field.TuleapMultiSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
-import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
+import org.tuleap.mylyn.task.internal.core.repository.TuleapUrlUtil;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Artifact;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactFieldValue;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.FieldValueFileInfo;
@@ -66,8 +67,10 @@ public class TuleapSoapParser {
 
 		String repositoryUrl = tuleapTrackerConfiguration.getTuleapProjectConfiguration()
 				.getServerConfiguration().getUrl();
-		String htmlUrl = repositoryUrl + ITuleapConstants.REPOSITORY_TASK_URL_SEPARATOR
-				+ String.valueOf(artifactId);
+
+		String taskId = TuleapTaskIdentityUtil.getTaskDataId(tuleapTrackerConfiguration
+				.getTuleapProjectConfiguration().getIdentifier(), trackerId, artifactId);
+		String htmlUrl = TuleapUrlUtil.getTaskUrlFromTaskId(repositoryUrl, taskId);
 
 		int submittedOn = artifactToParse.getSubmitted_on();
 		Date creationDate = this.getDateFromTimestamp(submittedOn);

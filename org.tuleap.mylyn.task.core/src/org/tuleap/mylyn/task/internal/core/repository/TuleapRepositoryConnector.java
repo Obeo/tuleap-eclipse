@@ -156,13 +156,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		if (url == null) {
 			return null;
 		}
-		int index = url.indexOf(ITuleapConstants.REPOSITORY_TASK_URL_SEPARATOR);
-		String repositoryUrl = null;
-
-		if (index != -1) {
-			repositoryUrl = url.substring(0, index);
-		}
-		return repositoryUrl;
+		return TuleapUrlUtil.getRepositoryUrlFromTaskUrl(url);
 	}
 
 	/**
@@ -176,12 +170,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			return null;
 		}
 
-		int index = url.indexOf(ITuleapConstants.REPOSITORY_TASK_URL_SEPARATOR);
-		String taskId = null;
-		if (index != -1) {
-			taskId = url.substring(index + ITuleapConstants.REPOSITORY_TASK_URL_SEPARATOR.length());
-		}
-		return taskId;
+		return TuleapUrlUtil.getTaskIdFromTaskUrl(url);
 	}
 
 	/**
@@ -212,8 +201,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 */
 	@Override
 	public String getTaskUrl(String repositoryUrl, String taskId) {
-		// Example: https://demo.tuleap.net/plugins/tracker/?group_id=409&aid=453
-		return repositoryUrl + ITuleapConstants.REPOSITORY_TASK_URL_SEPARATOR + taskId;
+		return TuleapUrlUtil.getTaskUrlFromTaskId(repositoryUrl, taskId);
 	}
 
 	/**
