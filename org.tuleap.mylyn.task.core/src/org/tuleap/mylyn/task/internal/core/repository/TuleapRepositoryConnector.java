@@ -324,7 +324,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			// null -> the top plannings do not have a configuration
 			MilestoneTaskDataConverter milestoneTaskDataConverter = new MilestoneTaskDataConverter(null);
 
-			TuleapRestClient restClient = this.clientManager.getRestClient(taskRepository);
+			TuleapRestClient restClient = this.getClientManager().getRestClient(taskRepository);
 			try {
 				List<TuleapTopPlanning> topPlannings = restClient.getTopPlannings(projectId, monitor);
 				for (TuleapTopPlanning tuleapTopPlanning : topPlannings) {

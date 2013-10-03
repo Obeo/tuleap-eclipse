@@ -15,6 +15,7 @@ import com.google.common.collect.Lists;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
@@ -28,10 +29,12 @@ import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapQueryConstants;
 import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
+import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
@@ -321,5 +324,66 @@ public class TuleapRepositoryConnectorTests {
 		assertThat(collector.getTaskData().size(), is(1));
 		assertThat(collector.getTaskData().iterator().next().getTaskId(), is(TuleapTaskIdentityUtil
 				.getTaskDataId(projectId, trackerId, artifactId)));
+	}
+
+	/**
+	 * Test the execution of a query to retrieve all the artifacts from a given tracker.
+	 */
+	@Test
+	public void testPerformQueryTopLevelPlanning() {
+		int projectId = 979;
+		int topPlanningId = 121;
+
+		final TuleapServerConfiguration tuleapServerConfiguration = new TuleapServerConfiguration(
+				"https://tuleap.net");
+
+		TuleapProjectConfiguration tuleapProjectConfiguration = new TuleapProjectConfiguration("", projectId);
+		tuleapServerConfiguration.addProject(tuleapProjectConfiguration);
+
+		final TuleapTopPlanning tuleapTopPlanning = new TuleapTopPlanning(topPlanningId);
+
+		final TuleapClientManager tuleapClientManager = new TuleapClientManager() {
+			@Override
+			public TuleapRestClient getRestClient(TaskRepository taskRepository) {
+				return new TuleapRestClient(null, null, null, null, null) {
+					@Override
+					public List<TuleapTopPlanning> getTopPlannings(int id, IProgressMonitor monitor)
+							throws CoreException {
+						return Lists.newArrayList(tuleapTopPlanning);
+					}
+				};
+			}
+		};
+
+		TuleapRepositoryConnector tuleapRepositoryConnector = new TuleapRepositoryConnector() {
+			@Override
+			public TuleapServerConfiguration getRepositoryConfiguration(TaskRepository taskRepository,
+					boolean forceRefresh, IProgressMonitor monitor) {
+				return tuleapServerConfiguration;
+			}
+
+			@Override
+			public TuleapClientManager getClientManager() {
+				return tuleapClientManager;
+			}
+		};
+
+		TaskRepository taskRepository = new TaskRepository(ITuleapConstants.CONNECTOR_KIND,
+				"https://tuleap.net");
+
+		// All from tracker
+		TuleapTaskDataCollector collector = new TuleapTaskDataCollector();
+
+		IRepositoryQuery query = new RepositoryQuery(ITuleapConstants.CONNECTOR_KIND, "");
+		query.setAttribute(ITuleapQueryConstants.QUERY_KIND,
+				ITuleapQueryConstants.QUERY_KIND_TOP_LEVEL_PLANNING);
+		query.setAttribute(ITuleapQueryConstants.QUERY_PROJECT_ID, String.valueOf(projectId));
+
+		tuleapRepositoryConnector.performQuery(taskRepository, query, collector, null,
+				new NullProgressMonitor());
+
+		assertThat(collector.getTaskData().size(), is(1));
+		assertThat(collector.getTaskData().iterator().next().getTaskId(), is(TuleapTaskIdentityUtil
+				.getTaskDataId(projectId, TuleapTaskIdentityUtil.IRRELEVANT_ID, topPlanningId)));
 	}
 }
