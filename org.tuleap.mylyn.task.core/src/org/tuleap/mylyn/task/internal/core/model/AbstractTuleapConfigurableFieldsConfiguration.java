@@ -213,9 +213,9 @@ public abstract class AbstractTuleapConfigurableFieldsConfiguration implements S
 	}
 
 	/**
-	 * Returns the tracker id.
+	 * Returns the configuration id.
 	 * 
-	 * @return The tracker id.
+	 * @return The configuration id.
 	 */
 	public int getIdentifier() {
 		return this.identifier;
