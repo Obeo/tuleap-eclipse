@@ -16,11 +16,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.restlet.data.Method;
 
 /**
- * JSON Resource for the {@code /api/<version>/top_plannings/:topPlanningId/backlog_items} URL.
+ * JSON Resource for the {@code /api/<version>/top_plannings/:topPlanningId} URL.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class RestTopPlanningsBacklogItems extends AbstractAuthenticatedRestResource {
+public class RestTopPlannings extends AbstractAuthenticatedRestResource {
 
 	/**
 	 * The top planning id.
@@ -39,7 +39,7 @@ public class RestTopPlanningsBacklogItems extends AbstractAuthenticatedRestResou
 	 * @param topPlanningId
 	 *            The id of the top planning.
 	 */
-	protected RestTopPlanningsBacklogItems(String serverUrl, String apiVersion, ICredentials credentials,
+	protected RestTopPlannings(String serverUrl, String apiVersion, ICredentials credentials,
 			int topPlanningId) {
 		super(serverUrl, apiVersion, credentials);
 		this.topPlanningId = topPlanningId;
@@ -52,7 +52,7 @@ public class RestTopPlanningsBacklogItems extends AbstractAuthenticatedRestResou
 	 */
 	@Override
 	protected String getUrl() {
-		return URL.TOP_PLANNINGS + "/" + topPlanningId + URL.BACKLOG_ITEMS; //$NON-NLS-1$
+		return URL.TOP_PLANNINGS + "/" + topPlanningId; //$NON-NLS-1$
 	}
 
 	/**

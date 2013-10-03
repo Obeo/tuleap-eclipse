@@ -19,6 +19,7 @@ import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItemType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 
 import static org.junit.Assert.assertEquals;
@@ -128,5 +129,21 @@ public class TuleapJsonParserTest {
 		assertEquals(2, provider.getProjectConfiguration().getAllMilestoneTypes().size());
 		assertSame(types.get(0), provider.getProjectConfiguration().getMilestoneType(901));
 		assertSame(types.get(1), provider.getProjectConfiguration().getMilestoneType(902));
+	}
+
+	/**
+	 * Checks the parsing of milestone types.
+	 * 
+	 * @throws ParseException
+	 *             if a parsing error occurs.
+	 */
+	@Test
+	public void testParseTopPlannings() throws ParseException {
+		String json = ParserUtil.loadFile("/top_plannings/top_plannings_prj3.json");
+		List<TuleapTopPlanning> plannings = parser.parseTopPlannings(json);
+		assertEquals(1, plannings.size());
+
+		TuleapTopPlanning tp = plannings.get(0);
+		new TuleapTopPlanningDeserializerTests().checkTopPlanning30(tp);
 	}
 }

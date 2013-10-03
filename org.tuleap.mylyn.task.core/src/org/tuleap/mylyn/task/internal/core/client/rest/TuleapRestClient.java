@@ -651,36 +651,75 @@ public class TuleapRestClient {
 
 		List<TuleapTopPlanning> topPlannings = this.jsonParser.parseTopPlannings(topPlanningsResponse
 				.getBody());
-		for (TuleapTopPlanning tuleapTopPlanning : topPlannings) {
-			// 2- Retrieve the milestones of this top planning
-			RestTopPlanningsMilestones restMilestones = restResources
-					.topPlanningsMilestones(tuleapTopPlanning.getId());
-			restMilestones.checkGet(Collections.<String, String> emptyMap());
-			ServerResponse milestonesResponse = restMilestones.get(Collections.<String, String> emptyMap());
-			// TODO Pagination
-			String jsonMilestones = milestonesResponse.getBody();
-
-			List<TuleapMilestone> tuleapMilestones = this.jsonParser.parseMilestones(jsonMilestones);
-			for (TuleapMilestone tuleapMilestone : tuleapMilestones) {
-				tuleapTopPlanning.addMilestone(tuleapMilestone);
-			}
-
-			// 3- Retrieve the backlog items of this top planning
-			RestTopPlanningsBacklogItems restBacklogItems = restResources
-					.topPlanningsBacklogItems(tuleapTopPlanning.getId());
-			restBacklogItems.checkGet(Collections.<String, String> emptyMap());
-			ServerResponse backlogItemsResponse = restBacklogItems.get(Collections
-					.<String, String> emptyMap());
-			// TODO Pagination
-			String jsonBacklogItems = backlogItemsResponse.getBody();
-
-			List<TuleapBacklogItem> backlogItems = this.jsonParser.parseBacklogItems(jsonBacklogItems);
-			for (TuleapBacklogItem tuleapBacklogItem : backlogItems) {
-				tuleapTopPlanning.addBacklogItem(tuleapBacklogItem);
-			}
+		for (TuleapTopPlanning topPlanning : topPlannings) {
+			loadTopPlanningElements(restResources, topPlanning);
 		}
 
 		return topPlannings;
+	}
+
+	/**
+	 * Retrieve the top planning(s) of a given project.
+	 * 
+	 * @param topPlanningId
+	 *            The top planning id
+	 * @param monitor
+	 *            The monitor to use
+	 * @return A list of the top plannings of the project.
+	 * @throws CoreException
+	 *             If anything goes wrong.
+	 */
+	public TuleapTopPlanning getTopPlanning(int topPlanningId, IProgressMonitor monitor) throws CoreException {
+		RestResources restResources = tuleapRestConnector.resources(credentials);
+
+		// 1- Retrieve the list of top planning ids
+		RestTopPlannings topPlannings = restResources.topPlannings(topPlanningId);
+		topPlannings.checkGet(Collections.<String, String> emptyMap());
+		ServerResponse topPlanningsResponse = topPlannings.get(Collections.<String, String> emptyMap());
+		// Contains a JSON array of integers
+
+		TuleapTopPlanning topPlanning = this.jsonParser.parseTopPlanning(topPlanningsResponse.getBody());
+		return loadTopPlanningElements(restResources, topPlanning);
+	}
+
+	/**
+	 * Loads the sub-milestones and the backlog items of a top-planning.
+	 * 
+	 * @param restResources
+	 *            The {@link RestResources} to use.
+	 * @param topPlanning
+	 *            The top planning to load, which will be modified by this method.
+	 * @return The given top planning, just for fluency of the PIA.
+	 * @throws CoreException
+	 *             If something goes wrong.
+	 */
+	private TuleapTopPlanning loadTopPlanningElements(RestResources restResources,
+			TuleapTopPlanning topPlanning) throws CoreException {
+		// 2- Retrieve the milestones of this top planning
+		RestTopPlanningsMilestones restMilestones = restResources.topPlanningsMilestones(topPlanning.getId());
+		restMilestones.checkGet(Collections.<String, String> emptyMap());
+		ServerResponse milestonesResponse = restMilestones.get(Collections.<String, String> emptyMap());
+		// TODO Pagination
+		String jsonMilestones = milestonesResponse.getBody();
+
+		List<TuleapMilestone> tuleapMilestones = this.jsonParser.parseMilestones(jsonMilestones);
+		for (TuleapMilestone tuleapMilestone : tuleapMilestones) {
+			topPlanning.addMilestone(tuleapMilestone);
+		}
+
+		// 3- Retrieve the backlog items of this top planning
+		RestTopPlanningsBacklogItems restBacklogItems = restResources.topPlanningsBacklogItems(topPlanning
+				.getId());
+		restBacklogItems.checkGet(Collections.<String, String> emptyMap());
+		ServerResponse backlogItemsResponse = restBacklogItems.get(Collections.<String, String> emptyMap());
+		// TODO Pagination
+		String jsonBacklogItems = backlogItemsResponse.getBody();
+
+		List<TuleapBacklogItem> backlogItems = this.jsonParser.parseBacklogItems(jsonBacklogItems);
+		for (TuleapBacklogItem tuleapBacklogItem : backlogItems) {
+			topPlanning.addBacklogItem(tuleapBacklogItem);
+		}
+		return topPlanning;
 	}
 
 	/**

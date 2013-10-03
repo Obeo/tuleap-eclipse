@@ -34,6 +34,7 @@ import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapPlanningBinding;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
@@ -340,7 +341,8 @@ public class TuleapRepositoryConnectorTests {
 		TuleapProjectConfiguration tuleapProjectConfiguration = new TuleapProjectConfiguration("", projectId);
 		tuleapServerConfiguration.addProject(tuleapProjectConfiguration);
 
-		final TuleapTopPlanning tuleapTopPlanning = new TuleapTopPlanning(topPlanningId);
+		final TuleapTopPlanning tuleapTopPlanning = new TuleapTopPlanning(topPlanningId, "Top planning",
+				"/top/planning", "/planning/top", projectId, new TuleapPlanningBinding(123, 321));
 
 		final TuleapClientManager tuleapClientManager = new TuleapClientManager() {
 			@Override

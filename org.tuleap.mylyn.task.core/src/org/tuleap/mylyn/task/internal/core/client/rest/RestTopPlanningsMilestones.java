@@ -23,7 +23,7 @@ import org.restlet.data.Method;
 public class RestTopPlanningsMilestones extends AbstractAuthenticatedRestResource {
 
 	/**
-	 * The project id.
+	 * The top planning id.
 	 */
 	protected int topPlanningId;
 
@@ -37,7 +37,7 @@ public class RestTopPlanningsMilestones extends AbstractAuthenticatedRestResourc
 	 * @param credentials
 	 *            The credentials to use.
 	 * @param topPlanningId
-	 *            The id of the project.
+	 *            The id of the top planning.
 	 */
 	protected RestTopPlanningsMilestones(String serverUrl, String apiVersion, ICredentials credentials,
 			int topPlanningId) {

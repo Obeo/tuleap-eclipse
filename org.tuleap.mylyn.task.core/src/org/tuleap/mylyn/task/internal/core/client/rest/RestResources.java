@@ -213,6 +213,17 @@ public final class RestResources {
 	}
 
 	/**
+	 * Provides access to the {code /top_plannings/:id} HTTP resource.
+	 * 
+	 * @param topPlanningId
+	 *            the top planning id
+	 * @return A resource that gives access to the {code /top_plannings/:id} HTTP resource.
+	 */
+	public RestTopPlannings topPlannings(int topPlanningId) {
+		return new RestTopPlannings(serverUrl, apiVersion, credentials, topPlanningId);
+	}
+
+	/**
 	 * Provides access to the {code /top_plannings/:id/milestones} HTTP resource.
 	 * 
 	 * @param topPlanningId

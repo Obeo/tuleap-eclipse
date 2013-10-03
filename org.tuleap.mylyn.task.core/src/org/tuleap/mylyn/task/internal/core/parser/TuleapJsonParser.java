@@ -154,18 +154,32 @@ public class TuleapJsonParser {
 	 * @return The top plannings parsed
 	 */
 	public List<TuleapTopPlanning> parseTopPlannings(String jsonResponse) {
-		List<TuleapTopPlanning> result = Lists.newArrayList();
+		List<TuleapTopPlanning> topPlannings = new ArrayList<TuleapTopPlanning>();
 
 		JsonParser parser = new JsonParser();
 
-		JsonArray topPlanningIds = parser.parse(jsonResponse).getAsJsonArray();
-		for (JsonElement element : topPlanningIds) {
-			int topPlanningId = element.getAsInt();
-			TuleapTopPlanning topPlanning = new TuleapTopPlanning(topPlanningId);
-			result.add(topPlanning);
+		JsonArray topPlanningsArray = parser.parse(jsonResponse).getAsJsonArray();
+		for (JsonElement element : topPlanningsArray) {
+			TuleapTopPlanning milestone = new TuleapTopPlanningDeserializer().deserialize(element,
+					TuleapTopPlanning.class, null);
+			topPlannings.add(milestone);
 		}
 
-		return result;
+		return topPlannings;
+	}
+
+	/**
+	 * Parse one top planning from the json response.
+	 * 
+	 * @param jsonResponse
+	 *            The json response
+	 * @return The top planning parsed
+	 */
+	public TuleapTopPlanning parseTopPlanning(String jsonResponse) {
+		JsonParser parser = new JsonParser();
+		JsonElement topPlanningElement = parser.parse(jsonResponse);
+		return new TuleapTopPlanningDeserializer().deserialize(topPlanningElement, TuleapTopPlanning.class,
+				null);
 	}
 
 	/**

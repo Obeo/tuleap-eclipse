@@ -235,4 +235,18 @@ public interface ITuleapConstants {
 
 	String BODY = "body"; //$NON-NLS-1$
 
+	/**
+	 * The key used for the title of milestones in a top-planning for instance.
+	 */
+	String JSON_MILESTONES_TITLE = "milestones_title"; //$NON-NLS-1$
+
+	/**
+	 * The key used for the title of backlog items in a top-planning for instance.
+	 */
+	String JSON_BACKLOG_ITEMS_TITLE = "backlog_items_title"; //$NON-NLS-1$
+
+	/**
+	 * The key used for the project ID of an element possessed by a project.
+	 */
+	String JSON_PROJECT_ID = "project_id"; //$NON-NLS-1$
 }

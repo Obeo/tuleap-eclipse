@@ -25,7 +25,32 @@ public class TuleapTopPlanning {
 	/**
 	 * The identifier.
 	 */
-	private int id;
+	private final int id;
+
+	/**
+	 * The human-readable label of the element.
+	 */
+	private final String label;
+
+	/**
+	 * The API URL of the element.
+	 */
+	private final String url;
+
+	/**
+	 * The URL of the planning for web browsers.
+	 */
+	private final String htmlUrl;
+
+	/**
+	 * The project id of this top planning.
+	 */
+	private final int projectId;
+
+	/**
+	 * The binding configuration for the planning.
+	 */
+	private final TuleapPlanningBinding binding;
 
 	/**
 	 * The top planning's milestones.
@@ -38,22 +63,94 @@ public class TuleapTopPlanning {
 	private final List<TuleapBacklogItem> backlogItems = Lists.newArrayList();
 
 	/**
-	 * The constructor.
+	 * The date of creation of the artifact.
+	 */
+	// private Date creationDate;
+
+	/**
+	 * The date of the last modification of the artifact.
+	 */
+	// private Date lastModificationDate;
+
+	/**
+	 * This constructor is used for the creation of the configurable elements that have been synchronized on
+	 * the server. Those elements must have an identifier assigned by the server.
 	 * 
 	 * @param id
-	 *            The identifier
+	 *            The identifier of the element
+	 * @param label
+	 *            The label of the element
+	 * @param url
+	 *            The API URL of the element
+	 * @param htmlUrl
+	 *            The HTML URL of the element
+	 * @param projectId
+	 *            The project Id
+	 * @param binding
+	 *            The planning binding configuration
 	 */
-	public TuleapTopPlanning(int id) {
+	public TuleapTopPlanning(int id, String label, String url, String htmlUrl, int projectId,
+			TuleapPlanningBinding binding) {
 		this.id = id;
+		this.label = label;
+		this.url = url;
+		this.htmlUrl = htmlUrl;
+		this.projectId = projectId;
+		this.binding = binding;
 	}
 
 	/**
-	 * Returns the id.
+	 * id getter.
 	 * 
-	 * @return The id
+	 * @return the id
 	 */
 	public int getId() {
-		return this.id;
+		return id;
+	}
+
+	/**
+	 * Returns the API URL of the element.
+	 * 
+	 * @return The API URL of the element
+	 */
+	public String getUrl() {
+		return this.url;
+	}
+
+	/**
+	 * Html URL getter.
+	 * 
+	 * @return the htmlUrl
+	 */
+	public String getHtmlUrl() {
+		return htmlUrl;
+	}
+
+	/**
+	 * Label getter.
+	 * 
+	 * @return the label
+	 */
+	public String getLabel() {
+		return label;
+	}
+
+	/**
+	 * The project ID.
+	 * 
+	 * @return the projectId
+	 */
+	public int getProjectId() {
+		return projectId;
+	}
+
+	/**
+	 * The binding configuration for the planning.
+	 * 
+	 * @return the binding
+	 */
+	public TuleapPlanningBinding getBinding() {
+		return binding;
 	}
 
 	/**

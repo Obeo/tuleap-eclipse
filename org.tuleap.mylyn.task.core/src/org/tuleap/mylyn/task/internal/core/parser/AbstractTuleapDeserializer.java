@@ -31,7 +31,8 @@ import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableEleme
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**
- * This class is used to deserialize a JSON representation of a Tuleap object.
+ * This class is used to deserialize a JSON representation of a Tuleap object, for objects that have a
+ * configuration ID (top-plannings, for instance, have no configuration ID).
  * 
  * @param <T>
  *            The type of the agile element to deserialize.
@@ -60,7 +61,7 @@ public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapConfigu
 		String label = jsonObject.get(ITuleapConstants.LABEL).getAsString();
 		String url = jsonObject.get(ITuleapConstants.URL).getAsString();
 		String htmlUrl = jsonObject.get(ITuleapConstants.HTML_URL).getAsString();
-		int configurationId = jsonObject.get(this.getTypeIdKey()).getAsInt();
+		int configurationId = jsonObject.get(getTypeIdKey()).getAsInt();
 
 		// TODO Fix the dates from the parsing
 		T pojo = buildPojo(id, configurationId, label, url, htmlUrl, new Date(), new Date());
