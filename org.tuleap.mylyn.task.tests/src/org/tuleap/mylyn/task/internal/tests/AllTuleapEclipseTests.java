@@ -17,6 +17,7 @@ import junit.textui.TestRunner;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.tuleap.mylyn.task.internal.tests.client.soap.TuleapSoapParserTests;
+import org.tuleap.mylyn.task.internal.tests.data.TuleapConfigurableElementMapperTests;
 import org.tuleap.mylyn.task.internal.tests.model.TuleapWorkflowTests;
 import org.tuleap.mylyn.task.internal.tests.repository.TuleapRepositoryConnectorTests;
 import org.tuleap.mylyn.task.internal.tests.repository.TuleapTaskDataHandlerTests;
@@ -30,7 +31,8 @@ import org.tuleap.mylyn.task.internal.tests.server.TaskRepositoryCredentialsTest
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({TuleapSoapParserTests.class, TuleapRepositoryConnectorTests.class,
-		TuleapTaskDataHandlerTests.class, TuleapWorkflowTests.class, TaskRepositoryCredentialsTest.class })
+		TuleapTaskDataHandlerTests.class, TuleapWorkflowTests.class, TaskRepositoryCredentialsTest.class,
+		TuleapConfigurableElementMapperTests.class })
 public final class AllTuleapEclipseTests {
 
 	/**

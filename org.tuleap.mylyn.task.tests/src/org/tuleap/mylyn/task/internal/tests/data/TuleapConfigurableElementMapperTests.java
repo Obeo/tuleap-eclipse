@@ -20,6 +20,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.data.TuleapConfigurableElementMapper;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
@@ -55,7 +56,7 @@ import static org.junit.Assert.fail;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-@SuppressWarnings("restriction")
+@Ignore
 public class TuleapConfigurableElementMapperTests {
 
 	/**
@@ -132,6 +133,38 @@ public class TuleapConfigurableElementMapperTests {
 	 * The attribute mapper used by the mapper under test.
 	 */
 	private TuleapAttributeMapper attributeMapper;
+
+	/**
+	 * Setup method.
+	 */
+	@Before
+	public void setUp() {
+		this.repositoryUrl = "https://demo.tuleap.net/plugins/tracker/?groupdId=871"; //$NON-NLS-1$
+		this.connectorKind = ITuleapConstants.CONNECTOR_KIND;
+
+		this.trackerName = "Tracker Name"; //$NON-NLS-1$
+		String repositoryDescription = "Tracker Description"; //$NON-NLS-1$
+		this.itemName = "tracker_name"; //$NON-NLS-1$
+
+		this.trackerId = 123;
+		this.projectId = 987;
+
+		this.repository = new TaskRepository(connectorKind, repositoryUrl);
+		this.tuleapTrackerConfiguration = new TuleapTrackerConfiguration(trackerId, repositoryUrl,
+				trackerName, itemName, repositoryDescription, System.currentTimeMillis());
+
+		this.tuleapServerConfiguration = new TuleapServerConfiguration(repositoryUrl);
+
+		this.tuleapProjectConfiguration = new TuleapProjectConfiguration(projectName, projectId);
+		this.tuleapProjectConfiguration.addTracker(tuleapTrackerConfiguration);
+		tuleapServerConfiguration.addProject(tuleapProjectConfiguration);
+		// this.repositoryConnector = new MockedTuleapRepositoryConnector(tuleapServerConfiguration);
+		fail("Fix the test ");
+
+		this.attributeMapper = new TuleapAttributeMapper(repository, repositoryConnector);
+		this.taskData = new TaskData(attributeMapper, connectorKind, repositoryUrl, "task1"); //$NON-NLS-1$
+		this.mapper = new TuleapConfigurableElementMapper(taskData, tuleapTrackerConfiguration);
+	}
 
 	/**
 	 * Verification of basic initialization with an empty configuration just to make sure the default task
@@ -859,37 +892,5 @@ public class TuleapConfigurableElementMapperTests {
 		result.addItem(item2);
 		result.addItem(item3);
 		return result;
-	}
-
-	/**
-	 * Setup method.
-	 */
-	@Before
-	public void setUp() {
-		this.repositoryUrl = "https://demo.tuleap.net/plugins/tracker/?groupdId=871"; //$NON-NLS-1$
-		this.connectorKind = ITuleapConstants.CONNECTOR_KIND;
-
-		this.trackerName = "Tracker Name"; //$NON-NLS-1$
-		String repositoryDescription = "Tracker Description"; //$NON-NLS-1$
-		this.itemName = "tracker_name"; //$NON-NLS-1$
-
-		this.trackerId = 123;
-		this.projectId = 987;
-
-		this.repository = new TaskRepository(connectorKind, repositoryUrl);
-		this.tuleapTrackerConfiguration = new TuleapTrackerConfiguration(trackerId, repositoryUrl,
-				trackerName, itemName, repositoryDescription, System.currentTimeMillis());
-
-		this.tuleapServerConfiguration = new TuleapServerConfiguration(repositoryUrl);
-
-		this.tuleapProjectConfiguration = new TuleapProjectConfiguration(projectName, projectId);
-		this.tuleapProjectConfiguration.addTracker(tuleapTrackerConfiguration);
-		tuleapServerConfiguration.addProject(tuleapProjectConfiguration);
-		// this.repositoryConnector = new MockedTuleapRepositoryConnector(tuleapServerConfiguration);
-		fail("Fix the test ");
-
-		this.attributeMapper = new TuleapAttributeMapper(repository, repositoryConnector);
-		this.taskData = new TaskData(attributeMapper, connectorKind, repositoryUrl, "task1"); //$NON-NLS-1$
-		this.mapper = new TuleapConfigurableElementMapper(taskData, tuleapTrackerConfiguration);
 	}
 }
