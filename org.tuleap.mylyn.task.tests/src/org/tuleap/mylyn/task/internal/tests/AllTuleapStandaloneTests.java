@@ -28,6 +28,7 @@ import org.tuleap.mylyn.task.internal.tests.parser.TuleapMilestoneDeserializerTe
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapMilestoneTypeDeserializerTests;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapProjectConfigurationDeserializerTests;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapTrackerConfigurationDeserializerTests;
+import org.tuleap.mylyn.task.internal.tests.serializer.TuleapMilestoneSerializerTests;
 import org.tuleap.mylyn.task.internal.tests.server.ServerResponseTest;
 
 /**
@@ -42,7 +43,8 @@ import org.tuleap.mylyn.task.internal.tests.server.ServerResponseTest;
 		TuleapBacklogItemDeserializerTest.class, TuleapBacklogItemTypeDeserializerTests.class,
 		TuleapMilestoneTypeDeserializerTests.class, TuleapMilestoneDeserializerTests.class,
 		TuleapCardTypeDeserializerTests.class, ServerResponseTest.class, TuleapJsonParserTest.class,
-		TuleapProjectConfigurationTests.class, TuleapCardwallConfigurationDeserializerTests.class })
+		TuleapProjectConfigurationTests.class, TuleapCardwallConfigurationDeserializerTests.class,
+		TuleapMilestoneSerializerTests.class })
 public final class AllTuleapStandaloneTests {
 
 	/**
