@@ -77,8 +77,10 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			Set<TaskAttribute> oldAttributes, IProgressMonitor monitor) throws CoreException {
 		RepositoryResponse response = null;
 
-		int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(taskData.getTaskId());
-		int configurationId = TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId(taskData.getTaskId());
+		TuleapConfigurableElementMapper mapper = new TuleapConfigurableElementMapper(taskData, null);
+
+		int projectId = mapper.getProjectId();
+		int configurationId = mapper.getConfigurationId();
 
 		TuleapServerConfiguration tuleapServerConfiguration = this.connector.getRepositoryConfiguration(
 				taskRepository, true, monitor);

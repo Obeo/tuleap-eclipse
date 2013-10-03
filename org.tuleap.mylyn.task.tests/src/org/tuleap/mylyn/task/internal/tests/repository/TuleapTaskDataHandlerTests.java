@@ -10,13 +10,19 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.tests.repository;
 
+import com.google.common.collect.Sets;
+
 import java.util.Date;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
+import org.eclipse.mylyn.tasks.core.RepositoryResponse;
+import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -25,6 +31,7 @@ import org.tuleap.mylyn.task.agile.core.data.AgileTaskKindUtil;
 import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
+import org.tuleap.mylyn.task.internal.core.data.TuleapConfigurableElementMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableFieldsConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
@@ -52,7 +59,6 @@ import static org.junit.Assert.fail;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
-@Ignore
 public class TuleapTaskDataHandlerTests {
 
 	/**
@@ -352,38 +358,191 @@ public class TuleapTaskDataHandlerTests {
 	 *            The task data
 	 * @param taskId
 	 *            The identifier of the task created and updated
-	 * @return
+	 * @param responseKind
+	 *            The kind of the response
 	 */
-	private void testPostTaskData(TaskData taskData, String taskId) {
-		// do nothing
+	private void testPostTaskData(TaskData taskData, String taskId, ResponseKind responseKind) {
+		// Mock soap client
+		final TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(null, null, null, null, null) {
+			@Override
+			public String createArtifact(TuleapArtifact artifact, IProgressMonitor monitor)
+					throws CoreException {
+				return TuleapTaskIdentityUtil.getTaskDataId(projectId, trackerId, artifactId);
+			}
+
+			@Override
+			public void updateArtifact(TuleapArtifact artifact, IProgressMonitor monitor)
+					throws CoreException {
+				// do nothing
+			}
+		};
+
+		// Mock rest client
+		final TuleapRestClient tuleapRestClient = new TuleapRestClient(null, null, null, null, null) {
+			@Override
+			public String createMilestone(TuleapMilestone tuleapMilestone, IProgressMonitor monitor) {
+				return TuleapTaskIdentityUtil.getTaskDataId(projectId, milestoneTypeId, milestoneId);
+			}
+
+			@Override
+			public void updateMilestone(TuleapMilestone tuleapMilestone, IProgressMonitor monitor) {
+				// do nothing
+			}
+		};
+
+		// mock client manager
+		final TuleapClientManager tuleapClientManager = new TuleapClientManager() {
+			@Override
+			public TuleapSoapClient getSoapClient(TaskRepository taskRepository) {
+				return tuleapSoapClient;
+			}
+
+			@Override
+			public TuleapRestClient getRestClient(TaskRepository taskRepository) {
+				return tuleapRestClient;
+			}
+		};
+
+		// mock repository connector
+		ITuleapRepositoryConnector repositoryConnector = new ITuleapRepositoryConnector() {
+
+			public void putRepositoryConfiguration(String repositoryUrl,
+					TuleapServerConfiguration configuration) {
+				// do nothing
+			}
+
+			public TuleapServerConfiguration getRepositoryConfiguration(TaskRepository taskRepository,
+					boolean forceRefresh, IProgressMonitor monitor) {
+				return TuleapTaskDataHandlerTests.this.tuleapServerConfiguration;
+			}
+
+			public TuleapServerConfiguration getRepositoryConfiguration(String repositoryUrl) {
+				return null;
+			}
+
+			public TuleapClientManager getClientManager() {
+				return tuleapClientManager;
+			}
+		};
+
+		TuleapTaskDataHandler tuleapTaskDataHandler = new TuleapTaskDataHandler(repositoryConnector);
+		try {
+			RepositoryResponse response = tuleapTaskDataHandler.postTaskData(this.repository, taskData, Sets
+					.<TaskAttribute> newHashSet(), new NullProgressMonitor());
+			assertThat(response.getReposonseKind(), is(responseKind));
+			assertThat(response.getTaskId(), is(taskId));
+		} catch (CoreException e) {
+			fail(e.getMessage());
+		}
 	}
 
 	/**
-	 * Test the submission of the task data representing an existing Tuleap artifact. We won't test here all
-	 * the options available in the task data since other unit tests will handle it.
-	 */
-	@Test
-	public void testPostTaskDataArtifact() {
-		fail();
-	}
-
-	/**
-	 * Test the submission of the task data representing an existing Tuleap milestone. We won't test here all
-	 * the options available in the task data since other unit tests will handle it.
-	 */
-	@Ignore
-	@Test
-	public void testPostTaskDataMilestone() {
-		fail();
-	}
-
-	/**
-	 * Test the submission of the task data representing an existing Tuleap backlog item. We won't test here
+	 * Test the submission of the new task data representing an existing Tuleap artifact. We won't test here
 	 * all the options available in the task data since other unit tests will handle it.
 	 */
+	@Test
+	public void testPostCreateTaskDataArtifact() {
+		TaskData taskData = new TaskData(new TaskAttributeMapper(this.repository),
+				ITuleapConstants.CONNECTOR_KIND, "", "");
+
+		TuleapConfigurableElementMapper mapper = new TuleapConfigurableElementMapper(taskData,
+				this.tuleapServerConfiguration.getProjectConfiguration(projectId)
+						.getConfigurableFieldsConfiguration(trackerId));
+		mapper.initializeEmptyTaskData();
+
+		String taskId = TuleapTaskIdentityUtil.getTaskDataId(projectId, trackerId, artifactId);
+		this.testPostTaskData(taskData, taskId, ResponseKind.TASK_CREATED);
+	}
+
+	/**
+	 * Test the submission of the new task data representing an existing Tuleap milestone. We won't test here
+	 * all the options available in the task data since other unit tests will handle it.
+	 */
+	@Test
+	public void testPostCreateTaskDataMilestone() {
+		TaskData taskData = new TaskData(new TaskAttributeMapper(this.repository),
+				ITuleapConstants.CONNECTOR_KIND, "", "");
+
+		TuleapConfigurableElementMapper mapper = new TuleapConfigurableElementMapper(taskData,
+				this.tuleapServerConfiguration.getProjectConfiguration(projectId)
+						.getConfigurableFieldsConfiguration(milestoneTypeId));
+		mapper.initializeEmptyTaskData();
+
+		String taskId = TuleapTaskIdentityUtil.getTaskDataId(projectId, milestoneTypeId, milestoneId);
+		this.testPostTaskData(taskData, taskId, ResponseKind.TASK_CREATED);
+	}
+
+	/**
+	 * Test the submission of the new task data representing an existing Tuleap backlog item. We won't test
+	 * here all the options available in the task data since other unit tests will handle it.
+	 */
 	@Ignore
 	@Test
-	public void testPostTaskDataBacklogItem() {
-		fail();
+	public void testPostCreateTaskDataBacklogItem() {
+		TaskData taskData = new TaskData(new TaskAttributeMapper(this.repository),
+				ITuleapConstants.CONNECTOR_KIND, "", "");
+
+		TuleapConfigurableElementMapper mapper = new TuleapConfigurableElementMapper(taskData,
+				this.tuleapServerConfiguration.getProjectConfiguration(projectId)
+						.getConfigurableFieldsConfiguration(backlogItemTypeId));
+		mapper.initializeEmptyTaskData();
+
+		String taskId = TuleapTaskIdentityUtil.getTaskDataId(projectId, backlogItemTypeId, backlogItemId);
+		this.testPostTaskData(taskData, taskId, ResponseKind.TASK_CREATED);
+	}
+
+	/**
+	 * Test the submission of the existing task data representing an existing Tuleap artifact. We won't test
+	 * here all the options available in the task data since other unit tests will handle it.
+	 */
+	@Test
+	public void testPostUpdateTaskDataArtifact() {
+		String taskId = TuleapTaskIdentityUtil.getTaskDataId(projectId, trackerId, artifactId);
+		TaskData taskData = new TaskData(new TaskAttributeMapper(this.repository),
+				ITuleapConstants.CONNECTOR_KIND, "", taskId);
+
+		TuleapConfigurableElementMapper mapper = new TuleapConfigurableElementMapper(taskData,
+				this.tuleapServerConfiguration.getProjectConfiguration(projectId)
+						.getConfigurableFieldsConfiguration(trackerId));
+		mapper.initializeEmptyTaskData();
+
+		this.testPostTaskData(taskData, taskId, ResponseKind.TASK_UPDATED);
+	}
+
+	/**
+	 * Test the submission of the existing task data representing an existing Tuleap milestone. We won't test
+	 * here all the options available in the task data since other unit tests will handle it.
+	 */
+	@Test
+	public void testPostUpdateTaskDataMilestone() {
+		String taskId = TuleapTaskIdentityUtil.getTaskDataId(projectId, milestoneTypeId, milestoneId);
+		TaskData taskData = new TaskData(new TaskAttributeMapper(this.repository),
+				ITuleapConstants.CONNECTOR_KIND, "", taskId);
+
+		TuleapConfigurableElementMapper mapper = new TuleapConfigurableElementMapper(taskData,
+				this.tuleapServerConfiguration.getProjectConfiguration(projectId)
+						.getConfigurableFieldsConfiguration(milestoneTypeId));
+		mapper.initializeEmptyTaskData();
+
+		this.testPostTaskData(taskData, taskId, ResponseKind.TASK_UPDATED);
+	}
+
+	/**
+	 * Test the submission of the existing task data representing an existing Tuleap backlog item. We won't
+	 * test here all the options available in the task data since other unit tests will handle it.
+	 */
+	@Ignore
+	@Test
+	public void testPostUpdateTaskDataBacklogItem() {
+		String taskId = TuleapTaskIdentityUtil.getTaskDataId(projectId, backlogItemTypeId, backlogItemId);
+		TaskData taskData = new TaskData(new TaskAttributeMapper(this.repository),
+				ITuleapConstants.CONNECTOR_KIND, "", taskId);
+
+		TuleapConfigurableElementMapper mapper = new TuleapConfigurableElementMapper(taskData,
+				this.tuleapServerConfiguration.getProjectConfiguration(projectId)
+						.getConfigurableFieldsConfiguration(backlogItemTypeId));
+		mapper.initializeEmptyTaskData();
+
+		this.testPostTaskData(taskData, taskId, ResponseKind.TASK_UPDATED);
 	}
 }
