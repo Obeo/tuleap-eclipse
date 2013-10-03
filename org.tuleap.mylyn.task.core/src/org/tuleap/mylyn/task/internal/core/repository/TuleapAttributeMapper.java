@@ -11,7 +11,6 @@
 package org.tuleap.mylyn.task.internal.core.repository;
 
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 
 /**
@@ -32,17 +31,5 @@ public class TuleapAttributeMapper extends TaskAttributeMapper {
 	 */
 	public TuleapAttributeMapper(TaskRepository taskRepository, ITuleapRepositoryConnector repositoryConnector) {
 		super(taskRepository);
-	}
-
-	/**
-	 * Indicates if the given task attribute is used internally by Tuleap.
-	 * 
-	 * @param taskAttribute
-	 *            The task attribute
-	 * @return <code>true</code> if the task attribute is used internally by Tuleap, <code>false</code>
-	 *         otherwise.
-	 */
-	public static boolean isInternalAttribute(TaskAttribute taskAttribute) {
-		return false;
 	}
 }
