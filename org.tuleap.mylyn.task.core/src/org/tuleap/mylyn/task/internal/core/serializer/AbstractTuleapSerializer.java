@@ -50,7 +50,6 @@ public abstract class AbstractTuleapSerializer<T extends AbstractTuleapConfigura
 	public JsonElement serialize(T element, Type type, JsonSerializationContext jsonSerializationContext) {
 
 		JsonObject abstractJsonObject = new JsonObject();
-		this.manageCommonAttributes(abstractJsonObject, element);
 
 		JsonElement values = new JsonArray();
 		if (element.getFieldValues().size() > 0) {
@@ -85,29 +84,6 @@ public abstract class AbstractTuleapSerializer<T extends AbstractTuleapConfigura
 	}
 
 	/**
-	 * Manage the common attributes of the created JSON objects.
-	 * 
-	 * @param abstractJsonObject
-	 *            the JSON object to create
-	 * @param abstractelement
-	 *            the abstractElement to serialize
-	 */
-	private void manageCommonAttributes(JsonObject abstractJsonObject,
-			AbstractTuleapConfigurableElement abstractelement) {
-
-		abstractJsonObject.add(ITuleapConstants.ID, new JsonPrimitive(Integer
-				.valueOf(abstractelement.getId())));
-		if (abstractelement.getLabel() != null) {
-			abstractJsonObject.add(ITuleapConstants.LABEL, new JsonPrimitive(abstractelement.getLabel()));
-		}
-		abstractJsonObject.add(ITuleapConstants.URL, new JsonPrimitive(abstractelement.getUrl()));
-		if (abstractelement.getHtmlUrl() != null) {
-			abstractJsonObject
-					.add(ITuleapConstants.HTML_URL, new JsonPrimitive(abstractelement.getHtmlUrl()));
-		}
-	}
-
-	/**
 	 * Manage attachment field values.
 	 * 
 	 * @param field
@@ -124,17 +100,9 @@ public abstract class AbstractTuleapSerializer<T extends AbstractTuleapConfigura
 				JsonObject fileDescritonObject = new JsonObject();
 				fileDescritonObject.add(ITuleapConstants.FILE_ID, new JsonPrimitive(Integer
 						.valueOf(attachmentValue.getAttachmentId())));
-				fileDescritonObject.add(ITuleapConstants.SUBMITTED_BY, new JsonPrimitive(Integer
-						.valueOf(attachmentValue.getPerson().getId())));
-				fileDescritonObject.add(ITuleapConstants.DESCRIPTION, new JsonPrimitive(attachmentValue
+								fileDescritonObject.add(ITuleapConstants.DESCRIPTION, new JsonPrimitive(attachmentValue
 						.getDescription()));
-				fileDescritonObject.add(ITuleapConstants.NAME, new JsonPrimitive(attachmentValue
-						.getFilename()));
-				fileDescritonObject.add(ITuleapConstants.SIZE, new JsonPrimitive(Integer
-						.valueOf(attachmentValue.getSize())));
-				fileDescritonObject.add(ITuleapConstants.TYPE, new JsonPrimitive(attachmentValue
-						.getContentType()));
-				fileDescriptions.getAsJsonArray().add(fileDescritonObject);
+								fileDescriptions.getAsJsonArray().add(fileDescritonObject);
 			}
 		}
 	}
