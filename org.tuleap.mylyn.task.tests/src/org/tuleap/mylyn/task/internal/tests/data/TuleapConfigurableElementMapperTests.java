@@ -50,13 +50,13 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
- * Tests of the new Tuleap Task Mapper.
+ * Tests of the new Tuleap configurable element mapper.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
 @SuppressWarnings("restriction")
-public class TuleapTaskMapperTests {
+public class TuleapConfigurableElementMapperTests {
 
 	/**
 	 * The task repository.
