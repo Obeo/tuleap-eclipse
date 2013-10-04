@@ -341,7 +341,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			TaskAttributeMapper attributeMapper = this.getAttributeMapper(taskRepository);
 
 			TaskData taskData = new TaskData(attributeMapper, ITuleapConstants.CONNECTOR_KIND, taskRepository
-					.getRepositoryUrl(), String.valueOf(tuleapArtifact.getId()));
+					.getRepositoryUrl(), taskId);
 			artifactTaskDataConverter.populateTaskData(taskData, tuleapArtifact);
 
 			return taskData;
@@ -370,13 +370,13 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		TuleapRestClient restClient = this.connector.getClientManager().getRestClient(taskRepository);
 		TuleapTopPlanning topPlanning = restClient.getTopPlanning(TuleapTaskIdentityUtil
 				.getElementIdFromTaskDataId(taskId), monitor);
-		int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(taskId);
 		if (topPlanning != null) {
 			MilestoneTaskDataConverter taskDataConverter = new MilestoneTaskDataConverter(null);
 			TaskAttributeMapper attributeMapper = this.getAttributeMapper(taskRepository);
 
 			TaskData taskData = new TaskData(attributeMapper, ITuleapConstants.CONNECTOR_KIND, taskRepository
-					.getRepositoryUrl(), String.valueOf(topPlanning.getId()));
+					.getRepositoryUrl(), taskId);
+			int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(taskId);
 			taskDataConverter.populateTaskData(taskData, topPlanning, projectId);
 
 			return taskData;
@@ -414,7 +414,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			TaskAttributeMapper attributeMapper = this.getAttributeMapper(taskRepository);
 
 			TaskData taskData = new TaskData(attributeMapper, ITuleapConstants.CONNECTOR_KIND, taskRepository
-					.getRepositoryUrl(), String.valueOf(milestone.getId()));
+					.getRepositoryUrl(), taskId);
 			taskDataConverter.populateTaskData(taskData, milestone);
 
 			return taskData;
