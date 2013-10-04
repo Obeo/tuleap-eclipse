@@ -20,10 +20,10 @@ var sprints = undefined;  // id = 902
 var error404 = undefined;
 
 var files = [
-  '../org.tuleap.mylyn.task.server.data/json/milestone_types/types.json',
-  '../org.tuleap.mylyn.task.server.data/json/milestone_types/releases.json',
-  '../org.tuleap.mylyn.task.server.data/json/milestone_types/sprints.json',
-  '../org.tuleap.mylyn.task.server.data/json/errors/404.json'
+  '../org.tuleap.mylyn.task.server.data/f_tests/milestone_types/types.json',
+  '../org.tuleap.mylyn.task.server.data/f_tests/milestone_types/releases.json',
+  '../org.tuleap.mylyn.task.server.data/f_tests/milestone_types/sprints.json',
+  '../org.tuleap.mylyn.task.server.data/f_tests/errors/404.json'
 ];
 
 for (var i = 0; i < files.length; i++) {

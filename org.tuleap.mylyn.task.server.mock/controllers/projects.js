@@ -23,13 +23,13 @@ var project4 = undefined;
 var error404 = undefined;
 
 var files = [
-  '../org.tuleap.mylyn.task.server.data/json/projects/projects.json',
-  '../org.tuleap.mylyn.task.server.data/json/projects/project-0.json',
-  '../org.tuleap.mylyn.task.server.data/json/projects/project-1.json',
-  '../org.tuleap.mylyn.task.server.data/json/projects/project-2.json',
-  '../org.tuleap.mylyn.task.server.data/json/projects/project-3.json',
-  '../org.tuleap.mylyn.task.server.data/json/projects/project-4.json',
-  '../org.tuleap.mylyn.task.server.data/json/errors/404.json'
+  '../org.tuleap.mylyn.task.server.data/f_tests/projects/projects.json',
+  '../org.tuleap.mylyn.task.server.data/f_tests/projects/project-0.json',
+  '../org.tuleap.mylyn.task.server.data/f_tests/projects/project-1.json',
+  '../org.tuleap.mylyn.task.server.data/f_tests/projects/project-2.json',
+  '../org.tuleap.mylyn.task.server.data/f_tests/projects/project-3.json',
+  '../org.tuleap.mylyn.task.server.data/f_tests/projects/project-4.json',
+  '../org.tuleap.mylyn.task.server.data/f_tests/errors/404.json'
 ];
 
 for (var i = 0; i < files.length; i++) {

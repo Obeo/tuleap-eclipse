@@ -18,11 +18,11 @@ var backlogItems = undefined;
 var error404 = undefined;
 
 var files = [
-    '../org.tuleap.mylyn.task.server.data/json/top_plannings/top_plannings_prj3.json',
-    '../org.tuleap.mylyn.task.server.data/json/top_plannings/milestones.json',
-    '../org.tuleap.mylyn.task.server.data/json/top_plannings/backlog_items.json',
-    '../org.tuleap.mylyn.task.server.data/json/top_plannings/top_planning_30.json',
-    '../org.tuleap.mylyn.task.server.data/json/errors/404.json'
+    '../org.tuleap.mylyn.task.server.data/f_tests/top_plannings/top_plannings_prj3.json',
+    '../org.tuleap.mylyn.task.server.data/f_tests/top_plannings/milestones.json',
+    '../org.tuleap.mylyn.task.server.data/f_tests/top_plannings/backlog_items.json',
+    '../org.tuleap.mylyn.task.server.data/f_tests/top_plannings/top_planning_30.json',
+    '../org.tuleap.mylyn.task.server.data/f_tests/errors/404.json'
 ];
 
 for ( var i = 0; i < files.length; i++) {

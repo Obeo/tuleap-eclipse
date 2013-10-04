@@ -17,9 +17,9 @@ var milestonesDoc = undefined;
 var planningsDoc = undefined;
 
 var files = [
-  '../org.tuleap.mylyn.task.server.data/json/api-docs/api-docs.json',
-  '../org.tuleap.mylyn.task.server.data/json/api-docs/milestones.json',
-  '../org.tuleap.mylyn.task.server.data/json/api-docs/plannings.json'
+  '../org.tuleap.mylyn.task.server.data/f_tests/api-docs/api-docs.json',
+  '../org.tuleap.mylyn.task.server.data/f_tests/api-docs/milestones.json',
+  '../org.tuleap.mylyn.task.server.data/f_tests/api-docs/plannings.json'
 ];
 
 for (var i = 0; i < files.length; i++) {

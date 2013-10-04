@@ -1,0 +1,23 @@
+{
+  "id" : 302,
+  "label" : "Some nice Epic",
+  "initial_effort": 25,
+  "project_id": 3,
+  "url" : "/backlog_items/302",
+  "html_url" : "/backlog_items?id=302&group_id=3",
+  "backlog_item_type_id" : 801,
+  "values" : [
+    {
+      "field_id" : 850,
+      "bind_value_id" : 8500
+    },
+    {
+      "field_id" : 851,
+      "value" : 26.5
+    },
+    {
+      "field_id" : 852,
+      "value" : "Use some nice visual effects"
+    }
+  ]
+}

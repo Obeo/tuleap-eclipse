@@ -19,10 +19,10 @@ var artifact2 = undefined;
 var error404 = undefined;
 
 var files = [
-  '../org.tuleap.mylyn.task.server.data/json/artifacts/artifact-0.json',
-  '../org.tuleap.mylyn.task.server.data/json/artifacts/artifact-1.json',
-  '../org.tuleap.mylyn.task.server.data/json/artifacts/artifact-2.json',
-  '../org.tuleap.mylyn.task.server.data/json/errors/404.json'
+  '../org.tuleap.mylyn.task.server.data/f_tests/artifacts/artifact-0.json',
+  '../org.tuleap.mylyn.task.server.data/f_tests/artifacts/artifact-1.json',
+  '../org.tuleap.mylyn.task.server.data/f_tests/artifacts/artifact-2.json',
+  '../org.tuleap.mylyn.task.server.data/f_tests/errors/404.json'
 ];
 
 for (var i = 0; i < files.length; i++) {

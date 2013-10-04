@@ -1,0 +1,11 @@
+{
+  "id": 30,
+  "label": "Project 30",
+  "url": "/top_plannings/30",
+  "html_url": "/project/3/top_planning?id=30",
+  "project_id": 3,
+  "milestone_type_id": 901,
+  "backlog_item_type_id": 801,
+  "milestones_title": "Releases",
+  "backlog_items_title": "Epics"
+}

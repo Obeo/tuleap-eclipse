@@ -1,0 +1,14 @@
+{
+  "apiVersion": "3.14",
+  "swaggerVersion": "1.2",
+  "apis": [
+    {
+      "path": "/milestones",
+      "description": "Milestones"
+    },
+    {
+      "path": "/plannings",
+      "description": "Plannings"
+    }
+  ]
+}

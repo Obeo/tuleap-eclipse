@@ -1,0 +1,102 @@
+{
+  "id": 3,
+  "label": "Sprint",
+  "unix_name": "sprint",
+  "description": "The description of the sprints tracker",
+  "url": "localhost:3001/api/v3.14/trackers/3",
+  "html_url": "localhost:3001/plugins/tracker/?tracker=3",
+  "project_id": 3,
+  "fields": [
+    {
+      "field_id": 0,
+      "short_name": "title",
+      "label": "Title",
+      "type": "string",
+      "permissions": [
+        "read",
+        "create",
+        "update"
+      ]
+    },
+    {
+      "field_id": 1,
+      "short_name": "start-date",
+      "label": "Start Date",
+      "type": "date",
+      "permissions": [
+        "read",
+        "create",
+        "update"
+      ]
+    },
+    {
+      "field_id": 2,
+      "short_name": "status",
+      "label": "Status",
+      "type": "sb",
+      "values": [
+        {
+          "field_value_id": 0,
+          "field_value_label": "CURRENT"
+        },
+        {
+          "field_value_id": 1,
+          "field_value_label": "DONE"
+        }
+      ],
+      "permissions": [
+        "read",
+        "create",
+        "update"
+      ]
+    },
+    {
+      "field_id": 3,
+      "short_name": "duration",
+      "label": "Duration",
+      "type": "int",
+      "permissions": [
+        "read",
+        "create",
+        "update"
+      ]
+    },
+    {
+      "field_id": 4,
+      "short_name": "capacity",
+      "label": "Capacity",
+      "type": "int",
+      "permissions": [
+        "read",
+        "create",
+        "update"
+      ]
+    }
+  ],
+  "semantic": {
+    "title": {
+      "field_id": 0
+    },
+    "status": {
+      "field_id": 2,
+      "open_status_field_values_ids": [
+        0
+      ]
+    },
+    "start_date": {
+      "field_id": 1
+    },
+    "duration": {
+      "field_id": 3
+    },
+    "capacity": {
+      "field_id": 4
+    }
+  },
+  "hierarchy": {
+    "parent_tracker_id": 2,
+    "children_tracker_ids": [
+      5
+    ]
+  }
+}

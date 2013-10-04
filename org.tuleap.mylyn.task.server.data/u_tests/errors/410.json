@@ -1,0 +1,4 @@
+{
+  "code": 410,
+  "message": "This version of the API is not supported anymore, a new but incompatible version is now available at the url specified in the 'Location' header entry."
+}

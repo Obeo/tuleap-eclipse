@@ -14,7 +14,7 @@ var fs = require('fs');
 
 var api = undefined;
 
-fs.readFile('../org.tuleap.mylyn.task.server.data/json/api.json', 'utf-8', function(err, data) {
+fs.readFile('../org.tuleap.mylyn.task.server.data/f_tests/api.json', 'utf-8', function(err, data) {
   if (err) {
     console.log(err);
     return;

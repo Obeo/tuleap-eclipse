@@ -1,0 +1,28 @@
+{
+  "id" : 300,
+  "label" : "An important Epic",
+  "initial_effort": 30,
+  "project_id": 3,
+  "url" : "/backlog_items/300",
+  "html_url" : "/backlog_items?id=300&group_id=3",
+  "backlog_item_type_id" : 801,
+  "assigned_milestone_id": 200,
+  "values" : [
+    {
+      "field_id" : 850,
+      "bind_value_id" : 8502
+    },
+    {
+      "field_id" : 851,
+      "value" : 0
+    },
+    {
+      "field_id" : 852,
+      "value" : "The summary of an important Epic"
+    },
+    {
+      "field_id" : 853,
+      "value" : "350,351"
+    }
+  ]
+}

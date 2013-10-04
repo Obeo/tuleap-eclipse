@@ -1,0 +1,41 @@
+{
+  "id" : 252,
+  "project_id": 3,
+  "label" : "Sprint 3",
+  "start_date" : "2013-09-23T11:44:18.963Z",
+  "duration" : 20,
+  "capacity" : 26.5,
+  "url" : "/milestones/302",
+  "html_url" : "/milestones?id=302&group_id=3",
+  "milestone_type_id" : 902,
+  "values" : [
+    {
+      "field_id" : 960,
+      "value" : "Sprint 2"
+    },
+    {
+      "field_id" : 961,
+      "bind_value_id" : 9610
+    },
+    {
+      "field_id" : 962,
+      "value" : "420, 421, 422"
+    },
+    {
+      "field_id" : 963,
+      "value" : 12365678
+    },
+    {
+      "field_id" : 964,
+      "value" : 20
+    },
+    {
+      "field_id" : 965,
+      "value" : 26.5
+    },
+    {
+      "field_id" : 966,
+      "value" : 26.5
+    }
+  ]
+}

@@ -18,9 +18,9 @@ var card_type_7000 = undefined; // id = 7000
 var error404 = undefined;
 
 var files = [
-  '../org.tuleap.mylyn.task.server.data/json/card_types/prj3_card_types.json',
-  '../org.tuleap.mylyn.task.server.data/json/card_types/task-7000.json',
-  '../org.tuleap.mylyn.task.server.data/json/errors/404.json'
+  '../org.tuleap.mylyn.task.server.data/f_tests/card_types/prj3_card_types.json',
+  '../org.tuleap.mylyn.task.server.data/f_tests/card_types/task-7000.json',
+  '../org.tuleap.mylyn.task.server.data/f_tests/errors/404.json'
 ];
 
 for (var i = 0; i < files.length; i++) {

@@ -1,0 +1,71 @@
+{
+  "id": 4,
+  "label": "Tests",
+  "unix_name": "tests",
+  "description": "The description of the tests tracker",
+  "url": "localhost:3001/api/v3.14/trackers/4",
+  "html_url": "localhost:3001/plugins/tracker/?tracker=4",
+  "project_id": 3,
+  "fields": [
+    {
+      "field_id": 0,
+      "short_name": "title",
+      "label": "Title",
+      "type": "string",
+      "permissions": [
+        "read",
+        "create",
+        "update"
+      ]
+    },
+    {
+      "field_id": 1,
+      "short_name": "status",
+      "label": "Status",
+      "type": "sb",
+      "values": [
+        {
+          "field_value_id": 0,
+          "field_value_label": "SUCCESS"
+        },
+        {
+          "field_value_id": 1,
+          "field_value_label": "FAILURE"
+        }
+      ],
+      "permissions": [
+        "read",
+        "create",
+        "update"
+      ]
+    },
+    {
+      "field_id": 2,
+      "short_name": "initial-effort",
+      "label": "Initial Effort",
+      "type": "int",
+      "permissions": [
+        "read",
+        "create",
+        "update"
+      ]
+    }
+  ],
+  "semantic": {
+    "title": {
+      "field_id": 0
+    },
+    "status": {
+      "field_id": 1,
+      "open_status_field_values_ids": [
+        0
+      ]
+    },
+    "initial_effort": {
+      "field_id": 2
+    }
+  },
+  "hierarchy": {
+    "parent_tracker_id": 5
+  }
+}

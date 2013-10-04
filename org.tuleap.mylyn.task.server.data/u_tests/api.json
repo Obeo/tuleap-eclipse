@@ -1,0 +1,9 @@
+{
+  "projects_url": "localhost:3001/api/v3.14/projects",
+  "trackers_url": "localhost:3001/api/v3.14/trackers",
+  "artifacts_url": "localhost:3001/api/v3.14/artifacts",
+  "plannings_url": "localhost:3001/api/v3.14/plannings",
+  "milestones_url": "localhost:3001/api/v3.14/milestones",
+  "users_url": "localhost:3001/api/v3.14/users",
+  "files_url": "localhost:3001/api/v3.14/files"
+}

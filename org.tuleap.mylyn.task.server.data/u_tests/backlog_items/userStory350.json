@@ -1,0 +1,48 @@
+{
+  "id" : 350,
+  "project_id": 3,
+  "label" : "An important User Story",
+  "initial_effort": 5,
+  "url" : "/backlog_items/350",
+  "html_url" : "/backlog_items?id=350&group_id=3",
+  "backlog_item_type_id" : 802,
+  "assigned_milestone_id": 250,
+  "values" : [
+    {
+      "field_id" : 860,
+      "bind_value_id" : 8602
+    },
+    {
+      "field_id" : 861,
+      "value" : "Do something useful"
+    },
+    {
+      "field_id" : 862,
+      "value" : "it brings some added-value to my work"
+    },
+    {
+      "field_id" : 863,
+      "value" : "Here are acceptance Criteria:\n* Blah blah\n* Foo"
+    },
+    {
+      "field_id" : 864,
+      "value" : "500,501,502,503"
+    },
+    {
+      "field_id" : 865,
+      "value" : "Iteration 1"
+    },
+    {
+      "field_id" : 866,
+      "value" : 3.5
+    },
+    {
+      "field_id" : 867,
+      "value" : "2"
+    },
+    {
+      "field_id" : 868,
+      "bind_value_id" : 8611
+    }
+  ]
+}

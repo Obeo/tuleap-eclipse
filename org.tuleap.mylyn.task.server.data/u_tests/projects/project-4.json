@@ -1,0 +1,12 @@
+{
+  "id": 4,
+  "name": "Project 4",
+  "unix_name": "project-4",
+  "description": "The project 4",
+  "url": "localhost:3001/api/v3.14/projects/4",
+  "html_url": "localhost:3001/projects/project-4",
+  "services": [
+    "git"
+  ],
+  "is_member": true
+}

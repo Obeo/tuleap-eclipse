@@ -15,7 +15,7 @@ var fs = require('fs');
 var user = undefined;
 var error401 = undefined;
 
-fs.readFile('../org.tuleap.mylyn.task.server.data/json/user.json', 'utf-8', function(err, data) {
+fs.readFile('../org.tuleap.mylyn.task.server.data/f_tests/user.json', 'utf-8', function(err, data) {
   if (err) {
     console.log(err);
     return;
@@ -23,7 +23,7 @@ fs.readFile('../org.tuleap.mylyn.task.server.data/json/user.json', 'utf-8', func
   user = JSON.parse(data);
 });
 
-fs.readFile('../org.tuleap.mylyn.task.server.data/json/errors/401.json', 'utf-8', function(err, data) {
+fs.readFile('../org.tuleap.mylyn.task.server.data/f_tests/errors/401.json', 'utf-8', function(err, data) {
   if (err) {
     console.log(err);
     return;

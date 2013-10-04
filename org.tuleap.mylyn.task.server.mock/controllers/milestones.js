@@ -26,17 +26,17 @@ var backlogItems_rel201 = undefined;
 var error404 = undefined;
 
 var files = [
-  '../org.tuleap.mylyn.task.server.data/json/milestones/releases.json',
-  '../org.tuleap.mylyn.task.server.data/json/milestones/release200.json',
-  '../org.tuleap.mylyn.task.server.data/json/milestones/release201.json',
-  '../org.tuleap.mylyn.task.server.data/json/milestones/sprints_rel200.json',
-  '../org.tuleap.mylyn.task.server.data/json/milestones/sprint250.json',
-  '../org.tuleap.mylyn.task.server.data/json/milestones/sprint251.json',
-  '../org.tuleap.mylyn.task.server.data/json/milestones/sprint252.json',
-  '../org.tuleap.mylyn.task.server.data/json/milestones/backlog_items_rel200.json',
-  '../org.tuleap.mylyn.task.server.data/json/milestones/sprints_rel201.json',
-  '../org.tuleap.mylyn.task.server.data/json/milestones/backlog_items_rel201.json',
-  '../org.tuleap.mylyn.task.server.data/json/errors/404.json'
+  '../org.tuleap.mylyn.task.server.data/f_tests/milestones/releases.json',
+  '../org.tuleap.mylyn.task.server.data/f_tests/milestones/release200.json',
+  '../org.tuleap.mylyn.task.server.data/f_tests/milestones/release201.json',
+  '../org.tuleap.mylyn.task.server.data/f_tests/milestones/sprints_rel200.json',
+  '../org.tuleap.mylyn.task.server.data/f_tests/milestones/sprint250.json',
+  '../org.tuleap.mylyn.task.server.data/f_tests/milestones/sprint251.json',
+  '../org.tuleap.mylyn.task.server.data/f_tests/milestones/sprint252.json',
+  '../org.tuleap.mylyn.task.server.data/f_tests/milestones/backlog_items_rel200.json',
+  '../org.tuleap.mylyn.task.server.data/f_tests/milestones/sprints_rel201.json',
+  '../org.tuleap.mylyn.task.server.data/f_tests/milestones/backlog_items_rel201.json',
+  '../org.tuleap.mylyn.task.server.data/f_tests/errors/404.json'
 ];
 
 for (var i = 0; i < files.length; i++) {

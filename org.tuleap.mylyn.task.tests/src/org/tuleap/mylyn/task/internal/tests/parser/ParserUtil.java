@@ -52,7 +52,7 @@ public final class ParserUtil {
 		if (serverDataBundle == null) {
 			url = ParserUtil.class.getResource(path);
 		} else {
-			url = serverDataBundle.getEntry("/json" + path);
+			url = serverDataBundle.getEntry("/u_tests" + path);
 		}
 		if (url == null) {
 			return null;
