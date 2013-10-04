@@ -1,6 +1,7 @@
 [
 	{
 	  "id" : 250,
+	  "project_id": 3,
 	  "label" : "Sprint 1",
 	  "start_date" : "2013-09-23T11:44:18.963Z",
 	  "duration" : 15,
@@ -41,6 +42,7 @@
 	},
 	{
 	  "id" : 251,
+	  "project_id": 3,
 	  "label" : "Sprint 2",
 	  "start_date" : 12355678,
 	  "duration" : 21,
@@ -81,6 +83,7 @@
 	},
 	{
 	  "id" : 252,
+	  "project_id": 3,
 	  "label" : "Sprint 3",
 	  "start_date" : 12365678,
 	  "duration" : 20,

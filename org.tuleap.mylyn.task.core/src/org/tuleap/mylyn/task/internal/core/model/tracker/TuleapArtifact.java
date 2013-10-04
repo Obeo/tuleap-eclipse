@@ -27,9 +27,11 @@ public class TuleapArtifact extends AbstractTuleapConfigurableElement {
 	 * 
 	 * @param trackerId
 	 *            The identifier of the tracker.
+	 * @param projectId
+	 *            The identifier of the project
 	 */
-	public TuleapArtifact(int trackerId) {
-		super(trackerId);
+	public TuleapArtifact(int trackerId, int projectId) {
+		super(trackerId, projectId);
 	}
 
 	/**
@@ -39,9 +41,11 @@ public class TuleapArtifact extends AbstractTuleapConfigurableElement {
 	 *            The identifier of the artifact
 	 * @param trackerId
 	 *            The identifier of the tracker
+	 * @param projectId
+	 *            The identifier of the project
 	 */
-	public TuleapArtifact(int artifactId, int trackerId) {
-		super(artifactId, trackerId);
+	public TuleapArtifact(int artifactId, int trackerId, int projectId) {
+		super(artifactId, trackerId, projectId);
 	}
 
 	/**
@@ -51,6 +55,8 @@ public class TuleapArtifact extends AbstractTuleapConfigurableElement {
 	 *            The Tuleap artifact ID
 	 * @param trackerId
 	 *            The id of the tracker
+	 * @param projectId
+	 *            The identifier of the project
 	 * @param label
 	 *            The label of the artifact
 	 * @param url
@@ -62,8 +68,10 @@ public class TuleapArtifact extends AbstractTuleapConfigurableElement {
 	 * @param lastModificationDate
 	 *            The last modification date of the artifact
 	 */
-	public TuleapArtifact(int artifactId, int trackerId, String label, String url, String htmlUrl,
-			Date creationDate, Date lastModificationDate) {
-		super(artifactId, trackerId, label, url, htmlUrl, creationDate, lastModificationDate);
+	// CHECKSTYLE:OFF
+	public TuleapArtifact(int artifactId, int trackerId, int projectId, String label, String url,
+			String htmlUrl, Date creationDate, Date lastModificationDate) {
+		super(artifactId, trackerId, projectId, label, url, htmlUrl, creationDate, lastModificationDate);
 	}
+	// CHECKSTYLE:ON
 }

@@ -58,7 +58,7 @@ public class TuleapMilestoneSerializerTests {
 	 */
 	@Test
 	public void testSerializeMilestoneEmptyWithParentId() throws ParseException {
-		TuleapMilestone milestone = new TuleapMilestone(200, 901);
+		TuleapMilestone milestone = new TuleapMilestone(200, 123, 901);
 		milestone.setDuration(Float.valueOf(50));
 		milestone.setCapacity(Float.valueOf(100));
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"); //$NON-NLS-1$
@@ -79,7 +79,7 @@ public class TuleapMilestoneSerializerTests {
 	 */
 	@Test
 	public void testSerializeMilestoneEmptyWithoutParentId() throws ParseException {
-		TuleapMilestone milestone = new TuleapMilestone(200, TuleapMilestone.INVALID_PARENT_MILESTONE_ID);
+		TuleapMilestone milestone = new TuleapMilestone(200, 123, TuleapMilestone.INVALID_PARENT_MILESTONE_ID);
 		milestone.setDuration(Float.valueOf(50));
 		milestone.setCapacity(Float.valueOf(100));
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"); //$NON-NLS-1$
@@ -100,7 +100,7 @@ public class TuleapMilestoneSerializerTests {
 	 */
 	@Test
 	public void testSerializeMilestoneWithLiteralValue() throws ParseException {
-		TuleapMilestone milestone = new TuleapMilestone(200, 901);
+		TuleapMilestone milestone = new TuleapMilestone(200, 123, 901);
 
 		LiteralFieldValue firstLiteralFieldValue = new LiteralFieldValue(1000, "300, 301, 302"); //$NON-NLS-1$
 		milestone.addFieldValue(firstLiteralFieldValue);
@@ -120,7 +120,7 @@ public class TuleapMilestoneSerializerTests {
 	 */
 	@Test
 	public void testSerializeMilestoneWithBoundValue() throws ParseException {
-		TuleapMilestone milestone = new TuleapMilestone(200, 901);
+		TuleapMilestone milestone = new TuleapMilestone(200, 123, 901);
 
 		List<Integer> valueIds = new ArrayList<Integer>();
 		valueIds.add(new Integer(1));
@@ -143,7 +143,7 @@ public class TuleapMilestoneSerializerTests {
 	 */
 	@Test
 	public void testSerializeMilestoneWithFileDescription() throws ParseException {
-		TuleapMilestone milestone = new TuleapMilestone(200, 901);
+		TuleapMilestone milestone = new TuleapMilestone(200, 123, 901);
 		List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
 		TuleapPerson firstUploadedBy = new TuleapPerson("first username", "first realname", 1, "first email"); //$NON-NLS-1$
 		attachments.add(new AttachmentValue("100000", "first name", firstUploadedBy, 123456, //$NON-NLS-1$ 
@@ -171,15 +171,15 @@ public class TuleapMilestoneSerializerTests {
 	 */
 	@Test
 	public void testMilestoneWithSubmilestones() throws ParseException {
-		TuleapMilestone milestone = new TuleapMilestone(200, 901);
+		TuleapMilestone milestone = new TuleapMilestone(200, 123, 901);
 		milestone.setDuration(Float.valueOf(50));
 		milestone.setCapacity(Float.valueOf(100));
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"); //$NON-NLS-1$
 		milestone.setStartDate(dateFormat.parse("2013-09-23T11:44:18.963Z")); //$NON-NLS-1$
 		milestone.setNewComment("I am the first milestone"); //$NON-NLS-1$
 
-		TuleapMilestone firstSubMilestone = new TuleapMilestone(201, 902);
-		TuleapMilestone secondSubMilestone = new TuleapMilestone(202, 903);
+		TuleapMilestone firstSubMilestone = new TuleapMilestone(201, 902, 123);
+		TuleapMilestone secondSubMilestone = new TuleapMilestone(202, 903, 123);
 
 		milestone.addSubMilestone(firstSubMilestone);
 		milestone.addSubMilestone(secondSubMilestone);
@@ -199,7 +199,7 @@ public class TuleapMilestoneSerializerTests {
 	 */
 	@Test
 	public void testMilestoneWithbacklogItems() throws ParseException {
-		TuleapMilestone milestone = new TuleapMilestone(200, 901);
+		TuleapMilestone milestone = new TuleapMilestone(200, 123, 901);
 		milestone.setDuration(Float.valueOf(50));
 		milestone.setCapacity(Float.valueOf(100));
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"); //$NON-NLS-1$
@@ -227,21 +227,21 @@ public class TuleapMilestoneSerializerTests {
 	 */
 	@Test
 	public void testMilestoneWithSubmilestonesAndBacklogItems() throws ParseException {
-		TuleapMilestone milestone = new TuleapMilestone(200, 901);
+		TuleapMilestone milestone = new TuleapMilestone(200, 123, 901);
 		milestone.setDuration(Float.valueOf(50));
 		milestone.setCapacity(Float.valueOf(100));
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"); //$NON-NLS-1$
 		milestone.setStartDate(dateFormat.parse("2013-09-23T11:44:18.963Z")); //$NON-NLS-1$
 		milestone.setNewComment("I am the first milestone"); //$NON-NLS-1$
 
-		TuleapMilestone firstSubMilestone = new TuleapMilestone(201, 902);
-		TuleapMilestone secondSubMilestone = new TuleapMilestone(202, 903);
+		TuleapMilestone firstSubMilestone = new TuleapMilestone(201, 902, 123);
+		TuleapMilestone secondSubMilestone = new TuleapMilestone(202, 903, 123);
 
 		milestone.addSubMilestone(firstSubMilestone);
 		milestone.addSubMilestone(secondSubMilestone);
 
-		TuleapBacklogItem firstBacklogItem = new TuleapBacklogItem(500, 1000);
-		TuleapBacklogItem secondBacklogItem = new TuleapBacklogItem(501, 1000);
+		TuleapBacklogItem firstBacklogItem = new TuleapBacklogItem(500, 1000, 123);
+		TuleapBacklogItem secondBacklogItem = new TuleapBacklogItem(501, 1000, 123);
 
 		firstSubMilestone.addBacklogItem(firstBacklogItem);
 		secondSubMilestone.addBacklogItem(secondBacklogItem);

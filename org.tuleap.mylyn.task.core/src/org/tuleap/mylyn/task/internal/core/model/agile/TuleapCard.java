@@ -36,9 +36,11 @@ public class TuleapCard extends AbstractTuleapConfigurableElement {
 	 * 
 	 * @param cardTypeId
 	 *            The identifier of the card type
+	 * @param projectId
+	 *            The identifier of the project
 	 */
-	public TuleapCard(int cardTypeId) {
-		super(cardTypeId);
+	public TuleapCard(int cardTypeId, int projectId) {
+		super(cardTypeId, projectId);
 	}
 
 	/**
@@ -48,9 +50,11 @@ public class TuleapCard extends AbstractTuleapConfigurableElement {
 	 *            The identifier of the card
 	 * @param cardTypeId
 	 *            The identifier of the card type
+	 * @param projectId
+	 *            The identifier of the project
 	 */
-	public TuleapCard(int cardId, int cardTypeId) {
-		super(cardId, cardTypeId);
+	public TuleapCard(int cardId, int cardTypeId, int projectId) {
+		super(cardId, cardTypeId, projectId);
 	}
 
 	/**
@@ -60,6 +64,8 @@ public class TuleapCard extends AbstractTuleapConfigurableElement {
 	 *            The identifier
 	 * @param cardTypeId
 	 *            The identifier of the card type
+	 * @param projectId
+	 *            The identifier of the project
 	 * @param label
 	 *            The label
 	 * @param url
@@ -71,10 +77,13 @@ public class TuleapCard extends AbstractTuleapConfigurableElement {
 	 * @param lastModificationDate
 	 *            The last modification
 	 */
-	public TuleapCard(int cardId, int cardTypeId, String label, String url, String htmlUrl,
+	// CHECKSTYLE:OFF
+	public TuleapCard(int cardId, int cardTypeId, int projectId, String label, String url, String htmlUrl,
 			Date creationDate, Date lastModificationDate) {
-		super(cardId, cardTypeId, label, url, htmlUrl, creationDate, lastModificationDate);
+		super(cardId, cardTypeId, projectId, label, url, htmlUrl, creationDate, lastModificationDate);
 	}
+
+	// CHECKSTYLE:ON
 
 	/**
 	 * Get the card color.

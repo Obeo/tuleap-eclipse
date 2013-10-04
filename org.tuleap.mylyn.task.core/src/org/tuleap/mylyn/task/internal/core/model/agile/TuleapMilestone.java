@@ -23,7 +23,7 @@ import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableEleme
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class TuleapMilestone extends AbstractTuleapConfigurableElement {
+public class TuleapMilestone extends AbstractTuleapConfigurableElement implements IPlanning {
 
 	/**
 	 * The value used is there are no parent milestone id.
@@ -65,11 +65,13 @@ public class TuleapMilestone extends AbstractTuleapConfigurableElement {
 	 * 
 	 * @param milestoneTypeId
 	 *            The identifier of the milestone type
+	 * @param projectId
+	 *            The identifier of the project
 	 * @param parentMilestoneId
 	 *            The identifier of the parent milestone or INVALID_PARENT_MILESTONE_ID if there are no parent
 	 */
-	public TuleapMilestone(int milestoneTypeId, int parentMilestoneId) {
-		super(milestoneTypeId);
+	public TuleapMilestone(int milestoneTypeId, int projectId, int parentMilestoneId) {
+		super(milestoneTypeId, projectId);
 		this.parentMilestoneId = parentMilestoneId;
 	}
 
@@ -78,11 +80,13 @@ public class TuleapMilestone extends AbstractTuleapConfigurableElement {
 	 * 
 	 * @param milestoneId
 	 *            The identifier of the milestone
+	 * @param projectId
+	 *            The identifier of the project
 	 * @param milestoneType
 	 *            The milestone type
 	 */
-	public TuleapMilestone(int milestoneId, TuleapMilestoneType milestoneType) {
-		super(milestoneId, milestoneType.getIdentifier());
+	public TuleapMilestone(int milestoneId, int projectId, TuleapMilestoneType milestoneType) {
+		super(milestoneId, milestoneType.getIdentifier(), projectId);
 	}
 
 	/**
@@ -92,6 +96,8 @@ public class TuleapMilestone extends AbstractTuleapConfigurableElement {
 	 *            The identifier of the milestone
 	 * @param milestoneTypeId
 	 *            The identifier of the milestone type
+	 * @param projectId
+	 *            The identifier of the project
 	 * @param label
 	 *            The label
 	 * @param url
@@ -103,10 +109,14 @@ public class TuleapMilestone extends AbstractTuleapConfigurableElement {
 	 * @param lastModificationDate
 	 *            The last modification
 	 */
-	public TuleapMilestone(int milestoneId, int milestoneTypeId, String label, String url, String htmlUrl,
-			Date creationDate, Date lastModificationDate) {
-		super(milestoneId, milestoneTypeId, label, url, htmlUrl, creationDate, lastModificationDate);
+	// CHECKSTYLE:OFF
+	public TuleapMilestone(int milestoneId, int milestoneTypeId, int projectId, String label, String url,
+			String htmlUrl, Date creationDate, Date lastModificationDate) {
+		super(milestoneId, milestoneTypeId, projectId, label, url, htmlUrl, creationDate,
+				lastModificationDate);
 	}
+
+	// CHECKSTYLE:ON
 
 	/**
 	 * Returns the identifier of the parent milestone or INVALID_PARENT_MILESTONE_ID if there is no parent for

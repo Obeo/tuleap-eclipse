@@ -1,5 +1,6 @@
 {
   "id" : 250,
+  "project_id": 3,
   "label" : "Sprint 1",
   "start_date" : "2013-09-23T11:44:18.963Z",
   "duration" : 15,

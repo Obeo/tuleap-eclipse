@@ -335,7 +335,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 					TaskData taskData = new TaskData(attributeMapper, this.getConnectorKind(), taskRepository
 							.getRepositoryUrl(), taskDataId);
-					milestoneTaskDataConverter.populateTaskData(taskData, tuleapTopPlanning);
+					milestoneTaskDataConverter.populateTaskData(taskData, tuleapTopPlanning, projectId);
 					try {
 						collector.accept(taskData);
 					} catch (IllegalArgumentException exception) {

@@ -75,6 +75,11 @@ public interface ITuleapConstants {
 	String ID = "id"; //$NON-NLS-1$
 
 	/**
+	 * The key used for the project id of the POJO.
+	 */
+	String PROJECT_ID = "project_id"; //$NON-NLS-1$
+
+	/**
 	 * The key used for the label of the POJO.
 	 */
 	String LABEL = "label"; //$NON-NLS-1$

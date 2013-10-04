@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.tests.server;
 
-import com.google.common.collect.ImmutableList;
-
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -105,9 +103,9 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 			assertEquals(1, topPlannings.size());
 			TuleapTopPlanning topPlanning = topPlannings.get(0);
 			assertEquals(30, topPlanning.getId());
-			ImmutableList<TuleapMilestone> milestones = topPlanning.getMilestones();
+			List<TuleapMilestone> milestones = topPlanning.getSubMilestones();
 			assertEquals(2, milestones.size());
-			ImmutableList<TuleapBacklogItem> backlogItems = topPlanning.getBacklogItems();
+			List<TuleapBacklogItem> backlogItems = topPlanning.getBacklogItems();
 			assertEquals(3, backlogItems.size());
 		} catch (CoreException e) {
 			fail(e.getMessage());

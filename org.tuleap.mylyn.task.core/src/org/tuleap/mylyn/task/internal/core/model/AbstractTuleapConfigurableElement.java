@@ -37,7 +37,12 @@ public abstract class AbstractTuleapConfigurableElement {
 	/**
 	 * The identifier of the configuration of the element.
 	 */
-	private int configurationId;
+	private final int configurationId;
+
+	/**
+	 * The id of the project that contains this element.
+	 */
+	private final int projectId;
 
 	/**
 	 * The human-readable label of the element.
@@ -86,9 +91,12 @@ public abstract class AbstractTuleapConfigurableElement {
 	 * 
 	 * @param configurationId
 	 *            The identifier of the configuration
+	 * @param projectId
+	 *            The identifier of the project
 	 */
-	public AbstractTuleapConfigurableElement(int configurationId) {
+	public AbstractTuleapConfigurableElement(int configurationId, int projectId) {
 		this.configurationId = configurationId;
+		this.projectId = projectId;
 	}
 
 	/**
@@ -99,10 +107,12 @@ public abstract class AbstractTuleapConfigurableElement {
 	 *            The identifier of the element
 	 * @param configurationId
 	 *            The identifier of the configuration of the element
+	 * @param projectId
+	 *            The identifier of the project
 	 */
-	public AbstractTuleapConfigurableElement(int elementId, int configurationId) {
+	public AbstractTuleapConfigurableElement(int elementId, int configurationId, int projectId) {
+		this(configurationId, projectId);
 		this.id = elementId;
-		this.configurationId = configurationId;
 	}
 
 	/**
@@ -113,6 +123,8 @@ public abstract class AbstractTuleapConfigurableElement {
 	 *            The identifier of the element
 	 * @param configurationId
 	 *            The identifier of the configuration of the element
+	 * @param projectId
+	 *            The identifier of the project of the element
 	 * @param label
 	 *            The label of the element
 	 * @param url
@@ -124,16 +136,18 @@ public abstract class AbstractTuleapConfigurableElement {
 	 * @param lastModificationDate
 	 *            The last modification date of the element
 	 */
-	public AbstractTuleapConfigurableElement(int id, int configurationId, String label, String url,
-			String htmlUrl, Date creationDate, Date lastModificationDate) {
-		this.id = id;
-		this.configurationId = configurationId;
+	// CHECKSTYLE:OFF
+	public AbstractTuleapConfigurableElement(int id, int configurationId, int projectId, String label,
+			String url, String htmlUrl, Date creationDate, Date lastModificationDate) {
+		this(id, configurationId, projectId);
 		this.label = label;
 		this.url = url;
 		this.htmlUrl = htmlUrl;
 		this.creationDate = creationDate;
 		this.lastModificationDate = lastModificationDate;
 	}
+
+	// CHECKSTYLE:ON
 
 	/**
 	 * id getter.
@@ -151,6 +165,15 @@ public abstract class AbstractTuleapConfigurableElement {
 	 */
 	public int getConfigurationId() {
 		return configurationId;
+	}
+
+	/**
+	 * Returns the identifier of the project.
+	 * 
+	 * @return The identifier of the project
+	 */
+	public int getProjectId() {
+		return projectId;
 	}
 
 	/**

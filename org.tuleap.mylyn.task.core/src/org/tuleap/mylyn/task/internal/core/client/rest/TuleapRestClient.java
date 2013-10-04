@@ -704,7 +704,7 @@ public class TuleapRestClient {
 
 		List<TuleapMilestone> tuleapMilestones = this.jsonParser.parseMilestones(jsonMilestones);
 		for (TuleapMilestone tuleapMilestone : tuleapMilestones) {
-			topPlanning.addMilestone(tuleapMilestone);
+			topPlanning.addSubMilestone(tuleapMilestone);
 		}
 
 		// 3- Retrieve the backlog items of this top planning

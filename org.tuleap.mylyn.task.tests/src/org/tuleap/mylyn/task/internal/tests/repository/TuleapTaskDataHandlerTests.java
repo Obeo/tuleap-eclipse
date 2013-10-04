@@ -239,12 +239,12 @@ public class TuleapTaskDataHandlerTests {
 	 *            The kind of the task data created
 	 */
 	private void testGetTaskData(String taskId, String taskKind) {
-		final TuleapArtifact tuleapArtifact = new TuleapArtifact(artifactId, trackerId, "", "", "",
-				new Date(), new Date());
-		final TuleapMilestone tuleapMilestone = new TuleapMilestone(milestoneId, this.milestoneTypeId, "",
-				"", "", new Date(), new Date());
+		final TuleapArtifact tuleapArtifact = new TuleapArtifact(artifactId, trackerId, projectId, "", "",
+				"", new Date(), new Date());
+		final TuleapMilestone tuleapMilestone = new TuleapMilestone(milestoneId, this.milestoneTypeId,
+				projectId, "", "", "", new Date(), new Date());
 		final TuleapBacklogItem tuleapBacklogItem = new TuleapBacklogItem(backlogItemId, backlogItemTypeId,
-				"", "", "", new Date(), new Date());
+				projectId, "", "", "", new Date(), new Date());
 
 		// Mock soap client
 		final TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(null, null, null, null, null) {

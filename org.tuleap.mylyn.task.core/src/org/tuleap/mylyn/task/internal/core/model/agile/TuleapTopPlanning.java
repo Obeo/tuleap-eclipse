@@ -20,7 +20,7 @@ import java.util.List;
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class TuleapTopPlanning {
+public class TuleapTopPlanning implements IPlanning {
 
 	/**
 	 * The identifier.
@@ -158,7 +158,7 @@ public class TuleapTopPlanning {
 	 * 
 	 * @return the milestones
 	 */
-	public ImmutableList<TuleapMilestone> getMilestones() {
+	public List<TuleapMilestone> getSubMilestones() {
 		return ImmutableList.copyOf(milestones);
 	}
 
@@ -167,7 +167,7 @@ public class TuleapTopPlanning {
 	 * 
 	 * @return the backlogItems
 	 */
-	public ImmutableList<TuleapBacklogItem> getBacklogItems() {
+	public List<TuleapBacklogItem> getBacklogItems() {
 		return ImmutableList.copyOf(backlogItems);
 	}
 
@@ -177,7 +177,7 @@ public class TuleapTopPlanning {
 	 * @param milestone
 	 *            The milestone to add.
 	 */
-	public void addMilestone(TuleapMilestone milestone) {
+	public void addSubMilestone(TuleapMilestone milestone) {
 		this.milestones.add(milestone);
 	}
 

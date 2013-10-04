@@ -21,6 +21,7 @@
     {
       "backlog_item": {
         "id" : 350,
+        "project_id": 3,
         "label" : "An important User Story",
         "initial_effort": 5,
         "url" : "/backlog_items/350",
@@ -69,6 +70,7 @@
       "cards": [
         {
           "id"            : 13500,
+          "project_id": 3,
           "card_type_id"  : 7000,
           "url"           : "/cards/13500",
           "html_url"      : "/cards?id=13500",
@@ -90,6 +92,7 @@
         },
         {
           "id"            : 13501,
+          "project_id": 3,
           "card_type_id"  : 7000,
           "url"           : "/cards/13501",
           "html_url"      : "/cards?id=13501",
@@ -111,6 +114,7 @@
         },
         {
           "id"            : 13502,
+          "project_id": 3,
           "card_type_id"  : 7000,
           "url"           : "/cards/13502",
           "html_url"      : "/cards?id=13502",
@@ -135,6 +139,7 @@
     {
       "backlog_item": {
         "id" : 351,
+        "project_id": 3,
         "label" : "Another important User Story",
         "initial_effort": 3,
         "url" : "/backlog_items/351",
@@ -183,6 +188,7 @@
       "cards": [
         {
           "id"            : 13510,
+          "project_id": 3,
           "card_type_id"  : 7000,
           "url"           : "/cards/13510",
           "html_url"      : "/cards?id=13510",
@@ -204,6 +210,7 @@
         },
         {
           "id"            : 13511,
+          "project_id": 3,
           "card_type_id"  : 7000,
           "url"           : "/cards/135011",
           "html_url"      : "/cards?id=13511",
@@ -225,6 +232,7 @@
         },
         {
           "id"            : 13512,
+          "project_id": 3,
           "card_type_id"  : 7000,
           "url"           : "/cards/13512",
           "html_url"      : "/cards?id=13512",
@@ -249,6 +257,7 @@
     {
       "backlog_item": {
         "id" : 352,
+        "project_id": 3,
         "label" : "A nice User Story",
         "initial_effort": 3.5,
         "url" : "/backlog_items/352",
@@ -293,6 +302,7 @@
       "cards": [
         {
           "id"            : 13520,
+          "project_id": 3,
           "card_type_id"  : 7000,
           "url"           : "/cards/13520",
           "html_url"      : "/cards?id=13520",
@@ -314,6 +324,7 @@
         },
         {
           "id"            : 13521,
+          "project_id": 3,
           "card_type_id"  : 7000,
           "url"           : "/cards/13521",
           "html_url"      : "/cards?id=13521",
@@ -335,6 +346,7 @@
         },
         {
           "id"            : 13522,
+          "project_id": 3,
           "card_type_id"  : 7000,
           "url"           : "/cards/13522",
           "html_url"      : "/cards?id=13522",

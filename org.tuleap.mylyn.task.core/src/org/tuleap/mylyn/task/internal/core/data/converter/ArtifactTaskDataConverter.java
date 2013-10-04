@@ -64,11 +64,13 @@ public class ArtifactTaskDataConverter extends AbstractElementTaskDataConverter<
 		TuleapArtifact tuleapArtifact = null;
 		if (taskData.isNew()) {
 			int trackerId = tuleapConfigurableElementMapper.getConfigurationId();
-			tuleapArtifact = new TuleapArtifact(trackerId);
+			int projectId = tuleapConfigurableElementMapper.getProjectId();
+			tuleapArtifact = new TuleapArtifact(trackerId, projectId);
 		} else {
 			int artifactId = tuleapConfigurableElementMapper.getId();
 			int trackerId = tuleapConfigurableElementMapper.getConfigurationId();
-			tuleapArtifact = new TuleapArtifact(artifactId, trackerId);
+			int projectId = tuleapConfigurableElementMapper.getProjectId();
+			tuleapArtifact = new TuleapArtifact(artifactId, trackerId, projectId);
 		}
 
 		Set<AbstractFieldValue> fieldValues = tuleapConfigurableElementMapper.getFieldValues();

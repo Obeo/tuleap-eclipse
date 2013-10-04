@@ -1,6 +1,7 @@
 [
   	{
 	  "id" : 300,
+	  "project_id": 3,
 	  "label" : "An important Epic",
 	  "initial_effort": 30,
 	  "url" : "/backlog_items/300",
@@ -28,6 +29,7 @@
 	},
 	{
 	  "id" : 301,
+	  "project_id": 3,
 	  "label" : "Another important Epic",
 	  "initial_effort": 40.5,
 	  "url" : "/backlog_items/301",

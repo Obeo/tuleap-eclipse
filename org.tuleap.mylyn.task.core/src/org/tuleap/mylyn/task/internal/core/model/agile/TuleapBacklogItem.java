@@ -37,9 +37,11 @@ public class TuleapBacklogItem extends AbstractTuleapConfigurableElement {
 	 * 
 	 * @param backlogItemTypeId
 	 *            The identifier of the backlog item type
+	 * @param projectId
+	 *            The identifier of the project
 	 */
-	public TuleapBacklogItem(int backlogItemTypeId) {
-		super(backlogItemTypeId);
+	public TuleapBacklogItem(int backlogItemTypeId, int projectId) {
+		super(backlogItemTypeId, projectId);
 	}
 
 	/**
@@ -49,9 +51,11 @@ public class TuleapBacklogItem extends AbstractTuleapConfigurableElement {
 	 *            The identifier of the backlog item
 	 * @param backlogItemTypeId
 	 *            The identifier of the backlog item type
+	 * @param projectId
+	 *            The identifier of the project
 	 */
-	public TuleapBacklogItem(int backlogItemId, int backlogItemTypeId) {
-		super(backlogItemId, backlogItemTypeId);
+	public TuleapBacklogItem(int backlogItemId, int backlogItemTypeId, int projectId) {
+		super(backlogItemId, backlogItemTypeId, projectId);
 	}
 
 	/**
@@ -61,6 +65,8 @@ public class TuleapBacklogItem extends AbstractTuleapConfigurableElement {
 	 *            The identifier
 	 * @param backlogItemTypeId
 	 *            The identifier of the backlog item type
+	 * @param projectId
+	 *            The identifier of the project
 	 * @param label
 	 *            The label
 	 * @param url
@@ -72,10 +78,14 @@ public class TuleapBacklogItem extends AbstractTuleapConfigurableElement {
 	 * @param lastModificationDate
 	 *            The last modification
 	 */
-	public TuleapBacklogItem(int backlogItemId, int backlogItemTypeId, String label, String url,
-			String htmlUrl, Date creationDate, Date lastModificationDate) {
-		super(backlogItemId, backlogItemTypeId, label, url, htmlUrl, creationDate, lastModificationDate);
+	// CHECKSTYLE:OFF
+	public TuleapBacklogItem(int backlogItemId, int backlogItemTypeId, int projectId, String label,
+			String url, String htmlUrl, Date creationDate, Date lastModificationDate) {
+		super(backlogItemId, backlogItemTypeId, projectId, label, url, htmlUrl, creationDate,
+				lastModificationDate);
 	}
+
+	// CHECKSTYLE:ON
 
 	/**
 	 * Initial effort.

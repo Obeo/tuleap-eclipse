@@ -1,5 +1,6 @@
 {
   "id" : 351,
+  "project_id": 3,
   "label" : "Another important User Story",
   "initial_effort": 3,
   "url" : "/backlog_items/351",

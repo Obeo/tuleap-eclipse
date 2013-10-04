@@ -60,6 +60,7 @@ public class TuleapSoapParser {
 		Artifact artifactToParse = commentedArtifact.getArtifact();
 		int artifactId = artifactToParse.getArtifact_id();
 		int trackerId = artifactToParse.getTracker_id();
+		int projectId = tuleapTrackerConfiguration.getTuleapProjectConfiguration().getIdentifier();
 
 		// Useless for regular artifacts (agile only)
 		String label = null;
@@ -78,8 +79,8 @@ public class TuleapSoapParser {
 		int lastUpdateDate = artifactToParse.getLast_update_date();
 		Date lastModificationDate = this.getDateFromTimestamp(lastUpdateDate);
 
-		TuleapArtifact tuleapArtifact = new TuleapArtifact(artifactId, trackerId, label, url, htmlUrl,
-				creationDate, lastModificationDate);
+		TuleapArtifact tuleapArtifact = new TuleapArtifact(artifactId, trackerId, projectId, label, url,
+				htmlUrl, creationDate, lastModificationDate);
 
 		ArtifactFieldValue[] value = artifactToParse.getValue();
 		for (ArtifactFieldValue artifactFieldValue : value) {

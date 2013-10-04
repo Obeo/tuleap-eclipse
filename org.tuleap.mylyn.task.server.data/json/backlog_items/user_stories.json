@@ -1,6 +1,7 @@
 [
   {
     "id" : 350,
+    "project_id": 3,
     "label" : "An important User Story",
     "initial_effort": 5,
     "url" : "/backlog_items/350",
@@ -48,6 +49,7 @@
   },
   {
     "id" : 351,
+    "project_id": 3,
     "label" : "Another important User Story",
     "initial_effort": 3,
     "url" : "/backlog_items/351",
@@ -95,6 +97,7 @@
   },
   {
     "id" : 352,
+    "project_id": 3,
     "label" : "A nice User Story",
     "initial_effort": 3.5,
     "url" : "/backlog_items/352",

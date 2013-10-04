@@ -56,6 +56,7 @@ public class TuleapCardDeserializer extends AbstractTuleapDeserializer<TuleapCar
 		return card;
 	}
 
+	// CHECKSTYLE:OFF
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -63,10 +64,13 @@ public class TuleapCardDeserializer extends AbstractTuleapDeserializer<TuleapCar
 	 *      java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date)
 	 */
 	@Override
-	protected TuleapCard buildPojo(int id, int configurationId, String label, String url, String htmlUrl,
-			Date creationDate, Date lastModificationDate) {
-		return new TuleapCard(id, configurationId, label, url, htmlUrl, creationDate, lastModificationDate);
+	protected TuleapCard buildPojo(int id, int configurationId, int projectId, String label, String url,
+			String htmlUrl, Date creationDate, Date lastModificationDate) {
+		return new TuleapCard(id, configurationId, projectId, label, url, htmlUrl, creationDate,
+				lastModificationDate);
 	}
+
+	// CHECKSTYLE:ON
 
 	/**
 	 * {@inheritDoc}

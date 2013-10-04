@@ -149,8 +149,8 @@ public class TuleapRepositoryConnectorTests {
 
 		tuleapServerConfiguration.addProject(tuleapProjectConfiguration);
 
-		final TuleapArtifact tuleapArtifact = new TuleapArtifact(artifactId, trackerId, "", "", "",
-				new Date(), new Date());
+		final TuleapArtifact tuleapArtifact = new TuleapArtifact(artifactId, trackerId, projectId, "", "",
+				"", new Date(), new Date());
 
 		final TuleapClientManager tuleapClientManager = new TuleapClientManager() {
 			@Override
@@ -217,8 +217,8 @@ public class TuleapRepositoryConnectorTests {
 
 		tuleapServerConfiguration.addProject(tuleapProjectConfiguration);
 
-		final TuleapArtifact tuleapArtifact = new TuleapArtifact(artifactId, trackerId, "", "", "",
-				new Date(), new Date());
+		final TuleapArtifact tuleapArtifact = new TuleapArtifact(artifactId, trackerId, projectId, "", "",
+				"", new Date(), new Date());
 
 		final TuleapClientManager tuleapClientManager = new TuleapClientManager() {
 			@Override
@@ -284,8 +284,8 @@ public class TuleapRepositoryConnectorTests {
 
 		tuleapServerConfiguration.addProject(tuleapProjectConfiguration);
 
-		final TuleapArtifact tuleapArtifact = new TuleapArtifact(artifactId, trackerId, "", "", "",
-				new Date(), new Date());
+		final TuleapArtifact tuleapArtifact = new TuleapArtifact(artifactId, trackerId, projectId, "", "",
+				"", new Date(), new Date());
 
 		final TuleapClientManager tuleapClientManager = new TuleapClientManager() {
 			@Override

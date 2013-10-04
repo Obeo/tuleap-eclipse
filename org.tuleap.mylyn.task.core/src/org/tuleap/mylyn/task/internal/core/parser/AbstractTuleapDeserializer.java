@@ -58,13 +58,14 @@ public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapConfigu
 		JsonObject jsonObject = rootJsonElement.getAsJsonObject();
 
 		int id = jsonObject.get(ITuleapConstants.ID).getAsInt();
+		int projectId = jsonObject.get(ITuleapConstants.PROJECT_ID).getAsInt();
 		String label = jsonObject.get(ITuleapConstants.LABEL).getAsString();
 		String url = jsonObject.get(ITuleapConstants.URL).getAsString();
 		String htmlUrl = jsonObject.get(ITuleapConstants.HTML_URL).getAsString();
 		int configurationId = jsonObject.get(getTypeIdKey()).getAsInt();
 
 		// TODO Fix the dates from the parsing
-		T pojo = buildPojo(id, configurationId, label, url, htmlUrl, new Date(), new Date());
+		T pojo = buildPojo(id, configurationId, projectId, label, url, htmlUrl, new Date(), new Date());
 
 		JsonArray fields = jsonObject.get(ITuleapConstants.VALUES).getAsJsonArray();
 		for (JsonElement field : fields) {
@@ -116,6 +117,8 @@ public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapConfigu
 	 *            The identifier
 	 * @param configurationId
 	 *            The identifier of the configuration
+	 * @param projectId
+	 *            The identifier of the project
 	 * @param label
 	 *            The label
 	 * @param url
@@ -128,8 +131,11 @@ public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapConfigu
 	 *            The last modification date
 	 * @return The POJO.
 	 */
-	protected abstract T buildPojo(int id, int configurationId, String label, String url, String htmlUrl,
-			Date creationDate, Date lastModificationDate);
+	// CHECKSTYLE:OFF
+	protected abstract T buildPojo(int id, int configurationId, int projectId, String label, String url,
+			String htmlUrl, Date creationDate, Date lastModificationDate);
+
+	// CHECKSTYLE:ON
 
 	/**
 	 * Returns the key of the type id.

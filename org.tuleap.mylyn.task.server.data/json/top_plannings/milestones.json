@@ -1,6 +1,7 @@
 [
   {
     "id" : 200,
+    "project_id": 3,
     "label" : "Release 0.9",
     "start_date" : 12345678,
     "duration" : 50,
@@ -33,6 +34,7 @@
   },
   {
     "id" : 201,
+    "project_id": 3,
     "label" : "Release 1.0",
     "start_date" : 12385678,
     "duration" : 50,

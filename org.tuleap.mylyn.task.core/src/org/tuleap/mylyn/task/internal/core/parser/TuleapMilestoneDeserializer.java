@@ -84,12 +84,15 @@ public class TuleapMilestoneDeserializer extends AbstractTuleapDeserializer<Tule
 		return milestone;
 	}
 
+	// CHECKSTYLE:OFF
 	@Override
-	protected TuleapMilestone buildPojo(int id, int configurationId, String label, String url,
+	protected TuleapMilestone buildPojo(int id, int configurationId, int projectId, String label, String url,
 			String htmlUrl, Date creationDate, Date lastModificationDate) {
-		return new TuleapMilestone(id, configurationId, label, url, htmlUrl, creationDate,
+		return new TuleapMilestone(id, configurationId, projectId, label, url, htmlUrl, creationDate,
 				lastModificationDate);
 	}
+
+	// CHECKSTYLE:ON
 
 	/**
 	 * {@inheritDoc}

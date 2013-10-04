@@ -1,5 +1,6 @@
 {
   "id": 1,
+  "project_id": 3,
   "kind": "products",
   "url": "localhost:3001/api/v3.14/artifacts/1",
   "milestone_url": "localhost:3001/api/v3.14/milestones/1",
