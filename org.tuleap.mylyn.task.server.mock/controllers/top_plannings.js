@@ -11,6 +11,7 @@
 var fs = require('fs');
 
 var topPlannings = undefined;
+var topPlanning30 = undefined;
 var milestones = undefined;
 var backlogItems = undefined;
 
@@ -20,6 +21,7 @@ var files = [
     '../org.tuleap.mylyn.task.server.data/json/top_plannings/top_plannings_prj3.json',
     '../org.tuleap.mylyn.task.server.data/json/top_plannings/milestones.json',
     '../org.tuleap.mylyn.task.server.data/json/top_plannings/backlog_items.json',
+    '../org.tuleap.mylyn.task.server.data/json/top_plannings/top_planning_30.json',
     '../org.tuleap.mylyn.task.server.data/json/errors/404.json'
 ];
 
@@ -41,6 +43,8 @@ for ( var i = 0; i < files.length; i++) {
       } else if (i === 2) {
         backlogItems = jsonData;
       } else if (i === 3) {
+        topPlanning30 = jsonData;
+      } else if (i === 4) {
         error404 = jsonData;
       }
     }
@@ -73,6 +77,34 @@ exports.list = function(req, res) {
     response = error404;
   }
   res.send(response);
+};
+
+///top_plannings/:topPlanningId
+exports.options = function(req, res) {
+res.header('Access-Control-Allow-Methods', 'OPTIONS, GET');
+res.header('Access-Control-Allow-Headers',
+   'Accept-Charset, Accept, Content-Type, Authorization');
+res.header('Allow', 'OPTIONS, GET');
+
+res.send();
+};
+
+exports.get = function(req, res) {
+res.header('Access-Control-Allow-Methods', 'OPTIONS, GET');
+res.header('Access-Control-Allow-Headers',
+   'Accept-Charset, Accept, Content-Type, Authorization');
+res.header('Allow', 'OPTIONS, GET');
+
+var response = undefined;
+var topPlanningId = req.params.topPlanningId;
+
+if (topPlanningId === '30') {
+ response = topPlanning30;
+} else {
+ res.status(404);
+ response = error404;
+}
+res.send(response);
 };
 
 // /top_plannings/:topPlanningId/milestones

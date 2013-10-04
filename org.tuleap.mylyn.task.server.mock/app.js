@@ -120,6 +120,9 @@ app.get('/api/v3.14/top_plannings/:topPlanningId/milestones', auth, top_planning
 //Getting the backlog items of a top planning
 app.options('/api/v3.14/top_plannings/:topPlanningId/backlog_items', top_plannings.optionsBacklogItems);
 app.get('/api/v3.14/top_plannings/:topPlanningId/backlog_items', auth, top_plannings.backlogItems);
+// Getting one top planning
+app.options('/api/v3.14/top_plannings/:topPlanningId', top_plannings.options);
+app.get('/api/v3.14/top_plannings/:topPlanningId', auth, top_plannings.get);
 
 // Milestones
 var milestones = require('./controllers/milestones.js');
