@@ -60,8 +60,8 @@ public class TuleapCardDeserializer extends AbstractTuleapDeserializer<TuleapCar
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.parser.AbstractTuleapDeserializer#buildPojo(int, int,
-	 *      java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date)
+	 * @see org.tuleap.mylyn.task.internal.core.parser.AbstractTuleapDeserializer#buildPojo(int, int, int,
+	 *      String, String, String, Date, Date)
 	 */
 	@Override
 	protected TuleapCard buildPojo(int id, int configurationId, int projectId, String label, String url,
