@@ -896,16 +896,11 @@ public class TuleapSoapConnector {
 
 		monitor.subTask(TuleapMylynTasksMessages
 				.getString(TuleapMylynTasksMessagesKeys.retrievingTrackerSemantic));
-		TrackerStructure trackerStructure = this.getTuleapTrackerV5APIPortType().getTrackerStructure(
-				sessionHash, groupId, artifact.getConfigurationId());
 		monitor.worked(10);
 		for (TrackerField trackerField : trackerFields) {
-			if (trackerStructure != null) {
-				ArtifactFieldValue artifactFieldValue = getArtifactFieldValue(trackerStructure, trackerField,
-						artifact, true);
-				if (artifactFieldValue != null) {
-					valuesList.add(artifactFieldValue);
-				}
+			ArtifactFieldValue artifactFieldValue = getArtifactFieldValue(trackerField, artifact, true);
+			if (artifactFieldValue != null) {
+				valuesList.add(artifactFieldValue);
 			}
 			monitor.worked(1);
 		}
@@ -966,16 +961,11 @@ public class TuleapSoapConnector {
 
 		monitor.subTask(TuleapMylynTasksMessages
 				.getString(TuleapMylynTasksMessagesKeys.retrievingTrackerSemantic));
-		TrackerStructure trackerStructure = this.getTuleapTrackerV5APIPortType().getTrackerStructure(
-				sessionHash, groupId, artifact.getConfigurationId());
 		monitor.worked(10);
 		for (TrackerField trackerField : trackerFields) {
-			if (trackerStructure != null) {
-				ArtifactFieldValue artifactFieldValue = getArtifactFieldValue(trackerStructure, trackerField,
-						artifact, false);
-				if (artifactFieldValue != null) {
-					valuesList.add(artifactFieldValue);
-				}
+			ArtifactFieldValue artifactFieldValue = getArtifactFieldValue(trackerField, artifact, false);
+			if (artifactFieldValue != null) {
+				valuesList.add(artifactFieldValue);
 			}
 			monitor.worked(1);
 		}
@@ -994,11 +984,8 @@ public class TuleapSoapConnector {
 	}
 
 	/**
-	 * Creates the artifact field value from the given tuleap artifact, the tracker structure and the tracker
-	 * field.
+	 * Creates the artifact field value from the given tuleap artifact and the tracker field.
 	 * 
-	 * @param trackerStructure
-	 *            The structure of the tracker holding the semantic and the workflow of the tracker.
 	 * @param trackerField
 	 *            The field of the tracker.
 	 * @param artifact
@@ -1008,8 +995,8 @@ public class TuleapSoapConnector {
 	 *            update of an existing one (false).
 	 * @return The artifact field value
 	 */
-	private ArtifactFieldValue getArtifactFieldValue(TrackerStructure trackerStructure,
-			TrackerField trackerField, TuleapArtifact artifact, boolean newlyCreatedArtifact) {
+	private ArtifactFieldValue getArtifactFieldValue(TrackerField trackerField, TuleapArtifact artifact,
+			boolean newlyCreatedArtifact) {
 		ArtifactFieldValue artifactFieldValue = null;
 
 		boolean returnEarly = false;
@@ -1035,11 +1022,14 @@ public class TuleapSoapConnector {
 						bindValues.add(new TrackerFieldBindValue(
 								ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID, "")); //$NON-NLS-1$
 					} else {
-						TrackerFieldBindValue[] trackerFieldBindValues = trackerField.getValues();
-						for (TrackerFieldBindValue trackerFieldBindValue : trackerFieldBindValues) {
-							bindValues.add(new TrackerFieldBindValue(value.intValue(), trackerFieldBindValue
-									.getBind_value_label()));
-						}
+						// String label = null;
+						// TrackerFieldBindValue[] trackerFieldBindValues = trackerField.getValues();
+						// for (TrackerFieldBindValue trackerFieldBindValue : trackerFieldBindValues) {
+						// if (trackerFieldBindValue.getBind_value_id() == value.intValue()) {
+						// label = trackerFieldBindValue.getBind_value_label();
+						// }
+						// }
+						bindValues.add(new TrackerFieldBindValue(value.intValue(), null));
 					}
 				}
 				FieldValue fieldValue = new FieldValue(
