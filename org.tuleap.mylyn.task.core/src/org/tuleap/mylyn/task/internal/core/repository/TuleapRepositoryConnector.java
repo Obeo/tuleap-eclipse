@@ -46,9 +46,11 @@ import org.tuleap.mylyn.task.internal.core.client.ITuleapQueryConstants;
 import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
+import org.tuleap.mylyn.task.internal.core.data.TuleapConfigurableElementMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.data.converter.ArtifactTaskDataConverter;
 import org.tuleap.mylyn.task.internal.core.data.converter.MilestoneTaskDataConverter;
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableFieldsConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
@@ -425,44 +427,28 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		}
 
 		// Update the completion date of the task from the status of the task data
-		TaskAttribute attributeStatus = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
-		TaskAttribute attributeProduct = taskData.getRoot().getMappedAttribute(TaskAttribute.PRODUCT);
-		if (attributeStatus != null && attributeProduct != null) {
-			int trackerId = -1;
-			String value = attributeProduct.getValue();
-			try {
-				trackerId = Integer.valueOf(value).intValue();
-				TuleapServerConfiguration configuration = this.getRepositoryConfiguration(taskRepository
-						.getRepositoryUrl());
-				TuleapTrackerConfiguration trackerConfiguration = null;
+		TuleapServerConfiguration configuration = this.getRepositoryConfiguration(taskRepository
+				.getRepositoryUrl());
 
-				List<TuleapProjectConfiguration> allProjectConfigurations = configuration
-						.getAllProjectConfigurations();
-				for (TuleapProjectConfiguration tuleapProjectConfiguration : allProjectConfigurations) {
-					TuleapTrackerConfiguration tuleapTrackerConfiguration = tuleapProjectConfiguration
-							.getTrackerConfiguration(trackerId);
-					if (tuleapTrackerConfiguration != null) {
-						trackerConfiguration = tuleapTrackerConfiguration;
-						break;
-					}
-				}
+		TuleapProjectConfiguration projectConfiguration = configuration
+				.getProjectConfiguration(TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(taskData
+						.getTaskId()));
+		AbstractTuleapConfigurableFieldsConfiguration tuleapConfigurableFieldsConfiguration = projectConfiguration
+				.getConfigurableFieldsConfiguration(TuleapTaskIdentityUtil
+						.getConfigurationIdFromTaskDataId(taskData.getTaskId()));
 
-				boolean isCompleted = false;
-				if (trackerConfiguration != null) {
-					isCompleted = isTaskCompleted(attributeStatus.getValue(), trackerConfiguration);
+		TuleapConfigurableElementMapper mapper = new TuleapConfigurableElementMapper(taskData,
+				tuleapConfigurableFieldsConfiguration);
+		int status = mapper.getStatus();
+		if (status != TuleapConfigurableElementMapper.INVALID_STATUS_ID) {
+			if (isTaskCompleted(status, tuleapConfigurableFieldsConfiguration)) {
+				if (task.getCompletionDate() == null) {
+					task.setCompletionDate(new Date(0));
 				}
-
-				if (isCompleted) {
-					if (task.getCompletionDate() == null) {
-						task.setCompletionDate(new Date(0));
-					}
-				} else {
-					if (task.getCompletionDate() != null) {
-						task.setCompletionDate(null);
-					}
+			} else {
+				if (task.getCompletionDate() != null) {
+					task.setCompletionDate(null);
 				}
-			} catch (NumberFormatException e) {
-				TuleapCoreActivator.log(e, true);
 			}
 		}
 
@@ -479,7 +465,8 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 *            The configuration of the repository containing the task
 	 * @return <code>true</code> if the current status matches a closed status, <code>false</code> otherwise.
 	 */
-	private boolean isTaskCompleted(String currentStatus, TuleapTrackerConfiguration configuration) {
+	private boolean isTaskCompleted(int currentStatus,
+			AbstractTuleapConfigurableFieldsConfiguration configuration) {
 		if (configuration != null) {
 			Collection<AbstractTuleapField> fields = configuration.getFields();
 			for (AbstractTuleapField abstractTuleapField : fields) {
@@ -488,7 +475,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 					TuleapSelectBox tuleapSelectBox = (TuleapSelectBox)abstractTuleapField;
 					List<TuleapSelectBoxItem> closedStatus = tuleapSelectBox.getClosedStatus();
 					for (TuleapSelectBoxItem tuleapSelectBoxItem : closedStatus) {
-						if (currentStatus.equals(tuleapSelectBoxItem.getLabel())) {
+						if (currentStatus == tuleapSelectBoxItem.getIdentifier()) {
 							return true;
 						}
 					}

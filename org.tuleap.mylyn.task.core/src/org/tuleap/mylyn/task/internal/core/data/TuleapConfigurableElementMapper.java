@@ -64,6 +64,11 @@ public class TuleapConfigurableElementMapper extends AbstractTaskMapper {
 	public static final String PROJECT_ID = "mtc_project_id"; //$NON-NLS-1$
 
 	/**
+	 * The invalid status id.
+	 */
+	public static final int INVALID_STATUS_ID = -1;
+
+	/**
 	 * List of attribute Ids that need not be sent to the server for update.
 	 */
 	private static final List<String> ATTRIBUTE_IDS_NOT_TO_SEND = Collections.unmodifiableList(Arrays.asList(
@@ -380,16 +385,16 @@ public class TuleapConfigurableElementMapper extends AbstractTaskMapper {
 	 * completion date is forced to {@code null}, since the closed semantic is managed by mylyn <i>via</i> the
 	 * completion date presence.
 	 * 
-	 * @param value
+	 * @param statusItemId
 	 *            The status value id
 	 */
-	public void setStatus(String value) {
+	public void setStatus(int statusItemId) {
 		// Sets the value of the read-only field and update the selectbox on which an operation is bound
 		TaskAttribute attribute = getStatusTaskAttribute();
 		if (attribute != null) {
 			attribute.clearValues();
-			attribute.setValue(value);
-			if (tuleapConfigurableFieldsConfiguration.hasClosedStatusMeaning(value)
+			attribute.setValue(String.valueOf(statusItemId));
+			if (tuleapConfigurableFieldsConfiguration.hasClosedStatusMeaning(statusItemId)
 					&& getCompletionDate() == null) {
 				// Sets the completion date
 				// Hypothesis: the last update date is up to date, which is reasonable since it appears early
@@ -404,33 +409,33 @@ public class TuleapConfigurableElementMapper extends AbstractTaskMapper {
 				// Remove an existing completion date
 				setCompletionDate(null);
 			}
-			updateStatusSelectBox(value, attribute);
+			updateStatusSelectBox(statusItemId, attribute);
 		}
 	}
 
 	/**
 	 * Update the associated select box according to the workflow if there is a workflow.
 	 * 
-	 * @param value
+	 * @param statusItemId
 	 *            The new status value
 	 * @param attribute
 	 *            the task attribute to update
 	 */
-	private void updateStatusSelectBox(String value, TaskAttribute attribute) {
+	private void updateStatusSelectBox(int statusItemId, TaskAttribute attribute) {
 		// update the options of the status field
 		AbstractTuleapSelectBox field = tuleapConfigurableFieldsConfiguration.getStatusField();
 		if (field instanceof TuleapSelectBox) {
 			TuleapSelectBox selectBox = (TuleapSelectBox)field;
 			if (selectBox.hasWorkflow()) {
-				String currentOption = attribute.getOption(value);
+				String currentOption = attribute.getOption(String.valueOf(statusItemId));
 				attribute.clearOptions();
 				if (currentOption != null
-						&& !String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID).equals(value)) {
+						&& ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID != statusItemId) {
 					// currentOption can only be null if the workflow forbids the current modification...
-					attribute.putOption(value, currentOption);
+					attribute.putOption(String.valueOf(statusItemId), currentOption);
 				}
 				Collection<TuleapSelectBoxItem> accessibleStates = selectBox.getWorkflow().accessibleStates(
-						Integer.parseInt(value));
+						statusItemId);
 				for (TuleapSelectBoxItem item : accessibleStates) {
 					attribute.putOption(String.valueOf(item.getIdentifier()), item.getLabel());
 				}
@@ -775,11 +780,15 @@ public class TuleapConfigurableElementMapper extends AbstractTaskMapper {
 	 * 
 	 * @return the status of the task.
 	 */
-	public String getStatus() {
+	public int getStatus() {
 		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
-		if (attribute != null) {
-			return attribute.getValue();
+		if (attribute != null && attribute.getValue() != null) {
+			try {
+				return Integer.parseInt(attribute.getValue());
+			} catch (NumberFormatException e) {
+				// do not log
+			}
 		}
-		return null;
+		return INVALID_STATUS_ID;
 	}
 }

@@ -82,8 +82,8 @@ public abstract class AbstractElementTaskDataConverter<ELEMENT extends AbstractT
 		tuleapConfigurableElementMapper.initializeEmptyTaskData();
 
 		// Task Key
-		String taskKey = TuleapTaskIdentityUtil.getTaskDataKey(this.configuration.getTuleapProjectConfiguration()
-				.getName(), this.configuration.getLabel(), element.getId());
+		String taskKey = TuleapTaskIdentityUtil.getTaskDataKey(this.configuration
+				.getTuleapProjectConfiguration().getName(), this.configuration.getLabel(), element.getId());
 		tuleapConfigurableElementMapper.setTaskKey(taskKey);
 
 		// URL
@@ -111,14 +111,9 @@ public abstract class AbstractElementTaskDataConverter<ELEMENT extends AbstractT
 				BoundFieldValue boundFieldValue = (BoundFieldValue)fieldValue;
 				List<Integer> valueIds = boundFieldValue.getValueIds();
 
-				List<String> valuesString = new ArrayList<String>();
-				for (Integer valueId : valueIds) {
-					valuesString.add(valueId.toString());
-				}
-
-				if (valuesString.size() > 0) {
+				if (valueIds.size() > 0) {
 					// Only support one status
-					tuleapConfigurableElementMapper.setStatus(valuesString.get(0));
+					tuleapConfigurableElementMapper.setStatus(valueIds.get(0).intValue());
 				}
 			}
 		}

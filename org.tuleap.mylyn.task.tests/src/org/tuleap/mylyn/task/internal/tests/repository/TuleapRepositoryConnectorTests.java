@@ -31,11 +31,14 @@ import org.tuleap.mylyn.task.internal.core.client.ITuleapQueryConstants;
 import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
+import org.tuleap.mylyn.task.internal.core.data.TuleapConfigurableElementMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapPlanningBinding;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
+import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
@@ -44,6 +47,8 @@ import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 
 import static org.junit.Assert.assertEquals;
 
@@ -387,5 +392,72 @@ public class TuleapRepositoryConnectorTests {
 		assertThat(collector.getTaskData().size(), is(1));
 		assertThat(collector.getTaskData().iterator().next().getTaskId(), is(TuleapTaskIdentityUtil
 				.getTaskDataId(projectId, TuleapTaskIdentityUtil.IRRELEVANT_ID, topPlanningId)));
+	}
+
+	/**
+	 * Test the update of the task from the given task data.
+	 */
+	@Test
+	public void testUpdateTaskFromTaskData() {
+		TaskRepository taskRepository = new TaskRepository(ITuleapConstants.CONNECTOR_KIND,
+				"https://tuleap.net");
+
+		int projectId = 789;
+		int configurationId = 456;
+		int elementId = 123;
+		String taskId = TuleapTaskIdentityUtil.getTaskDataId(projectId, configurationId, elementId);
+
+		ITask task = new LocalTask(taskId, "");
+
+		TaskData taskData = new TaskData(new TaskAttributeMapper(taskRepository),
+				ITuleapConstants.CONNECTOR_KIND, "https://tuleap.net", taskId);
+
+		int openStatusId = 0;
+		int closedStatusId = 1;
+
+		final TuleapServerConfiguration tuleapServerConfiguration = new TuleapServerConfiguration(
+				"https://tuleap.net");
+		TuleapProjectConfiguration tuleapProjectConfiguration = new TuleapProjectConfiguration(null,
+				projectId);
+
+		TuleapTrackerConfiguration trackerConfiguration = new TuleapTrackerConfiguration(configurationId,
+				null, null, null, null, 0);
+
+		TuleapSelectBox tuleapSelectBox = new TuleapSelectBox(0);
+		TuleapSelectBoxItem item = new TuleapSelectBoxItem(0);
+		item.setLabel("OPEN");
+		tuleapSelectBox.addItem(item);
+		tuleapSelectBox.getOpenStatus().add(item);
+
+		item = new TuleapSelectBoxItem(1);
+		item.setLabel("CLOSED");
+		tuleapSelectBox.addItem(item);
+
+		trackerConfiguration.addField(tuleapSelectBox);
+
+		tuleapProjectConfiguration.addTracker(trackerConfiguration);
+		tuleapServerConfiguration.addProject(tuleapProjectConfiguration);
+
+		TuleapConfigurableElementMapper mapper = new TuleapConfigurableElementMapper(taskData,
+				trackerConfiguration);
+		mapper.initializeEmptyTaskData();
+		mapper.setStatus(openStatusId);
+
+		TuleapRepositoryConnector tuleapRepositoryConnector = new TuleapRepositoryConnector() {
+			@Override
+			public TuleapServerConfiguration getRepositoryConfiguration(String repositoryUrl) {
+				return tuleapServerConfiguration;
+			}
+		};
+		tuleapRepositoryConnector.updateTaskFromTaskData(taskRepository, task, taskData);
+		assertThat(task.isCompleted(), is(false));
+		assertThat(task.getCompletionDate(), nullValue());
+
+		mapper.setModificationDate(new Date());
+		mapper.setStatus(closedStatusId);
+
+		tuleapRepositoryConnector.updateTaskFromTaskData(taskRepository, task, taskData);
+		assertThat(task.isCompleted(), is(true));
+		assertThat(task.getCompletionDate(), notNullValue());
 	}
 }

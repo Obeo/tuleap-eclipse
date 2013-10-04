@@ -288,16 +288,15 @@ public abstract class AbstractTuleapConfigurableFieldsConfiguration implements S
 	/**
 	 * Indicates whether the given status represents a closed status.
 	 * 
-	 * @param status
+	 * @param statusItemId
 	 *            The status for which you want to know if it means the task is closed.
 	 * @return {@code true} if the configuration of the status field closed statuses contains the given
 	 *         status, {@false otherwise}.
 	 */
-	public boolean hasClosedStatusMeaning(String status) {
+	public boolean hasClosedStatusMeaning(int statusItemId) {
 		if (statusField != null) {
-			int statusId = Integer.parseInt(status);
 			for (TuleapSelectBoxItem item : statusField.getClosedStatus()) {
-				if (item.getIdentifier() == statusId) {
+				if (item.getIdentifier() == statusItemId) {
 					return true;
 				}
 			}
