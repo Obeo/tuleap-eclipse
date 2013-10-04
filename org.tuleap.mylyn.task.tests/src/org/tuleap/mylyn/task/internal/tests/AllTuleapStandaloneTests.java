@@ -16,6 +16,7 @@ import junit.textui.TestRunner;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+import org.tuleap.mylyn.task.internal.tests.client.soap.TuleapSoapConnectorTests;
 import org.tuleap.mylyn.task.internal.tests.converter.MilestoneTaskDataConverterTest;
 import org.tuleap.mylyn.task.internal.tests.data.TuleapTaskIdentityUtilTests;
 import org.tuleap.mylyn.task.internal.tests.model.TuleapProjectConfigurationTests;
@@ -48,7 +49,8 @@ import org.tuleap.mylyn.task.internal.tests.server.ServerResponseTest;
 		TuleapCardTypeDeserializerTests.class, ServerResponseTest.class, TuleapJsonParserTest.class,
 		TuleapProjectConfigurationTests.class, TuleapCardwallConfigurationDeserializerTests.class,
 		TuleapMilestoneSerializerTests.class, TuleapTopPlanningDeserializerTests.class,
-		TuleapBacklogItemsSerializerTests.class, MilestoneTaskDataConverterTest.class })
+		TuleapBacklogItemsSerializerTests.class, MilestoneTaskDataConverterTest.class,
+		TuleapSoapConnectorTests.class })
 public final class AllTuleapStandaloneTests {
 
 	/**
