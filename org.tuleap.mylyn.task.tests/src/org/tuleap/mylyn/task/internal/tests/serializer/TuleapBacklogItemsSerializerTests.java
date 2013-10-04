@@ -49,10 +49,10 @@ public class TuleapBacklogItemsSerializerTests {
 	 */
 	@Test
 	public void testSerializeBacklogItemsWithAffectedMilestone() {
-		TuleapBacklogItem firstBacklogItem = new TuleapBacklogItem(200, 901);
+		TuleapBacklogItem firstBacklogItem = new TuleapBacklogItem(200, 901, 123);
 		firstBacklogItem.setAssignedMilestoneId(1000);
 
-		TuleapBacklogItem secondBacklogItem = new TuleapBacklogItem(201, 901);
+		TuleapBacklogItem secondBacklogItem = new TuleapBacklogItem(201, 901, 123);
 		secondBacklogItem.setAssignedMilestoneId(1001);
 
 		List<TuleapBacklogItem> backlogItemsList = new ArrayList<TuleapBacklogItem>();
@@ -70,8 +70,8 @@ public class TuleapBacklogItemsSerializerTests {
 	 */
 	@Test
 	public void testSerializeBacklogItemWithoutAffectedMilestone() {
-		TuleapBacklogItem firstBacklogItem = new TuleapBacklogItem(200, 901);
-		TuleapBacklogItem secondBacklogItem = new TuleapBacklogItem(201, 901);
+		TuleapBacklogItem firstBacklogItem = new TuleapBacklogItem(200, 901, 123);
+		TuleapBacklogItem secondBacklogItem = new TuleapBacklogItem(201, 901, 123);
 
 		List<TuleapBacklogItem> backlogItemsList = new ArrayList<TuleapBacklogItem>();
 		backlogItemsList.add(firstBacklogItem);
@@ -88,10 +88,10 @@ public class TuleapBacklogItemsSerializerTests {
 	 */
 	@Test
 	public void testSerializeBacklogItemWithoutAffectedId() {
-		TuleapBacklogItem firstBacklogItem = new TuleapBacklogItem(901);
+		TuleapBacklogItem firstBacklogItem = new TuleapBacklogItem(901, 123);
 		firstBacklogItem.setAssignedMilestoneId(1000);
 
-		TuleapBacklogItem secondBacklogItem = new TuleapBacklogItem(902);
+		TuleapBacklogItem secondBacklogItem = new TuleapBacklogItem(902, 123);
 		secondBacklogItem.setAssignedMilestoneId(1001);
 
 		List<TuleapBacklogItem> backlogItemsList = new ArrayList<TuleapBacklogItem>();
@@ -116,6 +116,7 @@ public class TuleapBacklogItemsSerializerTests {
 		TuleapBacklogItem firstBacklogItem = new TuleapBacklogItem(
 				200,
 				901,
+				123,
 				"the first backlog item", "/backlogItemss/200", "/backlogItemss?id=200&group_id=3", dateFormat.parse("2013-09-23T11:44:18.963Z"), //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$
 				dateFormat.parse("2013-09-24T11:44:18.963Z")); //$NON-NLS-1$
 		firstBacklogItem.setAssignedMilestoneId(500);
@@ -124,6 +125,7 @@ public class TuleapBacklogItemsSerializerTests {
 		TuleapBacklogItem secondBacklogItem = new TuleapBacklogItem(
 				201,
 				901,
+				123,
 				"the second backlog item", "/backlogItemss/201", "/backlogItemss?id=201&group_id=3", dateFormat.parse("2013-09-23T11:44:18.963Z"), //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$
 				dateFormat.parse("2013-09-24T11:44:18.963Z")); //$NON-NLS-1$
 		secondBacklogItem.setAssignedMilestoneId(501);

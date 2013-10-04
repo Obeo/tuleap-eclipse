@@ -292,7 +292,7 @@ public class TuleapSoapConnectorTests {
 				}
 			};
 
-			TuleapArtifact tuleapArtifact = new TuleapArtifact(configurationId);
+			TuleapArtifact tuleapArtifact = new TuleapArtifact(configurationId, projectId);
 			AbstractFieldValue firstFieldValue = new LiteralFieldValue(firstFieldId, literalFieldValue);
 			tuleapArtifact.addFieldValue(firstFieldValue);
 			AbstractFieldValue secondFieldValue = new BoundFieldValue(secondFieldId, boundFieldIds);

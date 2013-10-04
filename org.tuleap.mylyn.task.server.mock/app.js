@@ -129,6 +129,9 @@ var milestones = require('./controllers/milestones.js');
 //Getting the list of milestones
 app.options('/api/v3.14/milestones', milestones.optionsList);
 app.get('/api/v3.14/milestones', auth, milestones.list);
+//Getting one milestone
+app.options('/api/v3.14/milestones/:milestoneId', milestones.options);
+app.get('/api/v3.14/milestones/:milestoneId', auth, milestones.get);
 //Getting the sub-milestones of a milestone
 app.options('/api/v3.14/milestones/:milestoneId/submilestones', milestones.optionsSubmilestones);
 app.get('/api/v3.14/milestones/:milestoneId/submilestones', auth, milestones.submilestones);
