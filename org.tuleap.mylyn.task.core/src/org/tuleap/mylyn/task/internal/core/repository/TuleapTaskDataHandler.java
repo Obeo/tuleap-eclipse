@@ -36,6 +36,7 @@ import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItemType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
@@ -300,10 +301,13 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			taskData = this.getArtifactTaskData(taskId, serverConfiguration, taskRepository, monitor);
 		} else if (configuration instanceof TuleapMilestoneType) {
 			// TODO SBE retrieval of the milestone from the server
-			// taskData = this.getMilestoneTaskData();
+			// taskData = this.getMilestoneTaskData(...);
 		} else if (configuration instanceof TuleapBacklogItemType) {
 			// TODO SBE retrieval of the backlog item from the server
-			// taskData = this.getBacklogItemTaskData();
+			// taskData = this.getBacklogItemTaskData(...);
+		} else if (TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId(taskId) == TuleapTaskIdentityUtil.IRRELEVANT_ID) {
+			// Top Planning
+			taskData = this.getTopPlanningTaskData(taskId, serverConfiguration, taskRepository, monitor);
 		}
 
 		return taskData;
@@ -340,6 +344,40 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			TaskData taskData = new TaskData(attributeMapper, ITuleapConstants.CONNECTOR_KIND, taskRepository
 					.getRepositoryUrl(), String.valueOf(tuleapArtifact.getId()));
 			artifactTaskDataConverter.populateTaskData(taskData, tuleapArtifact);
+
+			return taskData;
+		}
+		return null;
+	}
+
+	/**
+	 * Retrieves the task data representing the Tuleap top planning with the given task id on the given task
+	 * repository.
+	 * 
+	 * @param taskId
+	 *            The identifier of the task
+	 * @param serverConfiguration
+	 *            The configuration of the server
+	 * @param taskRepository
+	 *            The task repository
+	 * @param monitor
+	 *            The progress monitor
+	 * @return The task data representing the Tuleap artifact with the given task id
+	 * @throws CoreException
+	 *             In case of issues during the download of the artifact data
+	 */
+	private TaskData getTopPlanningTaskData(String taskId, TuleapServerConfiguration serverConfiguration,
+			TaskRepository taskRepository, IProgressMonitor monitor) throws CoreException {
+		TuleapRestClient restClient = this.connector.getClientManager().getRestClient(taskRepository);
+		TuleapTopPlanning topPlanning = restClient.getTopPlanning(TuleapTaskIdentityUtil
+				.getElementIdFromTaskDataId(taskId), monitor);
+		if (topPlanning != null) {
+			MilestoneTaskDataConverter taskDataConverter = new MilestoneTaskDataConverter(null);
+			TaskAttributeMapper attributeMapper = this.getAttributeMapper(taskRepository);
+
+			TaskData taskData = new TaskData(attributeMapper, ITuleapConstants.CONNECTOR_KIND, taskRepository
+					.getRepositoryUrl(), String.valueOf(topPlanning.getId()));
+			taskDataConverter.populateTaskData(taskData, topPlanning);
 
 			return taskData;
 		}
