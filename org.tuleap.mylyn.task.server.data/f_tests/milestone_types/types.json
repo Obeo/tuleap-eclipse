@@ -16,7 +16,7 @@
         }, {
           "field_id" : 951,
           "label" : "Status",
-          "type": "sb",
+          "type" : "sb",
           "permissions" : [],
           "values" : [
               {
@@ -48,105 +48,6 @@
           "field_id" : 954,
           "label" : "In release",
           "type" : "art_link",
-          "permissions" : [
-              "read", "create", "update"
-          ]
-        }, {
-          "field_id" : 955,
-          "label" : "TU_001",
-          "type" : "text",
-          "permissions" : [
-              "read", "create", "update"
-          ]
-        }, {
-          "field_id" : 956,
-          "label" : "TU_002",
-          "type" : "computed",
-          "permissions" : [
-              "read", "create", "update"
-          ]
-        }, {
-          "field_id" : 957,
-          "label" : "TU_003",
-          "type" : "sb",
-          "values" : [
-              {
-                "field_value_id" : 9610,
-                "field_value_label" : "Planned"
-              }, {
-                "field_value_id" : 9611,
-                "field_value_label" : "Current"
-              }, {
-                "field_value_id" : 9612,
-                "field_value_label" : "Done"
-              }
-          ],
-          "permissions" : [
-              "read", "create", "update"
-          ]
-        }, {
-          "field_id" : 958,
-          "label" : "TU_004",
-          "type": "msb",
-        "binding": {
-          "bind_type": "users",
-          "bind_list": [
-              {
-                "user_group_id": 0,
-                "user_group_name": "Project Admins"
-              },
-              {
-                "user_group_id": 1,
-                "user_group_name": "Project Members"
-              }
-            ]
-        },
-          "permissions" : [
-              "read", "create", "update"
-          ]
-        }, {
-          "field_id" : 959,
-          "label" : "TU_005",
-          "type" : "cb",
-          "values": [
-          {
-            "field_value_id": 0,
-            "field_value_label": "Unit Tests"
-          },
-          {
-            "field_value_id": 1,
-            "field_value_label": "Integration Tests"
-          },
-          {
-            "field_value_id": 2,
-            "field_value_label": "Functional Tests"
-          },
-          {
-            "field_value_id": 3,
-            "field_value_label": "End To End Tests"
-          }
-        ],
-          "permissions" : [
-              "read", "create", "update"
-          ]
-        }, {
-          "field_id" : 960,
-          "label" : "TU_006",
-          "type" : "date",
-          "permissions" : [
-              "read", "create", "update"
-          ]
-        }, {
-          "field_id" : 961,
-          "label" : "TU_007",
-          "type" : "tbl",
-          "permissions" : [
-              "read", "create", "update"
-          ]
-        }, {
-          "field_id" : 962,
-          "label" : "TU_008",
-          "type" : "file",
           "permissions" : [
               "read", "create", "update"
           ]
