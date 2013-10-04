@@ -17,10 +17,13 @@ import junit.textui.TestRunner;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.tuleap.mylyn.task.internal.tests.client.soap.TuleapSoapConnectorTests;
+import org.tuleap.mylyn.task.internal.tests.client.soap.TuleapSoapParserTests;
 import org.tuleap.mylyn.task.internal.tests.converter.MilestoneTaskDataConverterTest;
+import org.tuleap.mylyn.task.internal.tests.data.TuleapConfigurableElementMapperTests;
 import org.tuleap.mylyn.task.internal.tests.data.TuleapTaskIdentityUtilTests;
 import org.tuleap.mylyn.task.internal.tests.model.TuleapProjectConfigurationTests;
 import org.tuleap.mylyn.task.internal.tests.model.TuleapTrackerConfigurationTests;
+import org.tuleap.mylyn.task.internal.tests.model.TuleapWorkflowTests;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapBacklogItemDeserializerTest;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapBacklogItemTypeDeserializerTests;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapCardTypeDeserializerTests;
@@ -31,9 +34,12 @@ import org.tuleap.mylyn.task.internal.tests.parser.TuleapMilestoneTypeDeserializ
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapProjectConfigurationDeserializerTests;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapTopPlanningDeserializerTests;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapTrackerConfigurationDeserializerTests;
+import org.tuleap.mylyn.task.internal.tests.repository.TuleapRepositoryConnectorTests;
+import org.tuleap.mylyn.task.internal.tests.repository.TuleapTaskDataHandlerTests;
 import org.tuleap.mylyn.task.internal.tests.serializer.TuleapBacklogItemsSerializerTests;
 import org.tuleap.mylyn.task.internal.tests.serializer.TuleapMilestoneSerializerTests;
 import org.tuleap.mylyn.task.internal.tests.server.ServerResponseTest;
+import org.tuleap.mylyn.task.internal.tests.server.TaskRepositoryCredentialsTest;
 
 /**
  * The stand alone unit tests suite (run as standard junit test).
@@ -42,15 +48,17 @@ import org.tuleap.mylyn.task.internal.tests.server.ServerResponseTest;
  * @since 0.7
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({TuleapTaskIdentityUtilTests.class, TuleapProjectConfigurationDeserializerTests.class,
-		TuleapTrackerConfigurationDeserializerTests.class, TuleapTrackerConfigurationTests.class,
-		TuleapBacklogItemDeserializerTest.class, TuleapBacklogItemTypeDeserializerTests.class,
-		TuleapMilestoneTypeDeserializerTests.class, TuleapMilestoneDeserializerTests.class,
-		TuleapCardTypeDeserializerTests.class, ServerResponseTest.class, TuleapJsonParserTest.class,
-		TuleapProjectConfigurationTests.class, TuleapCardwallConfigurationDeserializerTests.class,
-		TuleapMilestoneSerializerTests.class, TuleapTopPlanningDeserializerTests.class,
-		TuleapBacklogItemsSerializerTests.class, MilestoneTaskDataConverterTest.class,
-		TuleapSoapConnectorTests.class })
+@Suite.SuiteClasses({TuleapSoapParserTests.class, TuleapTaskIdentityUtilTests.class,
+		TuleapProjectConfigurationDeserializerTests.class, TuleapTrackerConfigurationDeserializerTests.class,
+		TuleapTrackerConfigurationTests.class, TuleapBacklogItemDeserializerTest.class,
+		TuleapBacklogItemTypeDeserializerTests.class, TuleapMilestoneTypeDeserializerTests.class,
+		TuleapMilestoneDeserializerTests.class, TuleapCardTypeDeserializerTests.class,
+		ServerResponseTest.class, TuleapJsonParserTest.class, TuleapProjectConfigurationTests.class,
+		TuleapCardwallConfigurationDeserializerTests.class, TuleapMilestoneSerializerTests.class,
+		TuleapTopPlanningDeserializerTests.class, TuleapBacklogItemsSerializerTests.class,
+		MilestoneTaskDataConverterTest.class, TuleapSoapConnectorTests.class,
+		TuleapRepositoryConnectorTests.class, TuleapTaskDataHandlerTests.class, TuleapWorkflowTests.class,
+		TaskRepositoryCredentialsTest.class, TuleapConfigurableElementMapperTests.class })
 public final class AllTuleapStandaloneTests {
 
 	/**
