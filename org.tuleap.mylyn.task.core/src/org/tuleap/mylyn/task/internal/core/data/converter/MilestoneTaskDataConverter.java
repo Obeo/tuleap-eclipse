@@ -163,6 +163,18 @@ public class MilestoneTaskDataConverter extends AbstractElementTaskDataConverter
 			String swimlaneId = TuleapTaskIdentityUtil.getTaskDataId(backlogItem.getProjectId(), backlogItem
 					.getConfigurationId(), backlogItem.getId());
 			SwimlaneWrapper swimlaneWrapper = wrapper.addSwimlane(swimlaneId);
+			swimlaneWrapper.getSwimlaneItem().setLabel(backlogItem.getLabel());
+			Integer assignedMilestoneId = backlogItem.getAssignedMilestoneId();
+			if (assignedMilestoneId != null) {
+				swimlaneWrapper.getSwimlaneItem().setAssignedMilestoneId(
+						TuleapTaskIdentityUtil.getTaskDataId(backlogItem.getProjectId(), backlogItem
+								.getConfigurationId(), backlogItem.getAssignedMilestoneId().intValue()));
+			}
+			swimlaneWrapper.getSwimlaneItem().setLabel(backlogItem.getLabel());
+			Float initialEffort = backlogItem.getInitialEffort();
+			if (initialEffort != null) {
+				swimlaneWrapper.getSwimlaneItem().setInitialEffort(initialEffort.floatValue());
+			}
 			for (TuleapCard card : swimlane.getCards()) {
 				String cardId = TuleapTaskIdentityUtil.getTaskDataId(card.getProjectId(), card
 						.getConfigurationId(), card.getId());
