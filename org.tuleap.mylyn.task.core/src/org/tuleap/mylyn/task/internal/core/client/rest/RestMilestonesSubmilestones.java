@@ -56,7 +56,7 @@ public class RestMilestonesSubmilestones extends AbstractAuthenticatedRestResour
 	}
 
 	/**
-	 * Sends an GET request to the {@code /api/<version>/milestones/:milestoneId/backlog_items} URL and
+	 * Sends an GET request to the {@code /api/<version>/milestones/:milestoneId/submilestones} URL and
 	 * returns the response.
 	 * 
 	 * @param headers
@@ -69,7 +69,7 @@ public class RestMilestonesSubmilestones extends AbstractAuthenticatedRestResour
 	}
 
 	/**
-	 * Sends an OPTIONS request to the {@code /api/<version>/milestones/:milestoneId/backlog_items} URL and
+	 * Sends an OPTIONS request to the {@code /api/<version>/milestones/:milestoneId/submilestones} URL and
 	 * checks that the GET operation is allowed in the response provided by the server.
 	 * 
 	 * @param headers
