@@ -22,6 +22,7 @@ var sprint252 = undefined;
 var backlogItems_rel200 = undefined;
 var sprints_rel201 = undefined;
 var backlogItems_rel201 = undefined;
+var cardwall250 = undefined
 
 var error404 = undefined;
 
@@ -36,6 +37,7 @@ var files = [
   '../org.tuleap.mylyn.task.server.data/f_tests/milestones/backlog_items_rel200.json',
   '../org.tuleap.mylyn.task.server.data/f_tests/milestones/sprints_rel201.json',
   '../org.tuleap.mylyn.task.server.data/f_tests/milestones/backlog_items_rel201.json',
+  '../org.tuleap.mylyn.task.server.data/f_tests/cardwalls/cw_sprint250.json',
   '../org.tuleap.mylyn.task.server.data/f_tests/errors/404.json'
 ];
 
@@ -70,6 +72,8 @@ for (var i = 0; i < files.length; i++) {
     	  sprints_rel201 = jsonData;
       } else if (i === 9){
     	  backlogItems_rel201 = jsonData;
+      } else if (i === 10){
+        cardwall250 = jsonData;
       } else {
     	  error404 = jsonData;
       }
@@ -198,4 +202,34 @@ exports.backlogItems = function(req, res) {
     response = error404;
   }
   res.send(response);
+};
+
+
+///milestones/:milestoneId/cardwall
+exports.optionsCardwall = function(req, res) {
+res.header('Access-Control-Allow-Methods', 'OPTIONS, GET');
+res.header('Access-Control-Allow-Headers',
+   'Accept-Charset, Accept, Content-Type, Authorization');
+res.header('Allow', 'OPTIONS, GET');
+
+res.send();
+};
+
+///milestones/:milestoneId/cardwall
+exports.cardwall = function(req, res) {
+res.header('Access-Control-Allow-Methods', 'OPTIONS, GET');
+res.header('Access-Control-Allow-Headers',
+   'Accept-Charset, Accept, Content-Type, Authorization');
+res.header('Allow', 'OPTIONS, GET');
+
+var response = undefined;
+var milestoneId = req.params.milestoneId;
+
+if (milestoneId === '250') {
+ response = cardwall250;
+} else {
+ res.status(404);
+ response = error404;
+}
+res.send(response);
 };

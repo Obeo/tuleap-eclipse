@@ -138,6 +138,9 @@ app.get('/api/v3.14/milestones/:milestoneId/submilestones', auth, milestones.sub
 //Getting the backlog items of a milestone
 app.options('/api/v3.14/milestones/:milestoneId/backlog_items', milestones.optionsBacklogItems);
 app.get('/api/v3.14/milestones/:milestoneId/backlog_items', auth, milestones.backlogItems);
+//Getting the card wall of a milestone
+app.options('/api/v3.14/milestones/:milestoneId/cardwall', milestones.optionsCardwall);
+app.get('/api/v3.14/milestones/:milestoneId/cardwall', auth, milestones.cardwall);
 
 
 // --------------- API-DOCS ---------------
