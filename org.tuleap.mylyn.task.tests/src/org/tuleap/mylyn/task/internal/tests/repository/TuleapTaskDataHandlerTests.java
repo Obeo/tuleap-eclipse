@@ -145,21 +145,17 @@ public class TuleapTaskDataHandlerTests {
 	private void testNewlyInitializedElementKind(int configurationId, String taskKind) {
 		ITuleapRepositoryConnector repositoryConnector = new ITuleapRepositoryConnector() {
 
-			public void putRepositoryConfiguration(String repositoryUrl,
-					TuleapServerConfiguration configuration) {
-				// do nothing
-			}
-
-			public TuleapServerConfiguration getRepositoryConfiguration(TaskRepository taskRepository,
-					boolean forceRefresh, IProgressMonitor monitor) {
+			public TuleapServerConfiguration getTuleapServerConfiguration(String repositoryUrl) {
 				return TuleapTaskDataHandlerTests.this.tuleapServerConfiguration;
 			}
 
-			public TuleapServerConfiguration getRepositoryConfiguration(String repositoryUrl) {
+			public TuleapClientManager getClientManager() {
 				return null;
 			}
 
-			public TuleapClientManager getClientManager() {
+			public AbstractTuleapConfigurableFieldsConfiguration refreshConfiguration(
+					TaskRepository taskRepository,
+					AbstractTuleapConfigurableFieldsConfiguration configuration, IProgressMonitor monitor) {
 				return null;
 			}
 		};
@@ -284,22 +280,18 @@ public class TuleapTaskDataHandlerTests {
 		// mock repository connector
 		ITuleapRepositoryConnector repositoryConnector = new ITuleapRepositoryConnector() {
 
-			public void putRepositoryConfiguration(String repositoryUrl,
-					TuleapServerConfiguration configuration) {
-				// do nothing
-			}
-
-			public TuleapServerConfiguration getRepositoryConfiguration(TaskRepository taskRepository,
-					boolean forceRefresh, IProgressMonitor monitor) {
+			public TuleapServerConfiguration getTuleapServerConfiguration(String repositoryUrl) {
 				return TuleapTaskDataHandlerTests.this.tuleapServerConfiguration;
-			}
-
-			public TuleapServerConfiguration getRepositoryConfiguration(String repositoryUrl) {
-				return null;
 			}
 
 			public TuleapClientManager getClientManager() {
 				return tuleapClientManager;
+			}
+
+			public AbstractTuleapConfigurableFieldsConfiguration refreshConfiguration(
+					TaskRepository taskRepository,
+					AbstractTuleapConfigurableFieldsConfiguration configuration, IProgressMonitor monitor) {
+				return configuration;
 			}
 		};
 
@@ -406,22 +398,18 @@ public class TuleapTaskDataHandlerTests {
 		// mock repository connector
 		ITuleapRepositoryConnector repositoryConnector = new ITuleapRepositoryConnector() {
 
-			public void putRepositoryConfiguration(String repositoryUrl,
-					TuleapServerConfiguration configuration) {
-				// do nothing
-			}
-
-			public TuleapServerConfiguration getRepositoryConfiguration(TaskRepository taskRepository,
-					boolean forceRefresh, IProgressMonitor monitor) {
+			public TuleapServerConfiguration getTuleapServerConfiguration(String repositoryUrl) {
 				return TuleapTaskDataHandlerTests.this.tuleapServerConfiguration;
-			}
-
-			public TuleapServerConfiguration getRepositoryConfiguration(String repositoryUrl) {
-				return null;
 			}
 
 			public TuleapClientManager getClientManager() {
 				return tuleapClientManager;
+			}
+
+			public AbstractTuleapConfigurableFieldsConfiguration refreshConfiguration(
+					TaskRepository taskRepository,
+					AbstractTuleapConfigurableFieldsConfiguration configuration, IProgressMonitor monitor) {
+				return configuration;
 			}
 		};
 

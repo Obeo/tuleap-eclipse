@@ -18,6 +18,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItemType;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardType;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 
 /**
@@ -141,6 +144,32 @@ public class TuleapServerConfiguration implements Serializable {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Replace an existing configuration in the project with the given project identifier by the newly
+	 * provided version of the configuration.
+	 * 
+	 * @param projectId
+	 *            The project identifier
+	 * @param configuration
+	 *            The new version of the configuration
+	 */
+	public void replaceConfiguration(int projectId,
+			AbstractTuleapConfigurableFieldsConfiguration configuration) {
+		TuleapProjectConfiguration projectConfiguration = this.projectId2projectConfiguration.get(Integer
+				.valueOf(projectId));
+		if (projectConfiguration != null) {
+			if (configuration instanceof TuleapTrackerConfiguration) {
+				projectConfiguration.addTracker((TuleapTrackerConfiguration)configuration);
+			} else if (configuration instanceof TuleapMilestoneType) {
+				projectConfiguration.addMilestoneType((TuleapMilestoneType)configuration);
+			} else if (configuration instanceof TuleapBacklogItemType) {
+				projectConfiguration.addBacklogItemType((TuleapBacklogItemType)configuration);
+			} else if (configuration instanceof TuleapCardType) {
+				projectConfiguration.addCardType((TuleapCardType)configuration);
+			}
+		}
 	}
 
 	/**

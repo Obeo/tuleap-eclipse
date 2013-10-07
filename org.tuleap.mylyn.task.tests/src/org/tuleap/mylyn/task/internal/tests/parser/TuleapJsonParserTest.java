@@ -23,7 +23,6 @@ import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 
 /**
  * Tests of {@link TuleapJsonParser}.
@@ -84,9 +83,6 @@ public class TuleapJsonParserTest {
 		assertEquals(1, cardTypes.size());
 		TuleapCardType cardType = cardTypes.get(0);
 		new TuleapCardTypeDeserializerTests().checkCardType7000(cardType);
-
-		// Check that the card type has been added to the project configuration
-		assertSame(cardType, provider.getProjectConfiguration().getCardType(7000));
 	}
 
 	/**
@@ -104,10 +100,6 @@ public class TuleapJsonParserTest {
 
 		type = types.get(1);
 		new TuleapBacklogItemTypeDeserializerTests().checkTypeUserStories(type);
-
-		assertEquals(2, provider.getProjectConfiguration().getAllBacklogItemTypes().size());
-		assertSame(types.get(0), provider.getProjectConfiguration().getBacklogItemType(801));
-		assertSame(types.get(1), provider.getProjectConfiguration().getBacklogItemType(802));
 	}
 
 	/**
@@ -125,10 +117,6 @@ public class TuleapJsonParserTest {
 
 		type = types.get(1);
 		new TuleapMilestoneTypeDeserializerTests().checkMilestoneTypeSprints(type);
-
-		assertEquals(2, provider.getProjectConfiguration().getAllMilestoneTypes().size());
-		assertSame(types.get(0), provider.getProjectConfiguration().getMilestoneType(901));
-		assertSame(types.get(1), provider.getProjectConfiguration().getMilestoneType(902));
 	}
 
 	/**

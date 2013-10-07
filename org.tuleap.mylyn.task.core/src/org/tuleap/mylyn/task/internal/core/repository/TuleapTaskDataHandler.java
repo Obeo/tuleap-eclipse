@@ -83,13 +83,16 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		int projectId = mapper.getProjectId();
 		int configurationId = mapper.getConfigurationId();
 
-		TuleapServerConfiguration tuleapServerConfiguration = this.connector.getRepositoryConfiguration(
-				taskRepository, true, monitor);
+		TuleapServerConfiguration tuleapServerConfiguration = this.connector
+				.getTuleapServerConfiguration(taskRepository.getRepositoryUrl());
 		TuleapProjectConfiguration projectConfiguration = tuleapServerConfiguration
 				.getProjectConfiguration(projectId);
 
 		AbstractTuleapConfigurableFieldsConfiguration configuration = projectConfiguration
 				.getConfigurableFieldsConfiguration(configurationId);
+
+		configuration = this.connector.refreshConfiguration(taskRepository, configuration, monitor);
+
 		if (configuration instanceof TuleapTrackerConfiguration) {
 			TuleapTrackerConfiguration tuleapTrackerConfiguration = (TuleapTrackerConfiguration)configuration;
 			response = this.postArtifactTaskData(tuleapTrackerConfiguration, taskData, taskRepository,
@@ -229,8 +232,8 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		}
 
 		boolean isInitialized = false;
-		TuleapServerConfiguration repositoryConfiguration = this.connector.getRepositoryConfiguration(
-				repository, true, monitor);
+		TuleapServerConfiguration repositoryConfiguration = this.connector
+				.getTuleapServerConfiguration(repository.getRepositoryUrl());
 		if (repositoryConfiguration != null) {
 			// Sets the creation date and last modification date.
 			if (initializationData instanceof TuleapTaskMapping) {
@@ -285,8 +288,8 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 */
 	public TaskData getTaskData(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
-		TuleapServerConfiguration serverConfiguration = this.connector.getRepositoryConfiguration(
-				taskRepository, true, monitor);
+		TuleapServerConfiguration serverConfiguration = this.connector
+				.getTuleapServerConfiguration(taskRepository.getRepositoryUrl());
 
 		int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(taskId);
 		TuleapProjectConfiguration projectConfiguration = serverConfiguration
@@ -295,6 +298,8 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		int configurationId = TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId(taskId);
 		AbstractTuleapConfigurableFieldsConfiguration configuration = projectConfiguration
 				.getConfigurableFieldsConfiguration(configurationId);
+
+		configuration = this.connector.refreshConfiguration(taskRepository, configuration, monitor);
 
 		TaskData taskData = null;
 		if (configuration instanceof TuleapTrackerConfiguration) {

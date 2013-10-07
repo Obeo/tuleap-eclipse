@@ -258,6 +258,20 @@ public final class RestResources {
 	}
 
 	/**
+	 * Provides access to the {code /projects/:projectId/backlog_item_types/:backlogItemTypeId} HTTP resource.
+	 * 
+	 * @param projectId
+	 *            the project id
+	 * @param backlogItemId
+	 *            The identifier of the backlog item type
+	 * @return A resource that gives access to the {code
+	 *         /projects/:projectId/backlog_item_types/:backlogItemTypeId} HTTP resource.
+	 */
+	public RestProjectsBacklogItemType projectsBacklogItemType(int projectId, int backlogItemId) {
+		return new RestProjectsBacklogItemType(serverUrl, apiVersion, credentials, projectId, backlogItemId);
+	}
+
+	/**
 	 * Provides access to the {code /projects/:projectId/milestone_types} HTTP resource.
 	 * 
 	 * @param projectId
@@ -269,6 +283,20 @@ public final class RestResources {
 	}
 
 	/**
+	 * Provides access to the {code /projects/:projectId/milestone_types/:milestoneTypeId} HTTP resource.
+	 * 
+	 * @param projectId
+	 *            The identifier of the project
+	 * @param milestoneTypeId
+	 *            The identifier of the milestone type
+	 * @return A resource that gives access to the {code
+	 *         /projects/:projectId/milestone_types/:milestoneTypeId} HTTP resource
+	 */
+	public RestProjectsMilestoneType projectsMilestoneType(int projectId, int milestoneTypeId) {
+		return new RestProjectsMilestoneType(serverUrl, apiVersion, credentials, projectId, milestoneTypeId);
+	}
+
+	/**
 	 * Provides access to the {code /projects/:projectId/card_types} HTTP resource.
 	 * 
 	 * @param projectId
@@ -277,6 +305,20 @@ public final class RestResources {
 	 */
 	public RestProjectsCardTypes projectsCardTypes(int projectId) {
 		return new RestProjectsCardTypes(serverUrl, apiVersion, credentials, projectId);
+	}
+
+	/**
+	 * Provides access to the {code /projects/:projectId/card_types/:cardTypeId} HTTP resource.
+	 * 
+	 * @param projectId
+	 *            the project id
+	 * @param cardTypeId
+	 *            The identifier of the card type
+	 * @return A resource that gives access to the {code /projects/:projectId/card_types/:cardTypeId} HTTP
+	 *         resource.
+	 */
+	public RestProjectsCardType projectsCardType(int projectId, int cardTypeId) {
+		return new RestProjectsCardType(serverUrl, apiVersion, credentials, projectId, cardTypeId);
 	}
 
 	/**

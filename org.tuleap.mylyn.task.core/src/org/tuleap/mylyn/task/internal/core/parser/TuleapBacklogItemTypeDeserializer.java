@@ -59,8 +59,6 @@ public class TuleapBacklogItemTypeDeserializer extends AbstractTuleapConfigurati
 				itemName, description, lastUpdateDate);
 
 		tuleapBacklogItemType = this.populateConfigurableFields(tuleapBacklogItemType, jsonObject);
-		projectConfiguration.addBacklogItemType(tuleapBacklogItemType);
-
 		return tuleapBacklogItemType;
 	}
 }

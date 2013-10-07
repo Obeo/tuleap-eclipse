@@ -59,7 +59,6 @@ public class TuleapTrackerConfigurationDeserializer extends AbstractTuleapConfig
 				label, itemName, description, lastUpdateDate);
 
 		trackerConfiguration = this.populateConfigurableFields(trackerConfiguration, jsonObject);
-		projectConfiguration.addTracker(trackerConfiguration);
 
 		return trackerConfiguration;
 	}

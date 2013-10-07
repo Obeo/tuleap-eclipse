@@ -402,6 +402,83 @@ public class TuleapSoapConnector {
 	}
 
 	/**
+	 * Returns the configuration of the Tuleap tracker with the given identifier.
+	 * 
+	 * @param projectId
+	 *            The project identifier
+	 * @param trackerId
+	 *            The tracker identifier
+	 * @param monitor
+	 *            The progress monitor
+	 * @return The Tuleap tracker configuration
+	 */
+	public TuleapTrackerConfiguration getTuleapTrackerConfiguration(int projectId, int trackerId,
+			IProgressMonitor monitor) {
+		try {
+			this.login(monitor);
+
+			Tracker[] trackers = new Tracker[0];
+			try {
+				trackers = this.getTuleapTrackerV5APIPortType().getTrackerList(sessionHash, projectId);
+			} catch (RemoteException e) {
+				// https://tuleap.net/plugins/tracker/?aid=4470
+				// The project does not have any trackers, we won't log the error so we catch it
+			}
+
+			Tracker tracker = null;
+
+			for (Tracker aTracker : trackers) {
+				if (aTracker.getTracker_id() == trackerId) {
+					tracker = aTracker;
+				}
+			}
+
+			if (tracker != null) {
+				String trackerUrl = TuleapUrlUtil.getTrackerUrl(this.trackerLocation.getUrl(), tracker
+						.getTracker_id());
+
+				TuleapTrackerConfiguration tuleapTrackerConfiguration = new TuleapTrackerConfiguration(
+						tracker.getTracker_id(), trackerUrl, tracker.getName(), tracker.getItem_name(),
+						tracker.getDescription(), System.currentTimeMillis());
+
+				monitor.subTask(TuleapMylynTasksMessages.getString(
+						TuleapMylynTasksMessagesKeys.retrievingFieldsDescriptionFromTracker, tracker
+								.getName()));
+
+				TrackerField[] trackerFields = this.getTuleapTrackerV5APIPortType().getTrackerFields(
+						sessionHash, tracker.getGroup_id(), tracker.getTracker_id());
+				monitor.worked(5);
+
+				TrackerStructure trackerStructure = this.getTuleapTrackerV5APIPortType().getTrackerStructure(
+						sessionHash, tracker.getGroup_id(), tracker.getTracker_id());
+				for (TrackerField trackerField : trackerFields) {
+					AbstractTuleapField tuleapField = getTuleapTrackerField(tracker.getGroup_id(),
+							trackerStructure, trackerField, monitor);
+					monitor.worked(1);
+					if (tuleapField != null) {
+						tuleapField.setName(trackerField.getShort_name());
+						tuleapField.setLabel(trackerField.getLabel());
+						tuleapField.setPermissions(trackerField.getPermissions());
+						tuleapTrackerConfiguration.addField(tuleapField);
+					}
+				}
+
+				return tuleapTrackerConfiguration;
+			}
+		} catch (RemoteException e) {
+			TuleapCoreActivator.log(e, true);
+		} catch (MalformedURLException e) {
+			TuleapCoreActivator.log(e, true);
+		} catch (ServiceException e) {
+			TuleapCoreActivator.log(e, true);
+		}
+
+		this.logout();
+
+		return null;
+	}
+
+	/**
 	 * Returns the configuration of the given tracker.
 	 * 
 	 * @param tracker

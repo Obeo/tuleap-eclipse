@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
@@ -72,8 +73,8 @@ public class TuleapJsonParser {
 	 */
 	public List<TuleapBacklogItemType> parseBacklogItemTypes(TuleapProjectConfiguration projectConfiguration,
 			String jsonResponse) {
-		JsonParser theJsonParser = new JsonParser();
-		JsonArray jsonArray = theJsonParser.parse(jsonResponse).getAsJsonArray();
+		JsonParser jsonParser = new JsonParser();
+		JsonArray jsonArray = jsonParser.parse(jsonResponse).getAsJsonArray();
 
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(TuleapBacklogItemType.class, new TuleapBacklogItemTypeDeserializer(
@@ -91,6 +92,29 @@ public class TuleapJsonParser {
 	}
 
 	/**
+	 * Parse the JSON response and return the backlog item type that it represents.
+	 * 
+	 * @param projectConfiguration
+	 *            The configuration of the project (used to find the persons)
+	 * @param jsonResponse
+	 *            The JSON response
+	 * @return The Tuleap backlog item type
+	 */
+	public TuleapBacklogItemType parseBacklogItemType(TuleapProjectConfiguration projectConfiguration,
+			String jsonResponse) {
+		JsonParser jsonParser = new JsonParser();
+		JsonObject jsonObject = jsonParser.parse(jsonResponse).getAsJsonObject();
+
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		gsonBuilder.registerTypeAdapter(TuleapBacklogItemType.class, new TuleapBacklogItemTypeDeserializer(
+				projectConfiguration));
+		Gson gson = gsonBuilder.create();
+
+		TuleapBacklogItemType result = gson.fromJson(jsonObject, TuleapBacklogItemType.class);
+		return result;
+	}
+
+	/**
 	 * Parse the milestone types from the json response.
 	 * 
 	 * @param projectConfiguration
@@ -101,8 +125,8 @@ public class TuleapJsonParser {
 	 */
 	public List<TuleapMilestoneType> parseMilestoneTypes(TuleapProjectConfiguration projectConfiguration,
 			String jsonResponse) {
-		JsonParser theJsonParser = new JsonParser();
-		JsonArray jsonArray = theJsonParser.parse(jsonResponse).getAsJsonArray();
+		JsonParser jsonParser = new JsonParser();
+		JsonArray jsonArray = jsonParser.parse(jsonResponse).getAsJsonArray();
 
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(TuleapMilestoneType.class, new TuleapMilestoneTypeDeserializer(
@@ -119,6 +143,29 @@ public class TuleapJsonParser {
 	}
 
 	/**
+	 * Parse the JSON response and return the milestone type that it represents.
+	 * 
+	 * @param projectConfiguration
+	 *            The configuration of the project (used to find the persons)
+	 * @param jsonResponse
+	 *            The JSON response
+	 * @return The Tuleap milestone type
+	 */
+	public TuleapMilestoneType parseMilestoneType(TuleapProjectConfiguration projectConfiguration,
+			String jsonResponse) {
+		JsonParser jsonParser = new JsonParser();
+		JsonObject jsonObject = jsonParser.parse(jsonResponse).getAsJsonObject();
+
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		gsonBuilder.registerTypeAdapter(TuleapMilestoneType.class, new TuleapMilestoneTypeDeserializer(
+				projectConfiguration));
+		Gson gson = gsonBuilder.create();
+
+		TuleapMilestoneType result = gson.fromJson(jsonObject, TuleapMilestoneType.class);
+		return result;
+	}
+
+	/**
 	 * Parse the card types from the json response.
 	 * 
 	 * @param projectConfiguration
@@ -129,8 +176,8 @@ public class TuleapJsonParser {
 	 */
 	public List<TuleapCardType> parseCardTypes(TuleapProjectConfiguration projectConfiguration,
 			String jsonResponse) {
-		JsonParser theJsonParser = new JsonParser();
-		JsonArray jsonArray = theJsonParser.parse(jsonResponse).getAsJsonArray();
+		JsonParser jsonParser = new JsonParser();
+		JsonArray jsonArray = jsonParser.parse(jsonResponse).getAsJsonArray();
 
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(TuleapCardType.class, new TuleapCardTypeDeserializer(
@@ -143,6 +190,28 @@ public class TuleapJsonParser {
 
 			result.add(cardType);
 		}
+		return result;
+	}
+
+	/**
+	 * Parse the JSON response and return the card type that it represents.
+	 * 
+	 * @param projectConfiguration
+	 *            The configuration of the project (used to find the persons)
+	 * @param jsonResponse
+	 *            The JSON response
+	 * @return The Tuleap card type
+	 */
+	public TuleapCardType parseCardType(TuleapProjectConfiguration projectConfiguration, String jsonResponse) {
+		JsonParser jsonParser = new JsonParser();
+		JsonObject jsonObject = jsonParser.parse(jsonResponse).getAsJsonObject();
+
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		gsonBuilder.registerTypeAdapter(TuleapCardType.class, new TuleapCardTypeDeserializer(
+				projectConfiguration));
+		Gson gson = gsonBuilder.create();
+
+		TuleapCardType result = gson.fromJson(jsonObject, TuleapCardType.class);
 		return result;
 	}
 

@@ -151,8 +151,8 @@ public class TuleapProjectPage extends WizardPage {
 						InterruptedException {
 					ITuleapRepositoryConnector connector = (ITuleapRepositoryConnector)repositoryConnector;
 					final TuleapServerConfiguration instanceConfiguration = connector
-							.getRepositoryConfiguration(TuleapProjectPage.this.repository, forceRefresh,
-									monitor);
+							.getTuleapServerConfiguration(TuleapProjectPage.this.repository
+									.getRepositoryUrl());
 					projectsList.addAll(instanceConfiguration.getAllProjectConfigurations());
 				}
 			};

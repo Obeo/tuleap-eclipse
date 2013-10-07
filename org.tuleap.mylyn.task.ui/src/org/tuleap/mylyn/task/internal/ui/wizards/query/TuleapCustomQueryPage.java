@@ -260,7 +260,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 		if (this.trackerId != -1 && this.projectId != -1) {
 			final TuleapRepositoryConnector repositoryConnector = (TuleapRepositoryConnector)connector;
 			TuleapServerConfiguration repositoryConfiguration = repositoryConnector
-					.getRepositoryConfiguration(this.getTaskRepository().getRepositoryUrl());
+					.getTuleapServerConfiguration(this.getTaskRepository().getRepositoryUrl());
 			tuleapTrackerConfiguration = repositoryConfiguration.getTrackerConfiguration(this.trackerId);
 
 			if (tuleapTrackerConfiguration == null) {
@@ -310,8 +310,8 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 		IRunnableWithProgress runnable = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 				final TuleapServerConfiguration instanceConfiguration = repositoryConnector
-						.getRepositoryConfiguration(TuleapCustomQueryPage.this.getTaskRepository(), true,
-								monitor);
+						.getTuleapServerConfiguration(TuleapCustomQueryPage.this.getTaskRepository()
+								.getRepositoryUrl());
 				tuleapTrackerConfiguration = instanceConfiguration.getTrackerConfiguration(trackerId);
 			}
 		};

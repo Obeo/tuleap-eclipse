@@ -33,6 +33,7 @@ import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.data.TuleapConfigurableElementMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableFieldsConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapPlanningBinding;
@@ -168,9 +169,16 @@ public class TuleapRepositoryConnectorTests {
 
 		TuleapRepositoryConnector tuleapRepositoryConnector = new TuleapRepositoryConnector() {
 			@Override
-			public TuleapServerConfiguration getRepositoryConfiguration(TaskRepository taskRepository,
-					boolean forceRefresh, IProgressMonitor monitor) {
+			public TuleapServerConfiguration getTuleapServerConfiguration(String repositoryUrl) {
 				return tuleapServerConfiguration;
+			}
+
+			@Override
+			public AbstractTuleapConfigurableFieldsConfiguration refreshConfiguration(
+					TaskRepository taskRepository,
+					AbstractTuleapConfigurableFieldsConfiguration configuration, IProgressMonitor monitor)
+					throws CoreException {
+				return configuration;
 			}
 
 			@Override
@@ -236,9 +244,16 @@ public class TuleapRepositoryConnectorTests {
 
 		TuleapRepositoryConnector tuleapRepositoryConnector = new TuleapRepositoryConnector() {
 			@Override
-			public TuleapServerConfiguration getRepositoryConfiguration(TaskRepository taskRepository,
-					boolean forceRefresh, IProgressMonitor monitor) {
+			public TuleapServerConfiguration getTuleapServerConfiguration(String repositoryUrl) {
 				return tuleapServerConfiguration;
+			}
+
+			@Override
+			public AbstractTuleapConfigurableFieldsConfiguration refreshConfiguration(
+					TaskRepository taskRepository,
+					AbstractTuleapConfigurableFieldsConfiguration configuration, IProgressMonitor monitor)
+					throws CoreException {
+				return configuration;
 			}
 
 			@Override
@@ -303,9 +318,16 @@ public class TuleapRepositoryConnectorTests {
 
 		TuleapRepositoryConnector tuleapRepositoryConnector = new TuleapRepositoryConnector() {
 			@Override
-			public TuleapServerConfiguration getRepositoryConfiguration(TaskRepository taskRepository,
-					boolean forceRefresh, IProgressMonitor monitor) {
+			public TuleapServerConfiguration getTuleapServerConfiguration(String repositoryUrl) {
 				return tuleapServerConfiguration;
+			}
+
+			@Override
+			public AbstractTuleapConfigurableFieldsConfiguration refreshConfiguration(
+					TaskRepository taskRepository,
+					AbstractTuleapConfigurableFieldsConfiguration configuration, IProgressMonitor monitor)
+					throws CoreException {
+				return configuration;
 			}
 
 			@Override
@@ -364,8 +386,7 @@ public class TuleapRepositoryConnectorTests {
 
 		TuleapRepositoryConnector tuleapRepositoryConnector = new TuleapRepositoryConnector() {
 			@Override
-			public TuleapServerConfiguration getRepositoryConfiguration(TaskRepository taskRepository,
-					boolean forceRefresh, IProgressMonitor monitor) {
+			public TuleapServerConfiguration getTuleapServerConfiguration(String repositoryUrl) {
 				return tuleapServerConfiguration;
 			}
 
@@ -445,7 +466,7 @@ public class TuleapRepositoryConnectorTests {
 
 		TuleapRepositoryConnector tuleapRepositoryConnector = new TuleapRepositoryConnector() {
 			@Override
-			public TuleapServerConfiguration getRepositoryConfiguration(String repositoryUrl) {
+			public TuleapServerConfiguration getTuleapServerConfiguration(String repositoryUrl) {
 				return tuleapServerConfiguration;
 			}
 		};

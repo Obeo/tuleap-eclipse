@@ -28,7 +28,6 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -55,9 +54,6 @@ public class TuleapCardTypeDeserializerTests extends AbstractConfigurationDeseri
 		String epics = ParserUtil.loadFile("/card_types/task-7000.json"); //$NON-NLS-1$
 		TuleapCardType cardType = this.parse(epics, TuleapCardType.class);
 		checkCardType7000(cardType);
-
-		// Check that the card type has been added to the project configuration
-		assertSame(cardType, getProjectConfiguration().getCardType(7000));
 	}
 
 	/**

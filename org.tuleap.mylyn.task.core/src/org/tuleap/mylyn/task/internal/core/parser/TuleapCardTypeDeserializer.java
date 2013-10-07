@@ -58,8 +58,6 @@ public class TuleapCardTypeDeserializer extends AbstractTuleapConfigurationDeser
 				lastUpdateDate);
 
 		cardType = this.populateConfigurableFields(cardType, jsonObject);
-		projectConfiguration.addCardType(cardType);
-
 		return cardType;
 	}
 }

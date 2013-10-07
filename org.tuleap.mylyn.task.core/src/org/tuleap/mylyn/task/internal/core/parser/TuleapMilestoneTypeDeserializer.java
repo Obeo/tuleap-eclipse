@@ -70,8 +70,6 @@ public class TuleapMilestoneTypeDeserializer extends AbstractTuleapConfiguration
 				description, lastUpdateDate, cardwallUrl);
 
 		milestoneType = this.populateConfigurableFields(milestoneType, jsonObject);
-		projectConfiguration.addMilestoneType(milestoneType);
-
 		return milestoneType;
 	}
 }

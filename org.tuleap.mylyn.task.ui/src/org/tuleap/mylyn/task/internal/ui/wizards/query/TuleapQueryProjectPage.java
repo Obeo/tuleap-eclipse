@@ -12,7 +12,6 @@ package org.tuleap.mylyn.task.internal.ui.wizards.query;
 
 import java.util.List;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -191,8 +190,8 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 	 * @return the server configuration.
 	 */
 	private TuleapServerConfiguration getServerConfiguration() {
-		return ((ITuleapRepositoryConnector)getConnector()).getRepositoryConfiguration(getTaskRepository(),
-				false, new NullProgressMonitor());
+		return ((ITuleapRepositoryConnector)getConnector()).getTuleapServerConfiguration(getTaskRepository()
+				.getRepositoryUrl());
 	}
 
 	/**

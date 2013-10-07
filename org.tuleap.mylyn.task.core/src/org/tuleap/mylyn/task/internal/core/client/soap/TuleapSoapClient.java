@@ -27,6 +27,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
+import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
@@ -126,6 +127,23 @@ public class TuleapSoapClient {
 	public TuleapServerConfiguration getTuleapServerConfiguration(IProgressMonitor monitor)
 			throws CoreException {
 		return soapConnector.getTuleapServerConfiguration(monitor);
+	}
+
+	/**
+	 * Returns the configuration of the tracker with the given identifier.
+	 * 
+	 * @param projectConfiguration
+	 *            The configuration of the project
+	 * @param trackerId
+	 *            The identifier of the tracker
+	 * @param monitor
+	 *            The progress monitor
+	 * @return The configuration of the tracker with the given identifier
+	 */
+	public TuleapTrackerConfiguration getTuleapTrackerConfiguration(
+			TuleapProjectConfiguration projectConfiguration, int trackerId, IProgressMonitor monitor) {
+		return this.soapConnector.getTuleapTrackerConfiguration(projectConfiguration.getIdentifier(),
+				trackerId, monitor);
 	}
 
 	/**
