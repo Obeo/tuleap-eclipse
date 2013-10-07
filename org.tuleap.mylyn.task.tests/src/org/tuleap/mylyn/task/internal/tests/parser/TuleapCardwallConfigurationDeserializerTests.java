@@ -22,10 +22,10 @@ import org.tuleap.mylyn.task.internal.core.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCard;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardwallConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardwall;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapStatus;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapSwimlane;
-import org.tuleap.mylyn.task.internal.core.parser.TuleapCardwallConfigurationDeserializer;
+import org.tuleap.mylyn.task.internal.core.parser.TuleapCardwallDeserializer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -43,7 +43,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 	@Test
 	public void testCardwallStatus() {
 		String cwSprint = ParserUtil.loadFile("/cardwalls/cw_sprint250.json"); //$NON-NLS-1$
-		TuleapCardwallConfiguration cardwall = this.parse(cwSprint);
+		TuleapCardwall cardwall = this.parse(cwSprint);
 		assertNotNull(cardwall);
 		List<TuleapStatus> status = cardwall.getStatus();
 		assertEquals(4, status.size());
@@ -71,7 +71,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 	@Test
 	public void testFirstCardwallSwimlaneBacklogItem() {
 		String cwSprint = ParserUtil.loadFile("/cardwalls/cw_sprint250.json"); //$NON-NLS-1$
-		TuleapCardwallConfiguration cardwall = this.parse(cwSprint);
+		TuleapCardwall cardwall = this.parse(cwSprint);
 
 		List<TuleapSwimlane> swimlanes = cardwall.getSwimlanes();
 		assertEquals(3, swimlanes.size());
@@ -115,7 +115,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 	@Test
 	public void testFirstCardwallSwimlaneCards() {
 		String cwSprint = ParserUtil.loadFile("/cardwalls/cw_sprint250.json"); //$NON-NLS-1$
-		TuleapCardwallConfiguration cardwall = this.parse(cwSprint);
+		TuleapCardwall cardwall = this.parse(cwSprint);
 
 		List<TuleapSwimlane> swimlanes = cardwall.getSwimlanes();
 		assertEquals(3, swimlanes.size());
@@ -169,7 +169,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 	@Test
 	public void testSecondCardwallSwimlaneBacklogItem() {
 		String cwSprint = ParserUtil.loadFile("/cardwalls/cw_sprint250.json"); //$NON-NLS-1$
-		TuleapCardwallConfiguration cardwall = this.parse(cwSprint);
+		TuleapCardwall cardwall = this.parse(cwSprint);
 
 		List<TuleapSwimlane> swimlanes = cardwall.getSwimlanes();
 		assertEquals(3, swimlanes.size());
@@ -213,7 +213,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 	@Test
 	public void testSecondCardwallSwimlaneCards() {
 		String cwSprint = ParserUtil.loadFile("/cardwalls/cw_sprint250.json"); //$NON-NLS-1$
-		TuleapCardwallConfiguration cardwall = this.parse(cwSprint);
+		TuleapCardwall cardwall = this.parse(cwSprint);
 
 		List<TuleapSwimlane> swimlanes = cardwall.getSwimlanes();
 		assertEquals(3, swimlanes.size());
@@ -267,7 +267,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 	@Test
 	public void testThirdCardwallSwimlaneBacklogItem() {
 		String cwSprint = ParserUtil.loadFile("/cardwalls/cw_sprint250.json"); //$NON-NLS-1$
-		TuleapCardwallConfiguration cardwall = this.parse(cwSprint);
+		TuleapCardwall cardwall = this.parse(cwSprint);
 
 		List<TuleapSwimlane> swimlanes = cardwall.getSwimlanes();
 		assertEquals(3, swimlanes.size());
@@ -309,7 +309,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 	@Test
 	public void testThirdCardwallSwimlaneCards() {
 		String cwSprint = ParserUtil.loadFile("/cardwalls/cw_sprint250.json"); //$NON-NLS-1$
-		TuleapCardwallConfiguration cardwall = this.parse(cwSprint);
+		TuleapCardwall cardwall = this.parse(cwSprint);
 
 		List<TuleapSwimlane> swimlanes = cardwall.getSwimlanes();
 		assertEquals(3, swimlanes.size());
@@ -364,17 +364,17 @@ public class TuleapCardwallConfigurationDeserializerTests {
 	 *            The content of the file
 	 * @return The Tuleap BacklogItem Type matching the content of the file
 	 */
-	private TuleapCardwallConfiguration parse(String fileContent) {
+	private TuleapCardwall parse(String fileContent) {
 		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(TuleapCardwallConfiguration.class,
-				new TuleapCardwallConfigurationDeserializer());
+		gsonBuilder.registerTypeAdapter(TuleapCardwall.class,
+				new TuleapCardwallDeserializer());
 
 		JsonParser jsonParser = new JsonParser();
 		JsonObject jsonObject = jsonParser.parse(fileContent).getAsJsonObject();
 
 		Gson gson = gsonBuilder.create();
-		TuleapCardwallConfiguration tuleapCardwallConfiguration = gson.fromJson(jsonObject,
-				TuleapCardwallConfiguration.class);
+		TuleapCardwall tuleapCardwallConfiguration = gson.fromJson(jsonObject,
+				TuleapCardwall.class);
 
 		return tuleapCardwallConfiguration;
 	}

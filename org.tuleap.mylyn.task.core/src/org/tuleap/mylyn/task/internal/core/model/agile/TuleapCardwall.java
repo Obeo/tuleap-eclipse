@@ -20,17 +20,12 @@ import java.util.List;
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class TuleapCardwallConfiguration {
-
-	/**
-	 * Flag indicating whether the card wall is enabled.
-	 */
-	private final boolean enabled;
+public class TuleapCardwall {
 
 	/**
 	 * Card wall column configurations.
 	 */
-	private final List<TuleapCardwallColumnConfiguration> columns;
+	private final List<TuleapCardwallColumn> columns;
 
 	/**
 	 * Card wall swimlanes list.
@@ -44,34 +39,21 @@ public class TuleapCardwallConfiguration {
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param enabled
-	 *            Is enabled?
 	 */
-	public TuleapCardwallConfiguration(boolean enabled) {
-		this.enabled = enabled;
+	public TuleapCardwall() {
 		this.columns = Lists.newArrayList();
 		this.swimlanes = Lists.newArrayList();
 		this.status = Lists.newArrayList();
 	}
 
 	/**
-	 * Is enabled?
-	 * 
-	 * @return {@code true} if and only if this cardwall is enabled.
-	 */
-	public boolean isEnabled() {
-		return enabled;
-	}
-
-	/**
 	 * Add a column configuration to the card wall.
 	 * 
-	 * @param columnConfig
+	 * @param column
 	 *            The column configuration to add.
 	 */
-	public void addColumnConfiguration(TuleapCardwallColumnConfiguration columnConfig) {
-		columns.add(columnConfig);
+	public void addColumn(TuleapCardwallColumn column) {
+		columns.add(column);
 	}
 
 	/**
@@ -79,7 +61,7 @@ public class TuleapCardwallConfiguration {
 	 * 
 	 * @return An unmodifiable list view of the columns of this card wall.
 	 */
-	public List<TuleapCardwallColumnConfiguration> getColumnConfigurations() {
+	public List<TuleapCardwallColumn> getColumns() {
 		return ImmutableList.copyOf(columns);
 	}
 

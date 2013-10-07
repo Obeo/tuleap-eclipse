@@ -21,7 +21,7 @@ import java.lang.reflect.Type;
 
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCard;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardwallConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardwall;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapStatus;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapSwimlane;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
@@ -31,7 +31,7 @@ import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
  * 
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
-public class TuleapCardwallConfigurationDeserializer implements JsonDeserializer<TuleapCardwallConfiguration> {
+public class TuleapCardwallDeserializer implements JsonDeserializer<TuleapCardwall> {
 
 	/**
 	 * {@inheritDoc}
@@ -39,18 +39,18 @@ public class TuleapCardwallConfigurationDeserializer implements JsonDeserializer
 	 * @see com.google.gson.JsonDeserializer#deserialize(com.google.gson.JsonElement, java.lang.reflect.Type,
 	 *      com.google.gson.JsonDeserializationContext)
 	 */
-	public TuleapCardwallConfiguration deserialize(JsonElement rootJsonElement, Type type,
+	public TuleapCardwall deserialize(JsonElement rootJsonElement, Type type,
 			JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
 		JsonObject jsonObject = rootJsonElement.getAsJsonObject();
 
 		JsonArray statusList = jsonObject.get(ITuleapConstants.STATUS_LIST).getAsJsonArray();
 
-		TuleapCardwallConfiguration tuleapCardwallConfiguration = new TuleapCardwallConfiguration(true);
+		TuleapCardwall cardwall = new TuleapCardwall();
 		for (JsonElement statusElement : statusList) {
 			int statusId = statusElement.getAsJsonObject().get(ITuleapConstants.ID).getAsInt();
 			String statuslabel = statusElement.getAsJsonObject().get(ITuleapConstants.LABEL).getAsString();
 			TuleapStatus status = new TuleapStatus(statusId, statuslabel);
-			tuleapCardwallConfiguration.addStatus(status);
+			cardwall.addStatus(status);
 		}
 
 		JsonArray swimlanesList = jsonObject.get(ITuleapConstants.SWIMLANES).getAsJsonArray();
@@ -73,9 +73,9 @@ public class TuleapCardwallConfigurationDeserializer implements JsonDeserializer
 				swimlane.addCard(card);
 			}
 
-			tuleapCardwallConfiguration.addSwimlane(swimlane);
+			cardwall.addSwimlane(swimlane);
 		}
 
-		return tuleapCardwallConfiguration;
+		return cardwall;
 	}
 }
