@@ -354,6 +354,11 @@ public abstract class AbstractRestResource {
 		String CARDS = "/cards"; //$NON-NLS-1$
 
 		/**
+		 * "/cardwall".
+		 */
+		String CARDWALL = "/cardwall"; //$NON-NLS-1$
+
+		/**
 		 * "/trackers".
 		 */
 		String TRACKERS = "/trackers"; //$NON-NLS-1$

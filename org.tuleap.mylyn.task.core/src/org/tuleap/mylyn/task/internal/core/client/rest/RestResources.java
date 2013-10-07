@@ -258,17 +258,15 @@ public final class RestResources {
 	}
 
 	/**
-	 * Provides access to the {code /projects/:projectId/backlog_item_types/:backlogItemTypeId} HTTP resource.
+	 * Provides access to the {code /backlog_item_types/:backlogItemTypeId} HTTP resource.
 	 * 
-	 * @param projectId
-	 *            the project id
 	 * @param backlogItemId
 	 *            The identifier of the backlog item type
-	 * @return A resource that gives access to the {code
-	 *         /projects/:projectId/backlog_item_types/:backlogItemTypeId} HTTP resource.
+	 * @return A resource that gives access to the {code /backlog_item_types/:backlogItemTypeId} HTTP
+	 *         resource.
 	 */
-	public RestProjectsBacklogItemType projectsBacklogItemType(int projectId, int backlogItemId) {
-		return new RestProjectsBacklogItemType(serverUrl, apiVersion, credentials, projectId, backlogItemId);
+	public RestBacklogItemTypes projectsBacklogItemType(int backlogItemId) {
+		return new RestBacklogItemTypes(serverUrl, apiVersion, credentials, backlogItemId);
 	}
 
 	/**
@@ -283,17 +281,14 @@ public final class RestResources {
 	}
 
 	/**
-	 * Provides access to the {code /projects/:projectId/milestone_types/:milestoneTypeId} HTTP resource.
+	 * Provides access to the {code /milestone_types/:milestoneTypeId} HTTP resource.
 	 * 
-	 * @param projectId
-	 *            The identifier of the project
 	 * @param milestoneTypeId
 	 *            The identifier of the milestone type
-	 * @return A resource that gives access to the {code
-	 *         /projects/:projectId/milestone_types/:milestoneTypeId} HTTP resource
+	 * @return A resource that gives access to the {code /milestone_types/:milestoneTypeId} HTTP resource
 	 */
-	public RestProjectsMilestoneType projectsMilestoneType(int projectId, int milestoneTypeId) {
-		return new RestProjectsMilestoneType(serverUrl, apiVersion, credentials, projectId, milestoneTypeId);
+	public RestMilestoneTypes projectsMilestoneType(int milestoneTypeId) {
+		return new RestMilestoneTypes(serverUrl, apiVersion, credentials, milestoneTypeId);
 	}
 
 	/**
@@ -308,17 +303,15 @@ public final class RestResources {
 	}
 
 	/**
-	 * Provides access to the {code /projects/:projectId/card_types/:cardTypeId} HTTP resource.
+	 * Provides access to the {code /card_types/:cardTypeId} HTTP resource.
 	 * 
-	 * @param projectId
-	 *            the project id
 	 * @param cardTypeId
 	 *            The identifier of the card type
 	 * @return A resource that gives access to the {code /projects/:projectId/card_types/:cardTypeId} HTTP
 	 *         resource.
 	 */
-	public RestProjectsCardType projectsCardType(int projectId, int cardTypeId) {
-		return new RestProjectsCardType(serverUrl, apiVersion, credentials, projectId, cardTypeId);
+	public RestCardTypes projectsCardType(int cardTypeId) {
+		return new RestCardTypes(serverUrl, apiVersion, credentials, cardTypeId);
 	}
 
 	/**
@@ -341,5 +334,27 @@ public final class RestResources {
 	 */
 	public RestMilestonesBacklogItems milestonesBacklogItems(int milestoneId) {
 		return new RestMilestonesBacklogItems(serverUrl, apiVersion, credentials, milestoneId);
+	}
+
+	/**
+	 * Provides access to the {code /milestones/:id/cardwall} HTTP resource.
+	 * 
+	 * @param milestoneId
+	 *            the milestone id
+	 * @return A resource that gives access to the {code /milestones/:id/cardwall} HTTP resource.
+	 */
+	public RestMilestonesCardwall milestonesCardwall(int milestoneId) {
+		return new RestMilestonesCardwall(serverUrl, apiVersion, credentials, milestoneId);
+	}
+
+	/**
+	 * Provides access to the {code /cards/:id} HTTP resource.
+	 * 
+	 * @param cardId
+	 *            the card id
+	 * @return A resource that gives access to the {code /cards/:id} HTTP resource.
+	 */
+	public RestCards milestonesCards(int cardId) {
+		return new RestCards(serverUrl, apiVersion, credentials, cardId);
 	}
 }

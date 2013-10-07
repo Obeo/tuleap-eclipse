@@ -51,6 +51,11 @@ public class TuleapMilestone extends AbstractTuleapConfigurableElement implement
 	private int parentMilestoneId;
 
 	/**
+	 * The milestone's cardwall, if present. Can be null.
+	 */
+	private TuleapCardwall cardwall;
+
+	/**
 	 * The milestone's sub-milestones.
 	 */
 	private List<TuleapMilestone> subMilestones = Lists.newArrayList();
@@ -222,6 +227,25 @@ public class TuleapMilestone extends AbstractTuleapConfigurableElement implement
 	 */
 	public List<TuleapBacklogItem> getBacklogItems() {
 		return ImmutableList.copyOf(this.backlogItems);
+	}
+
+	/**
+	 * Card wall getter, can return null.
+	 * 
+	 * @return The milestone's cardwall, or null if the milestone has no cardwall;
+	 */
+	public TuleapCardwall getCardwall() {
+		return cardwall;
+	}
+
+	/**
+	 * Card wall setter.
+	 * 
+	 * @param cardwall
+	 *            The card wall.
+	 */
+	public void setCardwall(TuleapCardwall cardwall) {
+		this.cardwall = cardwall;
 	}
 
 }

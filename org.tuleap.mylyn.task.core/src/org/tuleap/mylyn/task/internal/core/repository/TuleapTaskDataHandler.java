@@ -408,12 +408,12 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	private TaskData getMilestoneTaskData(String taskId, TuleapServerConfiguration serverConfiguration,
 			TaskRepository taskRepository, IProgressMonitor monitor) throws CoreException {
 		TuleapRestClient restClient = this.connector.getClientManager().getRestClient(taskRepository);
-		TuleapMilestone milestone = restClient.getMilestone(TuleapTaskIdentityUtil
-				.getElementIdFromTaskDataId(taskId), monitor);
 		int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(taskId);
 		int milestoneTypeId = TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId(taskId);
 		TuleapMilestoneType milestoneType = serverConfiguration.getProjectConfiguration(projectId)
 				.getMilestoneType(milestoneTypeId);
+		TuleapMilestone milestone = restClient.getMilestone(TuleapTaskIdentityUtil
+				.getElementIdFromTaskDataId(taskId), milestoneType.hasCardwall(), monitor);
 		if (milestone != null) {
 			MilestoneTaskDataConverter taskDataConverter = new MilestoneTaskDataConverter(milestoneType);
 			TaskAttributeMapper attributeMapper = this.getAttributeMapper(taskRepository);

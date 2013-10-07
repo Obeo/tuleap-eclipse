@@ -123,7 +123,7 @@ public class TuleapTaskDataHandlerTests {
 		tuleapProjectConfiguration.addTracker(trackerConfiguration);
 
 		TuleapMilestoneType milestoneType = new TuleapMilestoneType(milestoneTypeId, null, null, null, null,
-				0, null);
+				0, false);
 		tuleapProjectConfiguration.addMilestoneType(milestoneType);
 
 		TuleapBacklogItemType backlogItemType = new TuleapBacklogItemType(backlogItemTypeId, null, null,
@@ -254,7 +254,8 @@ public class TuleapTaskDataHandlerTests {
 		// Mock rest client
 		final TuleapRestClient tuleapRestClient = new TuleapRestClient(null, null, null, null, null) {
 			@Override
-			public TuleapMilestone getMilestone(int id, IProgressMonitor monitor) throws CoreException {
+			public TuleapMilestone getMilestone(int id, boolean needsCardwall, IProgressMonitor monitor)
+					throws CoreException {
 				return tuleapMilestone;
 			}
 

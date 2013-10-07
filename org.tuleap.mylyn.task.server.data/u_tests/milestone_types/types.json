@@ -4,6 +4,7 @@
     "label" : "Releases",
     "description" : "The description of Releases",
     "url" : "localhost:3001/api/v3.14/milestone_types/901",
+    "has_cardwall" : false,
     "project_id" : 3,
     "fields" : [
         {
@@ -16,7 +17,7 @@
         }, {
           "field_id" : 951,
           "label" : "Status",
-          "type": "sb",
+          "type" : "sb",
           "permissions" : [],
           "values" : [
               {
@@ -169,6 +170,7 @@
     "label" : "Sprints",
     "description" : "The description of sprints",
     "url" : "localhost:3001/api/v3.14/milestone_types/902",
+    "has_cardwall" : true,
     "project_id" : 3,
     "fields" : [
         {

@@ -56,7 +56,7 @@ public class TuleapProjectConfigurationTests {
 
 		long dateMilestone = date.getTime() - 2 * 60 * 60 * 1000;
 		TuleapMilestoneType milestoneType = new TuleapMilestoneType(200, "milestone/url", "Sprint", "sprint",
-				"Description of sprints", dateMilestone, "/cardwall/url");
+				"Description of sprints", dateMilestone, true);
 		project.addMilestoneType(milestoneType);
 
 		long dateCard = date.getTime() - 3 * 60 * 60 * 1000;
@@ -78,6 +78,7 @@ public class TuleapProjectConfigurationTests {
 		TuleapMilestoneType m = project.getMilestoneType(200);
 		assertSame(milestoneType, m);
 		assertEquals(1, project.getAllMilestoneTypes().size());
+		assertTrue(milestoneType.hasCardwall());
 
 		assertNull(project.getCardType(0));
 		TuleapCardType c = project.getCardType(300);

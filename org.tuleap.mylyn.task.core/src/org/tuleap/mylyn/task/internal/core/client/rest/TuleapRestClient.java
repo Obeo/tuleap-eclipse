@@ -35,6 +35,7 @@ import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItemType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardType;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardwall;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
@@ -270,8 +271,7 @@ public class TuleapRestClient {
 		// Send a request with OPTIONS to ensure that we can and have the right to retrieve the
 		// backlogItemType
 
-		RestProjectsMilestoneType restProjectsMilestoneType = restResources.projectsMilestoneType(
-				projectConfiguration.getIdentifier(), milestoneTypeId);
+		RestMilestoneTypes restProjectsMilestoneType = restResources.projectsMilestoneType(milestoneTypeId);
 		restProjectsMilestoneType.checkGet(Collections.<String, String> emptyMap());
 
 		ServerResponse response = restProjectsMilestoneType.get(Collections.<String, String> emptyMap());
@@ -307,8 +307,8 @@ public class TuleapRestClient {
 		// Send a request with OPTIONS to ensure that we can and have the right to retrieve the
 		// backlogItemType
 
-		RestProjectsBacklogItemType restProjectsBacklogITemType = restResources.projectsBacklogItemType(
-				projectConfiguration.getIdentifier(), backlogItemTypeId);
+		RestBacklogItemTypes restProjectsBacklogITemType = restResources
+				.projectsBacklogItemType(backlogItemTypeId);
 		restProjectsBacklogITemType.checkGet(Collections.<String, String> emptyMap());
 
 		ServerResponse response = restProjectsBacklogITemType.get(Collections.<String, String> emptyMap());
@@ -344,11 +344,10 @@ public class TuleapRestClient {
 		// Send a request with OPTIONS to ensure that we can and have the right to retrieve the
 		// backlogItemType
 
-		RestProjectsCardType restProjectsCardType = restResources.projectsCardType(projectConfiguration
-				.getIdentifier(), cardTypeId);
-		restProjectsCardType.checkGet(Collections.<String, String> emptyMap());
+		RestCardTypes restCardTypes = restResources.projectsCardType(cardTypeId);
+		restCardTypes.checkGet(Collections.<String, String> emptyMap());
 
-		ServerResponse response = restProjectsCardType.get(Collections.<String, String> emptyMap());
+		ServerResponse response = restCardTypes.get(Collections.<String, String> emptyMap());
 
 		if (ITuleapServerStatus.OK != response.getStatus()) {
 			// Invalid login? server error?
@@ -589,20 +588,34 @@ public class TuleapRestClient {
 	 * 
 	 * @param milestoneId
 	 *            milestone id
+	 * @param needsCardwall
+	 *            flag to indicate whether a card wall should be retrieved
 	 * @param monitor
 	 *            progress monitor to use
 	 * @return a milestone
 	 * @throws CoreException
 	 *             If anything goes wrong.
 	 */
-	public TuleapMilestone getMilestone(int milestoneId, IProgressMonitor monitor) throws CoreException {
+	public TuleapMilestone getMilestone(int milestoneId, boolean needsCardwall, IProgressMonitor monitor)
+			throws CoreException {
 		RestResources restResources = tuleapRestConnector.resources(credentials);
 		RestMilestones restMilestones = restResources.milestone(milestoneId);
 		restMilestones.checkGet(Collections.<String, String> emptyMap());
 
 		ServerResponse milestoneResponse = restMilestones.get(Collections.<String, String> emptyMap());
 
-		return this.jsonParser.parseMilestone(milestoneResponse.getBody());
+		TuleapMilestone milestone = this.jsonParser.parseMilestone(milestoneResponse.getBody());
+
+		// Fetch the cardwall if there should be one according to the milestone config
+		if (needsCardwall) {
+			RestMilestonesCardwall restCardwall = restResources.milestonesCardwall(milestoneId);
+			restCardwall.checkGet(Collections.<String, String> emptyMap());
+			ServerResponse cardwallResponse = restCardwall.get(Collections.<String, String> emptyMap());
+			TuleapCardwall cardwall = jsonParser.parseCardwall(cardwallResponse.getBody());
+			milestone.setCardwall(cardwall);
+		}
+
+		return milestone;
 	}
 
 	/**

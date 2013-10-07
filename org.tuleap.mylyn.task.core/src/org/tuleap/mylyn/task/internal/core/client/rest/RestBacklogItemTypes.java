@@ -16,16 +16,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.restlet.data.Method;
 
 /**
- * JSON Resource for the {@code /api/<version>/project/:projectId/backlog_item_type/:backlogItemTypeId} URL.
+ * JSON Resource for the {@code /api/<version>/backlog_item_types/:backlogItemTypeId} URL.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public class RestProjectsBacklogItemType extends AbstractAuthenticatedRestResource {
-
-	/**
-	 * The project id.
-	 */
-	protected int projectId;
+public class RestBacklogItemTypes extends AbstractAuthenticatedRestResource {
 
 	/**
 	 * The backlog item type id.
@@ -41,15 +36,12 @@ public class RestProjectsBacklogItemType extends AbstractAuthenticatedRestResour
 	 *            Version of the REST API to use.
 	 * @param credentials
 	 *            The credentials to use.
-	 * @param projectId
-	 *            The id of the project.
 	 * @param backlogItemTypeId
 	 *            The identifier of the backlog item type
 	 */
-	public RestProjectsBacklogItemType(String serverUrl, String apiVersion, ICredentials credentials,
-			int projectId, int backlogItemTypeId) {
+	public RestBacklogItemTypes(String serverUrl, String apiVersion, ICredentials credentials,
+			int backlogItemTypeId) {
 		super(serverUrl, apiVersion, credentials);
-		this.projectId = projectId;
 		this.backlogItemTypeId = backlogItemTypeId;
 	}
 
@@ -60,13 +52,12 @@ public class RestProjectsBacklogItemType extends AbstractAuthenticatedRestResour
 	 */
 	@Override
 	protected String getUrl() {
-		return URL.PROJECTS + "/" + this.projectId + URL.BACKLOG_ITEM_TYPES + "/" + this.backlogItemTypeId; //$NON-NLS-1$ //$NON-NLS-2$
+		return URL.BACKLOG_ITEM_TYPES + "/" + this.backlogItemTypeId; //$NON-NLS-1$
 	}
 
 	/**
-	 * Sends an GET request to the
-	 * {@code /api/<version>/projects/:projectId/backlog_item_type/:backlogItemTypeId} URL and returns the
-	 * response.
+	 * Sends an GET request to the {@code /api/<version>/backlog_item_types/:backlogItemTypeId} URL and
+	 * returns the response.
 	 * 
 	 * @param headers
 	 *            Headers to use for sending the request, just in case. There is no reason why this map
@@ -78,9 +69,8 @@ public class RestProjectsBacklogItemType extends AbstractAuthenticatedRestResour
 	}
 
 	/**
-	 * Sends an OPTIONS request to the
-	 * {@code /api/<version>/projects/:projectId/backlog_item_type/:backlogItemTypeId} URL and checks that the
-	 * GET operation is allowed in the response provided by the server.
+	 * Sends an OPTIONS request to the {@code /api/<version>/backlog_item_types/:backlogItemTypeId} URL and
+	 * checks that the GET operation is allowed in the response provided by the server.
 	 * 
 	 * @param headers
 	 *            Headers to use for sending the request, just in case. There is no reason why this map

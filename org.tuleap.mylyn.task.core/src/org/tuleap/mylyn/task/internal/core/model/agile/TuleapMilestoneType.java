@@ -27,7 +27,7 @@ public class TuleapMilestoneType extends AbstractTuleapConfigurableFieldsConfigu
 	/**
 	 * The cardwall URL, if and only if a cardwall is configured for this type of milestone.
 	 */
-	protected String cardwallUrl;
+	protected boolean hasCardwall;
 
 	/**
 	 * The constructor.
@@ -44,21 +44,22 @@ public class TuleapMilestoneType extends AbstractTuleapConfigurableFieldsConfigu
 	 *            The description
 	 * @param lastUpdateDate
 	 *            The date at which the configuration was last updated.
-	 * @param cardwallUrl
-	 *            The URL of the cardwall, if a cardwall is configured for this type of milestone.
+	 * @param hasCardwall
+	 *            Flag indicating whether a cardwall is activated for this milestone type.
 	 */
 	public TuleapMilestoneType(int identifier, String url, String label, String itemName, String description,
-			long lastUpdateDate, String cardwallUrl) {
+			long lastUpdateDate, boolean hasCardwall) {
 		super(identifier, url, label, itemName, description, lastUpdateDate);
+		this.hasCardwall = hasCardwall;
 	}
 
 	/**
-	 * Card wall URL getter.
+	 * Cardwall activation option.
 	 * 
-	 * @return the cardwallUrl
+	 * @return the cardwall activation option
 	 */
-	public String getCardwallUrl() {
-		return cardwallUrl;
+	public boolean hasCardwall() {
+		return hasCardwall;
 	}
 
 }

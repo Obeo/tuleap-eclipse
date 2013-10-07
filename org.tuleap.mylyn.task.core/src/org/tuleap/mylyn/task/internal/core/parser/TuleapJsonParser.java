@@ -25,6 +25,7 @@ import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItemType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardType;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardwall;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
@@ -300,13 +301,26 @@ public class TuleapJsonParser {
 	 * Parses a JSON String representing a milestone into a POJO.
 	 * 
 	 * @param jsonResponse
-	 *            The JSON response representing an artifact
+	 *            The JSON response representing an milestone
 	 * @return a POJO populated with the data from the JSON String.
 	 */
 	public TuleapMilestone parseMilestone(String jsonResponse) {
 		JsonParser parser = new JsonParser();
 		JsonElement milestoneElement = parser.parse(jsonResponse);
 		return new TuleapMilestoneDeserializer().deserialize(milestoneElement, TuleapMilestone.class, null);
+	}
+
+	/**
+	 * Parses a JSON String representing a cardwall into a POJO.
+	 * 
+	 * @param jsonResponse
+	 *            The JSON response representing an cardwall
+	 * @return a POJO populated with the data from the JSON String.
+	 */
+	public TuleapCardwall parseCardwall(String jsonResponse) {
+		JsonParser parser = new JsonParser();
+		JsonElement element = parser.parse(jsonResponse);
+		return new TuleapCardwallDeserializer().deserialize(element, TuleapCardwall.class, null);
 	}
 
 	/**

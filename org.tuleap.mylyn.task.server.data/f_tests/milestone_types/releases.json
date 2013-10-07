@@ -3,6 +3,7 @@
   "label" : "Releases",
   "description" : "The description of Releases",
   "url" : "localhost:3001/api/v3.14/milestone_types/901",
+  "has_cardwall" : false,
   "project_id" : 3,
   "fields" : [
       {

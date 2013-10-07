@@ -25,13 +25,14 @@ import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
  * 
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
+ * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
 public class TuleapMilestoneTypeDeserializer extends AbstractTuleapConfigurationDeserializer<TuleapMilestoneType> {
 
 	/**
-	 * The cardwall url key word.
+	 * The HAS CARDWALL key word.
 	 */
-	private static final String CARDWALL_URL = "cardwall_url"; //$NON-NLS-1$
+	private static final String HAS_CARDWALL = "has_cardwall"; //$NON-NLS-1$
 
 	/**
 	 * Constructor that receives the related project Configuration.
@@ -59,15 +60,15 @@ public class TuleapMilestoneTypeDeserializer extends AbstractTuleapConfiguration
 		String itemName = null;
 		String description = null;
 		long lastUpdateDate = System.currentTimeMillis();
-		String cardwallUrl = null;
+		boolean hasCardwall = false;
 
-		JsonElement jsonElement = jsonObject.get(CARDWALL_URL);
+		JsonElement jsonElement = jsonObject.get(HAS_CARDWALL);
 		if (jsonElement != null) {
-			cardwallUrl = jsonElement.getAsString();
+			hasCardwall = jsonElement.getAsBoolean();
 		}
 
 		TuleapMilestoneType milestoneType = new TuleapMilestoneType(identifier, url, label, itemName,
-				description, lastUpdateDate, cardwallUrl);
+				description, lastUpdateDate, hasCardwall);
 
 		milestoneType = this.populateConfigurableFields(milestoneType, jsonObject);
 		return milestoneType;

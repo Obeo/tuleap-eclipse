@@ -16,21 +16,16 @@ import org.eclipse.core.runtime.CoreException;
 import org.restlet.data.Method;
 
 /**
- * JSON Resource for the {@code /api/<version>/project/:projectId/milestone_type/:milestoneTypeId} URL.
+ * JSON Resource for the {@code /api/<version>/card_type/:cardTypeId} URL.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public class RestProjectsMilestoneType extends AbstractAuthenticatedRestResource {
+public class RestCardTypes extends AbstractAuthenticatedRestResource {
 
 	/**
-	 * The project id.
+	 * The card type id.
 	 */
-	protected int projectId;
-
-	/**
-	 * The milestone type id.
-	 */
-	protected int milestoneTypeId;
+	protected int cardTypeId;
 
 	/**
 	 * Constructor.
@@ -41,16 +36,12 @@ public class RestProjectsMilestoneType extends AbstractAuthenticatedRestResource
 	 *            Version of the REST API to use.
 	 * @param credentials
 	 *            The credentials to use.
-	 * @param projectId
-	 *            The id of the project.
-	 * @param milestoneTypeId
-	 *            The identifier of the milestone type
+	 * @param cardTypeId
+	 *            The identifier of the card type
 	 */
-	public RestProjectsMilestoneType(String serverUrl, String apiVersion, ICredentials credentials,
-			int projectId, int milestoneTypeId) {
+	public RestCardTypes(String serverUrl, String apiVersion, ICredentials credentials, int cardTypeId) {
 		super(serverUrl, apiVersion, credentials);
-		this.projectId = projectId;
-		this.milestoneTypeId = milestoneTypeId;
+		this.cardTypeId = cardTypeId;
 	}
 
 	/**
@@ -60,12 +51,11 @@ public class RestProjectsMilestoneType extends AbstractAuthenticatedRestResource
 	 */
 	@Override
 	protected String getUrl() {
-		return URL.PROJECTS + "/" + this.projectId + URL.MILESTONE_TYPES + "/" + this.milestoneTypeId; //$NON-NLS-1$ //$NON-NLS-2$
+		return URL.CARD_TYPES + "/" + this.cardTypeId; //$NON-NLS-1$ 
 	}
 
 	/**
-	 * Sends an GET request to the {@code /api/<version>/projects/:projectId/milestone_types/:milestoneTypeId}
-	 * URL and returns the response.
+	 * Sends an GET request to the {@code /api/<version>/card_types/:cardTypeId} URL and returns the response.
 	 * 
 	 * @param headers
 	 *            Headers to use for sending the request, just in case. There is no reason why this map
@@ -77,9 +67,8 @@ public class RestProjectsMilestoneType extends AbstractAuthenticatedRestResource
 	}
 
 	/**
-	 * Sends an OPTIONS request to the
-	 * {@code /api/<version>/projects/:projectId/milestone_types/:milestoneTypeId} URL and checks that the GET
-	 * operation is allowed in the response provided by the server.
+	 * Sends an OPTIONS request to the {@code /api/<version>/card_types/:cardTypeId} URL and checks that the
+	 * GET operation is allowed in the response provided by the server.
 	 * 
 	 * @param headers
 	 *            Headers to use for sending the request, just in case. There is no reason why this map
@@ -90,5 +79,4 @@ public class RestProjectsMilestoneType extends AbstractAuthenticatedRestResource
 	public void checkGet(Map<String, String> headers) throws CoreException {
 		checkAccreditation(Method.GET, headers);
 	}
-
 }

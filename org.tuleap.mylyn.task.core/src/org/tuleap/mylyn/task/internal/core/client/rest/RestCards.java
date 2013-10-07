@@ -16,41 +16,32 @@ import org.eclipse.core.runtime.CoreException;
 import org.restlet.data.Method;
 
 /**
- * JSON Resource for the {@code /api/<version>/project/:projectId/card_type/:cardTypeId} URL.
+ * Resource {@code /cards}, which can optionally use an integer parameter representing the id of a card.
  * 
- * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
+ * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class RestProjectsCardType extends AbstractAuthenticatedRestResource {
+public class RestCards extends AbstractAuthenticatedRestResource {
 
 	/**
-	 * The project id.
+	 * The card id.
 	 */
-	protected int projectId;
+	private int cardId;
 
 	/**
-	 * The card type id.
-	 */
-	protected int cardTypeId;
-
-	/**
-	 * Constructor.
+	 * Constructor with a card id.
 	 * 
 	 * @param serverUrl
-	 *            URL of the rest API on the server.
+	 *            The server URL.
 	 * @param apiVersion
-	 *            Version of the REST API to use.
+	 *            The API version.
 	 * @param credentials
-	 *            The credentials to use.
-	 * @param projectId
-	 *            The id of the project.
-	 * @param cardTypeId
-	 *            The identifier of the card type
+	 *            The credentials for authentication.
+	 * @param cardId
+	 *            The id of the artifact desired.
 	 */
-	public RestProjectsCardType(String serverUrl, String apiVersion, ICredentials credentials, int projectId,
-			int cardTypeId) {
+	public RestCards(String serverUrl, String apiVersion, ICredentials credentials, int cardId) {
 		super(serverUrl, apiVersion, credentials);
-		this.projectId = projectId;
-		this.cardTypeId = cardTypeId;
+		this.cardId = cardId;
 	}
 
 	/**
@@ -60,12 +51,11 @@ public class RestProjectsCardType extends AbstractAuthenticatedRestResource {
 	 */
 	@Override
 	protected String getUrl() {
-		return URL.PROJECTS + "/" + this.projectId + URL.CARD_TYPES + "/" + this.cardTypeId; //$NON-NLS-1$ //$NON-NLS-2$
+		return URL.ARTIFACTS + SLASH + cardId;
 	}
 
 	/**
-	 * Sends an GET request to the {@code /api/<version>/projects/:projectId/card_type/:cardTypeId} URL and
-	 * returns the response.
+	 * Sends an GET request to the {@code /api/<version>/cards/:id} URL and returns the response.
 	 * 
 	 * @param headers
 	 *            Headers to use for sending the request, just in case. There is no reason why this map
@@ -77,8 +67,8 @@ public class RestProjectsCardType extends AbstractAuthenticatedRestResource {
 	}
 
 	/**
-	 * Sends an OPTIONS request to the {@code /api/<version>/projects/:projectId/card_type/:cardTypeId} URL
-	 * and checks that the GET operation is allowed in the response provided by the server.
+	 * Sends an OPTIONS request to the {@code /api/<version>/cards/:id} URL and checks that the GET operation
+	 * is allowed in the response provided by the server.
 	 * 
 	 * @param headers
 	 *            Headers to use for sending the request, just in case. There is no reason why this map

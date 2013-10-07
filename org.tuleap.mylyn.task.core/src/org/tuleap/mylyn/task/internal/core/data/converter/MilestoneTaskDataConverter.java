@@ -17,15 +17,24 @@ import java.util.Map;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.agile.core.data.AgileTaskKindUtil;
+import org.tuleap.mylyn.task.agile.core.data.cardwall.CardWrapper;
+import org.tuleap.mylyn.task.agile.core.data.cardwall.CardwallWrapper;
+import org.tuleap.mylyn.task.agile.core.data.cardwall.SwimlaneWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.BacklogItemWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.MilestonePlanningWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.SubMilestoneWrapper;
+import org.tuleap.mylyn.task.internal.core.data.AbstractFieldValue;
+import org.tuleap.mylyn.task.internal.core.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.TuleapConfigurableElementMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.model.agile.IPlanning;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCard;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardwall;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardwallColumn;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapSwimlane;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
 
 /**
@@ -88,8 +97,10 @@ public class MilestoneTaskDataConverter extends AbstractElementTaskDataConverter
 
 		AgileTaskKindUtil.setAgileTaskKind(taskData, AgileTaskKindUtil.TASK_KIND_MILESTONE);
 
-		// TODO CNO Realize the cardwall of the milestone
-		// this.populateCardwall(taskData, milestone);
+		TuleapCardwall cardwall = milestone.getCardwall();
+		if (cardwall != null) {
+			populateCardwall(taskData, cardwall);
+		}
 	}
 
 	/**
@@ -129,6 +140,43 @@ public class MilestoneTaskDataConverter extends AbstractElementTaskDataConverter
 			backlogItemWrapper.setLabel(backlogItem.getLabel());
 			if (backlogItem.getInitialEffort() != null) {
 				backlogItemWrapper.setInitialEffort(backlogItem.getInitialEffort().floatValue());
+			}
+		}
+	}
+
+	/**
+	 * Populates the planning data in a task data from the given pojo.
+	 * 
+	 * @param taskData
+	 *            The task data to fill.
+	 * @param cardwall
+	 *            The cardwall pojo.
+	 */
+	private void populateCardwall(TaskData taskData, TuleapCardwall cardwall) {
+		CardwallWrapper wrapper = new CardwallWrapper(taskData.getRoot());
+		for (TuleapCardwallColumn column : cardwall.getColumns()) {
+			// TODO Validate that there's no need to compute an ID with TuleapTaskIdentityUtil
+			wrapper.addColumn(Integer.toString(column.getId()), column.getLabel());
+		}
+		for (TuleapSwimlane swimlane : cardwall.getSwimlanes()) {
+			TuleapBacklogItem backlogItem = swimlane.getBacklogItem();
+			String swimlaneId = TuleapTaskIdentityUtil.getTaskDataId(backlogItem.getProjectId(), backlogItem
+					.getConfigurationId(), backlogItem.getId());
+			SwimlaneWrapper swimlaneWrapper = wrapper.addSwimlane(swimlaneId);
+			for (TuleapCard card : swimlane.getCards()) {
+				String cardId = TuleapTaskIdentityUtil.getTaskDataId(card.getProjectId(), card
+						.getConfigurationId(), card.getId());
+				CardWrapper cardWrapper = swimlaneWrapper.addCard(cardId);
+				cardWrapper.setLabel(card.getLabel());
+				// ID of assigned status must be computed like in the columnWrapper above
+				cardWrapper.setStatusId(Integer.toString(card.getStatusId()));
+				for (AbstractFieldValue fieldValue : card.getFieldValues()) {
+					// TODO manage other types of fields
+					if (fieldValue instanceof LiteralFieldValue) {
+						cardWrapper.setFieldValue(Integer.toString(fieldValue.getFieldId()),
+								((LiteralFieldValue)fieldValue).getFieldValue());
+					}
+				}
 			}
 		}
 	}
