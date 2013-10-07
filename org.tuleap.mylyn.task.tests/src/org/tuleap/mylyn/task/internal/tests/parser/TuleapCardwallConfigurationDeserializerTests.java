@@ -45,13 +45,13 @@ public class TuleapCardwallConfigurationDeserializerTests {
 		String cwSprint = ParserUtil.loadFile("/cardwalls/cw_sprint250.json"); //$NON-NLS-1$
 		TuleapCardwall cardwall = this.parse(cwSprint);
 		assertNotNull(cardwall);
-		List<TuleapStatus> status = cardwall.getStatus();
-		assertEquals(4, status.size());
+		List<TuleapStatus> statuses = cardwall.getStatuses();
+		assertEquals(4, statuses.size());
 
-		TuleapStatus firstStatus = status.get(0);
-		TuleapStatus secondStatus = status.get(1);
-		TuleapStatus thirdStatus = status.get(2);
-		TuleapStatus fourthStatus = status.get(3);
+		TuleapStatus firstStatus = statuses.get(0);
+		TuleapStatus secondStatus = statuses.get(1);
+		TuleapStatus thirdStatus = statuses.get(2);
+		TuleapStatus fourthStatus = statuses.get(3);
 
 		assertEquals(2000, firstStatus.getId());
 		assertEquals(2001, secondStatus.getId());
@@ -366,15 +366,13 @@ public class TuleapCardwallConfigurationDeserializerTests {
 	 */
 	private TuleapCardwall parse(String fileContent) {
 		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(TuleapCardwall.class,
-				new TuleapCardwallDeserializer());
+		gsonBuilder.registerTypeAdapter(TuleapCardwall.class, new TuleapCardwallDeserializer());
 
 		JsonParser jsonParser = new JsonParser();
 		JsonObject jsonObject = jsonParser.parse(fileContent).getAsJsonObject();
 
 		Gson gson = gsonBuilder.create();
-		TuleapCardwall tuleapCardwallConfiguration = gson.fromJson(jsonObject,
-				TuleapCardwall.class);
+		TuleapCardwall tuleapCardwallConfiguration = gson.fromJson(jsonObject, TuleapCardwall.class);
 
 		return tuleapCardwallConfiguration;
 	}

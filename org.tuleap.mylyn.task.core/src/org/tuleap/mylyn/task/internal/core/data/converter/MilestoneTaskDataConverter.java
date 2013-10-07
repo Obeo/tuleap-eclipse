@@ -31,9 +31,9 @@ import org.tuleap.mylyn.task.internal.core.model.agile.IPlanning;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCard;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardwall;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardwallColumn;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapStatus;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapSwimlane;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
 
@@ -154,7 +154,7 @@ public class MilestoneTaskDataConverter extends AbstractElementTaskDataConverter
 	 */
 	private void populateCardwall(TaskData taskData, TuleapCardwall cardwall) {
 		CardwallWrapper wrapper = new CardwallWrapper(taskData.getRoot());
-		for (TuleapCardwallColumn column : cardwall.getColumns()) {
+		for (TuleapStatus column : cardwall.getStatuses()) {
 			// TODO Validate that there's no need to compute an ID with TuleapTaskIdentityUtil
 			wrapper.addColumn(Integer.toString(column.getId()), column.getLabel());
 		}

@@ -23,11 +23,6 @@ import java.util.List;
 public class TuleapCardwall {
 
 	/**
-	 * Card wall column configurations.
-	 */
-	private final List<TuleapCardwallColumn> columns;
-
-	/**
 	 * Card wall swimlanes list.
 	 */
 	private final List<TuleapSwimlane> swimlanes;
@@ -41,28 +36,8 @@ public class TuleapCardwall {
 	 * Constructor.
 	 */
 	public TuleapCardwall() {
-		this.columns = Lists.newArrayList();
 		this.swimlanes = Lists.newArrayList();
 		this.status = Lists.newArrayList();
-	}
-
-	/**
-	 * Add a column configuration to the card wall.
-	 * 
-	 * @param column
-	 *            The column configuration to add.
-	 */
-	public void addColumn(TuleapCardwallColumn column) {
-		columns.add(column);
-	}
-
-	/**
-	 * Provides the column configurations of this card wall.
-	 * 
-	 * @return An unmodifiable list view of the columns of this card wall.
-	 */
-	public List<TuleapCardwallColumn> getColumns() {
-		return ImmutableList.copyOf(columns);
 	}
 
 	/**
@@ -80,7 +55,7 @@ public class TuleapCardwall {
 	 * 
 	 * @return An unmodifiable list view of the status of this card wall.
 	 */
-	public List<TuleapStatus> getStatus() {
+	public List<TuleapStatus> getStatuses() {
 		return ImmutableList.copyOf(status);
 	}
 
