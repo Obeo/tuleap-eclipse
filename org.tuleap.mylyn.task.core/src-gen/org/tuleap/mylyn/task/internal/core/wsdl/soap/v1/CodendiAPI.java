@@ -7,10 +7,13 @@
 
 package org.tuleap.mylyn.task.internal.core.wsdl.soap.v1;
 
+@SuppressWarnings("all")
 public interface CodendiAPI extends javax.xml.rpc.Service {
-    public java.lang.String getCodendiAPIPortAddress();
+	public java.lang.String getCodendiAPIPortAddress();
 
-    public org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.CodendiAPIPortType getCodendiAPIPort() throws javax.xml.rpc.ServiceException;
+	public org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.CodendiAPIPortType getCodendiAPIPort()
+			throws javax.xml.rpc.ServiceException;
 
-    public org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.CodendiAPIPortType getCodendiAPIPort(java.net.URL portAddress) throws javax.xml.rpc.ServiceException;
+	public org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.CodendiAPIPortType getCodendiAPIPort(
+			java.net.URL portAddress) throws javax.xml.rpc.ServiceException;
 }

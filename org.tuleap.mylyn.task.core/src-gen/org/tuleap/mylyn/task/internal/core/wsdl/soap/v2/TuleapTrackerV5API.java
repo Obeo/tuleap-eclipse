@@ -7,10 +7,13 @@
 
 package org.tuleap.mylyn.task.internal.core.wsdl.soap.v2;
 
+@SuppressWarnings("all")
 public interface TuleapTrackerV5API extends javax.xml.rpc.Service {
-    public java.lang.String getTuleapTrackerV5APIPortAddress();
+	public java.lang.String getTuleapTrackerV5APIPortAddress();
 
-    public org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TuleapTrackerV5APIPortType getTuleapTrackerV5APIPort() throws javax.xml.rpc.ServiceException;
+	public org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TuleapTrackerV5APIPortType getTuleapTrackerV5APIPort()
+			throws javax.xml.rpc.ServiceException;
 
-    public org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TuleapTrackerV5APIPortType getTuleapTrackerV5APIPort(java.net.URL portAddress) throws javax.xml.rpc.ServiceException;
+	public org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TuleapTrackerV5APIPortType getTuleapTrackerV5APIPort(
+			java.net.URL portAddress) throws javax.xml.rpc.ServiceException;
 }

@@ -7,121 +7,128 @@
 
 package org.tuleap.mylyn.task.internal.core.wsdl.soap.v2;
 
+@SuppressWarnings("all")
 public interface TuleapTrackerV5APIPortType extends java.rmi.Remote {
 
-    /**
-     * Returns the version number of the SOAP API.
-     *      Changes are available in /plugins/tracker/soap/ChangeLog
-     */
-    public float getVersion() throws java.rmi.RemoteException;
+	/**
+	 * Returns the version number of the SOAP API. Changes are available in /plugins/tracker/soap/ChangeLog
+	 */
+	public float getVersion() throws java.rmi.RemoteException;
 
-    /**
-     * Returns the array of Tracker that belongs to the group identified
-     * by group ID.
-     *      Returns a soap fault if the group ID does not match with a valid
-     * project.
-     */
-    public org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Tracker[] getTrackerList(java.lang.String sessionKey, int group_id) throws java.rmi.RemoteException;
+	/**
+	 * Returns the array of Tracker that belongs to the group identified by group ID. Returns a soap fault if
+	 * the group ID does not match with a valid project.
+	 */
+	public org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Tracker[] getTrackerList(
+			java.lang.String sessionKey, int group_id) throws java.rmi.RemoteException;
 
-    /**
-     * Returns the array of Trackerfields that are used in the tracker
-     * tracker_id of the project group_id.
-     *      Returns a soap fault if the tracker ID or the group ID does not
-     * match with a valid project.
-     */
-    public org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerField[] getTrackerFields(java.lang.String sessionKey, int group_id, int tracker_id) throws java.rmi.RemoteException;
+	/**
+	 * Returns the array of Trackerfields that are used in the tracker tracker_id of the project group_id.
+	 * Returns a soap fault if the tracker ID or the group ID does not match with a valid project.
+	 */
+	public org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerField[] getTrackerFields(
+			java.lang.String sessionKey, int group_id, int tracker_id) throws java.rmi.RemoteException;
 
-    /**
-     * Returns the ArtifactQueryResult of the tracker tracker_id in
-     * the project group_id
-     *      that are matching the given criteria. If offset AND max_rows
-     * are filled, it returns only
-     *      max_rows artifacts, skipping the first offset ones.
-     *      It is not possible to sort artifact with this function (use getArtifactsFromReport
-     * if you want to sort).
-     *      Returns a soap fault if the group_id is not a valid one or if
-     * the tracker_id is not a valid one.
-     */
-    public org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactQueryResult getArtifacts(java.lang.String sessionKey, int group_id, int tracker_id, org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Criteria[] criteria, int offset, int max_rows) throws java.rmi.RemoteException;
+	/**
+	 * Returns the ArtifactQueryResult of the tracker tracker_id in the project group_id that are matching the
+	 * given criteria. If offset AND max_rows are filled, it returns only max_rows artifacts, skipping the
+	 * first offset ones. It is not possible to sort artifact with this function (use getArtifactsFromReport
+	 * if you want to sort). Returns a soap fault if the group_id is not a valid one or if the tracker_id is
+	 * not a valid one.
+	 */
+	public org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactQueryResult getArtifacts(
+			java.lang.String sessionKey, int group_id, int tracker_id,
+			org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Criteria[] criteria, int offset, int max_rows)
+			throws java.rmi.RemoteException;
 
-    /**
-     * Add an Artifact in the tracker tracker_id of the project group_id
-     * with the values given by
-     *      value (an ArtifactFieldValue).
-     *      Returns the Id of the created artifact if the creation succeed.
-     * Returns a soap fault if the group_id is not a valid one, if the tracker_name
-     * is not a valid one, or if the add failed.
-     */
-    public int addArtifact(java.lang.String sessionKey, int group_id, int tracker_id, org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactFieldValue[] value) throws java.rmi.RemoteException;
+	/**
+	 * Add an Artifact in the tracker tracker_id of the project group_id with the values given by value (an
+	 * ArtifactFieldValue). Returns the Id of the created artifact if the creation succeed. Returns a soap
+	 * fault if the group_id is not a valid one, if the tracker_name is not a valid one, or if the add failed.
+	 */
+	public int addArtifact(java.lang.String sessionKey, int group_id, int tracker_id,
+			org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactFieldValue[] value)
+			throws java.rmi.RemoteException;
 
-    /**
-     * Update the artifact $artifact_id of the tracker $tracker_id
-     * in the project group_id with the values given by
-     *      value. Add a follow-up comment $comment.
-     *      Returns a soap fault if the group_id is not a valid one, if the
-     * tracker_id is not a valid one,
-     *      if the artifart_id is not a valid one, or if the update failed.
-     */
-    public int updateArtifact(java.lang.String sessionKey, int group_id, int tracker_id, int artifact_id, org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactFieldValue[] value, java.lang.String comment, java.lang.String comment_format) throws java.rmi.RemoteException;
+	/**
+	 * Update the artifact $artifact_id of the tracker $tracker_id in the project group_id with the values
+	 * given by value. Add a follow-up comment $comment. Returns a soap fault if the group_id is not a valid
+	 * one, if the tracker_id is not a valid one, if the artifart_id is not a valid one, or if the update
+	 * failed.
+	 */
+	public int updateArtifact(java.lang.String sessionKey, int group_id, int tracker_id, int artifact_id,
+			org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactFieldValue[] value,
+			java.lang.String comment, java.lang.String comment_format) throws java.rmi.RemoteException;
 
-    /**
-     * Returns the artifact (Artifact) identified by the id artifact_id
-     * Returns a soap fault if the group_id is not a valid one, if the tracker_id
-     * is not a valid one,
-     *      or if the artifact_id is not a valid one.
-     */
-    public org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Artifact getArtifact(java.lang.String sessionKey, int group_id, int tracker_id, int artifact_id) throws java.rmi.RemoteException;
+	/**
+	 * Returns the artifact (Artifact) identified by the id artifact_id Returns a soap fault if the group_id
+	 * is not a valid one, if the tracker_id is not a valid one, or if the artifact_id is not a valid one.
+	 */
+	public org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Artifact getArtifact(java.lang.String sessionKey,
+			int group_id, int tracker_id, int artifact_id) throws java.rmi.RemoteException;
 
-    /**
-     * Execute a report and returns corresponding artifacts.
-     */
-    public org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactQueryResult getArtifactsFromReport(java.lang.String sessionKey, int report_id, int offset, int max_rows) throws java.rmi.RemoteException;
+	/**
+	 * Execute a report and returns corresponding artifacts.
+	 */
+	public org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactQueryResult getArtifactsFromReport(
+			java.lang.String sessionKey, int report_id, int offset, int max_rows)
+			throws java.rmi.RemoteException;
 
-    /**
-     * Return base64 encoded chunk of request file
-     */
-    public java.lang.String getArtifactAttachmentChunk(java.lang.String sessionKey, int artifact_id, int attachment_id, int offset, int size) throws java.rmi.RemoteException;
+	/**
+	 * Return base64 encoded chunk of request file
+	 */
+	public java.lang.String getArtifactAttachmentChunk(java.lang.String sessionKey, int artifact_id,
+			int attachment_id, int offset, int size) throws java.rmi.RemoteException;
 
-    /**
-     * <pre>Provision an attachment for future upload
-     * 
-     * This method is supposed to be run before "appendTemporaryAttachmentChunk"
-     * to
-     * allocate an file name on the server for upload before running "addArtifact"
-     * or
-     * "updateArtifact"
-     * 
-     * Returns an attachment_name to be used with appendTemporaryAttachmentChunk.</pre>
-     */
-    public java.lang.String createTemporaryAttachment(java.lang.String sessionKey) throws java.rmi.RemoteException;
+	/**
+	 * <pre>
+	 * Provision an attachment for future upload
+	 * 
+	 * This method is supposed to be run before "appendTemporaryAttachmentChunk"
+	 * to
+	 * allocate an file name on the server for upload before running "addArtifact"
+	 * or
+	 * "updateArtifact"
+	 * 
+	 * Returns an attachment_name to be used with appendTemporaryAttachmentChunk.
+	 * </pre>
+	 */
+	public java.lang.String createTemporaryAttachment(java.lang.String sessionKey)
+			throws java.rmi.RemoteException;
 
-    /**
-     * <pre>Appends file content chunk into selected attachment.
-     * 
-     * attachment_name is generated by createTemporaryAttachment
-     * content must be base64 encoded
-     * 
-     * Returns the number of written bytes on the file system.</pre>
-     */
-    public int appendTemporaryAttachmentChunk(java.lang.String sessionKey, java.lang.String attachment_name, java.lang.String content) throws java.rmi.RemoteException;
+	/**
+	 * <pre>
+	 * Appends file content chunk into selected attachment.
+	 * 
+	 * attachment_name is generated by createTemporaryAttachment
+	 * content must be base64 encoded
+	 * 
+	 * Returns the number of written bytes on the file system.
+	 * </pre>
+	 */
+	public int appendTemporaryAttachmentChunk(java.lang.String sessionKey, java.lang.String attachment_name,
+			java.lang.String content) throws java.rmi.RemoteException;
 
-    /**
-     * Remove all temporary attachment not yet attached to an artifact
-     */
-    public boolean purgeAllTemporaryAttachments(java.lang.String sessionKey) throws java.rmi.RemoteException;
+	/**
+	 * Remove all temporary attachment not yet attached to an artifact
+	 */
+	public boolean purgeAllTemporaryAttachments(java.lang.String sessionKey) throws java.rmi.RemoteException;
 
-    /**
-     * Returns the tracker structure.
-     */
-    public org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerStructure getTrackerStructure(java.lang.String sessionKey, int group_id, int tracker_id) throws java.rmi.RemoteException;
+	/**
+	 * Returns the tracker structure.
+	 */
+	public org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerStructure getTrackerStructure(
+			java.lang.String sessionKey, int group_id, int tracker_id) throws java.rmi.RemoteException;
 
-    /**
-     * Returns the reports the user can execute.
-     */
-    public org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerReport[] getTrackerReports(java.lang.String sessionKey, int group_id, int tracker_id) throws java.rmi.RemoteException;
+	/**
+	 * Returns the reports the user can execute.
+	 */
+	public org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TrackerReport[] getTrackerReports(
+			java.lang.String sessionKey, int group_id, int tracker_id) throws java.rmi.RemoteException;
 
-    /**
-     * Returns the comments of an artifact.
-     */
-    public org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactComments[] getArtifactComments(java.lang.String sessionKey, int artifact_id) throws java.rmi.RemoteException;
+	/**
+	 * Returns the comments of an artifact.
+	 */
+	public org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactComments[] getArtifactComments(
+			java.lang.String sessionKey, int artifact_id) throws java.rmi.RemoteException;
 }
