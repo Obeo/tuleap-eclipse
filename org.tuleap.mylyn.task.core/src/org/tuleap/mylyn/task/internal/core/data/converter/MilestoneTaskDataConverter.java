@@ -121,6 +121,7 @@ public class MilestoneTaskDataConverter extends AbstractElementTaskDataConverter
 					subMilestone.getConfigurationId(), subMilestone.getId());
 			milestoneInternalIdByTuleapId.put(Integer.valueOf(subMilestone.getId()), internalMilestoneId);
 			SubMilestoneWrapper subMilestoneWrapper = milestonePlanning.addSubMilestone(internalMilestoneId);
+			subMilestoneWrapper.setDisplayId(Integer.toString(subMilestone.getId()));
 			subMilestoneWrapper.setLabel(subMilestone.getLabel());
 			subMilestoneWrapper.setStartDate(subMilestone.getStartDate());
 			if (subMilestone.getDuration() != null) {
@@ -134,6 +135,7 @@ public class MilestoneTaskDataConverter extends AbstractElementTaskDataConverter
 			BacklogItemWrapper backlogItemWrapper = milestonePlanning.addBacklogItem(TuleapTaskIdentityUtil
 					.getTaskDataId(backlogItem.getProjectId(), backlogItem.getConfigurationId(), backlogItem
 							.getId()));
+			backlogItemWrapper.setDisplayId(Integer.toString(backlogItem.getId()));
 			Integer assignedMilestoneId = backlogItem.getAssignedMilestoneId();
 			if (assignedMilestoneId != null) {
 				backlogItemWrapper.setAssignedMilestoneId(milestoneInternalIdByTuleapId
@@ -165,13 +167,18 @@ public class MilestoneTaskDataConverter extends AbstractElementTaskDataConverter
 					.getConfigurationId(), backlogItem.getId());
 			SwimlaneWrapper swimlaneWrapper = wrapper.addSwimlane(swimlaneId);
 			swimlaneWrapper.getSwimlaneItem().setLabel(backlogItem.getLabel());
+
+			// display IDs
+			String biDisplayId = Integer.toString(backlogItem.getId());
+			swimlaneWrapper.getSwimlaneItem().setDisplayId(biDisplayId);
+			swimlaneWrapper.setDisplayId(biDisplayId);
+
 			Integer assignedMilestoneId = backlogItem.getAssignedMilestoneId();
 			if (assignedMilestoneId != null) {
 				swimlaneWrapper.getSwimlaneItem().setAssignedMilestoneId(
 						TuleapTaskIdentityUtil.getTaskDataId(backlogItem.getProjectId(), backlogItem
 								.getConfigurationId(), backlogItem.getAssignedMilestoneId().intValue()));
 			}
-			swimlaneWrapper.getSwimlaneItem().setLabel(backlogItem.getLabel());
 			Float initialEffort = backlogItem.getInitialEffort();
 			if (initialEffort != null) {
 				swimlaneWrapper.getSwimlaneItem().setInitialEffort(initialEffort.floatValue());
@@ -180,6 +187,7 @@ public class MilestoneTaskDataConverter extends AbstractElementTaskDataConverter
 				String cardId = TuleapTaskIdentityUtil.getTaskDataId(card.getProjectId(), card
 						.getConfigurationId(), card.getId());
 				CardWrapper cardWrapper = swimlaneWrapper.addCard(cardId);
+				cardWrapper.setDisplayId(String.valueOf(card.getId()));
 				cardWrapper.setLabel(card.getLabel());
 				// ID of assigned status must be computed like in the columnWrapper above
 				cardWrapper.setStatusId(Integer.toString(card.getStatusId()));
