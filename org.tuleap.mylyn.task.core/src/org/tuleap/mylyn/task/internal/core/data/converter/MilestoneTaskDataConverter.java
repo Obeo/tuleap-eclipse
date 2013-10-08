@@ -93,6 +93,7 @@ public class MilestoneTaskDataConverter extends AbstractElementTaskDataConverter
 	@Override
 	public void populateTaskData(TaskData taskData, TuleapMilestone milestone) {
 		super.populateTaskDataConfigurableFields(taskData, milestone);
+
 		this.populatePlanning(taskData, milestone);
 
 		AgileTaskKindUtil.setAgileTaskKind(taskData, AgileTaskKindUtil.TASK_KIND_MILESTONE);
@@ -113,6 +114,11 @@ public class MilestoneTaskDataConverter extends AbstractElementTaskDataConverter
 	 */
 	private void populatePlanning(TaskData taskData, IPlanning planning) {
 		MilestonePlanningWrapper milestonePlanning = new MilestonePlanningWrapper(taskData.getRoot());
+
+		if (configuration != null) {
+			milestonePlanning.setHasCardwall(configuration.hasCardwall());
+		}
+
 		Map<Integer, String> milestoneInternalIdByTuleapId = Maps.newHashMap();
 		for (TuleapMilestone subMilestone : planning.getSubMilestones()) {
 			String internalMilestoneId = TuleapTaskIdentityUtil.getTaskDataId(subMilestone.getProjectId(),
