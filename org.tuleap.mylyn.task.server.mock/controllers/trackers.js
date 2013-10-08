@@ -12,65 +12,17 @@
 
 var fs = require('fs');
 
-var trackersPart1 = undefined;
-var trackersPart2 = undefined;
+var trackersPart1 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/trackers/trackers_part_1.json').toString());
+var trackersPart2 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/trackers/trackers_part_2.json').toString());
 
-var tracker0 = undefined;
-var tracker1 = undefined;
-var tracker2 = undefined;
-var tracker3 = undefined;
-var tracker4 = undefined;
-var tracker5 = undefined;
+var tracker0 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/trackers/tracker-0.json').toString());
+var tracker1 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/trackers/tracker-1.json').toString());
+var tracker2 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/trackers/tracker-2.json').toString());
+var tracker3 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/trackers/tracker-3.json').toString());
+var tracker4 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/trackers/tracker-4.json').toString());
+var tracker5 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/trackers/tracker-5.json').toString());
 
-var error404 = undefined;
-
-var files = [
-  '../org.tuleap.mylyn.task.server.data/f_tests/trackers/trackers_part_1.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/trackers/trackers_part_2.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/trackers/tracker-0.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/trackers/tracker-1.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/trackers/tracker-2.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/trackers/tracker-3.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/trackers/tracker-4.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/trackers/tracker-5.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/errors/404.json'
-];
-
-for (var i = 0; i < files.length; i++) {
-  var file = files[i];
-
-  var functionCreator = function (i, file) {
-    return function(err, data) {
-      if (err) {
-        console.log(err);
-        return;
-      }
-      var jsonData = JSON.parse(data);
-      
-      if (i === 0) {
-        trackersPart1 = jsonData;
-      } else if (i === 1) {
-        trackersPart2 = jsonData;
-      } else if (i === 2) {
-        tracker0 = jsonData;
-      } else if (i === 3) {
-        tracker1 = jsonData;
-      } else if (i === 4) {
-        tracker2 = jsonData;
-      } else if (i === 5) {
-        tracker3 = jsonData;
-      } else if (i === 6) {
-        tracker4 = jsonData;
-      } else if (i === 7) {
-        tracker5 = jsonData;
-      } else if (i === 8) {
-        error404 = jsonData;
-      }
-    }
-  };
-
-  fs.readFile(file, 'utf-8', functionCreator(i, file));
-}
+var error404 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/errors/404.json').toString());
 
 exports.optionsList = function (req, res) {
   res.header('Access-Control-Allow-Methods', 'OPTIONS, GET');

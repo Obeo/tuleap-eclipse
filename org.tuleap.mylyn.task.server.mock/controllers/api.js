@@ -11,16 +11,7 @@
 'use strict';
 
 var fs = require('fs');
-
-var api = undefined;
-
-fs.readFile('../org.tuleap.mylyn.task.server.data/f_tests/api.json', 'utf-8', function(err, data) {
-  if (err) {
-    console.log(err);
-    return;
-  }
-  api = JSON.parse(data);
-});
+var api = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/api.json').toString());
 
 exports.options = function (req, res) {
   res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');

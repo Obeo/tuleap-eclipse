@@ -12,57 +12,15 @@
 
 var fs = require('fs');
 
-var projects = undefined;
+var projects = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/projects/projects.json').toString());
 
-var project0 = undefined;
-var project1 = undefined;
-var project2 = undefined;
-var project3 = undefined;
-var project4 = undefined;
+var project0 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/projects/project-0.json').toString());
+var project1 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/projects/project-1.json').toString());
+var project2 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/projects/project-2.json').toString());
+var project3 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/projects/project-3.json').toString());
+var project4 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/projects/project-4.json').toString());
 
-var error404 = undefined;
-
-var files = [
-  '../org.tuleap.mylyn.task.server.data/f_tests/projects/projects.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/projects/project-0.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/projects/project-1.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/projects/project-2.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/projects/project-3.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/projects/project-4.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/errors/404.json'
-];
-
-for (var i = 0; i < files.length; i++) {
-  var file = files[i];
-
-  var functionCreator = function (i, file) {
-    return function(err, data) {
-      if (err) {
-        console.log(err);
-        return;
-      }
-      var jsonData = JSON.parse(data);
-
-      if (i === 0) {
-        projects = jsonData;
-      } else if (i === 1) {
-        project0 = jsonData;
-      } else if (i === 2) {
-        project1 = jsonData;
-      } else if (i === 3) {
-        project2 = jsonData;
-      } else if (i === 4) {
-        project3 = jsonData;
-      } else if (i === 5) {
-        project4 = jsonData;
-      } else if (i === 6) {
-        error404 = jsonData;
-      }
-    }
-  };
-
-  fs.readFile(file, 'utf-8', functionCreator(i, file));
-};
+var error404 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/errors/404.json').toString());
 
 exports.optionsList = function (req, res) {
   res.header('Access-Control-Allow-Methods', 'OPTIONS, GET');

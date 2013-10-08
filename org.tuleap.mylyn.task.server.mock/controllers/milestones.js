@@ -12,76 +12,19 @@
 
 var fs = require('fs');
 
-var releases = undefined;
-var release200 = undefined;
-var release201 = undefined;
-var sprints_rel200 = undefined;
-var sprint250 = undefined;
-var sprint251 = undefined;
-var sprint252 = undefined;
-var backlogItems_rel200 = undefined;
-var sprints_rel201 = undefined;
-var backlogItems_rel201 = undefined;
-var cardwall250 = undefined
+var releases = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/milestones/releases.json').toString());
+var release200 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/milestones/release200.json').toString());
+var release201 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/milestones/release201.json').toString());
+var sprints_rel200 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/milestones/sprints_rel200.json').toString());
+var sprint250 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/milestones/sprint250.json').toString());
+var sprint251 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/milestones/sprint251.json').toString());
+var sprint252 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/milestones/sprint252.json').toString());
+var backlogItems_rel200 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/milestones/backlog_items_rel200.json').toString());
+var sprints_rel201 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/milestones/sprints_rel201.json').toString());
+var backlogItems_rel201 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/milestones/backlog_items_rel201.json').toString());
+var cardwall250 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/cardwalls/cw_sprint250.json').toString());
 
-var error404 = undefined;
-
-var files = [
-  '../org.tuleap.mylyn.task.server.data/f_tests/milestones/releases.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/milestones/release200.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/milestones/release201.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/milestones/sprints_rel200.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/milestones/sprint250.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/milestones/sprint251.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/milestones/sprint252.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/milestones/backlog_items_rel200.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/milestones/sprints_rel201.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/milestones/backlog_items_rel201.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/cardwalls/cw_sprint250.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/errors/404.json'
-];
-
-for (var i = 0; i < files.length; i++) {
-  var file = files[i];
-
-  var functionCreator = function (i, file) {
-    return function(err, data) {
-      if (err) {
-        console.log(err);
-        return;
-      }
-      var jsonData = JSON.parse(data);
-      
-      if (i === 0) {
-    	  releases = jsonData;
-      } else if (i === 1) {
-        release200 = jsonData;
-      } else if (i === 2) {
-    	  release201 = jsonData;
-      } else if (i === 3) {
-    	  sprints_rel200 = jsonData;
-      } else if (i === 4) {
-    	  sprint250 = jsonData;
-      } else if (i === 5) {
-    	  sprint251 = jsonData;
-      } else if (i === 6){
-    	  sprint252 = jsonData;
-      } else if (i === 7){
-    	  backlogItems_rel200 = jsonData;
-      } else if (i === 8){
-    	  sprints_rel201 = jsonData;
-      } else if (i === 9){
-    	  backlogItems_rel201 = jsonData;
-      } else if (i === 10){
-        cardwall250 = jsonData;
-      } else {
-    	  error404 = jsonData;
-      }
-    }
-  };
-
-  fs.readFile(file, 'utf-8', functionCreator(i, file));
-}
+var error404 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/errors/404.json').toString());
 
 // /milestones
 exports.optionsList = function(req, res) {

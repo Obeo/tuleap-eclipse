@@ -12,45 +12,12 @@
 
 var fs = require('fs');
 
-var milestone_types = undefined;
+var milestone_types = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/milestone_types/types.json').toString());
 
-var releases = undefined; // id = 901
-var sprints = undefined;  // id = 902
+var releases = JSON.parse(fs.readFileSync(  '../org.tuleap.mylyn.task.server.data/f_tests/milestone_types/releases.json').toString()); // id = 901
+var sprints = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/milestone_types/sprints.json').toString());  // id = 902
 
-var error404 = undefined;
-
-var files = [
-  '../org.tuleap.mylyn.task.server.data/f_tests/milestone_types/types.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/milestone_types/releases.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/milestone_types/sprints.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/errors/404.json'
-];
-
-for (var i = 0; i < files.length; i++) {
-  var file = files[i];
-
-  var functionCreator = function (i, file) {
-    return function(err, data) {
-      if (err) {
-        console.log(err);
-        return;
-      }
-      var jsonData = JSON.parse(data);
-      
-      if (i === 0) {
-        milestone_types = jsonData;
-      } else if (i === 1) {
-        releases = jsonData;
-      } else if (i === 2) {
-        sprints = jsonData;
-      } else if (i === 3) {
-        error404 = jsonData;
-      }
-    }
-  };
-
-  fs.readFile(file, 'utf-8', functionCreator(i, file));
-}
+var error404 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/errors/404.json').toString());
 
 exports.optionsList = function (req, res) {
   res.header('Access-Control-Allow-Methods', 'OPTIONS, GET');

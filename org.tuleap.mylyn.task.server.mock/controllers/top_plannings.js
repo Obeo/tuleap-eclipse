@@ -10,48 +10,12 @@
 
 var fs = require('fs');
 
-var topPlannings = undefined;
-var topPlanning30 = undefined;
-var milestones = undefined;
-var backlogItems = undefined;
+var topPlannings = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/top_plannings/top_plannings_prj3.json').toString());
+var topPlanning30 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/top_plannings/milestones.json').toString());
+var milestones = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/top_plannings/backlog_items.json').toString());
+var backlogItems = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/top_plannings/top_planning_30.json').toString());
 
-var error404 = undefined;
-
-var files = [
-    '../org.tuleap.mylyn.task.server.data/f_tests/top_plannings/top_plannings_prj3.json',
-    '../org.tuleap.mylyn.task.server.data/f_tests/top_plannings/milestones.json',
-    '../org.tuleap.mylyn.task.server.data/f_tests/top_plannings/backlog_items.json',
-    '../org.tuleap.mylyn.task.server.data/f_tests/top_plannings/top_planning_30.json',
-    '../org.tuleap.mylyn.task.server.data/f_tests/errors/404.json'
-];
-
-for ( var i = 0; i < files.length; i++) {
-  var file = files[i];
-
-  var functionCreator = function(i, file) {
-    return function(err, data) {
-      if (err) {
-        console.log(err);
-        return;
-      }
-      var jsonData = JSON.parse(data);
-
-      if (i === 0) {
-        topPlannings = jsonData;
-      } else if (i === 1) {
-        milestones = jsonData;
-      } else if (i === 2) {
-        backlogItems = jsonData;
-      } else if (i === 3) {
-        topPlanning30 = jsonData;
-      } else if (i === 4) {
-        error404 = jsonData;
-      }
-    }
-  };
-
-  fs.readFile(file, 'utf-8', functionCreator(i, file));
-}
+var error404 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/errors/404.json').toString());
 
 // /projects/:projectId/top_plannings
 exports.optionsList = function(req, res) {

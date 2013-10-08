@@ -12,24 +12,8 @@
 
 var fs = require('fs');
 
-var user = undefined;
-var error401 = undefined;
-
-fs.readFile('../org.tuleap.mylyn.task.server.data/f_tests/user.json', 'utf-8', function(err, data) {
-  if (err) {
-    console.log(err);
-    return;
-  }
-  user = JSON.parse(data);
-});
-
-fs.readFile('../org.tuleap.mylyn.task.server.data/f_tests/errors/401.json', 'utf-8', function(err, data) {
-  if (err) {
-    console.log(err);
-    return;
-  }
-  error401 = JSON.parse(data);
-});
+var user = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/user.json').toString());
+var error401 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/errors/401.json').toString());
 
 exports.options = function (req, res) {
   res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');

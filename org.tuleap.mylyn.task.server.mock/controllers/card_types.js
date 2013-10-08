@@ -12,40 +12,11 @@
 
 var fs = require('fs');
 
-var prj3_card_types = undefined; // id = 7000
-var card_type_7000 = undefined; // id = 7000
+var prj3_card_types = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/card_types/prj3_card_types.json').toString()); // id = 7000
+var card_type_7000 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/card_types/task-7000.json').toString()); // id = 7000
 
-var error404 = undefined;
+var error404 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/errors/404.json').toString());
 
-var files = [
-  '../org.tuleap.mylyn.task.server.data/f_tests/card_types/prj3_card_types.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/card_types/task-7000.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/errors/404.json'
-];
-
-for (var i = 0; i < files.length; i++) {
-  var file = files[i];
-
-  var functionCreator = function (i, file) {
-    return function(err, data) {
-      if (err) {
-        console.log(err);
-        return;
-      }
-      var jsonData = JSON.parse(data);
-      
-      if (i === 0) {
-        prj3_card_types = jsonData;
-      } else if (i === 1) {
-        card_type_7000 = jsonData;
-      } else if (i === 2) {
-        error404 = jsonData;
-      }
-    }
-  };
-
-  fs.readFile(file, 'utf-8', functionCreator(i, file));
-}
 
 exports.optionsList = function (req, res) {
   res.header('Access-Control-Allow-Methods', 'OPTIONS, GET');

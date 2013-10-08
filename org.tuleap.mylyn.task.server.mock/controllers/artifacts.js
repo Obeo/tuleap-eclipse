@@ -12,44 +12,11 @@
 
 var fs = require('fs');
 
-var artifact0 = undefined;
-var artifact1 = undefined;
-var artifact2 = undefined;
+var artifact0 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/artifacts/artifact-0.json').toString());
+var artifact1 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/artifacts/artifact-1.json').toString());
+var artifact2 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/artifacts/artifact-2.json').toString());
 
-var error404 = undefined;
-
-var files = [
-  '../org.tuleap.mylyn.task.server.data/f_tests/artifacts/artifact-0.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/artifacts/artifact-1.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/artifacts/artifact-2.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/errors/404.json'
-];
-
-for (var i = 0; i < files.length; i++) {
-  var file = files[i];
-
-  var functionCreator = function (i, file) {
-    return function(err, data) {
-      if (err) {
-        console.log(err);
-        return;
-      }
-      var jsonData = JSON.parse(data);
-      
-      if (i === 0) {
-    	  artifact0 = jsonData;
-      } else if (i === 1) {
-    	  artifact1 = jsonData;
-      } else if (i === 2) {
-    	  artifact2 = jsonData;
-      } else if (i === 3) {
-        error404 = jsonData;
-      }
-    }
-  };
-
-  fs.readFile(file, 'utf-8', functionCreator(i, file));
-}
+var error404 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/errors/404.json').toString());
 
 exports.options = function (req, res) {
   res.header('Access-Control-Allow-Methods', 'OPTIONS, GET');

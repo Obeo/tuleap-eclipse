@@ -12,45 +12,12 @@
 
 var fs = require('fs');
 
-var backlog_item_types = undefined;
+var backlog_item_types = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/backlog_item_types/types.json').toString());
 
-var epics = undefined; // id = 901
-var userStories = undefined;  // id = 902
+var epics = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/backlog_item_types/epics.json').toString()); // id = 901
+var userStories = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/backlog_item_types/user_stories.json').toString());  // id = 902
 
-var error404 = undefined;
-
-var files = [
-  '../org.tuleap.mylyn.task.server.data/f_tests/backlog_item_types/types.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/backlog_item_types/epics.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/backlog_item_types/user_stories.json',
-  '../org.tuleap.mylyn.task.server.data/f_tests/errors/404.json'
-];
-
-for (var i = 0; i < files.length; i++) {
-  var file = files[i];
-
-  var functionCreator = function (i, file) {
-    return function(err, data) {
-      if (err) {
-        console.log(err);
-        return;
-      }
-      var jsonData = JSON.parse(data);
-      
-      if (i === 0) {
-        backlog_item_types = jsonData;
-      } else if (i === 1) {
-        epics = jsonData;
-      } else if (i === 2) {
-        userStories = jsonData;
-      } else if (i === 3) {
-        error404 = jsonData;
-      }
-    }
-  };
-
-  fs.readFile(file, 'utf-8', functionCreator(i, file));
-}
+var error404 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/errors/404.json').toString());
 
 exports.optionsList = function (req, res) {
   res.header('Access-Control-Allow-Methods', 'OPTIONS, GET');
