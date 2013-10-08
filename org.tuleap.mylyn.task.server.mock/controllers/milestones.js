@@ -50,39 +50,37 @@ exports.list = function(req, res) {
 
 ///milestones/:milestoneId
 exports.options = function(req, res) {
-res.header('Access-Control-Allow-Methods', 'OPTIONS, GET');
-res.header('Access-Control-Allow-Headers',
-   'Accept-Charset, Accept, Content-Type, Authorization');
-res.header('Allow', 'OPTIONS, GET');
+  res.header('Access-Control-Allow-Methods', 'OPTIONS, GET');
+  res.header('Access-Control-Allow-Headers', 'Accept-Charset, Accept, Content-Type, Authorization');
+  res.header('Allow', 'OPTIONS, GET');
 
-res.send();
+  res.send();
 };
 
 ///milestones/:milestoneId : contents of the sub-milestones
 exports.get = function(req, res) {
-res.header('Access-Control-Allow-Methods', 'OPTIONS, GET');
-res.header('Access-Control-Allow-Headers',
-   'Accept-Charset, Accept, Content-Type, Authorization');
-res.header('Allow', 'OPTIONS, GET');
+  res.header('Access-Control-Allow-Methods', 'OPTIONS, GET');
+  res.header('Access-Control-Allow-Headers', 'Accept-Charset, Accept, Content-Type, Authorization');
+  res.header('Allow', 'OPTIONS, GET');
 
-var response = undefined;
-var milestoneId = req.params.milestoneId;
+  var response = undefined;
+  var milestoneId = req.params.milestoneId;
 
-if (milestoneId === '200') {
- response = release200;
-} else if (milestoneId === '201') {
- response = release201;
-} else if (milestoneId === '250') {
- response = sprint250;
-} else if (milestoneId === '251') {
- response = sprint251;
-} else if (milestoneId === '252') {
- response = sprint252;
-} else {
- res.status(404);
- response = error404;
-}
-res.send(response);
+  if (milestoneId === '200') {
+    response = release200;
+  } else if (milestoneId === '201') {
+    response = release201;
+  } else if (milestoneId === '250') {
+    response = sprint250;
+  } else if (milestoneId === '251') {
+    response = sprint251;
+  } else if (milestoneId === '252') {
+    response = sprint252;
+  } else {
+    res.status(404);
+    response = error404;
+  }
+  res.send(response);
 };
 
 // /milestones/:milestoneId/submilestones
@@ -150,29 +148,27 @@ exports.backlogItems = function(req, res) {
 
 ///milestones/:milestoneId/cardwall
 exports.optionsCardwall = function(req, res) {
-res.header('Access-Control-Allow-Methods', 'OPTIONS, GET');
-res.header('Access-Control-Allow-Headers',
-   'Accept-Charset, Accept, Content-Type, Authorization');
-res.header('Allow', 'OPTIONS, GET');
+  res.header('Access-Control-Allow-Methods', 'OPTIONS, GET');
+  res.header('Access-Control-Allow-Headers', 'Accept-Charset, Accept, Content-Type, Authorization');
+  res.header('Allow', 'OPTIONS, GET');
 
-res.send();
+  res.send();
 };
 
 ///milestones/:milestoneId/cardwall
 exports.cardwall = function(req, res) {
-res.header('Access-Control-Allow-Methods', 'OPTIONS, GET');
-res.header('Access-Control-Allow-Headers',
-   'Accept-Charset, Accept, Content-Type, Authorization');
-res.header('Allow', 'OPTIONS, GET');
+  res.header('Access-Control-Allow-Methods', 'OPTIONS, GET');
+  res.header('Access-Control-Allow-Headers', 'Accept-Charset, Accept, Content-Type, Authorization');
+  res.header('Allow', 'OPTIONS, GET');
 
-var response = undefined;
-var milestoneId = req.params.milestoneId;
+  var response = undefined;
+  var milestoneId = req.params.milestoneId;
 
-if (milestoneId === '250') {
- response = cardwall250;
-} else {
- res.status(404);
- response = error404;
-}
-res.send(response);
+  if (milestoneId === '250') {
+   response = cardwall250;
+  } else {
+   res.status(404);
+   response = error404;
+  }
+  res.send(response);
 };

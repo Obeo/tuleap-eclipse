@@ -45,30 +45,28 @@ exports.list = function(req, res) {
 
 ///top_plannings/:topPlanningId
 exports.options = function(req, res) {
-res.header('Access-Control-Allow-Methods', 'OPTIONS, GET');
-res.header('Access-Control-Allow-Headers',
-   'Accept-Charset, Accept, Content-Type, Authorization');
-res.header('Allow', 'OPTIONS, GET');
+  res.header('Access-Control-Allow-Methods', 'OPTIONS, GET');
+  res.header('Access-Control-Allow-Headers', 'Accept-Charset, Accept, Content-Type, Authorization');
+  res.header('Allow', 'OPTIONS, GET');
 
-res.send();
+  res.send();
 };
 
 exports.get = function(req, res) {
-res.header('Access-Control-Allow-Methods', 'OPTIONS, GET');
-res.header('Access-Control-Allow-Headers',
-   'Accept-Charset, Accept, Content-Type, Authorization');
-res.header('Allow', 'OPTIONS, GET');
+  res.header('Access-Control-Allow-Methods', 'OPTIONS, GET');
+  res.header('Access-Control-Allow-Headers', 'Accept-Charset, Accept, Content-Type, Authorization');
+  res.header('Allow', 'OPTIONS, GET');
 
-var response = undefined;
-var topPlanningId = req.params.topPlanningId;
+  var response = undefined;
+  var topPlanningId = req.params.topPlanningId;
 
-if (topPlanningId === '30') {
- response = topPlanning30;
-} else {
- res.status(404);
- response = error404;
-}
-res.send(response);
+  if (topPlanningId === '30') {
+    response = topPlanning30;
+  } else {
+    res.status(404);
+    response = error404;
+  }
+  res.send(response);
 };
 
 // /top_plannings/:topPlanningId/milestones
