@@ -296,22 +296,25 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				.getProjectConfiguration(projectId);
 
 		int configurationId = TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId(taskId);
-		AbstractTuleapConfigurableFieldsConfiguration configuration = projectConfiguration
-				.getConfigurableFieldsConfiguration(configurationId);
-
-		configuration = this.connector.refreshConfiguration(taskRepository, configuration, monitor);
 
 		TaskData taskData = null;
-		if (configuration instanceof TuleapTrackerConfiguration) {
-			taskData = this.getArtifactTaskData(taskId, serverConfiguration, taskRepository, monitor);
-		} else if (configuration instanceof TuleapMilestoneType) {
-			taskData = this.getMilestoneTaskData(taskId, serverConfiguration, taskRepository, monitor);
-		} else if (configuration instanceof TuleapBacklogItemType) {
-			// TODO SBE retrieval of the backlog item from the server
-			// taskData = this.getBacklogItemTaskData(taskId, serverConfiguration, taskRepository, monitor);
-		} else if (TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId(taskId) == TuleapTaskIdentityUtil.IRRELEVANT_ID) {
+		if (configurationId == TuleapTaskIdentityUtil.IRRELEVANT_ID) {
 			// Top Planning
 			taskData = this.getTopPlanningTaskData(taskId, serverConfiguration, taskRepository, monitor);
+		} else {
+			AbstractTuleapConfigurableFieldsConfiguration configuration = projectConfiguration
+					.getConfigurableFieldsConfiguration(configurationId);
+			configuration = this.connector.refreshConfiguration(taskRepository, configuration, monitor);
+
+			if (configuration instanceof TuleapTrackerConfiguration) {
+				taskData = this.getArtifactTaskData(taskId, serverConfiguration, taskRepository, monitor);
+			} else if (configuration instanceof TuleapMilestoneType) {
+				taskData = this.getMilestoneTaskData(taskId, serverConfiguration, taskRepository, monitor);
+			} else if (configuration instanceof TuleapBacklogItemType) {
+				// TODO SBE retrieval of the backlog item from the server
+				// taskData = this.getBacklogItemTaskData(taskId, serverConfiguration, taskRepository,
+				// monitor);
+			}
 		}
 
 		return taskData;
