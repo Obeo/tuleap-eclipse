@@ -73,15 +73,11 @@ public class MilestoneTaskDataConverter extends AbstractElementTaskDataConverter
 		String taskKey = TuleapTaskIdentityUtil.getTaskDataKey(Integer.toString(projectId),
 				"General Planning", tuleapTopPlanning.getId()); //$NON-NLS-1$
 		TuleapConfigurableElementMapper mapper = new TuleapConfigurableElementMapper(taskData, null);
-		// TODO FIXME Create a dummy configuration for Top Plannings ?
 		TaskAttribute taskKeyAtt = taskData.getRoot().createMappedAttribute(TaskAttribute.TASK_KEY);
 		taskKeyAtt.setValue(taskKey);
 		mapper.setTaskKey(taskKey);
 
 		AgileTaskKindUtil.setAgileTaskKind(taskData, AgileTaskKindUtil.TASK_KIND_TOP_PLANNING);
-
-		// TODO CNO Realize the cardwall of the top planning
-		// this.populateCardwall(taskData, tuleapTopPlanning);
 	}
 
 	/**
@@ -161,7 +157,6 @@ public class MilestoneTaskDataConverter extends AbstractElementTaskDataConverter
 	private void populateCardwall(TaskData taskData, TuleapCardwall cardwall) {
 		CardwallWrapper wrapper = new CardwallWrapper(taskData.getRoot());
 		for (TuleapStatus column : cardwall.getStatuses()) {
-			// TODO Validate that there's no need to compute an ID with TuleapTaskIdentityUtil
 			wrapper.addColumn(Integer.toString(column.getId()), column.getLabel());
 		}
 		for (TuleapSwimlane swimlane : cardwall.getSwimlanes()) {
