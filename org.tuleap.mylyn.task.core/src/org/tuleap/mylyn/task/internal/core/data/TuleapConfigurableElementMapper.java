@@ -23,7 +23,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.agile.core.data.AgileTaskKindUtil;
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableFieldsConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItemType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
@@ -64,20 +64,20 @@ public class TuleapConfigurableElementMapper extends TuleapTaskMapper {
 	/**
 	 * The configuration.
 	 */
-	protected final AbstractTuleapConfigurableFieldsConfiguration tuleapConfigurableFieldsConfiguration;
+	protected final AbstractTuleapConfiguration configuration;
 
 	/**
 	 * The constructor.
 	 * 
 	 * @param taskData
 	 *            The task data
-	 * @param tuleapConfigurableFieldsConfiguration
+	 * @param configuration
 	 *            The configuration.
 	 */
 	public TuleapConfigurableElementMapper(TaskData taskData,
-			AbstractTuleapConfigurableFieldsConfiguration tuleapConfigurableFieldsConfiguration) {
+			AbstractTuleapConfiguration configuration) {
 		super(taskData);
-		this.tuleapConfigurableFieldsConfiguration = tuleapConfigurableFieldsConfiguration;
+		this.configuration = configuration;
 	}
 
 	/**
@@ -87,8 +87,8 @@ public class TuleapConfigurableElementMapper extends TuleapTaskMapper {
 		createTaskKindTaskAttribute();
 
 		// The project id and the configuration id
-		setProjectId(tuleapConfigurableFieldsConfiguration.getTuleapProjectConfiguration().getIdentifier());
-		setConfigurationId(tuleapConfigurableFieldsConfiguration.getIdentifier());
+		setProjectId(configuration.getTuleapProjectConfiguration().getIdentifier());
+		setConfigurationId(configuration.getIdentifier());
 
 		createCreationDateTaskAttribute();
 		createLastUpdateDateTaskAttribute();
@@ -99,18 +99,18 @@ public class TuleapConfigurableElementMapper extends TuleapTaskMapper {
 
 		// Default attributes
 		TaskAttribute root = taskData.getRoot();
-		Collection<AbstractTuleapField> fields = tuleapConfigurableFieldsConfiguration.getFields();
+		Collection<AbstractTuleapField> fields = configuration.getFields();
 		for (AbstractTuleapField abstractTuleapField : fields) {
 			if (abstractTuleapField.needsTaskAttributeForInitialization()) {
 				abstractTuleapField.createTaskAttribute(root);
 			}
 		}
 
-		if (this.tuleapConfigurableFieldsConfiguration instanceof TuleapTrackerConfiguration) {
+		if (this.configuration instanceof TuleapTrackerConfiguration) {
 			AgileTaskKindUtil.setAgileTaskKind(taskData, AgileTaskKindUtil.TASK_KIND_ARTIFACT);
-		} else if (this.tuleapConfigurableFieldsConfiguration instanceof TuleapMilestoneType) {
+		} else if (this.configuration instanceof TuleapMilestoneType) {
 			AgileTaskKindUtil.setAgileTaskKind(taskData, AgileTaskKindUtil.TASK_KIND_MILESTONE);
-		} else if (this.tuleapConfigurableFieldsConfiguration instanceof TuleapBacklogItemType) {
+		} else if (this.configuration instanceof TuleapBacklogItemType) {
 			AgileTaskKindUtil.setAgileTaskKind(taskData, AgileTaskKindUtil.TASK_KIND_BACKLOG_ITEM);
 		}
 
@@ -188,7 +188,7 @@ public class TuleapConfigurableElementMapper extends TuleapTaskMapper {
 	 */
 	private void createTaskKindTaskAttribute() {
 		TaskAttribute attribute = taskData.getRoot().createAttribute(TaskAttribute.TASK_KIND);
-		String name = tuleapConfigurableFieldsConfiguration.getLabel();
+		String name = configuration.getLabel();
 		if (name != null) {
 			attribute.setValue(name);
 		} else {
@@ -262,7 +262,7 @@ public class TuleapConfigurableElementMapper extends TuleapTaskMapper {
 		if (attribute != null) {
 			attribute.clearValues();
 			attribute.setValue(String.valueOf(statusItemId));
-			if (tuleapConfigurableFieldsConfiguration.hasClosedStatusMeaning(statusItemId)
+			if (configuration.hasClosedStatusMeaning(statusItemId)
 					&& getCompletionDate() == null) {
 				// Sets the completion date
 				// Hypothesis: the last update date is up to date, which is reasonable since it appears early
@@ -291,7 +291,7 @@ public class TuleapConfigurableElementMapper extends TuleapTaskMapper {
 	 */
 	private void updateStatusSelectBox(int statusItemId, TaskAttribute attribute) {
 		// update the options of the status field
-		AbstractTuleapSelectBox field = tuleapConfigurableFieldsConfiguration.getStatusField();
+		AbstractTuleapSelectBox field = configuration.getStatusField();
 		if (field instanceof TuleapSelectBox) {
 			TuleapSelectBox selectBox = (TuleapSelectBox)field;
 			if (selectBox.hasWorkflow()) {
@@ -330,7 +330,7 @@ public class TuleapConfigurableElementMapper extends TuleapTaskMapper {
 			}
 		}
 		// Take the workflow of the select box into account if it exists
-		AbstractTuleapField field = tuleapConfigurableFieldsConfiguration.getFieldById(fieldId);
+		AbstractTuleapField field = configuration.getFieldById(fieldId);
 		if (field instanceof TuleapSelectBox) {
 			TuleapSelectBox selectBox = (TuleapSelectBox)field;
 			selectBox.updateOptionsWithWorkflow(attribute);
@@ -358,7 +358,7 @@ public class TuleapConfigurableElementMapper extends TuleapTaskMapper {
 		// For the moment, we return all known values.
 		// Later, an improvement will be to return only those values that have changed.
 		for (TaskAttribute attribute : taskData.getRoot().getAttributes().values()) {
-			Collection<AbstractTuleapField> fields = this.tuleapConfigurableFieldsConfiguration.getFields();
+			Collection<AbstractTuleapField> fields = this.configuration.getFields();
 			for (AbstractTuleapField abstractTuleapField : fields) {
 				if (String.valueOf(abstractTuleapField.getIdentifier()).equals(attribute.getId())
 						&& shouldBeSentToTheServer(abstractTuleapField.getIdentifier())) {

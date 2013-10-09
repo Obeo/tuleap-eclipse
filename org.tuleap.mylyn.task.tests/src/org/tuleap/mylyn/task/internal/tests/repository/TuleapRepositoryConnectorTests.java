@@ -33,7 +33,7 @@ import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.data.TuleapConfigurableElementMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableFieldsConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapPlanningBinding;
@@ -174,9 +174,9 @@ public class TuleapRepositoryConnectorTests {
 			}
 
 			@Override
-			public AbstractTuleapConfigurableFieldsConfiguration refreshConfiguration(
+			public AbstractTuleapConfiguration refreshConfiguration(
 					TaskRepository taskRepository,
-					AbstractTuleapConfigurableFieldsConfiguration configuration, IProgressMonitor monitor)
+					AbstractTuleapConfiguration configuration, IProgressMonitor monitor)
 					throws CoreException {
 				return configuration;
 			}
@@ -249,9 +249,9 @@ public class TuleapRepositoryConnectorTests {
 			}
 
 			@Override
-			public AbstractTuleapConfigurableFieldsConfiguration refreshConfiguration(
+			public AbstractTuleapConfiguration refreshConfiguration(
 					TaskRepository taskRepository,
-					AbstractTuleapConfigurableFieldsConfiguration configuration, IProgressMonitor monitor)
+					AbstractTuleapConfiguration configuration, IProgressMonitor monitor)
 					throws CoreException {
 				return configuration;
 			}
@@ -323,9 +323,9 @@ public class TuleapRepositoryConnectorTests {
 			}
 
 			@Override
-			public AbstractTuleapConfigurableFieldsConfiguration refreshConfiguration(
+			public AbstractTuleapConfiguration refreshConfiguration(
 					TaskRepository taskRepository,
-					AbstractTuleapConfigurableFieldsConfiguration configuration, IProgressMonitor monitor)
+					AbstractTuleapConfiguration configuration, IProgressMonitor monitor)
 					throws CoreException {
 				return configuration;
 			}

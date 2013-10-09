@@ -27,7 +27,7 @@ import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public abstract class AbstractTuleapConfigurableFieldsConfiguration implements Serializable {
+public abstract class AbstractTuleapConfiguration implements Serializable {
 
 	/**
 	 * Serial version UID.
@@ -115,7 +115,7 @@ public abstract class AbstractTuleapConfigurableFieldsConfiguration implements S
 	 * @param lastUpdateDate
 	 *            The date at which the configuration was last updated.
 	 */
-	public AbstractTuleapConfigurableFieldsConfiguration(int identifier, String url, String label,
+	public AbstractTuleapConfiguration(int identifier, String url, String label,
 			String itemName, String description, long lastUpdateDate) {
 		this.identifier = identifier;
 		this.url = url;

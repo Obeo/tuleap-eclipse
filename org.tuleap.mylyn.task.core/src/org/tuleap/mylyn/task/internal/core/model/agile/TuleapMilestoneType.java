@@ -10,14 +10,14 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model.agile;
 
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableFieldsConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfiguration;
 
 /**
  * The type of a milestone describes the configuration of milestones of this type.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class TuleapMilestoneType extends AbstractTuleapConfigurableFieldsConfiguration {
+public class TuleapMilestoneType extends AbstractTuleapConfiguration {
 
 	/**
 	 * The serial version UID.

@@ -10,14 +10,14 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model.agile;
 
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableFieldsConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfiguration;
 
 /**
  * The type of a card describes the configuration of cards of this type. Cards appear on card walls.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class TuleapCardType extends AbstractTuleapConfigurableFieldsConfiguration {
+public class TuleapCardType extends AbstractTuleapConfiguration {
 
 	/**
 	 * The serial version UID.

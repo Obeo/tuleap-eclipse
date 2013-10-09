@@ -50,7 +50,7 @@ import org.tuleap.mylyn.task.internal.core.data.TuleapConfigurableElementMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.data.converter.ArtifactTaskDataConverter;
 import org.tuleap.mylyn.task.internal.core.data.converter.MilestoneTaskDataConverter;
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableFieldsConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
@@ -302,7 +302,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			TuleapTrackerConfiguration trackerConfiguration = repositoryConfiguration
 					.getTrackerConfiguration(trackerId);
 			try {
-				AbstractTuleapConfigurableFieldsConfiguration refreshedConfiguration = this
+				AbstractTuleapConfiguration refreshedConfiguration = this
 						.refreshConfiguration(taskRepository, trackerConfiguration, monitor);
 				if (refreshedConfiguration instanceof TuleapTrackerConfiguration) {
 					trackerConfiguration = (TuleapTrackerConfiguration)refreshedConfiguration;
@@ -420,7 +420,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		TuleapProjectConfiguration projectConfiguration = configuration
 				.getProjectConfiguration(TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(taskData
 						.getTaskId()));
-		AbstractTuleapConfigurableFieldsConfiguration tuleapConfigurableFieldsConfiguration = projectConfiguration
+		AbstractTuleapConfiguration tuleapConfigurableFieldsConfiguration = projectConfiguration
 				.getConfigurableFieldsConfiguration(TuleapTaskIdentityUtil
 						.getConfigurationIdFromTaskDataId(taskData.getTaskId()));
 
@@ -453,7 +453,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 * @return <code>true</code> if the current status matches a closed status, <code>false</code> otherwise.
 	 */
 	private boolean isTaskCompleted(int currentStatus,
-			AbstractTuleapConfigurableFieldsConfiguration configuration) {
+			AbstractTuleapConfiguration configuration) {
 		if (configuration != null) {
 			Collection<AbstractTuleapField> fields = configuration.getFields();
 			for (AbstractTuleapField abstractTuleapField : fields) {
@@ -512,15 +512,15 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 * {@inheritDoc}
 	 * 
 	 * @see org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector#refreshConfiguration(org.eclipse.mylyn.tasks.core.TaskRepository,
-	 *      org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableFieldsConfiguration,
+	 *      org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfiguration,
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public AbstractTuleapConfigurableFieldsConfiguration refreshConfiguration(TaskRepository taskRepository,
-			AbstractTuleapConfigurableFieldsConfiguration configuration, IProgressMonitor monitor)
+	public AbstractTuleapConfiguration refreshConfiguration(TaskRepository taskRepository,
+			AbstractTuleapConfiguration configuration, IProgressMonitor monitor)
 			throws CoreException {
 		TuleapProjectConfiguration projectConfiguration = configuration.getTuleapProjectConfiguration();
 
-		AbstractTuleapConfigurableFieldsConfiguration refreshedConfiguration = null;
+		AbstractTuleapConfiguration refreshedConfiguration = null;
 		if (configuration instanceof TuleapTrackerConfiguration) {
 			TuleapSoapClient tuleapSoapClient = this.getClientManager().getSoapClient(taskRepository);
 			refreshedConfiguration = tuleapSoapClient.getTuleapTrackerConfiguration(projectConfiguration,

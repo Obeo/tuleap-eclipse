@@ -17,7 +17,7 @@ import com.google.gson.JsonObject;
 
 import org.eclipse.core.runtime.Assert;
 import org.tuleap.mylyn.task.internal.core.config.ITuleapConfigurationConstants;
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableFieldsConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapGroup;
 import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
@@ -44,7 +44,7 @@ import org.tuleap.mylyn.task.internal.core.model.workflow.TuleapWorkflowTransiti
  *            The type of the configuration.
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public abstract class AbstractTuleapConfigurationDeserializer<CONFIGURATION_TYPE extends AbstractTuleapConfigurableFieldsConfiguration> implements JsonDeserializer<CONFIGURATION_TYPE> {
+public abstract class AbstractTuleapConfigurationDeserializer<CONFIGURATION_TYPE extends AbstractTuleapConfiguration> implements JsonDeserializer<CONFIGURATION_TYPE> {
 
 	/**
 	 * The identifier keyword.

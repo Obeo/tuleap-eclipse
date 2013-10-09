@@ -31,7 +31,7 @@ import org.tuleap.mylyn.task.internal.core.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.TuleapConfigurableElementMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableElement;
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableFieldsConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapElementComment;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
@@ -46,10 +46,10 @@ import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector
  * @param <ELEMENT>
  *            The kind of {@link AbstractTuleapConfigurableElement} to use.
  * @param <CONFIGURATION>
- *            The kind of {@link AbstractTuleapConfigurableFieldsConfiguration} to use.
+ *            The kind of {@link AbstractTuleapConfiguration} to use.
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public abstract class AbstractElementTaskDataConverter<ELEMENT extends AbstractTuleapConfigurableElement, CONFIGURATION extends AbstractTuleapConfigurableFieldsConfiguration> {
+public abstract class AbstractElementTaskDataConverter<ELEMENT extends AbstractTuleapConfigurableElement, CONFIGURATION extends AbstractTuleapConfiguration> {
 
 	/**
 	 * The configuration of the kind of elements.
@@ -69,7 +69,7 @@ public abstract class AbstractElementTaskDataConverter<ELEMENT extends AbstractT
 	/**
 	 * Map of refreshed configurations to only refresh them once during the "transaction".
 	 */
-	private final Map<Integer, AbstractTuleapConfigurableFieldsConfiguration> refreshedConfigurationsById = Maps
+	private final Map<Integer, AbstractTuleapConfiguration> refreshedConfigurationsById = Maps
 			.newHashMap();
 
 	/**
@@ -245,7 +245,7 @@ public abstract class AbstractElementTaskDataConverter<ELEMENT extends AbstractT
 	 *            The progress monitor to use
 	 */
 	protected void refreshConfiguration(int projectId, int configurationId, IProgressMonitor monitor) {
-		AbstractTuleapConfigurableFieldsConfiguration refreshedConfig;
+		AbstractTuleapConfiguration refreshedConfig;
 		if (refreshedConfigurationsById.containsKey(Integer.valueOf(configurationId))) {
 			refreshedConfig = refreshedConfigurationsById.get(Integer.valueOf(configurationId));
 		} else {

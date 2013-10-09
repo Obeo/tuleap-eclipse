@@ -33,7 +33,7 @@ import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.data.TuleapConfigurableElementMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableFieldsConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
@@ -153,15 +153,15 @@ public class TuleapTaskDataHandlerTests {
 				return null;
 			}
 
-			public AbstractTuleapConfigurableFieldsConfiguration refreshConfiguration(
+			public AbstractTuleapConfiguration refreshConfiguration(
 					TaskRepository taskRepository,
-					AbstractTuleapConfigurableFieldsConfiguration configuration, IProgressMonitor monitor) {
+					AbstractTuleapConfiguration configuration, IProgressMonitor monitor) {
 				return null;
 			}
 		};
 
 		TuleapTaskDataHandler tuleapTaskDataHandler = new TuleapTaskDataHandler(repositoryConnector);
-		AbstractTuleapConfigurableFieldsConfiguration configuration = this.tuleapServerConfiguration
+		AbstractTuleapConfiguration configuration = this.tuleapServerConfiguration
 				.getProjectConfiguration(projectId).getConfigurableFieldsConfiguration(configurationId);
 
 		TaskData taskData = new TaskData(tuleapTaskDataHandler.getAttributeMapper(repository),
@@ -289,9 +289,9 @@ public class TuleapTaskDataHandlerTests {
 				return tuleapClientManager;
 			}
 
-			public AbstractTuleapConfigurableFieldsConfiguration refreshConfiguration(
+			public AbstractTuleapConfiguration refreshConfiguration(
 					TaskRepository taskRepository,
-					AbstractTuleapConfigurableFieldsConfiguration configuration, IProgressMonitor monitor) {
+					AbstractTuleapConfiguration configuration, IProgressMonitor monitor) {
 				return configuration;
 			}
 		};
@@ -407,9 +407,9 @@ public class TuleapTaskDataHandlerTests {
 				return tuleapClientManager;
 			}
 
-			public AbstractTuleapConfigurableFieldsConfiguration refreshConfiguration(
+			public AbstractTuleapConfiguration refreshConfiguration(
 					TaskRepository taskRepository,
-					AbstractTuleapConfigurableFieldsConfiguration configuration, IProgressMonitor monitor) {
+					AbstractTuleapConfiguration configuration, IProgressMonitor monitor) {
 				return configuration;
 			}
 		};

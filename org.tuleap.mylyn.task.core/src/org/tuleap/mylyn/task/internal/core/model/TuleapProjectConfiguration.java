@@ -334,18 +334,18 @@ public class TuleapProjectConfiguration implements Serializable {
 	}
 
 	/**
-	 * Returns the {@link AbstractTuleapConfigurableFieldsConfiguration} with the given identifier, or
+	 * Returns the {@link AbstractTuleapConfiguration} with the given identifier, or
 	 * <code>null</code> if none can be found. The configuration is first seeked among agile configurations,
 	 * then, in last resort, among tracker configurations.
 	 * 
 	 * @param configurationId
 	 *            The identifier of the configuration
-	 * @return The {@link AbstractTuleapConfigurableFieldsConfiguration} with the given identifier, or
+	 * @return The {@link AbstractTuleapConfiguration} with the given identifier, or
 	 *         <code>null</code> if none can be found
 	 */
-	public AbstractTuleapConfigurableFieldsConfiguration getConfigurableFieldsConfiguration(
+	public AbstractTuleapConfiguration getConfigurableFieldsConfiguration(
 			int configurationId) {
-		AbstractTuleapConfigurableFieldsConfiguration configuration = null;
+		AbstractTuleapConfiguration configuration = null;
 		Integer configId = Integer.valueOf(configurationId);
 
 		configuration = milestoneTypesById.get(configId);

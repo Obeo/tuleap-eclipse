@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableFieldsConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 
 /**
@@ -55,7 +55,7 @@ public interface ITuleapRepositoryConnector {
 	 * @throws CoreException
 	 *             In case of issues during the connection with the server
 	 */
-	AbstractTuleapConfigurableFieldsConfiguration refreshConfiguration(TaskRepository taskRepository,
-			AbstractTuleapConfigurableFieldsConfiguration configuration, IProgressMonitor monitor)
+	AbstractTuleapConfiguration refreshConfiguration(TaskRepository taskRepository,
+			AbstractTuleapConfiguration configuration, IProgressMonitor monitor)
 			throws CoreException;
 }

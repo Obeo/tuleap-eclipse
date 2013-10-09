@@ -11,7 +11,7 @@
 package org.tuleap.mylyn.task.internal.core.repository;
 
 import org.eclipse.mylyn.tasks.core.TaskMapping;
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableFieldsConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfiguration;
 
 /**
  * The Tuleap task mapping provides additional mapping compared to the regular TaskMapping.
@@ -23,7 +23,7 @@ public class TuleapTaskMapping extends TaskMapping {
 	/**
 	 * The configuration of the element.
 	 */
-	private AbstractTuleapConfigurableFieldsConfiguration configuration;
+	private AbstractTuleapConfiguration configuration;
 
 	/**
 	 * The constructor.
@@ -31,7 +31,7 @@ public class TuleapTaskMapping extends TaskMapping {
 	 * @param configuration
 	 *            The configuration of the element
 	 */
-	public TuleapTaskMapping(AbstractTuleapConfigurableFieldsConfiguration configuration) {
+	public TuleapTaskMapping(AbstractTuleapConfiguration configuration) {
 		this.configuration = configuration;
 	}
 
@@ -40,7 +40,7 @@ public class TuleapTaskMapping extends TaskMapping {
 	 * 
 	 * @return The configuration in which the task is created.
 	 */
-	public AbstractTuleapConfigurableFieldsConfiguration getConfiguration() {
+	public AbstractTuleapConfiguration getConfiguration() {
 		return this.configuration;
 	}
 }

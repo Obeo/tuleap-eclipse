@@ -30,7 +30,7 @@ import org.tuleap.mylyn.task.internal.core.data.TuleapConfigurableElementMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.data.converter.ArtifactTaskDataConverter;
 import org.tuleap.mylyn.task.internal.core.data.converter.MilestoneTaskDataConverter;
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableFieldsConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItemType;
@@ -88,7 +88,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		TuleapProjectConfiguration projectConfiguration = tuleapServerConfiguration
 				.getProjectConfiguration(projectId);
 
-		AbstractTuleapConfigurableFieldsConfiguration configuration = projectConfiguration
+		AbstractTuleapConfiguration configuration = projectConfiguration
 				.getConfigurableFieldsConfiguration(configurationId);
 
 		configuration = this.connector.refreshConfiguration(taskRepository, configuration, monitor);
@@ -239,7 +239,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			if (initializationData instanceof TuleapTaskMapping) {
 				TuleapTaskMapping tuleapTaskMapping = (TuleapTaskMapping)initializationData;
 
-				AbstractTuleapConfigurableFieldsConfiguration configuration = tuleapTaskMapping
+				AbstractTuleapConfiguration configuration = tuleapTaskMapping
 						.getConfiguration();
 
 				if (configuration != null) {
@@ -302,7 +302,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			// Top Planning
 			taskData = this.getTopPlanningTaskData(taskId, serverConfiguration, taskRepository, monitor);
 		} else {
-			AbstractTuleapConfigurableFieldsConfiguration configuration = projectConfiguration
+			AbstractTuleapConfiguration configuration = projectConfiguration
 					.getConfigurableFieldsConfiguration(configurationId);
 			configuration = this.connector.refreshConfiguration(taskRepository, configuration, monitor);
 

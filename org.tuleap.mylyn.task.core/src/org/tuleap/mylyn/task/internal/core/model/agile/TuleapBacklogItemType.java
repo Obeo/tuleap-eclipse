@@ -10,14 +10,14 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model.agile;
 
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableFieldsConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfiguration;
 
 /**
  * The type of a backlog item describes the configuration of backlog items of this type.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class TuleapBacklogItemType extends AbstractTuleapConfigurableFieldsConfiguration {
+public class TuleapBacklogItemType extends AbstractTuleapConfiguration {
 
 	/**
 	 * The serial version UID.

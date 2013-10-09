@@ -156,7 +156,7 @@ public class TuleapServerConfiguration implements Serializable {
 	 *            The new version of the configuration
 	 */
 	public void replaceConfiguration(int projectId,
-			AbstractTuleapConfigurableFieldsConfiguration configuration) {
+			AbstractTuleapConfiguration configuration) {
 		TuleapProjectConfiguration projectConfiguration = this.projectId2projectConfiguration.get(Integer
 				.valueOf(projectId));
 		if (projectConfiguration != null) {

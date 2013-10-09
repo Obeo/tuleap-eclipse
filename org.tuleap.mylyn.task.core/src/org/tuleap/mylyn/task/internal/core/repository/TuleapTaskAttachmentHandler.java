@@ -37,7 +37,7 @@ import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapConnector;
 import org.tuleap.mylyn.task.internal.core.data.TuleapConfigurableElementMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableFieldsConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapAttachmentDescriptor;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
@@ -119,7 +119,7 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 				.getTuleapServerConfiguration(repository.getRepositoryUrl());
 		TuleapProjectConfiguration projectConfiguration = tuleapServerConfiguration
 				.getProjectConfiguration(projectId);
-		AbstractTuleapConfigurableFieldsConfiguration configuration = projectConfiguration
+		AbstractTuleapConfiguration configuration = projectConfiguration
 				.getConfigurableFieldsConfiguration(configurationId);
 
 		if (configuration != null) {
@@ -195,7 +195,7 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 				.createWebLocation(repository);
 		TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(abstractWebLocation);
 
-		AbstractTuleapConfigurableFieldsConfiguration configuration = null;
+		AbstractTuleapConfiguration configuration = null;
 
 		// Let's find the tracker configuration
 		TuleapServerConfiguration repositoryConfiguration = this.connector

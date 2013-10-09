@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.tuleap.mylyn.task.internal.core.data.TuleapConfigurableElementMapper;
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableFieldsConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
@@ -153,7 +153,7 @@ public class TuleapTaskAttachmentPage extends TaskAttachmentPage {
 
 			TuleapProjectConfiguration projectConfiguration = repositoryConfiguration
 					.getProjectConfiguration(projectId);
-			AbstractTuleapConfigurableFieldsConfiguration configuration = projectConfiguration
+			AbstractTuleapConfiguration configuration = projectConfiguration
 					.getConfigurableFieldsConfiguration(configurationId);
 			Collection<AbstractTuleapField> fields = configuration.getFields();
 			for (AbstractTuleapField abstractTuleapField : fields) {

@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableFieldsConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfiguration;
 
 /**
  * The repository configuration will hold the latest known configuration of a given repository. This
@@ -24,7 +24,7 @@ import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableField
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
-public class TuleapTrackerConfiguration extends AbstractTuleapConfigurableFieldsConfiguration {
+public class TuleapTrackerConfiguration extends AbstractTuleapConfiguration {
 	/**
 	 * The serialization version ID.
 	 */
