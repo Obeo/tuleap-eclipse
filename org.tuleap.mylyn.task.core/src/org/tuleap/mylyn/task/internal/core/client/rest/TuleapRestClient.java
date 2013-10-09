@@ -783,13 +783,11 @@ public class TuleapRestClient {
 			throws CoreException {
 		RestResources restResources = tuleapRestConnector.resources(credentials);
 
-		// 1- Retrieve the list of top planning ids
+		// 1- Retrieve the list of top plannings
 		RestProjectsTopPlannings projectTopPlannings = restResources.projectsTopPlannings(projectId);
 		projectTopPlannings.checkGet(Collections.<String, String> emptyMap());
 		ServerResponse topPlanningsResponse = projectTopPlannings
 				.get(Collections.<String, String> emptyMap());
-		// Contains a JSON array of integers
-
 		List<TuleapTopPlanning> topPlannings = this.jsonParser.parseTopPlannings(topPlanningsResponse
 				.getBody());
 		for (TuleapTopPlanning topPlanning : topPlannings) {
