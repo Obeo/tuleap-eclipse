@@ -49,10 +49,12 @@ app.configure(function(){
   app.use(app.router);
 });
 
+var apiPrefix = '/api/';
+
 // Invalid version of the API
 app.all('/*', function (req, res, next) {
   var url = req.url;
-  if (url.indexOf('/api/') != -1) {
+  if (url.indexOf(apiPrefix) != -1) {
     var paths = url.split('/');
     var apiVersionString = paths[2];
     
@@ -146,97 +148,11 @@ var auth = express.basicAuth(function(user, password) {
   return user != 'test' && password != 'test';
 });
 
-// API
-var api = require('./controllers/api.js');
-app.options('/api/' + apiVersion, api.options);
-app.get('/api/' + apiVersion, api.get);
+// Static files
+app.use(express.static(__dirname + '/public'));
 
-//User
-var user = require('./controllers/user.js');
-app.options('/api/' + apiVersion + '/user', user.options);
-app.get('/api/' + apiVersion + '/user', auth, user.get);
-
-// Projects
-var projects = require('./controllers/projects.js');
-app.options('/api/' + apiVersion + '/projects', projects.optionsList);
-app.get('/api/' + apiVersion + '/projects', auth, projects.list);
-
-app.options('/api/' + apiVersion + '/projects/:projectId', projects.options);
-app.get('/api/' + apiVersion + '/projects/:projectId', auth, projects.get);
-
-// Trackers
-var trackers = require('./controllers/trackers.js');
-app.options('/api/' + apiVersion + '/projects/:projectId/trackers', trackers.optionsList);
-app.get('/api/' + apiVersion + '/projects/:projectId/trackers', auth, trackers.list);
-
-app.options('/api/' + apiVersion + '/trackers/:trackerId', trackers.options);
-app.get('/api/' + apiVersion + '/trackers/:trackerId', auth, trackers.get);
-
-// Artifacts
-var artifacts = require('./controllers/artifacts.js');
-app.options('/api/' + apiVersion + '/artifacts/:artifactId', artifacts.options);
-app.get('/api/' + apiVersion + '/artifacts/:artifactId', auth, artifacts.get);
-
-// Milestone types
-var milestone_types = require('./controllers/milestone_types.js');
-// Getting all the milestone types of a project
-app.options('/api/' + apiVersion + '/projects/:projectId/milestone_types', milestone_types.optionsList);
-app.get('/api/' + apiVersion + '/projects/:projectId/milestone_types', auth, milestone_types.list);
-// Getting a milestone type by id
-app.options('/api/' + apiVersion + '/milestone_types/:typeId', milestone_types.options);
-app.get('/api/' + apiVersion + '/milestone_types/:typeId', auth, milestone_types.get);
-
-// Backlog item types
-var bi_types = require('./controllers/backlog_item_types.js');
-// Getting all the backlog item types of a project
-app.options('/api/' + apiVersion + '/projects/:projectId/backlog_item_types', bi_types.optionsList);
-app.get('/api/' + apiVersion + '/projects/:projectId/backlog_item_types', auth, bi_types.list);
-// Getting a backlog item type by id
-app.options('/api/' + apiVersion + '/backlog_item_types/:typeId', bi_types.options);
-app.get('/api/' + apiVersion + '/backlog_item_types/:typeId', auth, bi_types.get);
-
-//Card types
-var card_types = require('./controllers/card_types.js');
-//Getting all the milestone types of a project
-app.options('/api/' + apiVersion + '/projects/:projectId/card_types', card_types.optionsList);
-app.get('/api/' + apiVersion + '/projects/:projectId/card_types', auth, card_types.list);
-//Getting a milestone type by id
-app.options('/api/' + apiVersion + '/card_types/:typeId', card_types.options);
-app.get('/api/' + apiVersion + '/card_types/:typeId', auth, card_types.get);
-
-// Top plannings
-var top_plannings = require('./controllers/top_plannings.js');
-// Getting the top plannings of a project
-app.options('/api/' + apiVersion + '/projects/:projectId/top_plannings', top_plannings.optionsList);
-app.get('/api/' + apiVersion + '/projects/:projectId/top_plannings', auth, top_plannings.list);
-// Getting the milestones of a top planning
-app.options('/api/' + apiVersion + '/top_plannings/:topPlanningId/milestones', top_plannings.optionsMilestones);
-app.get('/api/' + apiVersion + '/top_plannings/:topPlanningId/milestones', auth, top_plannings.milestones);
-//Getting the backlog items of a top planning
-app.options('/api/v3.14/top_plannings/:topPlanningId/backlog_items', top_plannings.optionsBacklogItems);
-app.get('/api/' + apiVersion + '/top_plannings/:topPlanningId/backlog_items', auth, top_plannings.backlogItems);
-// Getting one top planning
-app.options('/api/' + apiVersion + '/top_plannings/:topPlanningId', top_plannings.options);
-app.get('/api/' + apiVersion + '/top_plannings/:topPlanningId', auth, top_plannings.get);
-
-// Milestones
-var milestones = require('./controllers/milestones.js');
-//Getting the list of milestones
-app.options('/api/' + apiVersion + '/milestones', milestones.optionsList);
-app.get('/api/' + apiVersion + '/milestones', auth, milestones.list);
-//Getting one milestone
-app.options('/api/' + apiVersion + '/milestones/:milestoneId', milestones.options);
-app.get('/api/' + apiVersion + '/milestones/:milestoneId', auth, milestones.get);
-//Getting the sub-milestones of a milestone
-app.options('/api/' + apiVersion + '/milestones/:milestoneId/submilestones', milestones.optionsSubmilestones);
-app.get('/api/' + apiVersion + '/milestones/:milestoneId/submilestones', auth, milestones.submilestones);
-//Getting the backlog items of a milestone
-app.options('/api/' + apiVersion + '/milestones/:milestoneId/backlog_items', milestones.optionsBacklogItems);
-app.get('/api/' + apiVersion + '/milestones/:milestoneId/backlog_items', auth, milestones.backlogItems);
-//Getting the card wall of a milestone
-app.options('/api/' + apiVersion + '/milestones/:milestoneId/cardwall', milestones.optionsCardwall);
-app.get('/api/' + apiVersion + '/milestones/:milestoneId/cardwall', auth, milestones.cardwall);
-
+// Load the controllers dynamically
+require('./routes/routes.js')(app, apiPrefix + apiVersion);
 
 //BacklogItems
 var backlogItems = require('./controllers/backlogItems.js');
