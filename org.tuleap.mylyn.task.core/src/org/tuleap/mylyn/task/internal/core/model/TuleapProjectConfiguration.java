@@ -335,7 +335,8 @@ public class TuleapProjectConfiguration implements Serializable {
 
 	/**
 	 * Returns the {@link AbstractTuleapConfigurableFieldsConfiguration} with the given identifier, or
-	 * <code>null</code> if none can be found.
+	 * <code>null</code> if none can be found. The configuration is first seeked among agile configurations,
+	 * then, in last resort, among tracker configurations.
 	 * 
 	 * @param configurationId
 	 *            The identifier of the configuration
@@ -345,33 +346,18 @@ public class TuleapProjectConfiguration implements Serializable {
 	public AbstractTuleapConfigurableFieldsConfiguration getConfigurableFieldsConfiguration(
 			int configurationId) {
 		AbstractTuleapConfigurableFieldsConfiguration configuration = null;
+		Integer configId = Integer.valueOf(configurationId);
 
-		Collection<TuleapTrackerConfiguration> trackerConfiguration = this.trackerId2trackerConfiguration
-				.values();
-		for (TuleapTrackerConfiguration tuleapTrackerConfiguration : trackerConfiguration) {
-			if (tuleapTrackerConfiguration.getIdentifier() == configurationId) {
-				configuration = tuleapTrackerConfiguration;
-			}
-		}
-
+		configuration = milestoneTypesById.get(configId);
 		if (configuration == null) {
-			Collection<TuleapMilestoneType> milestoneTypes = this.milestoneTypesById.values();
-			for (TuleapMilestoneType tuleapMilestoneType : milestoneTypes) {
-				if (tuleapMilestoneType.getIdentifier() == configurationId) {
-					configuration = tuleapMilestoneType;
-				}
-			}
+			configuration = backlogItemTypesById.get(configId);
 		}
-
 		if (configuration == null) {
-			Collection<TuleapBacklogItemType> backlogItemTypes = this.backlogItemTypesById.values();
-			for (TuleapBacklogItemType tuleapBacklogItemType : backlogItemTypes) {
-				if (tuleapBacklogItemType.getIdentifier() == configurationId) {
-					configuration = tuleapBacklogItemType;
-				}
-			}
+			configuration = cardTypesById.get(configId);
 		}
-
+		if (configuration == null) {
+			configuration = trackerId2trackerConfiguration.get(configId);
+		}
 		return configuration;
 	}
 }
