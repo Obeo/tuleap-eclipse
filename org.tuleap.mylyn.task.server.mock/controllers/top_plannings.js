@@ -11,9 +11,9 @@
 var fs = require('fs');
 
 var topPlannings = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/top_plannings/top_plannings_prj3.json').toString());
-var topPlanning30 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/top_plannings/milestones.json').toString());
-var milestones = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/top_plannings/backlog_items.json').toString());
-var backlogItems = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/top_plannings/top_planning_30.json').toString());
+var milestones = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/top_plannings/milestones.json').toString());
+var backlogItems = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/top_plannings/backlog_items.json').toString());
+var topPlanning30 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/top_plannings/top_planning_30.json').toString());
 
 var error404 = JSON.parse(fs.readFileSync('../org.tuleap.mylyn.task.server.data/f_tests/errors/404.json').toString());
 
