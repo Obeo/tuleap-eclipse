@@ -42,7 +42,8 @@ public interface ITuleapRepositoryConnector {
 
 	/**
 	 * Returns a refreshed version of the given configuration. This operation will communicate with the
-	 * server.
+	 * server. The server configuration will be modified to contain the refreshed version of the
+	 * configuration.
 	 * 
 	 * @param taskRepository
 	 *            the Mylyn task repository
