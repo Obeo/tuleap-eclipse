@@ -10,11 +10,19 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.data.converter;
 
+import com.google.common.collect.Maps;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.data.AbstractFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.AttachmentFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.AttachmentValue;
@@ -26,9 +34,11 @@ import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableEleme
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableFieldsConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapElementComment;
+import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.AbstractTuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapFileUpload;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
+import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 
 /**
  * Common ancestor of all the task data converter.
@@ -47,13 +57,38 @@ public abstract class AbstractElementTaskDataConverter<ELEMENT extends AbstractT
 	protected final CONFIGURATION configuration;
 
 	/**
+	 * The task repository to use.
+	 */
+	protected final TaskRepository taskRepository;
+
+	/**
+	 * The connector to use.
+	 */
+	protected final ITuleapRepositoryConnector connector;
+
+	/**
+	 * Map of refreshed configurations to only refresh them once during the "transaction".
+	 */
+	private final Map<Integer, AbstractTuleapConfigurableFieldsConfiguration> refreshedConfigurationsById = Maps
+			.newHashMap();
+
+	/**
 	 * The constructor.
 	 * 
 	 * @param configuration
-	 *            The configuration
+	 *            The configuration.
+	 * @param taskRepository
+	 *            The task repository to use.
+	 * @param connector
+	 *            The repository connector to use.
 	 */
-	public AbstractElementTaskDataConverter(CONFIGURATION configuration) {
-		this.configuration = configuration;
+	public AbstractElementTaskDataConverter(CONFIGURATION configuration, TaskRepository taskRepository,
+			ITuleapRepositoryConnector connector) {
+		this.configuration = configuration; // Can be null
+		Assert.isNotNull(taskRepository);
+		Assert.isNotNull(connector);
+		this.taskRepository = taskRepository;
+		this.connector = connector;
 	}
 
 	/**
@@ -63,8 +98,10 @@ public abstract class AbstractElementTaskDataConverter<ELEMENT extends AbstractT
 	 *            the task data to fill/update with the given milestone.
 	 * @param element
 	 *            The element to use to populate the task data
+	 * @param monitor
+	 *            The progress monitor to use
 	 */
-	public abstract void populateTaskData(TaskData taskData, ELEMENT element);
+	public abstract void populateTaskData(TaskData taskData, ELEMENT element, IProgressMonitor monitor);
 
 	/**
 	 * Utility operation used to populate the task data with all the information from the configurable fields
@@ -195,5 +232,41 @@ public abstract class AbstractElementTaskDataConverter<ELEMENT extends AbstractT
 	protected ELEMENT populateElementConfigurableFields(TaskData taskData, ELEMENT element) {
 		// to do
 		return element;
+	}
+
+	/**
+	 * Refresh the configuration if it has not already been refreshed.
+	 * 
+	 * @param projectId
+	 *            The project Id
+	 * @param configurationId
+	 *            The configuration Id
+	 * @param monitor
+	 *            The progress monitor to use
+	 */
+	protected void refreshConfiguration(int projectId, int configurationId, IProgressMonitor monitor) {
+		AbstractTuleapConfigurableFieldsConfiguration refreshedConfig;
+		if (refreshedConfigurationsById.containsKey(Integer.valueOf(configurationId))) {
+			refreshedConfig = refreshedConfigurationsById.get(Integer.valueOf(configurationId));
+		} else {
+			// Let's refresh the configuration
+			// First, let's get the element's project config, in case the element comes from a
+			// different project, who knows...
+			TuleapProjectConfiguration projectConfiguration;
+			if (configuration != null) {
+				projectConfiguration = configuration.getTuleapProjectConfiguration();
+			} else {
+				projectConfiguration = connector.getTuleapServerConfiguration(taskRepository.getUrl())
+						.getProjectConfiguration(projectId);
+			}
+			refreshedConfig = projectConfiguration.getConfigurableFieldsConfiguration(configurationId);
+			try {
+				refreshedConfigurationsById.put(Integer.valueOf(configurationId), connector
+						.refreshConfiguration(taskRepository, refreshedConfig, monitor));
+			} catch (CoreException e) {
+				// TODO Check this is the right way to log
+				TuleapCoreActivator.log(e, false);
+			}
+		}
 	}
 }

@@ -14,6 +14,8 @@ import com.google.common.collect.Maps;
 
 import java.util.Map;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.agile.core.data.AgileTaskKindUtil;
@@ -24,6 +26,7 @@ import org.tuleap.mylyn.task.agile.core.data.planning.BacklogItemWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.MilestonePlanningWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.SubMilestoneWrapper;
 import org.tuleap.mylyn.task.internal.core.data.AbstractFieldValue;
+import org.tuleap.mylyn.task.internal.core.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.TuleapConfigurableElementMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
@@ -36,6 +39,7 @@ import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapStatus;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapSwimlane;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
+import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 
 /**
  * Class to convert a milestone to task data and task data to milestone.
@@ -50,9 +54,14 @@ public class MilestoneTaskDataConverter extends AbstractElementTaskDataConverter
 	 * 
 	 * @param configuration
 	 *            The configuration of the milestones.
+	 * @param taskRepository
+	 *            The task repository to use.
+	 * @param connector
+	 *            The repository connector to use.
 	 */
-	public MilestoneTaskDataConverter(TuleapMilestoneType configuration) {
-		super(configuration);
+	public MilestoneTaskDataConverter(TuleapMilestoneType configuration, TaskRepository taskRepository,
+			ITuleapRepositoryConnector connector) {
+		super(configuration, taskRepository, connector);
 	}
 
 	/**
@@ -64,9 +73,12 @@ public class MilestoneTaskDataConverter extends AbstractElementTaskDataConverter
 	 *            The top planning
 	 * @param projectId
 	 *            the project id
+	 * @param monitor
+	 *            The progress monitor to use
 	 */
-	public void populateTaskData(TaskData taskData, TuleapTopPlanning tuleapTopPlanning, int projectId) {
-		this.populatePlanning(taskData, tuleapTopPlanning);
+	public void populateTaskData(TaskData taskData, TuleapTopPlanning tuleapTopPlanning, int projectId,
+			IProgressMonitor monitor) {
+		this.populatePlanning(taskData, tuleapTopPlanning, monitor);
 
 		// Task Key
 		// TODO Externalize String
@@ -83,20 +95,21 @@ public class MilestoneTaskDataConverter extends AbstractElementTaskDataConverter
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.data.converter.AbstractElementTaskDataConverter#populateTaskData(org.eclipse.mylyn.tasks.core.data.TaskData,
-	 *      org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableElement)
+	 * @see org.tuleap.mylyn.task.internal.core.data.converter.AbstractElementTaskDataConverter#populateTaskData
+	 *      (TaskData, org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableElement,
+	 *      IProgressMonitor)
 	 */
 	@Override
-	public void populateTaskData(TaskData taskData, TuleapMilestone milestone) {
+	public void populateTaskData(TaskData taskData, TuleapMilestone milestone, IProgressMonitor monitor) {
 		super.populateTaskDataConfigurableFields(taskData, milestone);
 
-		this.populatePlanning(taskData, milestone);
+		this.populatePlanning(taskData, milestone, monitor);
 
 		AgileTaskKindUtil.setAgileTaskKind(taskData, AgileTaskKindUtil.TASK_KIND_MILESTONE);
 
 		TuleapCardwall cardwall = milestone.getCardwall();
 		if (cardwall != null) {
-			populateCardwall(taskData, cardwall);
+			populateCardwall(taskData, cardwall, monitor);
 		}
 	}
 
@@ -107,8 +120,10 @@ public class MilestoneTaskDataConverter extends AbstractElementTaskDataConverter
 	 *            The task data to fill.
 	 * @param planning
 	 *            The pojo.
+	 * @param monitor
+	 *            The progress monitor to use
 	 */
-	private void populatePlanning(TaskData taskData, IPlanning planning) {
+	private void populatePlanning(TaskData taskData, IPlanning planning, IProgressMonitor monitor) {
 		MilestonePlanningWrapper milestonePlanning = new MilestonePlanningWrapper(taskData.getRoot());
 
 		if (configuration != null) {
@@ -117,8 +132,12 @@ public class MilestoneTaskDataConverter extends AbstractElementTaskDataConverter
 
 		Map<Integer, String> milestoneInternalIdByTuleapId = Maps.newHashMap();
 		for (TuleapMilestone subMilestone : planning.getSubMilestones()) {
+			int submilestoneTypeId = subMilestone.getConfigurationId();
+			int projectId = subMilestone.getProjectId();
+			// Let's refresh the submilestone type configuration
+			refreshConfiguration(projectId, submilestoneTypeId, monitor);
 			String internalMilestoneId = TuleapTaskIdentityUtil.getTaskDataId(subMilestone.getProjectId(),
-					subMilestone.getConfigurationId(), subMilestone.getId());
+					submilestoneTypeId, subMilestone.getId());
 			milestoneInternalIdByTuleapId.put(Integer.valueOf(subMilestone.getId()), internalMilestoneId);
 			SubMilestoneWrapper subMilestoneWrapper = milestonePlanning.addSubMilestone(internalMilestoneId);
 			subMilestoneWrapper.setDisplayId(Integer.toString(subMilestone.getId()));
@@ -132,6 +151,10 @@ public class MilestoneTaskDataConverter extends AbstractElementTaskDataConverter
 			}
 		}
 		for (TuleapBacklogItem backlogItem : planning.getBacklogItems()) {
+			int biTypeId = backlogItem.getConfigurationId();
+			int projectId = backlogItem.getProjectId();
+			// Let's refresh the submilestone type configuration
+			refreshConfiguration(projectId, biTypeId, monitor);
 			BacklogItemWrapper backlogItemWrapper = milestonePlanning.addBacklogItem(TuleapTaskIdentityUtil
 					.getTaskDataId(backlogItem.getProjectId(), backlogItem.getConfigurationId(), backlogItem
 							.getId()));
@@ -155,8 +178,10 @@ public class MilestoneTaskDataConverter extends AbstractElementTaskDataConverter
 	 *            The task data to fill.
 	 * @param cardwall
 	 *            The cardwall pojo.
+	 * @param monitor
+	 *            The progress monitor to use
 	 */
-	private void populateCardwall(TaskData taskData, TuleapCardwall cardwall) {
+	private void populateCardwall(TaskData taskData, TuleapCardwall cardwall, IProgressMonitor monitor) {
 		CardwallWrapper wrapper = new CardwallWrapper(taskData.getRoot());
 		for (TuleapStatus column : cardwall.getStatuses()) {
 			wrapper.addColumn(Integer.toString(column.getId()), column.getLabel());
@@ -184,19 +209,38 @@ public class MilestoneTaskDataConverter extends AbstractElementTaskDataConverter
 				swimlaneWrapper.getSwimlaneItem().setInitialEffort(initialEffort.floatValue());
 			}
 			for (TuleapCard card : swimlane.getCards()) {
-				String cardId = TuleapTaskIdentityUtil.getTaskDataId(card.getProjectId(), card
-						.getConfigurationId(), card.getId());
+				int cardTypeId = card.getConfigurationId();
+				int cardProjectId = card.getProjectId();
+				refreshConfiguration(cardProjectId, cardTypeId, monitor);
+				String cardId = TuleapTaskIdentityUtil.getTaskDataId(cardProjectId, cardTypeId, card.getId());
 				CardWrapper cardWrapper = swimlaneWrapper.addCard(cardId);
-				cardWrapper.setDisplayId(String.valueOf(card.getId()));
-				cardWrapper.setLabel(card.getLabel());
-				// ID of assigned status must be computed like in the columnWrapper above
-				cardWrapper.setStatusId(Integer.toString(card.getStatusId()));
-				for (AbstractFieldValue fieldValue : card.getFieldValues()) {
-					// TODO manage other types of fields
-					if (fieldValue instanceof LiteralFieldValue) {
-						cardWrapper.setFieldValue(Integer.toString(fieldValue.getFieldId()),
-								((LiteralFieldValue)fieldValue).getFieldValue());
-					}
+				populateCard(cardWrapper, card);
+			}
+		}
+	}
+
+	/**
+	 * Transfers data form the given card POJO to the given {@link CardWrapper}.
+	 * 
+	 * @param cardWrapper
+	 *            The card wrapper.
+	 * @param card
+	 *            The card POJO.
+	 */
+	public void populateCard(CardWrapper cardWrapper, TuleapCard card) {
+		cardWrapper.setDisplayId(String.valueOf(card.getId()));
+		cardWrapper.setLabel(card.getLabel());
+		// ID of assigned status must be computed like in the columnWrapper above
+		cardWrapper.setStatusId(Integer.toString(card.getStatusId()));
+		for (AbstractFieldValue fieldValue : card.getFieldValues()) {
+			// TODO manage other types of fields
+			String fieldId = Integer.toString(fieldValue.getFieldId());
+			if (fieldValue instanceof LiteralFieldValue) {
+				cardWrapper.setFieldValue(fieldId, ((LiteralFieldValue)fieldValue).getFieldValue());
+			} else if (fieldValue instanceof BoundFieldValue) {
+				BoundFieldValue boundFieldValue = (BoundFieldValue)fieldValue;
+				for (Integer boundId : boundFieldValue.getValueIds()) {
+					cardWrapper.addFieldValue(fieldId, String.valueOf(boundId));
 				}
 			}
 		}

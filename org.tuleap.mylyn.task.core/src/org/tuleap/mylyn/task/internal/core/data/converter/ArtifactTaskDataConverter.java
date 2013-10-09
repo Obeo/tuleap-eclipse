@@ -12,6 +12,8 @@ package org.tuleap.mylyn.task.internal.core.data.converter;
 
 import java.util.Set;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.agile.core.data.AgileTaskKindUtil;
@@ -19,6 +21,7 @@ import org.tuleap.mylyn.task.internal.core.data.AbstractFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.TuleapConfigurableElementMapper;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
+import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 
 /**
  * Utility class used to transform a {@link TuleapArtifact} into a {@link TaskData} and vice versa.
@@ -28,23 +31,28 @@ import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfigurat
 public class ArtifactTaskDataConverter extends AbstractElementTaskDataConverter<TuleapArtifact, TuleapTrackerConfiguration> {
 
 	/**
-	 * The constructor.
+	 * Constructor.
 	 * 
-	 * @param tuleapTrackerConfiguration
-	 *            The configuration of the tracker
+	 * @param configuration
+	 *            The configuration of the tracker.
+	 * @param taskRepository
+	 *            The task repository to use.
+	 * @param connector
+	 *            The repository connector to use.
 	 */
-	public ArtifactTaskDataConverter(TuleapTrackerConfiguration tuleapTrackerConfiguration) {
-		super(tuleapTrackerConfiguration);
+	public ArtifactTaskDataConverter(TuleapTrackerConfiguration configuration, TaskRepository taskRepository,
+			ITuleapRepositoryConnector connector) {
+		super(configuration, taskRepository, connector);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.tuleap.mylyn.task.internal.core.data.converter.AbstractElementTaskDataConverter#populateTaskData(org.eclipse.mylyn.tasks.core.data.TaskData,
-	 *      org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableElement)
+	 *      org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableElement, IProgressMonitor)
 	 */
 	@Override
-	public void populateTaskData(TaskData taskData, TuleapArtifact tuleapArtifact) {
+	public void populateTaskData(TaskData taskData, TuleapArtifact tuleapArtifact, IProgressMonitor monitor) {
 		super.populateTaskDataConfigurableFields(taskData, tuleapArtifact);
 
 		AgileTaskKindUtil.setAgileTaskKind(taskData, AgileTaskKindUtil.TASK_KIND_ARTIFACT);

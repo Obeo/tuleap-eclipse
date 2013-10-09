@@ -128,7 +128,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		RepositoryResponse response = null;
 
 		ArtifactTaskDataConverter artifactTaskDataConverter = new ArtifactTaskDataConverter(
-				tuleapTrackerConfiguration);
+				tuleapTrackerConfiguration, taskRepository, connector);
 
 		TuleapArtifact artifact = artifactTaskDataConverter.createTuleapArtifact(taskData);
 		TuleapSoapClient tuleapSoapClient = this.connector.getClientManager().getSoapClient(taskRepository);
@@ -163,7 +163,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		RepositoryResponse response = null;
 
 		MilestoneTaskDataConverter milestoneTaskDataConverter = new MilestoneTaskDataConverter(
-				tuleapMilestoneType);
+				tuleapMilestoneType, taskRepository, connector);
 
 		TuleapMilestone tuleapMilestone = milestoneTaskDataConverter.createTuleapMilestone(taskData);
 		TuleapRestClient tuleapRestClient = this.connector.getClientManager().getRestClient(taskRepository);
@@ -345,12 +345,12 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 					.getTrackerConfiguration(tuleapArtifact.getConfigurationId());
 
 			ArtifactTaskDataConverter artifactTaskDataConverter = new ArtifactTaskDataConverter(
-					trackerConfiguration);
+					trackerConfiguration, taskRepository, connector);
 			TaskAttributeMapper attributeMapper = this.getAttributeMapper(taskRepository);
 
 			TaskData taskData = new TaskData(attributeMapper, ITuleapConstants.CONNECTOR_KIND, taskRepository
 					.getRepositoryUrl(), taskId);
-			artifactTaskDataConverter.populateTaskData(taskData, tuleapArtifact);
+			artifactTaskDataConverter.populateTaskData(taskData, tuleapArtifact, monitor);
 
 			return taskData;
 		}
@@ -379,13 +379,14 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		TuleapTopPlanning topPlanning = restClient.getTopPlanning(TuleapTaskIdentityUtil
 				.getElementIdFromTaskDataId(taskId), monitor);
 		if (topPlanning != null) {
-			MilestoneTaskDataConverter taskDataConverter = new MilestoneTaskDataConverter(null);
+			MilestoneTaskDataConverter taskDataConverter = new MilestoneTaskDataConverter(null,
+					taskRepository, connector);
 			TaskAttributeMapper attributeMapper = this.getAttributeMapper(taskRepository);
 
 			TaskData taskData = new TaskData(attributeMapper, ITuleapConstants.CONNECTOR_KIND, taskRepository
 					.getRepositoryUrl(), taskId);
 			int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(taskId);
-			taskDataConverter.populateTaskData(taskData, topPlanning, projectId);
+			taskDataConverter.populateTaskData(taskData, topPlanning, projectId, monitor);
 
 			return taskData;
 		}
@@ -418,12 +419,13 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		TuleapMilestone milestone = restClient.getMilestone(TuleapTaskIdentityUtil
 				.getElementIdFromTaskDataId(taskId), milestoneType.hasCardwall(), monitor);
 		if (milestone != null) {
-			MilestoneTaskDataConverter taskDataConverter = new MilestoneTaskDataConverter(milestoneType);
+			MilestoneTaskDataConverter taskDataConverter = new MilestoneTaskDataConverter(milestoneType,
+					taskRepository, connector);
 			TaskAttributeMapper attributeMapper = this.getAttributeMapper(taskRepository);
 
 			TaskData taskData = new TaskData(attributeMapper, ITuleapConstants.CONNECTOR_KIND, taskRepository
 					.getRepositoryUrl(), taskId);
-			taskDataConverter.populateTaskData(taskData, milestone);
+			taskDataConverter.populateTaskData(taskData, milestone, monitor);
 
 			return taskData;
 		}

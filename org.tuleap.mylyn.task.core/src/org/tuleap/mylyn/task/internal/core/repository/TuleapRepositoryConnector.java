@@ -312,7 +312,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			}
 
 			ArtifactTaskDataConverter artifactTaskDataConverter = new ArtifactTaskDataConverter(
-					trackerConfiguration);
+					trackerConfiguration, taskRepository, this);
 
 			List<TuleapArtifact> artifacts = soapClient.getArtifactsFromQuery(query, repositoryConfiguration,
 					trackerConfiguration, monitor);
@@ -323,7 +323,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 				TaskData taskData = new TaskData(attributeMapper, this.getConnectorKind(), taskRepository
 						.getRepositoryUrl(), taskDataId);
-				artifactTaskDataConverter.populateTaskData(taskData, tuleapArtifact);
+				artifactTaskDataConverter.populateTaskData(taskData, tuleapArtifact, monitor);
 
 				try {
 					collector.accept(taskData);
@@ -337,7 +337,8 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 					.intValue();
 
 			// null -> the top plannings do not have a configuration
-			MilestoneTaskDataConverter milestoneTaskDataConverter = new MilestoneTaskDataConverter(null);
+			MilestoneTaskDataConverter milestoneTaskDataConverter = new MilestoneTaskDataConverter(null,
+					taskRepository, this);
 
 			TuleapRestClient restClient = this.getClientManager().getRestClient(taskRepository);
 			try {
@@ -348,7 +349,8 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 					TaskData taskData = new TaskData(attributeMapper, this.getConnectorKind(), taskRepository
 							.getRepositoryUrl(), taskDataId);
-					milestoneTaskDataConverter.populateTaskData(taskData, tuleapTopPlanning, projectId);
+					milestoneTaskDataConverter.populateTaskData(taskData, tuleapTopPlanning, projectId,
+							monitor);
 					try {
 						collector.accept(taskData);
 					} catch (IllegalArgumentException exception) {
