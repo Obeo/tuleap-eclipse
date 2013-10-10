@@ -10,10 +10,6 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.client.rest;
 
-// By design, tThis class should have no dependency to
-// - com.google.json
-// - org.restlet
-
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -27,6 +23,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+import org.restlet.data.Method;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.model.TuleapAttachmentDescriptor;
@@ -43,6 +40,8 @@ import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerReport;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
+import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
+import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
 /**
  * This class will be used to communicate with the server with a higher level of abstraction than raw HTTP
@@ -165,86 +164,83 @@ public class TuleapRestClient {
 		// Retrieve the projects and create the configuration of each project
 		// TODO Pagination on projects?
 		ServerResponse projectsGetServerResponse = restProjects.get(Collections.<String, String> emptyMap());
-		if (ITuleapServerStatus.OK == projectsGetServerResponse.getStatus()) {
-			String projectsGetResponseBody = projectsGetServerResponse.getBody();
-			List<TuleapProjectConfiguration> projectConfigurations = this.jsonParser
-					.parseProjectConfigurations(projectsGetResponseBody);
 
-			// For each project that has the tracker service
-			for (TuleapProjectConfiguration projectConfiguration : projectConfigurations) {
-				tuleapServerConfiguration.addProject(projectConfiguration);
+		checkServerError(restProjects, Method.GET.toString(), projectsGetServerResponse);
 
-				// TODO SBE Restore this code!
+		String projectsGetResponseBody = projectsGetServerResponse.getBody();
+		List<TuleapProjectConfiguration> projectConfigurations = this.jsonParser
+				.parseProjectConfigurations(projectsGetResponseBody);
 
-				// if (projectConfig.hasService(ITuleapProjectServices.TRACKERS)) {
-				// // Check that we can get the list of trackers for this project
-				// RestProjectsTrackers restTrackers = restResources.projectsTrackers(projectConfig
-				// .getIdentifier());
-				//
-				// // Retrieve the trackers and create the configuration of each tracker
-				// ServerResponse projectTrackersGetServerResponse = restTrackers.get(Collections
-				// .<String, String> emptyMap());
-				// // TODO Pagination on trackers?
-				// if (ITuleapServerStatus.OK == projectTrackersGetServerResponse.getStatus()) {
-				// String projectTrackersGetResponseBody = projectTrackersGetServerResponse.getBody();
-				// List<TuleapTrackerConfiguration> trackerConfigurations = this.jsonParser
-				// .getTrackerConfigurations(projectTrackersGetResponseBody);
-				// // Put the configuration of the trackers in their containing project's
-				// // configuration
-				// for (TuleapTrackerConfiguration trackerConfig : trackerConfigurations) {
-				// projectConfig.addTracker(trackerConfig);
-				// }
-				//
-				// // adding the properties parent/children to trackers
-				// JsonParser trackersParser = new JsonParser();
-				// JsonArray trackersArray = trackersParser.parse(projectTrackersGetResponseBody)
-				// .getAsJsonArray();
-				//
-				// for (int i = 0; i < trackersArray.size(); i++) {
-				// JsonObject tracker = (JsonObject)trackersArray.get(i);
-				//							int trackerId = tracker.get("id").getAsInt(); //$NON-NLS-1$
-				//							JsonObject hierarchy = tracker.get("hierarchy").getAsJsonObject(); //$NON-NLS-1$
-				//							int parentTrackerId = hierarchy.get("parent_tracker_id").getAsInt(); //$NON-NLS-1$
-				//
-				// projectConfig.getTrackerConfiguration(trackerId).setParentTracker(
-				// projectConfig.getTrackerConfiguration(parentTrackerId));
-				// }
-				//
-				// } else {
-				// // Invalid login? server error?
-				// String message = this.jsonParser.getErrorMessage(projectTrackersGetServerResponse
-				// .getBody());
-				// throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
-				// message));
-				// }
-				// }
+		// For each project that has the tracker service
+		for (TuleapProjectConfiguration projectConfiguration : projectConfigurations) {
+			tuleapServerConfiguration.addProject(projectConfiguration);
 
-				if (projectConfiguration.hasService(ITuleapProjectServices.AGILE_DASHBOARD)) {
-					// Retrieve Milestone types for the project
-					List<TuleapMilestoneType> milestoneTypes = this.getMilestoneTypes(projectConfiguration,
-							monitor);
-					for (TuleapMilestoneType tuleapMilestoneType : milestoneTypes) {
-						projectConfiguration.addMilestoneType(tuleapMilestoneType);
-					}
+			// TODO SBE Restore this code!
 
-					// Retrieve BacklogItem types for the project
-					List<TuleapBacklogItemType> backlogItemTypes = this.getBacklogItemTypes(
-							projectConfiguration, monitor);
-					for (TuleapBacklogItemType tuleapBacklogItemType : backlogItemTypes) {
-						projectConfiguration.addBacklogItemType(tuleapBacklogItemType);
-					}
+			// if (projectConfig.hasService(ITuleapProjectServices.TRACKERS)) {
+			// // Check that we can get the list of trackers for this project
+			// RestProjectsTrackers restTrackers = restResources.projectsTrackers(projectConfig
+			// .getIdentifier());
+			//
+			// // Retrieve the trackers and create the configuration of each tracker
+			// ServerResponse projectTrackersGetServerResponse = restTrackers.get(Collections
+			// .<String, String> emptyMap());
+			// // TODO Pagination on trackers?
+			// if (ITuleapServerStatus.OK == projectTrackersGetServerResponse.getStatus()) {
+			// String projectTrackersGetResponseBody = projectTrackersGetServerResponse.getBody();
+			// List<TuleapTrackerConfiguration> trackerConfigurations = this.jsonParser
+			// .getTrackerConfigurations(projectTrackersGetResponseBody);
+			// // Put the configuration of the trackers in their containing project's
+			// // configuration
+			// for (TuleapTrackerConfiguration trackerConfig : trackerConfigurations) {
+			// projectConfig.addTracker(trackerConfig);
+			// }
+			//
+			// // adding the properties parent/children to trackers
+			// JsonParser trackersParser = new JsonParser();
+			// JsonArray trackersArray = trackersParser.parse(projectTrackersGetResponseBody)
+			// .getAsJsonArray();
+			//
+			// for (int i = 0; i < trackersArray.size(); i++) {
+			// JsonObject tracker = (JsonObject)trackersArray.get(i);
+			//							int trackerId = tracker.get("id").getAsInt(); //$NON-NLS-1$
+			//							JsonObject hierarchy = tracker.get("hierarchy").getAsJsonObject(); //$NON-NLS-1$
+			//							int parentTrackerId = hierarchy.get("parent_tracker_id").getAsInt(); //$NON-NLS-1$
+			//
+			// projectConfig.getTrackerConfiguration(trackerId).setParentTracker(
+			// projectConfig.getTrackerConfiguration(parentTrackerId));
+			// }
+			//
+			// } else {
+			// // Invalid login? server error?
+			// String message = this.jsonParser.getErrorMessage(projectTrackersGetServerResponse
+			// .getBody());
+			// throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
+			// message));
+			// }
+			// }
 
-					// Retrieve Card types for the project
-					List<TuleapCardType> cardTypes = this.getCardTypes(projectConfiguration, monitor);
-					for (TuleapCardType tuleapCardType : cardTypes) {
-						projectConfiguration.addCardType(tuleapCardType);
-					}
+			if (projectConfiguration.hasService(ITuleapProjectServices.AGILE_DASHBOARD)) {
+				// Retrieve Milestone types for the project
+				List<TuleapMilestoneType> milestoneTypes = this.getMilestoneTypes(projectConfiguration,
+						monitor);
+				for (TuleapMilestoneType tuleapMilestoneType : milestoneTypes) {
+					projectConfiguration.addMilestoneType(tuleapMilestoneType);
+				}
+
+				// Retrieve BacklogItem types for the project
+				List<TuleapBacklogItemType> backlogItemTypes = this.getBacklogItemTypes(projectConfiguration,
+						monitor);
+				for (TuleapBacklogItemType tuleapBacklogItemType : backlogItemTypes) {
+					projectConfiguration.addBacklogItemType(tuleapBacklogItemType);
+				}
+
+				// Retrieve Card types for the project
+				List<TuleapCardType> cardTypes = this.getCardTypes(projectConfiguration, monitor);
+				for (TuleapCardType tuleapCardType : cardTypes) {
+					projectConfiguration.addCardType(tuleapCardType);
 				}
 			}
-		} else {
-			// Invalid login? server error?
-			String message = this.jsonParser.getErrorMessage(projectsGetServerResponse.getBody());
-			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, message));
 		}
 
 		return tuleapServerConfiguration;
@@ -276,11 +272,7 @@ public class TuleapRestClient {
 
 		ServerResponse response = restProjectsMilestoneType.get(Collections.<String, String> emptyMap());
 
-		if (ITuleapServerStatus.OK != response.getStatus()) {
-			// Invalid login? server error?
-			String message = this.jsonParser.getErrorMessage(response.getBody());
-			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, message));
-		}
+		checkServerError(restProjectsMilestoneType, Method.GET.toString(), response);
 
 		// Analyze the server response
 		return jsonParser.parseMilestoneType(projectConfiguration, response.getBody());
@@ -313,11 +305,7 @@ public class TuleapRestClient {
 
 		ServerResponse response = restProjectsBacklogITemType.get(Collections.<String, String> emptyMap());
 
-		if (ITuleapServerStatus.OK != response.getStatus()) {
-			// Invalid login? server error?
-			String message = this.jsonParser.getErrorMessage(response.getBody());
-			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, message));
-		}
+		checkServerError(restProjectsBacklogITemType, Method.GET.toString(), response);
 
 		// Analyze the server response
 		return jsonParser.parseBacklogItemType(projectConfiguration, response.getBody());
@@ -349,14 +337,32 @@ public class TuleapRestClient {
 
 		ServerResponse response = restCardTypes.get(Collections.<String, String> emptyMap());
 
-		if (ITuleapServerStatus.OK != response.getStatus()) {
-			// Invalid login? server error?
-			String message = this.jsonParser.getErrorMessage(response.getBody());
-			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, message));
-		}
+		checkServerError(restCardTypes, Method.GET.toString(), response);
 
 		// Analyze the server response
 		return jsonParser.parseCardType(projectConfiguration, response.getBody());
+	}
+
+	/**
+	 * Throws a CoreException that encapsulates useful info about a server error.
+	 * 
+	 * @param restResource
+	 *            The restResource that returned the given response.
+	 * @param method
+	 *            The HTTP method invoked
+	 * @param response
+	 *            The error response received from the server.
+	 * @throws CoreException
+	 *             If the given response does not have a status OK (200).
+	 */
+	private void checkServerError(AbstractRestResource restResource, String method, ServerResponse response)
+			throws CoreException {
+		if (ITuleapServerStatus.OK != response.getStatus()) {
+			String message = TuleapMylynTasksMessages.getString(
+					TuleapMylynTasksMessagesKeys.errorReturnedByServer, restResource.getUrl(), method,
+					jsonParser.getErrorMessage(response.getBody()));
+			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, message));
+		}
 	}
 
 	// TODO get user groups of a project
@@ -604,6 +610,8 @@ public class TuleapRestClient {
 
 		ServerResponse milestoneResponse = restMilestones.get(Collections.<String, String> emptyMap());
 
+		checkServerError(restMilestones, Method.GET.toString(), milestoneResponse);
+
 		TuleapMilestone milestone = this.jsonParser.parseMilestone(milestoneResponse.getBody());
 
 		// Fetch the cardwall if there should be one according to the milestone config
@@ -611,6 +619,7 @@ public class TuleapRestClient {
 			RestMilestonesCardwall restCardwall = restResources.milestonesCardwall(milestoneId);
 			restCardwall.checkGet(Collections.<String, String> emptyMap());
 			ServerResponse cardwallResponse = restCardwall.get(Collections.<String, String> emptyMap());
+			checkServerError(restCardwall, Method.GET.toString(), cardwallResponse);
 			TuleapCardwall cardwall = jsonParser.parseCardwall(cardwallResponse.getBody());
 			milestone.setCardwall(cardwall);
 		}
@@ -687,11 +696,7 @@ public class TuleapRestClient {
 
 		ServerResponse response = restProjectsBacklogItemTypes.get(Collections.<String, String> emptyMap());
 
-		if (ITuleapServerStatus.OK != response.getStatus()) {
-			// Invalid login? server error?
-			String message = this.jsonParser.getErrorMessage(response.getBody());
-			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, message));
-		}
+		checkServerError(restProjectsBacklogItemTypes, Method.GET.toString(), response);
 
 		// Analyze the server response
 		return jsonParser.parseBacklogItemTypes(project, response.getBody());
@@ -722,11 +727,7 @@ public class TuleapRestClient {
 
 		ServerResponse response = restProjectsMilestoneTypes.get(Collections.<String, String> emptyMap());
 
-		if (ITuleapServerStatus.OK != response.getStatus()) {
-			// Invalid login? server error?
-			String message = this.jsonParser.getErrorMessage(response.getBody());
-			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, message));
-		}
+		checkServerError(restProjectsMilestoneTypes, Method.GET.toString(), response);
 
 		// Analyze the server response
 		return jsonParser.parseMilestoneTypes(project, response.getBody());
@@ -757,11 +758,7 @@ public class TuleapRestClient {
 
 		ServerResponse response = restProjectsCardTypes.get(Collections.<String, String> emptyMap());
 
-		if (ITuleapServerStatus.OK != response.getStatus()) {
-			// Invalid login? server error?
-			String message = this.jsonParser.getErrorMessage(response.getBody());
-			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, message));
-		}
+		checkServerError(restProjectsCardTypes, Method.GET.toString(), response);
 		// TODO Pagination?
 
 		// Analyze the server response
@@ -784,12 +781,13 @@ public class TuleapRestClient {
 		RestResources restResources = tuleapRestConnector.resources(credentials);
 
 		// 1- Retrieve the list of top plannings
-		RestProjectsTopPlannings projectTopPlannings = restResources.projectsTopPlannings(projectId);
-		projectTopPlannings.checkGet(Collections.<String, String> emptyMap());
-		ServerResponse topPlanningsResponse = projectTopPlannings
-				.get(Collections.<String, String> emptyMap());
-		List<TuleapTopPlanning> topPlannings = this.jsonParser.parseTopPlannings(topPlanningsResponse
-				.getBody());
+		RestProjectsTopPlannings restProjectTopPlannings = restResources.projectsTopPlannings(projectId);
+		restProjectTopPlannings.checkGet(Collections.<String, String> emptyMap());
+		ServerResponse response = restProjectTopPlannings.get(Collections.<String, String> emptyMap());
+
+		checkServerError(restProjectTopPlannings, Method.GET.toString(), response);
+
+		List<TuleapTopPlanning> topPlannings = this.jsonParser.parseTopPlannings(response.getBody());
 		for (TuleapTopPlanning topPlanning : topPlannings) {
 			loadTopPlanningElements(restResources, topPlanning);
 		}
@@ -811,13 +809,13 @@ public class TuleapRestClient {
 	public TuleapTopPlanning getTopPlanning(int topPlanningId, IProgressMonitor monitor) throws CoreException {
 		RestResources restResources = tuleapRestConnector.resources(credentials);
 
-		// 1- Retrieve the list of top planning ids
-		RestTopPlannings topPlannings = restResources.topPlannings(topPlanningId);
-		topPlannings.checkGet(Collections.<String, String> emptyMap());
-		ServerResponse topPlanningsResponse = topPlannings.get(Collections.<String, String> emptyMap());
-		// Contains a JSON array of integers
+		RestTopPlannings restTopPlannings = restResources.topPlannings(topPlanningId);
+		restTopPlannings.checkGet(Collections.<String, String> emptyMap());
+		ServerResponse response = restTopPlannings.get(Collections.<String, String> emptyMap());
 
-		TuleapTopPlanning topPlanning = this.jsonParser.parseTopPlanning(topPlanningsResponse.getBody());
+		checkServerError(restTopPlannings, Method.GET.toString(), response);
+
+		TuleapTopPlanning topPlanning = this.jsonParser.parseTopPlanning(response.getBody());
 		return loadTopPlanningElements(restResources, topPlanning);
 	}
 
@@ -838,6 +836,9 @@ public class TuleapRestClient {
 		RestTopPlanningsMilestones restMilestones = restResources.topPlanningsMilestones(topPlanning.getId());
 		restMilestones.checkGet(Collections.<String, String> emptyMap());
 		ServerResponse milestonesResponse = restMilestones.get(Collections.<String, String> emptyMap());
+
+		checkServerError(restMilestones, Method.GET.toString(), milestonesResponse);
+
 		// TODO Pagination
 		String jsonMilestones = milestonesResponse.getBody();
 
@@ -851,6 +852,9 @@ public class TuleapRestClient {
 				.getId());
 		restBacklogItems.checkGet(Collections.<String, String> emptyMap());
 		ServerResponse backlogItemsResponse = restBacklogItems.get(Collections.<String, String> emptyMap());
+
+		checkServerError(restBacklogItems, Method.GET.toString(), backlogItemsResponse);
+
 		// TODO Pagination
 		String jsonBacklogItems = backlogItemsResponse.getBody();
 
@@ -882,6 +886,8 @@ public class TuleapRestClient {
 		ServerResponse backlogItemsResponse = milestoneBacklogItems.get(Collections
 				.<String, String> emptyMap());
 
+		checkServerError(milestoneBacklogItems, Method.GET.toString(), backlogItemsResponse);
+
 		// Contains a JSON array of integers
 		String jsonBacklogItemIds = backlogItemsResponse.getBody();
 		return this.jsonParser.parseBacklogItems(jsonBacklogItemIds);
@@ -908,6 +914,8 @@ public class TuleapRestClient {
 		milestoneSubmilestones.checkGet(Collections.<String, String> emptyMap());
 		ServerResponse milestonesResponse = milestoneSubmilestones.get(Collections
 				.<String, String> emptyMap());
+
+		checkServerError(milestoneSubmilestones, Method.GET.toString(), milestonesResponse);
 
 		// Contains a JSON array of integers
 		String jsonMilestoneIds = milestonesResponse.getBody();

@@ -230,14 +230,41 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	public static String aPINotFound;
 
 	/**
-	 * Cannot perform operation.
+	 * Cannot perform operation. 2 parameters:
+	 * <ol>
+	 * <li>URL</li>
+	 * <li>HTTP method</li>
+	 * </ol>
 	 */
 	public static String cannotPerformOperation;
 
 	/**
-	 * Not authorized to perform operation.
+	 * Not authorized to perform operation. 2 parameters:
+	 * <ol>
+	 * <li>URL</li>
+	 * <li>HTTP method</li>
+	 * </ol>
 	 */
 	public static String notAuthorizedToPerformOperation;
+
+	/**
+	 * The server returned an error. 3 parameters:
+	 * <ol>
+	 * <li>URL</li>
+	 * <li>HTTP method</li>
+	 * <li>Error message returned by the server</li>
+	 * </ol>
+	 */
+	public static String errorReturnedByServer;
+
+	/**
+	 * Formatting of JSON error messages. 2 parameters:
+	 * <ol>
+	 * <li>code</li>
+	 * <li>message</li>
+	 * </ol>
+	 */
+	public static String jsonErrorMessage;
 
 	static {
 		// load message values from bundle file

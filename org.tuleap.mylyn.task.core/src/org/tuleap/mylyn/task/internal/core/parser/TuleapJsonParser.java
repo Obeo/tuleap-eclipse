@@ -21,6 +21,7 @@ import com.google.gson.JsonParser;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItemType;
@@ -29,6 +30,8 @@ import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardwall;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
+import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
+import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
 /**
  * This class is used to encapsulate all the logic of the JSON parsing.
@@ -331,6 +334,17 @@ public class TuleapJsonParser {
 	 * @return The error message
 	 */
 	public String getErrorMessage(String jsonResponse) {
-		throw new UnsupportedOperationException();
+		try {
+			JsonParser parser = new JsonParser();
+			JsonObject element = parser.parse(jsonResponse).getAsJsonObject();
+			return TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.jsonErrorMessage, element
+					.get("code"), element.get("message")); //$NON-NLS-1$//$NON-NLS-2$
+			// CHECKSTYLE:OFF
+			// We need to be able to provide something even if the parsing of the error message fails
+		} catch (Exception e) {
+			// CHECKSTYLE:ON
+			TuleapCoreActivator.log(e, false);
+		}
+		return jsonResponse;
 	}
 }
