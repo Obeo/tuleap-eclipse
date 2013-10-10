@@ -233,7 +233,8 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		ITaskMapping scheme = getTaskMapping(taskData);
 		Date repositoryDate = scheme.getModificationDate();
 		Date localDate = task.getModificationDate();
-		if (repositoryDate != null && repositoryDate.equals(localDate)) {
+		if (repositoryDate == null && localDate == null || repositoryDate != null
+				&& repositoryDate.equals(localDate)) {
 			return false;
 		}
 		return true;
@@ -302,8 +303,8 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			TuleapTrackerConfiguration trackerConfiguration = repositoryConfiguration
 					.getTrackerConfiguration(trackerId);
 			try {
-				AbstractTuleapConfiguration refreshedConfiguration = this
-						.refreshConfiguration(taskRepository, trackerConfiguration, monitor);
+				AbstractTuleapConfiguration refreshedConfiguration = this.refreshConfiguration(
+						taskRepository, trackerConfiguration, monitor);
 				if (refreshedConfiguration instanceof TuleapTrackerConfiguration) {
 					trackerConfiguration = (TuleapTrackerConfiguration)refreshedConfiguration;
 				}
@@ -452,8 +453,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 *            The configuration of the repository containing the task
 	 * @return <code>true</code> if the current status matches a closed status, <code>false</code> otherwise.
 	 */
-	private boolean isTaskCompleted(int currentStatus,
-			AbstractTuleapConfiguration configuration) {
+	private boolean isTaskCompleted(int currentStatus, AbstractTuleapConfiguration configuration) {
 		if (configuration != null) {
 			Collection<AbstractTuleapField> fields = configuration.getFields();
 			for (AbstractTuleapField abstractTuleapField : fields) {
@@ -516,8 +516,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public AbstractTuleapConfiguration refreshConfiguration(TaskRepository taskRepository,
-			AbstractTuleapConfiguration configuration, IProgressMonitor monitor)
-			throws CoreException {
+			AbstractTuleapConfiguration configuration, IProgressMonitor monitor) throws CoreException {
 		TuleapProjectConfiguration projectConfiguration = configuration.getTuleapProjectConfiguration();
 
 		AbstractTuleapConfiguration refreshedConfiguration = null;
