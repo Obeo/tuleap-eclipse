@@ -14,24 +14,6 @@ Tuleap Checkstyle Configuration
   <module name="TreeWalker">
     <property name="cacheFile" value="$\{cachefile\}"/>
     <module name="FileContentsHolder"/>
-    <module name="JavadocMethod">
-      <property name="severity" value="error"/>
-      <property name="allowMissingPropertyJavadoc" value="true"/>
-      <property name="suppressLoadErrors" value="true"/>
-    </module>
-    <module name="JavadocStyle">
-      <property name="severity" value="error"/>
-      <property name="checkEmptyJavadoc" value="true"/>
-      <property name="checkHtml" value="false"/>
-    </module>
-    <module name="JavadocType">
-      <property name="severity" value="error"/>
-      <property name="authorFormat" value="(&lt;a href=&quot;mailto:[a-z.]+@[a-z.]+\.[a-z]{2,4}\&quot;&gt;)?[A-Z][a-z]+\s[A-Z][a-z]+(&lt;/a&gt;)?"/>
-      <property name="allowUnknownTags" value="true"/>
-    </module>
-    <module name="JavadocVariable">
-      <property name="severity" value="error"/>
-    </module>
     <module name="ConstantName">
       <property name="severity" value="error"/>
     </module>
@@ -170,9 +152,6 @@ Tuleap Checkstyle Configuration
       <property name="severity" value="ignore"/>
       <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
     </module>
-    <!--module name="DoubleCheckedLocking">
-      <property name="severity" value="error"/>
-    </module-->
     <module name="EmptyStatement">
       <property name="severity" value="error"/>
     </module>
@@ -207,9 +186,6 @@ Tuleap Checkstyle Configuration
       <property name="severity" value="error"/>
     </module>
     <module name="JUnitTestCase">
-      <property name="severity" value="error"/>
-    </module>
-    <module name="MissingSwitchDefault">
       <property name="severity" value="error"/>
     </module>
     <module name="ModifiedControlVariable">
@@ -251,10 +227,6 @@ Tuleap Checkstyle Configuration
       <property name="allowUnchecked" value="true"/>
       <property name="allowSubclasses" value="true"/>
       <property name="suppressLoadErrors" value="true"/>
-    </module>
-    <module name="ReturnCount">
-      <property name="severity" value="error"/>
-      <property name="format" value="^$"/>
     </module>
     <module name="SimplifyBooleanExpression">
       <property name="severity" value="error"/>

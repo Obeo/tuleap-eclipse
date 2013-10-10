@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
@@ -25,13 +27,17 @@ import org.tuleap.mylyn.task.agile.core.data.AbstractTaskAttributeWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.BacklogItemWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.MilestonePlanningWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.SubMilestoneWrapper;
+import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
+import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.data.AttachmentFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.AttachmentValue;
 import org.tuleap.mylyn.task.internal.core.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.converter.MilestoneTaskDataConverter;
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCard;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardwall;
@@ -39,6 +45,7 @@ import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapStatus;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapSwimlane;
+import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -97,10 +104,33 @@ public class MilestoneTaskDataConverterTest {
 	 */
 	public static final String SWIMLANE_LIST = "mta_lanes"; //$NON-NLS-1$
 
+	private static final int MILESTONE_TYPE_ID1 = 123;
+
+	private static final int MILESTONE_TYPE_ID2 = 124;
+
+	private static final int BACKLOG_ITEM_TYPE_ID1 = 234;
+
+	private static final int PROJECT_ID = 666;
+
 	/**
 	 * The wrapped task data.
 	 */
 	private TaskData taskData;
+
+	/**
+	 * The task repository.
+	 */
+	private TaskRepository taskRepository;
+
+	private TuleapMilestoneType milestoneType1;
+
+	private TuleapMilestoneType milestoneType2;
+
+	private TuleapProjectConfiguration projectConfiguration;
+
+	private TuleapServerConfiguration serverConfiguration;
+
+	private TuleapRepositoryConnector connector;
 
 	/**
 	 * Configure the data for the tests.
@@ -109,8 +139,59 @@ public class MilestoneTaskDataConverterTest {
 	public void setUp() {
 		String repositoryUrl = "repository"; //$NON-NLS-1$
 		String connectorKind = "kind"; //$NON-NLS-1$
-		String taskId = "id"; //$NON-NLS-1$ 
-		TaskRepository taskRepository = new TaskRepository(connectorKind, repositoryUrl);
+		String taskId = "id"; //$NON-NLS-1$
+		serverConfiguration = new TuleapServerConfiguration(repositoryUrl);
+
+		projectConfiguration = new TuleapProjectConfiguration("The first project", 200); //$NON-NLS-1$
+		serverConfiguration.addProject(projectConfiguration);
+
+		milestoneType1 = new TuleapMilestoneType(MILESTONE_TYPE_ID1, "URL 1", //$NON-NLS-1$
+				"milestone type 1", "item name 1", "description 1", System.currentTimeMillis(), true); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+		projectConfiguration.addMilestoneType(milestoneType1);
+		milestoneType2 = new TuleapMilestoneType(MILESTONE_TYPE_ID2, "URL 2", //$NON-NLS-1$
+				"milestone type 2", "item name 2", "description 2", System.currentTimeMillis(), true); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+		projectConfiguration.addMilestoneType(milestoneType2);
+
+		final TuleapClientManager clientManager = new TuleapClientManager() {
+			@Override
+			public TuleapRestClient getRestClient(TaskRepository pTaskRepository) {
+				return new TuleapRestClient(null, null, null, null, null) {
+					@Override
+					public TuleapMilestoneType getTuleapMilestoneType(
+							TuleapProjectConfiguration pProjectConfiguration, int milestoneTypeId,
+							IProgressMonitor monitor) throws CoreException {
+						if (pProjectConfiguration.getIdentifier() == 200) {
+							switch (milestoneTypeId) {
+								case MILESTONE_TYPE_ID1:
+									return milestoneType1;
+								case MILESTONE_TYPE_ID2:
+									return milestoneType2;
+							}
+						}
+						return null;
+					}
+				};
+			}
+		};
+
+		connector = new TuleapRepositoryConnector() {
+			@Override
+			public TuleapServerConfiguration getTuleapServerConfiguration(String pRepositoryUrl) {
+				return serverConfiguration;
+			}
+
+			@Override
+			public AbstractTuleapConfiguration refreshConfiguration(TaskRepository pTaskRepository,
+					AbstractTuleapConfiguration configuration, IProgressMonitor monitor) throws CoreException {
+				return configuration;
+			}
+
+			@Override
+			public TuleapClientManager getClientManager() {
+				return clientManager;
+			}
+		};
+		taskRepository = new TaskRepository(connectorKind, repositoryUrl);
 		TaskAttributeMapper mapper = new TaskAttributeMapper(taskRepository);
 		taskData = new TaskData(mapper, connectorKind, repositoryUrl, taskId);
 	}
@@ -121,13 +202,13 @@ public class MilestoneTaskDataConverterTest {
 	@Test
 	public void testMilestoneSubmilestones() {
 		Date testDate = new Date();
-		TuleapProjectConfiguration tuleapProjectConfiguration = new TuleapProjectConfiguration(
-				"The first project", 200); //$NON-NLS-1$
 
-		TuleapMilestone milestone = new TuleapMilestone(50, 500, 200, "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
+		TuleapMilestone milestone = new TuleapMilestone(50, MILESTONE_TYPE_ID1, PROJECT_ID,
+				"The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
 				"HTML URL", testDate, testDate); //$NON-NLS-1$
 
-		TuleapMilestone submilestone100 = new TuleapMilestone(100, 500, 200, "submilestone100", "URL", //$NON-NLS-1$//$NON-NLS-2$
+		TuleapMilestone submilestone100 = new TuleapMilestone(100, MILESTONE_TYPE_ID2, PROJECT_ID,
+				"submilestone100", "URL", //$NON-NLS-1$//$NON-NLS-2$
 				"HTML URL", testDate, testDate); //$NON-NLS-1$
 		submilestone100.setCapacity(Float.valueOf(123));
 		submilestone100.setDuration(Float.valueOf(80));
@@ -140,11 +221,9 @@ public class MilestoneTaskDataConverterTest {
 		item200.setAssignedMilestoneId(submilestone100.getId());
 		milestone.addBacklogItem(item200);
 
-		TuleapMilestoneType tuleapMilestoneType = new TuleapMilestoneType(10000, "The URL", //$NON-NLS-1$
-				"The milestone type", "item name", "The description", testDate.getTime(), true); //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
-		tuleapProjectConfiguration.addMilestoneType(tuleapMilestoneType);
-		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(tuleapMilestoneType);
-		converter.populateTaskData(taskData, milestone);
+		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(milestoneType1, taskRepository,
+				connector);
+		converter.populateTaskData(taskData, milestone, null);
 
 		TaskAttribute root = taskData.getRoot();
 		TaskAttribute planningAtt = root.getAttribute(MilestonePlanningWrapper.MILESTONE_PLANNING);
@@ -171,7 +250,7 @@ public class MilestoneTaskDataConverterTest {
 		TaskAttribute id = milestone0.getAttribute(SubMilestoneWrapper.PREFIX_MILESTONE + "0" + ID_SEPARATOR //$NON-NLS-1$
 				+ AbstractTaskAttributeWrapper.SUFFIX_ID);
 		assertNotNull(id);
-		assertEquals("200:500#100", id.getValue()); //$NON-NLS-1$
+		assertEquals(PROJECT_ID + ":" + MILESTONE_TYPE_ID2 + "#100", id.getValue()); //$NON-NLS-1$ //$NON-NLS-2$
 		assertEquals(TaskAttribute.TYPE_INTEGER, id.getMetaData().getType());
 
 		TaskAttribute label = milestone0.getAttribute(SubMilestoneWrapper.PREFIX_MILESTONE + "0" //$NON-NLS-1$
@@ -193,13 +272,13 @@ public class MilestoneTaskDataConverterTest {
 	@Test
 	public void testMilestoneBacklogItem() {
 		Date testDate = new Date();
-		TuleapProjectConfiguration tuleapProjectConfiguration = new TuleapProjectConfiguration(
-				"The first project", 200); //$NON-NLS-1$
 
-		TuleapMilestone milestone = new TuleapMilestone(50, 500, 200, "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$ 
+		TuleapMilestone milestone = new TuleapMilestone(50, MILESTONE_TYPE_ID1, PROJECT_ID,
+				"The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$ 
 				"HTML URL", testDate, testDate); //$NON-NLS-1$
 
-		TuleapMilestone submilestone100 = new TuleapMilestone(100, 500, 200, "submilestone100", "URL", //$NON-NLS //$NON-NLS-1$ //$NON-NLS-2$-1$  
+		TuleapMilestone submilestone100 = new TuleapMilestone(100, MILESTONE_TYPE_ID2, PROJECT_ID,
+				"submilestone100", "URL", //$NON-NLS //$NON-NLS-1$ //$NON-NLS-2$-1$  
 				"HTML URL", testDate, testDate); //$NON-NLS-1$
 		submilestone100.setCapacity(Float.valueOf(123));
 		submilestone100.setDuration(Float.valueOf(80));
@@ -207,17 +286,15 @@ public class MilestoneTaskDataConverterTest {
 
 		milestone.addSubMilestone(submilestone100);
 
-		TuleapBacklogItem item200 = new TuleapBacklogItem(200, 1000, 200, "item200", null, null, null, null); //$NON-NLS-1$
+		TuleapBacklogItem item200 = new TuleapBacklogItem(200, BACKLOG_ITEM_TYPE_ID1, PROJECT_ID,
+				"item200", null, null, null, null); //$NON-NLS-1$
 		item200.setInitialEffort(Float.valueOf(201));
 		item200.setAssignedMilestoneId(submilestone100.getId());
 		milestone.addBacklogItem(item200);
 
-		TuleapMilestoneType tuleapMilestoneType = new TuleapMilestoneType(10000, "The URL", //$NON-NLS-1$
-				"The milestone type", "item name", "The description", testDate.getTime(), true); //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
-		tuleapProjectConfiguration.addMilestoneType(tuleapMilestoneType);
-
-		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(tuleapMilestoneType);
-		converter.populateTaskData(taskData, milestone);
+		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(milestoneType1, taskRepository,
+				connector);
+		converter.populateTaskData(taskData, milestone, null);
 
 		TaskAttribute root = taskData.getRoot();
 		TaskAttribute planningAtt = root.getAttribute(MilestonePlanningWrapper.MILESTONE_PLANNING);
@@ -233,7 +310,7 @@ public class MilestoneTaskDataConverterTest {
 		TaskAttribute itemId = item0.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + "0" + ID_SEPARATOR //$NON-NLS-1$
 				+ AbstractTaskAttributeWrapper.SUFFIX_ID);
 		assertNotNull(itemId);
-		assertEquals("200:1000#200", itemId.getValue()); //$NON-NLS-1$
+		assertEquals(PROJECT_ID + ":" + BACKLOG_ITEM_TYPE_ID1 + "#200", itemId.getValue()); //$NON-NLS-1$ //$NON-NLS-2$
 		assertEquals(TaskAttribute.TYPE_INTEGER, itemId.getMetaData().getType());
 
 		TaskAttribute itemLabel = item0.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + "0" //$NON-NLS-1$
@@ -255,10 +332,9 @@ public class MilestoneTaskDataConverterTest {
 	@Test
 	public void testCardwallSwimlanes() {
 		Date testDate = new Date();
-		TuleapProjectConfiguration tuleapProjectConfiguration = new TuleapProjectConfiguration(
-				"The first project", 200); //$NON-NLS-1$
 
-		TuleapMilestone milestone = new TuleapMilestone(50, 500, 200, "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$ 
+		TuleapMilestone milestone = new TuleapMilestone(50, MILESTONE_TYPE_ID1, PROJECT_ID,
+				"The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$ 
 				"HTML URL", testDate, testDate); //$NON-NLS-1$
 
 		TuleapCardwall cardwall = new TuleapCardwall();
@@ -274,41 +350,41 @@ public class MilestoneTaskDataConverterTest {
 		secondSwimlane.setBacklogItem(secondBacklogItem);
 		cardwall.addSwimlane(secondSwimlane);
 
-		TuleapMilestoneType tuleapMilestoneType = new TuleapMilestoneType(10000, "The URL", //$NON-NLS-1$
-				"The milestone type", "item name", "The description", testDate.getTime(), true); //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
-		tuleapProjectConfiguration.addMilestoneType(tuleapMilestoneType);
-
-		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(tuleapMilestoneType);
-		converter.populateTaskData(taskData, milestone);
+		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(milestoneType1, taskRepository,
+				connector);
+		converter.populateTaskData(taskData, milestone, null);
 
 		TaskAttribute root = taskData.getRoot();
 
 		TaskAttribute swimlaneList = root.getAttribute(SWIMLANE_LIST);
 		assertNotNull(swimlaneList);
 
+		int id = 0;
 		// The first swimlane
-		TaskAttribute firstSwimlaneTA = swimlaneList.getAttribute(SWIMLANE_LIST + ID_SEPARATOR + "0"); //$NON-NLS-1$
+		String swimlaneId = SWIMLANE_LIST + ID_SEPARATOR + id++;
+		TaskAttribute firstSwimlaneTA = swimlaneList.getAttribute(swimlaneId);
 		assertNotNull(firstSwimlaneTA);
 
-		TaskAttribute firstItemTA = firstSwimlaneTA.getAttribute(SWIMLANE_LIST + ID_SEPARATOR + "0" //$NON-NLS-1$
-				+ ID_SEPARATOR + SUFFIX_SWIMLANE_ITEM);
+		TaskAttribute firstItemTA = firstSwimlaneTA.getAttribute(swimlaneId + ID_SEPARATOR
+				+ SUFFIX_SWIMLANE_ITEM);
 
-		TaskAttribute idFirstItemTA = firstItemTA.getAttribute(SWIMLANE_LIST + ID_SEPARATOR + "0" //$NON-NLS-1$
-				+ ID_SEPARATOR + SUFFIX_SWIMLANE_ITEM + ID_SEPARATOR + SUFFIX_ID);
+		TaskAttribute idFirstItemTA = firstItemTA.getAttribute(swimlaneId + ID_SEPARATOR
+				+ SUFFIX_SWIMLANE_ITEM + ID_SEPARATOR + SUFFIX_ID);
 
 		assertNotNull(idFirstItemTA);
 		assertEquals(TaskAttribute.TYPE_INTEGER, idFirstItemTA.getMetaData().getType());
 		assertEquals("200:700#0", idFirstItemTA.getValue()); //$NON-NLS-1$
 
 		// The second swimlane
-		TaskAttribute secondSwimlaneTA = swimlaneList.getAttribute(SWIMLANE_LIST + ID_SEPARATOR + "1"); //$NON-NLS-1$
+		swimlaneId = SWIMLANE_LIST + ID_SEPARATOR + id++;
+		TaskAttribute secondSwimlaneTA = swimlaneList.getAttribute(swimlaneId);
 		assertNotNull(secondSwimlaneTA);
 
-		TaskAttribute secondItemTA = secondSwimlaneTA.getAttribute(SWIMLANE_LIST + ID_SEPARATOR + "1" //$NON-NLS-1$
-				+ ID_SEPARATOR + SUFFIX_SWIMLANE_ITEM);
+		TaskAttribute secondItemTA = secondSwimlaneTA.getAttribute(swimlaneId + ID_SEPARATOR
+				+ SUFFIX_SWIMLANE_ITEM);
 
-		TaskAttribute idSecondItemTA = secondItemTA.getAttribute(SWIMLANE_LIST + ID_SEPARATOR + "1" //$NON-NLS-1$
-				+ ID_SEPARATOR + SUFFIX_SWIMLANE_ITEM + ID_SEPARATOR + SUFFIX_ID);
+		TaskAttribute idSecondItemTA = secondItemTA.getAttribute(swimlaneId + ID_SEPARATOR
+				+ SUFFIX_SWIMLANE_ITEM + ID_SEPARATOR + SUFFIX_ID);
 
 		assertNotNull(idSecondItemTA);
 		assertEquals(TaskAttribute.TYPE_INTEGER, idSecondItemTA.getMetaData().getType());
@@ -321,66 +397,62 @@ public class MilestoneTaskDataConverterTest {
 	 */
 	@Test
 	public void testCardwallColumns() {
-
 		Date testDate = new Date();
-		TuleapProjectConfiguration tuleapProjectConfiguration = new TuleapProjectConfiguration(
-				"The first project", 200); //$NON-NLS-1$
-		TuleapMilestone milestone = new TuleapMilestone(50, 500, 200, "The first milestone", "URL", //$NON-NLS-1$//$NON-NLS-2$
+
+		TuleapMilestone milestone = new TuleapMilestone(50, MILESTONE_TYPE_ID1, PROJECT_ID,
+				"The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$ 
 				"HTML URL", testDate, testDate); //$NON-NLS-1$
+
 		TuleapCardwall cardwall = new TuleapCardwall();
 		milestone.setCardwall(cardwall);
-		TuleapStatus firstColumnConfig = new TuleapStatus(600, "I am the first column"); //$NON-NLS-1$
+		TuleapStatus firstColumnConfig = new TuleapStatus(600, "first column"); //$NON-NLS-1$
 
-		TuleapStatus secondColumnConfig = new TuleapStatus(800, "I am the second column"); //$NON-NLS-1$
+		TuleapStatus secondColumnConfig = new TuleapStatus(800, "second column"); //$NON-NLS-1$
 
 		cardwall.addStatus(firstColumnConfig);
 		cardwall.addStatus(secondColumnConfig);
 
-		TuleapMilestoneType tuleapMilestoneType = new TuleapMilestoneType(10000, "The URL", //$NON-NLS-1$
-				"The milestone type", "item name", "The description", testDate.getTime(), true); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
-		tuleapProjectConfiguration.addMilestoneType(tuleapMilestoneType);
-
-		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(tuleapMilestoneType);
-		converter.populateTaskData(taskData, milestone);
+		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(milestoneType1, taskRepository,
+				connector);
+		converter.populateTaskData(taskData, milestone, null);
 
 		TaskAttribute root = taskData.getRoot();
 
 		TaskAttribute columnList = root.getAttribute(COLUMN_LIST);
 		assertNotNull(columnList);
 
+		int i = 0;
 		// the first column
-		TaskAttribute firstColumnTA = columnList.getAttribute(COLUMN_LIST + ID_SEPARATOR + "0"); //$NON-NLS-1$
+		String attId = COLUMN_LIST + ID_SEPARATOR + i++;
+		TaskAttribute firstColumnTA = columnList.getAttribute(attId);
 
-		TaskAttribute firstColumnIdTA = firstColumnTA.getAttribute(COLUMN_LIST + ID_SEPARATOR + "0" //$NON-NLS-1$
-				+ ID_SEPARATOR + SUFFIX_ID);
+		TaskAttribute firstColumnIdTA = firstColumnTA.getAttribute(attId + ID_SEPARATOR + SUFFIX_ID);
 
 		assertNotNull(firstColumnIdTA);
 		assertEquals(TaskAttribute.TYPE_INTEGER, firstColumnIdTA.getMetaData().getType());
 		assertEquals("600", firstColumnIdTA.getValue()); //$NON-NLS-1$
 
-		TaskAttribute firstColumnLabelTA = firstColumnTA.getAttribute(COLUMN_LIST + ID_SEPARATOR + "0" //$NON-NLS-1$
-				+ ID_SEPARATOR + SUFFIX_LABEL);
+		TaskAttribute firstColumnLabelTA = firstColumnTA.getAttribute(attId + ID_SEPARATOR + SUFFIX_LABEL);
 
 		assertNotNull(firstColumnLabelTA);
 		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, firstColumnLabelTA.getMetaData().getType());
-		assertEquals("I am the first column", firstColumnLabelTA.getValue()); //$NON-NLS-1$
+		assertEquals("first column", firstColumnLabelTA.getValue()); //$NON-NLS-1$
 
 		// the second column
-		TaskAttribute secondColumnTA = columnList.getAttribute(COLUMN_LIST + ID_SEPARATOR + "1"); //$NON-NLS-1$
+		attId = COLUMN_LIST + ID_SEPARATOR + i++;
+		TaskAttribute secondColumnTA = columnList.getAttribute(attId);
 
-		TaskAttribute secondColumnIdTA = secondColumnTA.getAttribute(COLUMN_LIST + ID_SEPARATOR + "1" //$NON-NLS-1$
-				+ ID_SEPARATOR + SUFFIX_ID);
+		TaskAttribute secondColumnIdTA = secondColumnTA.getAttribute(attId + ID_SEPARATOR + SUFFIX_ID);
 
 		assertNotNull(secondColumnIdTA);
 		assertEquals(TaskAttribute.TYPE_INTEGER, secondColumnIdTA.getMetaData().getType());
 		assertEquals("800", secondColumnIdTA.getValue()); //$NON-NLS-1$
 
-		TaskAttribute secondColumnLabelTA = secondColumnTA.getAttribute(COLUMN_LIST + ID_SEPARATOR + "1" //$NON-NLS-1$
-				+ ID_SEPARATOR + SUFFIX_LABEL);
+		TaskAttribute secondColumnLabelTA = secondColumnTA.getAttribute(attId + ID_SEPARATOR + SUFFIX_LABEL);
 
 		assertNotNull(secondColumnLabelTA);
 		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, secondColumnLabelTA.getMetaData().getType());
-		assertEquals("I am the second column", secondColumnLabelTA.getValue()); //$NON-NLS-1$
+		assertEquals("second column", secondColumnLabelTA.getValue()); //$NON-NLS-1$
 
 	}
 
@@ -389,12 +461,12 @@ public class MilestoneTaskDataConverterTest {
 	 */
 	@Test
 	public void testCardwallCardsFieldValue() {
-
 		Date testDate = new Date();
-		TuleapProjectConfiguration tuleapProjectConfiguration = new TuleapProjectConfiguration(
-				"The first project", 200); //$NON-NLS-1$
-		TuleapMilestone milestone = new TuleapMilestone(50, 500, 200, "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
+
+		TuleapMilestone milestone = new TuleapMilestone(50, MILESTONE_TYPE_ID1, PROJECT_ID,
+				"The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$ 
 				"HTML URL", testDate, testDate); //$NON-NLS-1$
+
 		TuleapCardwall cardwall = new TuleapCardwall();
 		milestone.setCardwall(cardwall);
 
@@ -410,43 +482,42 @@ public class MilestoneTaskDataConverterTest {
 
 		firstSwimlane.addCard(firstCard);
 
-		TuleapMilestoneType tuleapMilestoneType = new TuleapMilestoneType(10000, "The URL", //$NON-NLS-1$
-				"The milestone type", "item name", "The description", testDate.getTime(), true); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
-		tuleapProjectConfiguration.addMilestoneType(tuleapMilestoneType);
-
-		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(tuleapMilestoneType);
-		converter.populateTaskData(taskData, milestone);
+		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(milestoneType1, taskRepository,
+				connector);
+		converter.populateTaskData(taskData, milestone, null);
 
 		TaskAttribute swimlaneList = taskData.getRoot().getAttribute(SWIMLANE_LIST);
 
+		int id = 0;
 		// The first swimlane
-		TaskAttribute firstSwimlaneTA = swimlaneList.getAttribute(SWIMLANE_LIST + ID_SEPARATOR + "0"); //$NON-NLS-1$
+		String swimlaneId = SWIMLANE_LIST + ID_SEPARATOR + id++;
+		TaskAttribute firstSwimlaneTA = swimlaneList.getAttribute(swimlaneId);
 
-		TaskAttribute cardsList = firstSwimlaneTA.getMappedAttribute(SWIMLANE_LIST + ID_SEPARATOR + "0" //$NON-NLS-1$
-				+ ID_SEPARATOR + SUFFIX_CARD_LIST);
+		TaskAttribute cardsList = firstSwimlaneTA.getMappedAttribute(swimlaneId + ID_SEPARATOR
+				+ SUFFIX_CARD_LIST);
 		assertNotNull(cardsList);
 
-		TaskAttribute firstCardTA = cardsList.getAttribute(SWIMLANE_LIST + ID_SEPARATOR + "0" + ID_SEPARATOR //$NON-NLS-1$
-				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0"); //$NON-NLS-1$
+		TaskAttribute firstCardTA = cardsList.getAttribute(swimlaneId + ID_SEPARATOR + SUFFIX_CARD_LIST
+				+ ID_SEPARATOR + "200:700#0"); //$NON-NLS-1$
 		assertNotNull(firstCardTA);
 
-		TaskAttribute idFirstCardTA = firstCardTA.getAttribute(SWIMLANE_LIST + ID_SEPARATOR + "0" //$NON-NLS-1$
-				+ ID_SEPARATOR + SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR + SUFFIX_ID); //$NON-NLS-1$
+		TaskAttribute idFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR + SUFFIX_CARD_LIST
+				+ ID_SEPARATOR + "200:700#0" + ID_SEPARATOR + SUFFIX_ID); //$NON-NLS-1$
 
 		assertNotNull(idFirstCardTA);
 		assertEquals(TaskAttribute.TYPE_INTEGER, idFirstCardTA.getMetaData().getType());
 		assertEquals("200:700#0", idFirstCardTA.getValue()); //$NON-NLS-1$
 
-		TaskAttribute statusIdFirstCardTA = firstCardTA.getAttribute(SWIMLANE_LIST + ID_SEPARATOR + "0" //$NON-NLS-1$
-				+ ID_SEPARATOR + SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
+		TaskAttribute statusIdFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
+				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
 				+ SUFFIX_STATUS_ID);
 
 		assertNotNull(statusIdFirstCardTA);
 		assertEquals(TaskAttribute.TYPE_INTEGER, statusIdFirstCardTA.getMetaData().getType());
 		assertEquals("10000", statusIdFirstCardTA.getValue()); //$NON-NLS-1$
 
-		TaskAttribute fieldValueFirstCardTA = firstCardTA.getAttribute(SWIMLANE_LIST + ID_SEPARATOR + "0" //$NON-NLS-1$
-				+ ID_SEPARATOR + SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + FIELD_SEPARATOR + "1000"); //$NON-NLS-1$ //$NON-NLS-2$
+		TaskAttribute fieldValueFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
+				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + FIELD_SEPARATOR + "1000"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		assertNotNull(fieldValueFirstCardTA);
 		assertEquals("300, 301, 302", fieldValueFirstCardTA.getValue()); //$NON-NLS-1$
@@ -458,12 +529,12 @@ public class MilestoneTaskDataConverterTest {
 	 */
 	@Test
 	public void testCardwallCardsBindFieldValues() {
-
 		Date testDate = new Date();
-		TuleapProjectConfiguration tuleapProjectConfiguration = new TuleapProjectConfiguration(
-				"The first project", 200); //$NON-NLS-1$
-		TuleapMilestone milestone = new TuleapMilestone(50, 500, 200, "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
+
+		TuleapMilestone milestone = new TuleapMilestone(50, MILESTONE_TYPE_ID1, PROJECT_ID,
+				"The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$ 
 				"HTML URL", testDate, testDate); //$NON-NLS-1$
+
 		TuleapCardwall cardwall = new TuleapCardwall();
 		milestone.setCardwall(cardwall);
 
@@ -485,45 +556,51 @@ public class MilestoneTaskDataConverterTest {
 
 		firstSwimlane.addCard(firstCard);
 
-		TuleapMilestoneType tuleapMilestoneType = new TuleapMilestoneType(10000, "The URL", //$NON-NLS-1$
-				"The milestone type", "item name", "The description", testDate.getTime(), true); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
-		tuleapProjectConfiguration.addMilestoneType(tuleapMilestoneType);
-
-		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(tuleapMilestoneType);
-		converter.populateTaskData(taskData, milestone);
+		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(milestoneType1, taskRepository,
+				connector);
+		converter.populateTaskData(taskData, milestone, null);
 
 		TaskAttribute swimlaneList = taskData.getRoot().getAttribute(SWIMLANE_LIST);
 
+		int id = 0;
 		// The first swimlane
-		TaskAttribute firstSwimlaneTA = swimlaneList.getAttribute(SWIMLANE_LIST + ID_SEPARATOR + "0"); //$NON-NLS-1$
+		String swimlaneId = SWIMLANE_LIST + ID_SEPARATOR + id++;
+		TaskAttribute firstSwimlaneTA = swimlaneList.getAttribute(swimlaneId);
 
-		TaskAttribute cardsList = firstSwimlaneTA.getMappedAttribute(SWIMLANE_LIST + ID_SEPARATOR + "0" //$NON-NLS-1$
-				+ ID_SEPARATOR + SUFFIX_CARD_LIST);
+		TaskAttribute cardsList = firstSwimlaneTA.getMappedAttribute(swimlaneId + ID_SEPARATOR
+				+ SUFFIX_CARD_LIST);
 		assertNotNull(cardsList);
 
-		TaskAttribute firstCardTA = cardsList.getAttribute(SWIMLANE_LIST + ID_SEPARATOR + "0" + ID_SEPARATOR //$NON-NLS-1$
-				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0"); //$NON-NLS-1$
+		TaskAttribute firstCardTA = cardsList.getAttribute(swimlaneId + ID_SEPARATOR + SUFFIX_CARD_LIST
+				+ ID_SEPARATOR + "200:700#0"); //$NON-NLS-1$
 		assertNotNull(firstCardTA);
 
-		TaskAttribute idFirstCardTA = firstCardTA.getAttribute(SWIMLANE_LIST + ID_SEPARATOR + "0" //$NON-NLS-1$
-				+ ID_SEPARATOR + SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR + SUFFIX_ID); //$NON-NLS-1$
+		TaskAttribute idFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR + SUFFIX_CARD_LIST
+				+ ID_SEPARATOR + "200:700#0" + ID_SEPARATOR + SUFFIX_ID); //$NON-NLS-1$
 
 		assertNotNull(idFirstCardTA);
 		assertEquals(TaskAttribute.TYPE_INTEGER, idFirstCardTA.getMetaData().getType());
 		assertEquals("200:700#0", idFirstCardTA.getValue()); //$NON-NLS-1$
 
-		TaskAttribute statusIdFirstCardTA = firstCardTA.getAttribute(SWIMLANE_LIST + ID_SEPARATOR + "0" //$NON-NLS-1$
-				+ ID_SEPARATOR + SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
+		TaskAttribute statusIdFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
+				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
 				+ SUFFIX_STATUS_ID);
 
 		assertNotNull(statusIdFirstCardTA);
 		assertEquals(TaskAttribute.TYPE_INTEGER, statusIdFirstCardTA.getMetaData().getType());
 		assertEquals("10000", statusIdFirstCardTA.getValue()); //$NON-NLS-1$
 
-		TaskAttribute fieldValueFirstCardTA = firstCardTA.getAttribute(SWIMLANE_LIST + ID_SEPARATOR + "0" //$NON-NLS-1$
-				+ ID_SEPARATOR + SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + FIELD_SEPARATOR + "2000"); //$NON-NLS-1$ //$NON-NLS-2$
+		TaskAttribute fieldValueFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
+				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + FIELD_SEPARATOR + "2000"); //$NON-NLS-1$ //$NON-NLS-2$
 
-		assertNull(fieldValueFirstCardTA);
+		assertNotNull(fieldValueFirstCardTA);
+		// FIXME manage the type of Bound fields
+		// assertEquals(TaskAttribute.TYPE_SINGLE_SELECT, fieldValueFirstCardTA.getMetaData().getType());
+		List<String> values = fieldValueFirstCardTA.getValues();
+		assertEquals(3, values.size());
+		assertEquals("10", values.get(0)); //$NON-NLS-1$
+		assertEquals("20", values.get(1)); //$NON-NLS-1$
+		assertEquals("30", values.get(2)); //$NON-NLS-1$
 
 	}
 
@@ -532,11 +609,10 @@ public class MilestoneTaskDataConverterTest {
 	 */
 	@Test
 	public void testCardwallCardsFileDescription() {
-
 		Date testDate = new Date();
-		TuleapProjectConfiguration tuleapProjectConfiguration = new TuleapProjectConfiguration(
-				"The first project", 200); //$NON-NLS-1$
-		TuleapMilestone milestone = new TuleapMilestone(50, 500, 200, "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
+
+		TuleapMilestone milestone = new TuleapMilestone(50, MILESTONE_TYPE_ID1, PROJECT_ID,
+				"The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$ 
 				"HTML URL", testDate, testDate); //$NON-NLS-1$
 		TuleapCardwall cardwall = new TuleapCardwall();
 		milestone.setCardwall(cardwall);
@@ -563,43 +639,42 @@ public class MilestoneTaskDataConverterTest {
 
 		firstSwimlane.addCard(firstCard);
 
-		TuleapMilestoneType tuleapMilestoneType = new TuleapMilestoneType(10000, "The URL", //$NON-NLS-1$
-				"The milestone type", "item name", "The description", testDate.getTime(), true); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		tuleapProjectConfiguration.addMilestoneType(tuleapMilestoneType);
-
-		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(tuleapMilestoneType);
-		converter.populateTaskData(taskData, milestone);
+		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(milestoneType1, taskRepository,
+				connector);
+		converter.populateTaskData(taskData, milestone, null);
 
 		TaskAttribute swimlaneList = taskData.getRoot().getAttribute(SWIMLANE_LIST);
 
+		int id = 0;
 		// The first swimlane
-		TaskAttribute firstSwimlaneTA = swimlaneList.getAttribute(SWIMLANE_LIST + ID_SEPARATOR + "0"); //$NON-NLS-1$
+		String swimlaneId = SWIMLANE_LIST + ID_SEPARATOR + id++;
+		TaskAttribute firstSwimlaneTA = swimlaneList.getAttribute(swimlaneId);
 
-		TaskAttribute cardsList = firstSwimlaneTA.getMappedAttribute(SWIMLANE_LIST + ID_SEPARATOR + "0" //$NON-NLS-1$
-				+ ID_SEPARATOR + SUFFIX_CARD_LIST);
+		TaskAttribute cardsList = firstSwimlaneTA.getMappedAttribute(swimlaneId + ID_SEPARATOR
+				+ SUFFIX_CARD_LIST);
 		assertNotNull(cardsList);
 
-		TaskAttribute firstCardTA = cardsList.getAttribute(SWIMLANE_LIST + ID_SEPARATOR + "0" + ID_SEPARATOR //$NON-NLS-1$
-				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0"); //$NON-NLS-1$
+		TaskAttribute firstCardTA = cardsList.getAttribute(swimlaneId + ID_SEPARATOR + SUFFIX_CARD_LIST
+				+ ID_SEPARATOR + "200:700#0"); //$NON-NLS-1$
 		assertNotNull(firstCardTA);
 
-		TaskAttribute idFirstCardTA = firstCardTA.getAttribute(SWIMLANE_LIST + ID_SEPARATOR + "0" //$NON-NLS-1$
-				+ ID_SEPARATOR + SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR + SUFFIX_ID); //$NON-NLS-1$
+		TaskAttribute idFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR + SUFFIX_CARD_LIST
+				+ ID_SEPARATOR + "200:700#0" + ID_SEPARATOR + SUFFIX_ID); //$NON-NLS-1$
 
 		assertNotNull(idFirstCardTA);
 		assertEquals(TaskAttribute.TYPE_INTEGER, idFirstCardTA.getMetaData().getType());
 		assertEquals("200:700#0", idFirstCardTA.getValue()); //$NON-NLS-1$
 
-		TaskAttribute statusIdFirstCardTA = firstCardTA.getAttribute(SWIMLANE_LIST + ID_SEPARATOR + "0" //$NON-NLS-1$
-				+ ID_SEPARATOR + SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
+		TaskAttribute statusIdFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
+				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
 				+ SUFFIX_STATUS_ID);
 
 		assertNotNull(statusIdFirstCardTA);
 		assertEquals(TaskAttribute.TYPE_INTEGER, statusIdFirstCardTA.getMetaData().getType());
 		assertEquals("10000", statusIdFirstCardTA.getValue()); //$NON-NLS-1$
 
-		TaskAttribute fieldValueFirstCardTA = firstCardTA.getAttribute(SWIMLANE_LIST + ID_SEPARATOR + "0" //$NON-NLS-1$
-				+ ID_SEPARATOR + SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + FIELD_SEPARATOR + "2000"); //$NON-NLS-1$ //$NON-NLS-2$  
+		TaskAttribute fieldValueFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
+				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + FIELD_SEPARATOR + "2000"); //$NON-NLS-1$ //$NON-NLS-2$  
 
 		assertNull(fieldValueFirstCardTA);
 	}
