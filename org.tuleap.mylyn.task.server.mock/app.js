@@ -17,6 +17,15 @@ var https = require("https");
 var http = require("http");
 var fs = require("fs")
 var express = require('express');
+var mongoose = require('mongoose');
+
+//connect to Mongo when the app initializes
+var databaseURI = 'mongodb://localhost/test';
+mongoose.connect(databaseURI);
+
+mongoose.connection.on('connected', function () {
+  console.log('Mongoose default connection open to ' + databaseURI);
+});
 
 // Creating the server and exporting it
 var app = express();
@@ -103,13 +112,8 @@ app.all('/*', function (req, res, next) {
       }
     }
   } else {
-    // 404 Not using the API
-    res.status(404);
-    var response = {
-        code: 404,
-        message: 'Not Found'
-    };
-    res.send(response);
+    // Not for the API? Let other middlewares handle it...
+    next();
   }
 });
 
@@ -117,7 +121,14 @@ app.all('/*', function (req, res, next) {
 app.all('/*', function (req, res, next) {
   res.header('Accept-Charset', 'utf-8');
   res.header('Accept', 'application/json');
-  res.header('Content-Type', 'application/json, chartset=utf-8');
+
+  if (req.url.indexOf('/api/') != -1) {
+    // The API returns JSON content
+    res.header('Content-Type', 'application/json, chartset=utf-8');
+  } else {
+    // The other urls return HTML pages
+    res.header('Content-Type', 'text/html; charset=utf-8');
+  }
 
   // Log the headers of the request
   console.log(req.originalMethod + " " + req.protocol + "://" + req.get('host') + req.url);
@@ -149,6 +160,7 @@ var auth = express.basicAuth(function(user, password) {
 });
 
 // Static files
+console.log('Static files served from: ' + __dirname + '/public');
 app.use(express.static(__dirname + '/public'));
 
 // Load the controllers dynamically
@@ -164,7 +176,7 @@ app.options('/api/' + apiVersion + '/backlog_items/:backlogItemId', backlogItems
 app.get('/api/' + apiVersion + '/backlog_items/:backlogItemId', auth, backlogItems.get);
 
 // 404 Since no middleware has responded
-app.use(function(req, res, next){
+app.use('/api/*', function(req, res, next){
   res.status(404);
   var response = {
     code: 404,
@@ -180,6 +192,6 @@ var options = {
 };
 
 // Launch the server
-// https.createServer(options, app).listen(3001);
-app.listen(3001)
+//var server = https.createServer(options, app).listen(3001);
+app.listen(3001);
 console.log("Express server listening on port 3001");

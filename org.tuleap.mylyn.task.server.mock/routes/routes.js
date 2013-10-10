@@ -76,4 +76,9 @@ module.exports = function(parent, apiPath) {
   });
   
   parent.use(app);
+  
+  console.log('/routes/routes.js');
+  console.log('   ' + 'OPTIONS ' + apiPath);
+  console.log('   ' + 'GET ' + apiPath);
+  console.log();
 };
