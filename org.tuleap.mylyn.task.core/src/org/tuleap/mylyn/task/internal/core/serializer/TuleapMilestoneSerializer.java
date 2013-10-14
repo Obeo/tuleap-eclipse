@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.serializer;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -17,6 +18,7 @@ import com.google.gson.JsonSerializationContext;
 
 import java.lang.reflect.Type;
 
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
@@ -67,5 +69,26 @@ public class TuleapMilestoneSerializer extends AbstractTuleapSerializer<TuleapMi
 			comment.add(ITuleapConstants.BODY, new JsonPrimitive(milestone.getNewComment()));
 		}
 		return milestoneObject;
+	}
+
+	/**
+	 * Serialize only the list of milestone backlogItems.
+	 * 
+	 * @param milestone
+	 *            The milestone to serialize.
+	 * @return the serialized JsonElement
+	 */
+	public JsonElement serializeMilestoneBacklogItems(TuleapMilestone milestone) {
+
+		JsonObject backlogItem = new JsonObject();
+		JsonElement backlogItems = new JsonArray();
+
+		for (TuleapBacklogItem tuleapBacklogItem : milestone.getBacklogItems()) {
+			backlogItem.add("id", new JsonPrimitive(Integer.valueOf(tuleapBacklogItem.getId()))); //$NON-NLS-1$
+			backlogItem.add("assigned_milestone_id", new JsonPrimitive(tuleapBacklogItem //$NON-NLS-1$
+					.getAssignedMilestoneId()));
+			backlogItems.getAsJsonArray().add(backlogItem);
+		}
+		return backlogItems;
 	}
 }

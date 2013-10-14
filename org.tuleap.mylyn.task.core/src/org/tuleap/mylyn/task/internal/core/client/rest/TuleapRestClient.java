@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.client.rest;
 
+import com.google.gson.JsonElement;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +41,7 @@ import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerReport;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
+import org.tuleap.mylyn.task.internal.core.serializer.TuleapMilestoneSerializer;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
@@ -618,12 +621,50 @@ public class TuleapRestClient {
 	 * Updates the milestone on the server.
 	 * 
 	 * @param tuleapMilestone
-	 *            The Tuleap milestone
+	 *            The milestone to update.
 	 * @param monitor
-	 *            The progress monitor
+	 *            The progress monitor.
+	 * @throws CoreException
+	 *             In case of error during the update of the artifact.
 	 */
-	public void updateMilestone(TuleapMilestone tuleapMilestone, IProgressMonitor monitor) {
-		// TODO SBE update the milestone on the server
+
+	public void updateMilestone(TuleapMilestone tuleapMilestone, IProgressMonitor monitor)
+			throws CoreException {
+		this.updateMilestoneBacklogItems(tuleapMilestone, monitor);
+	}
+
+	/**
+	 * Updates the milestone BacklogItems on the server.
+	 * 
+	 * @param tuleapMilestone
+	 *            The milestone to update.
+	 * @param monitor
+	 *            The progress monitor.
+	 * @throws CoreException
+	 *             In case of error during the update of the artifact.
+	 */
+
+	private void updateMilestoneBacklogItems(TuleapMilestone tuleapMilestone, IProgressMonitor monitor)
+			throws CoreException {
+		// Test the connection
+
+		RestResourceFactory restResources = tuleapRestConnector.getResourceFactory();
+		RestResource restMilestonesBacklogItems = restResources.milestonesBacklogItems(tuleapMilestone
+				.getId());
+
+		// from POJO to JSON
+		JsonElement backlogItems = new TuleapMilestoneSerializer()
+				.serializeMilestoneBacklogItems(tuleapMilestone);
+		String changesToPut = backlogItems.toString();
+
+		// Send the PUT request
+		ServerResponse response = restMilestonesBacklogItems.put().withBody(changesToPut).run();
+
+		if (!response.isOk()) {
+			// Invalid login? server error?
+			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, response
+					.getBody()));
+		}
 	}
 
 	/**
@@ -894,5 +935,4 @@ public class TuleapRestClient {
 		String jsonMilestoneIds = milestonesResponse.getBody();
 		return this.jsonParser.parseMilestones(jsonMilestoneIds);
 	}
-
 }

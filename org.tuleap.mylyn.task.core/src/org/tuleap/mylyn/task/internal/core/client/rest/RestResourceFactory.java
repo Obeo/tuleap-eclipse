@@ -244,7 +244,8 @@ public final class RestResourceFactory {
 	 * @return A resource that gives access to the {code /milestones/:id/backlog_items} HTTP resource.
 	 */
 	public RestResource milestonesBacklogItems(int milestoneId) {
-		return resource(RestResource.GET, URL.MILESTONES, Integer.toString(milestoneId), URL.BACKLOG_ITEMS);
+		return resource(RestResource.GET | RestResource.PUT, URL.MILESTONES, Integer.toString(milestoneId),
+				URL.BACKLOG_ITEMS);
 	}
 
 	/**

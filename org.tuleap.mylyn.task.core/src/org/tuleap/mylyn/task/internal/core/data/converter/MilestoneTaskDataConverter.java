@@ -50,6 +50,32 @@ import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector
 public class MilestoneTaskDataConverter extends AbstractElementTaskDataConverter<TuleapMilestone, TuleapMilestoneType> {
 
 	/**
+	 * The value used to indicate that a task data represents the label to use for points ("Story Points" for
+	 * example).
+	 */
+	public static final String SUFFIX_ASSIGNED_MILESTONE_ID = "assigned_id"; //$NON-NLS-1$
+
+	/**
+	 * Separator used in computed ids.
+	 */
+	public static final char ID_SEPARATOR = '-';
+
+	/**
+	 * Suffix appended to the ids of Task Attributes representing IDs to display to an end-user.
+	 */
+	public static final String SUFFIX_DISPLAY_ID = "display_id"; //$NON-NLS-1$
+
+	/**
+	 * Id of the backlog items list task attribute.
+	 */
+	public static final String BACKLOG = "mta_backlog"; //$NON-NLS-1$
+
+	/**
+	 * Id of the planning task attribute.
+	 */
+	public static final String MILESTONE_PLANNING = "mta_planning"; //$NON-NLS-1$
+
+	/**
 	 * Constructor.
 	 * 
 	 * @param configuration
@@ -276,7 +302,22 @@ public class MilestoneTaskDataConverter extends AbstractElementTaskDataConverter
 
 		// TODO SBE populate the backlog items etc...
 
-		return tuleapMilestone;
-	}
+		TaskAttribute milestoneAtt = taskData.getRoot().getAttribute(MILESTONE_PLANNING);
+		TaskAttribute backlogAtt = milestoneAtt.getAttribute(BACKLOG);
+		for (int i = 0; i < backlogAtt.getAttributes().size(); i++) {
+			TaskAttribute backlogItem = backlogAtt.getMappedAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM
+					+ i);
+			TaskAttribute backlogItemid = backlogItem.getMappedAttribute(backlogItem.getId() + ID_SEPARATOR
+					+ SUFFIX_DISPLAY_ID);
+			TaskAttribute assignedMilestoneId = backlogItem.getMappedAttribute(backlogItem.getId()
+					+ ID_SEPARATOR + SUFFIX_ASSIGNED_MILESTONE_ID);
+			TuleapBacklogItem tuleapbacklogItem = new TuleapBacklogItem(Integer.parseInt(backlogItemid
+					.getValue()), 0, 0, "", "", "", null, null); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+			tuleapbacklogItem.setAssignedMilestoneId(Integer.valueOf(assignedMilestoneId.getValue()));
+			tuleapMilestone.addBacklogItem(tuleapbacklogItem);
 
+		}
+		return tuleapMilestone;
+
+	}
 }
