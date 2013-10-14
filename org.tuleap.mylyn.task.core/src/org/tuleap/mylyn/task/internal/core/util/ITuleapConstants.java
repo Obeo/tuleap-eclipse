@@ -264,4 +264,9 @@ public interface ITuleapConstants {
 	 * The key used for the project ID of an element possessed by a project.
 	 */
 	String JSON_PROJECT_ID = "project_id"; //$NON-NLS-1$
+
+	/**
+	 * The key used for the configuration ID of an element.
+	 */
+	String CONFIGURATION_ID = "configuration_id"; //$NON-NLS-1$
 }

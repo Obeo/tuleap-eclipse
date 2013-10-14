@@ -106,4 +106,24 @@ public abstract class AbstractTuleapSerializer<T extends AbstractTuleapConfigura
 			}
 		}
 	}
+
+	/**
+	 * Serialize only the generic information to update an {@link AbstractTuleapConfigurableElement}.
+	 * 
+	 * @param element
+	 *            The element to serialize.
+	 * @return the serialized JsonElement
+	 */
+	public JsonElement serializeUpdateFields(T element) {
+		JsonObject elementObject = new JsonObject();
+		elementObject = (JsonObject)this.serialize(element, null, null);
+		elementObject.add(ITuleapConstants.ID, new JsonPrimitive(Integer.valueOf(element.getId())));
+		if (element.getLabel() != null) {
+			elementObject.add(ITuleapConstants.LABEL, new JsonPrimitive(element.getLabel()));
+		}
+		elementObject.add(ITuleapConstants.CONFIGURATION_ID, new JsonPrimitive(Integer.valueOf(element
+				.getConfigurationId())));
+		return elementObject;
+
+	}
 }

@@ -631,6 +631,7 @@ public class TuleapRestClient {
 	public void updateMilestone(TuleapMilestone tuleapMilestone, IProgressMonitor monitor)
 			throws CoreException {
 		this.updateMilestoneBacklogItems(tuleapMilestone, monitor);
+		this.updateMilestoneFields(tuleapMilestone, monitor);
 	}
 
 	/**
@@ -659,6 +660,37 @@ public class TuleapRestClient {
 
 		// Send the PUT request
 		ServerResponse response = restMilestonesBacklogItems.put().withBody(changesToPut).run();
+
+		if (!response.isOk()) {
+			// Invalid login? server error?
+			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, response
+					.getBody()));
+		}
+	}
+
+	/**
+	 * Updates the milestone fields on the server.
+	 * 
+	 * @param tuleapMilestone
+	 *            The milestone to update.
+	 * @param monitor
+	 *            The progress monitor.
+	 * @throws CoreException
+	 *             In case of error during the update of the artifact.
+	 */
+
+	private void updateMilestoneFields(TuleapMilestone tuleapMilestone, IProgressMonitor monitor)
+			throws CoreException {
+		// Test the connection
+		RestResourceFactory restResources = tuleapRestConnector.getResourceFactory();
+		RestResource restMilestone = restResources.milestone(tuleapMilestone.getId());
+
+		// from POJO to JSON
+		JsonElement milestoneObject = new TuleapMilestoneSerializer().serializeUpdateFields(tuleapMilestone);
+		String changesToPut = milestoneObject.toString();
+
+		// Send the PUT request
+		ServerResponse response = restMilestone.put().withBody(changesToPut).run();
 
 		if (!response.isOk()) {
 			// Invalid login? server error?

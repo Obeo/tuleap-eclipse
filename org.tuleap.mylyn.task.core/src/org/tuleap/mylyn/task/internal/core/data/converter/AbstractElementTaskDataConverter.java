@@ -230,7 +230,12 @@ public abstract class AbstractElementTaskDataConverter<ELEMENT extends AbstractT
 	 * @return The element to populate
 	 */
 	protected ELEMENT populateElementConfigurableFields(TaskData taskData, ELEMENT element) {
-		// to do
+		TuleapConfigurableElementMapper tuleapConfigurableElementMapper = new TuleapConfigurableElementMapper(
+				taskData, this.configuration);
+		for (AbstractFieldValue fieldValue : tuleapConfigurableElementMapper.getFieldValues()) {
+			element.addFieldValue(fieldValue);
+		}
+		// TODO FIB Add missing information to add to ELEMENT
 		return element;
 	}
 

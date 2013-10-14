@@ -98,7 +98,7 @@ public final class RestResourceFactory {
 	 * @return A resource that gives access to the {code /milestones/:id} HTTP resource.
 	 */
 	public RestResource milestone(int milestoneId) {
-		return resource(RestResource.GET, URL.MILESTONES, Integer.toString(milestoneId));
+		return resource(RestResource.GET | RestResource.PUT, URL.MILESTONES, Integer.toString(milestoneId));
 	}
 
 	/**
