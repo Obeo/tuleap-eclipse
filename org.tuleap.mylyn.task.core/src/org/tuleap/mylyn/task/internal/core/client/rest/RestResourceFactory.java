@@ -267,7 +267,7 @@ public final class RestResourceFactory {
 	 * @return A resource that gives access to the {code /cards/:id} HTTP resource.
 	 */
 	public RestResource cards(int cardId) {
-		return resource(RestResource.GET, URL.CARDS, Integer.toString(cardId));
+		return resource(RestResource.GET | RestResource.PUT, URL.CARDS, Integer.toString(cardId));
 	}
 
 	/**
