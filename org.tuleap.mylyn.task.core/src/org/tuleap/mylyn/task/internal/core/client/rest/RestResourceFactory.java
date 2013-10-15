@@ -102,6 +102,18 @@ public final class RestResourceFactory {
 	}
 
 	/**
+	 * Provides access to the {code /backlog_items/:id} HTTP resource.
+	 * 
+	 * @param backlogItemId
+	 *            Id of the backlogItem.
+	 * @return A resource that gives access to the {code /backlog_items/:id} HTTP resource.
+	 */
+	public RestResource backlogItem(int backlogItemId) {
+		return resource(RestResource.GET | RestResource.PUT, URL.BACKLOG_ITEMS, Integer
+				.toString(backlogItemId));
+	}
+
+	/**
 	 * Provides access to the {code /projects/:projectId/trackers} HTTP resource.
 	 * 
 	 * @param projectId

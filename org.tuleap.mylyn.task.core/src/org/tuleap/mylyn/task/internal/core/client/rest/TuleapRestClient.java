@@ -43,6 +43,7 @@ import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerReport;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
+import org.tuleap.mylyn.task.internal.core.serializer.TuleapBacklogItemSerializer;
 import org.tuleap.mylyn.task.internal.core.serializer.TuleapCardSerializer;
 import org.tuleap.mylyn.task.internal.core.serializer.TuleapMilestoneSerializer;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
@@ -639,6 +640,37 @@ public class TuleapRestClient {
 			for (TuleapCard tuleapCard : tuleapSwimlane.getCards()) {
 				this.updateCard(tuleapCard, monitor);
 			}
+		}
+	}
+
+	/**
+	 * Updates the milestone BacklogItems on the server.
+	 * 
+	 * @param tuleapBacklogItem
+	 *            The backlogItemto update.
+	 * @param monitor
+	 *            The progress monitor.
+	 * @throws CoreException
+	 *             In case of error during the update of the artifact.
+	 */
+
+	public void updateBacklogItem(TuleapBacklogItem tuleapBacklogItem, IProgressMonitor monitor)
+			throws CoreException {
+		// Test the connection
+		RestResourceFactory restResources = tuleapRestConnector.getResourceFactory();
+		RestResource restBacklogItem = restResources.backlogItem(tuleapBacklogItem.getId());
+
+		// from POJO to JSON
+		JsonElement backlogItem = new TuleapBacklogItemSerializer().serializeUpdateFields(tuleapBacklogItem);
+
+		String changesToPut = backlogItem.toString();
+
+		// Send the PUT request
+		ServerResponse response = restBacklogItem.put().withBody(changesToPut).run();
+		if (!response.isOk()) {
+			// Invalid login? server error?
+			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, response
+					.getBody()));
 		}
 	}
 
