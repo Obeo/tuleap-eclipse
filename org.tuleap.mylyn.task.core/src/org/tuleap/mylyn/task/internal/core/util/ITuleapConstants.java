@@ -135,6 +135,16 @@ public interface ITuleapConstants {
 	String SUBMITTED_BY = "submitted_by"; //$NON-NLS-1$
 
 	/**
+	 * The key used to retrieve the date of creation.
+	 */
+	String SUBMITTED_ON = "submitted_on"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the date of last modification.
+	 */
+	String LAST_UPDATED_ON = "last_updated_on"; //$NON-NLS-1$
+
+	/**
 	 * The key used to retrieve the file description.
 	 */
 	String DESCRIPTION = "description"; //$NON-NLS-1$

@@ -20,6 +20,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 
 import java.lang.reflect.Type;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,9 +64,18 @@ public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapConfigu
 		String url = jsonObject.get(ITuleapConstants.URL).getAsString();
 		String htmlUrl = jsonObject.get(ITuleapConstants.HTML_URL).getAsString();
 		int configurationId = jsonObject.get(getTypeIdKey()).getAsInt();
+		String submittedOn = jsonObject.get(ITuleapConstants.SUBMITTED_ON).getAsString();
+		// TODO int submittedBy = jsonObject.get(ITuleapConstants.SUBMITTED_BY).getAsInt();
+		String lastUpdateOn = jsonObject.get(ITuleapConstants.LAST_UPDATED_ON).getAsString();
 
-		// TODO Fix the dates from the parsing
-		T pojo = buildPojo(id, configurationId, projectId, label, url, htmlUrl, new Date(), new Date());
+		T pojo;
+		try {
+			pojo = buildPojo(id, configurationId, projectId, label, url, htmlUrl, dateFormat
+					.parse(submittedOn), dateFormat.parse(lastUpdateOn));
+		} catch (ParseException e) {
+			throw new JsonParseException("Invalid date", e); //$NON-NLS-1$
+		}
+		// pojo.setSubmittedBy(submittedBy);
 
 		JsonArray fields = jsonObject.get(ITuleapConstants.VALUES).getAsJsonArray();
 		for (JsonElement field : fields) {
