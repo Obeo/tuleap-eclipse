@@ -14,7 +14,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var projectSchema = new Schema({
-  id: String,
+  id: int,
   name: String,
   unix_name: String,
   description: String,

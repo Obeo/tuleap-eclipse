@@ -14,7 +14,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var userGroupSchema = new Schema({
-  id: String,
+  id: int,
   name: String
 });
 
