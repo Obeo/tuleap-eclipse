@@ -64,7 +64,7 @@ public class TuleapRestClient {
 	/**
 	 * Utility class used to communicate using HTTP with the server.
 	 */
-	private final TuleapRestConnector tuleapRestConnector;
+	private final IRestConnector tuleapRestConnector;
 
 	/**
 	 * The JSON parser.
@@ -100,7 +100,7 @@ public class TuleapRestClient {
 	 * @param logger
 	 *            The logger
 	 */
-	public TuleapRestClient(TuleapRestConnector tuleapRestConnector, TuleapJsonParser jsonParser,
+	public TuleapRestClient(IRestConnector tuleapRestConnector, TuleapJsonParser jsonParser,
 			TuleapJsonSerializer jsonSerializer, TaskRepository taskRepository, ILog logger) {
 		this.tuleapRestConnector = tuleapRestConnector;
 		this.jsonParser = jsonParser;
