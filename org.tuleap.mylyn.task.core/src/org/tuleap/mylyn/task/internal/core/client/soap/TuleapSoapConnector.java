@@ -325,8 +325,7 @@ public class TuleapSoapConnector {
 	 * @return The configuration of the Tuleap instance.
 	 */
 	public TuleapServer getTuleapServerConfiguration(IProgressMonitor monitor) {
-		TuleapServer serverConfiguration = new TuleapServer(this.trackerLocation
-				.getUrl());
+		TuleapServer serverConfiguration = new TuleapServer(this.trackerLocation.getUrl());
 		serverConfiguration.setLastUpdate(new Date().getTime());
 
 		try {
@@ -350,8 +349,7 @@ public class TuleapSoapConnector {
 					// The project does not have any trackers, we won't log the error so we catch it
 				}
 
-				TuleapProject projectConfiguration = new TuleapProject(group
-						.getGroup_name(), groupId);
+				TuleapProject projectConfiguration = new TuleapProject(group.getGroup_name(), groupId);
 				serverConfiguration.addProject(projectConfiguration);
 
 				if (trackers.length > 0) {
@@ -738,8 +736,8 @@ public class TuleapSoapConnector {
 	 *            The progress monitor
 	 * @return The tasks found
 	 */
-	public List<CommentedArtifact> performQuery(IRepositoryQuery query,
-			TuleapServer serverConfiguration, int maxHits, IProgressMonitor monitor) {
+	public List<CommentedArtifact> performQuery(IRepositoryQuery query, TuleapServer serverConfiguration,
+			int maxHits, IProgressMonitor monitor) {
 		List<CommentedArtifact> artifactsFound = new ArrayList<CommentedArtifact>();
 
 		int trackerId = -1;
@@ -949,13 +947,18 @@ public class TuleapSoapConnector {
 		Group[] myProjects = this.getCodendiAPIPortType().getMyProjects(sessionHash);
 		for (Group group : myProjects) {
 			if (groupId == -1) {
-				Tracker[] trackerList = this.getTuleapTrackerV5APIPortType().getTrackerList(sessionHash,
-						group.getGroup_id());
-				for (Tracker tracker : trackerList) {
-					if (artifact.getTracker().getId() == tracker.getTracker_id()) {
-						groupId = group.getGroup_id();
-						break;
+				try {
+					Tracker[] trackerList = this.getTuleapTrackerV5APIPortType().getTrackerList(sessionHash,
+							group.getGroup_id());
+					for (Tracker tracker : trackerList) {
+						if (artifact.getTracker().getId() == tracker.getTracker_id()) {
+							groupId = group.getGroup_id();
+							break;
+						}
 					}
+				} catch (RemoteException e) {
+					// https://tuleap.net/plugins/tracker/?aid=4470
+					// The project does not have any trackers, we won't log the error so we catch it
 				}
 			}
 		}
@@ -979,11 +982,9 @@ public class TuleapSoapConnector {
 			monitor.worked(1);
 		}
 		int artifactId = this.getTuleapTrackerV5APIPortType().addArtifact(sessionHash, groupId,
-				artifact.getTracker().getId(),
-				valuesList.toArray(new ArtifactFieldValue[valuesList.size()]));
+				artifact.getTracker().getId(), valuesList.toArray(new ArtifactFieldValue[valuesList.size()]));
 
-		taskDataId = TuleapTaskIdentityUtil.getTaskDataId(groupId, artifact.getTracker().getId(),
-				artifactId);
+		taskDataId = TuleapTaskIdentityUtil.getTaskDataId(groupId, artifact.getTracker().getId(), artifactId);
 		monitor.worked(fifty);
 
 		this.logout();
@@ -1016,7 +1017,7 @@ public class TuleapSoapConnector {
 
 		Group[] myProjects = this.getCodendiAPIPortType().getMyProjects(sessionHash);
 		for (Group group : myProjects) {
-			if (groupId == -1) {
+			try {
 				Tracker[] trackerList = this.getTuleapTrackerV5APIPortType().getTrackerList(sessionHash,
 						group.getGroup_id());
 				for (Tracker tracker : trackerList) {
@@ -1025,6 +1026,9 @@ public class TuleapSoapConnector {
 						break;
 					}
 				}
+			} catch (RemoteException e) {
+				// https://tuleap.net/plugins/tracker/?aid=4470
+				// The project does not have any trackers, we won't log the error so we catch it
 			}
 		}
 
