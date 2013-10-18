@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.client.rest;
 
-import com.google.gson.JsonElement;
-
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
@@ -148,12 +146,12 @@ public class RestResource {
 	 * Creates a GET operation for this resource after checking it makes sense by sending an OPTIONS call to
 	 * this resource's URL.
 	 * 
-	 * @return A new instance of {@link IRestOperation} created with this resource operation factory.
+	 * @return A new instance of {@link RestOpGet} created with this resource operation factory.
 	 * @throws CoreException
 	 *             If a problem occurs while checking whether the GET method is supported by the server for
 	 *             this resource.
 	 */
-	public IRestIterableOperation<JsonElement> get() throws CoreException {
+	public RestOpGet get() throws CoreException {
 		if ((supportedMethods & GET) == 0) {
 			throw new UnsupportedOperationException(TuleapMylynTasksMessages.getString(
 					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, GET_LABEL, getUrl()));
@@ -165,9 +163,9 @@ public class RestResource {
 	/**
 	 * Creates an OPTIONS operation for this resource.
 	 * 
-	 * @return A new instance of {@link IRestOperation} created with this resource operation factory.
+	 * @return A new instance of {@link RestOpOptions} created with this resource operation factory.
 	 */
-	public IRestOperation options() {
+	public RestOpOptions options() {
 		return new RestOpOptions(getFullUrl(), connector);
 	}
 
@@ -175,12 +173,12 @@ public class RestResource {
 	 * Creates a POST operation for this resource after checking it makes sense by sending an OPTIONS call to
 	 * this resource's URL.
 	 * 
-	 * @return A new instance of {@link IRestOperation} created with this resource operation factory.
+	 * @return A new instance of {@link RestOpPost} created with this resource operation factory.
 	 * @throws CoreException
 	 *             If a problem occurs while checking whether the GET method is supported by the server for
 	 *             this resource.
 	 */
-	public IRestOperation post() throws CoreException {
+	public RestOpPost post() throws CoreException {
 		if ((supportedMethods & POST) == 0) {
 			throw new UnsupportedOperationException(TuleapMylynTasksMessages.getString(
 					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, POST_LABEL, getUrl()));
@@ -193,12 +191,12 @@ public class RestResource {
 	 * Creates a PUT operation for this resource after checking it makes sense by sending an OPTIONS call to
 	 * this resource's URL.
 	 * 
-	 * @return A new instance of {@link IRestOperation} created with this resource operation factory.
+	 * @return A new instance of {@link RestOpPut} created with this resource operation factory.
 	 * @throws CoreException
 	 *             If a problem occurs while checking whether the GET method is supported by the server for
 	 *             this resource.
 	 */
-	public IRestOperation put() throws CoreException {
+	public RestOpPut put() throws CoreException {
 		if ((supportedMethods & PUT) == 0) {
 			throw new UnsupportedOperationException(TuleapMylynTasksMessages.getString(
 					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, PUT_LABEL, getUrl()));
@@ -219,14 +217,14 @@ public class RestResource {
 	 */
 	protected void checkOptionsAllows(final String method) throws CoreException {
 		if (optionsResponse == null) {
-			IRestOperation options = options();
+			RestOpOptions options = options();
 			optionsResponse = options.run();
 		}
 		// Check the available operations
 		final Map<String, String> respHeaders = optionsResponse.getHeaders();
 		String headerAllows = respHeaders.get(ITuleapHeaders.ALLOW);
 		String headerCorsAllows = respHeaders.get(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS);
-		if (ITuleapServerStatus.OK != optionsResponse.getStatus()) {
+		if (!optionsResponse.isOk()) {
 			// Server error?
 			// TODO See how to extract the error message since we don't have the jsonParser here.
 			// Throw a specific kind of exception that wraps the body and catch it higher where a json

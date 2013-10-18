@@ -34,7 +34,7 @@ import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public abstract class AbstractRestOperation implements IRestOperation {
+public abstract class AbstractRestOperation {
 
 	/**
 	 * String to send in the body when no data needs to be in the request body. {@code null} provokes an
@@ -87,13 +87,20 @@ public abstract class AbstractRestOperation implements IRestOperation {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * The resource's URL.
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.client.rest.IRestOperation#getUrl()
+	 * @return The resource's URL.
 	 */
 	public String getUrl() {
 		return fullUrl;
 	}
+
+	/**
+	 * Returns the name of the HTTP method to invoke.
+	 * 
+	 * @return The name of the HTTP method to invoke.
+	 */
+	public abstract String getMethodName();
 
 	/**
 	 * Computes the full URL to use to send the request, by concatenating the server address, the root API
@@ -121,9 +128,9 @@ public abstract class AbstractRestOperation implements IRestOperation {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Run this operation by sending the relevant request and returning the received response.
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.client.rest.IRestOperation#run()
+	 * @return The response received from the server after sending it the relevant request.
 	 */
 	public ServerResponse run() {
 		if (body == null) {
@@ -141,7 +148,7 @@ public abstract class AbstractRestOperation implements IRestOperation {
 	 *             If the given response does not have a status OK (200).
 	 */
 	protected void checkServerError(ServerResponse response) throws CoreException {
-		if (ITuleapServerStatus.OK != response.getStatus()) {
+		if (!response.isOk()) {
 			String message = TuleapMylynTasksMessages.getString(
 					TuleapMylynTasksMessagesKeys.errorReturnedByServer, getUrl(), getMethodName(),
 					getErrorMessage(response.getBody()));

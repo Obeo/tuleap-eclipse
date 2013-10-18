@@ -19,7 +19,6 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.client.rest.ITuleapHeaders;
-import org.tuleap.mylyn.task.internal.core.client.rest.ITuleapServerStatus;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestOpGet;
 import org.tuleap.mylyn.task.internal.core.client.rest.ServerResponse;
 
@@ -75,7 +74,7 @@ public class RestOperationsTest {
 	public void testExecutionOfGet() {
 		RestOpGet op = new RestOpGet("some/url", connector);
 		Map<String, String> responseHeaders = Maps.newLinkedHashMap();
-		ServerResponse response = new ServerResponse(ITuleapServerStatus.OK, "body", responseHeaders);
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, "body", responseHeaders);
 		connector.setResponse(response);
 		ServerResponse serverResponse = op.run();
 		assertEquals(response, serverResponse);
@@ -85,7 +84,7 @@ public class RestOperationsTest {
 	public void testIteratingOnGetWithJsonObject() {
 		RestOpGet op = new RestOpGet("some/url", connector);
 		Map<String, String> responseHeaders = Maps.newLinkedHashMap();
-		ServerResponse response = new ServerResponse(ITuleapServerStatus.OK, "{'a':'1'}", responseHeaders);
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, "{'a':'1'}", responseHeaders);
 		connector.setResponse(response);
 		Iterator<JsonElement> iterator = op.iterator();
 		assertEquals("{\"a\":\"1\"}", iterator.next().toString());
@@ -96,7 +95,7 @@ public class RestOperationsTest {
 	public void testIteratingOnGetWithArrayWithoutPagination() {
 		RestOpGet op = new RestOpGet("some/url", connector);
 		Map<String, String> responseHeaders = Maps.newLinkedHashMap();
-		ServerResponse response = new ServerResponse(ITuleapServerStatus.OK, "[{'a':'1'},{'a':'2'}]",
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, "[{'a':'1'},{'a':'2'}]",
 				responseHeaders);
 		connector.setResponse(response);
 		Iterator<JsonElement> iterator = op.iterator();
@@ -115,14 +114,15 @@ public class RestOperationsTest {
 		responseHeaders.put(ITuleapHeaders.HEADER_X_PAGINATION_SIZE, "3");
 		responseHeaders.put(ITuleapHeaders.HEADER_X_PAGINATION_LIMIT, "2");
 		responseHeaders.put(ITuleapHeaders.HEADER_X_PAGINATION_OFFSET, "0");
-		ServerResponse response = new ServerResponse(ITuleapServerStatus.OK, "[{'a':'1'},{'a':'2'}]",
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, "[{'a':'1'},{'a':'2'}]",
 				responseHeaders);
 		Map<String, String> responseHeaders2 = Maps.newLinkedHashMap();
 
 		responseHeaders2.put(ITuleapHeaders.HEADER_X_PAGINATION_SIZE, "3");
 		responseHeaders2.put(ITuleapHeaders.HEADER_X_PAGINATION_LIMIT, "2");
 		responseHeaders2.put(ITuleapHeaders.HEADER_X_PAGINATION_OFFSET, "2");
-		ServerResponse response2 = new ServerResponse(ITuleapServerStatus.OK, "[{'a':'3'}]", responseHeaders2);
+		ServerResponse response2 = new ServerResponse(ServerResponse.STATUS_OK, "[{'a':'3'}]",
+				responseHeaders2);
 
 		paginatingConnector.setResponse(response); // The default response
 		paginatingConnector.putResponse(0, response);

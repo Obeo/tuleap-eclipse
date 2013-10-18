@@ -11,16 +11,14 @@
 package org.tuleap.mylyn.task.internal.tests.client.rest;
 
 import com.google.common.collect.Maps;
-import com.google.gson.JsonElement;
 
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Before;
 import org.junit.Test;
-import org.tuleap.mylyn.task.internal.core.client.rest.IRestIterableOperation;
 import org.tuleap.mylyn.task.internal.core.client.rest.ITuleapHeaders;
-import org.tuleap.mylyn.task.internal.core.client.rest.ITuleapServerStatus;
+import org.tuleap.mylyn.task.internal.core.client.rest.RestOpGet;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestResource;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestResourceFactory;
 import org.tuleap.mylyn.task.internal.core.client.rest.ServerResponse;
@@ -96,8 +94,8 @@ public class TuleapRestResourceFactoryTest {
 		Map<String, String> headers = Maps.newTreeMap();
 		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET");
 		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
-		connector.setResponse(new ServerResponse(ITuleapServerStatus.OK, "", headers));
-		IRestIterableOperation<JsonElement> get = r.get();
+		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
+		RestOpGet get = r.get();
 		assertNotNull(get);
 		assertEquals("GET", get.getMethodName());
 		assertEquals("/server/api/v12.5/milestones/123/backlog_items", get.getUrl());
@@ -115,8 +113,8 @@ public class TuleapRestResourceFactoryTest {
 		Map<String, String> headers = Maps.newTreeMap();
 		headers.put(ITuleapHeaders.ALLOW, "OPTIONS");
 		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
-		connector.setResponse(new ServerResponse(ITuleapServerStatus.OK, "", headers));
-		IRestIterableOperation<JsonElement> get = r.get();
+		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
+		RestOpGet get = r.get();
 	}
 
 	/**
@@ -132,8 +130,8 @@ public class TuleapRestResourceFactoryTest {
 		Map<String, String> headers = Maps.newTreeMap();
 		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET");
 		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS");
-		connector.setResponse(new ServerResponse(ITuleapServerStatus.OK, "", headers));
-		IRestIterableOperation<JsonElement> get = r.get();
+		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
+		RestOpGet get = r.get();
 	}
 
 	/**

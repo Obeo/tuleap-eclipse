@@ -344,7 +344,7 @@ public class TuleapRestClient {
 	 */
 	private void checkServerError(RestResource restResource, String method, ServerResponse response)
 			throws CoreException {
-		if (ITuleapServerStatus.OK != response.getStatus()) {
+		if (!response.isOk()) {
 			String message = TuleapMylynTasksMessages.getString(
 					TuleapMylynTasksMessagesKeys.errorReturnedByServer, restResource.getUrl(), method,
 					jsonParser.getErrorMessage(response.getBody()));

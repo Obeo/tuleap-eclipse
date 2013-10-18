@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.client.rest.ServerResponse;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -47,6 +48,17 @@ public class ServerResponseTest {
 		assertEquals(body, response.getBody());
 		assertEquals(1, response.getHeaders().size());
 		assertEquals(value, response.getHeaders().get(key));
+	}
+
+	/**
+	 * Tests the behavior of the {@link ServerResponse#isOk()} method.
+	 */
+	@Test
+	public void testIsOk() {
+		ServerResponse response = new ServerResponse(200, "", null); //$NON-NLS-1$
+		assertTrue(response.isOk());
+		response = new ServerResponse(201, "", null); //$NON-NLS-1$
+		assertFalse(response.isOk());
 	}
 
 }

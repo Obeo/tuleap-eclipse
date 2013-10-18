@@ -18,6 +18,62 @@ import java.util.Map;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class ServerResponse {
+
+	/**
+	 * OK - 200.
+	 */
+	public static final int STATUS_OK = 200;
+
+	/**
+	 * Moved - 301.
+	 */
+	public static final int STATUS_MOVED = 301;
+
+	/**
+	 * Bad Request - 400.
+	 */
+	public static final int STATUS_BAD_REQUEST = 400;
+
+	/**
+	 * Unauthorized - 401.
+	 */
+	public static final int STATUS_UNAUTHORIZED = 401;
+
+	/**
+	 * Forbidden - 403.
+	 */
+	public static final int STATUS_FORBIDDEN = 403;
+
+	/**
+	 * Not Found - 404.
+	 */
+	public static final int STATUS_NOT_FOUND = 404;
+
+	/**
+	 * Method not allowed - 405.
+	 */
+	public static final int STATUS_METHOD_NOT_ALLOWED = 405;
+
+	/**
+	 * Not Acceptable - 406.
+	 */
+	public static final int STATUS_NOT_ACCEPTABLE = 406;
+
+	/**
+	 * Gone - 410.
+	 */
+	public static final int STATUS_GONE = 410;
+
+	/**
+	 * Requested Range Not Satisfiable - 416.
+	 */
+	public static final int STATUS_REQUESTED_RANGE_NOT_SATISFIABLE = 416;
+
+	/**
+	 * Internal Server Error - 500.
+	 */
+	public static final int STATUS_INTERNAL_SERVER_ERROR = 500;
+
 	/**
 	 * The status of the response.
 	 */
@@ -74,5 +130,14 @@ public class ServerResponse {
 	 */
 	public Map<String, String> getHeaders() {
 		return this.headers;
+	}
+
+	/**
+	 * Indicates whether the status code of this response is OK (200).
+	 * 
+	 * @return <code>true</code> if and only if the status of this response is OK (200).
+	 */
+	public boolean isOk() {
+		return status == STATUS_OK;
 	}
 }

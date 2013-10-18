@@ -50,7 +50,7 @@ public class JsonResponsePaginatedIterator implements Iterator<JsonElement> {
 	/**
 	 * The REST operation to perform.
 	 */
-	private final IRestOperation operation;
+	private final AbstractRestOperation operation;
 
 	/**
 	 * The headers to send.
@@ -86,8 +86,8 @@ public class JsonResponsePaginatedIterator implements Iterator<JsonElement> {
 	 * @param firstResponse
 	 *            The first response received from the server.
 	 */
-	public JsonResponsePaginatedIterator(IRestOperation operation, Map<String, String> headers, String body,
-			ServerResponse firstResponse) {
+	public JsonResponsePaginatedIterator(AbstractRestOperation operation, Map<String, String> headers,
+			String body, ServerResponse firstResponse) {
 		Assert.isNotNull(operation);
 		Assert.isNotNull(firstResponse);
 		this.operation = operation;

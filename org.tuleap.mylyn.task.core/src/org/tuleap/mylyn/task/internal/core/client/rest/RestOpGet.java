@@ -24,7 +24,7 @@ import org.restlet.data.Method;
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class RestOpGet extends AbstractRestOperation implements IRestIterableOperation<JsonElement> {
+public class RestOpGet extends AbstractRestOperation implements Iterable<JsonElement> {
 
 	/**
 	 * Constructor.
@@ -41,8 +41,9 @@ public class RestOpGet extends AbstractRestOperation implements IRestIterableOpe
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.client.rest.IRestOperation#getMethodName()
+	 * @see org.tuleap.mylyn.task.internal.core.client.rest.AbstractRestOperation#getMethodName()
 	 */
+	@Override
 	public String getMethodName() {
 		return Method.GET.getName();
 	}

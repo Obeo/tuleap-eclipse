@@ -99,11 +99,11 @@ public class TuleapRestConnector implements IRestConnector {
 
 		RestResourceFactory result = null;
 		switch (serverResponse.getStatus()) {
-			case ITuleapServerStatus.OK:
+			case ServerResponse.STATUS_OK:
 				// If we receive a 200 OK, the connection is good
 				result = new RestResourceFactory(location.getUrl(), bestApiVersion, this);
 				break;
-			case ITuleapServerStatus.MOVED:
+			case ServerResponse.STATUS_MOVED:
 				// If we receive a 301 Moved Permanently, a new compatible version of the API is available
 				Map<String, String> headers = serverResponse.getHeaders();
 				String newApiLocation = headers.get(ITuleapHeaders.LOCATION);
@@ -129,7 +129,7 @@ public class TuleapRestConnector implements IRestConnector {
 									TuleapMylynTasksMessagesKeys.missingAPILocation, bestApiVersion));
 				}
 				break;
-			case ITuleapServerStatus.GONE:
+			case ServerResponse.STATUS_GONE:
 				// If we receive a 410 Gone, the server does not support the required API, the connector
 				// cannot work with this server
 				// TODO How to deserialize the body here?
@@ -138,7 +138,7 @@ public class TuleapRestConnector implements IRestConnector {
 						.getString(TuleapMylynTasksMessagesKeys.missingCompatibleAPI, bestApiVersion,
 								goneErrorMessage));
 				break;
-			case ITuleapServerStatus.NOT_FOUND:
+			case ServerResponse.STATUS_NOT_FOUND:
 				// If we receive a 404 Not Found, the URL of server is invalid or the server is offline
 				status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, TuleapMylynTasksMessages
 						.getString(TuleapMylynTasksMessagesKeys.aPINotFound));

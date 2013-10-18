@@ -34,8 +34,9 @@ public class RestOpPost extends AbstractRestOperation {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.client.rest.IRestOperation#getMethodName()
+	 * @see org.tuleap.mylyn.task.internal.core.client.rest.AbstractRestOperation#getMethodName()
 	 */
+	@Override
 	public String getMethodName() {
 		return Method.POST.getName();
 	}
