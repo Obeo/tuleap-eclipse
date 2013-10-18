@@ -37,4 +37,31 @@ public interface ITuleapHeaders {
 	 * Authorization.
 	 */
 	String AUTHORIZATION = "Authorization"; //$NON-NLS-1$
+
+	/**
+	 * Header key for the property that describes the pagination limit (the maximum number of elements per
+	 * page).
+	 */
+	String HEADER_X_PAGINATION_LIMIT = "X-PAGINATION-LIMIT"; //$NON-NLS-1$
+
+	/**
+	 * Default value for pagination limit when header X-PAGINATION-LIMIT is not present.
+	 */
+	int DEFAULT_PAGINATION_LIMIT = 10;
+
+	/**
+	 * Header key for the property that describes the pagination offset (index of the first element in the
+	 * current page in the whole list of elements).
+	 */
+	String HEADER_X_PAGINATION_OFFSET = "X-PAGINATION-OFFSET"; //$NON-NLS-1$
+
+	/**
+	 * Default value for pagination offset when header X-PAGINATION-OFFSET is not present.
+	 */
+	int DEFAULT_PAGINATION_OFFSET = 0;
+
+	/**
+	 * Header key for the property that describes the number of elements in the paginated list.
+	 */
+	String HEADER_X_PAGINATION_SIZE = "X-PAGINATION-SIZE"; //$NON-NLS-1$
 }

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.ui.repository;
 
+import java.net.Proxy;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -174,7 +176,7 @@ public class TuleapRepositorySettingsPage extends AbstractRepositorySettingsPage
 		 *            The Mylyn task repository
 		 */
 		public TuleapRepositoryValidator(TaskRepository taskRepository) {
-			AbstractWebLocation location = new TaskRepositoryLocationFactory()
+			final AbstractWebLocation location = new TaskRepositoryLocationFactory()
 					.createWebLocation(taskRepository);
 
 			ILog logger = Platform.getLog(Platform.getBundle(TuleapTasksUIPlugin.PLUGIN_ID));
@@ -187,8 +189,21 @@ public class TuleapRepositorySettingsPage extends AbstractRepositorySettingsPage
 
 			TuleapJsonParser jsonParser = new TuleapJsonParser();
 			TuleapJsonSerializer jsonSerializer = new TuleapJsonSerializer();
-			TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(taskRepository
-					.getRepositoryLabel(), ITuleapAPIVersions.BEST_VERSION, logger);
+			// TODO Temporary hack to access a different REST server
+			AbstractWebLocation webLocationRest = new AbstractWebLocation(taskRepository.getRepositoryLabel()) {
+
+				@Override
+				public Proxy getProxyForHost(String host, String proxyType) {
+					return location.getProxyForHost(host, proxyType);
+				}
+
+				@Override
+				public AuthenticationCredentials getCredentials(AuthenticationType type) {
+					return location.getCredentials(type);
+				}
+			};
+			TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(webLocationRest,
+					ITuleapAPIVersions.BEST_VERSION, logger);
 			TuleapRestClient tuleapRestClient = new TuleapRestClient(tuleapRestConnector, jsonParser,
 					jsonSerializer, taskRepository, logger);
 

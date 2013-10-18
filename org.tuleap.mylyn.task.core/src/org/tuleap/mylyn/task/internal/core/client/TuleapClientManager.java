@@ -10,12 +10,15 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.client;
 
+import java.net.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.IRepositoryListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
@@ -99,7 +102,7 @@ public class TuleapClientManager implements IRepositoryListener {
 	 */
 	private void refreshClients(TaskRepository taskRepository) {
 		// Create both clients
-		AbstractWebLocation webLocation = new TaskRepositoryLocationFactory()
+		final AbstractWebLocation webLocation = new TaskRepositoryLocationFactory()
 				.createWebLocation(taskRepository);
 
 		ILog logger = Platform.getLog(Platform.getBundle(TuleapCoreActivator.PLUGIN_ID));
@@ -116,8 +119,21 @@ public class TuleapClientManager implements IRepositoryListener {
 		// Create the REST client
 		TuleapJsonParser jsonParser = new TuleapJsonParser();
 		TuleapJsonSerializer jsonSerializer = new TuleapJsonSerializer();
-		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(
-				taskRepository.getRepositoryLabel(), ITuleapAPIVersions.BEST_VERSION, logger);
+		// TODO Temporary hack to access a different REST server
+		AbstractWebLocation webLocationRest = new AbstractWebLocation(taskRepository.getRepositoryLabel()) {
+
+			@Override
+			public Proxy getProxyForHost(String host, String proxyType) {
+				return webLocation.getProxyForHost(host, proxyType);
+			}
+
+			@Override
+			public AuthenticationCredentials getCredentials(AuthenticationType type) {
+				return webLocation.getCredentials(type);
+			}
+		};
+		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(webLocationRest,
+				ITuleapAPIVersions.BEST_VERSION, logger);
 		TuleapRestClient tuleapRestClient = new TuleapRestClient(tuleapRestConnector, jsonParser,
 				jsonSerializer, taskRepository, logger);
 		this.restClientCache.put(taskRepository, tuleapRestClient);

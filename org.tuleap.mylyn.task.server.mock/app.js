@@ -142,6 +142,7 @@ app.all('/*', function (req, res, next) {
 
 // Authenticator
 var auth = express.basicAuth(function(user, password) {
+  console.log('user = ' + user + ', password = ' + password);
   return user != 'test' && password != 'test';
 });
 

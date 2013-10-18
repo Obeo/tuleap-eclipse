@@ -266,6 +266,15 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	 */
 	public static String jsonErrorMessage;
 
+	/**
+	 * Method &lt;METHOD> is not supported for resource &lt;URL>. 2 parameters:
+	 * <ol>
+	 * <li>HTTP method</li>
+	 * <li>resource URL</li>
+	 * </ol>
+	 */
+	public static String operationNotAllowedOnResource;
+
 	static {
 		// load message values from bundle file
 		reloadMessages();

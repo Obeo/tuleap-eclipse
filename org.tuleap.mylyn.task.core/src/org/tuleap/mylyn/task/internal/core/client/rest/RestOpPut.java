@@ -10,36 +10,34 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.client.rest;
 
+import org.restlet.data.Method;
+
 /**
- * JSON Resource for the {@code /api/<version>} URL.
+ * PUT operation on a REST resource.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class RestApi extends RestResource {
+public class RestOpPut extends AbstractRestOperation {
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param serverUrl
-	 *            URL of the rest API on the server.
-	 * @param apiVersion
-	 *            Version of the REST API to use.
+	 * @param fullUrl
+	 *            The resource's URL.
 	 * @param connector
-	 *            the connector to use.
+	 *            the connector to use to "task to" the server.
 	 */
-	protected RestApi(String serverUrl, String apiVersion, IRestConnector connector) {
-		super(serverUrl, apiVersion, "", GET, connector); //$NON-NLS-1$
+	public RestOpPut(String fullUrl, IRestConnector connector) {
+		super(fullUrl, connector);
 	}
 
 	/**
-	 * {@inheritDoc}<br/>
-	 * The URL returned here is empty since this resource represents the /api/&lt;version> URL.
+	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.client.rest.RestResource#getUrl()
+	 * @see org.tuleap.mylyn.task.internal.core.client.rest.IRestOperation#getMethodName()
 	 */
-	@Override
-	public String getUrl() {
-		return ""; //$NON-NLS-1$
+	public String getMethodName() {
+		return Method.PUT.getName();
 	}
 
 }

@@ -47,6 +47,7 @@ exports.list = function (req, res) {
   if (req.params.projectId === '3' && (req.headers['x-pagination-offset'] === '0' || req.headers['x-pagination-offset'] === undefined)) {
   	response = trackersPart1;
   } else if (req.params.projectId === '3' && req.headers['x-pagination-offset'] === '5') {
+    res.header('X-PAGINATION-OFFSET', '5');
   	response = trackersPart2;
   } else {
   	response = error404;

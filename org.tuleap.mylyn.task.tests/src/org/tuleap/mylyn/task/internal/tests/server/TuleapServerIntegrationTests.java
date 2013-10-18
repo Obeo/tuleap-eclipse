@@ -15,8 +15,12 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
+import org.junit.Before;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestConnector;
@@ -25,6 +29,7 @@ import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
+import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.tests.AbstractTuleapTests;
 import org.tuleap.mylyn.task.internal.tests.TestLogger;
 
@@ -38,13 +43,17 @@ import static org.junit.Assert.fail;
  */
 public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 
+	private TaskRepository taskRepository;
+
+	private AbstractWebLocation location;
+
 	/**
 	 * We will try to connect to the server with valid credentials.
 	 */
 	@Test
 	public void testValidAuthentication() {
 		TestLogger logger = new TestLogger();
-		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(this.getServerUrl(), "v3.14", //$NON-NLS-1$
+		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(location, "v3.14", //$NON-NLS-1$
 				logger);
 		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
 		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
@@ -70,7 +79,7 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 				"admin", "wrong"), false); //$NON-NLS-1$ //$NON-NLS-2$
 
 		TestLogger logger = new TestLogger();
-		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(this.getServerUrl(), "v3.14", //$NON-NLS-1$
+		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(location, "v3.14", //$NON-NLS-1$
 				logger);
 		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
 		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
@@ -92,7 +101,7 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 	@Test
 	public void testGetTopPlannings() {
 		TestLogger logger = new TestLogger();
-		TuleapRestConnector restConnector = new TuleapRestConnector(this.getServerUrl(), "v3.14", logger); //$NON-NLS-1$
+		TuleapRestConnector restConnector = new TuleapRestConnector(location, "v3.14", logger); //$NON-NLS-1$
 		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
 		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
 
@@ -118,7 +127,7 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 	@Test
 	public void testGetMilestones() {
 		TestLogger logger = new TestLogger();
-		TuleapRestConnector restConnector = new TuleapRestConnector(this.getServerUrl(), "v3.14", logger); //$NON-NLS-1$
+		TuleapRestConnector restConnector = new TuleapRestConnector(location, "v3.14", logger); //$NON-NLS-1$
 		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
 		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
 
@@ -150,5 +159,16 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 	public String getServerUrl() {
 		// TODO Use properties in order to be able to customize the unit test from jenkins/hudson
 		return "http://localhost:3001"; //$NON-NLS-1$
+	}
+
+	@Override
+	@Before
+	public void setUp() {
+		taskRepository = new TaskRepository(ITuleapConstants.CONNECTOR_KIND, "https://this.is.a.test"); //$NON-NLS-1$
+		AuthenticationCredentials credentials = new AuthenticationCredentials("admin", "password"); //$NON-NLS-1$//$NON-NLS-2$
+		taskRepository.setCredentials(AuthenticationType.REPOSITORY, credentials, true);
+		credentials = new AuthenticationCredentials("admin", "password"); //$NON-NLS-1$//$NON-NLS-2$
+		taskRepository.setCredentials(AuthenticationType.HTTP, credentials, true);
+		location = new TaskRepositoryLocationFactory().createWebLocation(taskRepository);
 	}
 }

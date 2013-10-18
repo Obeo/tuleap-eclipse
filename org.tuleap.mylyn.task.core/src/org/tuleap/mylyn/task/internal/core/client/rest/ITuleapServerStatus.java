@@ -34,9 +34,9 @@ public interface ITuleapServerStatus {
 	int BAD_REQUEST = 400;
 
 	/**
-	 * Gone - 401.
+	 * Unauthorized - 401.
 	 */
-	int GONE = 401;
+	int UNAUTHORIZED = 401;
 
 	/**
 	 * Forbidden - 403.
@@ -49,14 +49,19 @@ public interface ITuleapServerStatus {
 	int NOT_FOUND = 404;
 
 	/**
+	 * Method not allowed - 405.
+	 */
+	int METHOD_NOT_ALLOWED = 405;
+
+	/**
 	 * Not Acceptable - 406.
 	 */
 	int NOT_ACCEPTABLE = 406;
 
 	/**
-	 * Unauthorized - 410.
+	 * Gone - 410.
 	 */
-	int UNAUTHORIZED = 410;
+	int GONE = 410;
 
 	/**
 	 * Requested Range Not Satisfiable - 416.
