@@ -16,6 +16,9 @@ import junit.textui.TestRunner;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+import org.tuleap.mylyn.task.internal.tests.client.rest.RestOperationsTest;
+import org.tuleap.mylyn.task.internal.tests.client.rest.RestResourceTest;
+import org.tuleap.mylyn.task.internal.tests.client.rest.TuleapRestResourceFactoryTest;
 import org.tuleap.mylyn.task.internal.tests.client.soap.TuleapSoapConnectorTests;
 import org.tuleap.mylyn.task.internal.tests.client.soap.TuleapSoapParserTests;
 import org.tuleap.mylyn.task.internal.tests.converter.MilestoneTaskDataConverterTest;
@@ -58,7 +61,8 @@ import org.tuleap.mylyn.task.internal.tests.server.TaskRepositoryCredentialsTest
 		TuleapTopPlanningDeserializerTests.class, TuleapBacklogItemsSerializerTests.class,
 		MilestoneTaskDataConverterTest.class, TuleapSoapConnectorTests.class,
 		TuleapRepositoryConnectorTests.class, TuleapTaskDataHandlerTests.class, TuleapWorkflowTests.class,
-		TaskRepositoryCredentialsTest.class, TuleapConfigurableElementMapperTests.class })
+		TaskRepositoryCredentialsTest.class, TuleapConfigurableElementMapperTests.class,
+		TuleapRestResourceFactoryTest.class, RestResourceTest.class, RestOperationsTest.class })
 public final class AllTuleapStandaloneTests {
 
 	/**

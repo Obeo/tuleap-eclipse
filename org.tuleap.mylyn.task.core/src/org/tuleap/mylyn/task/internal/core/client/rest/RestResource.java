@@ -91,6 +91,11 @@ public class RestResource {
 	private final int supportedMethods;
 
 	/**
+	 * Cached ServerResponse received after sending an OPTIONS request to this resource's URL.
+	 */
+	private ServerResponse optionsResponse;
+
+	/**
 	 * Constructor.
 	 * 
 	 * @param serverUrl
@@ -105,7 +110,7 @@ public class RestResource {
 	 * @param connector
 	 *            The connector to use.
 	 */
-	RestResource(String serverUrl, String apiVersion, String url, int supportedMethods,
+	public RestResource(String serverUrl, String apiVersion, String url, int supportedMethods,
 			IRestConnector connector) {
 		this.serverUrl = serverUrl;
 		this.apiVersion = apiVersion;
@@ -213,35 +218,30 @@ public class RestResource {
 	 *             if this resource is not accessible with the given headers, whatever the reason.
 	 */
 	protected void checkOptionsAllows(final String method) throws CoreException {
-		IRestOperation options = options();
-		final ServerResponse response = options.run();
-
+		if (optionsResponse == null) {
+			IRestOperation options = options();
+			optionsResponse = options.run();
+		}
 		// Check the available operations
-		final Map<String, String> respHeaders = response.getHeaders();
-		final String allowHeaderEntry = respHeaders.get(ITuleapHeaders.ALLOW);
-		final String corsAllowMethodsHeaderEntry = respHeaders
-				.get(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS);
-
-		// TODO See how to extract the error message since we don't have the jsonParser here.
-		// Throw a specific kind of exception that wraps the body and catch it higher where a json
-		// parser is available?
-		boolean yesYouCan = allowHeaderEntry != null && allowHeaderEntry.contains(method.toString());
-		boolean yesYouAreAllowed = corsAllowMethodsHeaderEntry != null
-				&& corsAllowMethodsHeaderEntry.contains(method.toString());
-
-		if (ITuleapServerStatus.OK != response.getStatus()) {
+		final Map<String, String> respHeaders = optionsResponse.getHeaders();
+		String headerAllows = respHeaders.get(ITuleapHeaders.ALLOW);
+		String headerCorsAllows = respHeaders.get(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS);
+		if (ITuleapServerStatus.OK != optionsResponse.getStatus()) {
 			// Server error?
-			String message = response.getBody();
+			// TODO See how to extract the error message since we don't have the jsonParser here.
+			// Throw a specific kind of exception that wraps the body and catch it higher where a json
+			// parser is available?
+			String message = optionsResponse.getBody();
 			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
 					TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.errorReturnedByServer,
-							options.getUrl(), options.getMethodName(), message)));
+							url, "OPTIONS", message))); //$NON-NLS-1$
 		}
-		if (!yesYouCan) {
+		if (!headerAllows.contains(method.toString())) {
 			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
 					TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.cannotPerformOperation,
 							getUrl(), method)));
 		}
-		if (!yesYouAreAllowed) {
+		if (!headerCorsAllows.contains(method.toString())) {
 			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
 					TuleapMylynTasksMessages.getString(
 							TuleapMylynTasksMessagesKeys.notAuthorizedToPerformOperation, getUrl(), method)));

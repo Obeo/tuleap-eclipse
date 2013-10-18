@@ -10,13 +10,13 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.client.rest;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
+import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -58,9 +58,9 @@ public abstract class AbstractRestOperation implements IRestOperation {
 	protected final Map<String, String> requestHeaders = Maps.newTreeMap();
 
 	/**
-	 * {@link ListMultimap} of query parameters to append to the URL.
+	 * {@link LinkedHashMultimap} of query parameters to append to the URL.
 	 */
-	protected final ListMultimap<String, String> requestParameters = ArrayListMultimap.create();
+	protected final LinkedHashMultimap<String, String> requestParameters = LinkedHashMultimap.create();
 
 	// TODO Inject a logger
 	/**
@@ -216,13 +216,12 @@ public abstract class AbstractRestOperation implements IRestOperation {
 	 * 
 	 * @param key
 	 *            The key of the parameter.
-	 * @param value
-	 *            The value of the parameter. If there is already one or more entries for this key, a new
-	 *            entry is added with this key, existing entries are not modified.
+	 * @param values
+	 *            The values for the parameter. Former entries are removed if there were any.
 	 * @return The instance on which this method has been called, for a fluent API.
 	 */
-	public AbstractRestOperation withQueryParameter(String key, String value) {
-		requestParameters.put(key, value);
+	public AbstractRestOperation withQueryParameter(String key, String... values) {
+		requestParameters.replaceValues(key, Arrays.asList(values));
 		return this;
 	}
 
