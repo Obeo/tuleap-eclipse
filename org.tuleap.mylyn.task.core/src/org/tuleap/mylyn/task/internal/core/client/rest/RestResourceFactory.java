@@ -177,7 +177,7 @@ public final class RestResourceFactory {
 	 * @return A resource that gives access to the {code /backlog_item_types/:backlogItemTypeId} HTTP
 	 *         resource.
 	 */
-	public RestResource projectsBacklogItemType(int backlogItemId) {
+	public RestResource backlogItemType(int backlogItemId) {
 		return resource(RestResource.GET, URL.BACKLOG_ITEM_TYPES, Integer.toString(backlogItemId));
 	}
 
@@ -199,7 +199,7 @@ public final class RestResourceFactory {
 	 *            The identifier of the milestone type
 	 * @return A resource that gives access to the {code /milestone_types/:milestoneTypeId} HTTP resource
 	 */
-	public RestResource projectsMilestoneType(int milestoneTypeId) {
+	public RestResource milestoneType(int milestoneTypeId) {
 		return resource(RestResource.GET, URL.MILESTONE_TYPES, Integer.toString(milestoneTypeId));
 	}
 
@@ -219,10 +219,9 @@ public final class RestResourceFactory {
 	 * 
 	 * @param cardTypeId
 	 *            The identifier of the card type
-	 * @return A resource that gives access to the {code /projects/:projectId/card_types/:cardTypeId} HTTP
-	 *         resource.
+	 * @return A resource that gives access to the {code /card_types/:cardTypeId} HTTP resource.
 	 */
-	public RestResource projectsCardType(int cardTypeId) {
+	public RestResource cardType(int cardTypeId) {
 		return resource(RestResource.GET, URL.CARD_TYPES, Integer.toString(cardTypeId));
 	}
 
@@ -266,8 +265,8 @@ public final class RestResourceFactory {
 	 *            the card id
 	 * @return A resource that gives access to the {code /cards/:id} HTTP resource.
 	 */
-	public RestResource milestonesCards(int cardId) {
-		return resource(RestResource.GET, URL.MILESTONES, Integer.toString(cardId));
+	public RestResource cards(int cardId) {
+		return resource(RestResource.GET, URL.CARDS, Integer.toString(cardId));
 	}
 
 	/**

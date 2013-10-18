@@ -263,7 +263,7 @@ public class RestResource {
 		String API = ""; //$NON-NLS-1$
 
 		/**
-		 * "/login".
+		 * "/user".
 		 */
 		String USER = "user"; //$NON-NLS-1$
 
@@ -358,7 +358,7 @@ public class RestResource {
 		String MILESTONE_TYPES = "milestone_types"; //$NON-NLS-1$
 
 		/**
-		 * "/milestone_types".
+		 * "/card_types".
 		 */
 		String CARD_TYPES = "card_types"; //$NON-NLS-1$
 

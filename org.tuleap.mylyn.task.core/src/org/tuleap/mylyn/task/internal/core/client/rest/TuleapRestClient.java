@@ -258,7 +258,7 @@ public class TuleapRestClient {
 		// Send a request with OPTIONS to ensure that we can and have the right to retrieve the
 		// backlogItemType
 
-		RestResource restProjectsMilestoneType = restResourceFactory.projectsMilestoneType(milestoneTypeId);
+		RestResource restProjectsMilestoneType = restResourceFactory.milestoneType(milestoneTypeId);
 
 		ServerResponse response = restProjectsMilestoneType.get().run();
 
@@ -289,12 +289,11 @@ public class TuleapRestClient {
 		// Send a request with OPTIONS to ensure that we can and have the right to retrieve the
 		// backlogItemType
 
-		RestResource restProjectsBacklogITemType = restResourceFactory
-				.projectsBacklogItemType(backlogItemTypeId);
+		RestResource restBacklogITemType = restResourceFactory.backlogItemType(backlogItemTypeId);
 
-		ServerResponse response = restProjectsBacklogITemType.get().run();
+		ServerResponse response = restBacklogITemType.get().run();
 
-		checkServerError(restProjectsBacklogITemType, Method.GET.toString(), response);
+		checkServerError(restBacklogITemType, Method.GET.toString(), response);
 
 		// Analyze the server response
 		return jsonParser.parseBacklogItemType(projectConfiguration, response.getBody());
@@ -321,7 +320,7 @@ public class TuleapRestClient {
 		// Send a request with OPTIONS to ensure that we can and have the right to retrieve the
 		// backlogItemType
 
-		RestResource restCardTypes = restResourceFactory.projectsCardType(cardTypeId);
+		RestResource restCardTypes = restResourceFactory.cardType(cardTypeId);
 
 		ServerResponse response = restCardTypes.get().run();
 
