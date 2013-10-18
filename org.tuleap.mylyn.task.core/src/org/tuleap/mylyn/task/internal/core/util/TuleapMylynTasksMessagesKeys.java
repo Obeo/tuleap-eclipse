@@ -267,6 +267,11 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	public static String jsonErrorMessage;
 
 	/**
+	 * Invalid pagination header. No parameter.
+	 */
+	public static String invalidPaginationHeader;
+
+	/**
 	 * Method &lt;METHOD> is not supported for resource &lt;URL>. 2 parameters:
 	 * <ol>
 	 * <li>HTTP method</li>

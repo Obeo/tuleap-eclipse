@@ -19,6 +19,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.eclipse.core.runtime.Assert;
+import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
+import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
 /**
  * Handles the pagination of a REST dialog.
@@ -84,8 +86,8 @@ public class JsonResponsePaginatedIterator implements Iterator<JsonElement> {
 	 * @param firstResponse
 	 *            The first response received from the server.
 	 */
-	public JsonResponsePaginatedIterator(IRestOperation operation, Map<String, String> headers,
-			String body, ServerResponse firstResponse) {
+	public JsonResponsePaginatedIterator(IRestOperation operation, Map<String, String> headers, String body,
+			ServerResponse firstResponse) {
 		Assert.isNotNull(operation);
 		Assert.isNotNull(firstResponse);
 		this.operation = operation;
@@ -121,9 +123,8 @@ public class JsonResponsePaginatedIterator implements Iterator<JsonElement> {
 				currentOffset = ITuleapHeaders.DEFAULT_PAGINATION_OFFSET;
 			}
 		} catch (NumberFormatException e) {
-			// TODO Externalize
-			throw new IllegalArgumentException(
-					"The received server response does not contain the required headers", e);
+			throw new IllegalArgumentException(TuleapMylynTasksMessages
+					.getString(TuleapMylynTasksMessagesKeys.invalidPaginationHeader), e);
 		}
 		iterator = new JsonParser().parse(currentResponse.getBody()).getAsJsonArray().iterator();
 	}
