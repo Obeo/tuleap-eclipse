@@ -483,11 +483,6 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 				}
 				return taskKind;
 			}
-
-			@Override
-			public String getTaskUrl() {
-				return taskData.getRepositoryUrl();
-			}
 		};
 	}
 

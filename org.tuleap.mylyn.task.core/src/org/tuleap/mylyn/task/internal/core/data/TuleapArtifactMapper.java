@@ -97,6 +97,7 @@ public class TuleapArtifactMapper extends TuleapTaskMapper {
 		createNewCommentTaskAttribute();
 		createSubmittedByTaskAttribute();
 		createTaskKeyAttribute();
+		createTaskURLAttribute();
 
 		// Default attributes
 		TaskAttribute root = taskData.getRoot();
@@ -126,6 +127,16 @@ public class TuleapArtifactMapper extends TuleapTaskMapper {
 	 */
 	private void createTaskKeyAttribute() {
 		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.TASK_KEY);
+		TaskAttributeMetaData metaData = attribute.getMetaData();
+		metaData.setType(TaskAttribute.TYPE_SHORT_TEXT);
+		metaData.setReadOnly(true);
+	}
+
+	/**
+	 * Creates the read-only task attribute representing the task url.
+	 */
+	private void createTaskURLAttribute() {
+		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.TASK_URL);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
 		metaData.setType(TaskAttribute.TYPE_SHORT_TEXT);
 		metaData.setReadOnly(true);
