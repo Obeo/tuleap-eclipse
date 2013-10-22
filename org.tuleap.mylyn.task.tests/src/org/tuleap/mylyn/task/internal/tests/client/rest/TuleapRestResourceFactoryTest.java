@@ -19,6 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.client.rest.ITuleapHeaders;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestOpGet;
+import org.tuleap.mylyn.task.internal.core.client.rest.RestOpPut;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestResource;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestResourceFactory;
 import org.tuleap.mylyn.task.internal.core.client.rest.ServerResponse;
@@ -61,15 +62,22 @@ public class TuleapRestResourceFactoryTest {
 	}
 
 	/**
-	 * Checks that PUT is not supported by the operation returned by
-	 * {@link RestResourceFactory#milestone(int)}.
+	 * Checks that PUT is supported by the operation returned by {@link RestResourceFactory#milestone(int)}.
 	 * 
 	 * @throws CoreException
 	 */
-	@Test(expected = UnsupportedOperationException.class)
+	@Test
 	public void testGetMilestonesIsPutForbidden() throws CoreException {
 		RestResource milestone = factory.milestone(123);
-		milestone.put();
+		Map<String, String> headers = Maps.newTreeMap();
+		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT");
+		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT");
+		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
+
+		RestOpPut put = milestone.put();
+		assertNotNull(put);
+		assertEquals("PUT", put.getMethodName());
+		assertEquals("/server/api/v12.5/milestones/123", put.getUrl());
 	}
 
 	/**
@@ -147,15 +155,23 @@ public class TuleapRestResourceFactoryTest {
 	}
 
 	/**
-	 * Checks that PUT is not supported by the operation returned by
-	 * {@link RestResourceFactory#milestone(int)}.
+	 * Checks that PUT is supported by the operation returned by {@link RestResourceFactory#milestone(int)}.
 	 * 
 	 * @throws CoreException
 	 */
-	@Test(expected = UnsupportedOperationException.class)
+	@Test
 	public void testGetMilestonesBacklogItemsIsPutForbidden() throws CoreException {
 		RestResource r = factory.milestonesBacklogItems(123);
-		r.put();
+
+		Map<String, String> headers = Maps.newTreeMap();
+		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT");
+		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT");
+		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
+
+		RestOpPut put = r.put();
+		assertNotNull(put);
+		assertEquals("PUT", put.getMethodName());
+		assertEquals("/server/api/v12.5/milestones/123/backlog_items", put.getUrl());
 	}
 
 	/**
