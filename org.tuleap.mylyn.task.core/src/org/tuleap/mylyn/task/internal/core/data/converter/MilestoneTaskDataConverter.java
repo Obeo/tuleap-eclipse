@@ -301,22 +301,6 @@ public class MilestoneTaskDataConverter extends AbstractElementTaskDataConverter
 		tuleapMilestone = this.populateElementConfigurableFields(taskData, tuleapMilestone);
 
 		// TODO SBE populate the backlog items etc...
-
-		TaskAttribute milestoneAtt = taskData.getRoot().getAttribute(MILESTONE_PLANNING);
-		TaskAttribute backlogAtt = milestoneAtt.getAttribute(BACKLOG);
-		for (int i = 0; i < backlogAtt.getAttributes().size(); i++) {
-			TaskAttribute backlogItem = backlogAtt.getMappedAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM
-					+ i);
-			TaskAttribute backlogItemid = backlogItem.getMappedAttribute(backlogItem.getId() + ID_SEPARATOR
-					+ SUFFIX_DISPLAY_ID);
-			TaskAttribute assignedMilestoneId = backlogItem.getMappedAttribute(backlogItem.getId()
-					+ ID_SEPARATOR + SUFFIX_ASSIGNED_MILESTONE_ID);
-			TuleapBacklogItem tuleapbacklogItem = new TuleapBacklogItem(Integer.parseInt(backlogItemid
-					.getValue()), 0, 0, "", "", "", null, null); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
-			tuleapbacklogItem.setAssignedMilestoneId(Integer.valueOf(assignedMilestoneId.getValue()));
-			tuleapMilestone.addBacklogItem(tuleapbacklogItem);
-
-		}
 		return tuleapMilestone;
 
 	}
