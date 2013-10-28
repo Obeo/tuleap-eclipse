@@ -22,6 +22,7 @@ import org.tuleap.mylyn.task.internal.tests.client.rest.TuleapRestClientTest;
 import org.tuleap.mylyn.task.internal.tests.client.rest.TuleapRestResourceFactoryTest;
 import org.tuleap.mylyn.task.internal.tests.client.soap.TuleapSoapConnectorTests;
 import org.tuleap.mylyn.task.internal.tests.client.soap.TuleapSoapParserTests;
+import org.tuleap.mylyn.task.internal.tests.converter.BacklogItemTaskDataConverterTest;
 import org.tuleap.mylyn.task.internal.tests.converter.MilestoneTaskDataConverterTest;
 import org.tuleap.mylyn.task.internal.tests.data.TuleapConfigurableElementMapperTests;
 import org.tuleap.mylyn.task.internal.tests.data.TuleapTaskIdentityUtilTests;
@@ -65,7 +66,8 @@ import org.tuleap.mylyn.task.internal.tests.server.TaskRepositoryCredentialsTest
 		TuleapRepositoryConnectorTests.class, TuleapTaskDataHandlerTests.class, TuleapWorkflowTests.class,
 		TaskRepositoryCredentialsTest.class, TuleapConfigurableElementMapperTests.class,
 		TuleapRestResourceFactoryTest.class, RestResourceTest.class, RestOperationsTest.class,
-		TuleapRestClientTest.class, TuleapBacklogItemSerializerTests.class })
+		TuleapRestClientTest.class, TuleapBacklogItemSerializerTests.class,
+		BacklogItemTaskDataConverterTest.class })
 public final class AllTuleapStandaloneTests {
 
 	/**
