@@ -30,6 +30,7 @@ import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
 import org.tuleap.mylyn.task.internal.core.model.field.AbstractTuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
+import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
@@ -74,8 +75,7 @@ public class TuleapConfigurableElementMapper extends TuleapTaskMapper {
 	 * @param configuration
 	 *            The configuration.
 	 */
-	public TuleapConfigurableElementMapper(TaskData taskData,
-			AbstractTuleapConfiguration configuration) {
+	public TuleapConfigurableElementMapper(TaskData taskData, AbstractTuleapConfiguration configuration) {
 		super(taskData);
 		this.configuration = configuration;
 	}
@@ -262,8 +262,7 @@ public class TuleapConfigurableElementMapper extends TuleapTaskMapper {
 		if (attribute != null) {
 			attribute.clearValues();
 			attribute.setValue(String.valueOf(statusItemId));
-			if (configuration.hasClosedStatusMeaning(statusItemId)
-					&& getCompletionDate() == null) {
+			if (configuration.hasClosedStatusMeaning(statusItemId) && getCompletionDate() == null) {
 				// Sets the completion date
 				// Hypothesis: the last update date is up to date, which is reasonable since it appears early
 				// in the JSON objects.
@@ -378,6 +377,61 @@ public class TuleapConfigurableElementMapper extends TuleapTaskMapper {
 						}
 						BoundFieldValue boundFieldValue = new BoundFieldValue(Integer.parseInt(attribute
 								.getId()), valueIds);
+						result.add(boundFieldValue);
+					}
+				} else if (abstractTuleapField instanceof TuleapString
+						&& ((TuleapString)abstractTuleapField).isSemanticTitle()) {
+
+					if (attribute.getId().equals(TaskAttribute.SUMMARY)) {
+						LiteralFieldValue afieldValue = new LiteralFieldValue(configuration.getTitleField()
+								.getIdentifier(), attribute.getValue());
+						result.add(afieldValue);
+					}
+
+				} else if (abstractTuleapField instanceof AbstractTuleapSelectBox
+						&& ((AbstractTuleapSelectBox)abstractTuleapField).isSemanticStatus()) {
+
+					if (attribute.getId().equals(TaskAttribute.STATUS)) {
+						// select box or multi select box (or check box)
+						List<Integer> valueIds = new ArrayList<Integer>();
+						for (String strValue : attribute.getValues()) {
+							try {
+								valueIds.add(Integer.valueOf(strValue));
+							} catch (NumberFormatException e) {
+								// TODO Add log about non integer value
+							}
+						}
+
+						for (String strValue : attribute.getOptions().keySet()) {
+							if (!strValue.equals(String
+									.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID))) {
+								try {
+									valueIds.add(Integer.valueOf(strValue));
+								} catch (NumberFormatException e) {
+									// TODO Add log about non integer value
+								}
+							}
+
+						}
+						BoundFieldValue boundFieldValue = new BoundFieldValue(this.configuration
+								.getStatusField().getIdentifier(), valueIds);
+						result.add(boundFieldValue);
+					}
+
+				} else if (abstractTuleapField instanceof AbstractTuleapSelectBox
+						&& ((AbstractTuleapSelectBox)abstractTuleapField).isSemanticContributor()) {
+					if (attribute.getId().equals(TaskAttribute.USER_ASSIGNED)) {
+						// select box or multi select box (or check box)
+						List<Integer> valueIds = new ArrayList<Integer>();
+						for (String strValue : attribute.getValues()) {
+							try {
+								valueIds.add(Integer.valueOf(strValue));
+							} catch (NumberFormatException e) {
+								// TODO Add log about non integer value
+							}
+						}
+						BoundFieldValue boundFieldValue = new BoundFieldValue(this.configuration
+								.getContributorField().getIdentifier(), valueIds);
 						result.add(boundFieldValue);
 					}
 				}
