@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.client.rest.ITuleapHeaders;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestResourceFactory;
@@ -60,8 +59,6 @@ public class TuleapRestClientTest {
 
 	private final String serverUrl = "https://test/url"; //$NON-NLS-1$
 
-	private final String repositoryDescription = "Tracker Description"; //$NON-NLS-1$
-
 	private String apiVersion = "v12.3"; //$NON-NLS-1$
 
 	private MockRestConnector connector;
@@ -78,8 +75,8 @@ public class TuleapRestClientTest {
 	public void testRetrieveMilestoneWithoutCardwall() throws CoreException, ParseException {
 		String jsonMilestone = ParserUtil.loadFile("/milestones/release200.json");
 		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET");
-		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
+		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonMilestone, respHeaders);
 		connector.setResponse(response);
 		TuleapMilestone milestone = client.getMilestone(200, false, null);
@@ -89,12 +86,12 @@ public class TuleapRestClientTest {
 		List<ServerRequest> requestsSent = connector.getRequestsSent();
 		assertEquals(2, requestsSent.size());
 		ServerRequest request = requestsSent.get(0);
-		assertEquals("https://test/url/api/v12.3/milestones/200", request.url);
-		assertEquals("OPTIONS", request.method);
+		assertEquals("https://test/url/api/v12.3/milestones/200", request.url); //$NON-NLS-1$
+		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
 
 		request = requestsSent.get(1);
-		assertEquals("https://test/url/api/v12.3/milestones/200", request.url);
-		assertEquals("GET", request.method);
+		assertEquals("https://test/url/api/v12.3/milestones/200", request.url); //$NON-NLS-1$
+		assertEquals("GET", request.method); //$NON-NLS-1$
 	}
 
 	@Test
@@ -104,19 +101,19 @@ public class TuleapRestClientTest {
 		listConnector.setResourceFactory(restResourceFactory);
 		client = new TuleapRestClient(listConnector, jsonParser, null, repository, null);
 
-		String sprint250 = ParserUtil.loadFile("/milestones/sprint250.json");
+		String sprint250 = ParserUtil.loadFile("/milestones/sprint250.json"); //$NON-NLS-1$
 
 		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET");
-		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
+		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, sprint250, respHeaders);
 		listConnector.addServerResponse(response).addServerResponse(response);
 
-		String cardwall = ParserUtil.loadFile("/cardwalls/cw_sprint250.json");
+		String cardwall = ParserUtil.loadFile("/cardwalls/cw_sprint250.json"); //$NON-NLS-1$
 
 		Map<String, String> respHeaders2 = Maps.newHashMap();
-		respHeaders2.put(ITuleapHeaders.ALLOW, "OPTIONS,GET");
-		respHeaders2.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
+		respHeaders2.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders2.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
 		ServerResponse response2 = new ServerResponse(ServerResponse.STATUS_OK, cardwall, respHeaders2);
 		listConnector.addServerResponse(response2).addServerResponse(response2);
 
@@ -128,29 +125,36 @@ public class TuleapRestClientTest {
 		assertEquals(4, requestsSent.size());
 
 		ServerRequest request = requestsSent.get(0);
-		assertEquals("https://test/url/api/v12.3/milestones/250", request.url);
-		assertEquals("OPTIONS", request.method);
+		assertEquals("https://test/url/api/v12.3/milestones/250", request.url); //$NON-NLS-1$
+		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
 
 		request = requestsSent.get(1);
-		assertEquals("https://test/url/api/v12.3/milestones/250", request.url);
-		assertEquals("GET", request.method);
+		assertEquals("https://test/url/api/v12.3/milestones/250", request.url); //$NON-NLS-1$
+		assertEquals("GET", request.method); //$NON-NLS-1$
 
 		request = requestsSent.get(2);
-		assertEquals("https://test/url/api/v12.3/milestones/250/cardwall", request.url);
-		assertEquals("OPTIONS", request.method);
+		assertEquals("https://test/url/api/v12.3/milestones/250/cardwall", request.url); //$NON-NLS-1$
+		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
 
 		request = requestsSent.get(3);
-		assertEquals("https://test/url/api/v12.3/milestones/250/cardwall", request.url);
-		assertEquals("GET", request.method);
+		assertEquals("https://test/url/api/v12.3/milestones/250/cardwall", request.url); //$NON-NLS-1$
+		assertEquals("GET", request.method); //$NON-NLS-1$
 	}
 
+	/**
+	 * Test the retrieval of a backlog item.
+	 * 
+	 * @throws CoreException
+	 *             The core exception to throw
+	 * @throws ParseException
+	 *             The parse exception to throw
+	 */
 	@Test
-	@Ignore("Redo when getbacklogItem is implemented right")
 	public void testRetrieveBacklogItem() throws CoreException, ParseException {
-		String userStory = ParserUtil.loadFile("/backlog_items/userStory350.json");
+		String userStory = ParserUtil.loadFile("/backlog_items/userStory350.json"); //$NON-NLS-1$
 		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET");
-		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
+		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, userStory, respHeaders);
 		connector.setResponse(response);
 		TuleapBacklogItem bi = client.getBacklogItem(350, null);
@@ -160,12 +164,12 @@ public class TuleapRestClientTest {
 		List<ServerRequest> requestsSent = connector.getRequestsSent();
 		assertEquals(2, requestsSent.size());
 		ServerRequest request0 = requestsSent.get(0);
-		assertEquals("https://test/url/api/v12.3/backlog_items/350", request0.url);
-		assertEquals("OPTIONS", request0.method);
+		assertEquals("https://test/url/api/v12.3/backlog_items/350", request0.url); //$NON-NLS-1$
+		assertEquals("OPTIONS", request0.method); //$NON-NLS-1$
 
 		ServerRequest request1 = requestsSent.get(1);
-		assertEquals("https://test/url/api/v12.3/backlog_items/350", request1.url);
-		assertEquals("GET", request1.method);
+		assertEquals("https://test/url/api/v12.3/backlog_items/350", request1.url); //$NON-NLS-1$
+		assertEquals("GET", request1.method); //$NON-NLS-1$
 	}
 
 	@Test
@@ -175,27 +179,27 @@ public class TuleapRestClientTest {
 		listConnector.setResourceFactory(restResourceFactory);
 		client = new TuleapRestClient(listConnector, jsonParser, null, repository, null);
 
-		String tp30 = ParserUtil.loadFile("/top_plannings/top_planning_30.json");
+		String tp30 = ParserUtil.loadFile("/top_plannings/top_planning_30.json"); //$NON-NLS-1$
 
 		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET");
-		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
+		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, tp30, respHeaders);
 		listConnector.addServerResponse(response).addServerResponse(response);
 
-		String milestones = ParserUtil.loadFile("/top_plannings/milestones.json");
+		String milestones = ParserUtil.loadFile("/top_plannings/milestones.json"); //$NON-NLS-1$
 
 		Map<String, String> respHeaders2 = Maps.newHashMap();
-		respHeaders2.put(ITuleapHeaders.ALLOW, "OPTIONS,GET");
-		respHeaders2.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
+		respHeaders2.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders2.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
 		ServerResponse response2 = new ServerResponse(ServerResponse.STATUS_OK, milestones, respHeaders2);
 		listConnector.addServerResponse(response2).addServerResponse(response2);
 
-		String items = ParserUtil.loadFile("/top_plannings/backlog_items.json");
+		String items = ParserUtil.loadFile("/top_plannings/backlog_items.json"); //$NON-NLS-1$
 
 		Map<String, String> respHeaders3 = Maps.newHashMap();
-		respHeaders3.put(ITuleapHeaders.ALLOW, "OPTIONS,GET");
-		respHeaders3.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
+		respHeaders3.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders3.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
 		ServerResponse response3 = new ServerResponse(ServerResponse.STATUS_OK, items, respHeaders3);
 		listConnector.addServerResponse(response3).addServerResponse(response3);
 
@@ -207,28 +211,28 @@ public class TuleapRestClientTest {
 		assertEquals(6, requestsSent.size());
 
 		ServerRequest request = requestsSent.get(0);
-		assertEquals("https://test/url/api/v12.3/top_plannings/30", request.url);
-		assertEquals("OPTIONS", request.method);
+		assertEquals("https://test/url/api/v12.3/top_plannings/30", request.url); //$NON-NLS-1$
+		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
 
 		request = requestsSent.get(1);
-		assertEquals("https://test/url/api/v12.3/top_plannings/30", request.url);
-		assertEquals("GET", request.method);
+		assertEquals("https://test/url/api/v12.3/top_plannings/30", request.url); //$NON-NLS-1$
+		assertEquals("GET", request.method); //$NON-NLS-1$
 
 		request = requestsSent.get(2);
-		assertEquals("https://test/url/api/v12.3/top_plannings/30/milestones", request.url);
-		assertEquals("OPTIONS", request.method);
+		assertEquals("https://test/url/api/v12.3/top_plannings/30/milestones", request.url); //$NON-NLS-1$
+		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
 
 		request = requestsSent.get(3);
-		assertEquals("https://test/url/api/v12.3/top_plannings/30/milestones", request.url);
-		assertEquals("GET", request.method);
+		assertEquals("https://test/url/api/v12.3/top_plannings/30/milestones", request.url); //$NON-NLS-1$
+		assertEquals("GET", request.method); //$NON-NLS-1$
 
 		request = requestsSent.get(4);
-		assertEquals("https://test/url/api/v12.3/top_plannings/30/backlog_items", request.url);
-		assertEquals("OPTIONS", request.method);
+		assertEquals("https://test/url/api/v12.3/top_plannings/30/backlog_items", request.url); //$NON-NLS-1$
+		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
 
 		request = requestsSent.get(5);
-		assertEquals("https://test/url/api/v12.3/top_plannings/30/backlog_items", request.url);
-		assertEquals("GET", request.method);
+		assertEquals("https://test/url/api/v12.3/top_plannings/30/backlog_items", request.url); //$NON-NLS-1$
+		assertEquals("GET", request.method); //$NON-NLS-1$
 	}
 
 	/**
