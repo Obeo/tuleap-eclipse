@@ -796,9 +796,20 @@ public class TuleapRestClient {
 	 * @param monitor
 	 *            The progress monitor
 	 * @return The Tuleap backlog item with the given identifier from the server
+	 * @throws CoreException
+	 *             In case of error during the retrieval of the BacklogItem
 	 */
-	public TuleapBacklogItem getBacklogItem(int backlogItemId, IProgressMonitor monitor) {
-		return null;
+	public TuleapBacklogItem getBacklogItem(int backlogItemId, IProgressMonitor monitor) throws CoreException {
+		RestResourceFactory restResourceFactory = tuleapRestConnector.getResourceFactory();
+		RestResource restBacklogItem = restResourceFactory.backlogItem(backlogItemId);
+
+		ServerResponse backlogItemResponse = restBacklogItem.get().run();
+
+		checkServerError(restBacklogItem, Method.GET.toString(), backlogItemResponse);
+
+		TuleapBacklogItem backlogItem = this.jsonParser.parseBacklogItem(backlogItemResponse.getBody());
+
+		return backlogItem;
 	}
 
 	/**

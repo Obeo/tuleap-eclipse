@@ -4,6 +4,7 @@
   "artifacts_url": "localhost:3001/api/v3.14/artifacts",
   "plannings_url": "localhost:3001/api/v3.14/plannings",
   "milestones_url": "localhost:3001/api/v3.14/milestones",
+  "backlogItems_url": "localhost:3001/api/v3.14/backlog_items",
   "users_url": "localhost:3001/api/v3.14/users",
   "files_url": "localhost:3001/api/v3.14/files"
 }

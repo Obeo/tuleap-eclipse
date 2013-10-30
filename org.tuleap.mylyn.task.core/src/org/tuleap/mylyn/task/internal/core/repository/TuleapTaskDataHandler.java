@@ -29,10 +29,12 @@ import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.data.TuleapConfigurableElementMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.data.converter.ArtifactTaskDataConverter;
+import org.tuleap.mylyn.task.internal.core.data.converter.BacklogItemTaskDataConverter;
 import org.tuleap.mylyn.task.internal.core.data.converter.MilestoneTaskDataConverter;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItemType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
@@ -239,8 +241,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			if (initializationData instanceof TuleapTaskMapping) {
 				TuleapTaskMapping tuleapTaskMapping = (TuleapTaskMapping)initializationData;
 
-				AbstractTuleapConfiguration configuration = tuleapTaskMapping
-						.getConfiguration();
+				AbstractTuleapConfiguration configuration = tuleapTaskMapping.getConfiguration();
 
 				if (configuration != null) {
 					TuleapConfigurableElementMapper tuleapConfigurableElementMapper = new TuleapConfigurableElementMapper(
@@ -312,8 +313,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				taskData = this.getMilestoneTaskData(taskId, serverConfiguration, taskRepository, monitor);
 			} else if (configuration instanceof TuleapBacklogItemType) {
 				// TODO SBE retrieval of the backlog item from the server
-				// taskData = this.getBacklogItemTaskData(taskId, serverConfiguration, taskRepository,
-				// monitor);
+				taskData = this.getBacklogItemTaskData(taskId, serverConfiguration, taskRepository, monitor);
 			}
 		}
 
@@ -351,6 +351,45 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			TaskData taskData = new TaskData(attributeMapper, ITuleapConstants.CONNECTOR_KIND, taskRepository
 					.getRepositoryUrl(), taskId);
 			artifactTaskDataConverter.populateTaskData(taskData, tuleapArtifact, monitor);
+
+			return taskData;
+		}
+		return null;
+	}
+
+	/**
+	 * Retrieves the task data representing the Tuleap BacklogItem with the given task id on the given task
+	 * repository.
+	 * 
+	 * @param taskId
+	 *            The identifier of the task
+	 * @param serverConfiguration
+	 *            The configuration of the server
+	 * @param taskRepository
+	 *            The task repository
+	 * @param monitor
+	 *            The progress monitor
+	 * @return The task data representing the Tuleap backlogItem with the given task id
+	 * @throws CoreException
+	 *             In case of issues during the download of the backlogItem data
+	 */
+	private TaskData getBacklogItemTaskData(String taskId, TuleapServerConfiguration serverConfiguration,
+			TaskRepository taskRepository, IProgressMonitor monitor) throws CoreException {
+		TuleapRestClient restClient = this.connector.getClientManager().getRestClient(taskRepository);
+		int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(taskId);
+		int backlogItemTypeId = TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId(taskId);
+		TuleapBacklogItemType backlogItemType = serverConfiguration.getProjectConfiguration(projectId)
+				.getBacklogItemType(backlogItemTypeId);
+		TuleapBacklogItem backlogItem = restClient.getBacklogItem(TuleapTaskIdentityUtil
+				.getElementIdFromTaskDataId(taskId), monitor);
+		if (backlogItem != null) {
+			BacklogItemTaskDataConverter taskDataConverter = new BacklogItemTaskDataConverter(
+					backlogItemType, taskRepository, connector);
+			TaskAttributeMapper attributeMapper = this.getAttributeMapper(taskRepository);
+
+			TaskData taskData = new TaskData(attributeMapper, ITuleapConstants.CONNECTOR_KIND, taskRepository
+					.getRepositoryUrl(), taskId);
+			taskDataConverter.populateTaskData(taskData, backlogItem, monitor);
 
 			return taskData;
 		}

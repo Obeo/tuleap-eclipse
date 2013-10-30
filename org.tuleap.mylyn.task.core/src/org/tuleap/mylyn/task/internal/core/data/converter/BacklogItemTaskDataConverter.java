@@ -99,9 +99,9 @@ public class BacklogItemTaskDataConverter extends AbstractElementTaskDataConvert
 				.getTaskDataId(tuleapBacklogItem.getProjectId(), tuleapBacklogItem.getConfigurationId(),
 						tuleapBacklogItem.getId()));
 		backlogItemWrapper.setDisplayId(Integer.toString(tuleapBacklogItem.getId()));
-		Integer assignedMilestoneId = tuleapBacklogItem.getAssignedMilestoneId();
-		if (assignedMilestoneId != null) {
-			backlogItemWrapper.setAssignedMilestoneId(String.valueOf(assignedMilestoneId));
+		if (tuleapBacklogItem.getAssignedMilestoneId() != null) {
+			backlogItemWrapper.setAssignedMilestoneId(String.valueOf(tuleapBacklogItem
+					.getAssignedMilestoneId()));
 		}
 		backlogItemWrapper.setLabel(tuleapBacklogItem.getLabel());
 		if (tuleapBacklogItem.getInitialEffort() != null) {

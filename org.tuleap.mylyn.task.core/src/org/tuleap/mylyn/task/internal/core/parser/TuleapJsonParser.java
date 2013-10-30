@@ -314,6 +314,19 @@ public class TuleapJsonParser {
 	}
 
 	/**
+	 * Parses a JSON String representing a backlogItem into a POJO.
+	 * 
+	 * @param jsonResponse
+	 *            The JSON response representing a backlogItem
+	 * @return a POJO populated with the data from the JSON String.
+	 */
+	public TuleapBacklogItem parseBacklogItem(String jsonResponse) {
+		JsonParser parser = new JsonParser();
+		JsonElement backlogElement = parser.parse(jsonResponse);
+		return new TuleapBacklogItemDeserializer().deserialize(backlogElement, TuleapBacklogItem.class, null);
+	}
+
+	/**
 	 * Parses a JSON String representing a cardwall into a POJO.
 	 * 
 	 * @param jsonResponse

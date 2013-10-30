@@ -238,6 +238,15 @@ app.options('/api/' + apiVersion + '/milestones/:milestoneId/cardwall', mileston
 app.get('/api/' + apiVersion + '/milestones/:milestoneId/cardwall', auth, milestones.cardwall);
 
 
+//BacklogItems
+var backlogItems = require('./controllers/backlogItems.js');
+//Getting the list of backlogItems
+app.options('/api/' + apiVersion + '/backlog_items', backlogItems.optionsList);
+app.get('/api/' + apiVersion + '/backlog_items', auth, backlogItems.list);
+//Getting one backlogItem
+app.options('/api/' + apiVersion + '/backlog_items/:backlogItemId', backlogItems.options);
+app.get('/api/' + apiVersion + '/backlog_items/:backlogItemId', auth, backlogItems.get);
+
 // 404 Since no middleware has responded
 app.use(function(req, res, next){
   res.status(404);
