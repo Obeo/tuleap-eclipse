@@ -153,16 +153,15 @@ public class TuleapTaskDataHandlerTests {
 				return null;
 			}
 
-			public AbstractTuleapConfiguration refreshConfiguration(
-					TaskRepository taskRepository,
+			public AbstractTuleapConfiguration refreshConfiguration(TaskRepository taskRepository,
 					AbstractTuleapConfiguration configuration, IProgressMonitor monitor) {
 				return null;
 			}
 		};
 
 		TuleapTaskDataHandler tuleapTaskDataHandler = new TuleapTaskDataHandler(repositoryConnector);
-		AbstractTuleapConfiguration configuration = this.tuleapServerConfiguration
-				.getProjectConfiguration(projectId).getConfigurableFieldsConfiguration(configurationId);
+		AbstractTuleapConfiguration configuration = this.tuleapServerConfiguration.getProjectConfiguration(
+				projectId).getConfigurableFieldsConfiguration(configurationId);
 
 		TaskData taskData = new TaskData(tuleapTaskDataHandler.getAttributeMapper(repository),
 				ITuleapConstants.CONNECTOR_KIND, this.repository.getRepositoryUrl(), "");
@@ -289,8 +288,7 @@ public class TuleapTaskDataHandlerTests {
 				return tuleapClientManager;
 			}
 
-			public AbstractTuleapConfiguration refreshConfiguration(
-					TaskRepository taskRepository,
+			public AbstractTuleapConfiguration refreshConfiguration(TaskRepository taskRepository,
 					AbstractTuleapConfiguration configuration, IProgressMonitor monitor) {
 				return configuration;
 			}
@@ -334,10 +332,8 @@ public class TuleapTaskDataHandlerTests {
 	 * Test the retrieval of the task data representing an existing Tuleap backlog item. We won't test here
 	 * all the options used during the creation of said task data since other unit tests will handle it.
 	 */
-	@Ignore
 	@Test
 	public void testGetTaskDataBacklogItem() {
-		// TODO SBE remove the ignore when the creation of the backlog item is done
 		this.testGetTaskData(TuleapTaskIdentityUtil
 				.getTaskDataId(projectId, backlogItemTypeId, backlogItemId),
 				AgileTaskKindUtil.TASK_KIND_BACKLOG_ITEM);
@@ -407,8 +403,7 @@ public class TuleapTaskDataHandlerTests {
 				return tuleapClientManager;
 			}
 
-			public AbstractTuleapConfiguration refreshConfiguration(
-					TaskRepository taskRepository,
+			public AbstractTuleapConfiguration refreshConfiguration(TaskRepository taskRepository,
 					AbstractTuleapConfiguration configuration, IProgressMonitor monitor) {
 				return configuration;
 			}
