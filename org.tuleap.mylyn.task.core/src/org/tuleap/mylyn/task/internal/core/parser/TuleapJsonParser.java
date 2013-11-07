@@ -11,6 +11,7 @@
 package org.tuleap.mylyn.task.internal.core.parser;
 
 import com.google.common.collect.Lists;
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -22,11 +23,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapPlanning;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCardwall;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapTopPlanning;
+import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
@@ -46,8 +50,7 @@ public class TuleapJsonParser {
 	 */
 	public List<TuleapProject> parseProjectConfigurations(String jsonResponse) {
 		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(TuleapProject.class,
-				new TuleapProjectConfigurationDeserializer());
+		gsonBuilder.registerTypeAdapter(TuleapProject.class, new TuleapProjectConfigurationDeserializer());
 
 		JsonParser jsonParser = new JsonParser();
 		JsonArray jsonArray = jsonParser.parse(jsonResponse).getAsJsonArray();
@@ -55,8 +58,7 @@ public class TuleapJsonParser {
 		List<TuleapProject> result = Lists.newArrayList();
 		for (JsonElement jsonElement : jsonArray) {
 			Gson gson = gsonBuilder.create();
-			TuleapProject tuleapProject = gson.fromJson(jsonElement,
-					TuleapProject.class);
+			TuleapProject tuleapProject = gson.fromJson(jsonElement, TuleapProject.class);
 
 			result.add(tuleapProject);
 		}
@@ -83,6 +85,68 @@ public class TuleapJsonParser {
 		}
 
 		return topPlannings;
+	}
+
+	/**
+	 * Parses a list of {@link TuleapPlanning}s from a JSON string.
+	 * 
+	 * @param json
+	 *            Tje JSON string to parse, should contain an array, but can contain only a JSON object
+	 *            representing a {@link TuleapPlanning}.
+	 * @return A list that is never null but possibly empty if the JSON was neither an array nor an object.
+	 */
+	public List<TuleapPlanning> parsePlanningList(String json) {
+		JsonParser parser = new JsonParser();
+		JsonElement root = parser.parse(json);
+		List<TuleapPlanning> result = Lists.newArrayList();
+		if (root.isJsonArray()) {
+			JsonArray array = root.getAsJsonArray();
+			for (JsonElement elt : array) {
+				result.add(parsePlanning(elt));
+			}
+		} else if (root.isJsonObject()) {
+			result.add(parsePlanning(root));
+		}
+		return result;
+	}
+
+	/**
+	 * Parse a JSON representation of a planning and returns the created {@link TuleapPlanning} instance.
+	 * 
+	 * @param json
+	 *            The JSON representation of the planning
+	 * @return A new instance of {@link TuleapPlanning} containing the json data.
+	 */
+	public TuleapPlanning parsePlanning(String json) {
+		JsonParser parser = new JsonParser();
+		JsonElement planningElement = parser.parse(json);
+		TuleapPlanning planning = parsePlanning(planningElement);
+		return planning;
+	}
+
+	/**
+	 * Parse a JSON representation of a planning and returns the created {@link TuleapPlanning} instance.
+	 * 
+	 * @param planningElement
+	 *            the JSON element to parse
+	 * @return A new instance of {@link TuleapPlanning} containing the json data.
+	 */
+	private TuleapPlanning parsePlanning(JsonElement planningElement) {
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		Gson gson = gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
+		TuleapPlanning planning = gson.fromJson(planningElement, TuleapPlanning.class);
+
+		// Need to handle specifically the list of backlog item trackers
+		JsonObject jsonObject = planningElement.getAsJsonObject();
+		JsonElement biTrackerElement = jsonObject.get(ITuleapConstants.JSON_BACKLOG_ITEM_TRACKERS);
+		if (biTrackerElement.isJsonArray()) {
+			JsonArray biTrackerArray = biTrackerElement.getAsJsonArray();
+			for (JsonElement biElt : biTrackerArray) {
+				TuleapReference biTracker = gson.fromJson(biElt, TuleapReference.class);
+				planning.addBacklogTracker(biTracker);
+			}
+		}
+		return planning;
 	}
 
 	/**

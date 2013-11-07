@@ -1,0 +1,20 @@
+{
+  "id" : 401,
+  "label" : "Sprints Planning",
+  "uri" : "plannings/401",
+  "project" : {
+    "id" : 3,
+    "uri" : "projects/3"
+  },
+  "milestone_tracker" : {
+    "id" : 902,
+    "uri" : "trackers/902"
+  },
+  "backlog_item_trackers" : [
+    {
+      "id" : 802,
+      "uri" : "trackers/802"
+    }
+  ],
+  "milestones_uri" : "plannings/401/milestones"
+}

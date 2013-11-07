@@ -1,40 +1,48 @@
 [
   {
-    "id" : 300,
+    "id" : 200,
     "artifact" : {
-      "id" : 300,
-      "uri" : "artifacts/300"
+      "id" : 200,
+      "uri" : "artifacts/200"
     },
     "project" : {
       "id" : 3,
       "uri" : "projects/3"
     },
-    "label" : "An important Epic",
-    "uri" : "backlog_items/300",
-    "html_url" : "backlog_items?id=300&group_id=3",
+    "label" : "Release 0.9",
+    "uri" : "milestones/200",
+    "html_url" : "milestones?id=200&group_id=3",
     "submitted_by": 1,
     "submitted_on": "2013-09-23T11:44:18.963Z",
     "last_updated_on": "2013-09-24T15:33:18.523Z",
-    "initial_effort": 30,
-    "assigned_milestone_id": 200
+    "start_date" : "2013-09-23T11:44:18.963Z",
+    "end_date" : "2013-10-23T11:44:18.963Z",
+    "capacity" : 100,
+    "status_label" : "Done",
+    "sub_milestones_uri" : "milestones/200/milestones",
+    "backlog_items_uri" : "milestones/200/backlog_items"
   },
   {
-    "id" : 301,
+    "id" : 201,
     "artifact" : {
-      "id" : 301,
-      "uri" : "artifacts/301"
+      "id" : 201,
+      "uri" : "artifacts/201"
     },
     "project" : {
       "id" : 3,
       "uri" : "projects/3"
     },
-    "label" : "Another important Epic",
-    "uri" : "backlog_items/301",
-    "html_url" : "backlog_items?id=301&group_id=3",
+    "label" : "Release TU",
+    "uri" : "milestones/201",
+    "html_url" : "milestones?id=201&group_id=3",
     "submitted_by": 1,
     "submitted_on": "2013-09-23T11:44:18.963Z",
     "last_updated_on": "2013-09-24T15:33:18.523Z",
-    "initial_effort": 40.5,
-    "assigned_milestone_id": 201
+    "start_date" : "2013-10-23T11:44:18.963Z",
+    "end_date" : "2013-11-23T11:44:18.963Z",
+    "capacity" : 75,
+    "status_label" : "Current",
+    "sub_milestones_uri" : "milestones/201/milestones",
+    "backlog_items_uri" : "milestones/201/backlog_items"
   }
 ]

@@ -27,6 +27,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.restlet.data.Method;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapPlanning;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTrackerReport;
@@ -157,12 +158,22 @@ public class TuleapRestClient {
 		checkServerError(restProjects, Method.GET.toString(), projectsGetServerResponse);
 
 		String projectsGetResponseBody = projectsGetServerResponse.getBody();
-		List<TuleapProject> projectConfigurations = this.jsonParser
-				.parseProjectConfigurations(projectsGetResponseBody);
+		List<TuleapProject> projects = this.jsonParser.parseProjectConfigurations(projectsGetResponseBody);
 
 		// For each project that has the tracker service
-		for (TuleapProject projectConfiguration : projectConfigurations) {
-			tuleapServer.addProject(projectConfiguration);
+		for (TuleapProject project : projects) {
+			tuleapServer.addProject(project);
+
+			// Retrieve the plannings of the project
+			RestResource plannings = restResourceFactory.projectPlannings(project.getIdentifier());
+			ServerResponse planningsResponse = plannings.get().run();
+
+			checkServerError(plannings, Method.GET.toString(), planningsResponse);
+
+			List<TuleapPlanning> planningList = jsonParser.parsePlanningList(planningsResponse.getBody());
+			for (TuleapPlanning planning : planningList) {
+				project.addPlanning(planning);
+			}
 
 			// TODO SBE Restore this code!
 

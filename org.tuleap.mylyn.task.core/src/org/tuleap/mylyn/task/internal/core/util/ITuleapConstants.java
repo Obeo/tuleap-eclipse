@@ -277,4 +277,9 @@ public interface ITuleapConstants {
 	 * The key used for the parent of a milestone.
 	 */
 	String JSON_PARENT = "parent"; //$NON-NLS-1$
+
+	/**
+	 * The key used for the list of backlog item trackers in a planning.
+	 */
+	String JSON_BACKLOG_ITEM_TRACKERS = "backlog_item_trackers"; //$NON-NLS-1$
 }

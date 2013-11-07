@@ -35,6 +35,12 @@ public class TuleapPlanning extends AbstractTuleapProjectElement {
 	private List<TuleapReference> backlogTrackers;
 
 	/**
+	 * REST URI to retrieve the milestones of this planning. They are the milestones of the artifacts of the
+	 * milestone tracker of this planning.
+	 */
+	private String milestonesUri;
+
+	/**
 	 * REST URI of the cardwall configuration.
 	 */
 	private String cardwallConfigurationUri;
@@ -106,6 +112,16 @@ public class TuleapPlanning extends AbstractTuleapProjectElement {
 	}
 
 	/**
+	 * Backlog tracker reference setter.
+	 * 
+	 * @param backlogTrackers
+	 *            the backlogTrackers to set
+	 */
+	public void setBacklogTrackers(List<TuleapReference> backlogTrackers) {
+		this.backlogTrackers = backlogTrackers;
+	}
+
+	/**
 	 * Adds a backlog tracker reference.
 	 * 
 	 * @param backlogTracker
@@ -122,6 +138,25 @@ public class TuleapPlanning extends AbstractTuleapProjectElement {
 	 */
 	public String getCardwallConfigurationUri() {
 		return cardwallConfigurationUri;
+	}
+
+	/**
+	 * Milestones URI getter.
+	 * 
+	 * @return the milestonesUri
+	 */
+	public String getMilestonesUri() {
+		return milestonesUri;
+	}
+
+	/**
+	 * Milestones URI setter.
+	 * 
+	 * @param milestonesUri
+	 *            the milestonesUri to set
+	 */
+	public void setMilestonesUri(String milestonesUri) {
+		this.milestonesUri = milestonesUri;
 	}
 
 	/**
