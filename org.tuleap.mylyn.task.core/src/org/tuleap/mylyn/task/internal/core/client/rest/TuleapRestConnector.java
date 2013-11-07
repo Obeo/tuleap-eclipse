@@ -42,8 +42,6 @@ import org.restlet.engine.http.header.HeaderConstants;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
-import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
-import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
 /**
  * This class will be used to establish the connection with the HTTP based Tuleap server.
@@ -98,71 +96,9 @@ public class TuleapRestConnector implements IRestConnector {
 	 */
 	public RestResourceFactory getResourceFactory() throws CoreException {
 		if (restResourceFactory == null) {
-			IStatus status = null;
-
-			// Try to send a request to the best supported version of the API
-			ServerResponse serverResponse = new RestApi(location.getUrl(), bestApiVersion, this).options()
-					.run();
-
-			switch (serverResponse.getStatus()) {
-				case ServerResponse.STATUS_OK:
-					// If we receive a 200 OK, the connection is good
-					restResourceFactory = new RestResourceFactory(location.getUrl(), bestApiVersion, this);
-					break;
-				case ServerResponse.STATUS_MOVED:
-					// If we receive a 301 Moved Permanently, a new compatible version of the API is available
-					Map<String, String> headers = serverResponse.getHeaders();
-					String newApiLocation = headers.get(ITuleapHeaders.LOCATION);
-
-					// Parse the new location to get the api version segment.
-					if (newApiLocation != null) {
-						int indexOfAPIPrefix = newApiLocation.indexOf(ITuleapAPIVersions.API_PREFIX);
-						if (indexOfAPIPrefix != -1) {
-							String newApiVersion = newApiLocation.substring(indexOfAPIPrefix
-									+ ITuleapAPIVersions.API_PREFIX.length());
-							// TODO Send an OPTIONS request to this new URL to check the response
-							restResourceFactory = new RestResourceFactory(location.getUrl(), newApiVersion,
-									this);
-						} else {
-							// Error, invalid behavior of the server, invalid location
-							status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
-									TuleapMylynTasksMessages.getString(
-											TuleapMylynTasksMessagesKeys.invalidAPILocation, bestApiVersion));
-						}
-					} else {
-						// Error, invalid behavior of the server, no new location
-						status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
-								TuleapMylynTasksMessages.getString(
-										TuleapMylynTasksMessagesKeys.missingAPILocation, bestApiVersion));
-					}
-					break;
-				case ServerResponse.STATUS_GONE:
-					// If we receive a 410 Gone, the server does not support the required API, the connector
-					// cannot work with this server
-					// TODO How to deserialize the body here?
-					String goneErrorMessage = serverResponse.getBody();
-					status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
-							TuleapMylynTasksMessages.getString(
-									TuleapMylynTasksMessagesKeys.missingCompatibleAPI, bestApiVersion,
-									goneErrorMessage));
-					break;
-				case ServerResponse.STATUS_NOT_FOUND:
-					// If we receive a 404 Not Found, the URL of server is invalid or the server is offline
-					status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
-							TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.aPINotFound));
-					break;
-				default:
-					// Unknown error, invalid behavior of the server?
-					status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
-							TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.invalidBehavior,
-									Integer.valueOf(serverResponse.getStatus())));
-					break;
-			}
-			if (status != null) {
-				throw new CoreException(status);
-			}
+			// No redirection is possible for the time being
+			restResourceFactory = new RestResourceFactory(location.getUrl(), bestApiVersion, this);
 		}
-
 		return restResourceFactory;
 	}
 
