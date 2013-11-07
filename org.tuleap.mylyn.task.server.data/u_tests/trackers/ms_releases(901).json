@@ -2,8 +2,7 @@
   "id" : 901,
   "label" : "Releases",
   "description" : "The description of Releases",
-  "url" : "localhost:3001/api/v3.14/milestone_types/901",
-  "has_cardwall" : false,
+  "url" : "localhost:3001/api/v3.14/trackers/901",
   "project_id" : 3,
   "fields" : [
       {

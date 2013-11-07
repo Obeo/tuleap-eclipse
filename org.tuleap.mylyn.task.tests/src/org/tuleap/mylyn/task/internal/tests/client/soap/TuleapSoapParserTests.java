@@ -41,7 +41,7 @@ import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapText;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapUrlUtil;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Artifact;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactFieldValue;
@@ -93,75 +93,75 @@ public class TuleapSoapParserTests {
 				projectId);
 
 		// The first tracker does not have a single field.
-		TuleapTrackerConfiguration firstTrackerConfiguration = new TuleapTrackerConfiguration(0, null, null,
-				null, null, System.currentTimeMillis());
+		TuleapTracker firstTrackerConfiguration = new TuleapTracker(0, null, null, null, null, System
+				.currentTimeMillis());
 
 		// The second tracker has one string field
-		TuleapTrackerConfiguration secondTrackerConfiguration = new TuleapTrackerConfiguration(1, null, null,
-				null, null, System.currentTimeMillis());
+		TuleapTracker secondTrackerConfiguration = new TuleapTracker(1, null, null, null, null, System
+				.currentTimeMillis());
 		TuleapString tuleapString = new TuleapString(12);
 		tuleapString.setName("string field name"); //$NON-NLS-1$
 		secondTrackerConfiguration.addField(tuleapString);
 
 		// The third tracker has one text field
-		TuleapTrackerConfiguration thirdTrackerConfiguration = new TuleapTrackerConfiguration(2, null, null,
-				null, null, System.currentTimeMillis());
+		TuleapTracker thirdTrackerConfiguration = new TuleapTracker(2, null, null, null, null, System
+				.currentTimeMillis());
 		TuleapText tuleapText = new TuleapText(12);
 		tuleapText.setName("text field name"); //$NON-NLS-1$
 		thirdTrackerConfiguration.addField(tuleapText);
 
 		// The fourth tracker has one integer field
-		TuleapTrackerConfiguration fourthTrackerConfiguration = new TuleapTrackerConfiguration(3, null, null,
-				null, null, System.currentTimeMillis());
+		TuleapTracker fourthTrackerConfiguration = new TuleapTracker(3, null, null, null, null, System
+				.currentTimeMillis());
 		TuleapInteger tuleapInteger = new TuleapInteger(12);
 		tuleapInteger.setName("integer field name"); //$NON-NLS-1$
 		fourthTrackerConfiguration.addField(tuleapInteger);
 
 		// The fifth tracker has one float field
-		TuleapTrackerConfiguration fifthTrackerConfiguration = new TuleapTrackerConfiguration(4, null, null,
-				null, null, System.currentTimeMillis());
+		TuleapTracker fifthTrackerConfiguration = new TuleapTracker(4, null, null, null, null, System
+				.currentTimeMillis());
 		TuleapFloat tuleapFloat = new TuleapFloat(12);
 		tuleapFloat.setName("float field name"); //$NON-NLS-1$
 		fifthTrackerConfiguration.addField(tuleapFloat);
 
 		// The sixth tracker has one date field
-		TuleapTrackerConfiguration sixthTrackerConfiguration = new TuleapTrackerConfiguration(5, null, null,
-				null, null, System.currentTimeMillis());
+		TuleapTracker sixthTrackerConfiguration = new TuleapTracker(5, null, null, null, null, System
+				.currentTimeMillis());
 		TuleapDate tuleapDate = new TuleapDate(12);
 		tuleapDate.setName("date field name"); //$NON-NLS-1$
 		sixthTrackerConfiguration.addField(tuleapDate);
 
 		// The seventh tracker has one open list field
-		TuleapTrackerConfiguration seventhTrackerConfiguration = new TuleapTrackerConfiguration(6, null,
-				null, null, null, System.currentTimeMillis());
+		TuleapTracker seventhTrackerConfiguration = new TuleapTracker(6, null, null, null, null, System
+				.currentTimeMillis());
 		TuleapOpenList tuleapOpenList = new TuleapOpenList(12);
 		tuleapOpenList.setName("open list field name"); //$NON-NLS-1$
 		seventhTrackerConfiguration.addField(tuleapOpenList);
 
 		// The eighth tracker has one open list field
-		TuleapTrackerConfiguration eighthTrackerConfiguration = new TuleapTrackerConfiguration(7, null, null,
-				null, null, System.currentTimeMillis());
+		TuleapTracker eighthTrackerConfiguration = new TuleapTracker(7, null, null, null, null, System
+				.currentTimeMillis());
 		TuleapArtifactLink tuleapArtifactLink = new TuleapArtifactLink(12);
 		tuleapArtifactLink.setName("artifact links field name"); //$NON-NLS-1$
 		eighthTrackerConfiguration.addField(tuleapArtifactLink);
 
 		// The ninth tracker has one select box
-		TuleapTrackerConfiguration ninthTrackerConfiguration = new TuleapTrackerConfiguration(8, null, null,
-				null, null, System.currentTimeMillis());
+		TuleapTracker ninthTrackerConfiguration = new TuleapTracker(8, null, null, null, null, System
+				.currentTimeMillis());
 		TuleapSelectBox tuleapSelectBox = new TuleapSelectBox(12);
 		tuleapSelectBox.setName("tuleap select box field name"); //$NON-NLS-1$
 		ninthTrackerConfiguration.addField(tuleapSelectBox);
 
 		// The tenth tracker has one multi-select box
-		TuleapTrackerConfiguration tenthTrackerConfiguration = new TuleapTrackerConfiguration(9, null, null,
-				null, null, System.currentTimeMillis());
+		TuleapTracker tenthTrackerConfiguration = new TuleapTracker(9, null, null, null, null, System
+				.currentTimeMillis());
 		TuleapMultiSelectBox tuleapMultiSelectBox = new TuleapMultiSelectBox(12);
 		tuleapMultiSelectBox.setName("tuleap multi-select box field name"); //$NON-NLS-1$
 		tenthTrackerConfiguration.addField(tuleapMultiSelectBox);
 
 		// The eleventh tracker has one file attachment
-		TuleapTrackerConfiguration eleventhTrackerConfiguration = new TuleapTrackerConfiguration(10, null,
-				null, null, null, System.currentTimeMillis());
+		TuleapTracker eleventhTrackerConfiguration = new TuleapTracker(10, null, null, null, null, System
+				.currentTimeMillis());
 		TuleapFileUpload tuleapFileUpload = new TuleapFileUpload(12);
 		tuleapFileUpload.setName("tuleap file upload field name"); //$NON-NLS-1$
 		eleventhTrackerConfiguration.addField(tuleapFileUpload);
@@ -234,8 +234,7 @@ public class TuleapSoapParserTests {
 		Date creationDate = new Date();
 		Date lastUpdateDate = new Date();
 
-		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.tuleapServerConfiguration
-				.getTrackerConfiguration(trackerId);
+		TuleapTracker tuleapTracker = this.tuleapServerConfiguration.getTrackerConfiguration(trackerId);
 
 		List<TuleapElementComment> comments = new ArrayList<TuleapElementComment>();
 
@@ -263,20 +262,19 @@ public class TuleapSoapParserTests {
 				creationDate, lastUpdateDate, comments);
 
 		TuleapSoapParser tuleapSoapParser = new TuleapSoapParser();
-		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTrackerConfiguration,
-				commentedArtifact);
+		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTracker, commentedArtifact);
 
 		assertThat(tuleapArtifact, is(notNullValue()));
 		assertThat(tuleapArtifact.getId(), is(artifactId));
-		assertThat(tuleapArtifact.getConfigurationId(), is(trackerId));
-		assertThat(tuleapArtifact.getCreationDate().toString(), is(creationDate.toString()));
-		assertThat(tuleapArtifact.getLastModificationDate().toString(), is(lastUpdateDate.toString()));
+		assertThat(tuleapArtifact.getTracker().getId(), is(trackerId));
+		assertThat(tuleapArtifact.getSubmittedOn().toString(), is(creationDate.toString()));
+		assertThat(tuleapArtifact.getLastUpdatedOn().toString(), is(lastUpdateDate.toString()));
 
 		String taskId = TuleapTaskIdentityUtil.getTaskDataId(projectId, trackerId, artifactId);
 		String htmlUrl = TuleapUrlUtil.getTaskUrlFromTaskId(repositoryUrl, taskId);
 		assertThat(tuleapArtifact.getHtmlUrl(), is(htmlUrl));
 
-		assertThat(tuleapArtifact.getUrl(), is(nullValue()));
+		assertThat(tuleapArtifact.getUri(), is(nullValue()));
 		assertThat(tuleapArtifact.getNewComment(), is(nullValue()));
 		assertThat(tuleapArtifact.getFieldValues().size(), is(0));
 		assertThat(tuleapArtifact.getLabel(), is(nullValue()));
@@ -367,13 +365,12 @@ public class TuleapSoapParserTests {
 		Date creationDate = new Date();
 		Date lastUpdateDate = new Date();
 
-		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.tuleapServerConfiguration
-				.getTrackerConfiguration(trackerId);
+		TuleapTracker tuleapTracker = this.tuleapServerConfiguration.getTrackerConfiguration(trackerId);
 
 		CommentedArtifact commentedArtifact = this.createCommentedArtifact(artifactId, trackerId, userId,
 				creationDate, lastUpdateDate, new ArrayList<TuleapElementComment>());
 
-		Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
+		Collection<AbstractTuleapField> fields = tuleapTracker.getFields();
 		AbstractTuleapField field = fields.iterator().next();
 
 		String fieldValue = "string field value"; //$NON-NLS-1$
@@ -384,8 +381,7 @@ public class TuleapSoapParserTests {
 		commentedArtifact.getArtifact().setValue(value);
 
 		TuleapSoapParser tuleapSoapParser = new TuleapSoapParser();
-		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTrackerConfiguration,
-				commentedArtifact);
+		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTracker, commentedArtifact);
 
 		this.testLiteralFieldValue(artifactId, field, fieldValue, tuleapArtifact);
 	}
@@ -403,13 +399,12 @@ public class TuleapSoapParserTests {
 		Date creationDate = new Date();
 		Date lastUpdateDate = new Date();
 
-		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.tuleapServerConfiguration
-				.getTrackerConfiguration(trackerId);
+		TuleapTracker tuleapTracker = this.tuleapServerConfiguration.getTrackerConfiguration(trackerId);
 
 		CommentedArtifact commentedArtifact = this.createCommentedArtifact(artifactId, trackerId, userId,
 				creationDate, lastUpdateDate, new ArrayList<TuleapElementComment>());
 
-		Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
+		Collection<AbstractTuleapField> fields = tuleapTracker.getFields();
 		AbstractTuleapField field = fields.iterator().next();
 
 		String fieldValue = "text field value"; //$NON-NLS-1$
@@ -420,8 +415,7 @@ public class TuleapSoapParserTests {
 		commentedArtifact.getArtifact().setValue(value);
 
 		TuleapSoapParser tuleapSoapParser = new TuleapSoapParser();
-		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTrackerConfiguration,
-				commentedArtifact);
+		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTracker, commentedArtifact);
 
 		this.testLiteralFieldValue(artifactId, field, fieldValue, tuleapArtifact);
 	}
@@ -439,13 +433,12 @@ public class TuleapSoapParserTests {
 		Date creationDate = new Date();
 		Date lastUpdateDate = new Date();
 
-		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.tuleapServerConfiguration
-				.getTrackerConfiguration(trackerId);
+		TuleapTracker tuleapTracker = this.tuleapServerConfiguration.getTrackerConfiguration(trackerId);
 
 		CommentedArtifact commentedArtifact = this.createCommentedArtifact(artifactId, trackerId, userId,
 				creationDate, lastUpdateDate, new ArrayList<TuleapElementComment>());
 
-		Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
+		Collection<AbstractTuleapField> fields = tuleapTracker.getFields();
 		AbstractTuleapField field = fields.iterator().next();
 
 		String fieldValue = "12"; //$NON-NLS-1$
@@ -456,8 +449,7 @@ public class TuleapSoapParserTests {
 		commentedArtifact.getArtifact().setValue(value);
 
 		TuleapSoapParser tuleapSoapParser = new TuleapSoapParser();
-		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTrackerConfiguration,
-				commentedArtifact);
+		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTracker, commentedArtifact);
 
 		this.testLiteralFieldValue(artifactId, field, fieldValue, tuleapArtifact);
 	}
@@ -475,13 +467,12 @@ public class TuleapSoapParserTests {
 		Date creationDate = new Date();
 		Date lastUpdateDate = new Date();
 
-		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.tuleapServerConfiguration
-				.getTrackerConfiguration(trackerId);
+		TuleapTracker tuleapTracker = this.tuleapServerConfiguration.getTrackerConfiguration(trackerId);
 
 		CommentedArtifact commentedArtifact = this.createCommentedArtifact(artifactId, trackerId, userId,
 				creationDate, lastUpdateDate, new ArrayList<TuleapElementComment>());
 
-		Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
+		Collection<AbstractTuleapField> fields = tuleapTracker.getFields();
 		AbstractTuleapField field = fields.iterator().next();
 
 		String fieldValue = "12.5"; //$NON-NLS-1$
@@ -492,8 +483,7 @@ public class TuleapSoapParserTests {
 		commentedArtifact.getArtifact().setValue(value);
 
 		TuleapSoapParser tuleapSoapParser = new TuleapSoapParser();
-		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTrackerConfiguration,
-				commentedArtifact);
+		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTracker, commentedArtifact);
 
 		this.testLiteralFieldValue(artifactId, field, fieldValue, tuleapArtifact);
 	}
@@ -511,13 +501,12 @@ public class TuleapSoapParserTests {
 		Date creationDate = new Date();
 		Date lastUpdateDate = new Date();
 
-		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.tuleapServerConfiguration
-				.getTrackerConfiguration(trackerId);
+		TuleapTracker tuleapTracker = this.tuleapServerConfiguration.getTrackerConfiguration(trackerId);
 
 		CommentedArtifact commentedArtifact = this.createCommentedArtifact(artifactId, trackerId, userId,
 				creationDate, lastUpdateDate, new ArrayList<TuleapElementComment>());
 
-		Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
+		Collection<AbstractTuleapField> fields = tuleapTracker.getFields();
 		AbstractTuleapField field = fields.iterator().next();
 
 		String fieldValue = "2013-09-23T11:44:18.963Z"; //$NON-NLS-1$
@@ -528,8 +517,7 @@ public class TuleapSoapParserTests {
 		commentedArtifact.getArtifact().setValue(value);
 
 		TuleapSoapParser tuleapSoapParser = new TuleapSoapParser();
-		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTrackerConfiguration,
-				commentedArtifact);
+		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTracker, commentedArtifact);
 
 		this.testLiteralFieldValue(artifactId, field, fieldValue, tuleapArtifact);
 	}
@@ -547,13 +535,12 @@ public class TuleapSoapParserTests {
 		Date creationDate = new Date();
 		Date lastUpdateDate = new Date();
 
-		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.tuleapServerConfiguration
-				.getTrackerConfiguration(trackerId);
+		TuleapTracker tuleapTracker = this.tuleapServerConfiguration.getTrackerConfiguration(trackerId);
 
 		CommentedArtifact commentedArtifact = this.createCommentedArtifact(artifactId, trackerId, userId,
 				creationDate, lastUpdateDate, new ArrayList<TuleapElementComment>());
 
-		Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
+		Collection<AbstractTuleapField> fields = tuleapTracker.getFields();
 		AbstractTuleapField field = fields.iterator().next();
 
 		String fieldValue = "141, 218, 21, 8197"; //$NON-NLS-1$
@@ -564,8 +551,7 @@ public class TuleapSoapParserTests {
 		commentedArtifact.getArtifact().setValue(value);
 
 		TuleapSoapParser tuleapSoapParser = new TuleapSoapParser();
-		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTrackerConfiguration,
-				commentedArtifact);
+		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTracker, commentedArtifact);
 
 		this.testLiteralFieldValue(artifactId, field, fieldValue, tuleapArtifact);
 	}
@@ -583,13 +569,12 @@ public class TuleapSoapParserTests {
 		Date creationDate = new Date();
 		Date lastUpdateDate = new Date();
 
-		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.tuleapServerConfiguration
-				.getTrackerConfiguration(trackerId);
+		TuleapTracker tuleapTracker = this.tuleapServerConfiguration.getTrackerConfiguration(trackerId);
 
 		CommentedArtifact commentedArtifact = this.createCommentedArtifact(artifactId, trackerId, userId,
 				creationDate, lastUpdateDate, new ArrayList<TuleapElementComment>());
 
-		Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
+		Collection<AbstractTuleapField> fields = tuleapTracker.getFields();
 		AbstractTuleapField field = fields.iterator().next();
 
 		String fieldValue = "this, is, a, list, of, tags"; //$NON-NLS-1$
@@ -600,8 +585,7 @@ public class TuleapSoapParserTests {
 		commentedArtifact.getArtifact().setValue(value);
 
 		TuleapSoapParser tuleapSoapParser = new TuleapSoapParser();
-		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTrackerConfiguration,
-				commentedArtifact);
+		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTracker, commentedArtifact);
 
 		this.testLiteralFieldValue(artifactId, field, fieldValue, tuleapArtifact);
 	}
@@ -679,13 +663,12 @@ public class TuleapSoapParserTests {
 		Date creationDate = new Date();
 		Date lastUpdateDate = new Date();
 
-		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.tuleapServerConfiguration
-				.getTrackerConfiguration(trackerId);
+		TuleapTracker tuleapTracker = this.tuleapServerConfiguration.getTrackerConfiguration(trackerId);
 
 		CommentedArtifact commentedArtifact = this.createCommentedArtifact(artifactId, trackerId, userId,
 				creationDate, lastUpdateDate, new ArrayList<TuleapElementComment>());
 
-		Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
+		Collection<AbstractTuleapField> fields = tuleapTracker.getFields();
 		AbstractTuleapField field = fields.iterator().next();
 
 		int[] bindValueIds = new int[] {1, };
@@ -696,8 +679,7 @@ public class TuleapSoapParserTests {
 		commentedArtifact.getArtifact().setValue(value);
 
 		TuleapSoapParser tuleapSoapParser = new TuleapSoapParser();
-		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTrackerConfiguration,
-				commentedArtifact);
+		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTracker, commentedArtifact);
 
 		this.testBoundFieldValues(artifactId, field, bindValueIds, tuleapArtifact);
 	}
@@ -715,13 +697,12 @@ public class TuleapSoapParserTests {
 		Date creationDate = new Date();
 		Date lastUpdateDate = new Date();
 
-		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.tuleapServerConfiguration
-				.getTrackerConfiguration(trackerId);
+		TuleapTracker tuleapTracker = this.tuleapServerConfiguration.getTrackerConfiguration(trackerId);
 
 		CommentedArtifact commentedArtifact = this.createCommentedArtifact(artifactId, trackerId, userId,
 				creationDate, lastUpdateDate, new ArrayList<TuleapElementComment>());
 
-		Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
+		Collection<AbstractTuleapField> fields = tuleapTracker.getFields();
 		AbstractTuleapField field = fields.iterator().next();
 
 		int[] bindValueIds = new int[] {1, 2, 3, 4, };
@@ -732,8 +713,7 @@ public class TuleapSoapParserTests {
 		commentedArtifact.getArtifact().setValue(value);
 
 		TuleapSoapParser tuleapSoapParser = new TuleapSoapParser();
-		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTrackerConfiguration,
-				commentedArtifact);
+		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTracker, commentedArtifact);
 
 		this.testBoundFieldValues(artifactId, field, bindValueIds, tuleapArtifact);
 	}
@@ -824,13 +804,12 @@ public class TuleapSoapParserTests {
 		Date creationDate = new Date();
 		Date lastUpdateDate = new Date();
 
-		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.tuleapServerConfiguration
-				.getTrackerConfiguration(trackerId);
+		TuleapTracker tuleapTracker = this.tuleapServerConfiguration.getTrackerConfiguration(trackerId);
 
 		CommentedArtifact commentedArtifact = this.createCommentedArtifact(artifactId, trackerId, userId,
 				creationDate, lastUpdateDate, new ArrayList<TuleapElementComment>());
 
-		Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
+		Collection<AbstractTuleapField> fields = tuleapTracker.getFields();
 		AbstractTuleapField field = fields.iterator().next();
 
 		List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
@@ -851,8 +830,7 @@ public class TuleapSoapParserTests {
 		commentedArtifact.getArtifact().setValue(value);
 
 		TuleapSoapParser tuleapSoapParser = new TuleapSoapParser();
-		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTrackerConfiguration,
-				commentedArtifact);
+		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTracker, commentedArtifact);
 
 		this.testFileDescriptionValues(artifactId, field, fileDescriptions, tuleapArtifact);
 	}

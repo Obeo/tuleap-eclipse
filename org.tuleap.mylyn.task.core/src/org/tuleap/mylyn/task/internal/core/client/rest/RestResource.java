@@ -261,104 +261,84 @@ public class RestResource {
 		String API = ""; //$NON-NLS-1$
 
 		/**
-		 * "/user".
-		 */
-		String USER = "user"; //$NON-NLS-1$
-
-		/**
-		 * "/projects".
-		 */
-		String PROJECTS = "projects"; //$NON-NLS-1$
-
-		/**
-		 * "/plannings".
-		 */
-		String PLANNINGS = "plannings"; //$NON-NLS-1$
-
-		/**
-		 * "/top_plannings".
-		 */
-		String TOP_PLANNINGS = "top_plannings"; //$NON-NLS-1$
-
-		/**
-		 * "/milestones".
-		 */
-		String MILESTONES = "milestones"; //$NON-NLS-1$
-
-		/**
-		 * "/submilestones".
-		 */
-		String SUBMILESTONES = "submilestones"; //$NON-NLS-1$
-
-		/**
-		 * "/backlog_items".
-		 */
-		String BACKLOG_ITEMS = "backlog_items"; //$NON-NLS-1$
-
-		/**
-		 * "/cards".
-		 */
-		String CARDS = "cards"; //$NON-NLS-1$
-
-		/**
-		 * "/cardwall".
-		 */
-		String CARDWALL = "cardwall"; //$NON-NLS-1$
-
-		/**
-		 * "/trackers".
-		 */
-		String TRACKERS = "trackers"; //$NON-NLS-1$
-
-		/**
-		 * "/groups".
-		 */
-		String GROUPS = "groups"; //$NON-NLS-1$
-
-		/**
-		 * "/members".
-		 */
-		String MEMBERS = "members"; //$NON-NLS-1$
-
-		/**
-		 * "/users".
-		 */
-		String USERS = "users"; //$NON-NLS-1$
-
-		/**
-		 * "/reports".
-		 */
-		String REPORTS = "reports"; //$NON-NLS-1$
-
-		/**
-		 * "/artifacts".
+		 * "artifacts".
 		 */
 		String ARTIFACTS = "artifacts"; //$NON-NLS-1$
 
 		/**
-		 * "/files".
+		 * "backlog_items".
 		 */
-		String FILES = "files"; //$NON-NLS-1$
+		String BACKLOG_ITEMS = "backlog_items"; //$NON-NLS-1$
 
 		/**
-		 * "/chunked_upload".
+		 * "cards".
+		 */
+		String CARDS = "cards"; //$NON-NLS-1$
+
+		/**
+		 * "cardwall".
+		 */
+		String CARDWALL = "cardwall"; //$NON-NLS-1$
+
+		/**
+		 * "chunked_upload".
 		 */
 		String CHUNKED_UPLOAD = "chunked_upload"; //$NON-NLS-1$
 
 		/**
-		 * "/backlog_item_types".
+		 * "files".
 		 */
-		String BACKLOG_ITEM_TYPES = "backlog_item_types"; //$NON-NLS-1$
+		String FILES = "files"; //$NON-NLS-1$
 
 		/**
-		 * "/milestone_types".
+		 * "groups".
 		 */
-		String MILESTONE_TYPES = "milestone_types"; //$NON-NLS-1$
+		String GROUPS = "groups"; //$NON-NLS-1$
 
 		/**
-		 * "/card_types".
+		 * "members".
 		 */
-		String CARD_TYPES = "card_types"; //$NON-NLS-1$
+		String MEMBERS = "members"; //$NON-NLS-1$
+
+		/**
+		 * "milestones".
+		 */
+		String MILESTONES = "milestones"; //$NON-NLS-1$
+
+		/**
+		 * "plannings".
+		 */
+		String PLANNINGS = "plannings"; //$NON-NLS-1$
+
+		/**
+		 * "projects".
+		 */
+		String PROJECTS = "projects"; //$NON-NLS-1$
+
+		/**
+		 * "reports".
+		 */
+		String REPORTS = "reports"; //$NON-NLS-1$
+
+		/**
+		 * "top_plannings".
+		 */
+		String TOP_PLANNINGS = "top_plannings"; //$NON-NLS-1$
+
+		/**
+		 * "trackers".
+		 */
+		String TRACKERS = "trackers"; //$NON-NLS-1$
+
+		/**
+		 * "user".
+		 */
+		String USER = "user"; //$NON-NLS-1$
+
+		/**
+		 * "users".
+		 */
+		String USERS = "users"; //$NON-NLS-1$
 
 	}
 }

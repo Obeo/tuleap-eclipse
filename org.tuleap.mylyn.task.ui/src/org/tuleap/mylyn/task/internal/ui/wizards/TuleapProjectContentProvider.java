@@ -15,7 +15,7 @@ import java.util.List;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
 
 /**
  * The content provider of the tree viewer of the wizard used to create new tasks.
@@ -73,8 +73,8 @@ public class TuleapProjectContentProvider implements ITreeContentProvider {
 	 * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
 	 */
 	public Object getParent(Object element) {
-		if (element instanceof TuleapTrackerConfiguration) {
-			return ((TuleapTrackerConfiguration)element).getTuleapProjectConfiguration();
+		if (element instanceof TuleapTracker) {
+			return ((TuleapTracker)element).getTuleapProjectConfiguration();
 		}
 		return null;
 	}

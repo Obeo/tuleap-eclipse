@@ -1,0 +1,25 @@
+{
+  "id" : 302,
+  "label" : "Some nice Epic",
+  "project_id": 3,
+  "url" : "artifacts/302",
+  "html_url" : "artifacts?id=302&group_id=3",
+  "tracker_id" : 801,
+  "submitted_by": 1,
+  "submitted_on": "2013-09-23T11:44:18.963Z",
+  "last_updated_on": "2013-09-24T15:33:18.523Z",
+  "values" : [
+    {
+      "field_id" : 850,
+      "bind_value_id" : 8500
+    },
+    {
+      "field_id" : 851,
+      "value" : 26.5
+    },
+    {
+      "field_id" : 852,
+      "value" : "Use some nice visual effects"
+    }
+  ]
+}

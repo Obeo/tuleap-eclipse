@@ -12,6 +12,8 @@ package org.tuleap.mylyn.task.internal.core.model.agile;
 
 import java.util.List;
 
+import org.tuleap.mylyn.task.internal.core.model.TuleapReference;
+
 /**
  * Interface that represents a planning (i.e. something with a backlog and milestones to which backlog items
  * can be assigned.
@@ -35,9 +37,9 @@ public interface IPlanning {
 	List<TuleapBacklogItem> getBacklogItems();
 
 	/**
-	 * The project ID.
+	 * The project reference.
 	 * 
-	 * @return the project ID
+	 * @return the projec reference
 	 */
-	int getProjectId();
+	TuleapReference getProject();
 }

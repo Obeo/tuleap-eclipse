@@ -1,0 +1,41 @@
+{
+  "id" : 252,
+  "project_id": 3,
+  "label" : "Sprint 3",
+  "url" : "artifacts/252",
+  "html_url" : "artifacts?id=252&group_id=3",
+  "tracker_id" : 902,
+  "submitted_by": 1,
+  "submitted_on": "2013-09-23T11:44:18.963Z",
+  "last_updated_on": "2013-09-24T15:33:18.523Z",
+  "values" : [
+    {
+      "field_id" : 960,
+      "value" : "Sprint 2"
+    },
+    {
+      "field_id" : 961,
+      "bind_value_id" : 9610
+    },
+    {
+      "field_id" : 962,
+      "value" : "420, 421, 422"
+    },
+    {
+      "field_id" : 963,
+      "value" : 12365678
+    },
+    {
+      "field_id" : 964,
+      "value" : 20
+    },
+    {
+      "field_id" : 965,
+      "value" : 26.5
+    },
+    {
+      "field_id" : 966,
+      "value" : 26.5
+    }
+  ]
+}

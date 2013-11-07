@@ -29,7 +29,7 @@ import org.tuleap.mylyn.task.internal.core.model.field.TuleapMultiSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapTrackerConfigurationDeserializer;
 
 import static org.junit.Assert.assertEquals;
@@ -42,13 +42,13 @@ import static org.junit.Assert.assertTrue;
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public class TuleapTrackerConfigurationDeserializerTests extends AbstractConfigurationDeserializerTest<TuleapTrackerConfiguration> {
+public class TuleapTrackerConfigurationDeserializerTests extends AbstractConfigurationDeserializerTest<TuleapTracker> {
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected JsonDeserializer<TuleapTrackerConfiguration> getDeserializer() {
+	protected JsonDeserializer<TuleapTracker> getDeserializer() {
 		return new TuleapTrackerConfigurationDeserializer(getProjectConfiguration());
 	}
 
@@ -58,15 +58,15 @@ public class TuleapTrackerConfigurationDeserializerTests extends AbstractConfigu
 	@Test
 	public void testTracker0Parsing() {
 		String tracker0 = ParserUtil.loadFile("/trackers/tracker-0.json");
-		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker0,
-				TuleapTrackerConfiguration.class);
-		assertNotNull(tuleapTrackerConfiguration);
-		assertEquals(0, tuleapTrackerConfiguration.getIdentifier());
-		assertEquals("Product", tuleapTrackerConfiguration.getLabel()); //$NON-NLS-1$
-		assertEquals("localhost:3001/api/v3.14/trackers/0", tuleapTrackerConfiguration.getUrl()); //$NON-NLS-1$
+		TuleapTracker tuleapTracker = this.parse(tracker0,
+				TuleapTracker.class);
+		assertNotNull(tuleapTracker);
+		assertEquals(0, tuleapTracker.getIdentifier());
+		assertEquals("Product", tuleapTracker.getLabel()); //$NON-NLS-1$
+		assertEquals("localhost:3001/api/v3.14/trackers/0", tuleapTracker.getUrl()); //$NON-NLS-1$
 		//		assertEquals("The description of the products tracker", tuleapTrackerConfiguration.getDescription()); //$NON-NLS-1$
 
-		Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
+		Collection<AbstractTuleapField> fields = tuleapTracker.getFields();
 		assertEquals(1, fields.size());
 
 		Iterator<AbstractTuleapField> iterator = fields.iterator();
@@ -91,15 +91,15 @@ public class TuleapTrackerConfigurationDeserializerTests extends AbstractConfigu
 	@Test
 	public void testTracker1Parsing() {
 		String tracker1 = ParserUtil.loadFile("/trackers/tracker-1.json");
-		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker1,
-				TuleapTrackerConfiguration.class);
-		assertNotNull(tuleapTrackerConfiguration);
-		assertEquals(1, tuleapTrackerConfiguration.getIdentifier());
-		assertEquals("Bugs", tuleapTrackerConfiguration.getLabel()); //$NON-NLS-1$
-		assertEquals("localhost:3001/api/v3.14/trackers/1", tuleapTrackerConfiguration.getUrl()); //$NON-NLS-1$
+		TuleapTracker tuleapTracker = this.parse(tracker1,
+				TuleapTracker.class);
+		assertNotNull(tuleapTracker);
+		assertEquals(1, tuleapTracker.getIdentifier());
+		assertEquals("Bugs", tuleapTracker.getLabel()); //$NON-NLS-1$
+		assertEquals("localhost:3001/api/v3.14/trackers/1", tuleapTracker.getUrl()); //$NON-NLS-1$
 		//		assertEquals("The description of the bugs tracker", tuleapTrackerConfiguration.getDescription()); //$NON-NLS-1$
 
-		Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
+		Collection<AbstractTuleapField> fields = tuleapTracker.getFields();
 		assertEquals(13, fields.size());
 
 		Iterator<AbstractTuleapField> iterator = fields.iterator();
@@ -178,15 +178,15 @@ public class TuleapTrackerConfigurationDeserializerTests extends AbstractConfigu
 	@Test
 	public void testTracker2Parsing() {
 		String tracker2 = ParserUtil.loadFile("/trackers/tracker-2.json");
-		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker2,
-				TuleapTrackerConfiguration.class);
-		assertNotNull(tuleapTrackerConfiguration);
-		assertEquals(2, tuleapTrackerConfiguration.getIdentifier());
-		assertEquals("Release", tuleapTrackerConfiguration.getLabel()); //$NON-NLS-1$
-		assertEquals("localhost:3001/api/v3.14/trackers/2", tuleapTrackerConfiguration.getUrl()); //$NON-NLS-1$
+		TuleapTracker tuleapTracker = this.parse(tracker2,
+				TuleapTracker.class);
+		assertNotNull(tuleapTracker);
+		assertEquals(2, tuleapTracker.getIdentifier());
+		assertEquals("Release", tuleapTracker.getLabel()); //$NON-NLS-1$
+		assertEquals("localhost:3001/api/v3.14/trackers/2", tuleapTracker.getUrl()); //$NON-NLS-1$
 		//		assertEquals("The description of the releases tracker", tuleapTrackerConfiguration.getDescription()); //$NON-NLS-1$
 
-		Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
+		Collection<AbstractTuleapField> fields = tuleapTracker.getFields();
 		assertEquals(5, fields.size());
 
 		Iterator<AbstractTuleapField> iterator = fields.iterator();
@@ -212,15 +212,15 @@ public class TuleapTrackerConfigurationDeserializerTests extends AbstractConfigu
 	@Test
 	public void testTracker3Parsing() {
 		String tracker3 = ParserUtil.loadFile("/trackers/tracker-3.json");
-		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker3,
-				TuleapTrackerConfiguration.class);
-		assertNotNull(tuleapTrackerConfiguration);
-		assertEquals(3, tuleapTrackerConfiguration.getIdentifier());
-		assertEquals("Sprint", tuleapTrackerConfiguration.getLabel()); //$NON-NLS-1$
-		assertEquals("localhost:3001/api/v3.14/trackers/3", tuleapTrackerConfiguration.getUrl()); //$NON-NLS-1$
+		TuleapTracker tuleapTracker = this.parse(tracker3,
+				TuleapTracker.class);
+		assertNotNull(tuleapTracker);
+		assertEquals(3, tuleapTracker.getIdentifier());
+		assertEquals("Sprint", tuleapTracker.getLabel()); //$NON-NLS-1$
+		assertEquals("localhost:3001/api/v3.14/trackers/3", tuleapTracker.getUrl()); //$NON-NLS-1$
 		//		assertEquals("The description of the sprints tracker", tuleapTrackerConfiguration.getDescription()); //$NON-NLS-1$
 
-		Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
+		Collection<AbstractTuleapField> fields = tuleapTracker.getFields();
 		assertEquals(5, fields.size());
 
 		Iterator<AbstractTuleapField> iterator = fields.iterator();
@@ -245,15 +245,15 @@ public class TuleapTrackerConfigurationDeserializerTests extends AbstractConfigu
 	@Test
 	public void testTracker4Parsing() {
 		String tracker4 = ParserUtil.loadFile("/trackers/tracker-4.json");
-		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker4,
-				TuleapTrackerConfiguration.class);
-		assertNotNull(tuleapTrackerConfiguration);
-		assertEquals(4, tuleapTrackerConfiguration.getIdentifier());
-		assertEquals("Tests", tuleapTrackerConfiguration.getLabel()); //$NON-NLS-1$
-		assertEquals("localhost:3001/api/v3.14/trackers/4", tuleapTrackerConfiguration.getUrl()); //$NON-NLS-1$
+		TuleapTracker tuleapTracker = this.parse(tracker4,
+				TuleapTracker.class);
+		assertNotNull(tuleapTracker);
+		assertEquals(4, tuleapTracker.getIdentifier());
+		assertEquals("Tests", tuleapTracker.getLabel()); //$NON-NLS-1$
+		assertEquals("localhost:3001/api/v3.14/trackers/4", tuleapTracker.getUrl()); //$NON-NLS-1$
 		// assertEquals("The description of the tests tracker", tuleapTrackerConfiguration.getDescription()); //$NON-NLS-1$
 
-		Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
+		Collection<AbstractTuleapField> fields = tuleapTracker.getFields();
 		assertEquals(3, fields.size());
 
 		Iterator<AbstractTuleapField> iterator = fields.iterator();
@@ -278,16 +278,16 @@ public class TuleapTrackerConfigurationDeserializerTests extends AbstractConfigu
 	@Test
 	public void testTracker5Parsing() {
 		String tracker5 = ParserUtil.loadFile("/trackers/tracker-5.json");
-		TuleapTrackerConfiguration tuleapTrackerConfiguration = this.parse(tracker5,
-				TuleapTrackerConfiguration.class);
-		assertNotNull(tuleapTrackerConfiguration);
-		assertEquals(5, tuleapTrackerConfiguration.getIdentifier());
-		assertEquals("User Stories", tuleapTrackerConfiguration.getLabel()); //$NON-NLS-1$
-		assertEquals("localhost:3001/api/v3.14/trackers/5", tuleapTrackerConfiguration.getUrl()); //$NON-NLS-1$
+		TuleapTracker tuleapTracker = this.parse(tracker5,
+				TuleapTracker.class);
+		assertNotNull(tuleapTracker);
+		assertEquals(5, tuleapTracker.getIdentifier());
+		assertEquals("User Stories", tuleapTracker.getLabel()); //$NON-NLS-1$
+		assertEquals("localhost:3001/api/v3.14/trackers/5", tuleapTracker.getUrl()); //$NON-NLS-1$
 		// assertEquals(
 		//				"The description of the user stories tracker", tuleapTrackerConfiguration.getDescription()); //$NON-NLS-1$
 
-		Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
+		Collection<AbstractTuleapField> fields = tuleapTracker.getFields();
 		assertEquals(2, fields.size());
 
 		Iterator<AbstractTuleapField> iterator = fields.iterator();
@@ -312,51 +312,51 @@ public class TuleapTrackerConfigurationDeserializerTests extends AbstractConfigu
 	public void testFirstTrackersGroupParsing() {
 		String firstTrackersGroup = ParserUtil.loadFile("/trackers/trackers_part_1.json");
 		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(TuleapTrackerConfiguration.class, getDeserializer());
+		gsonBuilder.registerTypeAdapter(TuleapTracker.class, getDeserializer());
 
 		JsonParser jsonParser = new JsonParser();
 		JsonArray asJsonArray = jsonParser.parse(firstTrackersGroup).getAsJsonArray();
 		Gson gson = gsonBuilder.create();
 
-		List<TuleapTrackerConfiguration> tracksConfiguration = new ArrayList<TuleapTrackerConfiguration>();
+		List<TuleapTracker> tracksConfiguration = new ArrayList<TuleapTracker>();
 		for (int i = 0; i < asJsonArray.size(); i++) {
 			JsonElement jsonElement = asJsonArray.get(i);
-			TuleapTrackerConfiguration tuleapTrackerConfiguration = gson.fromJson(jsonElement,
-					TuleapTrackerConfiguration.class);
-			tracksConfiguration.add(tuleapTrackerConfiguration);
+			TuleapTracker tuleapTracker = gson.fromJson(jsonElement,
+					TuleapTracker.class);
+			tracksConfiguration.add(tuleapTracker);
 		}
 
-		Iterator<TuleapTrackerConfiguration> iterator = tracksConfiguration.iterator();
+		Iterator<TuleapTracker> iterator = tracksConfiguration.iterator();
 
-		TuleapTrackerConfiguration firstProjectConfiguration = iterator.next();
+		TuleapTracker firstProjectConfiguration = iterator.next();
 
 		assertEquals(0, firstProjectConfiguration.getIdentifier());
 		assertEquals("Product", firstProjectConfiguration.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/trackers/0", firstProjectConfiguration.getUrl()); //$NON-NLS-1$
 		//		assertEquals("The description of the products tracker", firstProjectConfiguration.getDescription()); //$NON-NLS-1$
 
-		TuleapTrackerConfiguration secondProjectConfiguration = iterator.next();
+		TuleapTracker secondProjectConfiguration = iterator.next();
 
 		assertEquals(1, secondProjectConfiguration.getIdentifier());
 		assertEquals("Bugs", secondProjectConfiguration.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/trackers/1", secondProjectConfiguration.getUrl()); //$NON-NLS-1$
 		//		assertEquals("The description of the bugs tracker", secondProjectConfiguration.getDescription()); //$NON-NLS-1$
 
-		TuleapTrackerConfiguration thirdProjectConfiguration = iterator.next();
+		TuleapTracker thirdProjectConfiguration = iterator.next();
 
 		assertEquals(2, thirdProjectConfiguration.getIdentifier());
 		assertEquals("Release", thirdProjectConfiguration.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/trackers/2", thirdProjectConfiguration.getUrl()); //$NON-NLS-1$
 		//		assertEquals("The description of the releases tracker", thirdProjectConfiguration.getDescription()); //$NON-NLS-1$
 
-		TuleapTrackerConfiguration fourthProjectConfiguration = iterator.next();
+		TuleapTracker fourthProjectConfiguration = iterator.next();
 
 		assertEquals(3, fourthProjectConfiguration.getIdentifier());
 		assertEquals("Sprint", fourthProjectConfiguration.getLabel()); //$NON-NLS-1$
 		assertEquals("localhost:3001/api/v3.14/trackers/3", fourthProjectConfiguration.getUrl()); //$NON-NLS-1$
 		//		assertEquals("The description of the sprints tracker", fourthProjectConfiguration.getDescription()); //$NON-NLS-1$
 
-		TuleapTrackerConfiguration fifthProjectConfiguration = iterator.next();
+		TuleapTracker fifthProjectConfiguration = iterator.next();
 
 		assertEquals(4, fifthProjectConfiguration.getIdentifier());
 		assertEquals("Tests", fifthProjectConfiguration.getLabel()); //$NON-NLS-1$
@@ -372,23 +372,23 @@ public class TuleapTrackerConfigurationDeserializerTests extends AbstractConfigu
 	public void testSecondTrackersGroupParsing() {
 		String secondTrackersGroup = ParserUtil.loadFile("/trackers/trackers_part_2.json");
 		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(TuleapTrackerConfiguration.class, getDeserializer());
+		gsonBuilder.registerTypeAdapter(TuleapTracker.class, getDeserializer());
 
 		JsonParser jsonParser = new JsonParser();
 		JsonArray asJsonArray = jsonParser.parse(secondTrackersGroup).getAsJsonArray();
 		Gson gson = gsonBuilder.create();
 
-		List<TuleapTrackerConfiguration> tracksConfiguration = new ArrayList<TuleapTrackerConfiguration>();
+		List<TuleapTracker> tracksConfiguration = new ArrayList<TuleapTracker>();
 		for (int i = 0; i < asJsonArray.size(); i++) {
 			JsonElement jsonElement = asJsonArray.get(i);
-			TuleapTrackerConfiguration tuleapTrackerConfiguration = gson.fromJson(jsonElement,
-					TuleapTrackerConfiguration.class);
-			tracksConfiguration.add(tuleapTrackerConfiguration);
+			TuleapTracker tuleapTracker = gson.fromJson(jsonElement,
+					TuleapTracker.class);
+			tracksConfiguration.add(tuleapTracker);
 		}
 
-		Iterator<TuleapTrackerConfiguration> iterator = tracksConfiguration.iterator();
+		Iterator<TuleapTracker> iterator = tracksConfiguration.iterator();
 
-		TuleapTrackerConfiguration sixthProjectConfiguration = iterator.next();
+		TuleapTracker sixthProjectConfiguration = iterator.next();
 
 		assertEquals(5, sixthProjectConfiguration.getIdentifier());
 		assertEquals("User Stories", sixthProjectConfiguration.getLabel()); //$NON-NLS-1$

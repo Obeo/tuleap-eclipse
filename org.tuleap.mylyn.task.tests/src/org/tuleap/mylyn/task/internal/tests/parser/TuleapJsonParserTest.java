@@ -13,12 +13,10 @@ package org.tuleap.mylyn.task.internal.tests.parser;
 import java.text.ParseException;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItemType;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 
@@ -43,9 +41,13 @@ public class TuleapJsonParserTest {
 
 	/**
 	 * Tests the parsing of backlog items.
+	 * 
+	 * @throws ParseException
+	 *             if the test is badly configured
 	 */
 	@Test
-	public void testParseBacklogItems() {
+	@Ignore("To do when Enalean has chosen about top plannings")
+	public void testParseBacklogItems() throws ParseException {
 		String json = ParserUtil.loadFile("/backlog_items/epics.json");
 		List<TuleapBacklogItem> backlogItems = parser.parseBacklogItems(json);
 		assertEquals(3, backlogItems.size());
@@ -64,6 +66,7 @@ public class TuleapJsonParserTest {
 	 *             If the parsing of a date goes wrong.
 	 */
 	@Test
+	@Ignore("To do when Enalean has chosen about top plannings")
 	public void testParseMilestones() throws ParseException {
 		String json = ParserUtil.loadFile("/milestones/releases.json");
 		List<TuleapMilestone> milestones = parser.parseMilestones(json);
@@ -74,58 +77,13 @@ public class TuleapJsonParserTest {
 	}
 
 	/**
-	 * Checks the parsing of card types.
-	 */
-	@Test
-	public void testParseCardTypes() {
-		String json = ParserUtil.loadFile("/card_types/prj3_card_types.json");
-		List<TuleapCardType> cardTypes = parser.parseCardTypes(provider.getProjectConfiguration(), json);
-		assertEquals(1, cardTypes.size());
-		TuleapCardType cardType = cardTypes.get(0);
-		new TuleapCardTypeDeserializerTests().checkCardType7000(cardType);
-	}
-
-	/**
-	 * Checks the parsing of backlog item types.
-	 */
-	@Test
-	public void testParseBacklogItemTypeEpics() {
-		String json = ParserUtil.loadFile("/backlog_item_types/types.json");
-		List<TuleapBacklogItemType> types = parser.parseBacklogItemTypes(provider.getProjectConfiguration(),
-				json);
-		assertEquals(2, types.size());
-
-		TuleapBacklogItemType type = types.get(0);
-		new TuleapBacklogItemTypeDeserializerTests().checkTypeEpics(type);
-
-		type = types.get(1);
-		new TuleapBacklogItemTypeDeserializerTests().checkTypeUserStories(type);
-	}
-
-	/**
-	 * Checks the parsing of milestone types.
-	 */
-	@Test
-	public void testParseMilestoneType() {
-		String json = ParserUtil.loadFile("/milestone_types/types.json");
-		List<TuleapMilestoneType> types = parser
-				.parseMilestoneTypes(provider.getProjectConfiguration(), json);
-		assertEquals(2, types.size());
-
-		TuleapMilestoneType type = types.get(0);
-		new TuleapMilestoneTypeDeserializerTests().checkMilestoneTypeReleases(type);
-
-		type = types.get(1);
-		new TuleapMilestoneTypeDeserializerTests().checkMilestoneTypeSprints(type);
-	}
-
-	/**
 	 * Checks the parsing of milestone types.
 	 * 
 	 * @throws ParseException
 	 *             if a parsing error occurs.
 	 */
 	@Test
+	@Ignore("To do when Enalean has chosen about top plannings")
 	public void testParseTopPlannings() throws ParseException {
 		String json = ParserUtil.loadFile("/top_plannings/top_plannings_prj3.json");
 		List<TuleapTopPlanning> plannings = parser.parseTopPlannings(json);

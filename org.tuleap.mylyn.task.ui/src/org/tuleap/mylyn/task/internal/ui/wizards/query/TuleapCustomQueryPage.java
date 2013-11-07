@@ -49,7 +49,7 @@ import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapText;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.ui.TuleapTasksUIPlugin;
@@ -94,7 +94,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 	/**
 	 * Tracker configuration.
 	 */
-	private TuleapTrackerConfiguration tuleapTrackerConfiguration;
+	private TuleapTracker tuleapTracker;
 
 	/**
 	 * The constructor.
@@ -261,9 +261,9 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 			final TuleapRepositoryConnector repositoryConnector = (TuleapRepositoryConnector)connector;
 			TuleapServerConfiguration repositoryConfiguration = repositoryConnector
 					.getTuleapServerConfiguration(this.getTaskRepository().getRepositoryUrl());
-			tuleapTrackerConfiguration = repositoryConfiguration.getTrackerConfiguration(this.trackerId);
+			tuleapTracker = repositoryConfiguration.getTrackerConfiguration(this.trackerId);
 
-			if (tuleapTrackerConfiguration == null) {
+			if (tuleapTracker == null) {
 				reloadConfiguration(repositoryConnector);
 			}
 
@@ -273,7 +273,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 			group.setLayoutData(gridData);
 			group.setLayout(new GridLayout(3, false));
 
-			Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
+			Collection<AbstractTuleapField> fields = tuleapTracker.getFields();
 			for (AbstractTuleapField field : fields) {
 				if (field instanceof TuleapString) {
 					this.createGroupContent((TuleapString)field, group);
@@ -312,7 +312,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 				final TuleapServerConfiguration instanceConfiguration = repositoryConnector
 						.getTuleapServerConfiguration(TuleapCustomQueryPage.this.getTaskRepository()
 								.getRepositoryUrl());
-				tuleapTrackerConfiguration = instanceConfiguration.getTrackerConfiguration(trackerId);
+				tuleapTracker = instanceConfiguration.getTrackerConfiguration(trackerId);
 			}
 		};
 		try {

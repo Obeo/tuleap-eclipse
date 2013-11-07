@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapQueryConstants;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapConnector;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerReport;
 import org.tuleap.mylyn.task.internal.ui.TuleapTasksUIPlugin;
 import org.tuleap.mylyn.task.internal.ui.util.ITuleapUIConstants;
@@ -207,11 +207,11 @@ public class TuleapQueryPage extends AbstractRepositoryQueryPage2 {
 		IWizardPage previousPage = this.getPreviousPage();
 		if (previousPage instanceof TuleapTrackerPage) {
 			TuleapTrackerPage tuleapTrackerPage = (TuleapTrackerPage)previousPage;
-			final TuleapTrackerConfiguration tuleapTrackerConfiguration = tuleapTrackerPage
+			final TuleapTracker tuleapTracker = tuleapTrackerPage
 					.getTrackerSelected();
-			if (tuleapTrackerConfiguration != null) {
-				this.trackerId = tuleapTrackerConfiguration.getIdentifier();
-				this.projectId = tuleapTrackerConfiguration.getTuleapProjectConfiguration().getIdentifier();
+			if (tuleapTracker != null) {
+				this.trackerId = tuleapTracker.getIdentifier();
+				this.projectId = tuleapTracker.getTuleapProjectConfiguration().getIdentifier();
 			}
 		}
 
@@ -355,9 +355,9 @@ public class TuleapQueryPage extends AbstractRepositoryQueryPage2 {
 		IWizardPage previousPage = this.getPreviousPage();
 		if (this.reportsButton.getSelection() && previousPage instanceof TuleapTrackerPage) {
 			TuleapTrackerPage tuleapTrackerPage = (TuleapTrackerPage)previousPage;
-			TuleapTrackerConfiguration tuleapTrackerConfiguration = tuleapTrackerPage.getTrackerSelected();
-			this.trackerId = tuleapTrackerConfiguration.getIdentifier();
-			this.projectId = tuleapTrackerConfiguration.getTuleapProjectConfiguration().getIdentifier();
+			TuleapTracker tuleapTracker = tuleapTrackerPage.getTrackerSelected();
+			this.trackerId = tuleapTracker.getIdentifier();
+			this.projectId = tuleapTracker.getTuleapProjectConfiguration().getIdentifier();
 		}
 
 		query.setSummary(this.getQueryTitle());

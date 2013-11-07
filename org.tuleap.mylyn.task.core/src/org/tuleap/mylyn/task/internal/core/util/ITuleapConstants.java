@@ -75,19 +75,22 @@ public interface ITuleapConstants {
 	String ID = "id"; //$NON-NLS-1$
 
 	/**
-	 * The key used for the project id of the POJO.
-	 */
-	String PROJECT_ID = "project_id"; //$NON-NLS-1$
-
-	/**
 	 * The key used for the label of the POJO.
 	 */
 	String LABEL = "label"; //$NON-NLS-1$
 
 	/**
 	 * The key used for the URL of the POJO.
+	 * 
+	 * @deprecated
 	 */
+	@Deprecated
 	String URL = "url"; //$NON-NLS-1$
+
+	/**
+	 * The key used for the REST URI of the POJO.
+	 */
+	String URI = "uri"; //$NON-NLS-1$
 
 	/**
 	 * The key used for the HTML URL of the POJO.
@@ -172,27 +175,12 @@ public interface ITuleapConstants {
 	/**
 	 * The key used to retrieve the duration of the milestone.
 	 */
-	String DURATION = "duration"; //$NON-NLS-1$
+	String END_DATE = "end_date"; //$NON-NLS-1$
 
 	/**
 	 * The key used to retrieve the capacity of the milestone.
 	 */
 	String CAPACITY = "capacity"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the type id of the milestone.
-	 */
-	String MILESTONE_TYPE_ID = "milestone_type_id"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the sub-milestones.
-	 */
-	String SUBMILESTONES = "submilestones"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the type id of the backlogItem.
-	 */
-	String BACKLOGITEM_TYPE_ID = "backlog_item_type_id"; //$NON-NLS-1$
 
 	/**
 	 * The key used to retrieve the initial effort of the backlogItem.
@@ -203,11 +191,6 @@ public interface ITuleapConstants {
 	 * The key used to retrieve the backlogItem assigned milestone identifier.
 	 */
 	String ASSIGNED_MILESTONE_ID = "assigned_milestone_id"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the type id of the card.
-	 */
-	String CARD_TYPE_ID = "card_type_id"; //$NON-NLS-1$
 
 	/**
 	 * The key used to retrieve the color of the card.
@@ -263,10 +246,35 @@ public interface ITuleapConstants {
 	/**
 	 * The key used for the project ID of an element possessed by a project.
 	 */
-	String JSON_PROJECT_ID = "project_id"; //$NON-NLS-1$
+	String JSON_TRACKER = "tracker"; //$NON-NLS-1$
 
 	/**
-	 * The key used for the configuration ID of an element.
+	 * The key used for the project ref of an element possessed by a project.
 	 */
-	String CONFIGURATION_ID = "configuration_id"; //$NON-NLS-1$
+	String JSON_PROJECT = "project"; //$NON-NLS-1$
+
+	/**
+	 * The key used for the artifact ref of an element possessed by a project.
+	 */
+	String JSON_ARTIFACT = "artifact"; //$NON-NLS-1$
+
+	/**
+	 * The key used for the status label of a milestone.
+	 */
+	String JSON_STATUS_LABEL = "status_label"; //$NON-NLS-1$
+
+	/**
+	 * The key used for the sub-milestones URI of a milestone.
+	 */
+	String JSON_SUB_MILESTONES_URI = "sub_milestones_uri"; //$NON-NLS-1$
+
+	/**
+	 * The key used for the backlog items URI of a milestone.
+	 */
+	String JSON_BACKLOG_ITEMS_URI = "backlog_items_uri"; //$NON-NLS-1$
+
+	/**
+	 * The key used for the parent of a milestone.
+	 */
+	String JSON_PARENT = "parent"; //$NON-NLS-1$
 }

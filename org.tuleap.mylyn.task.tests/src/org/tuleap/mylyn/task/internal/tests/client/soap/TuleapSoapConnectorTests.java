@@ -36,6 +36,7 @@ import org.tuleap.mylyn.task.internal.core.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
+import org.tuleap.mylyn.task.internal.core.model.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
@@ -195,7 +196,9 @@ public class TuleapSoapConnectorTests {
 
 		try {
 			final int projectId = 137;
+			final TuleapReference project = new TuleapReference(projectId, "p/137");
 			final int configurationId = 25;
+			final TuleapReference trackerRef = new TuleapReference(25, "t/25");
 			final int elementId = 42;
 
 			final Artifact artifact = new Artifact();
@@ -292,7 +295,7 @@ public class TuleapSoapConnectorTests {
 				}
 			};
 
-			TuleapArtifact tuleapArtifact = new TuleapArtifact(configurationId, projectId);
+			TuleapArtifact tuleapArtifact = new TuleapArtifact(trackerRef, project);
 			AbstractFieldValue firstFieldValue = new LiteralFieldValue(firstFieldId, literalFieldValue);
 			tuleapArtifact.addFieldValue(firstFieldValue);
 			AbstractFieldValue secondFieldValue = new BoundFieldValue(secondFieldId, boundFieldIds);

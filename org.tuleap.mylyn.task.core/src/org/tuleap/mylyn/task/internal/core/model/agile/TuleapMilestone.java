@@ -10,25 +10,22 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model.agile;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-
 import java.util.Date;
-import java.util.List;
 
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableElement;
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapDetailedElement;
+import org.tuleap.mylyn.task.internal.core.model.TuleapReference;
 
 /**
  * A milestone with its backlog items and its sub-milestones.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class TuleapMilestone extends AbstractTuleapConfigurableElement implements IPlanning {
+public class TuleapMilestone extends AbstractTuleapDetailedElement {
 
 	/**
-	 * The value used is there are no parent milestone id.
+	 * Reference to the artifact that contains this item's details.
 	 */
-	public static final int INVALID_PARENT_MILESTONE_ID = -1;
+	private TuleapReference artifact;
 
 	/**
 	 * The milestone's start date.
@@ -36,9 +33,9 @@ public class TuleapMilestone extends AbstractTuleapConfigurableElement implement
 	private Date startDate;
 
 	/**
-	 * The milestone's duration.
+	 * The milestone's end date.
 	 */
-	private Float duration;
+	private Date endDate;
 
 	/**
 	 * The milestone's capacity.
@@ -46,63 +43,61 @@ public class TuleapMilestone extends AbstractTuleapConfigurableElement implement
 	private Float capacity;
 
 	/**
-	 * The identifier of the parent milestone.
+	 * The parent milestone.
 	 */
-	private int parentMilestoneId;
+	private TuleapReference parent;
 
 	/**
-	 * The milestone's cardwall, if present. Can be null.
+	 * The REST URI to get this milestone's sub-milestones.
 	 */
-	private TuleapCardwall cardwall;
+	private String subMilestonesUri;
 
 	/**
-	 * The milestone's sub-milestones.
+	 * The REST URI to get this milestone's backlog items.
 	 */
-	private List<TuleapMilestone> subMilestones = Lists.newArrayList();
+	private String backlogItemsUri;
 
 	/**
-	 * The milestone's backlog items (including those assigned to sub-milestones).
+	 * The milestone's status label.
 	 */
-	private List<TuleapBacklogItem> backlogItems = Lists.newArrayList();
+	private String statusLabel;
 
 	/**
-	 * The constructor used when we are creating a new milestone.
+	 * Default constructor for deserialization.
+	 */
+	public TuleapMilestone() {
+		// Default constructor for deserialization.
+	}
+
+	/**
+	 * The constructor used when we are creating a milestone.
 	 * 
-	 * @param milestoneTypeId
-	 *            The identifier of the milestone type
-	 * @param projectId
-	 *            The identifier of the project
-	 * @param parentMilestoneId
-	 *            The identifier of the parent milestone or INVALID_PARENT_MILESTONE_ID if there are no parent
+	 * @param projectRef
+	 *            The reference to the project
 	 */
-	public TuleapMilestone(int milestoneTypeId, int projectId, int parentMilestoneId) {
-		super(milestoneTypeId, projectId);
-		this.parentMilestoneId = parentMilestoneId;
+	public TuleapMilestone(TuleapReference projectRef) {
+		super(projectRef);
 	}
 
 	/**
 	 * The constructor used when we are updating a milestone.
 	 * 
-	 * @param milestoneId
+	 * @param id
 	 *            The identifier of the milestone
-	 * @param projectId
-	 *            The identifier of the project
-	 * @param milestoneType
-	 *            The milestone type
+	 * @param projectRef
+	 *            The reference to the project
 	 */
-	public TuleapMilestone(int milestoneId, int projectId, TuleapMilestoneType milestoneType) {
-		super(milestoneId, milestoneType.getIdentifier(), projectId);
+	public TuleapMilestone(int id, TuleapReference projectRef) {
+		super(id, projectRef);
 	}
 
 	/**
 	 * The constructor used when we are retrieving a milestone from the server.
 	 * 
-	 * @param milestoneId
+	 * @param id
 	 *            The identifier of the milestone
-	 * @param milestoneTypeId
-	 *            The identifier of the milestone type
-	 * @param projectId
-	 *            The identifier of the project
+	 * @param projectRef
+	 *            The reference to the project
 	 * @param label
 	 *            The label
 	 * @param url
@@ -114,24 +109,47 @@ public class TuleapMilestone extends AbstractTuleapConfigurableElement implement
 	 * @param lastModificationDate
 	 *            The last modification
 	 */
-	// CHECKSTYLE:OFF
-	public TuleapMilestone(int milestoneId, int milestoneTypeId, int projectId, String label, String url,
-			String htmlUrl, Date creationDate, Date lastModificationDate) {
-		super(milestoneId, milestoneTypeId, projectId, label, url, htmlUrl, creationDate,
-				lastModificationDate);
+	public TuleapMilestone(int id, TuleapReference projectRef, String label, String url, String htmlUrl,
+			Date creationDate, Date lastModificationDate) {
+		super(id, projectRef, label, url, htmlUrl, creationDate, lastModificationDate);
 	}
 
-	// CHECKSTYLE:ON
+	/**
+	 * Artifact ref.
+	 * 
+	 * @return the artifactRef
+	 */
+	public TuleapReference getArtifact() {
+		return artifact;
+	}
 
 	/**
-	 * Returns the identifier of the parent milestone or INVALID_PARENT_MILESTONE_ID if there is no parent for
-	 * this milestone.
+	 * Artifact ref.
 	 * 
-	 * @return The identifier of the parent milestone or INVALID_PARENT_MILESTONE_ID if there is no parent for
-	 *         this milestone
+	 * @param artifact
+	 *            the artifact reference
 	 */
-	public int getParentMilestoneId() {
-		return this.parentMilestoneId;
+	public void setArtifact(TuleapReference artifact) {
+		this.artifact = artifact;
+	}
+
+	/**
+	 * parent milestone.
+	 * 
+	 * @param parent
+	 *            the parentMilestone to set
+	 */
+	public void setParent(TuleapReference parent) {
+		this.parent = parent;
+	}
+
+	/**
+	 * Returns the parent milestone or <code>null</code> if there is no parent for this milestone.
+	 * 
+	 * @return The parent milestone or <code>null</code> if there is no parent for this milestone
+	 */
+	public TuleapReference getParent() {
+		return this.parent;
 	}
 
 	/**
@@ -154,22 +172,22 @@ public class TuleapMilestone extends AbstractTuleapConfigurableElement implement
 	}
 
 	/**
-	 * Duration getter.
+	 * End date getter.
 	 * 
-	 * @return the duration
+	 * @return the startDate
 	 */
-	public Float getDuration() {
-		return duration;
+	public Date getEndDate() {
+		return endDate;
 	}
 
 	/**
-	 * Duration setter.
+	 * End date setter.
 	 * 
-	 * @param duration
-	 *            the duration to set
+	 * @param endDate
+	 *            the startDate to set
 	 */
-	public void setDuration(Float duration) {
-		this.duration = duration;
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
 	}
 
 	/**
@@ -192,60 +210,60 @@ public class TuleapMilestone extends AbstractTuleapConfigurableElement implement
 	}
 
 	/**
-	 * Adds a new sub-milestone to this milestone.
+	 * URI for sub-milestones.
 	 * 
-	 * @param subMilestone
-	 *            The sub-milestone to add.
+	 * @return the subMilestonesUri
 	 */
-	public void addSubMilestone(TuleapMilestone subMilestone) {
-		this.subMilestones.add(subMilestone);
+	public String getSubMilestonesUri() {
+		return subMilestonesUri;
 	}
 
 	/**
-	 * Provides the sub-milestones of this milestone.
+	 * URI for sub-milestones.
 	 * 
-	 * @return An unmodifiable list view of the sub-milestones of this milestone.
+	 * @param subMilestonesUri
+	 *            the subMilestonesUri to set
 	 */
-	public List<TuleapMilestone> getSubMilestones() {
-		return ImmutableList.copyOf(this.subMilestones);
+	public void setSubMilestonesUri(String subMilestonesUri) {
+		this.subMilestonesUri = subMilestonesUri;
 	}
 
 	/**
-	 * Adds a new sub-milestone to this milestone.
+	 * URI for backlog items.
 	 * 
-	 * @param backlogItem
-	 *            The backlog item to add.
+	 * @return the backlogItemsUri
 	 */
-	public void addBacklogItem(TuleapBacklogItem backlogItem) {
-		this.backlogItems.add(backlogItem);
+	public String getBacklogItemsUri() {
+		return backlogItemsUri;
 	}
 
 	/**
-	 * Provides the backlog items of this milestone.
+	 * URI for backlog items.
 	 * 
-	 * @return An unmodifiable list view of the backlog items of this milestone.
+	 * @param backlogItemsUri
+	 *            the backlogItemsUri to set
 	 */
-	public List<TuleapBacklogItem> getBacklogItems() {
-		return ImmutableList.copyOf(this.backlogItems);
+	public void setBacklogItemsUri(String backlogItemsUri) {
+		this.backlogItemsUri = backlogItemsUri;
 	}
 
 	/**
-	 * Card wall getter, can return null.
+	 * The status label.
 	 * 
-	 * @return The milestone's cardwall, or null if the milestone has no cardwall;
+	 * @return the status label
 	 */
-	public TuleapCardwall getCardwall() {
-		return cardwall;
+	public String getStatusLabel() {
+		return statusLabel;
 	}
 
 	/**
-	 * Card wall setter.
+	 * The status label.
 	 * 
-	 * @param cardwall
-	 *            The card wall.
+	 * @param statusLabel
+	 *            the status label to set
 	 */
-	public void setCardwall(TuleapCardwall cardwall) {
-		this.cardwall = cardwall;
+	public void setStatusLabel(String statusLabel) {
+		this.statusLabel = statusLabel;
 	}
 
 }

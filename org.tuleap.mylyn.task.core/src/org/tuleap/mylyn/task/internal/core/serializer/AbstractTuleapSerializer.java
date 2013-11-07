@@ -15,10 +15,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
 
 import org.tuleap.mylyn.task.internal.core.data.AbstractFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.AttachmentFieldValue;
@@ -34,12 +32,7 @@ import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  * @param <T>
  */
-public abstract class AbstractTuleapSerializer<T extends AbstractTuleapConfigurableElement> implements JsonSerializer<T> {
-
-	/**
-	 * The pattern used to format date following the ISO8601 standard.
-	 */
-	protected SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"); //$NON-NLS-1$
+public abstract class AbstractTuleapSerializer<T extends AbstractTuleapConfigurableElement> extends AbstractProjectElementSerializer<T> {
 
 	/**
 	 * {@inheritDoc}
@@ -47,13 +40,14 @@ public abstract class AbstractTuleapSerializer<T extends AbstractTuleapConfigura
 	 * @see com.google.gson.JsonSerializer#serialize(java.lang.Object, java.lang.reflect.Type,
 	 *      com.google.gson.JsonSerializationContext)
 	 */
+	@Override
 	public JsonElement serialize(T element, Type type, JsonSerializationContext jsonSerializationContext) {
+		JsonObject json = super.serialize(element, type, jsonSerializationContext).getAsJsonObject();
+		// TODO is it necessary to send the trackerId?
 
-		JsonObject abstractJsonObject = new JsonObject();
-
-		JsonElement values = new JsonArray();
+		JsonArray values = new JsonArray();
 		if (element.getFieldValues().size() > 0) {
-			abstractJsonObject.add(ITuleapConstants.VALUES, values);
+			json.add(ITuleapConstants.VALUES, values);
 		}
 		for (AbstractFieldValue field : element.getFieldValues()) {
 			JsonObject fieldObject = new JsonObject();
@@ -78,9 +72,9 @@ public abstract class AbstractTuleapSerializer<T extends AbstractTuleapConfigura
 			} else if (field instanceof AttachmentFieldValue) {
 				this.manageAttachmentFieldValues(field, fieldObject);
 			}
-			values.getAsJsonArray().add(fieldObject);
+			values.add(fieldObject);
 		}
-		return abstractJsonObject;
+		return json;
 	}
 
 	/**
@@ -97,33 +91,13 @@ public abstract class AbstractTuleapSerializer<T extends AbstractTuleapConfigura
 			JsonElement fileDescriptions = new JsonArray();
 			fieldObject.add(ITuleapConstants.FILE_DESCRIPTIONS, fileDescriptions);
 			for (AttachmentValue attachmentValue : attachmentFieldValue.getAttachments()) {
-				JsonObject fileDescritonObject = new JsonObject();
-				fileDescritonObject.add(ITuleapConstants.FILE_ID, new JsonPrimitive(Integer
+				JsonObject fileDescriptionObject = new JsonObject();
+				fileDescriptionObject.add(ITuleapConstants.FILE_ID, new JsonPrimitive(Integer
 						.valueOf(attachmentValue.getAttachmentId())));
-				fileDescritonObject.add(ITuleapConstants.DESCRIPTION, new JsonPrimitive(attachmentValue
+				fileDescriptionObject.add(ITuleapConstants.DESCRIPTION, new JsonPrimitive(attachmentValue
 						.getDescription()));
-				fileDescriptions.getAsJsonArray().add(fileDescritonObject);
+				fileDescriptions.getAsJsonArray().add(fileDescriptionObject);
 			}
 		}
-	}
-
-	/**
-	 * Serialize only the generic information to update an {@link AbstractTuleapConfigurableElement}.
-	 * 
-	 * @param element
-	 *            The element to serialize.
-	 * @return the serialized JsonElement
-	 */
-	public JsonElement serializeUpdateFields(T element) {
-		JsonObject elementObject = new JsonObject();
-		elementObject = (JsonObject)this.serialize(element, null, null);
-		elementObject.add(ITuleapConstants.ID, new JsonPrimitive(Integer.valueOf(element.getId())));
-		if (element.getLabel() != null) {
-			elementObject.add(ITuleapConstants.LABEL, new JsonPrimitive(element.getLabel()));
-		}
-		elementObject.add(ITuleapConstants.CONFIGURATION_ID, new JsonPrimitive(Integer.valueOf(element
-				.getConfigurationId())));
-		return elementObject;
-
 	}
 }

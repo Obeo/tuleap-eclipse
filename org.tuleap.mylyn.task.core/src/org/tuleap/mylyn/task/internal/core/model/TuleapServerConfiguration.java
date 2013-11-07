@@ -18,10 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItemType;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardType;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
 
 /**
  * This class will hold the configuration of a Tuleap server instance.
@@ -54,7 +51,7 @@ public class TuleapServerConfiguration implements Serializable {
 	/**
 	 * This map contains the ID of the projects of the Tuleap instance and their matching configuration.
 	 */
-	private Map<Integer, TuleapProjectConfiguration> projectId2projectConfiguration = new HashMap<Integer, TuleapProjectConfiguration>();
+	private Map<Integer, TuleapProjectConfiguration> projectById = new HashMap<Integer, TuleapProjectConfiguration>();
 
 	/**
 	 * The constructor.
@@ -73,7 +70,7 @@ public class TuleapServerConfiguration implements Serializable {
 	 *            The configuration of the project (must not be null).
 	 */
 	public void addProject(TuleapProjectConfiguration tuleapProjectConfiguration) {
-		this.projectId2projectConfiguration.put(Integer.valueOf(tuleapProjectConfiguration.getIdentifier()),
+		this.projectById.put(Integer.valueOf(tuleapProjectConfiguration.getIdentifier()),
 				tuleapProjectConfiguration);
 		tuleapProjectConfiguration.setServerConfiguration(this);
 	}
@@ -86,7 +83,7 @@ public class TuleapServerConfiguration implements Serializable {
 	 * @return The project configuration for the given project id.
 	 */
 	public TuleapProjectConfiguration getProjectConfiguration(int projectId) {
-		return this.projectId2projectConfiguration.get(Integer.valueOf(projectId));
+		return this.projectById.get(Integer.valueOf(projectId));
 	}
 
 	/**
@@ -123,7 +120,7 @@ public class TuleapServerConfiguration implements Serializable {
 	 * @return The list of all the project configurations.
 	 */
 	public List<TuleapProjectConfiguration> getAllProjectConfigurations() {
-		return new ArrayList<TuleapProjectConfiguration>(this.projectId2projectConfiguration.values());
+		return new ArrayList<TuleapProjectConfiguration>(this.projectById.values());
 	}
 
 	/**
@@ -134,10 +131,9 @@ public class TuleapServerConfiguration implements Serializable {
 	 *            The identifier of the tracker
 	 * @return The configuration of the tracker with the given identifier or null if none can be found
 	 */
-	public TuleapTrackerConfiguration getTrackerConfiguration(int trackerId) {
-		for (TuleapProjectConfiguration tuleapProjectConfiguration : this.projectId2projectConfiguration
-				.values()) {
-			TuleapTrackerConfiguration trackerConfiguration = tuleapProjectConfiguration
+	public TuleapTracker getTrackerConfiguration(int trackerId) {
+		for (TuleapProjectConfiguration tuleapProjectConfiguration : this.projectById.values()) {
+			TuleapTracker trackerConfiguration = tuleapProjectConfiguration
 					.getTrackerConfiguration(trackerId);
 			if (trackerConfiguration != null) {
 				return trackerConfiguration;
@@ -152,23 +148,13 @@ public class TuleapServerConfiguration implements Serializable {
 	 * 
 	 * @param projectId
 	 *            The project identifier
-	 * @param configuration
-	 *            The new version of the configuration
+	 * @param tracker
+	 *            The new version of the tracker
 	 */
-	public void replaceConfiguration(int projectId,
-			AbstractTuleapConfiguration configuration) {
-		TuleapProjectConfiguration projectConfiguration = this.projectId2projectConfiguration.get(Integer
-				.valueOf(projectId));
+	public void replaceConfiguration(int projectId, TuleapTracker tracker) {
+		TuleapProjectConfiguration projectConfiguration = this.projectById.get(Integer.valueOf(projectId));
 		if (projectConfiguration != null) {
-			if (configuration instanceof TuleapTrackerConfiguration) {
-				projectConfiguration.addTracker((TuleapTrackerConfiguration)configuration);
-			} else if (configuration instanceof TuleapMilestoneType) {
-				projectConfiguration.addMilestoneType((TuleapMilestoneType)configuration);
-			} else if (configuration instanceof TuleapBacklogItemType) {
-				projectConfiguration.addBacklogItemType((TuleapBacklogItemType)configuration);
-			} else if (configuration instanceof TuleapCardType) {
-				projectConfiguration.addCardType((TuleapCardType)configuration);
-			}
+			projectConfiguration.addTracker(tracker);
 		}
 	}
 

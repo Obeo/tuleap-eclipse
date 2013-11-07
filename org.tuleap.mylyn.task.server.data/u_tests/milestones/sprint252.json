@@ -1,44 +1,26 @@
 {
   "id" : 252,
-  "project_id": 3,
+  "artifact" : {
+    "id" : 252,
+    "uri" : "artifacts/252"
+  },
+  "project" : {
+    "id" : 3,
+    "uri" : "projects/3"
+  },
   "label" : "Sprint 3",
-  "start_date" : "2013-09-23T11:44:18.963Z",
-  "duration" : 20,
-  "capacity" : 26.5,
-  "url" : "/milestones/302",
-  "html_url" : "/milestones?id=302&group_id=3",
-  "milestone_type_id" : 902,
+  "uri" : "milestones/302",
+  "html_url" : "milestones?id=302&group_id=3",
   "submitted_by": 1,
   "submitted_on": "2013-09-23T11:44:18.963Z",
-  "last_updated_on": "2013-09-24T15:33:18.523Z",
-  "values" : [
-    {
-      "field_id" : 960,
-      "value" : "Sprint 2"
-    },
-    {
-      "field_id" : 961,
-      "bind_value_id" : 9610
-    },
-    {
-      "field_id" : 962,
-      "value" : "420, 421, 422"
-    },
-    {
-      "field_id" : 963,
-      "value" : 12365678
-    },
-    {
-      "field_id" : 964,
-      "value" : 20
-    },
-    {
-      "field_id" : 965,
-      "value" : 26.5
-    },
-    {
-      "field_id" : 966,
-      "value" : 26.5
-    }
-  ]
+  "last_updated_on": "2013-09-24T15:33:18.523Z"
+  "start_date" : "2013-10-23T11:44:18.963Z",
+  "end_date" : "2013-11-23T11:44:18.963Z",
+  "capacity" : 26.5,
+  "status_label" : "Planned",
+  "parent" : {
+    "id" : 200,
+    "uri" : "milestones/200"
+  },
+  "backlog_items_uri" : "milestones/252/backlog_items"
 }

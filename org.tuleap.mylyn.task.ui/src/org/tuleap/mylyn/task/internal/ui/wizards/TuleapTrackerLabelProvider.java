@@ -11,7 +11,7 @@
 package org.tuleap.mylyn.task.internal.ui.wizards;
 
 import org.eclipse.jface.viewers.LabelProvider;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
 
 /**
  * The label provider used to display the trackers in the tracker selection page.
@@ -27,8 +27,8 @@ public class TuleapTrackerLabelProvider extends LabelProvider {
 	 */
 	@Override
 	public String getText(Object element) {
-		if (element instanceof TuleapTrackerConfiguration) {
-			return ((TuleapTrackerConfiguration)element).getLabel();
+		if (element instanceof TuleapTracker) {
+			return ((TuleapTracker)element).getLabel();
 
 		}
 		return super.getText(element);

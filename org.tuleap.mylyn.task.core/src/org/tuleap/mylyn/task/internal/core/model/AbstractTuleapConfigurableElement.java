@@ -12,62 +12,60 @@ package org.tuleap.mylyn.task.internal.core.model;
 
 import com.google.common.collect.Maps;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.tuleap.mylyn.task.internal.core.data.AbstractFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.field.AbstractTuleapSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.field.TuleapFileUpload;
+import org.tuleap.mylyn.task.internal.core.model.field.TuleapFloat;
+import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
+import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
 
 /**
- * Ancestor of all tuleap configurable elements that have and ID, a REST URL, and an HTML URL.
+ * Configurable element that contains fields (artifact, card). Fields need a tracker to be interpreted
+ * meaningfully.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
- * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
- * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public abstract class AbstractTuleapConfigurableElement {
+public abstract class AbstractTuleapConfigurableElement extends AbstractTuleapDetailedElement {
 
 	/**
-	 * The id of the element.
+	 * The reference to the tracker that backs the element.
 	 */
-	private int id;
+	private TuleapReference tracker;
 
 	/**
-	 * The identifier of the configuration of the element.
+	 * The title field.
 	 */
-	private final int configurationId;
+	private TuleapString titleField;
 
 	/**
-	 * The id of the project that contains this element.
+	 * The cached status field.
 	 */
-	private final int projectId;
+	private AbstractTuleapSelectBox statusField;
 
 	/**
-	 * The human-readable label of the element.
+	 * The cached contributor field.
 	 */
-	private String label;
+	private AbstractTuleapSelectBox contributorField;
 
 	/**
-	 * The API URL of the element.
+	 * The cached initial effort field (not mandatory).
 	 */
-	private String url;
+	private TuleapFloat initialEffortField;
 
 	/**
-	 * The URL of the planning for web browsers.
+	 * The attachment field.
 	 */
-	private String htmlUrl;
+	private TuleapFileUpload attachmentField;
 
 	/**
-	 * The date of creation of the artifact.
+	 * The fields of the Tuleap element.
 	 */
-	private Date creationDate;
-
-	/**
-	 * The date of the last modification of the artifact.
-	 */
-	private Date lastModificationDate;
+	private Map<Integer, AbstractTuleapField> fields = new LinkedHashMap<Integer, AbstractTuleapField>();
 
 	/**
 	 * The milestone's configurable values.
@@ -75,188 +73,189 @@ public abstract class AbstractTuleapConfigurableElement {
 	private Map<Integer, AbstractFieldValue> fieldTypeIdToValue = Maps.newHashMap();
 
 	/**
-	 * The new comment to send to the server.
+	 * Default constructor for deserialization.
 	 */
-	private String newComment;
-
-	/**
-	 * The comments of the element.
-	 */
-	private List<TuleapElementComment> comments = new ArrayList<TuleapElementComment>();
-
-	/**
-	 * This constructor is used for the creation of the configurable elements that have not been synchronized
-	 * on the server yet. We need the identifier of the configuration to know the details of the artifact to
-	 * update.
-	 * 
-	 * @param configurationId
-	 *            The identifier of the configuration
-	 * @param projectId
-	 *            The identifier of the project
-	 */
-	public AbstractTuleapConfigurableElement(int configurationId, int projectId) {
-		this.configurationId = configurationId;
-		this.projectId = projectId;
+	public AbstractTuleapConfigurableElement() {
+		// Default constructor for deserialization
 	}
 
 	/**
-	 * This constructor is used for the update of an existing element. We know the identifier of the element
-	 * and the identifier of its configuration.
+	 * Constructor for new elements not yet synchronized.
+	 * 
+	 * @param trackerRef
+	 *            The tracker ref
+	 * @param projectRef
+	 *            The project ref
+	 */
+	public AbstractTuleapConfigurableElement(TuleapReference trackerRef, TuleapReference projectRef) {
+		super(projectRef);
+		this.tracker = trackerRef;
+	}
+
+	/**
+	 * Constructor used to update an existing element.
 	 * 
 	 * @param elementId
-	 *            The identifier of the element
-	 * @param configurationId
-	 *            The identifier of the configuration of the element
-	 * @param projectId
-	 *            The identifier of the project
+	 *            The element id
+	 * @param trackerRef
+	 *            The tracker reference
+	 * @param projectRef
+	 *            The project reference
 	 */
-	public AbstractTuleapConfigurableElement(int elementId, int configurationId, int projectId) {
-		this(configurationId, projectId);
-		this.id = elementId;
+	public AbstractTuleapConfigurableElement(int elementId, TuleapReference trackerRef,
+			TuleapReference projectRef) {
+		super(elementId, projectRef);
+		this.tracker = trackerRef;
 	}
 
 	/**
-	 * This constructor is used for the creation of the configurable elements that have been synchronized on
-	 * the server. Those elements must have an identifier assigned by the server.
+	 * Constructor for synchronized elements.
 	 * 
 	 * @param id
-	 *            The identifier of the element
-	 * @param configurationId
-	 *            The identifier of the configuration of the element
-	 * @param projectId
-	 *            The identifier of the project of the element
+	 *            The element id
+	 * @param projectRef
+	 *            The project reference
 	 * @param label
-	 *            The label of the element
+	 *            label
 	 * @param url
-	 *            The API URL of the element
+	 *            URL
 	 * @param htmlUrl
-	 *            The URL of the element
+	 *            HTML URL
 	 * @param creationDate
-	 *            The creation date of the element
+	 *            Creation date
 	 * @param lastModificationDate
-	 *            The last modification date of the element
+	 *            last modification date
 	 */
-	// CHECKSTYLE:OFF
-	public AbstractTuleapConfigurableElement(int id, int configurationId, int projectId, String label,
-			String url, String htmlUrl, Date creationDate, Date lastModificationDate) {
-		this(id, configurationId, projectId);
-		this.label = label;
-		this.url = url;
-		this.htmlUrl = htmlUrl;
-		this.creationDate = creationDate;
-		this.lastModificationDate = lastModificationDate;
-	}
-
-	// CHECKSTYLE:ON
-
-	/**
-	 * id getter.
-	 * 
-	 * @return the id
-	 */
-	public int getId() {
-		return id;
+	public AbstractTuleapConfigurableElement(int id, TuleapReference projectRef, String label, String url,
+			String htmlUrl, Date creationDate, Date lastModificationDate) {
+		super(id, projectRef, label, url, htmlUrl, creationDate, lastModificationDate);
 	}
 
 	/**
-	 * Returns the identifier of the configuration.
+	 * Returns a reference to the tracker.
 	 * 
-	 * @return The identifier of the configuration
+	 * @return The id of the tracker
 	 */
-	public int getConfigurationId() {
-		return configurationId;
+	public TuleapReference getTracker() {
+		return tracker;
 	}
 
 	/**
-	 * Returns the identifier of the project.
+	 * Tracker reference setter.
 	 * 
-	 * @return The identifier of the project
+	 * @param tracker
+	 *            the trackerRef to set
 	 */
-	public int getProjectId() {
-		return projectId;
+	public void setTracker(TuleapReference tracker) {
+		this.tracker = tracker;
 	}
 
 	/**
-	 * Returns the API URL of the element.
+	 * Returns an immutable view of the fields of the tracker. Elements cannot be added or removed form the
+	 * returned list.
 	 * 
-	 * @return The API URL of the element
+	 * @return An immutable view of the fields of the tracker.
 	 */
-	public String getUrl() {
-		return this.url;
+	public Collection<AbstractTuleapField> getFields() {
+		return this.fields.values();
 	}
 
 	/**
-	 * Html URL getter.
+	 * Add a field to this configuration. If the given field has a specific semantic, it is cached in the
+	 * relevant field to allow for easy retrieval.
 	 * 
-	 * @return the htmlUrl
+	 * @param field
+	 *            The field to add to the configuration
 	 */
-	public String getHtmlUrl() {
-		return htmlUrl;
+	public void addField(AbstractTuleapField field) {
+		this.fields.put(Integer.valueOf(field.getIdentifier()), field);
+		if (field instanceof AbstractTuleapSelectBox) {
+			AbstractTuleapSelectBox selectbox = (AbstractTuleapSelectBox)field;
+			if (selectbox.isSemanticStatus()) {
+				this.statusField = selectbox;
+			} else if (selectbox.isSemanticContributor()) {
+				this.contributorField = selectbox;
+			}
+		} else if (field instanceof TuleapFileUpload) {
+			attachmentField = (TuleapFileUpload)field;
+		} else if (field instanceof TuleapString && ((TuleapString)field).isSemanticTitle()) {
+			this.titleField = (TuleapString)field;
+		}
 	}
 
 	/**
-	 * Label getter.
+	 * Provides access to the cached title field. To use only after configuration creation.
 	 * 
-	 * @return the label
+	 * @return The field with the "title" semantic or null if sucj field doesn't exists.
 	 */
-	public String getLabel() {
-		return label;
+	public TuleapString getTitleField() {
+		return this.titleField;
 	}
 
 	/**
-	 * Returns the date of the creation.
+	 * Provides access to the cached status field. To use only used after configuration creation.
 	 * 
-	 * @return The date of the creation
+	 * @return The field with the "status" semantic or null if such a field doesn't exist.
 	 */
-	public Date getCreationDate() {
-		return this.creationDate;
+	public AbstractTuleapSelectBox getStatusField() {
+		return statusField;
 	}
 
 	/**
-	 * Returns the date of the last modification.
+	 * Provides access to the cached contributor field. To use only used after configuration creation.
 	 * 
-	 * @return The date of the last modification
+	 * @return The field with the "contributor" semantic or null if such a field doesn't exist.
 	 */
-	public Date getLastModificationDate() {
-		return this.lastModificationDate;
+	public AbstractTuleapSelectBox getContributorField() {
+		return contributorField;
 	}
 
 	/**
-	 * Adds a comment.
+	 * Provides access to the cached initial effort field. To use only used after configuration creation.
 	 * 
-	 * @param artifactComment
-	 *            The comment to add.
+	 * @return The field with the "initial effort" semantic or null if such a field doesn't exist.
 	 */
-	public void addComment(TuleapElementComment artifactComment) {
-		this.comments.add(artifactComment);
+	public TuleapFloat geInitialEffortField() {
+		return initialEffortField;
 	}
 
 	/**
-	 * Returns the comments.
+	 * Provides access to the attachment field of this configuration.
 	 * 
-	 * @return the comments
+	 * @return The attachment field of this configuration.
 	 */
-	public List<TuleapElementComment> getComments() {
-		return this.comments;
+	public TuleapFileUpload getAttachmentField() {
+		return attachmentField;
 	}
 
 	/**
-	 * Sets the new comment.
+	 * Indicates whether the given status represents a closed status.
 	 * 
-	 * @param newComment
-	 *            The new comment
+	 * @param statusItemId
+	 *            The status for which you want to know if it means the task is closed.
+	 * @return {@code true} if the configuration of the status field closed statuses contains the given
+	 *         status, {@false otherwise}.
 	 */
-	public void setNewComment(String newComment) {
-		this.newComment = newComment;
+	public boolean hasClosedStatusMeaning(int statusItemId) {
+		if (statusField != null) {
+			for (TuleapSelectBoxItem item : statusField.getClosedStatus()) {
+				if (item.getIdentifier() == statusItemId) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
-	 * Returns the new comment to send to the server.
+	 * Provides access to a configuration field by its id.
 	 * 
-	 * @return The new comment to send to the server.
+	 * @param id
+	 *            the field identifier
+	 * @return The configuration field or null if it doesn't exist.
 	 */
-	public String getNewComment() {
-		return this.newComment;
+	public AbstractTuleapField getFieldById(int id) {
+		return fields.get(Integer.valueOf(id));
 	}
 
 	/**

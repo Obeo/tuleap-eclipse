@@ -10,9 +10,13 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model.tracker;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableElement;
+import org.tuleap.mylyn.task.internal.core.model.TuleapElementComment;
+import org.tuleap.mylyn.task.internal.core.model.TuleapReference;
 
 /**
  * This class represents a Tuleap artifact obtained from the Tuleap tracker.
@@ -23,40 +27,55 @@ import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableEleme
 public class TuleapArtifact extends AbstractTuleapConfigurableElement {
 
 	/**
+	 * The new comment to send to the server.
+	 */
+	private String newComment;
+
+	/**
+	 * The comments of the element.
+	 */
+	private List<TuleapElementComment> comments = new ArrayList<TuleapElementComment>();
+
+	/**
+	 * Default constructor for deserialization.
+	 */
+	public TuleapArtifact() {
+		// Default constructor for deserialization
+	}
+
+	/**
 	 * The default constructor used to create a new Tuleap artifact locally.
 	 * 
-	 * @param trackerId
-	 *            The identifier of the tracker.
-	 * @param projectId
-	 *            The identifier of the project
+	 * @param trackerRef
+	 *            The tracker.
+	 * @param projectRef
+	 *            The project
 	 */
-	public TuleapArtifact(int trackerId, int projectId) {
-		super(trackerId, projectId);
+	public TuleapArtifact(TuleapReference trackerRef, TuleapReference projectRef) {
+		super(trackerRef, projectRef);
 	}
 
 	/**
 	 * The default constructor used to update an existing artifact.
 	 * 
-	 * @param artifactId
+	 * @param id
 	 *            The identifier of the artifact
-	 * @param trackerId
-	 *            The identifier of the tracker
-	 * @param projectId
-	 *            The identifier of the project
+	 * @param trackerRef
+	 *            The tracker
+	 * @param projectRef
+	 *            The project
 	 */
-	public TuleapArtifact(int artifactId, int trackerId, int projectId) {
-		super(artifactId, trackerId, projectId);
+	public TuleapArtifact(int id, TuleapReference trackerRef, TuleapReference projectRef) {
+		super(id, trackerRef, projectRef);
 	}
 
 	/**
 	 * The constructor used to create a Tuleap artifact with the artifact ID computed from a Tuleap tracker.
 	 * 
-	 * @param artifactId
+	 * @param id
 	 *            The Tuleap artifact ID
-	 * @param trackerId
-	 *            The id of the tracker
-	 * @param projectId
-	 *            The identifier of the project
+	 * @param projectRef
+	 *            The project
 	 * @param label
 	 *            The label of the artifact
 	 * @param url
@@ -68,10 +87,46 @@ public class TuleapArtifact extends AbstractTuleapConfigurableElement {
 	 * @param lastModificationDate
 	 *            The last modification date of the artifact
 	 */
-	// CHECKSTYLE:OFF
-	public TuleapArtifact(int artifactId, int trackerId, int projectId, String label, String url,
-			String htmlUrl, Date creationDate, Date lastModificationDate) {
-		super(artifactId, trackerId, projectId, label, url, htmlUrl, creationDate, lastModificationDate);
+	public TuleapArtifact(int id, TuleapReference projectRef, String label, String url, String htmlUrl,
+			Date creationDate, Date lastModificationDate) {
+		super(id, projectRef, label, url, htmlUrl, creationDate, lastModificationDate);
 	}
-	// CHECKSTYLE:ON
+
+	/**
+	 * Adds a comment.
+	 * 
+	 * @param artifactComment
+	 *            The comment to add.
+	 */
+	public void addComment(TuleapElementComment artifactComment) {
+		this.comments.add(artifactComment);
+	}
+
+	/**
+	 * Returns the comments.
+	 * 
+	 * @return the comments
+	 */
+	public List<TuleapElementComment> getComments() {
+		return this.comments;
+	}
+
+	/**
+	 * Sets the new comment.
+	 * 
+	 * @param newComment
+	 *            The new comment
+	 */
+	public void setNewComment(String newComment) {
+		this.newComment = newComment;
+	}
+
+	/**
+	 * Returns the new comment to send to the server.
+	 * 
+	 * @return The new comment to send to the server.
+	 */
+	public String getNewComment() {
+		return this.newComment;
+	}
 }

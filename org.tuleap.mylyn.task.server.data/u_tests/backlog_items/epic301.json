@@ -1,31 +1,19 @@
 {
   "id" : 301,
+  "artifact" : {
+    "id" : 301,
+    "uri" : "artifacts/301"
+  },
+  "project" : {
+    "id" : 3,
+    "uri" : "projects/3"
+  },
   "label" : "Another important Epic",
-  "initial_effort": 40.5,
-  "project_id": 3,
-  "url" : "/backlog_items/301",
-  "html_url" : "/backlog_items?id=301&group_id=3",
-  "backlog_item_type_id" : 801,
+  "uri" : "backlog_items/301",
+  "html_url" : "backlog_items?id=301&group_id=3",
   "submitted_by": 1,
   "submitted_on": "2013-09-23T11:44:18.963Z",
   "last_updated_on": "2013-09-24T15:33:18.523Z",
-  "assigned_milestone_id": 201,
-  "values" : [
-    {
-      "field_id" : 850,
-      "bind_value_id" : 8501
-    },
-    {
-      "field_id" : 851,
-      "value" : 20.5
-    },
-    {
-      "field_id" : 852,
-      "value" : "Bring more added-value to users"
-    },
-    {
-      "field_id" : 853,
-      "value" : "352"
-    }
-  ]
+  "initial_effort": 40.5,
+  "assigned_milestone_id": 201
 }

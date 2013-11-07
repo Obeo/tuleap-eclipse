@@ -1,0 +1,29 @@
+{
+  "id" : 300,
+  "label" : "An important Epic",
+  "project_id": 3,
+  "url" : "artifacts/300",
+  "html_url" : "artifacts?id=300&group_id=3",
+  "tracker_id" : 801,
+  "submitted_by": 1,
+  "submitted_on": "2013-09-23T11:44:18.963Z",
+  "last_updated_on": "2013-09-24T15:33:18.523Z",
+  "values" : [
+    {
+      "field_id" : 850,
+      "bind_value_id" : 8502
+    },
+    {
+      "field_id" : 851,
+      "value" : 0
+    },
+    {
+      "field_id" : 852,
+      "value" : "The summary of an important Epic"
+    },
+    {
+      "field_id" : 853,
+      "value" : "350,351"
+    }
+  ]
+}

@@ -16,7 +16,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
-import java.util.Date;
 
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCard;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
@@ -56,30 +55,14 @@ public class TuleapCardDeserializer extends AbstractTuleapDeserializer<TuleapCar
 		return card;
 	}
 
-	// CHECKSTYLE:OFF
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.parser.AbstractTuleapDeserializer#buildPojo(int, int, int,
-	 *      String, String, String, Date, Date)
+	 * @see org.tuleap.mylyn.task.internal.core.parser.AbstractProjectElementDeserializer#getPrototype()
 	 */
 	@Override
-	protected TuleapCard buildPojo(int id, int configurationId, int projectId, String label, String url,
-			String htmlUrl, Date creationDate, Date lastModificationDate) {
-		return new TuleapCard(id, configurationId, projectId, label, url, htmlUrl, creationDate,
-				lastModificationDate);
-	}
-
-	// CHECKSTYLE:ON
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.parser.AbstractTuleapDeserializer#getTypeIdKey()
-	 */
-	@Override
-	protected String getTypeIdKey() {
-		return ITuleapConstants.CARD_TYPE_ID;
+	protected TuleapCard getPrototype() {
+		return new TuleapCard();
 	}
 
 }

@@ -2,7 +2,7 @@
   "id" : 802,
   "label" : "User Stories",
   "description" : "The description of user stories",
-  "url" : "localhost:3001/api/v3.14/backlog_item_types/802",
+  "url" : "localhost:3001/api/v3.14/trackers/802",
   "project_id" : 3,
   "fields" : [
       {

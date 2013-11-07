@@ -12,13 +12,12 @@ package org.tuleap.mylyn.task.internal.tests.serializer;
 
 import com.google.gson.GsonBuilder;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.tuleap.mylyn.task.internal.core.model.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.serializer.TuleapBacklogItemsSerializer;
 
@@ -49,10 +48,11 @@ public class TuleapBacklogItemsSerializerTests {
 	 */
 	@Test
 	public void testSerializeBacklogItemsWithAffectedMilestone() {
-		TuleapBacklogItem firstBacklogItem = new TuleapBacklogItem(200, 901, 123);
+		TuleapReference projectRef = new TuleapReference(123, "p/123");
+		TuleapBacklogItem firstBacklogItem = new TuleapBacklogItem(200, projectRef);
 		firstBacklogItem.setAssignedMilestoneId(1000);
 
-		TuleapBacklogItem secondBacklogItem = new TuleapBacklogItem(201, 901, 123);
+		TuleapBacklogItem secondBacklogItem = new TuleapBacklogItem(201, projectRef);
 		secondBacklogItem.setAssignedMilestoneId(1001);
 
 		List<TuleapBacklogItem> backlogItemsList = new ArrayList<TuleapBacklogItem>();
@@ -70,8 +70,9 @@ public class TuleapBacklogItemsSerializerTests {
 	 */
 	@Test
 	public void testSerializeBacklogItemWithoutAffectedMilestone() {
-		TuleapBacklogItem firstBacklogItem = new TuleapBacklogItem(200, 901, 123);
-		TuleapBacklogItem secondBacklogItem = new TuleapBacklogItem(201, 901, 123);
+		TuleapReference projectRef = new TuleapReference(123, "p/123");
+		TuleapBacklogItem firstBacklogItem = new TuleapBacklogItem(200, projectRef);
+		TuleapBacklogItem secondBacklogItem = new TuleapBacklogItem(201, projectRef);
 
 		List<TuleapBacklogItem> backlogItemsList = new ArrayList<TuleapBacklogItem>();
 		backlogItemsList.add(firstBacklogItem);
@@ -88,10 +89,11 @@ public class TuleapBacklogItemsSerializerTests {
 	 */
 	@Test
 	public void testSerializeBacklogItemWithoutAffectedId() {
-		TuleapBacklogItem firstBacklogItem = new TuleapBacklogItem(901, 123);
+		TuleapReference projectRef = new TuleapReference(123, "p/123");
+		TuleapBacklogItem firstBacklogItem = new TuleapBacklogItem(projectRef);
 		firstBacklogItem.setAssignedMilestoneId(1000);
 
-		TuleapBacklogItem secondBacklogItem = new TuleapBacklogItem(902, 123);
+		TuleapBacklogItem secondBacklogItem = new TuleapBacklogItem(projectRef);
 		secondBacklogItem.setAssignedMilestoneId(1001);
 
 		List<TuleapBacklogItem> backlogItemsList = new ArrayList<TuleapBacklogItem>();
@@ -99,44 +101,8 @@ public class TuleapBacklogItemsSerializerTests {
 		backlogItemsList.add(secondBacklogItem);
 
 		String theBacklogItems = gson.toJsonTree(backlogItemsList).toString();
+		// FIXME This is what the current implementation does, but it's not logical to have ids here!
 		String expectedResult = "[{\"id\":0,\"assigned_milestone_id\":1000},{\"id\":0,\"assigned_milestone_id\":1001}]"; //$NON-NLS-1$
-
-		assertEquals(expectedResult, theBacklogItems);
-	}
-
-	/**
-	 * Test the serialisation of a list of BacklogItems with extra information.
-	 * 
-	 * @throws ParseException
-	 *             the exception
-	 */
-	@Test
-	public void testSerializeBacklogItemsWithExtraInformation() throws ParseException {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"); //$NON-NLS-1$
-		TuleapBacklogItem firstBacklogItem = new TuleapBacklogItem(
-				200,
-				901,
-				123,
-				"the first backlog item", "/backlogItemss/200", "/backlogItemss?id=200&group_id=3", dateFormat.parse("2013-09-23T11:44:18.963Z"), //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$
-				dateFormat.parse("2013-09-24T11:44:18.963Z")); //$NON-NLS-1$
-		firstBacklogItem.setAssignedMilestoneId(500);
-		firstBacklogItem.setInitialEffort(Float.valueOf(10));
-
-		TuleapBacklogItem secondBacklogItem = new TuleapBacklogItem(
-				201,
-				901,
-				123,
-				"the second backlog item", "/backlogItemss/201", "/backlogItemss?id=201&group_id=3", dateFormat.parse("2013-09-23T11:44:18.963Z"), //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$
-				dateFormat.parse("2013-09-24T11:44:18.963Z")); //$NON-NLS-1$
-		secondBacklogItem.setAssignedMilestoneId(501);
-		secondBacklogItem.setInitialEffort(Float.valueOf(15));
-
-		List<TuleapBacklogItem> backlogItemsList = new ArrayList<TuleapBacklogItem>();
-		backlogItemsList.add(firstBacklogItem);
-		backlogItemsList.add(secondBacklogItem);
-
-		String theBacklogItems = gson.toJsonTree(backlogItemsList).toString();
-		String expectedResult = "[{\"id\":200,\"assigned_milestone_id\":500},{\"id\":201,\"assigned_milestone_id\":501}]"; //$NON-NLS-1$
 
 		assertEquals(expectedResult, theBacklogItems);
 	}

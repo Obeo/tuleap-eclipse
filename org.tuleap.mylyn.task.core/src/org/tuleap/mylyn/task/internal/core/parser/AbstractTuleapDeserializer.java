@@ -11,24 +11,22 @@
 package org.tuleap.mylyn.task.internal.core.parser;
 
 import com.google.common.collect.Lists;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 
 import java.lang.reflect.Type;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.tuleap.mylyn.task.internal.core.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableElement;
+import org.tuleap.mylyn.task.internal.core.model.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**
@@ -40,12 +38,7 @@ import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapConfigurableElement> implements JsonDeserializer<T> {
-
-	/**
-	 * The pattern used to format date following the ISO8601 standard.
-	 */
-	protected SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"); //$NON-NLS-1$
+public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapConfigurableElement> extends AbstractDetailedElementDeserializer<T> {
 
 	/**
 	 * {@inheritDoc}
@@ -53,29 +46,14 @@ public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapConfigu
 	 * @see com.google.gson.JsonDeserializer#deserialize(com.google.gson.JsonElement, java.lang.reflect.Type,
 	 *      com.google.gson.JsonDeserializationContext)
 	 */
+	@Override
 	public T deserialize(JsonElement rootJsonElement, Type type,
 			JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-
 		JsonObject jsonObject = rootJsonElement.getAsJsonObject();
-
-		int id = jsonObject.get(ITuleapConstants.ID).getAsInt();
-		int projectId = jsonObject.get(ITuleapConstants.PROJECT_ID).getAsInt();
-		String label = jsonObject.get(ITuleapConstants.LABEL).getAsString();
-		String url = jsonObject.get(ITuleapConstants.URL).getAsString();
-		String htmlUrl = jsonObject.get(ITuleapConstants.HTML_URL).getAsString();
-		int configurationId = jsonObject.get(getTypeIdKey()).getAsInt();
-		String submittedOn = jsonObject.get(ITuleapConstants.SUBMITTED_ON).getAsString();
-		// TODO int submittedBy = jsonObject.get(ITuleapConstants.SUBMITTED_BY).getAsInt();
-		String lastUpdateOn = jsonObject.get(ITuleapConstants.LAST_UPDATED_ON).getAsString();
-
-		T pojo;
-		try {
-			pojo = buildPojo(id, configurationId, projectId, label, url, htmlUrl, dateFormat
-					.parse(submittedOn), dateFormat.parse(lastUpdateOn));
-		} catch (ParseException e) {
-			throw new JsonParseException("Invalid date", e); //$NON-NLS-1$
-		}
-		// pojo.setSubmittedBy(submittedBy);
+		T pojo = super.deserialize(rootJsonElement, type, jsonDeserializationContext);
+		JsonElement jsonTrackerRef = jsonObject.get(ITuleapConstants.JSON_TRACKER);
+		TuleapReference trackerRef = new Gson().fromJson(jsonTrackerRef, TuleapReference.class);
+		pojo.setTracker(trackerRef);
 
 		JsonArray fields = jsonObject.get(ITuleapConstants.VALUES).getAsJsonArray();
 		for (JsonElement field : fields) {
@@ -119,39 +97,5 @@ public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapConfigu
 
 		return pojo;
 	}
-
-	/**
-	 * Instantiates the relevant class of POJO to fill.
-	 * 
-	 * @param id
-	 *            The identifier
-	 * @param configurationId
-	 *            The identifier of the configuration
-	 * @param projectId
-	 *            The identifier of the project
-	 * @param label
-	 *            The label
-	 * @param url
-	 *            The url
-	 * @param htmlUrl
-	 *            The HTML URL
-	 * @param creationDate
-	 *            The creation date
-	 * @param lastModificationDate
-	 *            The last modification date
-	 * @return The POJO.
-	 */
-	// CHECKSTYLE:OFF
-	protected abstract T buildPojo(int id, int configurationId, int projectId, String label, String url,
-			String htmlUrl, Date creationDate, Date lastModificationDate);
-
-	// CHECKSTYLE:ON
-
-	/**
-	 * Returns the key of the type id.
-	 * 
-	 * @return The key of the type id
-	 */
-	protected abstract String getTypeIdKey();
 
 }

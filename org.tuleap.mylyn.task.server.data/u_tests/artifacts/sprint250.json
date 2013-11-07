@@ -1,0 +1,41 @@
+{
+  "id" : 250,
+  "project_id": 3,
+  "label" : "Sprint 1",
+  "url" : "artifacts/250",
+  "html_url" : "artifacts?id=250&group_id=3",
+  "tracker_id" : 902,
+  "submitted_by": 1,
+  "submitted_on": "2013-09-23T11:44:18.963Z",
+  "last_updated_on": "2013-09-24T15:33:18.523Z",
+  "values" : [
+    {
+      "field_id" : 960,
+      "value" : "Sprint 1"
+    },
+    {
+      "field_id" : 961,
+      "bind_value_id" : 9612
+    },
+    {
+      "field_id" : 962,
+      "value" : "400, 401, 402"
+    },
+    {
+      "field_id" : 963,
+      "value" : 12345678
+    },
+    {
+      "field_id" : 964,
+      "value" : 15
+    },
+    {
+      "field_id" : 965,
+      "value" : 24.5
+    },
+    {
+      "field_id" : 966,
+      "value" : 0
+    }
+  ]
+}

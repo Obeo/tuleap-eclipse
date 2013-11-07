@@ -14,7 +14,7 @@ import java.util.Collection;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -31,47 +31,47 @@ public class TuleapTrackerConfigurationTests {
 	/**
 	 * The first tracker.
 	 */
-	private TuleapTrackerConfiguration tracker1;
+	private TuleapTracker tracker1;
 
 	/**
 	 * The second tracker.
 	 */
-	private TuleapTrackerConfiguration tracker2;
+	private TuleapTracker tracker2;
 
 	/**
 	 * The third tracker.
 	 */
-	private TuleapTrackerConfiguration tracker3;
+	private TuleapTracker tracker3;
 
 	/**
 	 * The fourth tracker.
 	 */
-	private TuleapTrackerConfiguration tracker4;
+	private TuleapTracker tracker4;
 
 	/**
 	 * The fifth tracker.
 	 */
-	private TuleapTrackerConfiguration tracker5;
+	private TuleapTracker tracker5;
 
 	/**
 	 * The sixth tracker.
 	 */
-	private TuleapTrackerConfiguration tracker6;
+	private TuleapTracker tracker6;
 
 	/**
 	 * The seventh tracker.
 	 */
-	private TuleapTrackerConfiguration tracker7;
+	private TuleapTracker tracker7;
 
 	/**
 	 * The eighth tracker.
 	 */
-	private TuleapTrackerConfiguration tracker8;
+	private TuleapTracker tracker8;
 
 	/**
 	 * The ninth tracker.
 	 */
-	private TuleapTrackerConfiguration tracker9;
+	private TuleapTracker tracker9;
 
 	/**
 	 * The first url.
@@ -123,15 +123,15 @@ public class TuleapTrackerConfigurationTests {
 	 */
 	@Before
 	public void setUp() {
-		tracker1 = new TuleapTrackerConfiguration(1, firstUrl, null, null, null, -1);
-		tracker2 = new TuleapTrackerConfiguration(2, secondUrl, null, null, null, -1);
-		tracker3 = new TuleapTrackerConfiguration(3, thirdUrl, null, null, null, -1);
-		tracker4 = new TuleapTrackerConfiguration(4, fourthUrl, null, null, null, -1);
-		tracker5 = new TuleapTrackerConfiguration(5, fifthUrl, null, null, null, -1);
-		tracker6 = new TuleapTrackerConfiguration(6, sixthUrl, null, null, null, -1);
-		tracker7 = new TuleapTrackerConfiguration(7, seventhUrl, null, null, null, -1);
-		tracker8 = new TuleapTrackerConfiguration(8, eighthUrl, null, null, null, -1);
-		tracker9 = new TuleapTrackerConfiguration(9, ninthUrl, null, null, null, -1);
+		tracker1 = new TuleapTracker(1, firstUrl, null, null, null, -1);
+		tracker2 = new TuleapTracker(2, secondUrl, null, null, null, -1);
+		tracker3 = new TuleapTracker(3, thirdUrl, null, null, null, -1);
+		tracker4 = new TuleapTracker(4, fourthUrl, null, null, null, -1);
+		tracker5 = new TuleapTracker(5, fifthUrl, null, null, null, -1);
+		tracker6 = new TuleapTracker(6, sixthUrl, null, null, null, -1);
+		tracker7 = new TuleapTracker(7, seventhUrl, null, null, null, -1);
+		tracker8 = new TuleapTracker(8, eighthUrl, null, null, null, -1);
+		tracker9 = new TuleapTracker(9, ninthUrl, null, null, null, -1);
 
 	}
 
@@ -152,7 +152,7 @@ public class TuleapTrackerConfigurationTests {
 
 		// testing that the parent contains all children
 
-		Collection<TuleapTrackerConfiguration> children = tracker1.getChildrenTrackers();
+		Collection<TuleapTracker> children = tracker1.getChildrenTrackers();
 		assertEquals(5, children.size());
 		assertTrue(children.contains(tracker2));
 		assertTrue(children.contains(tracker3));

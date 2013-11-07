@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 
 import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;
@@ -36,6 +37,15 @@ public final class ParserUtil {
 	 */
 	private ParserUtil() {
 		// Prevents instantiation
+	}
+
+	/**
+	 * The pattern used to format date following the ISO8601 standard.
+	 * 
+	 * @return a Simple date format to use for JSON date strings.
+	 */
+	public static SimpleDateFormat getJsonDateFormat() {
+		return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"); //$NON-NLS-1$
 	}
 
 	/**

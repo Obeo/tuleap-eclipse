@@ -10,14 +10,15 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.parser;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
-import java.util.Date;
 
+import org.tuleap.mylyn.task.internal.core.model.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
@@ -26,12 +27,7 @@ import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public class TuleapBacklogItemDeserializer extends AbstractTuleapDeserializer<TuleapBacklogItem> {
-
-	/**
-	 * The key used for the type id of the backlog item.
-	 */
-	private static final String BACKLOG_ITEM_TYPE_ID = "backlog_item_type_id"; //$NON-NLS-1$
+public class TuleapBacklogItemDeserializer extends AbstractDetailedElementDeserializer<TuleapBacklogItem> {
 
 	/**
 	 * {@inheritDoc}.
@@ -45,6 +41,9 @@ public class TuleapBacklogItemDeserializer extends AbstractTuleapDeserializer<Tu
 		TuleapBacklogItem backlogItem = super.deserialize(element, type, context);
 
 		JsonObject jsonObject = element.getAsJsonObject();
+
+		backlogItem.setArtifactRef(new Gson().fromJson(jsonObject.get(ITuleapConstants.JSON_ARTIFACT),
+				TuleapReference.class));
 
 		JsonElement elt = jsonObject.get(ITuleapConstants.INITIAL_EFFORT);
 		if (elt != null) {
@@ -61,30 +60,14 @@ public class TuleapBacklogItemDeserializer extends AbstractTuleapDeserializer<Tu
 		return backlogItem;
 	}
 
-	// CHECKSTYLE:OFF
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.parser.AbstractTuleapDeserializer#buildPojo(int, int, int,
-	 *      String, String, String, Date, Date)
+	 * @see org.tuleap.mylyn.task.internal.core.parser.AbstractProjectElementDeserializer#getPrototype()
 	 */
 	@Override
-	protected TuleapBacklogItem buildPojo(int id, int configurationId, int projectId, String label,
-			String url, String htmlUrl, Date creationDate, Date lastModificationDate) {
-		return new TuleapBacklogItem(id, configurationId, projectId, label, url, htmlUrl, creationDate,
-				lastModificationDate);
-	}
-
-	// CHECKSTYLE:ON
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.parser.AbstractTuleapDeserializer#getTypeIdKey()
-	 */
-	@Override
-	protected String getTypeIdKey() {
-		return BACKLOG_ITEM_TYPE_ID;
+	protected TuleapBacklogItem getPrototype() {
+		return new TuleapBacklogItem();
 	}
 
 }

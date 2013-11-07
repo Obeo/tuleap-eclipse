@@ -35,7 +35,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
 import org.tuleap.mylyn.task.internal.ui.wizards.query.TuleapQueryProjectPage;
@@ -102,7 +102,7 @@ public class TuleapTrackerPage extends WizardPage {
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			public void selectionChanged(SelectionChangedEvent event) {
-				TuleapTrackerConfiguration trackerSelected = TuleapTrackerPage.this.getTrackerSelected();
+				TuleapTracker trackerSelected = TuleapTrackerPage.this.getTrackerSelected();
 				if (trackerSelected == null) {
 					TuleapTrackerPage.this.setErrorMessage(TuleapMylynTasksUIMessages
 							.getString("TuleapTrackerPage.SelectATracker")); //$NON-NLS-1$
@@ -135,9 +135,9 @@ public class TuleapTrackerPage extends WizardPage {
 		String connectorKind = this.repository.getConnectorKind();
 		final AbstractRepositoryConnector repositoryConnector = TasksUi.getRepositoryManager()
 				.getRepositoryConnector(connectorKind);
-		final List<TuleapTrackerConfiguration> trackersList = new ArrayList<TuleapTrackerConfiguration>();
+		final List<TuleapTracker> trackersList = new ArrayList<TuleapTracker>();
 		if (repositoryConnector instanceof ITuleapRepositoryConnector) {
-			final List<TuleapTrackerConfiguration> allTrackerConfigurations = new ArrayList<TuleapTrackerConfiguration>();
+			final List<TuleapTracker> allTrackerConfigurations = new ArrayList<TuleapTracker>();
 
 			IWizardPage previousPage = TuleapTrackerPage.this.getPreviousPage();
 
@@ -156,8 +156,8 @@ public class TuleapTrackerPage extends WizardPage {
 
 				public void run(IProgressMonitor monitor) throws InvocationTargetException,
 						InterruptedException {
-					for (TuleapTrackerConfiguration tuleapTrackerConfiguration : allTrackerConfigurations) {
-						trackersList.add(tuleapTrackerConfiguration);
+					for (TuleapTracker tuleapTracker : allTrackerConfigurations) {
+						trackersList.add(tuleapTracker);
 					}
 				}
 			};
@@ -187,10 +187,10 @@ public class TuleapTrackerPage extends WizardPage {
 	 * 
 	 * @return The tracker where the new task should be created.
 	 */
-	public TuleapTrackerConfiguration getTrackerSelected() {
+	public TuleapTracker getTrackerSelected() {
 		IStructuredSelection selection = (IStructuredSelection)this.trackerTree.getViewer().getSelection();
-		if (selection.getFirstElement() instanceof TuleapTrackerConfiguration) {
-			return (TuleapTrackerConfiguration)selection.getFirstElement();
+		if (selection.getFirstElement() instanceof TuleapTracker) {
+			return (TuleapTracker)selection.getFirstElement();
 		}
 		return null;
 	}

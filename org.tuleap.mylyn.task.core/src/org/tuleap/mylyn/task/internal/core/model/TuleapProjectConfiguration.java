@@ -21,10 +21,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItemType;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardType;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapPlanningConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
 
 /**
  * This class will hold the configuration of a Tuleap project.
@@ -39,26 +37,6 @@ public class TuleapProjectConfiguration implements Serializable {
 	private static final long serialVersionUID = -1057944606439051675L;
 
 	/**
-	 * This map contains the ID of the tracker of the Tuleap instance and their matching configuration.
-	 */
-	private Map<Integer, TuleapTrackerConfiguration> trackerId2trackerConfiguration = Maps.newHashMap();
-
-	/**
-	 * Map of milestone types (i.e. configuration) by id.
-	 */
-	private Map<Integer, TuleapMilestoneType> milestoneTypesById = Maps.newHashMap();
-
-	/**
-	 * Map of backlogItem types (i.e. configuration) by id.
-	 */
-	private Map<Integer, TuleapBacklogItemType> backlogItemTypesById = Maps.newHashMap();
-
-	/**
-	 * Map of card types (i.e. configuration) by id.
-	 */
-	private Map<Integer, TuleapCardType> cardTypesById = Maps.newHashMap();
-
-	/**
 	 * The label of the project.
 	 */
 	private String name;
@@ -69,19 +47,29 @@ public class TuleapProjectConfiguration implements Serializable {
 	private int identifier;
 
 	/**
+	 * The parent server configuration.
+	 */
+	private TuleapServerConfiguration serverConfiguration;
+
+	/**
 	 * The list of active services for this project.
 	 */
 	private final List<String> services = Lists.newArrayList();
 
 	/**
+	 * Map of trackers indexed by their IDs.
+	 */
+	private final Map<Integer, TuleapTracker> trackersById = Maps.newHashMap();
+
+	/**
+	 * Map of plannings indexed by their IDs.
+	 */
+	private final Map<Integer, TuleapPlanningConfiguration> planningsById = Maps.newHashMap();
+
+	/**
 	 * User groups indexed by id.
 	 */
 	private final Map<Integer, TuleapGroup> groupsById = Maps.newHashMap();
-
-	/**
-	 * The parent server configuration.
-	 */
-	private TuleapServerConfiguration serverConfiguration;
 
 	/**
 	 * The constructor.
@@ -102,9 +90,8 @@ public class TuleapProjectConfiguration implements Serializable {
 	 * @param trackerConfiguration
 	 *            The configuration of the tracker.
 	 */
-	public void addTracker(TuleapTrackerConfiguration trackerConfiguration) {
-		this.trackerId2trackerConfiguration.put(Integer.valueOf(trackerConfiguration.identifier),
-				trackerConfiguration);
+	public void addTracker(TuleapTracker trackerConfiguration) {
+		this.trackersById.put(Integer.valueOf(trackerConfiguration.getIdentifier()), trackerConfiguration);
 		trackerConfiguration.setTuleapProjectConfiguration(this);
 	}
 
@@ -115,8 +102,8 @@ public class TuleapProjectConfiguration implements Serializable {
 	 *            the id of the tracker
 	 * @return The tracker configuration for the given tracker id.
 	 */
-	public TuleapTrackerConfiguration getTrackerConfiguration(int trackerId) {
-		return this.trackerId2trackerConfiguration.get(Integer.valueOf(trackerId));
+	public TuleapTracker getTrackerConfiguration(int trackerId) {
+		return this.trackersById.get(Integer.valueOf(trackerId));
 	}
 
 	/**
@@ -124,101 +111,94 @@ public class TuleapProjectConfiguration implements Serializable {
 	 * 
 	 * @return The list of all the tracker configurations.
 	 */
-	public List<TuleapTrackerConfiguration> getAllTrackerConfigurations() {
-		return new ArrayList<TuleapTrackerConfiguration>(this.trackerId2trackerConfiguration.values());
+	public List<TuleapTracker> getAllTrackerConfigurations() {
+		return new ArrayList<TuleapTracker>(this.trackersById.values());
 	}
 
 	/**
-	 * Adds the given milestone type in the project configuration.
+	 * Add a planning to this project.
 	 * 
-	 * @param milestoneType
-	 *            The configuration of a milestone type.
+	 * @param planning
+	 *            The planning to add.
 	 */
-	public void addMilestoneType(TuleapMilestoneType milestoneType) {
-		this.milestoneTypesById.put(Integer.valueOf(milestoneType.identifier), milestoneType);
-		milestoneType.setTuleapProjectConfiguration(this);
+	public void addPlanning(TuleapPlanningConfiguration planning) {
+		planningsById.put(Integer.valueOf(planning.getId()), planning);
 	}
 
 	/**
-	 * Returns the Milestone type configuration for the given milestone type id.
+	 * Get a planning by its ID.
 	 * 
-	 * @param milestoneTypeId
-	 *            the id of the milestone type
-	 * @return The Milestone type configuration for the given milestone type id.
+	 * @param planningId
+	 *            The id of the planning being looked for.
+	 * @return The planning with this ID, or null if it is not registered with this project.
 	 */
-	public TuleapMilestoneType getMilestoneType(int milestoneTypeId) {
-		return this.milestoneTypesById.get(Integer.valueOf(milestoneTypeId));
+	public TuleapPlanningConfiguration getPlanning(int planningId) {
+		return planningsById.get(Integer.valueOf(planningId));
 	}
 
 	/**
-	 * Returns the list of all the milestone type for this project.
+	 * Indicates whether the given id is the id of a tracker used to persist milestone fields.
 	 * 
-	 * @return The list of all the milestone type for this project.
+	 * @param trackerId
+	 *            The tracker id.
+	 * @return <code>true</code> if and only if there is a planning whose milestone tracker id equals the
+	 *         given id.
 	 */
-	public List<TuleapMilestoneType> getAllMilestoneTypes() {
-		return new ArrayList<TuleapMilestoneType>(this.milestoneTypesById.values());
+	public boolean isMilestoneTracker(int trackerId) {
+		boolean ret = false;
+		for (TuleapPlanningConfiguration planning : planningsById.values()) {
+			TuleapReference milestoneTracker = planning.getMilestoneTracker();
+			if (milestoneTracker != null && milestoneTracker.getId() == trackerId) {
+				ret = true;
+				break;
+			}
+		}
+		return ret;
 	}
 
 	/**
-	 * Adds the given backlogItem type in the project configuration.
+	 * Indicates whether the given id is the id of a tracker used to persist backlog item fields.
 	 * 
-	 * @param backlogItemType
-	 *            The configuration of a backlogItem type.
+	 * @param trackerId
+	 *            The tracker id.
+	 * @return <code>true</code> if and only if there is a planning whose backlog tracker id equals the given
+	 *         id.
 	 */
-	public void addBacklogItemType(TuleapBacklogItemType backlogItemType) {
-		this.backlogItemTypesById.put(Integer.valueOf(backlogItemType.identifier), backlogItemType);
-		backlogItemType.setTuleapProjectConfiguration(this);
+	public boolean isBacklogTracker(int trackerId) {
+		boolean ret = false;
+		loop: for (TuleapPlanningConfiguration planning : planningsById.values()) {
+			List<TuleapReference> backlogTrackers = planning.getBacklogTrackers();
+			if (backlogTrackers == null) {
+				continue;
+			}
+			for (TuleapReference ref : backlogTrackers) {
+				if (ref.getId() == trackerId) {
+					ret = true;
+					break loop;
+				}
+			}
+		}
+		return ret;
 	}
 
 	/**
-	 * Returns the BacklogItem type configuration for the given backlogItem type id.
+	 * Indicates whether a cardwall is active for the given tracker.
 	 * 
-	 * @param backlogItemTypeId
-	 *            the id of the backlogItem type
-	 * @return The BacklogItem type configuration for the given backlogItem type id.
+	 * @param trackerId
+	 *            id of the tracker.
+	 * @return <code>true</code> if and only if the given ID is the ID of a milestone tracker, and the
+	 *         cardwall flag is active for the planning whose milestone tracker is this tracker.
 	 */
-	public TuleapBacklogItemType getBacklogItemType(int backlogItemTypeId) {
-		return this.backlogItemTypesById.get(Integer.valueOf(backlogItemTypeId));
-	}
-
-	/**
-	 * Returns the list of all the backlogItem type for this project.
-	 * 
-	 * @return The list of all the backlogItem type for this project.
-	 */
-	public List<TuleapBacklogItemType> getAllBacklogItemTypes() {
-		return new ArrayList<TuleapBacklogItemType>(this.backlogItemTypesById.values());
-	}
-
-	/**
-	 * Adds the given card type in the project configuration.
-	 * 
-	 * @param cardType
-	 *            The configuration of a card type.
-	 */
-	public void addCardType(TuleapCardType cardType) {
-		this.cardTypesById.put(Integer.valueOf(cardType.identifier), cardType);
-		cardType.setTuleapProjectConfiguration(this);
-	}
-
-	/**
-	 * Returns the Card type configuration for the given card type id.
-	 * 
-	 * @param cardTypeId
-	 *            the id of the card type
-	 * @return The Card type configuration for the given card type id.
-	 */
-	public TuleapCardType getCardType(int cardTypeId) {
-		return this.cardTypesById.get(Integer.valueOf(cardTypeId));
-	}
-
-	/**
-	 * Returns the list of all the card type for this project.
-	 * 
-	 * @return The list of all the card type for this project.
-	 */
-	public List<TuleapCardType> getAllCardTypes() {
-		return new ArrayList<TuleapCardType>(this.cardTypesById.values());
+	public boolean isCardwallActive(int trackerId) {
+		boolean ret = false;
+		for (TuleapPlanningConfiguration planning : planningsById.values()) {
+			TuleapReference milestoneTracker = planning.getMilestoneTracker();
+			if (milestoneTracker != null && milestoneTracker.getId() == trackerId) {
+				ret = planning.isCardwallActive();
+				break;
+			}
+		}
+		return ret;
 	}
 
 	/**
@@ -331,33 +311,5 @@ public class TuleapProjectConfiguration implements Serializable {
 	 */
 	public TuleapServerConfiguration getServerConfiguration() {
 		return serverConfiguration;
-	}
-
-	/**
-	 * Returns the {@link AbstractTuleapConfiguration} with the given identifier, or
-	 * <code>null</code> if none can be found. The configuration is first seeked among agile configurations,
-	 * then, in last resort, among tracker configurations.
-	 * 
-	 * @param configurationId
-	 *            The identifier of the configuration
-	 * @return The {@link AbstractTuleapConfiguration} with the given identifier, or
-	 *         <code>null</code> if none can be found
-	 */
-	public AbstractTuleapConfiguration getConfigurableFieldsConfiguration(
-			int configurationId) {
-		AbstractTuleapConfiguration configuration = null;
-		Integer configId = Integer.valueOf(configurationId);
-
-		configuration = milestoneTypesById.get(configId);
-		if (configuration == null) {
-			configuration = backlogItemTypesById.get(configId);
-		}
-		if (configuration == null) {
-			configuration = cardTypesById.get(configId);
-		}
-		if (configuration == null) {
-			configuration = trackerId2trackerConfiguration.get(configId);
-		}
-		return configuration;
 	}
 }

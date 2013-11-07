@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.parser;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -18,7 +19,7 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapPlanningBinding;
+import org.tuleap.mylyn.task.internal.core.model.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
@@ -42,24 +43,11 @@ public class TuleapTopPlanningDeserializer implements JsonDeserializer<TuleapTop
 
 		int id = jsonObject.get(ITuleapConstants.ID).getAsInt();
 		String label = jsonObject.get(ITuleapConstants.LABEL).getAsString();
-		String url = jsonObject.get(ITuleapConstants.URL).getAsString();
-		String htmlUrl = jsonObject.get(ITuleapConstants.HTML_URL).getAsString();
-		int projectId = jsonObject.get(ITuleapConstants.JSON_PROJECT_ID).getAsInt();
+		String uri = jsonObject.get(ITuleapConstants.URI).getAsString();
+		TuleapReference projectRef = new Gson().fromJson(jsonObject.get(ITuleapConstants.JSON_PROJECT),
+				TuleapReference.class);
 
-		int milestoneTypeId = jsonObject.get(ITuleapConstants.MILESTONE_TYPE_ID).getAsInt();
-		int backlogItemTypeId = jsonObject.get(ITuleapConstants.BACKLOGITEM_TYPE_ID).getAsInt();
-		TuleapPlanningBinding binding = new TuleapPlanningBinding(milestoneTypeId, backlogItemTypeId);
-
-		JsonElement element = jsonObject.get(ITuleapConstants.JSON_MILESTONES_TITLE);
-		if (element != null) {
-			binding.setMilestonesTitle(element.getAsString());
-		}
-		element = jsonObject.get(ITuleapConstants.JSON_BACKLOG_ITEMS_TITLE);
-		if (element != null) {
-			binding.setBacklogItemsTitle(element.getAsString());
-		}
-
-		TuleapTopPlanning topPlanning = new TuleapTopPlanning(id, label, url, htmlUrl, projectId, binding);
+		TuleapTopPlanning topPlanning = new TuleapTopPlanning(id, projectRef, label, uri);
 
 		return topPlanning;
 	}

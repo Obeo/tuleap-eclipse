@@ -123,6 +123,7 @@ public class TuleapRestResourceFactoryTest {
 		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
 		RestOpGet get = r.get();
+		assertNotNull(get);
 	}
 
 	/**
@@ -140,6 +141,7 @@ public class TuleapRestResourceFactoryTest {
 		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS");
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
 		RestOpGet get = r.get();
+		assertNotNull(get);
 	}
 
 	/**
@@ -192,8 +194,8 @@ public class TuleapRestResourceFactoryTest {
 	public void testGetMilestonesSubmilestones() {
 		RestResource r = factory.milestonesSubmilestones(123);
 		assertNotNull(r);
-		assertEquals("/milestones/123/submilestones", r.getUrl());
-		assertEquals("/server/api/v12.5/milestones/123/submilestones", r.getFullUrl());
+		assertEquals("/milestones/123/milestones", r.getUrl());
+		assertEquals("/server/api/v12.5/milestones/123/milestones", r.getFullUrl());
 	}
 
 	/**
@@ -238,72 +240,6 @@ public class TuleapRestResourceFactoryTest {
 		assertNotNull(r);
 		assertEquals("/projects", r.getUrl());
 		assertEquals("/server/api/v12.5/projects", r.getFullUrl());
-	}
-
-	/**
-	 * Checks the basic properties of {@link RestResourceFactory#projectsBacklogItemTypes(int)}.
-	 */
-	@Test
-	public void testGetProjectBacklogItemTypes() {
-		RestResource r = factory.projectsBacklogItemTypes(123);
-		assertNotNull(r);
-		assertEquals("/projects/123/backlog_item_types", r.getUrl());
-		assertEquals("/server/api/v12.5/projects/123/backlog_item_types", r.getFullUrl());
-	}
-
-	/**
-	 * Checks the basic properties of {@link RestResourceFactory#backlogItemType(int)}.
-	 */
-	@Test
-	public void testGetBacklogItemType() {
-		RestResource r = factory.backlogItemType(111);
-		assertNotNull(r);
-		assertEquals("/backlog_item_types/111", r.getUrl());
-		assertEquals("/server/api/v12.5/backlog_item_types/111", r.getFullUrl());
-	}
-
-	/**
-	 * Checks the basic properties of {@link RestResourceFactory#cardType(int)}.
-	 */
-	@Test
-	public void testGetCardType() {
-		RestResource r = factory.cardType(321);
-		assertNotNull(r);
-		assertEquals("/card_types/321", r.getUrl());
-		assertEquals("/server/api/v12.5/card_types/321", r.getFullUrl());
-	}
-
-	/**
-	 * Checks the basic properties of {@link RestResourceFactory#projectsCardTypes(int)}.
-	 */
-	@Test
-	public void testGetProjectCardTypes() {
-		RestResource r = factory.projectsCardTypes(321);
-		assertNotNull(r);
-		assertEquals("/projects/321/card_types", r.getUrl());
-		assertEquals("/server/api/v12.5/projects/321/card_types", r.getFullUrl());
-	}
-
-	/**
-	 * Checks the basic properties of {@link RestResourceFactory#milestoneType(int)}.
-	 */
-	@Test
-	public void testGetMilestoneType() {
-		RestResource r = factory.milestoneType(321);
-		assertNotNull(r);
-		assertEquals("/milestone_types/321", r.getUrl());
-		assertEquals("/server/api/v12.5/milestone_types/321", r.getFullUrl());
-	}
-
-	/**
-	 * Checks the basic properties of {@link RestResourceFactory#projectsMilestoneTypes(int)}.
-	 */
-	@Test
-	public void testGetProjectMilestoneTypes() {
-		RestResource r = factory.projectsMilestoneTypes(321);
-		assertNotNull(r);
-		assertEquals("/projects/321/milestone_types", r.getUrl());
-		assertEquals("/server/api/v12.5/projects/321/milestone_types", r.getFullUrl());
 	}
 
 	/**

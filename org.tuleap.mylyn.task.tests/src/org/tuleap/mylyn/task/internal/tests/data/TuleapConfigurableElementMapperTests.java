@@ -22,7 +22,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.tuleap.mylyn.task.internal.core.data.TuleapConfigurableElementMapper;
+import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
@@ -35,7 +35,7 @@ import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapText;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.workflow.TuleapWorkflowTransition;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapAttributeMapper;
@@ -67,7 +67,7 @@ public class TuleapConfigurableElementMapperTests {
 	/**
 	 * The tracker configuration.
 	 */
-	private TuleapTrackerConfiguration tuleapTrackerConfiguration;
+	private TuleapTracker tuleapTracker;
 
 	/**
 	 * The URL of the repository.
@@ -127,7 +127,7 @@ public class TuleapConfigurableElementMapperTests {
 	/**
 	 * The mapper used for tests.
 	 */
-	private TuleapConfigurableElementMapper mapper;
+	private TuleapArtifactMapper mapper;
 
 	/**
 	 * The attribute mapper used by the mapper under test.
@@ -150,20 +150,20 @@ public class TuleapConfigurableElementMapperTests {
 		this.projectId = 987;
 
 		this.repository = new TaskRepository(connectorKind, repositoryUrl);
-		this.tuleapTrackerConfiguration = new TuleapTrackerConfiguration(trackerId, repositoryUrl,
+		this.tuleapTracker = new TuleapTracker(trackerId, repositoryUrl,
 				trackerName, itemName, repositoryDescription, System.currentTimeMillis());
 
 		this.tuleapServerConfiguration = new TuleapServerConfiguration(repositoryUrl);
 
 		this.tuleapProjectConfiguration = new TuleapProjectConfiguration(projectName, projectId);
-		this.tuleapProjectConfiguration.addTracker(tuleapTrackerConfiguration);
+		this.tuleapProjectConfiguration.addTracker(tuleapTracker);
 		tuleapServerConfiguration.addProject(tuleapProjectConfiguration);
 		// this.repositoryConnector = new MockedTuleapRepositoryConnector(tuleapServerConfiguration);
 		fail("Fix the test ");
 
 		this.attributeMapper = new TuleapAttributeMapper(repository, repositoryConnector);
 		this.taskData = new TaskData(attributeMapper, connectorKind, repositoryUrl, "task1"); //$NON-NLS-1$
-		this.mapper = new TuleapConfigurableElementMapper(taskData, tuleapTrackerConfiguration);
+		this.mapper = new TuleapArtifactMapper(taskData, tuleapTracker);
 	}
 
 	/**
@@ -177,7 +177,7 @@ public class TuleapConfigurableElementMapperTests {
 
 		TaskAttribute att = root.getAttribute(TaskAttribute.TASK_KIND);
 		assertNotNull(att);
-		assertEquals(tuleapTrackerConfiguration.getLabel(), att.getValue());
+		assertEquals(tuleapTracker.getLabel(), att.getValue());
 		att = root.getMappedAttribute(TaskAttribute.DATE_CREATION);
 		assertNotNull(att);
 		TaskAttributeMetaData metadata = att.getMetaData();
@@ -191,11 +191,11 @@ public class TuleapConfigurableElementMapperTests {
 
 		// Also check that project id & tracker id task attributes are correctly created since they will be
 		// useful to mylyn
-		att = root.getAttribute(TuleapConfigurableElementMapper.PROJECT_ID);
+		att = root.getAttribute(TuleapArtifactMapper.PROJECT_ID);
 		assertNotNull(att);
 		assertEquals(String.valueOf(projectId), att.getValue());
 
-		att = root.getAttribute(TuleapConfigurableElementMapper.CONFIGURATION_ID);
+		att = root.getAttribute(TuleapArtifactMapper.TRACKER_ID);
 		assertNotNull(att);
 		assertEquals(String.valueOf(trackerId), att.getValue());
 
@@ -241,7 +241,7 @@ public class TuleapConfigurableElementMapperTests {
 	@Test
 	public void testInitializeEmptyTaskDataWithSemanticTitle() {
 		int id = 401;
-		tuleapTrackerConfiguration.addField(newSemanticTitle(id));
+		tuleapTracker.addField(newSemanticTitle(id));
 		mapper.initializeEmptyTaskData();
 
 		TaskAttribute att = taskData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY);
@@ -257,7 +257,7 @@ public class TuleapConfigurableElementMapperTests {
 	@Test
 	public void testInitializeEmptyTaskDataWithDate() {
 		int id = 402;
-		tuleapTrackerConfiguration.addField(newTuleapDate(id));
+		tuleapTracker.addField(newTuleapDate(id));
 		mapper.initializeEmptyTaskData();
 
 		TaskAttribute att = taskData.getRoot().getMappedAttribute(String.valueOf(id));
@@ -273,7 +273,7 @@ public class TuleapConfigurableElementMapperTests {
 	@Test
 	public void testInitializeEmptyTaskDataWithString() {
 		int id = 403;
-		tuleapTrackerConfiguration.addField(newTuleapString(id));
+		tuleapTracker.addField(newTuleapString(id));
 		mapper.initializeEmptyTaskData();
 
 		TaskAttribute att = taskData.getRoot().getMappedAttribute(String.valueOf(id));
@@ -289,7 +289,7 @@ public class TuleapConfigurableElementMapperTests {
 	@Test
 	public void testInitializeEmptyTaskDataWithText() {
 		int id = 403;
-		tuleapTrackerConfiguration.addField(newTuleapText(id));
+		tuleapTracker.addField(newTuleapText(id));
 		mapper.initializeEmptyTaskData();
 
 		TaskAttribute att = taskData.getRoot().getMappedAttribute(String.valueOf(id));
@@ -305,7 +305,7 @@ public class TuleapConfigurableElementMapperTests {
 	@Test
 	public void testInitializeEmptyTaskDataWithInteger() {
 		int id = 403;
-		tuleapTrackerConfiguration.addField(newTuleapInteger(id));
+		tuleapTracker.addField(newTuleapInteger(id));
 		mapper.initializeEmptyTaskData();
 
 		TaskAttribute att = taskData.getRoot().getMappedAttribute(String.valueOf(id));
@@ -321,7 +321,7 @@ public class TuleapConfigurableElementMapperTests {
 	@Test
 	public void testInitializeEmptyTaskDataWithFloat() {
 		int id = 403;
-		tuleapTrackerConfiguration.addField(newTuleapFloat(id));
+		tuleapTracker.addField(newTuleapFloat(id));
 		mapper.initializeEmptyTaskData();
 
 		TaskAttribute att = taskData.getRoot().getMappedAttribute(String.valueOf(id));
@@ -337,7 +337,7 @@ public class TuleapConfigurableElementMapperTests {
 	@Test
 	public void testInitializeEmptyTaskDataWithOpenList() {
 		int id = 403;
-		tuleapTrackerConfiguration.addField(newTuleapOpenList(id));
+		tuleapTracker.addField(newTuleapOpenList(id));
 		mapper.initializeEmptyTaskData();
 
 		TaskAttribute att = taskData.getRoot().getMappedAttribute(String.valueOf(id));
@@ -353,7 +353,7 @@ public class TuleapConfigurableElementMapperTests {
 	@Test
 	public void testInitializeEmptyTaskDataWithSemanticStatus() {
 		int id = 403;
-		tuleapTrackerConfiguration.addField(newSemanticStatus(id));
+		tuleapTracker.addField(newSemanticStatus(id));
 		mapper.initializeEmptyTaskData();
 
 		TaskAttribute att = taskData.getRoot().getMappedAttribute(String.valueOf(id));
@@ -383,7 +383,7 @@ public class TuleapConfigurableElementMapperTests {
 	@Test
 	public void testInitializeEmptyTaskDataWithSemanticStatusWithWorkflow() {
 		int id = 403;
-		tuleapTrackerConfiguration.addField(newSemanticStatusWithWorkflow(id));
+		tuleapTracker.addField(newSemanticStatusWithWorkflow(id));
 		mapper.initializeEmptyTaskData();
 
 		TaskAttribute att = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
@@ -431,7 +431,7 @@ public class TuleapConfigurableElementMapperTests {
 		transition.setFrom(2);
 		transition.setTo(1);
 		selectBox.getWorkflow().addTransition(transition);
-		tuleapTrackerConfiguration.addField(selectBox);
+		tuleapTracker.addField(selectBox);
 		mapper.initializeEmptyTaskData();
 
 		// No value is assigned to the field
@@ -454,7 +454,7 @@ public class TuleapConfigurableElementMapperTests {
 	@Test
 	public void testInitializeEmptyTaskDataWithMultiSelectBox() {
 		int id = 405;
-		tuleapTrackerConfiguration.addField(newTuleapMultiSelectBox(id));
+		tuleapTracker.addField(newTuleapMultiSelectBox(id));
 		mapper.initializeEmptyTaskData();
 
 		TaskAttribute att = taskData.getRoot().getMappedAttribute(String.valueOf(id));
@@ -470,7 +470,7 @@ public class TuleapConfigurableElementMapperTests {
 	@Test
 	public void testInitializeEmptyTaskDataWithSemanticContributor() {
 		int id = 408;
-		tuleapTrackerConfiguration.addField(newSemanticContributorSingle(id));
+		tuleapTracker.addField(newSemanticContributorSingle(id));
 		mapper.initializeEmptyTaskData();
 
 		TaskAttribute att = taskData.getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED);
@@ -489,7 +489,7 @@ public class TuleapConfigurableElementMapperTests {
 	@Test
 	public void testSetStatus() {
 		int statusId = 555;
-		tuleapTrackerConfiguration.addField(newSemanticStatus(statusId));
+		tuleapTracker.addField(newSemanticStatus(statusId));
 		mapper.initializeEmptyTaskData();
 
 		assertEquals("", taskData.getRoot().getAttribute(TaskAttribute.STATUS).getValue()); //$NON-NLS-1$
@@ -527,7 +527,7 @@ public class TuleapConfigurableElementMapperTests {
 	public void testSetStatusWithWorkflow() {
 		int statusId = 556;
 		// 100 -> 0 -> 1 <-> 2 -> 3
-		tuleapTrackerConfiguration.addField(newSemanticStatusWithWorkflow(statusId));
+		tuleapTracker.addField(newSemanticStatusWithWorkflow(statusId));
 		mapper.initializeEmptyTaskData();
 
 		assertEquals("", taskData.getRoot().getAttribute(TaskAttribute.STATUS).getValue()); //$NON-NLS-1$
@@ -600,7 +600,7 @@ public class TuleapConfigurableElementMapperTests {
 	@Test
 	public void testSetAssignedToSingle() {
 		int id = 408;
-		tuleapTrackerConfiguration.addField(newSemanticContributorSingle(id));
+		tuleapTracker.addField(newSemanticContributorSingle(id));
 		mapper.initializeEmptyTaskData();
 		mapper.setAssignedTo(Lists.newArrayList(Integer.valueOf(1)));
 
@@ -613,7 +613,7 @@ public class TuleapConfigurableElementMapperTests {
 	@Test
 	public void testSetAssignedToMultiple() {
 		int id = 408;
-		tuleapTrackerConfiguration.addField(newSemanticContributorMultiple(id));
+		tuleapTracker.addField(newSemanticContributorMultiple(id));
 		mapper.initializeEmptyTaskData();
 		List<Integer> valueIds = new ArrayList<Integer>();
 		valueIds.add(Integer.valueOf(117));

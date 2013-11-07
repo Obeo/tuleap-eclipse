@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.parser;
 
-import com.google.gson.JsonArray;
+import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -18,8 +18,8 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 import java.text.ParseException;
-import java.util.Date;
 
+import org.tuleap.mylyn.task.internal.core.model.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
@@ -30,12 +30,7 @@ import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public class TuleapMilestoneDeserializer extends AbstractTuleapDeserializer<TuleapMilestone> {
-
-	/**
-	 * The key used to retrieve the type id of the milestone.
-	 */
-	private static final String MILESTONE_TYPE_ID = "milestone_type_id"; //$NON-NLS-1$
+public class TuleapMilestoneDeserializer extends AbstractDetailedElementDeserializer<TuleapMilestone> {
 
 	/**
 	 * {@inheritDoc}
@@ -50,6 +45,9 @@ public class TuleapMilestoneDeserializer extends AbstractTuleapDeserializer<Tule
 
 		JsonObject jsonObject = rootJsonElement.getAsJsonObject();
 
+		milestone.setArtifact(new Gson().fromJson(jsonObject.get(ITuleapConstants.JSON_ARTIFACT),
+				TuleapReference.class));
+
 		JsonElement elt = jsonObject.get(ITuleapConstants.START_DATE);
 		if (elt != null) {
 			String startDate = elt.getAsString();
@@ -60,10 +58,14 @@ public class TuleapMilestoneDeserializer extends AbstractTuleapDeserializer<Tule
 			}
 		}
 
-		elt = jsonObject.get(ITuleapConstants.DURATION);
+		elt = jsonObject.get(ITuleapConstants.END_DATE);
 		if (elt != null) {
-			Float duration = Float.valueOf(elt.getAsFloat());
-			milestone.setDuration(duration);
+			String endDate = elt.getAsString();
+			try {
+				milestone.setEndDate(dateFormat.parse(endDate));
+			} catch (ParseException e) {
+				// TODO manage the exception properly
+			}
 		}
 
 		elt = jsonObject.get(ITuleapConstants.CAPACITY);
@@ -72,36 +74,32 @@ public class TuleapMilestoneDeserializer extends AbstractTuleapDeserializer<Tule
 			milestone.setCapacity(capacity);
 		}
 
-		elt = jsonObject.get(ITuleapConstants.SUBMILESTONES);
+		elt = jsonObject.get(ITuleapConstants.JSON_STATUS_LABEL);
 		if (elt != null) {
-			JsonArray submilestones = elt.getAsJsonArray();
-			for (JsonElement submilestone : submilestones) {
-				TuleapMilestone sub = deserialize(submilestone, type, jsonDeserializationContext);
-				milestone.addSubMilestone(sub);
-			}
+			milestone.setStatusLabel(elt.getAsString());
+		}
+
+		elt = jsonObject.get(ITuleapConstants.JSON_SUB_MILESTONES_URI);
+		if (elt != null) {
+			milestone.setSubMilestonesUri(elt.getAsString());
+		}
+
+		elt = jsonObject.get(ITuleapConstants.JSON_BACKLOG_ITEMS_URI);
+		if (elt != null) {
+			milestone.setBacklogItemsUri(elt.getAsString());
 		}
 
 		return milestone;
 	}
 
-	// CHECKSTYLE:OFF
-	@Override
-	protected TuleapMilestone buildPojo(int id, int configurationId, int projectId, String label, String url,
-			String htmlUrl, Date creationDate, Date lastModificationDate) {
-		return new TuleapMilestone(id, configurationId, projectId, label, url, htmlUrl, creationDate,
-				lastModificationDate);
-	}
-
-	// CHECKSTYLE:ON
-
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.parser.AbstractTuleapDeserializer#getTypeIdKey()
+	 * @see org.tuleap.mylyn.task.internal.core.parser.AbstractProjectElementDeserializer#getPrototype()
 	 */
 	@Override
-	protected String getTypeIdKey() {
-		return MILESTONE_TYPE_ID;
+	protected TuleapMilestone getPrototype() {
+		return new TuleapMilestone();
 	}
 
 }

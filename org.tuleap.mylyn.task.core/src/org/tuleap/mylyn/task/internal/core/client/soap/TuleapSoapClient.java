@@ -30,7 +30,7 @@ import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
 
 /**
  * The Mylyn Tuleap client is in charge of the connection with the repository and it will realize the request
@@ -140,7 +140,7 @@ public class TuleapSoapClient {
 	 *            The progress monitor
 	 * @return The configuration of the tracker with the given identifier
 	 */
-	public TuleapTrackerConfiguration getTuleapTrackerConfiguration(
+	public TuleapTracker getTuleapTrackerConfiguration(
 			TuleapProjectConfiguration projectConfiguration, int trackerId, IProgressMonitor monitor) {
 		return this.soapConnector.getTuleapTrackerConfiguration(projectConfiguration.getIdentifier(),
 				trackerId, monitor);
@@ -153,7 +153,7 @@ public class TuleapSoapClient {
 	 *            The query to run
 	 * @param serverConfiguration
 	 *            The server configuration
-	 * @param tuleapTrackerConfiguration
+	 * @param tuleapTracker
 	 *            The configuration used to analyze the data from the SOAP responses
 	 * @param monitor
 	 *            the progress monitor
@@ -161,13 +161,13 @@ public class TuleapSoapClient {
 	 */
 	public List<TuleapArtifact> getArtifactsFromQuery(IRepositoryQuery query,
 			TuleapServerConfiguration serverConfiguration,
-			TuleapTrackerConfiguration tuleapTrackerConfiguration, IProgressMonitor monitor) {
+			TuleapTracker tuleapTracker, IProgressMonitor monitor) {
 		List<TuleapArtifact> artifacts = new ArrayList<TuleapArtifact>();
 
 		List<CommentedArtifact> artifactsToConvert = soapConnector.performQuery(query, serverConfiguration,
 				TaskDataCollector.MAX_HITS, monitor);
 		for (CommentedArtifact artifactToParse : artifactsToConvert) {
-			TuleapArtifact tuleapArtifact = this.tuleapSoapParser.parseArtifact(tuleapTrackerConfiguration,
+			TuleapArtifact tuleapArtifact = this.tuleapSoapParser.parseArtifact(tuleapTracker,
 					artifactToParse);
 			artifacts.add(tuleapArtifact);
 		}

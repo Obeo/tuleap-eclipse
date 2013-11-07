@@ -2,8 +2,7 @@
   "id" : 902,
   "label" : "Sprints",
   "description" : "The description of sprints",
-  "url" : "localhost:3001/api/v3.14/milestone_types/902",
-  "has_cardwall" : true,
+  "url" : "localhost:3001/api/v3.14/trackers/902",
   "project_id" : 3,
   "fields" : [
       {

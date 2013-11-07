@@ -1,0 +1,29 @@
+{
+  "id" : 301,
+  "label" : "Another important Epic",
+  "project_id": 3,
+  "url" : "artifacts/301",
+  "html_url" : "artifacts?id=301&group_id=3",
+  "tracker_id" : 801,
+  "submitted_by": 1,
+  "submitted_on": "2013-09-23T11:44:18.963Z",
+  "last_updated_on": "2013-09-24T15:33:18.523Z",
+  "values" : [
+    {
+      "field_id" : 850,
+      "bind_value_id" : 8501
+    },
+    {
+      "field_id" : 851,
+      "value" : 20.5
+    },
+    {
+      "field_id" : 852,
+      "value" : "Bring more added-value to users"
+    },
+    {
+      "field_id" : 853,
+      "value" : "352"
+    }
+  ]
+}

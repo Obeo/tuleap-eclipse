@@ -10,132 +10,137 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model.agile;
 
+import com.google.common.collect.Lists;
+
+import java.util.List;
+
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapProjectElement;
+import org.tuleap.mylyn.task.internal.core.model.TuleapReference;
 
 /**
  * Configuration of a Planning in Tuleap.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class TuleapPlanningConfiguration {
+public class TuleapPlanningConfiguration extends AbstractTuleapProjectElement {
 
 	/**
-	 * The id of the project that contains this planning.
+	 * Reference to the tracker that contains the milestone artifacts of this planning.
 	 */
-	private int projectId;
+	private TuleapReference milestoneTracker;
 
 	/**
-	 * The id of the tracker that contains the milestone artifacts of this planning.
+	 * References to the trackers that contain the backlog item artifacts of this planning.
 	 */
-	private int milestoneTrackerId;
+	private List<TuleapReference> backlogTrackers;
 
 	/**
-	 * The id of the tracker that contains the backlog item artifacts of this planning.
+	 * REST URI of the cardwall configuration.
 	 */
-	private int backlogTrackerId;
+	private String cardwallConfigurationUri;
 
 	/**
-	 * The label of the milestone tracker.
+	 * Default constructor for deserialization.
 	 */
-	private String milestoneTrackerTitle;
-
-	/**
-	 * The label of the backlog tracker.
-	 */
-	private String backlogTrackerLabel;
-
-	/**
-	 * Project id getter.
-	 * 
-	 * @return the projectId
-	 */
-	public int getProjectId() {
-		return projectId;
+	public TuleapPlanningConfiguration() {
+		// Default constructor for deserialization.
 	}
 
 	/**
-	 * Project Id setter.
+	 * Constructor used to update an existing element.
 	 * 
-	 * @param projectId
-	 *            the projectId to set
+	 * @param id
+	 *            The id
+	 * @param projectRef
+	 *            the project
 	 */
-	public void setProjectId(int projectId) {
-		this.projectId = projectId;
+	public TuleapPlanningConfiguration(int id, TuleapReference projectRef) {
+		super(id, projectRef);
 	}
 
 	/**
-	 * Milestone tracker id getter.
+	 * Constructor used to create elements.
 	 * 
-	 * @return the milestoneTrackerId
+	 * @param id
+	 *            The id
+	 * @param projectRef
+	 *            the project
+	 * @param label
+	 *            The label
+	 * @param uri
+	 *            the uri
 	 */
-	public int getMilestoneTrackerId() {
-		return milestoneTrackerId;
+	public TuleapPlanningConfiguration(int id, TuleapReference projectRef, String label, String uri) {
+		super(id, projectRef, label, uri);
 	}
 
 	/**
-	 * Milestone tracker id setter.
+	 * Milestone tracker reference getter.
 	 * 
-	 * @param milestoneTrackerId
-	 *            the milestoneTrackerId to set
+	 * @return the milestoneTracker
 	 */
-	public void setMilestoneTrackerId(int milestoneTrackerId) {
-		this.milestoneTrackerId = milestoneTrackerId;
+	public TuleapReference getMilestoneTracker() {
+		return milestoneTracker;
 	}
 
 	/**
-	 * Backlog tracker id getter.
+	 * Milestone tracker reference setter.
 	 * 
-	 * @return the backlogTrackerId
+	 * @param milestoneTracker
+	 *            the milestoneTracker to set
 	 */
-	public int getBacklogTrackerId() {
-		return backlogTrackerId;
+	public void setMilestoneTracker(TuleapReference milestoneTracker) {
+		this.milestoneTracker = milestoneTracker;
 	}
 
 	/**
-	 * Backlog tracker id setter.
+	 * Backlog tracker reference getter.
 	 * 
-	 * @param backlogTrackerId
-	 *            the backlogTrackerId to set
+	 * @return the backlogTrackers, a list that is never <code>null</code> but possibly empty.
 	 */
-	public void setBacklogTrackerId(int backlogTrackerId) {
-		this.backlogTrackerId = backlogTrackerId;
+	public List<TuleapReference> getBacklogTrackers() {
+		if (backlogTrackers == null) {
+			backlogTrackers = Lists.newArrayList();
+		}
+		return backlogTrackers;
 	}
 
 	/**
-	 * Milestone tracker label getter.
+	 * Adds a backlog tracker reference.
 	 * 
-	 * @return the milestoneTrackerTitle
+	 * @param backlogTracker
+	 *            the backlogTracker to add
 	 */
-	public String getMilestoneTrackerTitle() {
-		return milestoneTrackerTitle;
+	public void addBacklogTracker(TuleapReference backlogTracker) {
+		getBacklogTrackers().add(backlogTracker);
 	}
 
 	/**
-	 * Milestone tracker label setter.
+	 * Cardwall config URI.
 	 * 
-	 * @param milestoneTrackerTitle
-	 *            the milestoneTrackerTitle to set
+	 * @return the cardwallConfigurationUri
 	 */
-	public void setMilestoneTrackerTitle(String milestoneTrackerTitle) {
-		this.milestoneTrackerTitle = milestoneTrackerTitle;
+	public String getCardwallConfigurationUri() {
+		return cardwallConfigurationUri;
 	}
 
 	/**
-	 * Backlog tracker label getter.
+	 * Cardwall config URI.
 	 * 
-	 * @return the backlogTrackerLabel
+	 * @param cardwallConfigurationUri
+	 *            the cardwallConfigurationUri to set
 	 */
-	public String getBacklogTrackerLabel() {
-		return backlogTrackerLabel;
+	public void setCardwallConfigurationUri(String cardwallConfigurationUri) {
+		this.cardwallConfigurationUri = cardwallConfigurationUri;
 	}
 
 	/**
-	 * Backlog tracker label setter.
+	 * Flag to indicate if it has a cardwall.
 	 * 
-	 * @param backlogTrackerLabel
-	 *            the backlogTrackerLabel to set
+	 * @return the cardwallActive
 	 */
-	public void setBacklogTrackerLabel(String backlogTrackerLabel) {
-		this.backlogTrackerLabel = backlogTrackerLabel;
+	public boolean isCardwallActive() {
+		return cardwallConfigurationUri != null;
 	}
 
 }

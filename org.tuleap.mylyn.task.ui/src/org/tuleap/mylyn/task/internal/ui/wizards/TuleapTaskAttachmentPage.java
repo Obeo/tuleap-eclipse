@@ -32,12 +32,12 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.tuleap.mylyn.task.internal.core.data.TuleapConfigurableElementMapper;
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfiguration;
+import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapFileUpload;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
@@ -144,17 +144,15 @@ public class TuleapTaskAttachmentPage extends TaskAttachmentPage {
 
 			TaskAttribute attribute = this.getModel().getAttribute();
 			TaskData taskData = attribute.getTaskData();
-			TuleapConfigurableElementMapper tuleapConfigurableElementMapper = new TuleapConfigurableElementMapper(
-					taskData, null);
-			int projectId = tuleapConfigurableElementMapper.getProjectId();
-			int configurationId = tuleapConfigurableElementMapper.getConfigurationId();
+			TuleapArtifactMapper tuleapArtifactMapper = new TuleapArtifactMapper(taskData, null);
+			int projectId = tuleapArtifactMapper.getProjectId();
+			int trackerId = tuleapArtifactMapper.getConfigurationId();
 
 			List<String> attachmentFieldsName = new ArrayList<String>();
 
 			TuleapProjectConfiguration projectConfiguration = repositoryConfiguration
 					.getProjectConfiguration(projectId);
-			AbstractTuleapConfiguration configuration = projectConfiguration
-					.getConfigurableFieldsConfiguration(configurationId);
+			TuleapTracker configuration = projectConfiguration.getTrackerConfiguration(trackerId);
 			Collection<AbstractTuleapField> fields = configuration.getFields();
 			for (AbstractTuleapField abstractTuleapField : fields) {
 				if (abstractTuleapField instanceof TuleapFileUpload) {

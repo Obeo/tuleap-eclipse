@@ -27,12 +27,13 @@ import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.TuleapElementComment;
 import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
+import org.tuleap.mylyn.task.internal.core.model.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapFileUpload;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapMultiSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapUrlUtil;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Artifact;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactFieldValue;
@@ -49,28 +50,27 @@ public class TuleapSoapParser {
 	/**
 	 * Parse the SOAP data and return a {@link TuleapArtifact} representing the artifact.
 	 * 
-	 * @param tuleapTrackerConfiguration
+	 * @param tuleapTracker
 	 *            The configuration of the Tuleap tracker
 	 * @param commentedArtifact
 	 *            The SOAP artifact to parse + the related comments.
 	 * @return The TuleapArtifact representing the artifact
 	 */
-	public TuleapArtifact parseArtifact(TuleapTrackerConfiguration tuleapTrackerConfiguration,
-			CommentedArtifact commentedArtifact) {
+	public TuleapArtifact parseArtifact(TuleapTracker tuleapTracker, CommentedArtifact commentedArtifact) {
 		Artifact artifactToParse = commentedArtifact.getArtifact();
 		int artifactId = artifactToParse.getArtifact_id();
 		int trackerId = artifactToParse.getTracker_id();
-		int projectId = tuleapTrackerConfiguration.getTuleapProjectConfiguration().getIdentifier();
+		int projectId = tuleapTracker.getTuleapProjectConfiguration().getIdentifier();
 
 		// Useless for regular artifacts (agile only)
 		String label = null;
 		String url = null;
 
-		String repositoryUrl = tuleapTrackerConfiguration.getTuleapProjectConfiguration()
-				.getServerConfiguration().getUrl();
+		String repositoryUrl = tuleapTracker.getTuleapProjectConfiguration().getServerConfiguration()
+				.getUrl();
 
-		String taskId = TuleapTaskIdentityUtil.getTaskDataId(tuleapTrackerConfiguration
-				.getTuleapProjectConfiguration().getIdentifier(), trackerId, artifactId);
+		String taskId = TuleapTaskIdentityUtil.getTaskDataId(tuleapTracker.getTuleapProjectConfiguration()
+				.getIdentifier(), trackerId, artifactId);
 		String htmlUrl = TuleapUrlUtil.getTaskUrlFromTaskId(repositoryUrl, taskId);
 
 		int submittedOn = artifactToParse.getSubmitted_on();
@@ -79,12 +79,22 @@ public class TuleapSoapParser {
 		int lastUpdateDate = artifactToParse.getLast_update_date();
 		Date lastModificationDate = this.getDateFromTimestamp(lastUpdateDate);
 
-		TuleapArtifact tuleapArtifact = new TuleapArtifact(artifactId, trackerId, projectId, label, url,
-				htmlUrl, creationDate, lastModificationDate);
+		TuleapReference projectRef = new TuleapReference();
+		projectRef.setId(projectId);
+		// TODO Fix this hack
+		projectRef.setUri("projects/" + projectId); //$NON-NLS-1$
+		TuleapArtifact tuleapArtifact = new TuleapArtifact(artifactId, projectRef, label, url, htmlUrl,
+				creationDate, lastModificationDate);
+
+		TuleapReference trackerRef = new TuleapReference();
+		trackerRef.setId(trackerId);
+		// TODO Fix this hack
+		trackerRef.setUri("artifacts/" + trackerId); //$NON-NLS-1$
+		tuleapArtifact.setTracker(trackerRef);
 
 		ArtifactFieldValue[] value = artifactToParse.getValue();
 		for (ArtifactFieldValue artifactFieldValue : value) {
-			Collection<AbstractTuleapField> fields = tuleapTrackerConfiguration.getFields();
+			Collection<AbstractTuleapField> fields = tuleapTracker.getFields();
 			for (AbstractTuleapField abstractTuleapField : fields) {
 				if (artifactFieldValue.getField_name().equals(abstractTuleapField.getName())) {
 					AbstractFieldValue abstractFieldValue = null;
@@ -117,7 +127,7 @@ public class TuleapSoapParser {
 						List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
 
 						FieldValueFileInfo[] fileInfo = artifactFieldValue.getField_value().getFile_info();
-						TuleapServerConfiguration serverConfiguration = tuleapTrackerConfiguration
+						TuleapServerConfiguration serverConfiguration = tuleapTracker
 								.getTuleapProjectConfiguration().getServerConfiguration();
 						// Yes, this array can be null.
 						if (fileInfo != null) {

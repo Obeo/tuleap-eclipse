@@ -2,7 +2,7 @@
   "id" : 801,
   "label" : "Epics",
   "description" : "The description of epics",
-  "url" : "localhost:3001/api/v3.14/backlog_item_types/801",
+  "url" : "localhost:3001/api/v3.14/trackers/801",
   "project_id" : 3,
   "fields" : [
       {

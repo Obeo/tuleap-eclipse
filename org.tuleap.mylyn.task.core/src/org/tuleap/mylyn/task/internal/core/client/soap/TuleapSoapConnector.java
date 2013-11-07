@@ -66,7 +66,7 @@ import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
 import org.tuleap.mylyn.task.internal.core.model.field.TuleapText;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerReport;
 import org.tuleap.mylyn.task.internal.core.model.workflow.TuleapWorkflow;
 import org.tuleap.mylyn.task.internal.core.model.workflow.TuleapWorkflowTransition;
@@ -359,9 +359,8 @@ public class TuleapSoapConnector {
 						monitor.worked(5);
 						monitor.setTaskName(TuleapMylynTasksMessages.getString(
 								TuleapMylynTasksMessagesKeys.analyzingTracker, tracker.getName()));
-						TuleapTrackerConfiguration tuleapTrackerConfiguration = this
-								.getTuleapTrackerConfiguration(tracker, monitor);
-						projectConfiguration.addTracker(tuleapTrackerConfiguration);
+						TuleapTracker tuleapTracker = this.getTuleapTrackerConfiguration(tracker, monitor);
+						projectConfiguration.addTracker(tuleapTracker);
 					}
 				}
 
@@ -412,8 +411,7 @@ public class TuleapSoapConnector {
 	 *            The progress monitor
 	 * @return The Tuleap tracker configuration
 	 */
-	public TuleapTrackerConfiguration getTuleapTrackerConfiguration(int projectId, int trackerId,
-			IProgressMonitor monitor) {
+	public TuleapTracker getTuleapTrackerConfiguration(int projectId, int trackerId, IProgressMonitor monitor) {
 		try {
 			this.login(monitor);
 
@@ -437,9 +435,9 @@ public class TuleapSoapConnector {
 				String trackerUrl = TuleapUrlUtil.getTrackerUrl(this.trackerLocation.getUrl(), tracker
 						.getTracker_id());
 
-				TuleapTrackerConfiguration tuleapTrackerConfiguration = new TuleapTrackerConfiguration(
-						tracker.getTracker_id(), trackerUrl, tracker.getName(), tracker.getItem_name(),
-						tracker.getDescription(), System.currentTimeMillis());
+				TuleapTracker tuleapTracker = new TuleapTracker(tracker.getTracker_id(), trackerUrl, tracker
+						.getName(), tracker.getItem_name(), tracker.getDescription(), System
+						.currentTimeMillis());
 
 				monitor.subTask(TuleapMylynTasksMessages.getString(
 						TuleapMylynTasksMessagesKeys.retrievingFieldsDescriptionFromTracker, tracker
@@ -459,11 +457,11 @@ public class TuleapSoapConnector {
 						tuleapField.setName(trackerField.getShort_name());
 						tuleapField.setLabel(trackerField.getLabel());
 						tuleapField.setPermissions(trackerField.getPermissions());
-						tuleapTrackerConfiguration.addField(tuleapField);
+						tuleapTracker.addField(tuleapField);
 					}
 				}
 
-				return tuleapTrackerConfiguration;
+				return tuleapTracker;
 			}
 		} catch (RemoteException e) {
 			TuleapCoreActivator.log(e, true);
@@ -487,13 +485,12 @@ public class TuleapSoapConnector {
 	 *            The progress monitor
 	 * @return The configuration of the Tuleap tracker.
 	 */
-	private TuleapTrackerConfiguration getTuleapTrackerConfiguration(Tracker tracker, IProgressMonitor monitor) {
+	private TuleapTracker getTuleapTrackerConfiguration(Tracker tracker, IProgressMonitor monitor) {
 		String trackerUrl = TuleapUrlUtil.getTrackerUrl(this.trackerLocation.getUrl(), tracker
 				.getTracker_id());
 
-		TuleapTrackerConfiguration tuleapTrackerConfiguration = new TuleapTrackerConfiguration(tracker
-				.getTracker_id(), trackerUrl, tracker.getName(), tracker.getItem_name(), tracker
-				.getDescription(), System.currentTimeMillis());
+		TuleapTracker tuleapTracker = new TuleapTracker(tracker.getTracker_id(), trackerUrl, tracker
+				.getName(), tracker.getItem_name(), tracker.getDescription(), System.currentTimeMillis());
 
 		try {
 			monitor.subTask(TuleapMylynTasksMessages.getString(
@@ -513,14 +510,14 @@ public class TuleapSoapConnector {
 					tuleapField.setName(trackerField.getShort_name());
 					tuleapField.setLabel(trackerField.getLabel());
 					tuleapField.setPermissions(trackerField.getPermissions());
-					tuleapTrackerConfiguration.addField(tuleapField);
+					tuleapTracker.addField(tuleapField);
 				}
 			}
 		} catch (RemoteException e) {
 			TuleapCoreActivator.log(e, true);
 		}
 
-		return tuleapTrackerConfiguration;
+		return tuleapTracker;
 	}
 
 	/**
@@ -955,7 +952,7 @@ public class TuleapSoapConnector {
 				Tracker[] trackerList = this.getTuleapTrackerV5APIPortType().getTrackerList(sessionHash,
 						group.getGroup_id());
 				for (Tracker tracker : trackerList) {
-					if (artifact.getConfigurationId() == tracker.getTracker_id()) {
+					if (artifact.getTracker().getId() == tracker.getTracker_id()) {
 						groupId = group.getGroup_id();
 						break;
 					}
@@ -968,7 +965,7 @@ public class TuleapSoapConnector {
 
 		List<ArtifactFieldValue> valuesList = new ArrayList<ArtifactFieldValue>();
 		TrackerField[] trackerFields = this.getTuleapTrackerV5APIPortType().getTrackerFields(sessionHash,
-				groupId, artifact.getConfigurationId());
+				groupId, artifact.getTracker().getId());
 		monitor.worked(10);
 
 		monitor.subTask(TuleapMylynTasksMessages
@@ -982,9 +979,11 @@ public class TuleapSoapConnector {
 			monitor.worked(1);
 		}
 		int artifactId = this.getTuleapTrackerV5APIPortType().addArtifact(sessionHash, groupId,
-				artifact.getConfigurationId(), valuesList.toArray(new ArtifactFieldValue[valuesList.size()]));
+				artifact.getTracker().getId(),
+				valuesList.toArray(new ArtifactFieldValue[valuesList.size()]));
 
-		taskDataId = TuleapTaskIdentityUtil.getTaskDataId(groupId, artifact.getConfigurationId(), artifactId);
+		taskDataId = TuleapTaskIdentityUtil.getTaskDataId(groupId, artifact.getTracker().getId(),
+				artifactId);
 		monitor.worked(fifty);
 
 		this.logout();
@@ -1021,7 +1020,7 @@ public class TuleapSoapConnector {
 				Tracker[] trackerList = this.getTuleapTrackerV5APIPortType().getTrackerList(sessionHash,
 						group.getGroup_id());
 				for (Tracker tracker : trackerList) {
-					if (artifact.getConfigurationId() == tracker.getTracker_id()) {
+					if (artifact.getTracker().getId() == tracker.getTracker_id()) {
 						groupId = group.getGroup_id();
 						break;
 					}
@@ -1033,7 +1032,7 @@ public class TuleapSoapConnector {
 				.getString(TuleapMylynTasksMessagesKeys.retrievingTrackerFields));
 		List<ArtifactFieldValue> valuesList = new ArrayList<ArtifactFieldValue>();
 		TrackerField[] trackerFields = this.getTuleapTrackerV5APIPortType().getTrackerFields(sessionHash,
-				groupId, artifact.getConfigurationId());
+				groupId, artifact.getTracker().getId());
 		monitor.worked(10);
 
 		monitor.subTask(TuleapMylynTasksMessages
@@ -1052,7 +1051,7 @@ public class TuleapSoapConnector {
 			newComment = TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.defaultComment);
 		}
 		this.getTuleapTrackerV5APIPortType().updateArtifact(sessionHash, groupId,
-				artifact.getConfigurationId(), artifact.getId(),
+				artifact.getTracker().getId(), artifact.getId(),
 				valuesList.toArray(new ArtifactFieldValue[valuesList.size()]), newComment, UTF8);
 
 		monitor.worked(fifty);

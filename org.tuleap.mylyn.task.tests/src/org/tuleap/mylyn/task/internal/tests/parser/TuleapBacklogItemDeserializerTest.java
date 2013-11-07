@@ -12,9 +12,9 @@ package org.tuleap.mylyn.task.internal.tests.parser;
 
 import com.google.gson.JsonDeserializer;
 
+import java.text.ParseException;
+
 import org.junit.Test;
-import org.tuleap.mylyn.task.internal.core.data.BoundFieldValue;
-import org.tuleap.mylyn.task.internal.core.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapBacklogItemDeserializer;
 
@@ -29,9 +29,12 @@ public class TuleapBacklogItemDeserializerTest extends AbstractDeserializerTest<
 
 	/**
 	 * Tests the parsing of epic #301.
+	 * 
+	 * @throws ParseException
+	 *             if the test is badly configured
 	 */
 	@Test
-	public void testDeserializeEpic301() {
+	public void testDeserializeEpic301() throws ParseException {
 		String epic = ParserUtil.loadFile("/backlog_items/epic301.json");
 		TuleapBacklogItem item = parse(epic, TuleapBacklogItem.class);
 		checkEpic301(item);
@@ -42,54 +45,59 @@ public class TuleapBacklogItemDeserializerTest extends AbstractDeserializerTest<
 	 * 
 	 * @param item
 	 *            The backlog item
+	 * @throws ParseException
+	 *             if the test is badly configured
 	 */
-	public static void checkEpic301(TuleapBacklogItem item) {
+	public static void checkEpic301(TuleapBacklogItem item) throws ParseException {
 		assertEquals(301, item.getId());
+		assertEquals(301, item.getArtifactRef().getId());
+		assertEquals("artifacts/301", item.getArtifactRef().getUri());
+		assertEquals(3, item.getProject().getId());
+		assertEquals("projects/3", item.getProject().getUri());
 		assertEquals("Another important Epic", item.getLabel());
-		assertEquals("/backlog_items/301", item.getUrl());
-		assertEquals("/backlog_items?id=301&group_id=3", item.getHtmlUrl());
+		assertEquals("backlog_items/301", item.getUri());
+		assertEquals("backlog_items?id=301&group_id=3", item.getHtmlUrl());
+		assertEquals(1, item.getSubmittedBy());
+		assertEquals(ParserUtil.getJsonDateFormat().parse("2013-09-23T11:44:18.963Z"), item.getSubmittedOn());
+		assertEquals(ParserUtil.getJsonDateFormat().parse("2013-09-24T15:33:18.523Z"), item
+				.getLastUpdatedOn());
 		assertEquals(40.5f, item.getInitialEffort(), 0f);
-		assertEquals(801, item.getConfigurationId());
-
 		assertEquals(201, item.getAssignedMilestoneId().intValue());
-
-		assertEquals(4, item.getFieldValues().size());
-		assertEquals(8501, ((BoundFieldValue)item.getFieldValue(850)).getValueIds().get(0).intValue());
-		assertEquals("20.5", ((LiteralFieldValue)item.getFieldValue(851)).getFieldValue());
-		assertEquals("Bring more added-value to users", ((LiteralFieldValue)item.getFieldValue(Integer
-				.valueOf(852))).getFieldValue());
-		assertEquals("352", ((LiteralFieldValue)item.getFieldValue(853)).getFieldValue());
 	}
 
 	/**
 	 * Checks that the given backlog item corresponds to epic 300.
 	 * 
 	 * @param item
-	 *            The backlog item
+	 *            The backlog item The backlog item
+	 * @throws ParseException
+	 *             if the test is badly configured
 	 */
-	public static void checkEpic300(TuleapBacklogItem item) {
+	public static void checkEpic300(TuleapBacklogItem item) throws ParseException {
 		assertEquals(300, item.getId());
+		assertEquals(300, item.getArtifactRef().getId());
+		assertEquals("artifacts/300", item.getArtifactRef().getUri());
+		assertEquals(3, item.getProject().getId());
+		assertEquals("projects/3", item.getProject().getUri());
 		assertEquals("An important Epic", item.getLabel());
-		assertEquals("/backlog_items/300", item.getUrl());
-		assertEquals("/backlog_items?id=300&group_id=3", item.getHtmlUrl());
+		assertEquals("backlog_items/300", item.getUri());
+		assertEquals("backlog_items?id=300&group_id=3", item.getHtmlUrl());
+		assertEquals(1, item.getSubmittedBy());
+		assertEquals(ParserUtil.getJsonDateFormat().parse("2013-09-23T11:44:18.963Z"), item.getSubmittedOn());
+		assertEquals(ParserUtil.getJsonDateFormat().parse("2013-09-24T15:33:18.523Z"), item
+				.getLastUpdatedOn());
 		assertEquals(30f, item.getInitialEffort(), 0f);
-		assertEquals(801, item.getConfigurationId());
-
 		assertEquals(200, item.getAssignedMilestoneId().intValue());
-
-		assertEquals(4, item.getFieldValues().size());
-		assertEquals(8502, ((BoundFieldValue)item.getFieldValue(850)).getValueIds().get(0).intValue());
-		assertEquals("0", ((LiteralFieldValue)item.getFieldValue(851)).getFieldValue());
-		assertEquals("The summary of an important Epic", ((LiteralFieldValue)item.getFieldValue(Integer
-				.valueOf(852))).getFieldValue());
-		assertEquals("350,351", ((LiteralFieldValue)item.getFieldValue(853)).getFieldValue());
 	}
 
 	/**
 	 * Tests the parsing of user story #350.
+	 * 
+	 * @throws ParseException
+	 *             if the test is badly configured
 	 */
 	@Test
-	public void testDeserializeUserStory350() {
+	public void testDeserializeUserStory350() throws ParseException {
 		String userStory = ParserUtil.loadFile("/backlog_items/userStory350.json");
 		TuleapBacklogItem item = parse(userStory, TuleapBacklogItem.class);
 		checkUserStory350(item);
@@ -101,30 +109,25 @@ public class TuleapBacklogItemDeserializerTest extends AbstractDeserializerTest<
 	 * 
 	 * @param item
 	 *            The backlog item
+	 * @throws ParseException
+	 *             if the test is badly configured
 	 */
-	public static void checkUserStory350(TuleapBacklogItem item) {
+	public static void checkUserStory350(TuleapBacklogItem item) throws ParseException {
 		assertEquals(350, item.getId());
+		assertEquals(350, item.getArtifactRef().getId());
+		assertEquals("artifacts/350", item.getArtifactRef().getUri());
+		assertEquals(3, item.getProject().getId());
+		assertEquals("projects/3", item.getProject().getUri());
 		assertEquals("An important User Story", item.getLabel());
-		assertEquals("/backlog_items/350", item.getUrl());
-		assertEquals("/backlog_items?id=350&group_id=3", item.getHtmlUrl());
+		assertEquals("backlog_items/350", item.getUri());
+		assertEquals("backlog_items?id=350&group_id=3", item.getHtmlUrl());
+		assertEquals(1, item.getSubmittedBy());
+		assertEquals(ParserUtil.getJsonDateFormat().parse("2013-09-23T11:44:18.963Z"), item.getSubmittedOn());
+		assertEquals(ParserUtil.getJsonDateFormat().parse("2013-09-24T15:33:18.523Z"), item
+				.getLastUpdatedOn());
 
 		assertEquals(5f, item.getInitialEffort(), 0f);
-		assertEquals(802, item.getConfigurationId());
-
 		assertEquals(250, item.getAssignedMilestoneId().intValue());
-
-		assertEquals(9, item.getFieldValues().size());
-		assertEquals(8602, ((BoundFieldValue)item.getFieldValue(860)).getValueIds().get(0).intValue());
-		assertEquals("Do something useful", ((LiteralFieldValue)item.getFieldValue(861)).getFieldValue());
-		assertEquals("it brings some added-value to my work", ((LiteralFieldValue)item.getFieldValue(Integer
-				.valueOf(862))).getFieldValue());
-		assertEquals("Here are acceptance Criteria:\n* Blah blah\n* Foo", ((LiteralFieldValue)item
-				.getFieldValue(863)).getFieldValue());
-		assertEquals("500,501,502,503", ((LiteralFieldValue)item.getFieldValue(864)).getFieldValue());
-		assertEquals("Iteration 1", ((LiteralFieldValue)item.getFieldValue(865)).getFieldValue());
-		assertEquals("3.5", ((LiteralFieldValue)item.getFieldValue(866)).getFieldValue());
-		assertEquals("2", ((LiteralFieldValue)item.getFieldValue(867)).getFieldValue());
-		assertEquals(8611, ((BoundFieldValue)item.getFieldValue(868)).getValueIds().get(0).intValue());
 	}
 
 	/**

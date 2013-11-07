@@ -31,14 +31,12 @@ import org.tuleap.mylyn.task.internal.core.model.TuleapAttachmentDescriptor;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItemType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCard;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardwall;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapSwimlane;
 import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerReport;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
@@ -217,124 +215,9 @@ public class TuleapRestClient {
 			// message));
 			// }
 			// }
-
-			if (projectConfiguration.hasService(ITuleapProjectServices.AGILE_DASHBOARD)) {
-				// Retrieve Milestone types for the project
-				List<TuleapMilestoneType> milestoneTypes = this.getMilestoneTypes(projectConfiguration,
-						monitor);
-				for (TuleapMilestoneType tuleapMilestoneType : milestoneTypes) {
-					projectConfiguration.addMilestoneType(tuleapMilestoneType);
-				}
-
-				// Retrieve BacklogItem types for the project
-				List<TuleapBacklogItemType> backlogItemTypes = this.getBacklogItemTypes(projectConfiguration,
-						monitor);
-				for (TuleapBacklogItemType tuleapBacklogItemType : backlogItemTypes) {
-					projectConfiguration.addBacklogItemType(tuleapBacklogItemType);
-				}
-
-				// Retrieve Card types for the project
-				List<TuleapCardType> cardTypes = this.getCardTypes(projectConfiguration, monitor);
-				for (TuleapCardType tuleapCardType : cardTypes) {
-					projectConfiguration.addCardType(tuleapCardType);
-				}
-			}
 		}
 
 		return tuleapServerConfiguration;
-	}
-
-	/**
-	 * Returns the Tuleap milestone type with the given identifier.
-	 * 
-	 * @param projectConfiguration
-	 *            The configuration of the project
-	 * @param milestoneTypeId
-	 *            The identifier of the milestone type
-	 * @param monitor
-	 *            The progress monitor
-	 * @return The Tuleap milestone type with the given identifier
-	 * @throws CoreException
-	 *             In case of issues during the communication with the server
-	 */
-	public TuleapMilestoneType getTuleapMilestoneType(TuleapProjectConfiguration projectConfiguration,
-			int milestoneTypeId, IProgressMonitor monitor) throws CoreException {
-		// Test the connection
-		RestResourceFactory restResourceFactory = tuleapRestConnector.getResourceFactory();
-
-		// Send a request with OPTIONS to ensure that we can and have the right to retrieve the
-		// backlogItemType
-
-		RestResource restProjectsMilestoneType = restResourceFactory.milestoneType(milestoneTypeId);
-
-		ServerResponse response = restProjectsMilestoneType.get().run();
-
-		checkServerError(restProjectsMilestoneType, Method.GET.toString(), response);
-
-		// Analyze the server response
-		return jsonParser.parseMilestoneType(projectConfiguration, response.getBody());
-	}
-
-	/**
-	 * Returns the Tuleap backlog item type with the given identifier.
-	 * 
-	 * @param projectConfiguration
-	 *            The configuration of the project
-	 * @param backlogItemTypeId
-	 *            The identifier of the backlog item type
-	 * @param monitor
-	 *            The progress monitor
-	 * @return The Tuleap backlog item type with the given identifier
-	 * @throws CoreException
-	 *             In case of issues with the connection to the server
-	 */
-	public TuleapBacklogItemType getTuleapBacklogItemType(TuleapProjectConfiguration projectConfiguration,
-			int backlogItemTypeId, IProgressMonitor monitor) throws CoreException {
-		// Test the connection
-		RestResourceFactory restResourceFactory = tuleapRestConnector.getResourceFactory();
-
-		// Send a request with OPTIONS to ensure that we can and have the right to retrieve the
-		// backlogItemType
-
-		RestResource restBacklogITemType = restResourceFactory.backlogItemType(backlogItemTypeId);
-
-		ServerResponse response = restBacklogITemType.get().run();
-
-		checkServerError(restBacklogITemType, Method.GET.toString(), response);
-
-		// Analyze the server response
-		return jsonParser.parseBacklogItemType(projectConfiguration, response.getBody());
-	}
-
-	/**
-	 * Returns the Tuleap card type with the given identifier.
-	 * 
-	 * @param projectConfiguration
-	 *            The configuration of the project
-	 * @param cardTypeId
-	 *            The identifier of the card type
-	 * @param monitor
-	 *            The progress monitor
-	 * @return The Tuleap card type with the given identifier
-	 * @throws CoreException
-	 *             In case of issues with the connection to the server
-	 */
-	public TuleapCardType getTuleapCardType(TuleapProjectConfiguration projectConfiguration, int cardTypeId,
-			IProgressMonitor monitor) throws CoreException {
-		// Test the connection
-		RestResourceFactory restResourceFactory = tuleapRestConnector.getResourceFactory();
-
-		// Send a request with OPTIONS to ensure that we can and have the right to retrieve the
-		// backlogItemType
-
-		RestResource restCardTypes = restResourceFactory.cardType(cardTypeId);
-
-		ServerResponse response = restCardTypes.get().run();
-
-		checkServerError(restCardTypes, Method.GET.toString(), response);
-
-		// Analyze the server response
-		return jsonParser.parseCardType(projectConfiguration, response.getBody());
 	}
 
 	/**
@@ -376,8 +259,8 @@ public class TuleapRestClient {
 	 * @throws CoreException
 	 *             In case of error during the retrieval of the artifact
 	 */
-	public TaskData getArtifact(int artifactId, ITuleapRepositoryConnector connector, IProgressMonitor monitor)
-			throws CoreException {
+	public TuleapArtifact getArtifact(int artifactId, ITuleapRepositoryConnector connector,
+			IProgressMonitor monitor) throws CoreException {
 		// // TODO [SBE] See if the parameter connector should be a class attribute instead of a parameter
 		// // Test the connection
 		// RestResources restResources = tuleapRestConnector.getResourceFactory();
@@ -588,55 +471,93 @@ public class TuleapRestClient {
 	 * 
 	 * @param milestoneId
 	 *            milestone id
-	 * @param needsCardwall
-	 *            flag to indicate whether a card wall should be retrieved
 	 * @param monitor
 	 *            progress monitor to use
 	 * @return a milestone
 	 * @throws CoreException
 	 *             If anything goes wrong.
 	 */
-	public TuleapMilestone getMilestone(int milestoneId, boolean needsCardwall, IProgressMonitor monitor)
-			throws CoreException {
+	public TuleapMilestone getMilestone(int milestoneId, IProgressMonitor monitor) throws CoreException {
 		RestResourceFactory restResourceFactory = tuleapRestConnector.getResourceFactory();
-		RestResource restMilestones = restResourceFactory.milestone(milestoneId);
-
-		ServerResponse milestoneResponse = restMilestones.get().run();
-
-		checkServerError(restMilestones, Method.GET.toString(), milestoneResponse);
-
-		TuleapMilestone milestone = this.jsonParser.parseMilestone(milestoneResponse.getBody());
-
-		// TODO Retrieve backlog items
-
-		// Fetch the cardwall if there should be one according to the milestone config
-		if (needsCardwall) {
-			RestResource restCardwall = restResourceFactory.milestonesCardwall(milestoneId);
-			ServerResponse cardwallResponse = restCardwall.get().run();
-			checkServerError(restCardwall, Method.GET.toString(), cardwallResponse);
-			TuleapCardwall cardwall = jsonParser.parseCardwall(cardwallResponse.getBody());
-			milestone.setCardwall(cardwall);
-		}
-
+		RestResource milestoneResource = restResourceFactory.milestone(milestoneId);
+		ServerResponse response = milestoneResource.get().run();
+		checkServerError(milestoneResource, Method.GET.toString(), response);
+		TuleapMilestone milestone = this.jsonParser.parseMilestone(response.getBody());
 		return milestone;
 	}
 
 	/**
-	 * Updates the milestone on the server.
+	 * Retrieve the backlog items of a given milestone.
 	 * 
-	 * @param tuleapMilestone
-	 *            The milestone to update.
+	 * @param milestoneId
+	 *            The milestone id
 	 * @param monitor
-	 *            The progress monitor.
+	 *            The monitor to use
+	 * @return A list of backlog items of the milestone.
+	 * @throws CoreException
+	 *             If anything goes wrong.
+	 */
+	public List<TuleapBacklogItem> getBacklogItems(int milestoneId, IProgressMonitor monitor)
+			throws CoreException {
+		RestResourceFactory restResourceFactory = tuleapRestConnector.getResourceFactory();
+		RestResource backlogItemsResource = restResourceFactory.milestonesBacklogItems(milestoneId);
+		ServerResponse response = backlogItemsResource.get().run();
+		checkServerError(backlogItemsResource, Method.GET.toString(), response);
+		return this.jsonParser.parseBacklogItems(response.getBody());
+	}
+
+	/**
+	 * Retrieve the backlog items of a given milestone.
+	 * 
+	 * @param milestoneId
+	 *            The milestone id
+	 * @param monitor
+	 *            The monitor to use
+	 * @return A list of backlog items of the milestone.
+	 * @throws CoreException
+	 *             If anything goes wrong.
+	 */
+	public List<TuleapMilestone> getSubMilestones(int milestoneId, IProgressMonitor monitor)
+			throws CoreException {
+		RestResourceFactory restResourceFactory = tuleapRestConnector.getResourceFactory();
+		RestResource subMilestonesResource = restResourceFactory.milestonesSubmilestones(milestoneId);
+		ServerResponse response = subMilestonesResource.get().run();
+		checkServerError(subMilestonesResource, Method.GET.toString(), response);
+		return this.jsonParser.parseMilestones(response.getBody());
+	}
+
+	/**
+	 * Retrieves the cardwall of a milestone, if there is one.
+	 * 
+	 * @param milestoneId
+	 *            Id of the milestone
+	 * @param monitor
+	 *            Progress monitor to use
+	 * @return The milestone's cardwall
+	 * @throws CoreException
+	 *             If a problem occurs.
+	 */
+	public TuleapCardwall getCardwall(int milestoneId, IProgressMonitor monitor) throws CoreException {
+		RestResourceFactory restResourceFactory = tuleapRestConnector.getResourceFactory();
+		RestResource restCardwall = restResourceFactory.milestonesCardwall(milestoneId);
+		ServerResponse cardwallResponse = restCardwall.get().run();
+		checkServerError(restCardwall, Method.GET.toString(), cardwallResponse);
+		TuleapCardwall cardwall = jsonParser.parseCardwall(cardwallResponse.getBody());
+		return cardwall;
+	}
+
+	/**
+	 * Updates a cardwall by sending its local state to the server.
+	 * 
+	 * @param cardwall
+	 *            Cardwall to commit.
+	 * @param monitor
+	 *            Progress monitor to use.
 	 * @throws CoreException
 	 *             In case of error during the update of the artifact.
 	 */
-
-	public void updateMilestone(TuleapMilestone tuleapMilestone, IProgressMonitor monitor)
-			throws CoreException {
-		this.updateMilestoneBacklogItems(tuleapMilestone, monitor);
-		this.updateMilestoneFields(tuleapMilestone, monitor);
-		for (TuleapSwimlane tuleapSwimlane : tuleapMilestone.getCardwall().getSwimlanes()) {
+	public void updateCardwall(TuleapCardwall cardwall, IProgressMonitor monitor) throws CoreException {
+		for (TuleapSwimlane tuleapSwimlane : cardwall.getSwimlanes()) {
 			for (TuleapCard tuleapCard : tuleapSwimlane.getCards()) {
 				this.updateCard(tuleapCard, monitor);
 			}
@@ -661,7 +582,7 @@ public class TuleapRestClient {
 		RestResource restBacklogItem = restResources.backlogItem(tuleapBacklogItem.getId());
 
 		// from POJO to JSON
-		JsonElement backlogItem = new TuleapBacklogItemSerializer().serializeUpdateFields(tuleapBacklogItem);
+		JsonElement backlogItem = new TuleapBacklogItemSerializer().serialize(tuleapBacklogItem, null, null);
 
 		String changesToPut = backlogItem.toString();
 
@@ -677,25 +598,24 @@ public class TuleapRestClient {
 	/**
 	 * Updates the milestone BacklogItems on the server.
 	 * 
-	 * @param tuleapMilestone
-	 *            The milestone to update.
+	 * @param milestoneId
+	 *            the id of the milestone containing the backlog items
+	 * @param backlogItems
+	 *            The backlog items to update.
 	 * @param monitor
 	 *            The progress monitor.
 	 * @throws CoreException
 	 *             In case of error during the update of the artifact.
 	 */
 
-	private void updateMilestoneBacklogItems(TuleapMilestone tuleapMilestone, IProgressMonitor monitor)
-			throws CoreException {
+	public void updateMilestoneBacklogItems(int milestoneId, List<TuleapBacklogItem> backlogItems,
+			IProgressMonitor monitor) throws CoreException {
 		// Test the connection
 
 		RestResourceFactory restResources = tuleapRestConnector.getResourceFactory();
-		RestResource restMilestonesBacklogItems = restResources.milestonesBacklogItems(tuleapMilestone
-				.getId());
+		RestResource restMilestonesBacklogItems = restResources.milestonesBacklogItems(milestoneId);
 
 		// from POJO to JSON
-		JsonElement backlogItems = new TuleapMilestoneSerializer()
-				.serializeMilestoneBacklogItems(tuleapMilestone);
 		String changesToPut = backlogItems.toString();
 
 		// Send the PUT request
@@ -718,7 +638,7 @@ public class TuleapRestClient {
 	 * @throws CoreException
 	 *             In case of error during the update of the artifact.
 	 */
-
+	// TODO Remove this, replace by updateArtifact
 	private void updateMilestoneFields(TuleapMilestone tuleapMilestone, IProgressMonitor monitor)
 			throws CoreException {
 		// Test the connection
@@ -726,7 +646,7 @@ public class TuleapRestClient {
 		RestResource restMilestone = restResources.milestone(tuleapMilestone.getId());
 
 		// from POJO to JSON
-		JsonElement milestoneObject = new TuleapMilestoneSerializer().serializeUpdateFields(tuleapMilestone);
+		JsonElement milestoneObject = new TuleapMilestoneSerializer().serialize(tuleapMilestone, null, null);
 		String changesToPut = milestoneObject.toString();
 
 		// Send the PUT request
@@ -756,7 +676,7 @@ public class TuleapRestClient {
 		RestResource restCards = restResources.cards(tuleapCard.getId());
 
 		// from POJO to JSON
-		JsonElement card = new TuleapCardSerializer().serializeUpdateFields(tuleapCard);
+		JsonElement card = new TuleapCardSerializer().serialize(tuleapCard, null, null);
 		String changesToPut = card.toString();
 
 		// Send the PUT request
@@ -780,7 +700,8 @@ public class TuleapRestClient {
 	 */
 	public String createMilestone(TuleapMilestone tuleapMilestone, IProgressMonitor monitor) {
 		int projectId = -1;
-		int configurationId = tuleapMilestone.getConfigurationId();
+		int configurationId = -1;
+		// TODO int configurationId = tuleapMilestone.getConfigurationId();
 
 		// TODO SBE create the milestone on the server
 
@@ -810,96 +731,6 @@ public class TuleapRestClient {
 		TuleapBacklogItem backlogItem = this.jsonParser.parseBacklogItem(backlogItemResponse.getBody());
 
 		return backlogItem;
-	}
-
-	/**
-	 * Retrieves the list of the project's BacklogItem Types from the server with the given project id.
-	 * 
-	 * @param project
-	 *            the project configuration
-	 * @param monitor
-	 *            Used to monitor the progress
-	 * @return The list of the backlog items type
-	 * @throws CoreException
-	 *             In case of error during the retrieval of the BacklogItem Types
-	 */
-	private List<TuleapBacklogItemType> getBacklogItemTypes(TuleapProjectConfiguration project,
-			IProgressMonitor monitor) throws CoreException {
-		// Test the connection
-		RestResourceFactory restResourceFactory = tuleapRestConnector.getResourceFactory();
-
-		// Send a request with OPTIONS to ensure that we can and have the right to retrieve the
-		// backlogItemType
-
-		RestResource restProjectsBacklogItemTypes = restResourceFactory.projectsBacklogItemTypes(project
-				.getIdentifier());
-
-		ServerResponse response = restProjectsBacklogItemTypes.get().run();
-
-		checkServerError(restProjectsBacklogItemTypes, Method.GET.toString(), response);
-
-		// Analyze the server response
-		return jsonParser.parseBacklogItemTypes(project, response.getBody());
-	}
-
-	/**
-	 * Retrieves the list of the project's Milestone Types from the server with the given project id.
-	 * 
-	 * @param project
-	 *            the project configuration
-	 * @param monitor
-	 *            Used to monitor the progress
-	 * @return The list of the milestone types
-	 * @throws CoreException
-	 *             In case of error during the retrieval of the Milestone Types
-	 */
-	private List<TuleapMilestoneType> getMilestoneTypes(TuleapProjectConfiguration project,
-			IProgressMonitor monitor) throws CoreException {
-		// Test the connection
-		RestResourceFactory restResourceFactory = tuleapRestConnector.getResourceFactory();
-
-		// Send a request with OPTIONS to ensure that we can and have the right to retrieve the
-		// backlogItemType
-
-		RestResource restProjectsMilestoneTypes = restResourceFactory.projectsMilestoneTypes(project
-				.getIdentifier());
-
-		ServerResponse response = restProjectsMilestoneTypes.get().run();
-
-		checkServerError(restProjectsMilestoneTypes, Method.GET.toString(), response);
-
-		// Analyze the server response
-		return jsonParser.parseMilestoneTypes(project, response.getBody());
-	}
-
-	/**
-	 * Retrieves the list of the project's Milestone Types from the server with the given project id.
-	 * 
-	 * @param project
-	 *            the project configuration
-	 * @param monitor
-	 *            Used to monitor the progress
-	 * @return The list of the card types
-	 * @throws CoreException
-	 *             In case of error during the retrieval of the Milestone Types
-	 */
-	private List<TuleapCardType> getCardTypes(TuleapProjectConfiguration project, IProgressMonitor monitor)
-			throws CoreException {
-		// Test the connection
-		RestResourceFactory restResourceFactory = tuleapRestConnector.getResourceFactory();
-
-		// Send a request with OPTIONS to ensure that we can and have the right to retrieve the
-		// backlogItemType
-
-		RestResource restProjectsCardTypes = restResourceFactory.projectsCardTypes(project.getIdentifier());
-
-		ServerResponse response = restProjectsCardTypes.get().run();
-
-		checkServerError(restProjectsCardTypes, Method.GET.toString(), response);
-		// TODO Pagination?
-
-		// Analyze the server response
-		return jsonParser.parseCardTypes(project, response.getBody());
 	}
 
 	/**
@@ -995,57 +826,5 @@ public class TuleapRestClient {
 			topPlanning.addBacklogItem(tuleapBacklogItem);
 		}
 		return topPlanning;
-	}
-
-	/**
-	 * Retrieve the backlog items of a given milestone.
-	 * 
-	 * @param milestoneId
-	 *            The milestone id
-	 * @param monitor
-	 *            The monitor to use
-	 * @return A list of backlog items of the milestone.
-	 * @throws CoreException
-	 *             If anything goes wrong.
-	 */
-	public List<TuleapBacklogItem> getBacklogItems(int milestoneId, IProgressMonitor monitor)
-			throws CoreException {
-		RestResourceFactory restResourceFactory = tuleapRestConnector.getResourceFactory();
-
-		// 1- Retrieve the list of backlog items ids
-		RestResource milestoneBacklogItems = restResourceFactory.milestonesBacklogItems(milestoneId);
-		ServerResponse backlogItemsResponse = milestoneBacklogItems.get().run();
-
-		checkServerError(milestoneBacklogItems, Method.GET.toString(), backlogItemsResponse);
-
-		// Contains a JSON array of integers
-		String jsonBacklogItemIds = backlogItemsResponse.getBody();
-		return this.jsonParser.parseBacklogItems(jsonBacklogItemIds);
-	}
-
-	/**
-	 * Retrieve the backlog items of a given milestone.
-	 * 
-	 * @param milestoneId
-	 *            The milestone id
-	 * @param monitor
-	 *            The monitor to use
-	 * @return A list of backlog items of the milestone.
-	 * @throws CoreException
-	 *             If anything goes wrong.
-	 */
-	public List<TuleapMilestone> getSubMilestones(int milestoneId, IProgressMonitor monitor)
-			throws CoreException {
-		RestResourceFactory restResourceFactory = tuleapRestConnector.getResourceFactory();
-
-		// 1- Retrieve the list of milestone ids
-		RestResource milestoneSubmilestones = restResourceFactory.milestonesSubmilestones(milestoneId);
-		ServerResponse milestonesResponse = milestoneSubmilestones.get().run();
-
-		checkServerError(milestoneSubmilestones, Method.GET.toString(), milestonesResponse);
-
-		// Contains a JSON array of integers
-		String jsonMilestoneIds = milestonesResponse.getBody();
-		return this.jsonParser.parseMilestones(jsonMilestoneIds);
 	}
 }

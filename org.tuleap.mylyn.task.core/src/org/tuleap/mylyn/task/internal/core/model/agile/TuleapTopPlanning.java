@@ -15,42 +15,15 @@ import com.google.common.collect.Lists;
 
 import java.util.List;
 
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapProjectElement;
+import org.tuleap.mylyn.task.internal.core.model.TuleapReference;
+
 /**
  * This POJO represents a top planning.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class TuleapTopPlanning implements IPlanning {
-
-	/**
-	 * The identifier.
-	 */
-	private final int id;
-
-	/**
-	 * The human-readable label of the element.
-	 */
-	private final String label;
-
-	/**
-	 * The API URL of the element.
-	 */
-	private final String url;
-
-	/**
-	 * The URL of the planning for web browsers.
-	 */
-	private final String htmlUrl;
-
-	/**
-	 * The project id of this top planning.
-	 */
-	private final int projectId;
-
-	/**
-	 * The binding configuration for the planning.
-	 */
-	private final TuleapPlanningBinding binding;
+public class TuleapTopPlanning extends AbstractTuleapProjectElement implements IPlanning {
 
 	/**
 	 * The top planning's milestones.
@@ -63,14 +36,11 @@ public class TuleapTopPlanning implements IPlanning {
 	private final List<TuleapBacklogItem> backlogItems = Lists.newArrayList();
 
 	/**
-	 * The date of creation of the artifact.
+	 * Default constructor for deserialization.
 	 */
-	// private Date creationDate;
-
-	/**
-	 * The date of the last modification of the artifact.
-	 */
-	// private Date lastModificationDate;
+	public TuleapTopPlanning() {
+		// Default constructor for deserialization.
+	}
 
 	/**
 	 * This constructor is used for the creation of the configurable elements that have been synchronized on
@@ -78,79 +48,15 @@ public class TuleapTopPlanning implements IPlanning {
 	 * 
 	 * @param id
 	 *            The identifier of the element
+	 * @param projectRef
+	 *            the project
 	 * @param label
 	 *            The label of the element
-	 * @param url
+	 * @param uri
 	 *            The API URL of the element
-	 * @param htmlUrl
-	 *            The HTML URL of the element
-	 * @param projectId
-	 *            The project Id
-	 * @param binding
-	 *            The planning binding configuration
 	 */
-	public TuleapTopPlanning(int id, String label, String url, String htmlUrl, int projectId,
-			TuleapPlanningBinding binding) {
-		this.id = id;
-		this.label = label;
-		this.url = url;
-		this.htmlUrl = htmlUrl;
-		this.projectId = projectId;
-		this.binding = binding;
-	}
-
-	/**
-	 * id getter.
-	 * 
-	 * @return the id
-	 */
-	public int getId() {
-		return id;
-	}
-
-	/**
-	 * Returns the API URL of the element.
-	 * 
-	 * @return The API URL of the element
-	 */
-	public String getUrl() {
-		return this.url;
-	}
-
-	/**
-	 * Html URL getter.
-	 * 
-	 * @return the htmlUrl
-	 */
-	public String getHtmlUrl() {
-		return htmlUrl;
-	}
-
-	/**
-	 * Label getter.
-	 * 
-	 * @return the label
-	 */
-	public String getLabel() {
-		return label;
-	}
-
-	/**
-	 * The project ID.
-	 * 
-	 * @return the projectId
-	 */
-	public int getProjectId() {
-		return projectId;
-	}
-
-	/**
-	 * The binding configuration for the planning.
-	 * 
-	 * @return the binding
-	 */
-	public TuleapPlanningBinding getBinding() {
-		return binding;
+	public TuleapTopPlanning(int id, TuleapReference projectRef, String label, String uri) {
+		super(id, projectRef, label, uri);
 	}
 
 	/**

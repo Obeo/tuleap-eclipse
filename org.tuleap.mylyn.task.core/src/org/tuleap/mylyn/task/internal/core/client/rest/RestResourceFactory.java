@@ -170,82 +170,14 @@ public final class RestResourceFactory {
 	}
 
 	/**
-	 * Provides access to the {code /projects/:projectId/backlog_item_types} HTTP resource.
-	 * 
-	 * @param projectId
-	 *            the project id
-	 * @return A resource that gives access to the {code /projects/:projectId/backlog_item_types} HTTP
-	 *         resource.
-	 */
-	public RestResource projectsBacklogItemTypes(int projectId) {
-		return resource(RestResource.GET, URL.PROJECTS, Integer.toString(projectId), URL.BACKLOG_ITEM_TYPES);
-	}
-
-	/**
-	 * Provides access to the {code /backlog_item_types/:backlogItemTypeId} HTTP resource.
-	 * 
-	 * @param backlogItemId
-	 *            The identifier of the backlog item type
-	 * @return A resource that gives access to the {code /backlog_item_types/:backlogItemTypeId} HTTP
-	 *         resource.
-	 */
-	public RestResource backlogItemType(int backlogItemId) {
-		return resource(RestResource.GET, URL.BACKLOG_ITEM_TYPES, Integer.toString(backlogItemId));
-	}
-
-	/**
-	 * Provides access to the {code /projects/:projectId/milestone_types} HTTP resource.
-	 * 
-	 * @param projectId
-	 *            the project id
-	 * @return A resource that gives access to the {code /projects/:projectId/milestone_types} HTTP resource.
-	 */
-	public RestResource projectsMilestoneTypes(int projectId) {
-		return resource(RestResource.GET, URL.PROJECTS, Integer.toString(projectId), URL.MILESTONE_TYPES);
-	}
-
-	/**
-	 * Provides access to the {code /milestone_types/:milestoneTypeId} HTTP resource.
-	 * 
-	 * @param milestoneTypeId
-	 *            The identifier of the milestone type
-	 * @return A resource that gives access to the {code /milestone_types/:milestoneTypeId} HTTP resource
-	 */
-	public RestResource milestoneType(int milestoneTypeId) {
-		return resource(RestResource.GET, URL.MILESTONE_TYPES, Integer.toString(milestoneTypeId));
-	}
-
-	/**
-	 * Provides access to the {code /projects/:projectId/card_types} HTTP resource.
-	 * 
-	 * @param projectId
-	 *            the project id
-	 * @return A resource that gives access to the {code /projects/:projectId/card_types} HTTP resource.
-	 */
-	public RestResource projectsCardTypes(int projectId) {
-		return resource(RestResource.GET, URL.PROJECTS, Integer.toString(projectId), URL.CARD_TYPES);
-	}
-
-	/**
-	 * Provides access to the {code /card_types/:cardTypeId} HTTP resource.
-	 * 
-	 * @param cardTypeId
-	 *            The identifier of the card type
-	 * @return A resource that gives access to the {code /card_types/:cardTypeId} HTTP resource.
-	 */
-	public RestResource cardType(int cardTypeId) {
-		return resource(RestResource.GET, URL.CARD_TYPES, Integer.toString(cardTypeId));
-	}
-
-	/**
-	 * Provides access to the {code /milestones/:id/submilestones} HTTP resource.
+	 * Provides access to the {code /milestones/:id/milestones} HTTP resource.
 	 * 
 	 * @param milestoneId
 	 *            the milestone id
-	 * @return A resource that gives access to the {code /milestones/:id/submilestones} HTTP resource.
+	 * @return A resource that gives access to the {code /milestones/:id/milestones} HTTP resource.
 	 */
 	public RestResource milestonesSubmilestones(int milestoneId) {
-		return resource(RestResource.GET, URL.MILESTONES, Integer.toString(milestoneId), URL.SUBMILESTONES);
+		return resource(RestResource.GET, URL.MILESTONES, Integer.toString(milestoneId), URL.MILESTONES);
 	}
 
 	/**

@@ -1,0 +1,41 @@
+{
+  "id" : 201,
+  "project_id": 3,
+  "label" : "Release TU",
+  "url" : "artifacts/201",
+  "html_url" : "artifacts?id=201&group_id=3",
+  "tracker_id" : 901,
+  "submitted_by": 1,
+  "submitted_on": "2013-09-23T11:44:18.963Z",
+  "last_updated_on": "2013-09-24T15:33:18.523Z",
+  "values" : [
+    {
+      "field_id" : 955,
+      "value" : "Bonjour,\nC'est un test unitaire."
+    },
+    {
+      "field_id" : 956,
+      "value" : "je suis une valeur calculee"
+    },
+    {
+      "field_id" : 957,
+      "bind_value_id" : 9610
+    },
+    {
+      "field_id" : 958,
+      "bind_value_ids" : [0, 1]
+    },
+    {
+      "field_id" : 959,
+      "bind_value_ids" : [0, 2]
+    },
+    {
+      "field_id" : 960,
+      "value" : 20120101
+    },
+    {
+      "field_id" : 961,
+      "value" : "first, second, third"
+    }
+  ]
+}

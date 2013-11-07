@@ -1,44 +1,26 @@
 {
   "id" : 250,
-  "project_id": 3,
+  "artifact" : {
+    "id" : 250,
+    "uri" : "artifacts/250"
+  },
+  "project" : {
+    "id" : 3,
+    "uri" : "projects/3"
+  },
   "label" : "Sprint 1",
-  "start_date" : "2013-09-23T11:44:18.963Z",
-  "duration" : 15,
-  "capacity" : 24.5,
-  "url" : "/milestones/300",
-  "html_url" : "/milestones?id=300&group_id=3",
-  "milestone_type_id" : 902,
+  "uri" : "milestones/300",
+  "html_url" : "milestones?id=300&group_id=3",
   "submitted_by": 1,
   "submitted_on": "2013-09-23T11:44:18.963Z",
   "last_updated_on": "2013-09-24T15:33:18.523Z",
-  "values" : [
-    {
-      "field_id" : 960,
-      "value" : "Sprint 1"
-    },
-    {
-      "field_id" : 961,
-      "bind_value_id" : 9612
-    },
-    {
-      "field_id" : 962,
-      "value" : "400, 401, 402"
-    },
-    {
-      "field_id" : 963,
-      "value" : 12345678
-    },
-    {
-      "field_id" : 964,
-      "value" : 15
-    },
-    {
-      "field_id" : 965,
-      "value" : 24.5
-    },
-    {
-      "field_id" : 966,
-      "value" : 0
-    }
-  ]
+  "start_date" : "2013-08-23T11:44:18.963Z",
+  "end_date" : "2013-09-23T11:44:18.963Z",
+  "capacity" : 24.5,
+  "status_label" : "Done",
+  "parent" : {
+    "id" : 200,
+    "uri" : "milestones/200"
+  },
+  "backlog_items_uri" : "milestones/250/backlog_items"
 }

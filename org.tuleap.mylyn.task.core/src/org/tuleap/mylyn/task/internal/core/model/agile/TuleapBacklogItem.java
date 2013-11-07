@@ -12,14 +12,20 @@ package org.tuleap.mylyn.task.internal.core.model.agile;
 
 import java.util.Date;
 
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableElement;
+import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapDetailedElement;
+import org.tuleap.mylyn.task.internal.core.model.TuleapReference;
 
 /**
  * A backlog item in a milestone.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class TuleapBacklogItem extends AbstractTuleapConfigurableElement {
+public class TuleapBacklogItem extends AbstractTuleapDetailedElement {
+
+	/**
+	 * ID of the artifact that contains this item's details.
+	 */
+	private TuleapReference artifactRef;
 
 	/**
 	 * The initial effort.
@@ -33,40 +39,41 @@ public class TuleapBacklogItem extends AbstractTuleapConfigurableElement {
 	private Integer assignedMilestoneId;
 
 	/**
+	 * Default constructor for deserialization.
+	 */
+	public TuleapBacklogItem() {
+		// Default constructor for deserialization.
+	}
+
+	/**
 	 * The constructor used when we are trying to create a new backlog item locally.
 	 * 
-	 * @param backlogItemTypeId
-	 *            The identifier of the backlog item type
-	 * @param projectId
-	 *            The identifier of the project
+	 * @param projectRef
+	 *            The reference to the project
 	 */
-	public TuleapBacklogItem(int backlogItemTypeId, int projectId) {
-		super(backlogItemTypeId, projectId);
+	public TuleapBacklogItem(TuleapReference projectRef) {
+		super(projectRef);
 	}
 
 	/**
 	 * The constructor used when we are updating an existing artifact.
 	 * 
-	 * @param backlogItemId
+	 * @param id
 	 *            The identifier of the backlog item
-	 * @param backlogItemTypeId
-	 *            The identifier of the backlog item type
-	 * @param projectId
-	 *            The identifier of the project
+	 * @param projectRef
+	 *            The reference to the project
 	 */
-	public TuleapBacklogItem(int backlogItemId, int backlogItemTypeId, int projectId) {
-		super(backlogItemId, backlogItemTypeId, projectId);
+	public TuleapBacklogItem(int id, TuleapReference projectRef) {
+		super(id, projectRef);
 	}
 
 	/**
 	 * The constructor used to create a backlog item retrieved from the server.
 	 * 
-	 * @param backlogItemId
+	 * @param id
 	 *            The identifier
-	 * @param backlogItemTypeId
-	 *            The identifier of the backlog item type
-	 * @param projectId
-	 *            The identifier of the project
+	 * @param projectRef
+	 *            The reference to the project
 	 * @param label
 	 *            The label
 	 * @param url
@@ -79,10 +86,9 @@ public class TuleapBacklogItem extends AbstractTuleapConfigurableElement {
 	 *            The last modification
 	 */
 	// CHECKSTYLE:OFF
-	public TuleapBacklogItem(int backlogItemId, int backlogItemTypeId, int projectId, String label,
-			String url, String htmlUrl, Date creationDate, Date lastModificationDate) {
-		super(backlogItemId, backlogItemTypeId, projectId, label, url, htmlUrl, creationDate,
-				lastModificationDate);
+	public TuleapBacklogItem(int id, TuleapReference projectRef, String label, String url, String htmlUrl,
+			Date creationDate, Date lastModificationDate) {
+		super(id, projectRef, label, url, htmlUrl, creationDate, lastModificationDate);
 	}
 
 	// CHECKSTYLE:ON
@@ -123,6 +129,25 @@ public class TuleapBacklogItem extends AbstractTuleapConfigurableElement {
 	 */
 	public void setAssignedMilestoneId(Integer assignedMilestoneId) {
 		this.assignedMilestoneId = assignedMilestoneId;
+	}
+
+	/**
+	 * Artifact reference.
+	 * 
+	 * @return the artifactRef
+	 */
+	public TuleapReference getArtifactRef() {
+		return artifactRef;
+	}
+
+	/**
+	 * Artifact reference.
+	 * 
+	 * @param artifactRef
+	 *            the artifact reference to set
+	 */
+	public void setArtifactRef(TuleapReference artifactRef) {
+		this.artifactRef = artifactRef;
 	}
 
 }

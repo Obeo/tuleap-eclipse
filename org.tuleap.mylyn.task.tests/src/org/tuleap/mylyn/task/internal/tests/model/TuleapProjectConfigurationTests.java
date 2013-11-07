@@ -17,13 +17,13 @@ import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.model.TuleapGroup;
 import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItemType;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardType;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestoneType;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.agile.TuleapPlanningConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
@@ -37,53 +37,102 @@ import static org.junit.Assert.assertTrue;
 public class TuleapProjectConfigurationTests {
 
 	/**
-	 * Test adding configuration elements to a project.
+	 * Test adding and retrieving trackers to a project.
 	 */
 	@Test
-	public void testConfigurationRetrieval() {
+	public void testTrackers() {
 		TuleapProjectConfiguration project = new TuleapProjectConfiguration("Test Project", 42);
 
 		Date date = new Date();
 		long dateTracker = date.getTime();
-		TuleapTrackerConfiguration tracker = new TuleapTrackerConfiguration(1, "tracker/url", "Tracker",
-				"Item name", "Description", dateTracker);
+		TuleapTracker tracker = new TuleapTracker(1, "tracker/url", "Tracker", "Item name", "Description",
+				dateTracker);
 		project.addTracker(tracker);
 
-		long dateBI = date.getTime() - 60 * 60 * 1000;
-		TuleapBacklogItemType backlogItemType = new TuleapBacklogItemType(100, "bi/url", "User Story",
-				"user_story", "Description of user stories", dateBI);
-		project.addBacklogItemType(backlogItemType);
-
-		long dateMilestone = date.getTime() - 2 * 60 * 60 * 1000;
-		TuleapMilestoneType milestoneType = new TuleapMilestoneType(200, "milestone/url", "Sprint", "sprint",
-				"Description of sprints", dateMilestone, true);
-		project.addMilestoneType(milestoneType);
-
-		long dateCard = date.getTime() - 3 * 60 * 60 * 1000;
-		TuleapCardType cardType = new TuleapCardType(300, "bi/url", "User Story", "user_story",
-				"Description of user stories", dateCard);
-		project.addCardType(cardType);
-
 		assertNull(project.getTrackerConfiguration(0));
-		TuleapTrackerConfiguration t = project.getTrackerConfiguration(1);
+		TuleapTracker t = project.getTrackerConfiguration(1);
 		assertSame(tracker, t);
 		assertEquals(1, project.getAllTrackerConfigurations().size());
+	}
 
-		assertNull(project.getBacklogItemType(0));
-		TuleapBacklogItemType bi = project.getBacklogItemType(100);
-		assertSame(backlogItemType, bi);
-		assertEquals(1, project.getAllBacklogItemTypes().size());
+	@Test
+	public void testServices() {
+		TuleapProjectConfiguration project = new TuleapProjectConfiguration("Test Project", 42);
 
-		assertNull(project.getMilestoneType(0));
-		TuleapMilestoneType m = project.getMilestoneType(200);
-		assertSame(milestoneType, m);
-		assertEquals(1, project.getAllMilestoneTypes().size());
-		assertTrue(milestoneType.hasCardwall());
+		String service = "trackers";
+		assertFalse(project.hasService(service));
 
-		assertNull(project.getCardType(0));
-		TuleapCardType c = project.getCardType(300);
-		assertSame(cardType, c);
-		assertEquals(1, project.getAllCardTypes().size());
+		project.addService(service);
+		assertTrue(project.hasService(service));
+	}
+
+	@Test
+	public void testPlannings() {
+		TuleapProjectConfiguration project = new TuleapProjectConfiguration("Test Project", 42);
+		TuleapReference projectRef = new TuleapReference(42, "projects/42");
+		TuleapPlanningConfiguration planning = new TuleapPlanningConfiguration(100, projectRef);
+
+		TuleapReference reference = new TuleapReference();
+		reference.setId(123);
+		reference.setUri("trackers/123");
+		planning.setMilestoneTracker(reference);
+
+		reference = new TuleapReference();
+		reference.setId(321);
+		reference.setUri("trackers/321");
+		planning.getBacklogTrackers().add(reference);
+		reference = new TuleapReference();
+		reference.setId(322);
+		reference.setUri("trackers/322");
+		planning.getBacklogTrackers().add(reference);
+
+		project.addPlanning(planning);
+
+		assertFalse(project.isBacklogTracker(0)); // id that does not exist causes no exception
+		assertFalse(project.isBacklogTracker(123));
+		assertTrue(project.isBacklogTracker(321));
+		assertTrue(project.isBacklogTracker(322));
+
+		assertFalse(project.isMilestoneTracker(0)); // id that does not exist causes no exception
+		assertFalse(project.isMilestoneTracker(321));
+		assertFalse(project.isMilestoneTracker(322));
+		assertTrue(project.isMilestoneTracker(123));
+
+		assertFalse(project.isCardwallActive(0)); // id that does not exist causes no exception
+		assertFalse(project.isCardwallActive(123));
+		assertFalse(project.isCardwallActive(321));
+		assertFalse(project.isCardwallActive(322));
+	}
+
+	@Test
+	public void testPlanningCardwall() {
+		TuleapProjectConfiguration project = new TuleapProjectConfiguration("Test Project", 42);
+		TuleapReference projectRef = new TuleapReference(42, "projects/42");
+		TuleapPlanningConfiguration planning = new TuleapPlanningConfiguration(100, projectRef);
+
+		planning.setCardwallConfigurationUri("some uri");
+
+		TuleapReference reference = new TuleapReference();
+		reference.setId(123);
+		reference.setUri("trackers/123");
+		planning.setMilestoneTracker(reference);
+
+		reference = new TuleapReference();
+		reference.setId(321);
+		reference.setUri("trackers/321");
+		planning.getBacklogTrackers().add(reference);
+		reference = new TuleapReference();
+		reference.setId(322);
+		reference.setUri("trackers/322");
+		planning.getBacklogTrackers().add(reference);
+
+		project.addPlanning(planning);
+
+		assertFalse(project.isCardwallActive(0)); // id that does not exist causes no exception
+		assertTrue(project.isCardwallActive(123)); // 123 is the id of the milestone tracker, and a cardwall
+													// is configured
+		assertFalse(project.isCardwallActive(321)); // other ids are not ids of milestone trackers
+		assertFalse(project.isCardwallActive(322));
 	}
 
 	/**

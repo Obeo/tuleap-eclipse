@@ -13,9 +13,10 @@ package org.tuleap.mylyn.task.internal.core.model.agile;
 import java.util.Date;
 
 import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableElement;
+import org.tuleap.mylyn.task.internal.core.model.TuleapReference;
 
 /**
- * The cardwall swimlane.
+ * A card in a cardwall.
  * 
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
@@ -32,15 +33,22 @@ public class TuleapCard extends AbstractTuleapConfigurableElement {
 	private int statusId;
 
 	/**
+	 * Default constructor for deserialization.
+	 */
+	public TuleapCard() {
+		// Default constructor for deserialization.
+	}
+
+	/**
 	 * The constructor used when we are trying to create a new card locally.
 	 * 
-	 * @param cardTypeId
-	 *            The identifier of the card type
-	 * @param projectId
-	 *            The identifier of the project
+	 * @param trackerRef
+	 *            The tracker
+	 * @param projectRef
+	 *            The project
 	 */
-	public TuleapCard(int cardTypeId, int projectId) {
-		super(cardTypeId, projectId);
+	public TuleapCard(TuleapReference trackerRef, TuleapReference projectRef) {
+		super(trackerRef, projectRef);
 	}
 
 	/**
@@ -48,13 +56,13 @@ public class TuleapCard extends AbstractTuleapConfigurableElement {
 	 * 
 	 * @param cardId
 	 *            The identifier of the card
-	 * @param cardTypeId
-	 *            The identifier of the card type
-	 * @param projectId
-	 *            The identifier of the project
+	 * @param trackerRef
+	 *            The tracker
+	 * @param projectRef
+	 *            The project
 	 */
-	public TuleapCard(int cardId, int cardTypeId, int projectId) {
-		super(cardId, cardTypeId, projectId);
+	public TuleapCard(int cardId, TuleapReference trackerRef, TuleapReference projectRef) {
+		super(cardId, trackerRef, projectRef);
 	}
 
 	/**
@@ -62,10 +70,8 @@ public class TuleapCard extends AbstractTuleapConfigurableElement {
 	 * 
 	 * @param cardId
 	 *            The identifier
-	 * @param cardTypeId
-	 *            The identifier of the card type
-	 * @param projectId
-	 *            The identifier of the project
+	 * @param projectRef
+	 *            The reference to the project
 	 * @param label
 	 *            The label
 	 * @param url
@@ -77,13 +83,10 @@ public class TuleapCard extends AbstractTuleapConfigurableElement {
 	 * @param lastModificationDate
 	 *            The last modification
 	 */
-	// CHECKSTYLE:OFF
-	public TuleapCard(int cardId, int cardTypeId, int projectId, String label, String url, String htmlUrl,
+	public TuleapCard(int cardId, TuleapReference projectRef, String label, String url, String htmlUrl,
 			Date creationDate, Date lastModificationDate) {
-		super(cardId, cardTypeId, projectId, label, url, htmlUrl, creationDate, lastModificationDate);
+		super(cardId, projectRef, label, url, htmlUrl, creationDate, lastModificationDate);
 	}
-
-	// CHECKSTYLE:ON
 
 	/**
 	 * Get the card color.
