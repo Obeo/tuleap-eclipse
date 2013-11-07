@@ -1017,18 +1017,20 @@ public class TuleapSoapConnector {
 
 		Group[] myProjects = this.getCodendiAPIPortType().getMyProjects(sessionHash);
 		for (Group group : myProjects) {
-			try {
-				Tracker[] trackerList = this.getTuleapTrackerV5APIPortType().getTrackerList(sessionHash,
-						group.getGroup_id());
-				for (Tracker tracker : trackerList) {
-					if (artifact.getTracker().getId() == tracker.getTracker_id()) {
-						groupId = group.getGroup_id();
-						break;
+			if (groupId == -1) {
+				try {
+					Tracker[] trackerList = this.getTuleapTrackerV5APIPortType().getTrackerList(sessionHash,
+							group.getGroup_id());
+					for (Tracker tracker : trackerList) {
+						if (artifact.getTracker().getId() == tracker.getTracker_id()) {
+							groupId = group.getGroup_id();
+							break;
+						}
 					}
+				} catch (RemoteException e) {
+					// https://tuleap.net/plugins/tracker/?aid=4470
+					// The project does not have any trackers, we won't log the error so we catch it
 				}
-			} catch (RemoteException e) {
-				// https://tuleap.net/plugins/tracker/?aid=4470
-				// The project does not have any trackers, we won't log the error so we catch it
 			}
 		}
 
