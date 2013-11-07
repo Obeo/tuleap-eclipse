@@ -180,10 +180,10 @@ public class MilestoneTaskDataConverter {
 					.getTaskDataId(backlogItem.getProject().getId(), 0, backlogItem.getId()));
 			// FIXME Replace 0 above
 			backlogItemWrapper.setDisplayId(Integer.toString(backlogItem.getId()));
-			Integer assignedMilestoneId = backlogItem.getAssignedMilestoneId();
-			if (assignedMilestoneId != null) {
-				backlogItemWrapper.setAssignedMilestoneId(milestoneInternalIdByTuleapId
-						.get(assignedMilestoneId));
+			TuleapReference assignedMilestone = backlogItem.getAssignedMilestone();
+			if (assignedMilestone != null) {
+				backlogItemWrapper.setAssignedMilestoneId(milestoneInternalIdByTuleapId.get(Integer
+						.valueOf(assignedMilestone.getId())));
 			}
 			backlogItemWrapper.setLabel(backlogItem.getLabel());
 			if (backlogItem.getInitialEffort() != null) {
@@ -220,12 +220,12 @@ public class MilestoneTaskDataConverter {
 			swimlaneWrapper.getSwimlaneItem().setDisplayId(biDisplayId);
 			swimlaneWrapper.setDisplayId(biDisplayId);
 
-			Integer assignedMilestoneId = backlogItem.getAssignedMilestoneId();
-			if (assignedMilestoneId != null) {
+			TuleapReference assignedMilestone = backlogItem.getAssignedMilestone();
+			if (assignedMilestone != null) {
 				// FIXME Replace 0 below
 				swimlaneWrapper.getSwimlaneItem().setAssignedMilestoneId(
 						TuleapTaskIdentityUtil.getTaskDataId(backlogItem.getProject().getId(), 0, backlogItem
-								.getAssignedMilestoneId().intValue()));
+								.getAssignedMilestone().getId()));
 			}
 			Float initialEffort = backlogItem.getInitialEffort();
 			if (initialEffort != null) {
@@ -314,13 +314,16 @@ public class MilestoneTaskDataConverter {
 			// TODO mechanism to store TuleapReference in TaskData?
 			TuleapReference projectRef = new TuleapReference();
 			projectRef.setId(projectId);
-			projectRef.setUri("projects/" + projectId);
+			projectRef.setUri("projects/" + projectId); //$NON-NLS-1$
 			TuleapBacklogItem bi = new TuleapBacklogItem(id, projectRef);
-			String assignedMilestoneId = biWrapper.getAssignedMilestoneId();
-			if (assignedMilestoneId != null) {
+			String assignedId = biWrapper.getAssignedMilestoneId();
+			if (assignedId != null) {
+				TuleapReference assignedMilestone = new TuleapReference();
 				// The assigned milestone id is the internal id, not the tuleap id!
-				bi.setAssignedMilestoneId(Integer.valueOf(TuleapTaskIdentityUtil
-						.getElementIdFromTaskDataId(assignedMilestoneId)));
+				int assignedMilestoneId = TuleapTaskIdentityUtil.getElementIdFromTaskDataId(assignedId);
+				assignedMilestone.setId(assignedMilestoneId);
+				assignedMilestone.setUri("milestones/" + assignedMilestoneId); //$NON-NLS-1$
+				bi.setAssignedMilestone(assignedMilestone);
 			}
 			bi.setInitialEffort(biWrapper.getInitialEffort());
 		}

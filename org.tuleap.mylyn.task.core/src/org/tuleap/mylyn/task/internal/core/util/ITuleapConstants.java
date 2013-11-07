@@ -188,11 +188,6 @@ public interface ITuleapConstants {
 	String INITIAL_EFFORT = "initial_effort"; //$NON-NLS-1$
 
 	/**
-	 * The key used to retrieve the backlogItem assigned milestone identifier.
-	 */
-	String ASSIGNED_MILESTONE_ID = "assigned_milestone_id"; //$NON-NLS-1$
-
-	/**
 	 * The key used to retrieve the color of the card.
 	 */
 	String COLOR = "color"; //$NON-NLS-1$
@@ -287,4 +282,9 @@ public interface ITuleapConstants {
 	 * The key used for the status of a backlog item ("Open" or "Closed").
 	 */
 	String JSON_STATUS = "status"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve assigned milestone reference for a backlog item.
+	 */
+	String JSON_ASSIGNED_MILESTONE = "assigned_milestone"; //$NON-NLS-1$
 }

@@ -50,17 +50,19 @@ public class TuleapBacklogItemsSerializerTests {
 	public void testSerializeBacklogItemsWithAffectedMilestone() {
 		TuleapReference projectRef = new TuleapReference(123, "p/123");
 		TuleapBacklogItem firstBacklogItem = new TuleapBacklogItem(200, projectRef);
-		firstBacklogItem.setAssignedMilestoneId(1000);
+		TuleapReference assignedMilestone0 = new TuleapReference(1000, "milestones/1000");
+		firstBacklogItem.setAssignedMilestone(assignedMilestone0);
 
 		TuleapBacklogItem secondBacklogItem = new TuleapBacklogItem(201, projectRef);
-		secondBacklogItem.setAssignedMilestoneId(1001);
+		TuleapReference assignedMilestone1 = new TuleapReference(1001, "milestones/1001");
+		secondBacklogItem.setAssignedMilestone(assignedMilestone1);
 
 		List<TuleapBacklogItem> backlogItemsList = new ArrayList<TuleapBacklogItem>();
 		backlogItemsList.add(firstBacklogItem);
 		backlogItemsList.add(secondBacklogItem);
 
 		String theBacklogItems = gson.toJsonTree(backlogItemsList).toString();
-		String expectedResult = "[{\"id\":200,\"assigned_milestone_id\":1000},{\"id\":201,\"assigned_milestone_id\":1001}]"; //$NON-NLS-1$
+		String expectedResult = "[{\"id\":200,\"assigned_milestone\":{\"id\":1000}},{\"id\":201,\"assigned_milestone\":{\"id\":1001}}]"; //$NON-NLS-1$
 
 		assertEquals(expectedResult, theBacklogItems);
 	}
@@ -91,10 +93,12 @@ public class TuleapBacklogItemsSerializerTests {
 	public void testSerializeBacklogItemWithoutAffectedId() {
 		TuleapReference projectRef = new TuleapReference(123, "p/123");
 		TuleapBacklogItem firstBacklogItem = new TuleapBacklogItem(projectRef);
-		firstBacklogItem.setAssignedMilestoneId(1000);
+		TuleapReference assignedMilestone0 = new TuleapReference(1000, "milestones/1000");
+		firstBacklogItem.setAssignedMilestone(assignedMilestone0);
 
 		TuleapBacklogItem secondBacklogItem = new TuleapBacklogItem(projectRef);
-		secondBacklogItem.setAssignedMilestoneId(1001);
+		TuleapReference assignedMilestone1 = new TuleapReference(1001, "milestones/1001");
+		secondBacklogItem.setAssignedMilestone(assignedMilestone1);
 
 		List<TuleapBacklogItem> backlogItemsList = new ArrayList<TuleapBacklogItem>();
 		backlogItemsList.add(firstBacklogItem);
@@ -102,7 +106,7 @@ public class TuleapBacklogItemsSerializerTests {
 
 		String theBacklogItems = gson.toJsonTree(backlogItemsList).toString();
 		// FIXME This is what the current implementation does, but it's not logical to have ids here!
-		String expectedResult = "[{\"id\":0,\"assigned_milestone_id\":1000},{\"id\":0,\"assigned_milestone_id\":1001}]"; //$NON-NLS-1$
+		String expectedResult = "[{\"id\":0,\"assigned_milestone\":{\"id\":1000}},{\"id\":0,\"assigned_milestone\":{\"id\":1001}}]"; //$NON-NLS-1$
 
 		assertEquals(expectedResult, theBacklogItems);
 	}

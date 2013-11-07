@@ -43,7 +43,8 @@ public class TuleapBacklogItemDeserializer extends AbstractDetailedElementDeseri
 
 		JsonObject jsonObject = element.getAsJsonObject();
 
-		backlogItem.setArtifact(new Gson().fromJson(jsonObject.get(ITuleapConstants.JSON_ARTIFACT),
+		Gson gson = new Gson();
+		backlogItem.setArtifact(gson.fromJson(jsonObject.get(ITuleapConstants.JSON_ARTIFACT),
 				TuleapReference.class));
 
 		JsonElement elt = jsonObject.get(ITuleapConstants.INITIAL_EFFORT);
@@ -52,10 +53,9 @@ public class TuleapBacklogItemDeserializer extends AbstractDetailedElementDeseri
 			backlogItem.setInitialEffort(initialEffort);
 		}
 
-		elt = jsonObject.get(ITuleapConstants.ASSIGNED_MILESTONE_ID);
+		elt = jsonObject.get(ITuleapConstants.JSON_ASSIGNED_MILESTONE);
 		if (elt != null) {
-			int assignedMilestoneId = elt.getAsInt();
-			backlogItem.setAssignedMilestoneId(Integer.valueOf(assignedMilestoneId));
+			backlogItem.setAssignedMilestone(gson.fromJson(elt, TuleapReference.class));
 		}
 
 		elt = jsonObject.get(ITuleapConstants.JSON_STATUS);

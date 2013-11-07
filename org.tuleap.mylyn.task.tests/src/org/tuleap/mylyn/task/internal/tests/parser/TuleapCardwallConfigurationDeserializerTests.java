@@ -90,7 +90,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 
 		assertEquals(5f, firstBacklogItem.getInitialEffort(), 0f);
 
-		assertEquals(250, firstBacklogItem.getAssignedMilestoneId().intValue());
+		assertEquals(250, firstBacklogItem.getAssignedMilestone().getId());
 	}
 
 	/**
@@ -168,7 +168,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 
 		assertEquals(3f, firstBacklogItem.getInitialEffort(), 0f);
 
-		assertEquals(250, firstBacklogItem.getAssignedMilestoneId().intValue());
+		assertEquals(250, firstBacklogItem.getAssignedMilestone().getId());
 
 		// assertEquals(9, firstBacklogItem.getFieldValues().size());
 		// assertEquals(8602, ((BoundFieldValue)firstBacklogItem.getFieldValue(860)).getValueIds().get(0)
@@ -265,7 +265,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 
 		assertEquals(3.5f, firstBacklogItem.getInitialEffort(), 0f);
 
-		assertEquals(250, firstBacklogItem.getAssignedMilestoneId().intValue());
+		assertEquals(250, firstBacklogItem.getAssignedMilestone().getId());
 
 		// assertEquals(8, firstBacklogItem.getFieldValues().size());
 		// assertEquals(8602, ((BoundFieldValue)firstBacklogItem.getFieldValue(860)).getValueIds().get(0)

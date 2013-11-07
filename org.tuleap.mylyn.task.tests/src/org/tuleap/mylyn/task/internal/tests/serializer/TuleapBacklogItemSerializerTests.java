@@ -54,7 +54,7 @@ public class TuleapBacklogItemSerializerTests {
 		TuleapBacklogItem backlogItem = new TuleapBacklogItem(200, projectRef);
 
 		String emptyBacklogItem = gson.toJsonTree(backlogItem).toString();
-		String expectedResult = "{}"; //$NON-NLS-1$
+		String expectedResult = "{\"id\":200}"; //$NON-NLS-1$
 		assertEquals(expectedResult, emptyBacklogItem);
 	}
 
@@ -68,10 +68,11 @@ public class TuleapBacklogItemSerializerTests {
 	public void testSerializeBacklogItemWithAssignedMilestoneIdentifier() throws ParseException {
 		TuleapReference projectRef = new TuleapReference(123, "p/123");
 		TuleapBacklogItem backlogItem = new TuleapBacklogItem(200, projectRef);
-		backlogItem.setAssignedMilestoneId(1000);
+		TuleapReference assignedMilestone = new TuleapReference(1000, "milestones/1000");
+		backlogItem.setAssignedMilestone(assignedMilestone);
 
 		String emptyBacklogItem = gson.toJsonTree(backlogItem).toString();
-		String expectedResult = "{\"assigned_milestone_id\":1000}"; //$NON-NLS-1$
+		String expectedResult = "{\"id\":200,\"assigned_milestone\":{\"id\":1000}}"; //$NON-NLS-1$
 		assertEquals(expectedResult, emptyBacklogItem);
 	}
 
@@ -88,7 +89,7 @@ public class TuleapBacklogItemSerializerTests {
 		backlogItem.setInitialEffort(Float.valueOf(10));
 
 		String emptyBacklogItem = gson.toJsonTree(backlogItem).toString();
-		String expectedResult = "{\"initial_effort\":10.0}"; //$NON-NLS-1$
+		String expectedResult = "{\"id\":200,\"initial_effort\":10.0}"; //$NON-NLS-1$
 		assertEquals(expectedResult, emptyBacklogItem);
 	}
 
@@ -102,11 +103,12 @@ public class TuleapBacklogItemSerializerTests {
 	public void testSerializeBacklogItemWithBothInitialEffortAndAssigneMilestone() throws ParseException {
 		TuleapReference projectRef = new TuleapReference(123, "p/123");
 		TuleapBacklogItem backlogItem = new TuleapBacklogItem(200, projectRef);
-		backlogItem.setAssignedMilestoneId(1000);
+		TuleapReference assignedMilestone = new TuleapReference(1000, "milestones/1000");
+		backlogItem.setAssignedMilestone(assignedMilestone);
 		backlogItem.setInitialEffort(Float.valueOf(10));
 
 		String emptyBacklogItem = gson.toJsonTree(backlogItem).toString();
-		String expectedResult = "{\"initial_effort\":10.0,\"assigned_milestone_id\":1000}"; //$NON-NLS-1$
+		String expectedResult = "{\"id\":200,\"initial_effort\":10.0,\"assigned_milestone\":{\"id\":1000}}"; //$NON-NLS-1$
 		assertEquals(expectedResult, emptyBacklogItem);
 	}
 }

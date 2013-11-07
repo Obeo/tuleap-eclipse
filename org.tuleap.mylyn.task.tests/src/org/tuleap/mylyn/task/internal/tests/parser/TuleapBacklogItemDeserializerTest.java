@@ -62,7 +62,7 @@ public class TuleapBacklogItemDeserializerTest extends AbstractDeserializerTest<
 		assertEquals(ParserUtil.getJsonDateFormat().parse("2013-09-24T15:33:18.523Z"), item
 				.getLastUpdatedOn());
 		assertEquals(40.5f, item.getInitialEffort(), 0f);
-		assertEquals(201, item.getAssignedMilestoneId().intValue());
+		assertEquals(201, item.getAssignedMilestone().getId());
 		assertEquals(TuleapBacklogItem.Status.OPEN, item.getStatus());
 	}
 
@@ -88,7 +88,7 @@ public class TuleapBacklogItemDeserializerTest extends AbstractDeserializerTest<
 		assertEquals(ParserUtil.getJsonDateFormat().parse("2013-09-24T15:33:18.523Z"), item
 				.getLastUpdatedOn());
 		assertEquals(30f, item.getInitialEffort(), 0f);
-		assertEquals(200, item.getAssignedMilestoneId().intValue());
+		assertEquals(200, item.getAssignedMilestone().getId());
 		assertEquals(TuleapBacklogItem.Status.CLOSED, item.getStatus());
 	}
 
@@ -129,7 +129,7 @@ public class TuleapBacklogItemDeserializerTest extends AbstractDeserializerTest<
 				.getLastUpdatedOn());
 
 		assertEquals(5f, item.getInitialEffort(), 0f);
-		assertEquals(250, item.getAssignedMilestoneId().intValue());
+		assertEquals(250, item.getAssignedMilestone().getId());
 		assertEquals(TuleapBacklogItem.Status.OPEN, item.getStatus());
 	}
 

@@ -33,10 +33,10 @@ public class TuleapBacklogItem extends AbstractTuleapDetailedElement {
 	private Float initialEffort;
 
 	/**
-	 * The id of the milestone to which the backlog item is assigned. {@code null} indicates that the backlog
-	 * item is NOT assigned to any milestone.
+	 * The milestone to which the backlog item is assigned. {@code null} indicates that the backlog item is
+	 * NOT assigned to any milestone.
 	 */
-	private Integer assignedMilestoneId;
+	private TuleapReference assignedMilestone;
 
 	/**
 	 * The status of the backlog item.
@@ -118,22 +118,22 @@ public class TuleapBacklogItem extends AbstractTuleapDetailedElement {
 	}
 
 	/**
-	 * Gets the id of the milestone this backlog item is assigned to.
+	 * Gets the milestone reference this backlog item is assigned to.
 	 * 
 	 * @return the assignedMilestoneId
 	 */
-	public Integer getAssignedMilestoneId() {
-		return assignedMilestoneId;
+	public TuleapReference getAssignedMilestone() {
+		return assignedMilestone;
 	}
 
 	/**
-	 * Sets the id of the milestone this backlog item is assigned to.
+	 * Sets the milestone reference this backlog item is assigned to.
 	 * 
-	 * @param assignedMilestoneId
-	 *            the assignedMilestoneId to set
+	 * @param assignedMilestone
+	 *            the assigned Milestone reference
 	 */
-	public void setAssignedMilestoneId(Integer assignedMilestoneId) {
-		this.assignedMilestoneId = assignedMilestoneId;
+	public void setAssignedMilestone(TuleapReference assignedMilestone) {
+		this.assignedMilestone = assignedMilestone;
 	}
 
 	/**
