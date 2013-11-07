@@ -261,7 +261,7 @@ public interface ITuleapConstants {
 	/**
 	 * The key used for the status label of a milestone.
 	 */
-	String JSON_STATUS_LABEL = "status_label"; //$NON-NLS-1$
+	String JSON_STATUS_VALUE = "status_value"; //$NON-NLS-1$
 
 	/**
 	 * The key used for the sub-milestones URI of a milestone.
@@ -282,4 +282,9 @@ public interface ITuleapConstants {
 	 * The key used for the list of backlog item trackers in a planning.
 	 */
 	String JSON_BACKLOG_ITEM_TRACKERS = "backlog_item_trackers"; //$NON-NLS-1$
+
+	/**
+	 * The key used for the status of a backlog item ("Open" or "Closed").
+	 */
+	String JSON_STATUS = "status"; //$NON-NLS-1$
 }

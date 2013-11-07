@@ -90,7 +90,7 @@ public class TuleapMilestoneDeserializerTests extends AbstractDeserializerTest<T
 		assertEquals(dateFormat.parse("20130923114418963"), tuleapMilestone.getStartDate());
 		assertEquals(dateFormat.parse("20131023114418963"), tuleapMilestone.getEndDate());
 		assertEquals(100, tuleapMilestone.getCapacity().floatValue(), 0);
-		assertEquals("Done", tuleapMilestone.getStatusLabel());
+		assertEquals("Done", tuleapMilestone.getStatusValue());
 		assertEquals("milestones/200/milestones", tuleapMilestone.getSubMilestonesUri());
 		assertEquals("milestones/200/backlog_items", tuleapMilestone.getBacklogItemsUri());
 	}
@@ -116,7 +116,7 @@ public class TuleapMilestoneDeserializerTests extends AbstractDeserializerTest<T
 		assertEquals(75, tuleapMilestone.getCapacity(), 0);
 		assertEquals("milestones/201", tuleapMilestone.getUri()); //$NON-NLS-1$
 		assertEquals("milestones?id=201&group_id=3", tuleapMilestone.getHtmlUrl()); //$NON-NLS-1$
-		assertEquals("Current", tuleapMilestone.getStatusLabel());
+		assertEquals("Current", tuleapMilestone.getStatusValue());
 		assertEquals("milestones/201/milestones", tuleapMilestone.getSubMilestonesUri());
 		assertEquals("milestones/201/backlog_items", tuleapMilestone.getBacklogItemsUri());
 	}

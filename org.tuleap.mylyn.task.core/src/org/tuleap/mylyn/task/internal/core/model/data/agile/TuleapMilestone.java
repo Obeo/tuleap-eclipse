@@ -60,7 +60,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement {
 	/**
 	 * The milestone's status label.
 	 */
-	private String statusLabel;
+	private String statusValue;
 
 	/**
 	 * Default constructor for deserialization.
@@ -252,18 +252,18 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement {
 	 * 
 	 * @return the status label
 	 */
-	public String getStatusLabel() {
-		return statusLabel;
+	public String getStatusValue() {
+		return statusValue;
 	}
 
 	/**
 	 * The status label.
 	 * 
-	 * @param statusLabel
+	 * @param statusValue
 	 *            the status label to set
 	 */
-	public void setStatusLabel(String statusLabel) {
-		this.statusLabel = statusLabel;
+	public void setStatusValue(String statusValue) {
+		this.statusValue = statusValue;
 	}
 
 }

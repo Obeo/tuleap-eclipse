@@ -185,7 +185,7 @@ public class MilestoneTaskDataConverterTest {
 				"HTML URL", testDate, testDate); //$NON-NLS-1$
 		milestone.setCapacity(Float.valueOf(123));
 		milestone.setStartDate(new Date(2013));
-		milestone.setStatusLabel("Done");
+		milestone.setStatusValue("Done");
 
 		// FIXME Implement the test
 		fail("Implement the actual test");

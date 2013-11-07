@@ -74,9 +74,9 @@ public class TuleapMilestoneDeserializer extends AbstractDetailedElementDeserial
 			milestone.setCapacity(capacity);
 		}
 
-		elt = jsonObject.get(ITuleapConstants.JSON_STATUS_LABEL);
+		elt = jsonObject.get(ITuleapConstants.JSON_STATUS_VALUE);
 		if (elt != null) {
-			milestone.setStatusLabel(elt.getAsString());
+			milestone.setStatusValue(elt.getAsString());
 		}
 
 		elt = jsonObject.get(ITuleapConstants.JSON_SUB_MILESTONES_URI);

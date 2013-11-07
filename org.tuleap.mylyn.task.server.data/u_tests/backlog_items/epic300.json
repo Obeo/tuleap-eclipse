@@ -15,5 +15,6 @@
   "submitted_on": "2013-09-23T11:44:18.963Z",
   "last_updated_on": "2013-09-24T15:33:18.523Z",
   "initial_effort": 30,
-  "assigned_milestone_id": 200
+  "assigned_milestone_id": 200,
+  "status" : "Closed"
 }

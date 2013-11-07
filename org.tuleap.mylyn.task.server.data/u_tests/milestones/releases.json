@@ -18,7 +18,7 @@
     "start_date" : "2013-09-23T11:44:18.963Z",
     "end_date" : "2013-10-23T11:44:18.963Z",
     "capacity" : 100,
-    "status_label" : "Done",
+    "status_value" : "Done",
     "sub_milestones_uri" : "milestones/200/milestones",
     "backlog_items_uri" : "milestones/200/backlog_items"
   },
@@ -41,7 +41,7 @@
     "start_date" : "2013-10-23T11:44:18.963Z",
     "end_date" : "2013-11-23T11:44:18.963Z",
     "capacity" : 75,
-    "status_label" : "Current",
+    "status_value" : "Current",
     "sub_milestones_uri" : "milestones/201/milestones",
     "backlog_items_uri" : "milestones/201/backlog_items"
   }

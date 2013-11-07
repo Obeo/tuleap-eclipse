@@ -20,6 +20,7 @@ import java.lang.reflect.Type;
 
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem.Status;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**
@@ -42,7 +43,7 @@ public class TuleapBacklogItemDeserializer extends AbstractDetailedElementDeseri
 
 		JsonObject jsonObject = element.getAsJsonObject();
 
-		backlogItem.setArtifactRef(new Gson().fromJson(jsonObject.get(ITuleapConstants.JSON_ARTIFACT),
+		backlogItem.setArtifact(new Gson().fromJson(jsonObject.get(ITuleapConstants.JSON_ARTIFACT),
 				TuleapReference.class));
 
 		JsonElement elt = jsonObject.get(ITuleapConstants.INITIAL_EFFORT);
@@ -55,6 +56,12 @@ public class TuleapBacklogItemDeserializer extends AbstractDetailedElementDeseri
 		if (elt != null) {
 			int assignedMilestoneId = elt.getAsInt();
 			backlogItem.setAssignedMilestoneId(Integer.valueOf(assignedMilestoneId));
+		}
+
+		elt = jsonObject.get(ITuleapConstants.JSON_STATUS);
+		if (elt != null) {
+			String statusString = elt.getAsString();
+			backlogItem.setStatus(Status.fromJsonString(statusString));
 		}
 
 		return backlogItem;

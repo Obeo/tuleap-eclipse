@@ -18,7 +18,7 @@
     "start_date" : "2013-08-23T11:44:18.963Z",
     "end_date" : "2013-09-23T11:44:18.963Z",
     "capacity" : 24.5,
-    "status_label" : "Done",
+    "status_value" : "Done",
     "parent" : {
       "id" : 200,
       "uri" : "milestones/200"
@@ -44,7 +44,7 @@
     "start_date" : "2013-09-23T11:44:18.963Z",
     "end_date" : "2013-10-23T11:44:18.963Z",
     "capacity" : 28.5,
-    "status_label" : "Current",
+    "status_value" : "Current",
     "parent" : {
       "id" : 200,
       "uri" : "milestones/200"
@@ -70,7 +70,7 @@
     "start_date" : "2013-10-23T11:44:18.963Z",
     "end_date" : "2013-11-23T11:44:18.963Z",
     "capacity" : 26.5,
-    "status_label" : "Planned",
+    "status_value" : "Planned",
     "parent" : {
       "id" : 200,
       "uri" : "milestones/200"

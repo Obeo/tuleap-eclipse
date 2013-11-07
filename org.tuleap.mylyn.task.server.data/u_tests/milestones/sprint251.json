@@ -17,7 +17,7 @@
   "start_date" : "2013-09-23T11:44:18.963Z",
   "end_date" : "2013-10-23T11:44:18.963Z",
   "capacity" : 28.5,
-  "status_label" : "Current",
+  "status_value" : "Current",
   "parent" : {
     "id" : 200,
     "uri" : "milestones/200"

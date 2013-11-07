@@ -50,8 +50,8 @@ public class TuleapBacklogItemDeserializerTest extends AbstractDeserializerTest<
 	 */
 	public static void checkEpic301(TuleapBacklogItem item) throws ParseException {
 		assertEquals(301, item.getId());
-		assertEquals(301, item.getArtifactRef().getId());
-		assertEquals("artifacts/301", item.getArtifactRef().getUri());
+		assertEquals(301, item.getArtifact().getId());
+		assertEquals("artifacts/301", item.getArtifact().getUri());
 		assertEquals(3, item.getProject().getId());
 		assertEquals("projects/3", item.getProject().getUri());
 		assertEquals("Another important Epic", item.getLabel());
@@ -63,6 +63,7 @@ public class TuleapBacklogItemDeserializerTest extends AbstractDeserializerTest<
 				.getLastUpdatedOn());
 		assertEquals(40.5f, item.getInitialEffort(), 0f);
 		assertEquals(201, item.getAssignedMilestoneId().intValue());
+		assertEquals(TuleapBacklogItem.Status.OPEN, item.getStatus());
 	}
 
 	/**
@@ -75,8 +76,8 @@ public class TuleapBacklogItemDeserializerTest extends AbstractDeserializerTest<
 	 */
 	public static void checkEpic300(TuleapBacklogItem item) throws ParseException {
 		assertEquals(300, item.getId());
-		assertEquals(300, item.getArtifactRef().getId());
-		assertEquals("artifacts/300", item.getArtifactRef().getUri());
+		assertEquals(300, item.getArtifact().getId());
+		assertEquals("artifacts/300", item.getArtifact().getUri());
 		assertEquals(3, item.getProject().getId());
 		assertEquals("projects/3", item.getProject().getUri());
 		assertEquals("An important Epic", item.getLabel());
@@ -88,6 +89,7 @@ public class TuleapBacklogItemDeserializerTest extends AbstractDeserializerTest<
 				.getLastUpdatedOn());
 		assertEquals(30f, item.getInitialEffort(), 0f);
 		assertEquals(200, item.getAssignedMilestoneId().intValue());
+		assertEquals(TuleapBacklogItem.Status.CLOSED, item.getStatus());
 	}
 
 	/**
@@ -114,8 +116,8 @@ public class TuleapBacklogItemDeserializerTest extends AbstractDeserializerTest<
 	 */
 	public static void checkUserStory350(TuleapBacklogItem item) throws ParseException {
 		assertEquals(350, item.getId());
-		assertEquals(350, item.getArtifactRef().getId());
-		assertEquals("artifacts/350", item.getArtifactRef().getUri());
+		assertEquals(350, item.getArtifact().getId());
+		assertEquals("artifacts/350", item.getArtifact().getUri());
 		assertEquals(3, item.getProject().getId());
 		assertEquals("projects/3", item.getProject().getUri());
 		assertEquals("An important User Story", item.getLabel());
@@ -128,6 +130,7 @@ public class TuleapBacklogItemDeserializerTest extends AbstractDeserializerTest<
 
 		assertEquals(5f, item.getInitialEffort(), 0f);
 		assertEquals(250, item.getAssignedMilestoneId().intValue());
+		assertEquals(TuleapBacklogItem.Status.OPEN, item.getStatus());
 	}
 
 	/**

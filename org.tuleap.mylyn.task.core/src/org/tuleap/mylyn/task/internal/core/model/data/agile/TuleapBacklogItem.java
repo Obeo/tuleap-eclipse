@@ -25,7 +25,7 @@ public class TuleapBacklogItem extends AbstractTuleapDetailedElement {
 	/**
 	 * ID of the artifact that contains this item's details.
 	 */
-	private TuleapReference artifactRef;
+	private TuleapReference artifact;
 
 	/**
 	 * The initial effort.
@@ -37,6 +37,11 @@ public class TuleapBacklogItem extends AbstractTuleapDetailedElement {
 	 * item is NOT assigned to any milestone.
 	 */
 	private Integer assignedMilestoneId;
+
+	/**
+	 * The status of the backlog item.
+	 */
+	private Status status;
 
 	/**
 	 * Default constructor for deserialization.
@@ -134,20 +139,84 @@ public class TuleapBacklogItem extends AbstractTuleapDetailedElement {
 	/**
 	 * Artifact reference.
 	 * 
-	 * @return the artifactRef
+	 * @return the artifact
 	 */
-	public TuleapReference getArtifactRef() {
-		return artifactRef;
+	public TuleapReference getArtifact() {
+		return artifact;
 	}
 
 	/**
 	 * Artifact reference.
 	 * 
-	 * @param artifactRef
+	 * @param artifact
 	 *            the artifact reference to set
 	 */
-	public void setArtifactRef(TuleapReference artifactRef) {
-		this.artifactRef = artifactRef;
+	public void setArtifact(TuleapReference artifact) {
+		this.artifact = artifact;
+	}
+
+	/**
+	 * Status getter.
+	 * 
+	 * @return the status
+	 */
+	public Status getStatus() {
+		return status;
+	}
+
+	/**
+	 * Status setter.
+	 * 
+	 * @param status
+	 *            the status to set
+	 */
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	/**
+	 * Indicates whether this backlog item is closed. If no status is set in the backlog item, it is
+	 * considered open by default.
+	 * 
+	 * @return <code>true</code> if and only if the item's status is {@code CLOSED}.
+	 */
+	public boolean isClosed() {
+		return status == Status.CLOSED;
+	}
+
+	/**
+	 * Backlog item status. Currently, the only statuses that exist are "Open" and "Closed".
+	 * 
+	 * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
+	 */
+	public static enum Status {
+		/**
+		 * Means that the backlog item is closed.
+		 */
+		CLOSED,
+		/**
+		 * Means that the backlog item is open.
+		 */
+		OPEN;
+
+		/**
+		 * Provides the enum value for a given JSON string. Captures the knowledge of which value strings
+		 * Tuleap provides.
+		 * 
+		 * @param jsonValue
+		 *            The JSON value received from Tuleap.
+		 * @return The relevant Status, or <code>null</code> if the given String is unrecognized or null.
+		 */
+		public static Status fromJsonString(String jsonValue) {
+			Status result = null;
+			if ("Closed".equalsIgnoreCase(jsonValue)) { //$NON-NLS-1$
+				result = CLOSED;
+			} else if ("Open".equalsIgnoreCase(jsonValue)) { //$NON-NLS-1$
+				result = OPEN;
+			}
+			return result;
+
+		}
 	}
 
 }
