@@ -18,22 +18,22 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import org.tuleap.mylyn.task.internal.core.data.AbstractFieldValue;
-import org.tuleap.mylyn.task.internal.core.data.AttachmentFieldValue;
-import org.tuleap.mylyn.task.internal.core.data.AttachmentValue;
-import org.tuleap.mylyn.task.internal.core.data.BoundFieldValue;
-import org.tuleap.mylyn.task.internal.core.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
-import org.tuleap.mylyn.task.internal.core.model.TuleapElementComment;
-import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
-import org.tuleap.mylyn.task.internal.core.model.TuleapReference;
-import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapFileUpload;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapMultiSelectBox;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapPerson;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapFileUpload;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapMultiSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.AttachmentFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.AttachmentValue;
+import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapElementComment;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapUrlUtil;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Artifact;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactFieldValue;
@@ -127,7 +127,7 @@ public class TuleapSoapParser {
 						List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
 
 						FieldValueFileInfo[] fileInfo = artifactFieldValue.getField_value().getFile_info();
-						TuleapServerConfiguration serverConfiguration = tuleapTracker
+						TuleapServer serverConfiguration = tuleapTracker
 								.getTuleapProjectConfiguration().getServerConfiguration();
 						// Yes, this array can be null.
 						if (fileInfo != null) {

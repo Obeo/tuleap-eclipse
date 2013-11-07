@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.tests.parser;
 
-import org.tuleap.mylyn.task.internal.core.model.TuleapGroup;
-import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
-import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapGroup;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapPerson;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 
 /**
  * Super class of tests that deserialize project configuration parts.
@@ -25,17 +25,17 @@ public class StubProjectProvider {
 	/**
 	 * The project configuration.
 	 */
-	protected TuleapProjectConfiguration projectConfiguration;
+	protected TuleapProject projectConfiguration;
 
 	/**
 	 * Provides the project Configuration, after creating it if necessary. Not thread-safe.
 	 * 
 	 * @return The project configuration to use for tests.
 	 */
-	public TuleapProjectConfiguration getProjectConfiguration() {
+	public TuleapProject getProjectConfiguration() {
 		if (projectConfiguration == null) {
-			TuleapServerConfiguration serverConfiguration = new TuleapServerConfiguration("http://test/url");
-			projectConfiguration = new TuleapProjectConfiguration("Test", 3);
+			TuleapServer serverConfiguration = new TuleapServer("http://test/url");
+			projectConfiguration = new TuleapProject("Test", 3);
 			serverConfiguration.addProject(projectConfiguration);
 			TuleapGroup group0 = new TuleapGroup(0, "Project Admins");
 			projectConfiguration.addUserToUserGroup(group0, new TuleapPerson("jd15", "John Doe", 15,

@@ -19,11 +19,11 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCard;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardwall;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapStatus;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapSwimlane;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCard;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCardwall;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapStatus;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapSwimlane;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**

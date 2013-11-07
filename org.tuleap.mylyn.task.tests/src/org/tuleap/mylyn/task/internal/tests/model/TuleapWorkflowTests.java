@@ -15,10 +15,10 @@ import java.util.Iterator;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
-import org.tuleap.mylyn.task.internal.core.model.workflow.TuleapWorkflow;
-import org.tuleap.mylyn.task.internal.core.model.workflow.TuleapWorkflowTransition;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapWorkflow;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapWorkflowTransition;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 import static org.junit.Assert.assertEquals;

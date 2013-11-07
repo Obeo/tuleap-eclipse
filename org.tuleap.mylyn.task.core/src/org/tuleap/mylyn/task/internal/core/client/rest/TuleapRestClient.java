@@ -27,17 +27,17 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.restlet.data.Method;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
-import org.tuleap.mylyn.task.internal.core.model.TuleapAttachmentDescriptor;
-import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCard;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardwall;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapSwimlane;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerReport;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapTrackerReport;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapAttachmentDescriptor;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCard;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCardwall;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapSwimlane;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapTopPlanning;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
@@ -60,11 +60,6 @@ import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class TuleapRestClient {
-
-	/**
-	 * The version number of the best api supported.
-	 */
-	public static final String BEST_SUPPORTED_API_VERSION = ITuleapAPIVersions.V1_0;
 
 	/**
 	 * Utility class used to communicate using HTTP with the server.
@@ -146,14 +141,12 @@ public class TuleapRestClient {
 	 * @throws CoreException
 	 *             In case of error during the retrieval of the configuration
 	 */
-	public TuleapServerConfiguration getTuleapServerConfiguration(IProgressMonitor monitor)
-			throws CoreException {
+	public TuleapServer getTuleapServerConfiguration(IProgressMonitor monitor) throws CoreException {
 		// Test the connection
 		RestResourceFactory restResourceFactory = tuleapRestConnector.getResourceFactory();
 
-		TuleapServerConfiguration tuleapServerConfiguration = new TuleapServerConfiguration(
-				this.taskRepository.getRepositoryUrl());
-		tuleapServerConfiguration.setLastUpdate(new Date().getTime());
+		TuleapServer tuleapServer = new TuleapServer(this.taskRepository.getRepositoryUrl());
+		tuleapServer.setLastUpdate(new Date().getTime());
 
 		// Check that we can get the list of projects
 		RestResource restProjects = restResourceFactory.projects();
@@ -164,12 +157,12 @@ public class TuleapRestClient {
 		checkServerError(restProjects, Method.GET.toString(), projectsGetServerResponse);
 
 		String projectsGetResponseBody = projectsGetServerResponse.getBody();
-		List<TuleapProjectConfiguration> projectConfigurations = this.jsonParser
+		List<TuleapProject> projectConfigurations = this.jsonParser
 				.parseProjectConfigurations(projectsGetResponseBody);
 
 		// For each project that has the tracker service
-		for (TuleapProjectConfiguration projectConfiguration : projectConfigurations) {
-			tuleapServerConfiguration.addProject(projectConfiguration);
+		for (TuleapProject projectConfiguration : projectConfigurations) {
+			tuleapServer.addProject(projectConfiguration);
 
 			// TODO SBE Restore this code!
 
@@ -217,7 +210,7 @@ public class TuleapRestClient {
 			// }
 		}
 
-		return tuleapServerConfiguration;
+		return tuleapServer;
 	}
 
 	/**

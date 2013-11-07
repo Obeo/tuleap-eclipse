@@ -19,14 +19,14 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
-import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 
 /**
  * This class is used to deserialize the JSON representation of a project configuration.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public class TuleapProjectConfigurationDeserializer implements JsonDeserializer<TuleapProjectConfiguration> {
+public class TuleapProjectConfigurationDeserializer implements JsonDeserializer<TuleapProject> {
 
 	/**
 	 * The key used for the name of the project.
@@ -44,10 +44,10 @@ public class TuleapProjectConfigurationDeserializer implements JsonDeserializer<
 	 * @see com.google.gson.JsonDeserializer#deserialize(com.google.gson.JsonElement, java.lang.reflect.Type,
 	 *      com.google.gson.JsonDeserializationContext)
 	 */
-	public TuleapProjectConfiguration deserialize(JsonElement arg0, Type arg1, JsonDeserializationContext arg2)
+	public TuleapProject deserialize(JsonElement arg0, Type arg1, JsonDeserializationContext arg2)
 			throws JsonParseException {
 		JsonObject jsonObject = arg0.getAsJsonObject();
-		TuleapProjectConfiguration tuleapProjectConfiguration = new TuleapProjectConfiguration(jsonObject
+		TuleapProject tuleapProject = new TuleapProject(jsonObject
 				.get(PROJECT_NAME).getAsString(), jsonObject.get(PROJECT_ID).getAsInt());
 
 		// Active services
@@ -55,11 +55,11 @@ public class TuleapProjectConfigurationDeserializer implements JsonDeserializer<
 		if (servicesElement != null) {
 			JsonArray services = servicesElement.getAsJsonArray();
 			for (JsonElement element : services) {
-				tuleapProjectConfiguration.addService(element.getAsString());
+				tuleapProject.addService(element.getAsString());
 			}
 		}
 
-		return tuleapProjectConfiguration;
+		return tuleapProject;
 	}
 
 }

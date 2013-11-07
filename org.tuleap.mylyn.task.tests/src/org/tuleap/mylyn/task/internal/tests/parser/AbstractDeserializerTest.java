@@ -16,7 +16,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
+import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
 
 import static org.junit.Assert.assertEquals;
 

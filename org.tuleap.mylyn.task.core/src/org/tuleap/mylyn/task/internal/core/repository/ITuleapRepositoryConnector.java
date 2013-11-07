@@ -14,8 +14,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
-import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 
 /**
  * This interface represents a Tuleap repository connector.
@@ -38,7 +38,7 @@ public interface ITuleapRepositoryConnector {
 	 *            the URL of the repository
 	 * @return The configuration of the Tuleap server.
 	 */
-	TuleapServerConfiguration getTuleapServerConfiguration(String repositoryUrl);
+	TuleapServer getTuleapServerConfiguration(String repositoryUrl);
 
 	/**
 	 * Returns a refreshed version of the given configuration. This operation will communicate with the

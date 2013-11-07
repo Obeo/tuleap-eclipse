@@ -19,7 +19,7 @@ import com.google.gson.JsonSerializer;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapProjectElement;
+import org.tuleap.mylyn.task.internal.core.model.data.AbstractTuleapProjectElement;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**

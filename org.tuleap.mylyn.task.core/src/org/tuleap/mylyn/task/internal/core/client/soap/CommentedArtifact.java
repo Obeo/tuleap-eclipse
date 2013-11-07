@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
-import org.tuleap.mylyn.task.internal.core.model.TuleapElementComment;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapElementComment;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Artifact;
 
 /**

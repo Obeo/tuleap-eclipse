@@ -34,8 +34,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
-import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
 import org.tuleap.mylyn.task.internal.ui.wizards.query.TuleapQueryProjectPage;
@@ -141,7 +141,7 @@ public class TuleapTrackerPage extends WizardPage {
 
 			IWizardPage previousPage = TuleapTrackerPage.this.getPreviousPage();
 
-			TuleapProjectConfiguration projectSelected = null;
+			TuleapProject projectSelected = null;
 			if (previousPage instanceof TuleapProjectPage) {
 				projectSelected = ((TuleapProjectPage)previousPage).getProjectSelected();
 			} else if (previousPage instanceof TuleapQueryProjectPage) {

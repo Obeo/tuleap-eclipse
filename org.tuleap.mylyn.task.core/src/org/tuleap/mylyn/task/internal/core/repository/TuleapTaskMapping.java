@@ -11,7 +11,7 @@
 package org.tuleap.mylyn.task.internal.core.repository;
 
 import org.eclipse.mylyn.tasks.core.TaskMapping;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 
 /**
  * The Tuleap task mapping provides additional mapping compared to the regular TaskMapping.

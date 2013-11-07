@@ -36,8 +36,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
-import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
 
@@ -100,7 +100,7 @@ public class TuleapProjectPage extends WizardPage {
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			public void selectionChanged(SelectionChangedEvent event) {
-				TuleapProjectConfiguration projectSelected = TuleapProjectPage.this.getProjectSelected();
+				TuleapProject projectSelected = TuleapProjectPage.this.getProjectSelected();
 				if (projectSelected == null) {
 					TuleapProjectPage.this.setErrorMessage(TuleapMylynTasksUIMessages
 							.getString("TuleapProjectPage.SelectAProject")); //$NON-NLS-1$
@@ -143,17 +143,17 @@ public class TuleapProjectPage extends WizardPage {
 		String connectorKind = this.repository.getConnectorKind();
 		final AbstractRepositoryConnector repositoryConnector = TasksUi.getRepositoryManager()
 				.getRepositoryConnector(connectorKind);
-		final List<TuleapProjectConfiguration> projectsList = new ArrayList<TuleapProjectConfiguration>();
+		final List<TuleapProject> projectsList = new ArrayList<TuleapProject>();
 		if (repositoryConnector instanceof ITuleapRepositoryConnector) {
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {
 
 				public void run(IProgressMonitor monitor) throws InvocationTargetException,
 						InterruptedException {
 					ITuleapRepositoryConnector connector = (ITuleapRepositoryConnector)repositoryConnector;
-					final TuleapServerConfiguration instanceConfiguration = connector
+					final TuleapServer instanceConfiguration = connector
 							.getTuleapServerConfiguration(TuleapProjectPage.this.repository
 									.getRepositoryUrl());
-					projectsList.addAll(instanceConfiguration.getAllProjectConfigurations());
+					projectsList.addAll(instanceConfiguration.getAllProjects());
 				}
 			};
 
@@ -182,11 +182,11 @@ public class TuleapProjectPage extends WizardPage {
 	 * 
 	 * @return The identifier of the project currently selected in the wizard. -1 if none has been selected
 	 */
-	public TuleapProjectConfiguration getProjectSelected() {
+	public TuleapProject getProjectSelected() {
 		IStructuredSelection selection = (IStructuredSelection)this.projectsTree.getViewer().getSelection();
 		Object firstElement = selection.getFirstElement();
-		if (firstElement instanceof TuleapProjectConfiguration) {
-			return (TuleapProjectConfiguration)firstElement;
+		if (firstElement instanceof TuleapProject) {
+			return (TuleapProject)firstElement;
 		}
 		return null;
 	}

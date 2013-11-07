@@ -19,7 +19,7 @@ import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapDetailedElement;
+import org.tuleap.mylyn.task.internal.core.model.data.AbstractTuleapDetailedElement;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**

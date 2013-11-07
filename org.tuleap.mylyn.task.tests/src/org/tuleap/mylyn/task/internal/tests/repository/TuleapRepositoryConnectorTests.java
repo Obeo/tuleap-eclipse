@@ -33,14 +33,14 @@ import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
-import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapReference;
-import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBoxItem;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapTopPlanning;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapTaskDataCollector;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
@@ -139,15 +139,15 @@ public class TuleapRepositoryConnectorTests {
 		TuleapReference trackerRef = new TuleapReference(42, "trackers/42");
 		int artifactId = 121;
 
-		final TuleapServerConfiguration tuleapServerConfiguration = new TuleapServerConfiguration(
+		final TuleapServer tuleapServer = new TuleapServer(
 				"https://tuleap.net");
 
-		TuleapProjectConfiguration tuleapProjectConfiguration = new TuleapProjectConfiguration("", projectRef
+		TuleapProject tuleapProject = new TuleapProject("", projectRef
 				.getId());
 		TuleapTracker trackerConfiguration = new TuleapTracker(trackerRef.getId(), null, null, null, null, 0);
-		tuleapProjectConfiguration.addTracker(trackerConfiguration);
+		tuleapProject.addTracker(trackerConfiguration);
 
-		tuleapServerConfiguration.addProject(tuleapProjectConfiguration);
+		tuleapServer.addProject(tuleapProject);
 
 		final TuleapArtifact tuleapArtifact = new TuleapArtifact(artifactId, projectRef, "", "", "",
 				new Date(), new Date());
@@ -159,7 +159,7 @@ public class TuleapRepositoryConnectorTests {
 				return new TuleapSoapClient(null, null, null, null, null) {
 					@Override
 					public List<TuleapArtifact> getArtifactsFromQuery(IRepositoryQuery query,
-							TuleapServerConfiguration serverConfiguration, TuleapTracker tuleapTracker,
+							TuleapServer serverConfiguration, TuleapTracker tuleapTracker,
 							IProgressMonitor monitor) {
 						return Lists.newArrayList(tuleapArtifact);
 					}
@@ -169,8 +169,8 @@ public class TuleapRepositoryConnectorTests {
 
 		TuleapRepositoryConnector tuleapRepositoryConnector = new TuleapRepositoryConnector() {
 			@Override
-			public TuleapServerConfiguration getTuleapServerConfiguration(String repositoryUrl) {
-				return tuleapServerConfiguration;
+			public TuleapServer getTuleapServerConfiguration(String repositoryUrl) {
+				return tuleapServer;
 			}
 
 			@Override
@@ -213,15 +213,15 @@ public class TuleapRepositoryConnectorTests {
 		TuleapReference trackerRef = new TuleapReference(42, "trackers/42");
 		int artifactId = 121;
 
-		final TuleapServerConfiguration tuleapServerConfiguration = new TuleapServerConfiguration(
+		final TuleapServer tuleapServer = new TuleapServer(
 				"https://tuleap.net");
 
-		TuleapProjectConfiguration tuleapProjectConfiguration = new TuleapProjectConfiguration("", projectRef
+		TuleapProject tuleapProject = new TuleapProject("", projectRef
 				.getId());
 		TuleapTracker trackerConfiguration = new TuleapTracker(trackerRef.getId(), null, null, null, null, 0);
-		tuleapProjectConfiguration.addTracker(trackerConfiguration);
+		tuleapProject.addTracker(trackerConfiguration);
 
-		tuleapServerConfiguration.addProject(tuleapProjectConfiguration);
+		tuleapServer.addProject(tuleapProject);
 
 		final TuleapArtifact tuleapArtifact = new TuleapArtifact(artifactId, projectRef, "", "", "",
 				new Date(), new Date());
@@ -233,7 +233,7 @@ public class TuleapRepositoryConnectorTests {
 				return new TuleapSoapClient(null, null, null, null, null) {
 					@Override
 					public List<TuleapArtifact> getArtifactsFromQuery(IRepositoryQuery query,
-							TuleapServerConfiguration serverConfiguration, TuleapTracker tuleapTracker,
+							TuleapServer serverConfiguration, TuleapTracker tuleapTracker,
 							IProgressMonitor monitor) {
 						return Lists.newArrayList(tuleapArtifact);
 					}
@@ -243,8 +243,8 @@ public class TuleapRepositoryConnectorTests {
 
 		TuleapRepositoryConnector tuleapRepositoryConnector = new TuleapRepositoryConnector() {
 			@Override
-			public TuleapServerConfiguration getTuleapServerConfiguration(String repositoryUrl) {
-				return tuleapServerConfiguration;
+			public TuleapServer getTuleapServerConfiguration(String repositoryUrl) {
+				return tuleapServer;
 			}
 
 			@Override
@@ -286,15 +286,15 @@ public class TuleapRepositoryConnectorTests {
 		TuleapReference trackerRef = new TuleapReference(42, "trackers/42");
 		int artifactId = 121;
 
-		final TuleapServerConfiguration tuleapServerConfiguration = new TuleapServerConfiguration(
+		final TuleapServer tuleapServer = new TuleapServer(
 				"https://tuleap.net");
 
-		TuleapProjectConfiguration tuleapProjectConfiguration = new TuleapProjectConfiguration("", projectRef
+		TuleapProject tuleapProject = new TuleapProject("", projectRef
 				.getId());
 		TuleapTracker trackerConfiguration = new TuleapTracker(trackerRef.getId(), null, null, null, null, 0);
-		tuleapProjectConfiguration.addTracker(trackerConfiguration);
+		tuleapProject.addTracker(trackerConfiguration);
 
-		tuleapServerConfiguration.addProject(tuleapProjectConfiguration);
+		tuleapServer.addProject(tuleapProject);
 
 		final TuleapArtifact tuleapArtifact = new TuleapArtifact(artifactId, projectRef, "", "", "",
 				new Date(), new Date());
@@ -306,7 +306,7 @@ public class TuleapRepositoryConnectorTests {
 				return new TuleapSoapClient(null, null, null, null, null) {
 					@Override
 					public List<TuleapArtifact> getArtifactsFromQuery(IRepositoryQuery query,
-							TuleapServerConfiguration serverConfiguration, TuleapTracker tuleapTracker,
+							TuleapServer serverConfiguration, TuleapTracker tuleapTracker,
 							IProgressMonitor monitor) {
 						return Lists.newArrayList(tuleapArtifact);
 					}
@@ -316,8 +316,8 @@ public class TuleapRepositoryConnectorTests {
 
 		TuleapRepositoryConnector tuleapRepositoryConnector = new TuleapRepositoryConnector() {
 			@Override
-			public TuleapServerConfiguration getTuleapServerConfiguration(String repositoryUrl) {
-				return tuleapServerConfiguration;
+			public TuleapServer getTuleapServerConfiguration(String repositoryUrl) {
+				return tuleapServer;
 			}
 
 			@Override
@@ -358,12 +358,12 @@ public class TuleapRepositoryConnectorTests {
 		TuleapReference projectRef = new TuleapReference(979, "projects/979");
 		int topPlanningId = 121;
 
-		final TuleapServerConfiguration tuleapServerConfiguration = new TuleapServerConfiguration(
+		final TuleapServer tuleapServer = new TuleapServer(
 				"https://tuleap.net");
 
-		TuleapProjectConfiguration tuleapProjectConfiguration = new TuleapProjectConfiguration("", projectRef
+		TuleapProject tuleapProject = new TuleapProject("", projectRef
 				.getId());
-		tuleapServerConfiguration.addProject(tuleapProjectConfiguration);
+		tuleapServer.addProject(tuleapProject);
 
 		final TuleapTopPlanning tuleapTopPlanning = new TuleapTopPlanning(topPlanningId, projectRef,
 				"Top planning", "/top/planning");
@@ -383,8 +383,8 @@ public class TuleapRepositoryConnectorTests {
 
 		TuleapRepositoryConnector tuleapRepositoryConnector = new TuleapRepositoryConnector() {
 			@Override
-			public TuleapServerConfiguration getTuleapServerConfiguration(String repositoryUrl) {
-				return tuleapServerConfiguration;
+			public TuleapServer getTuleapServerConfiguration(String repositoryUrl) {
+				return tuleapServer;
 			}
 
 			@Override
@@ -433,9 +433,9 @@ public class TuleapRepositoryConnectorTests {
 		int openStatusId = 0;
 		int closedStatusId = 1;
 
-		final TuleapServerConfiguration tuleapServerConfiguration = new TuleapServerConfiguration(
+		final TuleapServer tuleapServer = new TuleapServer(
 				"https://tuleap.net");
-		TuleapProjectConfiguration tuleapProjectConfiguration = new TuleapProjectConfiguration(null,
+		TuleapProject tuleapProject = new TuleapProject(null,
 				projectId);
 
 		TuleapTracker trackerConfiguration = new TuleapTracker(configurationId, null, null, null, null, 0);
@@ -452,8 +452,8 @@ public class TuleapRepositoryConnectorTests {
 
 		trackerConfiguration.addField(tuleapSelectBox);
 
-		tuleapProjectConfiguration.addTracker(trackerConfiguration);
-		tuleapServerConfiguration.addProject(tuleapProjectConfiguration);
+		tuleapProject.addTracker(trackerConfiguration);
+		tuleapServer.addProject(tuleapProject);
 
 		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, trackerConfiguration);
 		mapper.initializeEmptyTaskData();
@@ -461,8 +461,8 @@ public class TuleapRepositoryConnectorTests {
 
 		TuleapRepositoryConnector tuleapRepositoryConnector = new TuleapRepositoryConnector() {
 			@Override
-			public TuleapServerConfiguration getTuleapServerConfiguration(String repositoryUrl) {
-				return tuleapServerConfiguration;
+			public TuleapServer getTuleapServerConfiguration(String repositoryUrl) {
+				return tuleapServer;
 			}
 		};
 		tuleapRepositoryConnector.updateTaskFromTaskData(taskRepository, task, taskData);

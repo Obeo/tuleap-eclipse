@@ -11,7 +11,7 @@
 package org.tuleap.mylyn.task.internal.ui.wizards;
 
 import org.eclipse.jface.viewers.LabelProvider;
-import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 
 /**
  * The label provider of the tree viewer of the first page used to create new task or queries.
@@ -26,8 +26,8 @@ public class TuleapProjectLabelProvider extends LabelProvider {
 	 */
 	@Override
 	public String getText(Object element) {
-		if (element instanceof TuleapProjectConfiguration) {
-			return ((TuleapProjectConfiguration)element).getName();
+		if (element instanceof TuleapProject) {
+			return ((TuleapProject)element).getName();
 		}
 		return super.getText(element);
 	}

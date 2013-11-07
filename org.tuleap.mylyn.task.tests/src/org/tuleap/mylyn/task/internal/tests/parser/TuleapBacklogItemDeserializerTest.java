@@ -15,7 +15,7 @@ import com.google.gson.JsonDeserializer;
 import java.text.ParseException;
 
 import org.junit.Test;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapBacklogItemDeserializer;
 
 import static org.junit.Assert.assertEquals;

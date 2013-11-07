@@ -26,22 +26,22 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.agile.core.data.AgileTaskKindUtil;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
-import org.tuleap.mylyn.task.internal.core.data.AbstractFieldValue;
-import org.tuleap.mylyn.task.internal.core.data.AttachmentFieldValue;
-import org.tuleap.mylyn.task.internal.core.data.AttachmentValue;
-import org.tuleap.mylyn.task.internal.core.data.BoundFieldValue;
-import org.tuleap.mylyn.task.internal.core.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
-import org.tuleap.mylyn.task.internal.core.model.TuleapElementComment;
-import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapReference;
-import org.tuleap.mylyn.task.internal.core.model.field.AbstractTuleapSelectBox;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapFileUpload;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.field.AbstractTuleapSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapFileUpload;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapString;
+import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.AttachmentFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.AttachmentValue;
+import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapElementComment;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 
 /**
@@ -242,7 +242,7 @@ public class ArtifactTaskDataConverter {
 			// Let's refresh the configuration
 			// First, let's get the element's project config, in case the element comes from a
 			// different project, who knows...
-			TuleapProjectConfiguration projectConfiguration;
+			TuleapProject projectConfiguration;
 			if (tracker != null) {
 				projectConfiguration = tracker.getTuleapProjectConfiguration();
 			} else {

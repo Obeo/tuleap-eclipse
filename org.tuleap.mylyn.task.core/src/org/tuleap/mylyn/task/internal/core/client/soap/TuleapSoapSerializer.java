@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.client.soap;
 
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
 
 /**
  * Utility class used to transform the {@link TuleapArtifact} into the data structure of the SOAP API.

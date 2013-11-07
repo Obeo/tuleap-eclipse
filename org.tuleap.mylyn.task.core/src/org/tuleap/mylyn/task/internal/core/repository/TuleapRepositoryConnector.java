@@ -50,14 +50,14 @@ import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.data.converter.ArtifactTaskDataConverter;
 import org.tuleap.mylyn.task.internal.core.data.converter.MilestoneTaskDataConverter;
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
-import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBoxItem;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapTopPlanning;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
@@ -88,7 +88,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	/**
 	 * The cache of the repository configurations.
 	 */
-	private final Map<String, TuleapServerConfiguration> repositoryConfigurations = new HashMap<String, TuleapServerConfiguration>();
+	private final Map<String, TuleapServer> repositoryConfigurations = new HashMap<String, TuleapServer>();
 
 	/**
 	 * Indicates that the cache of the repository configuration has been read.
@@ -284,7 +284,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		// Populate the collector with the task data resulting from the query
 		String queryKind = query.getAttribute(ITuleapQueryConstants.QUERY_KIND);
 
-		TuleapServerConfiguration repositoryConfiguration = this.getTuleapServerConfiguration(taskRepository
+		TuleapServer repositoryConfiguration = this.getTuleapServerConfiguration(taskRepository
 				.getRepositoryUrl());
 		TaskAttributeMapper attributeMapper = this.getTaskDataHandler().getAttributeMapper(taskRepository);
 
@@ -296,26 +296,31 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			int trackerId = Integer.valueOf(query.getAttribute(ITuleapQueryConstants.QUERY_CONFIGURATION_ID))
 					.intValue();
 
-			TuleapTracker trackerConfiguration = repositoryConfiguration.getTrackerConfiguration(trackerId);
+			TuleapTracker tracker = repositoryConfiguration.getTracker(trackerId);
 			try {
-				trackerConfiguration = this.refreshTracker(taskRepository, trackerConfiguration, monitor);
+				tracker = this.refreshTracker(taskRepository, tracker, monitor);
 			} catch (CoreException e) {
 				TuleapCoreActivator.log(e, true);
 			}
 
-			ArtifactTaskDataConverter artifactTaskDataConverter = new ArtifactTaskDataConverter(
-					trackerConfiguration, taskRepository, this);
+			ArtifactTaskDataConverter artifactTaskDataConverter = new ArtifactTaskDataConverter(tracker,
+					taskRepository, this);
 
 			List<TuleapArtifact> artifacts = soapClient.getArtifactsFromQuery(query, repositoryConfiguration,
-					trackerConfiguration, monitor);
+					tracker, monitor);
 			for (TuleapArtifact tuleapArtifact : artifacts) {
-				String taskDataId = TuleapTaskIdentityUtil.getTaskDataId(trackerConfiguration
-						.getTuleapProjectConfiguration().getIdentifier(), tuleapArtifact.getTracker()
-						.getId(), tuleapArtifact.getId());
+				String taskDataId = TuleapTaskIdentityUtil.getTaskDataId(tracker
+						.getTuleapProjectConfiguration().getIdentifier(),
+						tuleapArtifact.getTracker().getId(), tuleapArtifact.getId());
 
 				TaskData taskData = new TaskData(attributeMapper, this.getConnectorKind(), taskRepository
 						.getRepositoryUrl(), taskDataId);
 				artifactTaskDataConverter.populateTaskData(taskData, tuleapArtifact, monitor);
+
+				// If the tracker is a milestone tracker, retrieve milestone-specific informations
+				if (tracker.getTuleapProjectConfiguration().isMilestoneTracker(tracker.getIdentifier())) {
+					// TODO
+				}
 
 				try {
 					collector.accept(taskData);
@@ -370,16 +375,16 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			TuleapRestClient tuleapRestClient = this.getClientManager().getRestClient(taskRepository);
 			TuleapSoapClient tuleapSoapClient = this.getClientManager().getSoapClient(taskRepository);
 			try {
-				TuleapServerConfiguration tuleapServerConfigurationRest = tuleapRestClient
+				TuleapServer tuleapServerConfigurationRest = tuleapRestClient
 						.getTuleapServerConfiguration(monitor);
-				TuleapServerConfiguration tuleapServerConfigurationSoap = tuleapSoapClient
+				TuleapServer tuleapServerConfigurationSoap = tuleapSoapClient
 						.getTuleapServerConfiguration(monitor);
 
 				// put the configuration in this.repositoryConfigurations
-				List<TuleapProjectConfiguration> allProjectConfigurations = tuleapServerConfigurationSoap
-						.getAllProjectConfigurations();
-				for (TuleapProjectConfiguration tuleapProjectConfiguration : allProjectConfigurations) {
-					tuleapServerConfigurationRest.addProject(tuleapProjectConfiguration);
+				List<TuleapProject> allProjectConfigurations = tuleapServerConfigurationSoap
+						.getAllProjects();
+				for (TuleapProject tuleapProject : allProjectConfigurations) {
+					tuleapServerConfigurationRest.addProject(tuleapProject);
 				}
 
 				this.repositoryConfigurations.put(taskRepository.getRepositoryUrl(),
@@ -406,10 +411,10 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		}
 
 		// Update the completion date of the task from the status of the task data
-		TuleapServerConfiguration configuration = this.getTuleapServerConfiguration(taskRepository
+		TuleapServer configuration = this.getTuleapServerConfiguration(taskRepository
 				.getRepositoryUrl());
 
-		TuleapProjectConfiguration projectConfiguration = configuration
+		TuleapProject projectConfiguration = configuration
 				.getProjectConfiguration(TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(taskData
 						.getTaskId()));
 		TuleapTracker tracker = projectConfiguration.getTrackerConfiguration(TuleapTaskIdentityUtil
@@ -493,7 +498,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 *            The repository url
 	 * @return The repository configuration matching the given url.
 	 */
-	public TuleapServerConfiguration getTuleapServerConfiguration(String repositoryUrl) {
+	public TuleapServer getTuleapServerConfiguration(String repositoryUrl) {
 		return repositoryConfigurations.get(repositoryUrl);
 	}
 
@@ -501,12 +506,12 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 * {@inheritDoc}
 	 * 
 	 * @see org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector#refreshTracker(org.eclipse.mylyn.tasks.core.TaskRepository,
-	 *      org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker,
+	 *      org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker,
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public TuleapTracker refreshTracker(TaskRepository taskRepository, TuleapTracker configuration,
 			IProgressMonitor monitor) throws CoreException {
-		TuleapProjectConfiguration projectConfiguration = configuration.getTuleapProjectConfiguration();
+		TuleapProject projectConfiguration = configuration.getTuleapProjectConfiguration();
 
 		TuleapTracker refreshedConfiguration = null;
 		TuleapSoapClient tuleapSoapClient = this.getClientManager().getSoapClient(taskRepository);
@@ -514,9 +519,9 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 				configuration.getIdentifier(), monitor);
 
 		if (refreshedConfiguration != null) {
-			TuleapServerConfiguration tuleapServerConfiguration = this.repositoryConfigurations
+			TuleapServer tuleapServer = this.repositoryConfigurations
 					.get(taskRepository.getRepositoryUrl());
-			tuleapServerConfiguration.replaceConfiguration(projectConfiguration.getIdentifier(),
+			tuleapServer.replaceTracker(projectConfiguration.getIdentifier(),
 					refreshedConfiguration);
 		}
 		return refreshedConfiguration;
@@ -536,7 +541,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 				in = new ObjectInputStream(new FileInputStream(repositoryConfigurationFile));
 				int size = in.readInt();
 				for (int nX = 0; nX < size; nX++) {
-					TuleapServerConfiguration item = (TuleapServerConfiguration)in.readObject();
+					TuleapServer item = (TuleapServer)in.readObject();
 					if (item != null) {
 						repositoryConfigurations.put(item.getUrl(), item);
 					}
@@ -578,14 +583,14 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		if (repositoryConfigurationFile != null) {
 			ObjectOutputStream out = null;
 			try {
-				Set<TuleapServerConfiguration> tempConfigs;
+				Set<TuleapServer> tempConfigs;
 				synchronized(repositoryConfigurations) {
-					tempConfigs = new HashSet<TuleapServerConfiguration>(repositoryConfigurations.values());
+					tempConfigs = new HashSet<TuleapServer>(repositoryConfigurations.values());
 				}
 				if (tempConfigs.size() > 0) {
 					out = new ObjectOutputStream(new FileOutputStream(repositoryConfigurationFile));
 					out.writeInt(tempConfigs.size());
-					for (TuleapServerConfiguration repositoryConfiguration : tempConfigs) {
+					for (TuleapServer repositoryConfiguration : tempConfigs) {
 						if (repositoryConfiguration != null) {
 							out.writeObject(repositoryConfiguration);
 						}

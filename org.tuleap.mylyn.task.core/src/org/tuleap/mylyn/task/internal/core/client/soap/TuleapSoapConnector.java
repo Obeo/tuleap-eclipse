@@ -41,35 +41,35 @@ import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapQueryConstants;
-import org.tuleap.mylyn.task.internal.core.config.ITuleapConfigurationConstants;
-import org.tuleap.mylyn.task.internal.core.data.AbstractFieldValue;
-import org.tuleap.mylyn.task.internal.core.data.BoundFieldValue;
-import org.tuleap.mylyn.task.internal.core.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
-import org.tuleap.mylyn.task.internal.core.model.TuleapAttachmentDescriptor;
-import org.tuleap.mylyn.task.internal.core.model.TuleapElementComment;
-import org.tuleap.mylyn.task.internal.core.model.TuleapGroup;
-import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
-import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapArtifactLink;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapComputedValue;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapDate;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapFileUpload;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapFloat;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapInteger;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapMultiSelectBox;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapOpenList;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapText;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTrackerReport;
-import org.tuleap.mylyn.task.internal.core.model.workflow.TuleapWorkflow;
-import org.tuleap.mylyn.task.internal.core.model.workflow.TuleapWorkflowTransition;
+import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
+import org.tuleap.mylyn.task.internal.core.model.config.ITuleapConfigurationConstants;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapGroup;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapPerson;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapTrackerReport;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapWorkflow;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapWorkflowTransition;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapArtifactLink;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapComputedValue;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapDate;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapFileUpload;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapFloat;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapInteger;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapMultiSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapOpenList;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBoxItem;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapString;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapText;
+import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapAttachmentDescriptor;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapElementComment;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapUrlUtil;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
@@ -324,8 +324,8 @@ public class TuleapSoapConnector {
 	 *            The progress monitor
 	 * @return The configuration of the Tuleap instance.
 	 */
-	public TuleapServerConfiguration getTuleapServerConfiguration(IProgressMonitor monitor) {
-		TuleapServerConfiguration serverConfiguration = new TuleapServerConfiguration(this.trackerLocation
+	public TuleapServer getTuleapServerConfiguration(IProgressMonitor monitor) {
+		TuleapServer serverConfiguration = new TuleapServer(this.trackerLocation
 				.getUrl());
 		serverConfiguration.setLastUpdate(new Date().getTime());
 
@@ -350,7 +350,7 @@ public class TuleapSoapConnector {
 					// The project does not have any trackers, we won't log the error so we catch it
 				}
 
-				TuleapProjectConfiguration projectConfiguration = new TuleapProjectConfiguration(group
+				TuleapProject projectConfiguration = new TuleapProject(group
 						.getGroup_name(), groupId);
 				serverConfiguration.addProject(projectConfiguration);
 
@@ -739,7 +739,7 @@ public class TuleapSoapConnector {
 	 * @return The tasks found
 	 */
 	public List<CommentedArtifact> performQuery(IRepositoryQuery query,
-			TuleapServerConfiguration serverConfiguration, int maxHits, IProgressMonitor monitor) {
+			TuleapServer serverConfiguration, int maxHits, IProgressMonitor monitor) {
 		List<CommentedArtifact> artifactsFound = new ArrayList<CommentedArtifact>();
 
 		int trackerId = -1;
@@ -818,7 +818,7 @@ public class TuleapSoapConnector {
 	 *             In case a remote exception occurs
 	 */
 	private List<TuleapElementComment> getArtifactCommentsWhileLoggedIn(int artifactId,
-			TuleapServerConfiguration serverConfiguration, IProgressMonitor monitor) throws RemoteException {
+			TuleapServer serverConfiguration, IProgressMonitor monitor) throws RemoteException {
 		List<TuleapElementComment> comments = new ArrayList<TuleapElementComment>();
 		if (monitor != null) {
 			monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.retrieveComments,
@@ -908,7 +908,7 @@ public class TuleapSoapConnector {
 	 * @throws MalformedURLException
 	 *             If the URL is invalid
 	 */
-	public CommentedArtifact getArtifact(int artifactId, TuleapServerConfiguration serverConfiguration,
+	public CommentedArtifact getArtifact(int artifactId, TuleapServer serverConfiguration,
 			IProgressMonitor monitor) throws MalformedURLException, RemoteException, ServiceException {
 		this.login(monitor);
 

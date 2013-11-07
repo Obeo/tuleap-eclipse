@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.tests.parser;
 
-import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 
 /**
  * Super class of tests that deserialize project configuration parts.
@@ -31,7 +31,7 @@ public abstract class AbstractConfigurationDeserializerTest<T> extends AbstractD
 	 * 
 	 * @return The project configuration to use for tests.
 	 */
-	protected TuleapProjectConfiguration getProjectConfiguration() {
+	protected TuleapProject getProjectConfiguration() {
 		return provider.getProjectConfiguration();
 	}
 

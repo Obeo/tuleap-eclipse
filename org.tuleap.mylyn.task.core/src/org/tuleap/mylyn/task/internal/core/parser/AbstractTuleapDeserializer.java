@@ -23,10 +23,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.tuleap.mylyn.task.internal.core.data.BoundFieldValue;
-import org.tuleap.mylyn.task.internal.core.data.LiteralFieldValue;
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableElement;
-import org.tuleap.mylyn.task.internal.core.model.TuleapReference;
+import org.tuleap.mylyn.task.internal.core.model.data.AbstractTuleapConfigurableElement;
+import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**

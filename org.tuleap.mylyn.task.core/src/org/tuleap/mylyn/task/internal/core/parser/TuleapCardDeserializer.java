@@ -17,7 +17,7 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCard;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCard;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**

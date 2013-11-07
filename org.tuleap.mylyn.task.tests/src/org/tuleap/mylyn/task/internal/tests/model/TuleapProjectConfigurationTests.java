@@ -14,13 +14,13 @@ import java.util.Collection;
 import java.util.Date;
 
 import org.junit.Test;
-import org.tuleap.mylyn.task.internal.core.model.TuleapGroup;
-import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
-import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapReference;
-import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapPlanningConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapGroup;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapPerson;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapPlanning;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -41,7 +41,7 @@ public class TuleapProjectConfigurationTests {
 	 */
 	@Test
 	public void testTrackers() {
-		TuleapProjectConfiguration project = new TuleapProjectConfiguration("Test Project", 42);
+		TuleapProject project = new TuleapProject("Test Project", 42);
 
 		Date date = new Date();
 		long dateTracker = date.getTime();
@@ -57,7 +57,7 @@ public class TuleapProjectConfigurationTests {
 
 	@Test
 	public void testServices() {
-		TuleapProjectConfiguration project = new TuleapProjectConfiguration("Test Project", 42);
+		TuleapProject project = new TuleapProject("Test Project", 42);
 
 		String service = "trackers";
 		assertFalse(project.hasService(service));
@@ -68,9 +68,9 @@ public class TuleapProjectConfigurationTests {
 
 	@Test
 	public void testPlannings() {
-		TuleapProjectConfiguration project = new TuleapProjectConfiguration("Test Project", 42);
+		TuleapProject project = new TuleapProject("Test Project", 42);
 		TuleapReference projectRef = new TuleapReference(42, "projects/42");
-		TuleapPlanningConfiguration planning = new TuleapPlanningConfiguration(100, projectRef);
+		TuleapPlanning planning = new TuleapPlanning(100, projectRef);
 
 		TuleapReference reference = new TuleapReference();
 		reference.setId(123);
@@ -106,9 +106,9 @@ public class TuleapProjectConfigurationTests {
 
 	@Test
 	public void testPlanningCardwall() {
-		TuleapProjectConfiguration project = new TuleapProjectConfiguration("Test Project", 42);
+		TuleapProject project = new TuleapProject("Test Project", 42);
 		TuleapReference projectRef = new TuleapReference(42, "projects/42");
-		TuleapPlanningConfiguration planning = new TuleapPlanningConfiguration(100, projectRef);
+		TuleapPlanning planning = new TuleapPlanning(100, projectRef);
 
 		planning.setCardwallConfigurationUri("some uri");
 
@@ -142,8 +142,8 @@ public class TuleapProjectConfigurationTests {
 	public void testUsermanagement() {
 		// TODO LDE There is something wrong with the fact that the constructor of ProjectConfiguration does
 		// not receive the server config
-		TuleapServerConfiguration server = new TuleapServerConfiguration("http://server/url");
-		TuleapProjectConfiguration project = new TuleapProjectConfiguration("Test Project", 42);
+		TuleapServer server = new TuleapServer("http://server/url");
+		TuleapProject project = new TuleapProject("Test Project", 42);
 		server.addProject(project);
 
 		assertNull(project.getGroup(0));

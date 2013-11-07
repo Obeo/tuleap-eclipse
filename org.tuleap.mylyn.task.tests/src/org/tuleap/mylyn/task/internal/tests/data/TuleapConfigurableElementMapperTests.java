@@ -23,20 +23,20 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
-import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapDate;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapFloat;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapInteger;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapMultiSelectBox;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapOpenList;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapText;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
-import org.tuleap.mylyn.task.internal.core.model.workflow.TuleapWorkflowTransition;
+import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapWorkflowTransition;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapDate;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapFloat;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapInteger;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapMultiSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapOpenList;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBoxItem;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapString;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapText;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapAttributeMapper;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
@@ -102,12 +102,12 @@ public class TuleapConfigurableElementMapperTests {
 	/**
 	 * The configuration of the tuleap instance.
 	 */
-	private TuleapServerConfiguration tuleapServerConfiguration;
+	private TuleapServer tuleapServer;
 
 	/**
 	 * The configuration of the tuleap project.
 	 */
-	private TuleapProjectConfiguration tuleapProjectConfiguration;
+	private TuleapProject tuleapProject;
 
 	/**
 	 * The name of the items.
@@ -153,12 +153,12 @@ public class TuleapConfigurableElementMapperTests {
 		this.tuleapTracker = new TuleapTracker(trackerId, repositoryUrl,
 				trackerName, itemName, repositoryDescription, System.currentTimeMillis());
 
-		this.tuleapServerConfiguration = new TuleapServerConfiguration(repositoryUrl);
+		this.tuleapServer = new TuleapServer(repositoryUrl);
 
-		this.tuleapProjectConfiguration = new TuleapProjectConfiguration(projectName, projectId);
-		this.tuleapProjectConfiguration.addTracker(tuleapTracker);
-		tuleapServerConfiguration.addProject(tuleapProjectConfiguration);
-		// this.repositoryConnector = new MockedTuleapRepositoryConnector(tuleapServerConfiguration);
+		this.tuleapProject = new TuleapProject(projectName, projectId);
+		this.tuleapProject.addTracker(tuleapTracker);
+		tuleapServer.addProject(tuleapProject);
+		// this.repositoryConnector = new MockedTuleapRepositoryConnector(tuleapServer);
 		fail("Fix the test ");
 
 		this.attributeMapper = new TuleapAttributeMapper(repository, repositoryConnector);

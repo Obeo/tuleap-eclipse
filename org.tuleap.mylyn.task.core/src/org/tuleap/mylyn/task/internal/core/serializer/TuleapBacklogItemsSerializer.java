@@ -20,7 +20,7 @@ import com.google.gson.JsonSerializer;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**

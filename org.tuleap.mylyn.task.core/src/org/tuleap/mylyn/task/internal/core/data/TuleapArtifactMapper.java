@@ -23,13 +23,16 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.agile.core.data.AgileTaskKindUtil;
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
-import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.field.AbstractTuleapSelectBox;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.field.AbstractTuleapSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBoxItem;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapString;
+import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
@@ -104,7 +107,7 @@ public class TuleapArtifactMapper extends TuleapTaskMapper {
 			}
 		}
 
-		TuleapProjectConfiguration projectConfiguration = tracker.getTuleapProjectConfiguration();
+		TuleapProject projectConfiguration = tracker.getTuleapProjectConfiguration();
 		if (projectConfiguration.isMilestoneTracker(tracker.getIdentifier())) {
 			AgileTaskKindUtil.setAgileTaskKind(taskData, AgileTaskKindUtil.TASK_KIND_MILESTONE);
 		} else if (projectConfiguration.isBacklogTracker(tracker.getIdentifier())) {

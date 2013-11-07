@@ -18,12 +18,12 @@ import com.google.gson.JsonSerializationContext;
 
 import java.lang.reflect.Type;
 
-import org.tuleap.mylyn.task.internal.core.data.AbstractFieldValue;
-import org.tuleap.mylyn.task.internal.core.data.AttachmentFieldValue;
-import org.tuleap.mylyn.task.internal.core.data.AttachmentValue;
-import org.tuleap.mylyn.task.internal.core.data.BoundFieldValue;
-import org.tuleap.mylyn.task.internal.core.data.LiteralFieldValue;
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapConfigurableElement;
+import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.AbstractTuleapConfigurableElement;
+import org.tuleap.mylyn.task.internal.core.model.data.AttachmentFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.AttachmentValue;
+import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**

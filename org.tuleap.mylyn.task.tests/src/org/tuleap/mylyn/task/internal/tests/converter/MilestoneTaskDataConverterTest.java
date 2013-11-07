@@ -24,11 +24,11 @@ import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.data.converter.MilestoneTaskDataConverter;
-import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapReference;
-import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
 
 import static org.junit.Assert.fail;
@@ -101,9 +101,9 @@ public class MilestoneTaskDataConverterTest {
 	 */
 	private TaskRepository taskRepository;
 
-	private TuleapProjectConfiguration projectConfiguration;
+	private TuleapProject projectConfiguration;
 
-	private TuleapServerConfiguration serverConfiguration;
+	private TuleapServer serverConfiguration;
 
 	private TuleapRepositoryConnector connector;
 
@@ -115,9 +115,9 @@ public class MilestoneTaskDataConverterTest {
 		String repositoryUrl = "repository"; //$NON-NLS-1$
 		String connectorKind = "kind"; //$NON-NLS-1$
 		String taskId = "id"; //$NON-NLS-1$
-		serverConfiguration = new TuleapServerConfiguration(repositoryUrl);
+		serverConfiguration = new TuleapServer(repositoryUrl);
 
-		projectConfiguration = new TuleapProjectConfiguration("The first project", 200); //$NON-NLS-1$
+		projectConfiguration = new TuleapProject("The first project", 200); //$NON-NLS-1$
 		serverConfiguration.addProject(projectConfiguration);
 
 		final TuleapClientManager clientManager = new TuleapClientManager() {
@@ -129,7 +129,7 @@ public class MilestoneTaskDataConverterTest {
 
 		connector = new TuleapRepositoryConnector() {
 			@Override
-			public TuleapServerConfiguration getTuleapServerConfiguration(String pRepositoryUrl) {
+			public TuleapServer getTuleapServerConfiguration(String pRepositoryUrl) {
 				return serverConfiguration;
 			}
 

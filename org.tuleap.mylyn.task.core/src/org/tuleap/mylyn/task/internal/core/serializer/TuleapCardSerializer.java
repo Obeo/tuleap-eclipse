@@ -16,7 +16,7 @@ import com.google.gson.JsonSerializationContext;
 
 import java.lang.reflect.Type;
 
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCard;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCard;
 
 /**
  * This class is used to serialize the JSON representation of a card.

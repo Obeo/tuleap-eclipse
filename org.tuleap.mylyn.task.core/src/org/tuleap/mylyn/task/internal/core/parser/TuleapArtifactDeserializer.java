@@ -16,7 +16,7 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
 
 /**
  * This class is used to deserialize the JSON representation of a cardwall card.

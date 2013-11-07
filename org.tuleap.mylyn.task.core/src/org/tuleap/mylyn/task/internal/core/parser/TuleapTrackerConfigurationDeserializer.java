@@ -20,26 +20,26 @@ import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
 
 import org.eclipse.core.runtime.Assert;
-import org.tuleap.mylyn.task.internal.core.config.ITuleapConfigurationConstants;
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
-import org.tuleap.mylyn.task.internal.core.model.TuleapGroup;
-import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
-import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.field.AbstractTuleapSelectBox;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapArtifactLink;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapComputedValue;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapDate;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapFileUpload;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapFloat;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapInteger;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapMultiSelectBox;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapOpenList;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapText;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
-import org.tuleap.mylyn.task.internal.core.model.workflow.TuleapWorkflowTransition;
+import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
+import org.tuleap.mylyn.task.internal.core.model.config.ITuleapConfigurationConstants;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapGroup;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapPerson;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapWorkflowTransition;
+import org.tuleap.mylyn.task.internal.core.model.config.field.AbstractTuleapSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapArtifactLink;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapComputedValue;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapDate;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapFileUpload;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapFloat;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapInteger;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapMultiSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapOpenList;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBoxItem;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapString;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapText;
 
 /**
  * This class is used to deserialize the JSON representation of a tracker configuration.
@@ -177,7 +177,7 @@ public class TuleapTrackerConfigurationDeserializer implements JsonDeserializer<
 	/**
 	 * The related project configuration.
 	 */
-	protected final TuleapProjectConfiguration projectConfiguration;
+	protected final TuleapProject projectConfiguration;
 
 	/**
 	 * Constructor that receives the related project Configuration.
@@ -185,7 +185,7 @@ public class TuleapTrackerConfigurationDeserializer implements JsonDeserializer<
 	 * @param projectConfiguration
 	 *            The project configuration;
 	 */
-	public TuleapTrackerConfigurationDeserializer(TuleapProjectConfiguration projectConfiguration) {
+	public TuleapTrackerConfigurationDeserializer(TuleapProject projectConfiguration) {
 		Assert.isNotNull(projectConfiguration);
 		this.projectConfiguration = projectConfiguration;
 	}

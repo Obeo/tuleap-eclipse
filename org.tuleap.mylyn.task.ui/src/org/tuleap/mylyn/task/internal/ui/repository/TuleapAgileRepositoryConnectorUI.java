@@ -66,7 +66,7 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 		// connectorKind);
 		// if (connector instanceof TuleapRepositoryConnector) {
 		// TuleapRepositoryConnector tuleapRepositoryConnector = (TuleapRepositoryConnector)connector;
-		// TuleapServerConfiguration repositoryConfiguration = tuleapRepositoryConnector
+		// TuleapServer repositoryConfiguration = tuleapRepositoryConnector
 		// .getRepositoryConfiguration(taskRepository.getRepositoryUrl());
 		//
 		// }

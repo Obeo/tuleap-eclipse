@@ -22,7 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.junit.Test;
-import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapProjectConfigurationDeserializer;
 
 import static org.junit.Assert.assertEquals;
@@ -35,13 +35,13 @@ import static org.junit.Assert.assertTrue;
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public class TuleapProjectConfigurationDeserializerTests extends AbstractDeserializerTest<TuleapProjectConfiguration> {
+public class TuleapProjectConfigurationDeserializerTests extends AbstractDeserializerTest<TuleapProject> {
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected JsonDeserializer<TuleapProjectConfiguration> getDeserializer() {
+	protected JsonDeserializer<TuleapProject> getDeserializer() {
 		return new TuleapProjectConfigurationDeserializer();
 	}
 
@@ -51,15 +51,15 @@ public class TuleapProjectConfigurationDeserializerTests extends AbstractDeseria
 	@Test
 	public void testProject0Parsing() {
 		String project0 = ParserUtil.loadFile("/projects/project-0.json");
-		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project0,
-				TuleapProjectConfiguration.class);
-		assertNotNull(tuleapProjectConfiguration);
-		assertEquals(0, tuleapProjectConfiguration.getIdentifier());
-		assertEquals("Project 0", tuleapProjectConfiguration.getName()); //$NON-NLS-1$
+		TuleapProject tuleapProject = this.parse(project0,
+				TuleapProject.class);
+		assertNotNull(tuleapProject);
+		assertEquals(0, tuleapProject.getIdentifier());
+		assertEquals("Project 0", tuleapProject.getName()); //$NON-NLS-1$
 
-		assertTrue(tuleapProjectConfiguration.hasService("documents")); //$NON-NLS-1$
-		assertFalse(tuleapProjectConfiguration.hasService("")); //$NON-NLS-1$
-		assertFalse(tuleapProjectConfiguration.hasService("trackers")); //$NON-NLS-1$
+		assertTrue(tuleapProject.hasService("documents")); //$NON-NLS-1$
+		assertFalse(tuleapProject.hasService("")); //$NON-NLS-1$
+		assertFalse(tuleapProject.hasService("trackers")); //$NON-NLS-1$
 	}
 
 	/**
@@ -68,15 +68,15 @@ public class TuleapProjectConfigurationDeserializerTests extends AbstractDeseria
 	@Test
 	public void testProject1Parsing() {
 		String project1 = ParserUtil.loadFile("/projects/project-1.json");
-		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project1,
-				TuleapProjectConfiguration.class);
-		assertNotNull(tuleapProjectConfiguration);
-		assertEquals(1, tuleapProjectConfiguration.getIdentifier());
-		assertEquals("Project 1", tuleapProjectConfiguration.getName()); //$NON-NLS-1$
+		TuleapProject tuleapProject = this.parse(project1,
+				TuleapProject.class);
+		assertNotNull(tuleapProject);
+		assertEquals(1, tuleapProject.getIdentifier());
+		assertEquals("Project 1", tuleapProject.getName()); //$NON-NLS-1$
 
-		assertFalse(tuleapProjectConfiguration.hasService("documents")); //$NON-NLS-1$
-		assertFalse(tuleapProjectConfiguration.hasService("")); //$NON-NLS-1$
-		assertFalse(tuleapProjectConfiguration.hasService("trackers")); //$NON-NLS-1$
+		assertFalse(tuleapProject.hasService("documents")); //$NON-NLS-1$
+		assertFalse(tuleapProject.hasService("")); //$NON-NLS-1$
+		assertFalse(tuleapProject.hasService("trackers")); //$NON-NLS-1$
 	}
 
 	/**
@@ -85,15 +85,15 @@ public class TuleapProjectConfigurationDeserializerTests extends AbstractDeseria
 	@Test
 	public void testProject2Parsing() {
 		String project2 = ParserUtil.loadFile("/projects/project-2.json");
-		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project2,
-				TuleapProjectConfiguration.class);
-		assertNotNull(tuleapProjectConfiguration);
-		assertEquals(2, tuleapProjectConfiguration.getIdentifier());
-		assertEquals("Project 2", tuleapProjectConfiguration.getName()); //$NON-NLS-1$
+		TuleapProject tuleapProject = this.parse(project2,
+				TuleapProject.class);
+		assertNotNull(tuleapProject);
+		assertEquals(2, tuleapProject.getIdentifier());
+		assertEquals("Project 2", tuleapProject.getName()); //$NON-NLS-1$
 
-		assertTrue(tuleapProjectConfiguration.hasService("documents")); //$NON-NLS-1$
-		assertFalse(tuleapProjectConfiguration.hasService("")); //$NON-NLS-1$
-		assertFalse(tuleapProjectConfiguration.hasService("trackers")); //$NON-NLS-1$
+		assertTrue(tuleapProject.hasService("documents")); //$NON-NLS-1$
+		assertFalse(tuleapProject.hasService("")); //$NON-NLS-1$
+		assertFalse(tuleapProject.hasService("trackers")); //$NON-NLS-1$
 	}
 
 	/**
@@ -102,25 +102,25 @@ public class TuleapProjectConfigurationDeserializerTests extends AbstractDeseria
 	@Test
 	public void testProject3Parsing() {
 		String project3 = ParserUtil.loadFile("/projects/project-3.json");
-		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project3,
-				TuleapProjectConfiguration.class);
-		assertNotNull(tuleapProjectConfiguration);
-		assertEquals(3, tuleapProjectConfiguration.getIdentifier());
-		assertEquals("Project 3", tuleapProjectConfiguration.getName()); //$NON-NLS-1$
+		TuleapProject tuleapProject = this.parse(project3,
+				TuleapProject.class);
+		assertNotNull(tuleapProject);
+		assertEquals(3, tuleapProject.getIdentifier());
+		assertEquals("Project 3", tuleapProject.getName()); //$NON-NLS-1$
 
-		assertTrue(tuleapProjectConfiguration.hasService("trackers")); //$NON-NLS-1$
-		assertTrue(tuleapProjectConfiguration.hasService("agile_dashboard")); //$NON-NLS-1$
-		assertTrue(tuleapProjectConfiguration.hasService("documents")); //$NON-NLS-1$
-		assertTrue(tuleapProjectConfiguration.hasService("wikis")); //$NON-NLS-1$
-		assertTrue(tuleapProjectConfiguration.hasService("forums")); //$NON-NLS-1$
-		assertTrue(tuleapProjectConfiguration.hasService("lists")); //$NON-NLS-1$
-		assertTrue(tuleapProjectConfiguration.hasService("news")); //$NON-NLS-1$
-		assertTrue(tuleapProjectConfiguration.hasService("subversion")); //$NON-NLS-1$
-		assertTrue(tuleapProjectConfiguration.hasService("files")); //$NON-NLS-1$
-		assertTrue(tuleapProjectConfiguration.hasService("instant_messaging")); //$NON-NLS-1$
-		assertTrue(tuleapProjectConfiguration.hasService("continuous_integration")); //$NON-NLS-1$
-		assertTrue(tuleapProjectConfiguration.hasService("git")); //$NON-NLS-1$
-		assertFalse(tuleapProjectConfiguration.hasService("")); //$NON-NLS-1$
+		assertTrue(tuleapProject.hasService("trackers")); //$NON-NLS-1$
+		assertTrue(tuleapProject.hasService("agile_dashboard")); //$NON-NLS-1$
+		assertTrue(tuleapProject.hasService("documents")); //$NON-NLS-1$
+		assertTrue(tuleapProject.hasService("wikis")); //$NON-NLS-1$
+		assertTrue(tuleapProject.hasService("forums")); //$NON-NLS-1$
+		assertTrue(tuleapProject.hasService("lists")); //$NON-NLS-1$
+		assertTrue(tuleapProject.hasService("news")); //$NON-NLS-1$
+		assertTrue(tuleapProject.hasService("subversion")); //$NON-NLS-1$
+		assertTrue(tuleapProject.hasService("files")); //$NON-NLS-1$
+		assertTrue(tuleapProject.hasService("instant_messaging")); //$NON-NLS-1$
+		assertTrue(tuleapProject.hasService("continuous_integration")); //$NON-NLS-1$
+		assertTrue(tuleapProject.hasService("git")); //$NON-NLS-1$
+		assertFalse(tuleapProject.hasService("")); //$NON-NLS-1$
 	}
 
 	/**
@@ -129,16 +129,16 @@ public class TuleapProjectConfigurationDeserializerTests extends AbstractDeseria
 	@Test
 	public void testProject4Parsing() {
 		String project4 = ParserUtil.loadFile("/projects/project-4.json");
-		TuleapProjectConfiguration tuleapProjectConfiguration = this.parse(project4,
-				TuleapProjectConfiguration.class);
-		assertNotNull(tuleapProjectConfiguration);
-		assertEquals(4, tuleapProjectConfiguration.getIdentifier());
-		assertEquals("Project 4", tuleapProjectConfiguration.getName()); //$NON-NLS-1$
+		TuleapProject tuleapProject = this.parse(project4,
+				TuleapProject.class);
+		assertNotNull(tuleapProject);
+		assertEquals(4, tuleapProject.getIdentifier());
+		assertEquals("Project 4", tuleapProject.getName()); //$NON-NLS-1$
 
-		assertTrue(tuleapProjectConfiguration.hasService("git")); //$NON-NLS-1$
-		assertFalse(tuleapProjectConfiguration.hasService("")); //$NON-NLS-1$
-		assertFalse(tuleapProjectConfiguration.hasService("documents")); //$NON-NLS-1$
-		assertFalse(tuleapProjectConfiguration.hasService("trackers")); //$NON-NLS-1$
+		assertTrue(tuleapProject.hasService("git")); //$NON-NLS-1$
+		assertFalse(tuleapProject.hasService("")); //$NON-NLS-1$
+		assertFalse(tuleapProject.hasService("documents")); //$NON-NLS-1$
+		assertFalse(tuleapProject.hasService("trackers")); //$NON-NLS-1$
 	}
 
 	/**
@@ -148,24 +148,24 @@ public class TuleapProjectConfigurationDeserializerTests extends AbstractDeseria
 	public void testProjectsParsing() {
 		String projects = ParserUtil.loadFile("/projects/projects.json");
 		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(TuleapProjectConfiguration.class,
+		gsonBuilder.registerTypeAdapter(TuleapProject.class,
 				new TuleapProjectConfigurationDeserializer());
 
 		JsonParser jsonParser = new JsonParser();
 		JsonArray asJsonArray = jsonParser.parse(projects).getAsJsonArray();
 		Gson gson = gsonBuilder.create();
 
-		List<TuleapProjectConfiguration> projectsConfiguration = new ArrayList<TuleapProjectConfiguration>();
+		List<TuleapProject> projectsConfiguration = new ArrayList<TuleapProject>();
 		for (int i = 0; i < asJsonArray.size(); i++) {
 			JsonElement jsonElement = asJsonArray.get(i);
-			TuleapProjectConfiguration tuleapProjectConfiguration = gson.fromJson(jsonElement,
-					TuleapProjectConfiguration.class);
-			projectsConfiguration.add(tuleapProjectConfiguration);
+			TuleapProject tuleapProject = gson.fromJson(jsonElement,
+					TuleapProject.class);
+			projectsConfiguration.add(tuleapProject);
 		}
 
-		Iterator<TuleapProjectConfiguration> iterator = projectsConfiguration.iterator();
+		Iterator<TuleapProject> iterator = projectsConfiguration.iterator();
 
-		TuleapProjectConfiguration firstProjectConfiguration = iterator.next();
+		TuleapProject firstProjectConfiguration = iterator.next();
 
 		assertEquals(0, firstProjectConfiguration.getIdentifier());
 		assertEquals("Project 0", firstProjectConfiguration.getName()); //$NON-NLS-1$
@@ -173,7 +173,7 @@ public class TuleapProjectConfigurationDeserializerTests extends AbstractDeseria
 		assertFalse(firstProjectConfiguration.hasService("")); //$NON-NLS-1$
 		assertFalse(firstProjectConfiguration.hasService("trackers")); //$NON-NLS-1$
 
-		TuleapProjectConfiguration secondProjectConfiguration = iterator.next();
+		TuleapProject secondProjectConfiguration = iterator.next();
 
 		assertEquals(1, secondProjectConfiguration.getIdentifier());
 		assertEquals("Project 1", secondProjectConfiguration.getName()); //$NON-NLS-1$
@@ -181,7 +181,7 @@ public class TuleapProjectConfigurationDeserializerTests extends AbstractDeseria
 		assertFalse(secondProjectConfiguration.hasService("")); //$NON-NLS-1$
 		assertFalse(secondProjectConfiguration.hasService("trackers")); //$NON-NLS-1$
 
-		TuleapProjectConfiguration thirdProjectConfiguration = iterator.next();
+		TuleapProject thirdProjectConfiguration = iterator.next();
 
 		assertEquals(2, thirdProjectConfiguration.getIdentifier());
 		assertEquals("Project 2", thirdProjectConfiguration.getName()); //$NON-NLS-1$
@@ -189,7 +189,7 @@ public class TuleapProjectConfigurationDeserializerTests extends AbstractDeseria
 		assertFalse(thirdProjectConfiguration.hasService("")); //$NON-NLS-1$
 		assertFalse(thirdProjectConfiguration.hasService("trackers")); //$NON-NLS-1$
 
-		TuleapProjectConfiguration fourthProjectConfiguration = iterator.next();
+		TuleapProject fourthProjectConfiguration = iterator.next();
 
 		assertEquals(3, fourthProjectConfiguration.getIdentifier());
 		assertEquals("Project 3", fourthProjectConfiguration.getName()); //$NON-NLS-1$
@@ -207,7 +207,7 @@ public class TuleapProjectConfigurationDeserializerTests extends AbstractDeseria
 		assertTrue(fourthProjectConfiguration.hasService("git")); //$NON-NLS-1$
 		assertFalse(fourthProjectConfiguration.hasService("")); //$NON-NLS-1$
 
-		TuleapProjectConfiguration fifthProjectConfiguration = iterator.next();
+		TuleapProject fifthProjectConfiguration = iterator.next();
 
 		assertEquals(4, fifthProjectConfiguration.getIdentifier());
 		assertEquals("Project 4", fifthProjectConfiguration.getName()); //$NON-NLS-1$

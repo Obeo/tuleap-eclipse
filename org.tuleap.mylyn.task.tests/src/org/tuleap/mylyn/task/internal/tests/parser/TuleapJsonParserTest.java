@@ -15,9 +15,9 @@ import java.util.List;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapTopPlanning;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 
 import static org.junit.Assert.assertEquals;

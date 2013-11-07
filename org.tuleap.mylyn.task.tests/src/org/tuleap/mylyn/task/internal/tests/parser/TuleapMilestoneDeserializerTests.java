@@ -16,7 +16,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import org.junit.Test;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapMilestoneDeserializer;
 
 import static org.junit.Assert.assertEquals;

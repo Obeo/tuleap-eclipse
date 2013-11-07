@@ -17,8 +17,8 @@ import java.text.SimpleDateFormat;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.tuleap.mylyn.task.internal.core.model.TuleapReference;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.serializer.TuleapMilestoneSerializer;
 
 import static org.junit.Assert.assertEquals;

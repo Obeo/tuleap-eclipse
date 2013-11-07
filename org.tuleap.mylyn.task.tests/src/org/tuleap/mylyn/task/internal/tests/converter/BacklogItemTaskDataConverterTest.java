@@ -17,10 +17,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
-import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapReference;
-import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapAttributeMapper;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
@@ -82,12 +82,12 @@ public class BacklogItemTaskDataConverterTest {
 	/**
 	 * The configuration of the tuleap instance.
 	 */
-	private TuleapServerConfiguration tuleapServerConfiguration;
+	private TuleapServer tuleapServer;
 
 	/**
 	 * The configuration of the tuleap project.
 	 */
-	private TuleapProjectConfiguration tuleapProjectConfiguration;
+	private TuleapProject tuleapProject;
 
 	/**
 	 * The name of the project.
@@ -121,19 +121,19 @@ public class BacklogItemTaskDataConverterTest {
 
 		this.repository = new TaskRepository(connectorKind, repositoryUrl);
 
-		this.tuleapServerConfiguration = new TuleapServerConfiguration(repositoryUrl);
+		this.tuleapServer = new TuleapServer(repositoryUrl);
 
-		this.tuleapProjectConfiguration = new TuleapProjectConfiguration(projectName, projectRef.getId());
+		this.tuleapProject = new TuleapProject(projectName, projectRef.getId());
 
 		item200 = new TuleapBacklogItem(200, projectRef, "item200", "URL", "HTML URL", null, null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-		tuleapServerConfiguration.addProject(tuleapProjectConfiguration);
+		tuleapServer.addProject(tuleapProject);
 
 		final TuleapClientManager clientManager = new TuleapClientManager();
 		repositoryConnector = new TuleapRepositoryConnector() {
 			@Override
-			public TuleapServerConfiguration getTuleapServerConfiguration(String pRepositoryUrl) {
-				return tuleapServerConfiguration;
+			public TuleapServer getTuleapServerConfiguration(String pRepositoryUrl) {
+				return tuleapServer;
 			}
 
 			@Override

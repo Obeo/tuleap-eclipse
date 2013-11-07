@@ -36,20 +36,20 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapQueryConstants;
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
-import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapArtifactLink;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapComputedValue;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapDate;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapFloat;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapInteger;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapMultiSelectBox;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapOpenList;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBox;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapSelectBoxItem;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapString;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapText;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapArtifactLink;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapComputedValue;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapDate;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapFloat;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapInteger;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapMultiSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapOpenList;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBoxItem;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapString;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapText;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.ui.TuleapTasksUIPlugin;
@@ -259,9 +259,9 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 
 		if (this.trackerId != -1 && this.projectId != -1) {
 			final TuleapRepositoryConnector repositoryConnector = (TuleapRepositoryConnector)connector;
-			TuleapServerConfiguration repositoryConfiguration = repositoryConnector
+			TuleapServer repositoryConfiguration = repositoryConnector
 					.getTuleapServerConfiguration(this.getTaskRepository().getRepositoryUrl());
-			tuleapTracker = repositoryConfiguration.getTrackerConfiguration(this.trackerId);
+			tuleapTracker = repositoryConfiguration.getTracker(this.trackerId);
 
 			if (tuleapTracker == null) {
 				reloadConfiguration(repositoryConnector);
@@ -309,10 +309,10 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 	public void reloadConfiguration(final TuleapRepositoryConnector repositoryConnector) {
 		IRunnableWithProgress runnable = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-				final TuleapServerConfiguration instanceConfiguration = repositoryConnector
+				final TuleapServer instanceConfiguration = repositoryConnector
 						.getTuleapServerConfiguration(TuleapCustomQueryPage.this.getTaskRepository()
 								.getRepositoryUrl());
-				tuleapTracker = instanceConfiguration.getTrackerConfiguration(trackerId);
+				tuleapTracker = instanceConfiguration.getTracker(trackerId);
 			}
 		};
 		try {

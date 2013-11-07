@@ -19,8 +19,8 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapProjectElement;
-import org.tuleap.mylyn.task.internal.core.model.TuleapReference;
+import org.tuleap.mylyn.task.internal.core.model.data.AbstractTuleapProjectElement;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**

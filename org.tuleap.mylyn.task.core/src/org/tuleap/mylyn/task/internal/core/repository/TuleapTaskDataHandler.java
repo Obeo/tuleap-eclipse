@@ -31,14 +31,14 @@ import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.data.converter.ArtifactTaskDataConverter;
 import org.tuleap.mylyn.task.internal.core.data.converter.MilestoneTaskDataConverter;
-import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardwall;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCardwall;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapTopPlanning;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
@@ -83,9 +83,9 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		int projectId = mapper.getProjectId();
 		int configurationId = mapper.getConfigurationId();
 
-		TuleapServerConfiguration tuleapServerConfiguration = this.connector
+		TuleapServer tuleapServer = this.connector
 				.getTuleapServerConfiguration(taskRepository.getRepositoryUrl());
-		TuleapProjectConfiguration projectConfiguration = tuleapServerConfiguration
+		TuleapProject projectConfiguration = tuleapServer
 				.getProjectConfiguration(projectId);
 
 		TuleapTracker tuleapTracker = projectConfiguration.getTrackerConfiguration(configurationId);
@@ -217,7 +217,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		}
 
 		boolean isInitialized = false;
-		TuleapServerConfiguration repositoryConfiguration = this.connector
+		TuleapServer repositoryConfiguration = this.connector
 				.getTuleapServerConfiguration(repository.getRepositoryUrl());
 		if (repositoryConfiguration != null) {
 			// Sets the creation date and last modification date.
@@ -267,11 +267,11 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 */
 	public TaskData getTaskData(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
-		TuleapServerConfiguration serverConfiguration = this.connector
+		TuleapServer serverConfiguration = this.connector
 				.getTuleapServerConfiguration(taskRepository.getRepositoryUrl());
 
 		int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(taskId);
-		TuleapProjectConfiguration projectConfiguration = serverConfiguration
+		TuleapProject projectConfiguration = serverConfiguration
 				.getProjectConfiguration(projectId);
 
 		int configurationId = TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId(taskId);
@@ -316,12 +316,12 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 * @throws CoreException
 	 *             In case of issues during the download of the artifact data
 	 */
-	private TaskData getArtifactTaskData(String taskId, TuleapServerConfiguration serverConfiguration,
+	private TaskData getArtifactTaskData(String taskId, TuleapServer serverConfiguration,
 			TaskRepository taskRepository, IProgressMonitor monitor) throws CoreException {
 		TuleapSoapClient tuleapSoapClient = this.connector.getClientManager().getSoapClient(taskRepository);
 		TuleapArtifact tuleapArtifact = tuleapSoapClient.getArtifact(taskId, serverConfiguration, monitor);
 		if (tuleapArtifact != null) {
-			TuleapTracker trackerConfiguration = serverConfiguration.getTrackerConfiguration(tuleapArtifact
+			TuleapTracker trackerConfiguration = serverConfiguration.getTracker(tuleapArtifact
 					.getTracker().getId());
 
 			ArtifactTaskDataConverter artifactTaskDataConverter = new ArtifactTaskDataConverter(
@@ -354,7 +354,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 *             In case of issues during the download of the backlogItem data
 	 */
 	// FIXME Remove if really useless, otherwise adapt
-	// private TaskData getBacklogItemTaskData(String taskId, TuleapServerConfiguration serverConfiguration,
+	// private TaskData getBacklogItemTaskData(String taskId, TuleapServer serverConfiguration,
 	// TaskRepository taskRepository, IProgressMonitor monitor) throws CoreException {
 	// TuleapRestClient restClient = this.connector.getClientManager().getRestClient(taskRepository);
 	// int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(taskId);
@@ -393,7 +393,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 * @throws CoreException
 	 *             In case of issues during the download of the artifact data
 	 */
-	private TaskData getTopPlanningTaskData(String taskId, TuleapServerConfiguration serverConfiguration,
+	private TaskData getTopPlanningTaskData(String taskId, TuleapServer serverConfiguration,
 			TaskRepository taskRepository, IProgressMonitor monitor) throws CoreException {
 		TuleapRestClient restClient = this.connector.getClientManager().getRestClient(taskRepository);
 		TuleapTopPlanning topPlanning = restClient.getTopPlanning(TuleapTaskIdentityUtil
@@ -430,7 +430,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 * @throws CoreException
 	 *             In case of issues during the download of the artifact data
 	 */
-	private TaskData fetchMilestoneData(TaskData taskData, TuleapProjectConfiguration projectConfiguration,
+	private TaskData fetchMilestoneData(TaskData taskData, TuleapProject projectConfiguration,
 			TuleapTracker tracker, TaskRepository taskRepository, IProgressMonitor monitor)
 			throws CoreException {
 		TuleapRestClient restClient = this.connector.getClientManager().getRestClient(taskRepository);

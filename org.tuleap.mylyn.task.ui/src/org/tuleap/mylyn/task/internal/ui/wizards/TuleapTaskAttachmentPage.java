@@ -33,11 +33,11 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
-import org.tuleap.mylyn.task.internal.core.model.AbstractTuleapField;
-import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapFileUpload;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapFileUpload;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
@@ -139,7 +139,7 @@ public class TuleapTaskAttachmentPage extends TaskAttachmentPage {
 				.getConnectorKind());
 		if (repositoryConnector instanceof TuleapRepositoryConnector) {
 			TuleapRepositoryConnector tuleapRepositoryConnector = (TuleapRepositoryConnector)repositoryConnector;
-			TuleapServerConfiguration repositoryConfiguration = tuleapRepositoryConnector
+			TuleapServer repositoryConfiguration = tuleapRepositoryConnector
 					.getTuleapServerConfiguration(taskRepository.getRepositoryUrl());
 
 			TaskAttribute attribute = this.getModel().getAttribute();
@@ -150,7 +150,7 @@ public class TuleapTaskAttachmentPage extends TaskAttachmentPage {
 
 			List<String> attachmentFieldsName = new ArrayList<String>();
 
-			TuleapProjectConfiguration projectConfiguration = repositoryConfiguration
+			TuleapProject projectConfiguration = repositoryConfiguration
 					.getProjectConfiguration(projectId);
 			TuleapTracker configuration = projectConfiguration.getTrackerConfiguration(trackerId);
 			Collection<AbstractTuleapField> fields = configuration.getFields();

@@ -11,7 +11,7 @@
 package org.tuleap.mylyn.task.internal.ui.wizards;
 
 import org.eclipse.jface.viewers.LabelProvider;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 
 /**
  * The label provider used to display the trackers in the tracker selection page.

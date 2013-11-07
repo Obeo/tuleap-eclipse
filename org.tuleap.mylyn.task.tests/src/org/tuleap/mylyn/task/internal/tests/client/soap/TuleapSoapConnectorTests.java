@@ -30,15 +30,15 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.client.soap.CommentedArtifact;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapConnector;
-import org.tuleap.mylyn.task.internal.core.config.ITuleapConfigurationConstants;
-import org.tuleap.mylyn.task.internal.core.data.AbstractFieldValue;
-import org.tuleap.mylyn.task.internal.core.data.BoundFieldValue;
-import org.tuleap.mylyn.task.internal.core.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
-import org.tuleap.mylyn.task.internal.core.model.TuleapPerson;
-import org.tuleap.mylyn.task.internal.core.model.TuleapReference;
-import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapArtifact;
+import org.tuleap.mylyn.task.internal.core.model.config.ITuleapConfigurationConstants;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapPerson;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
+import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.CodendiAPIBindingStub;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.CodendiAPIPortType;
@@ -160,7 +160,7 @@ public class TuleapSoapConnectorTests {
 				}
 			};
 
-			TuleapServerConfiguration serverConfiguration = new TuleapServerConfiguration(
+			TuleapServer serverConfiguration = new TuleapServer(
 					"https://tuleap.net");
 			TuleapPerson person = new TuleapPerson(null, null, submittedBy, email);
 			serverConfiguration.register(person);

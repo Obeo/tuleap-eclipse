@@ -24,18 +24,13 @@ public interface ITuleapAPIVersions {
 	String API_PREFIX = "/api/"; //$NON-NLS-1$
 
 	/**
-	 * The best version of the API supported by the connector.
-	 */
-	String BEST_VERSION = "v3.14"; //$NON-NLS-1$
-
-	/**
 	 * v1.
 	 */
 	String V1 = "v1"; //$NON-NLS-1$
 
 	/**
-	 * v1.0.
+	 * The best version of the API supported by the connector.
 	 */
-	String V1_0 = "v1.0"; //$NON-NLS-1$
+	String BEST_VERSION = V1;
 
 }

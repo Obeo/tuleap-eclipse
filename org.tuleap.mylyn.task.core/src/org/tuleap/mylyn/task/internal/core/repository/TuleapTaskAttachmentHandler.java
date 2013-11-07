@@ -37,11 +37,11 @@ import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapConnector;
 import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
-import org.tuleap.mylyn.task.internal.core.model.TuleapAttachmentDescriptor;
-import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.field.TuleapFileUpload;
-import org.tuleap.mylyn.task.internal.core.model.tracker.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapFileUpload;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapAttachmentDescriptor;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**
@@ -115,9 +115,9 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 		int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(task.getTaskId());
 		int trackerId = TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId(task.getTaskId());
 
-		TuleapServerConfiguration tuleapServerConfiguration = this.connector
+		TuleapServer tuleapServer = this.connector
 				.getTuleapServerConfiguration(repository.getRepositoryUrl());
-		TuleapProjectConfiguration projectConfiguration = tuleapServerConfiguration
+		TuleapProject projectConfiguration = tuleapServer
 				.getProjectConfiguration(projectId);
 		TuleapTracker tracker = projectConfiguration.getTrackerConfiguration(trackerId);
 
@@ -197,7 +197,7 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 		TuleapTracker configuration = null;
 
 		// Let's find the tracker configuration
-		TuleapServerConfiguration repositoryConfiguration = this.connector
+		TuleapServer repositoryConfiguration = this.connector
 				.getTuleapServerConfiguration(repository.getRepositoryUrl());
 
 		// If the attachement attribute is available, let's use it
@@ -208,18 +208,18 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 
 			int trackerId = tuleapArtifactMapper.getConfigurationId();
 
-			List<TuleapProjectConfiguration> allProjectConfigurations = repositoryConfiguration
-					.getAllProjectConfigurations();
-			for (TuleapProjectConfiguration tuleapProjectConfiguration : allProjectConfigurations) {
-				configuration = tuleapProjectConfiguration.getTrackerConfiguration(trackerId);
+			List<TuleapProject> allProjectConfigurations = repositoryConfiguration
+					.getAllProjects();
+			for (TuleapProject tuleapProject : allProjectConfigurations) {
+				configuration = tuleapProject.getTrackerConfiguration(trackerId);
 			}
 		} else {
 			int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(task.getTaskId());
 			int trackerId = TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId(task.getTaskId());
 
-			TuleapServerConfiguration tuleapServerConfiguration = this.connector
+			TuleapServer tuleapServer = this.connector
 					.getTuleapServerConfiguration(repository.getRepositoryUrl());
-			TuleapProjectConfiguration projectConfiguration = tuleapServerConfiguration
+			TuleapProject projectConfiguration = tuleapServer
 					.getProjectConfiguration(projectId);
 			configuration = projectConfiguration.getTrackerConfiguration(trackerId);
 		}

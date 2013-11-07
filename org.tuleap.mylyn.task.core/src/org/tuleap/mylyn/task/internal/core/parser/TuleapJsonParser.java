@@ -22,11 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
-import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapCardwall;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapMilestone;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapTopPlanning;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCardwall;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapTopPlanning;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
@@ -44,21 +44,21 @@ public class TuleapJsonParser {
 	 *            The JSON representation of a collection of Tuleap projects
 	 * @return The list of the Tuleap project's configuration
 	 */
-	public List<TuleapProjectConfiguration> parseProjectConfigurations(String jsonResponse) {
+	public List<TuleapProject> parseProjectConfigurations(String jsonResponse) {
 		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(TuleapProjectConfiguration.class,
+		gsonBuilder.registerTypeAdapter(TuleapProject.class,
 				new TuleapProjectConfigurationDeserializer());
 
 		JsonParser jsonParser = new JsonParser();
 		JsonArray jsonArray = jsonParser.parse(jsonResponse).getAsJsonArray();
 
-		List<TuleapProjectConfiguration> result = Lists.newArrayList();
+		List<TuleapProject> result = Lists.newArrayList();
 		for (JsonElement jsonElement : jsonArray) {
 			Gson gson = gsonBuilder.create();
-			TuleapProjectConfiguration tuleapProjectConfiguration = gson.fromJson(jsonElement,
-					TuleapProjectConfiguration.class);
+			TuleapProject tuleapProject = gson.fromJson(jsonElement,
+					TuleapProject.class);
 
-			result.add(tuleapProjectConfiguration);
+			result.add(tuleapProject);
 		}
 		return result;
 	}

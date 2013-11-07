@@ -17,8 +17,8 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.tuleap.mylyn.task.internal.core.model.TuleapReference;
-import org.tuleap.mylyn.task.internal.core.model.agile.TuleapBacklogItem;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.serializer.TuleapBacklogItemsSerializer;
 
 import static org.junit.Assert.assertEquals;

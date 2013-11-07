@@ -32,8 +32,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapQueryConstants;
-import org.tuleap.mylyn.task.internal.core.model.TuleapProjectConfiguration;
-import org.tuleap.mylyn.task.internal.core.model.TuleapServerConfiguration;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
 import org.tuleap.mylyn.task.internal.ui.wizards.TuleapProjectContentProvider;
@@ -73,11 +73,11 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 	 * 
 	 * @return The identifier of the project currently selected in the wizard. -1 if none has been selected
 	 */
-	public TuleapProjectConfiguration getProjectSelected() {
+	public TuleapProject getProjectSelected() {
 		IStructuredSelection selection = (IStructuredSelection)this.projectsTree.getViewer().getSelection();
 		Object firstElement = selection.getFirstElement();
-		if (firstElement instanceof TuleapProjectConfiguration) {
-			return (TuleapProjectConfiguration)firstElement;
+		if (firstElement instanceof TuleapProject) {
+			return (TuleapProject)firstElement;
 		}
 		return null;
 	}
@@ -113,7 +113,7 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			public void selectionChanged(SelectionChangedEvent event) {
-				TuleapProjectConfiguration projectSelected = TuleapQueryProjectPage.this.getProjectSelected();
+				TuleapProject projectSelected = TuleapQueryProjectPage.this.getProjectSelected();
 				if (projectSelected == null) {
 					TuleapQueryProjectPage.this.setErrorMessage(TuleapMylynTasksUIMessages
 							.getString("TuleapProjectPage.SelectAProject")); //$NON-NLS-1$
@@ -189,7 +189,7 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 	 * 
 	 * @return the server configuration.
 	 */
-	private TuleapServerConfiguration getServerConfiguration() {
+	private TuleapServer getServerConfiguration() {
 		return ((ITuleapRepositoryConnector)getConnector()).getTuleapServerConfiguration(getTaskRepository()
 				.getRepositoryUrl());
 	}
@@ -233,9 +233,9 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 		if (!hasRepositoryConfiguration()) {
 			refreshConfiguration(true);
 		}
-		TuleapServerConfiguration serverConfig = getServerConfiguration();
+		TuleapServer serverConfig = getServerConfiguration();
 		if (serverConfig != null) {
-			List<TuleapProjectConfiguration> projectConfigs = serverConfig.getAllProjectConfigurations();
+			List<TuleapProject> projectConfigs = serverConfig.getAllProjects();
 			this.projectsTree.getViewer().setInput(projectConfigs);
 		}
 	}
