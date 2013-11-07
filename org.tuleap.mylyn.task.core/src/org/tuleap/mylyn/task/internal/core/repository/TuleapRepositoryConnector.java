@@ -430,9 +430,9 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		// Update the completion date of the task from the status of the task data
 		TuleapServer configuration = this.getTuleapServerConfiguration(taskRepository.getRepositoryUrl());
 
-		TuleapProject project = configuration.getProjectConfiguration(TuleapTaskIdentityUtil
+		TuleapProject project = configuration.getProject(TuleapTaskIdentityUtil
 				.getProjectIdFromTaskDataId(taskData.getTaskId()));
-		TuleapTracker tracker = project.getTrackerConfiguration(TuleapTaskIdentityUtil
+		TuleapTracker tracker = project.getTracker(TuleapTaskIdentityUtil
 				.getConfigurationIdFromTaskDataId(taskData.getTaskId()));
 
 		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, tracker);

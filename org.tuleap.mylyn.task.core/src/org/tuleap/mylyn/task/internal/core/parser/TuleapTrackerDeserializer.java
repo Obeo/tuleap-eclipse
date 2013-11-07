@@ -47,7 +47,7 @@ import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapText;
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public class TuleapTrackerConfigurationDeserializer implements JsonDeserializer<TuleapTracker> {
+public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker> {
 
 	/**
 	 * The identifier keyword.
@@ -185,7 +185,7 @@ public class TuleapTrackerConfigurationDeserializer implements JsonDeserializer<
 	 * @param projectConfiguration
 	 *            The project configuration;
 	 */
-	public TuleapTrackerConfigurationDeserializer(TuleapProject projectConfiguration) {
+	public TuleapTrackerDeserializer(TuleapProject projectConfiguration) {
 		Assert.isNotNull(projectConfiguration);
 		this.projectConfiguration = projectConfiguration;
 	}

@@ -49,7 +49,7 @@ public class TuleapServer implements Serializable {
 	/**
 	 * This map contains the ID of the projects of the Tuleap instance and their matching configuration.
 	 */
-	private Map<Integer, TuleapProject> projectById = new HashMap<Integer, TuleapProject>();
+	private Map<Integer, TuleapProject> projectsById = new HashMap<Integer, TuleapProject>();
 
 	/**
 	 * The constructor.
@@ -68,9 +68,9 @@ public class TuleapServer implements Serializable {
 	 *            The configuration of the project (must not be null).
 	 */
 	public void addProject(TuleapProject tuleapProject) {
-		this.projectById.put(Integer.valueOf(tuleapProject.getIdentifier()),
+		this.projectsById.put(Integer.valueOf(tuleapProject.getIdentifier()),
 				tuleapProject);
-		tuleapProject.setServerConfiguration(this);
+		tuleapProject.setServer(this);
 	}
 
 	/**
@@ -80,8 +80,8 @@ public class TuleapServer implements Serializable {
 	 *            the id of the project
 	 * @return The project configuration for the given project id.
 	 */
-	public TuleapProject getProjectConfiguration(int projectId) {
-		return this.projectById.get(Integer.valueOf(projectId));
+	public TuleapProject getProject(int projectId) {
+		return this.projectsById.get(Integer.valueOf(projectId));
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class TuleapServer implements Serializable {
 	 * @return The list of all the project configurations.
 	 */
 	public List<TuleapProject> getAllProjects() {
-		return new ArrayList<TuleapProject>(this.projectById.values());
+		return new ArrayList<TuleapProject>(this.projectsById.values());
 	}
 
 	/**
@@ -130,9 +130,9 @@ public class TuleapServer implements Serializable {
 	 * @return The configuration of the tracker with the given identifier or null if none can be found
 	 */
 	public TuleapTracker getTracker(int trackerId) {
-		for (TuleapProject tuleapProject : this.projectById.values()) {
+		for (TuleapProject tuleapProject : this.projectsById.values()) {
 			TuleapTracker trackerConfiguration = tuleapProject
-					.getTrackerConfiguration(trackerId);
+					.getTracker(trackerId);
 			if (trackerConfiguration != null) {
 				return trackerConfiguration;
 			}
@@ -150,7 +150,7 @@ public class TuleapServer implements Serializable {
 	 *            The new version of the tracker
 	 */
 	public void replaceTracker(int projectId, TuleapTracker tracker) {
-		TuleapProject projectConfiguration = this.projectById.get(Integer.valueOf(projectId));
+		TuleapProject projectConfiguration = this.projectsById.get(Integer.valueOf(projectId));
 		if (projectConfiguration != null) {
 			projectConfiguration.addTracker(tracker);
 		}

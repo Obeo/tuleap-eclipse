@@ -128,7 +128,8 @@
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/config/field" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="111" width="323" x="338" y="51"/>    
-    <display autosize="false" stereotype="true" accessors="true"/>  
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true"/>  
   </package>  
   <class id="13" language="java" name="org.tuleap.mylyn.task.internal.core.model.config.TuleapPlanning" 
     project="org.tuleap.mylyn.task.core" 

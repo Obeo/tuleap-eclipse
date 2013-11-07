@@ -86,9 +86,9 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		TuleapServer tuleapServer = this.connector
 				.getTuleapServerConfiguration(taskRepository.getRepositoryUrl());
 		TuleapProject projectConfiguration = tuleapServer
-				.getProjectConfiguration(projectId);
+				.getProject(projectId);
 
-		TuleapTracker tuleapTracker = projectConfiguration.getTrackerConfiguration(configurationId);
+		TuleapTracker tuleapTracker = projectConfiguration.getTracker(configurationId);
 		tuleapTracker = this.connector.refreshTracker(taskRepository, tuleapTracker, monitor);
 		response = this.postArtifactTaskData(tuleapTracker, taskData, taskRepository, monitor);
 
@@ -272,7 +272,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 		int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(taskId);
 		TuleapProject projectConfiguration = serverConfiguration
-				.getProjectConfiguration(projectId);
+				.getProject(projectId);
 
 		int configurationId = TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId(taskId);
 
@@ -281,7 +281,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			// Top Planning
 			taskData = this.getTopPlanningTaskData(taskId, serverConfiguration, taskRepository, monitor);
 		} else {
-			TuleapTracker tracker = projectConfiguration.getTrackerConfiguration(configurationId);
+			TuleapTracker tracker = projectConfiguration.getTracker(configurationId);
 			tracker = this.connector.refreshTracker(taskRepository, tracker, monitor);
 			taskData = this.getArtifactTaskData(taskId, serverConfiguration, taskRepository, monitor);
 			// TODO Fetch comments (changeSets)

@@ -149,7 +149,7 @@ public class TuleapTrackerPage extends WizardPage {
 			}
 
 			if (projectSelected != null) {
-				allTrackerConfigurations.addAll(projectSelected.getAllTrackerConfigurations());
+				allTrackerConfigurations.addAll(projectSelected.getAllTrackers());
 			}
 
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {

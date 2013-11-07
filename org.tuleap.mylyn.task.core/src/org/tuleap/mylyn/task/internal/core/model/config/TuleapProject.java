@@ -48,7 +48,7 @@ public class TuleapProject implements Serializable {
 	/**
 	 * The parent server configuration.
 	 */
-	private TuleapServer serverConfiguration;
+	private TuleapServer server;
 
 	/**
 	 * The list of active services for this project.
@@ -101,7 +101,7 @@ public class TuleapProject implements Serializable {
 	 *            the id of the tracker
 	 * @return The tracker configuration for the given tracker id.
 	 */
-	public TuleapTracker getTrackerConfiguration(int trackerId) {
+	public TuleapTracker getTracker(int trackerId) {
 		return this.trackersById.get(Integer.valueOf(trackerId));
 	}
 
@@ -110,7 +110,7 @@ public class TuleapProject implements Serializable {
 	 * 
 	 * @return The list of all the tracker configurations.
 	 */
-	public List<TuleapTracker> getAllTrackerConfigurations() {
+	public List<TuleapTracker> getAllTrackers() {
 		return new ArrayList<TuleapTracker>(this.trackersById.values());
 	}
 
@@ -290,17 +290,17 @@ public class TuleapProject implements Serializable {
 			groupToUse = group;
 		}
 		groupToUse.addMember(member);
-		serverConfiguration.register(member);
+		server.register(member);
 	}
 
 	/**
 	 * The parent server configuration setter.
 	 * 
-	 * @param serverConfiguration
+	 * @param server
 	 *            The parent server configuration.
 	 */
-	protected void setServerConfiguration(TuleapServer serverConfiguration) {
-		this.serverConfiguration = serverConfiguration;
+	protected void setServer(TuleapServer server) {
+		this.server = server;
 	}
 
 	/**
@@ -308,7 +308,7 @@ public class TuleapProject implements Serializable {
 	 * 
 	 * @return The parent server configuration.
 	 */
-	public TuleapServer getServerConfiguration() {
-		return serverConfiguration;
+	public TuleapServer getServer() {
+		return server;
 	}
 }

@@ -23,7 +23,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
-import org.tuleap.mylyn.task.internal.core.parser.TuleapProjectConfigurationDeserializer;
+import org.tuleap.mylyn.task.internal.core.parser.TuleapProjectDeserializer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -42,7 +42,7 @@ public class TuleapProjectConfigurationDeserializerTests extends AbstractDeseria
 	 */
 	@Override
 	protected JsonDeserializer<TuleapProject> getDeserializer() {
-		return new TuleapProjectConfigurationDeserializer();
+		return new TuleapProjectDeserializer();
 	}
 
 	/**
@@ -149,7 +149,7 @@ public class TuleapProjectConfigurationDeserializerTests extends AbstractDeseria
 		String projects = ParserUtil.loadFile("/projects/projects.json");
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(TuleapProject.class,
-				new TuleapProjectConfigurationDeserializer());
+				new TuleapProjectDeserializer());
 
 		JsonParser jsonParser = new JsonParser();
 		JsonArray asJsonArray = jsonParser.parse(projects).getAsJsonArray();

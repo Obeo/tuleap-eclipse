@@ -151,8 +151,8 @@ public class TuleapTaskAttachmentPage extends TaskAttachmentPage {
 			List<String> attachmentFieldsName = new ArrayList<String>();
 
 			TuleapProject projectConfiguration = repositoryConfiguration
-					.getProjectConfiguration(projectId);
-			TuleapTracker configuration = projectConfiguration.getTrackerConfiguration(trackerId);
+					.getProject(projectId);
+			TuleapTracker configuration = projectConfiguration.getTracker(trackerId);
 			Collection<AbstractTuleapField> fields = configuration.getFields();
 			for (AbstractTuleapField abstractTuleapField : fields) {
 				if (abstractTuleapField instanceof TuleapFileUpload) {

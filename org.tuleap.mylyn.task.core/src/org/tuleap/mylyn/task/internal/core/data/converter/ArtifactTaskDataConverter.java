@@ -247,9 +247,9 @@ public class ArtifactTaskDataConverter {
 				projectConfiguration = tracker.getTuleapProjectConfiguration();
 			} else {
 				projectConfiguration = connector.getTuleapServerConfiguration(taskRepository.getUrl())
-						.getProjectConfiguration(projectId);
+						.getProject(projectId);
 			}
-			refreshedConfig = projectConfiguration.getTrackerConfiguration(trackerId);
+			refreshedConfig = projectConfiguration.getTracker(trackerId);
 			try {
 				refreshedTrackersById.put(Integer.valueOf(trackerId), connector.refreshTracker(
 						taskRepository, refreshedConfig, monitor));

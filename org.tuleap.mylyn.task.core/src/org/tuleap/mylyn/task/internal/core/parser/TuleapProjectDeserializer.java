@@ -26,7 +26,7 @@ import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public class TuleapProjectConfigurationDeserializer implements JsonDeserializer<TuleapProject> {
+public class TuleapProjectDeserializer implements JsonDeserializer<TuleapProject> {
 
 	/**
 	 * The key used for the name of the project.

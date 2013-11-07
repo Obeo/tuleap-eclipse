@@ -49,10 +49,10 @@ public class TuleapProjectConfigurationTests {
 				dateTracker);
 		project.addTracker(tracker);
 
-		assertNull(project.getTrackerConfiguration(0));
-		TuleapTracker t = project.getTrackerConfiguration(1);
+		assertNull(project.getTracker(0));
+		TuleapTracker t = project.getTracker(1);
 		assertSame(tracker, t);
-		assertEquals(1, project.getAllTrackerConfigurations().size());
+		assertEquals(1, project.getAllTrackers().size());
 	}
 
 	@Test

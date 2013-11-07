@@ -30,7 +30,7 @@ import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapMultiSelectB
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapString;
-import org.tuleap.mylyn.task.internal.core.parser.TuleapTrackerConfigurationDeserializer;
+import org.tuleap.mylyn.task.internal.core.parser.TuleapTrackerDeserializer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -49,7 +49,7 @@ public class TuleapTrackerConfigurationDeserializerTests extends AbstractConfigu
 	 */
 	@Override
 	protected JsonDeserializer<TuleapTracker> getDeserializer() {
-		return new TuleapTrackerConfigurationDeserializer(getProjectConfiguration());
+		return new TuleapTrackerDeserializer(getProjectConfiguration());
 	}
 
 	/**

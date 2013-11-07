@@ -161,8 +161,8 @@ public class TuleapTaskDataHandlerTests {
 		};
 
 		TuleapTaskDataHandler tuleapTaskDataHandler = new TuleapTaskDataHandler(repositoryConnector);
-		TuleapTracker configuration = this.tuleapServer.getProjectConfiguration(
-				projectRef.getId()).getTrackerConfiguration(configurationId);
+		TuleapTracker configuration = this.tuleapServer.getProject(
+				projectRef.getId()).getTracker(configurationId);
 
 		TaskData taskData = new TaskData(tuleapTaskDataHandler.getAttributeMapper(repository),
 				ITuleapConstants.CONNECTOR_KIND, this.repository.getRepositoryUrl(), "");
@@ -430,7 +430,7 @@ public class TuleapTaskDataHandlerTests {
 				ITuleapConstants.CONNECTOR_KIND, "", "");
 
 		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer
-				.getProjectConfiguration(projectRef.getId()).getTrackerConfiguration(trackerRef.getId()));
+				.getProject(projectRef.getId()).getTracker(trackerRef.getId()));
 		mapper.initializeEmptyTaskData();
 
 		String taskId = TuleapTaskIdentityUtil.getTaskDataId(projectRef.getId(), trackerRef.getId(),
@@ -449,7 +449,7 @@ public class TuleapTaskDataHandlerTests {
 				ITuleapConstants.CONNECTOR_KIND, "", "");
 
 		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer
-				.getProjectConfiguration(projectRef.getId()).getTrackerConfiguration(milestoneTrackerId));
+				.getProject(projectRef.getId()).getTracker(milestoneTrackerId));
 		mapper.initializeEmptyTaskData();
 
 		String taskId = TuleapTaskIdentityUtil.getTaskDataId(projectRef.getId(), milestoneTrackerId,
@@ -468,7 +468,7 @@ public class TuleapTaskDataHandlerTests {
 				ITuleapConstants.CONNECTOR_KIND, "", "");
 
 		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer
-				.getProjectConfiguration(projectRef.getId()).getTrackerConfiguration(backlogItemTrackerId));
+				.getProject(projectRef.getId()).getTracker(backlogItemTrackerId));
 		mapper.initializeEmptyTaskData();
 
 		String taskId = TuleapTaskIdentityUtil.getTaskDataId(projectRef.getId(), backlogItemTrackerId,
@@ -488,7 +488,7 @@ public class TuleapTaskDataHandlerTests {
 				ITuleapConstants.CONNECTOR_KIND, "", taskId);
 
 		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer
-				.getProjectConfiguration(projectRef.getId()).getTrackerConfiguration(trackerRef.getId()));
+				.getProject(projectRef.getId()).getTracker(trackerRef.getId()));
 		mapper.initializeEmptyTaskData();
 
 		this.testPostTaskData(taskData, taskId, ResponseKind.TASK_UPDATED);
@@ -506,7 +506,7 @@ public class TuleapTaskDataHandlerTests {
 				ITuleapConstants.CONNECTOR_KIND, "", taskId);
 
 		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer
-				.getProjectConfiguration(projectRef.getId()).getTrackerConfiguration(milestoneTrackerId));
+				.getProject(projectRef.getId()).getTracker(milestoneTrackerId));
 		mapper.initializeEmptyTaskData();
 
 		this.testPostTaskData(taskData, taskId, ResponseKind.TASK_UPDATED);

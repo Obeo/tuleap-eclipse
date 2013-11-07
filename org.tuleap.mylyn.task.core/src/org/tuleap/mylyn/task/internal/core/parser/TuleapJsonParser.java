@@ -50,7 +50,7 @@ public class TuleapJsonParser {
 	 */
 	public List<TuleapProject> parseProjectConfigurations(String jsonResponse) {
 		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(TuleapProject.class, new TuleapProjectConfigurationDeserializer());
+		gsonBuilder.registerTypeAdapter(TuleapProject.class, new TuleapProjectDeserializer());
 
 		JsonParser jsonParser = new JsonParser();
 		JsonArray jsonArray = jsonParser.parse(jsonResponse).getAsJsonArray();

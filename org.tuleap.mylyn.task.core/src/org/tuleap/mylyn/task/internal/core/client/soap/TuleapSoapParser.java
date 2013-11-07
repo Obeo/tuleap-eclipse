@@ -66,7 +66,7 @@ public class TuleapSoapParser {
 		String label = null;
 		String url = null;
 
-		String repositoryUrl = tuleapTracker.getTuleapProjectConfiguration().getServerConfiguration()
+		String repositoryUrl = tuleapTracker.getTuleapProjectConfiguration().getServer()
 				.getUrl();
 
 		String taskId = TuleapTaskIdentityUtil.getTaskDataId(tuleapTracker.getTuleapProjectConfiguration()
@@ -128,7 +128,7 @@ public class TuleapSoapParser {
 
 						FieldValueFileInfo[] fileInfo = artifactFieldValue.getField_value().getFile_info();
 						TuleapServer serverConfiguration = tuleapTracker
-								.getTuleapProjectConfiguration().getServerConfiguration();
+								.getTuleapProjectConfiguration().getServer();
 						// Yes, this array can be null.
 						if (fileInfo != null) {
 							for (FieldValueFileInfo fieldValueFileInfo : fileInfo) {
