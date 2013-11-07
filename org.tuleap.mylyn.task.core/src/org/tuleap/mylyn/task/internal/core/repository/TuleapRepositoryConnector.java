@@ -57,6 +57,8 @@ import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapTopPlanning;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
@@ -308,18 +310,34 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 			List<TuleapArtifact> artifacts = soapClient.getArtifactsFromQuery(query, repositoryConfiguration,
 					tracker, monitor);
-			for (TuleapArtifact tuleapArtifact : artifacts) {
+			for (TuleapArtifact artifact : artifacts) {
 				String taskDataId = TuleapTaskIdentityUtil.getTaskDataId(tracker
-						.getTuleapProjectConfiguration().getIdentifier(),
-						tuleapArtifact.getTracker().getId(), tuleapArtifact.getId());
+						.getTuleapProjectConfiguration().getIdentifier(), artifact.getTracker().getId(),
+						artifact.getId());
 
 				TaskData taskData = new TaskData(attributeMapper, this.getConnectorKind(), taskRepository
 						.getRepositoryUrl(), taskDataId);
-				artifactTaskDataConverter.populateTaskData(taskData, tuleapArtifact, monitor);
+				artifactTaskDataConverter.populateTaskData(taskData, artifact, monitor);
 
 				// If the tracker is a milestone tracker, retrieve milestone-specific informations
 				if (tracker.getTuleapProjectConfiguration().isMilestoneTracker(tracker.getIdentifier())) {
-					// TODO
+					TuleapRestClient restClient = clientManager.getRestClient(taskRepository);
+					try {
+						TuleapMilestone milestone = restClient.getMilestone(artifact.getId(), monitor);
+						MilestoneTaskDataConverter milestoneConverter = new MilestoneTaskDataConverter(
+								taskRepository, this);
+						milestoneConverter.populateTaskData(taskData, milestone, monitor);
+
+						List<TuleapMilestone> subMilestones = restClient.getSubMilestones(artifact.getId(),
+								monitor);
+						List<TuleapBacklogItem> backlogItems = restClient.getBacklogItems(artifact.getId(),
+								monitor);
+						milestoneConverter.populatePlanning(taskData, subMilestones, backlogItems, monitor);
+
+						// TODO Cardwall, when cardwall is active
+					} catch (CoreException e) {
+						TuleapCoreActivator.log(e, true);
+					}
 				}
 
 				try {
@@ -381,10 +399,9 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 						.getTuleapServerConfiguration(monitor);
 
 				// put the configuration in this.repositoryConfigurations
-				List<TuleapProject> allProjectConfigurations = tuleapServerConfigurationSoap
-						.getAllProjects();
-				for (TuleapProject tuleapProject : allProjectConfigurations) {
-					tuleapServerConfigurationRest.addProject(tuleapProject);
+				List<TuleapProject> allProjects = tuleapServerConfigurationSoap.getAllProjects();
+				for (TuleapProject project : allProjects) {
+					tuleapServerConfigurationRest.addProject(project);
 				}
 
 				this.repositoryConfigurations.put(taskRepository.getRepositoryUrl(),
@@ -411,13 +428,11 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		}
 
 		// Update the completion date of the task from the status of the task data
-		TuleapServer configuration = this.getTuleapServerConfiguration(taskRepository
-				.getRepositoryUrl());
+		TuleapServer configuration = this.getTuleapServerConfiguration(taskRepository.getRepositoryUrl());
 
-		TuleapProject projectConfiguration = configuration
-				.getProjectConfiguration(TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(taskData
-						.getTaskId()));
-		TuleapTracker tracker = projectConfiguration.getTrackerConfiguration(TuleapTaskIdentityUtil
+		TuleapProject project = configuration.getProjectConfiguration(TuleapTaskIdentityUtil
+				.getProjectIdFromTaskDataId(taskData.getTaskId()));
+		TuleapTracker tracker = project.getTrackerConfiguration(TuleapTaskIdentityUtil
 				.getConfigurationIdFromTaskDataId(taskData.getTaskId()));
 
 		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, tracker);
@@ -514,10 +529,8 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 				configuration.getIdentifier(), monitor);
 
 		if (refreshedConfiguration != null) {
-			TuleapServer tuleapServer = this.repositoryConfigurations
-					.get(taskRepository.getRepositoryUrl());
-			tuleapServer.replaceTracker(projectConfiguration.getIdentifier(),
-					refreshedConfiguration);
+			TuleapServer tuleapServer = this.repositoryConfigurations.get(taskRepository.getRepositoryUrl());
+			tuleapServer.replaceTracker(projectConfiguration.getIdentifier(), refreshedConfiguration);
 		}
 		return refreshedConfiguration;
 	}
