@@ -129,6 +129,11 @@ public class TuleapRestConnector implements IRestConnector {
 			request.setChallengeResponse(challengeResponse);
 		}
 
+		ChallengeResponse proxyChallengeResponse = getProxyChallengeResponse();
+		if (proxyChallengeResponse != null) {
+			request.setProxyChallengeResponse(proxyChallengeResponse);
+		}
+
 		Representation entity = new StringRepresentation(data, MediaType.APPLICATION_JSON,
 				Language.ENGLISH_US, CharacterSet.UTF_8);
 		request.setEntity(entity);
@@ -230,6 +235,20 @@ public class TuleapRestConnector implements IRestConnector {
 	 */
 	protected ChallengeResponse getChallengeResponse() {
 		AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.HTTP);
+		if (credentials != null) {
+			return new ChallengeResponse(ChallengeScheme.HTTP_BASIC, credentials.getUserName(), credentials
+					.getPassword());
+		}
+		return null;
+	}
+
+	/**
+	 * Computes the challenge response for a proxy server with the available credentials.
+	 * 
+	 * @return A challenge response to use by Restlet for proxy authentication.
+	 */
+	protected ChallengeResponse getProxyChallengeResponse() {
+		AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.PROXY);
 		if (credentials != null) {
 			return new ChallengeResponse(ChallengeScheme.HTTP_BASIC, credentials.getUserName(), credentials
 					.getPassword());
