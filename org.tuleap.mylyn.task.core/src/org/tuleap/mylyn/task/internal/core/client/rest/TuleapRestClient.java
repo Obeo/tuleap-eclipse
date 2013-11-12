@@ -11,6 +11,8 @@
 package org.tuleap.mylyn.task.internal.core.client.rest;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 import java.util.Date;
 import java.util.List;
@@ -249,6 +251,48 @@ public class TuleapRestClient {
 	// TODO get user groups of a project
 
 	// TODO get users of a group
+
+	/**
+	 * Create the token on the server.
+	 * 
+	 * @param taskRepositoryCredentials
+	 *            The task repository credentials
+	 * @param monitor
+	 *            The progress monitor.
+	 * @throws CoreException
+	 *             In case of error during the update of the artifact.
+	 */
+
+	public void createToken(TaskRepositoryCredentials taskRepositoryCredentials, IProgressMonitor monitor)
+			throws CoreException {
+		// Test the connection
+		RestResourceFactory restResources = tuleapRestConnector.getResourceFactory();
+		RestResource restBacklogItem = restResources.tokens();
+
+		String changesToPost = getCredentials(taskRepositoryCredentials);
+
+		// Send the POST request
+		ServerResponse response = restBacklogItem.post().withBody(changesToPost).run();
+		if (!response.isOk()) {
+			// Invalid login? server error?
+			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, response
+					.getBody()));
+		}
+	}
+
+	/**
+	 * Create the POST token body.
+	 * 
+	 * @param taskRepositoryCredentials
+	 *            The task repository credentials
+	 * @return The POST token body
+	 */
+	private String getCredentials(TaskRepositoryCredentials taskRepositoryCredentials) {
+		JsonObject tokenObject = new JsonObject();
+		tokenObject.add("username", new JsonPrimitive(taskRepositoryCredentials.getUserName())); //$NON-NLS-1$
+		tokenObject.add("password", new JsonPrimitive(taskRepositoryCredentials.getPassword())); //$NON-NLS-1$
+		return tokenObject.toString();
+	}
 
 	/**
 	 * Retrieves the artifact from the server with the given artifact id.

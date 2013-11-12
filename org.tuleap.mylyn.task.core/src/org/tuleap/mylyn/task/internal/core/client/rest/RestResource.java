@@ -340,5 +340,11 @@ public class RestResource {
 		 */
 		String USERS = "users"; //$NON-NLS-1$
 
+		/**
+		 * "tokens".
+		 */
+
+		String TOKENS = "tokens"; //$NON-NLS-1$
+
 	}
 }

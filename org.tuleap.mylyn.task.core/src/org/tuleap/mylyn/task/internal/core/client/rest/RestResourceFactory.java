@@ -62,6 +62,15 @@ public final class RestResourceFactory {
 	}
 
 	/**
+	 * Provides access to the {code /tokens} HTTP resource.
+	 * 
+	 * @return A resource that gives access to the {code /tokens} HTTP resource.
+	 */
+	public RestResource tokens() {
+		return resource(RestResource.POST, URL.TOKENS);
+	}
+
+	/**
 	 * Provides access to the {code /projects} HTTP resource.
 	 * 
 	 * @return A resource that gives access to the {code /projects} HTTP resource.
