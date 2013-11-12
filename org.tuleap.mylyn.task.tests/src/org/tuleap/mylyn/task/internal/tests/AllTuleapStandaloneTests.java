@@ -42,7 +42,6 @@ import org.tuleap.mylyn.task.internal.tests.serializer.TuleapBacklogItemSerializ
 import org.tuleap.mylyn.task.internal.tests.serializer.TuleapBacklogItemsSerializerTests;
 import org.tuleap.mylyn.task.internal.tests.serializer.TuleapMilestoneSerializerTests;
 import org.tuleap.mylyn.task.internal.tests.server.ServerResponseTest;
-import org.tuleap.mylyn.task.internal.tests.server.TaskRepositoryCredentialsTest;
 
 /**
  * The stand alone unit tests suite (run as standard junit test).
@@ -59,7 +58,7 @@ import org.tuleap.mylyn.task.internal.tests.server.TaskRepositoryCredentialsTest
 		TuleapMilestoneSerializerTests.class, TuleapTopPlanningDeserializerTests.class,
 		TuleapBacklogItemsSerializerTests.class, MilestoneTaskDataConverterTest.class,
 		TuleapSoapConnectorTests.class, TuleapRepositoryConnectorTests.class,
-		TuleapTaskDataHandlerTests.class, TuleapWorkflowTests.class, TaskRepositoryCredentialsTest.class,
+		TuleapTaskDataHandlerTests.class, TuleapWorkflowTests.class,
 		TuleapConfigurableElementMapperTests.class, TuleapRestResourceFactoryTest.class,
 		RestResourceTest.class, RestOperationsTest.class, TuleapRestClientTest.class,
 		TuleapBacklogItemSerializerTests.class, BacklogItemTaskDataConverterTest.class })
