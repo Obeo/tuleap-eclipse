@@ -13,8 +13,6 @@ package org.tuleap.mylyn.task.internal.core.client.rest;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -26,6 +24,10 @@ import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
+import org.tuleap.mylyn.task.internal.core.model.TuleapDebugPart;
+import org.tuleap.mylyn.task.internal.core.model.TuleapErrorMessage;
+import org.tuleap.mylyn.task.internal.core.model.TuleapErrorPart;
+import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
@@ -149,33 +151,26 @@ public abstract class AbstractRestOperation {
 	 */
 	protected void checkServerError(ServerResponse response) throws CoreException {
 		if (!response.isOk()) {
-			String message = TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.errorReturnedByServer, getUrl(), getMethodName(),
-					getErrorMessage(response.getBody()));
-			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, message));
+			TuleapErrorMessage message = new TuleapJsonParser().getErrorMessage(response.getBody());
+			TuleapErrorPart errorPart = message.getError();
+			TuleapDebugPart debugPart = message.getDebug();
+			String msg;
+			if (errorPart == null) {
+				msg = response.getBody();
+			} else {
+				if (debugPart != null) {
+					msg = TuleapMylynTasksMessages.getString(
+							TuleapMylynTasksMessagesKeys.errorReturnedByServerWithDebug, getUrl(),
+							getMethodName(), Integer.valueOf(errorPart.getCode()), errorPart.getMessage(),
+							debugPart.getSource());
+				} else {
+					msg = TuleapMylynTasksMessages.getString(
+							TuleapMylynTasksMessagesKeys.errorReturnedByServer, getUrl(), getMethodName(),
+							Integer.valueOf(errorPart.getCode()), errorPart.getMessage());
+				}
+			}
+			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, msg));
 		}
-	}
-
-	/**
-	 * Parse the JSON representation of an error and returns its message.
-	 * 
-	 * @param jsonResponse
-	 *            The JSON representation of the error
-	 * @return The error message
-	 */
-	protected String getErrorMessage(String jsonResponse) {
-		try {
-			JsonParser parser = new JsonParser();
-			JsonObject element = parser.parse(jsonResponse).getAsJsonObject();
-			return TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.jsonErrorMessage, element
-					.get("code"), element.get("message")); //$NON-NLS-1$//$NON-NLS-2$
-			// CHECKSTYLE:OFF
-			// We need to be able to provide something even if the parsing of the error message fails
-		} catch (Exception e) {
-			// CHECKSTYLE:ON
-			TuleapCoreActivator.log(e, false);
-		}
-		return jsonResponse;
 	}
 
 	/**

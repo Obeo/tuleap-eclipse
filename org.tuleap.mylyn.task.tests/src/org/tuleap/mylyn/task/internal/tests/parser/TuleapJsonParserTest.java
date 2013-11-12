@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.tuleap.mylyn.task.internal.core.model.TuleapErrorMessage;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPlanning;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
@@ -22,6 +23,7 @@ import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapTopPlanning;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -126,6 +128,19 @@ public class TuleapJsonParserTest {
 		List<TuleapPlanning> planningList = parser.parsePlanningList(epic);
 		assertEquals(1, planningList.size());
 		checkPlanning400(planningList.get(0));
+	}
+
+	@Test
+	public void testParseError() {
+		String json = "{\"error\":{\"code\":401,\"message\":\"Unauthorized: X-Auth-Token HTTP header required\"},\"debug\":{\"source\":\"TokenAuthentication.class.php:85 at authenticate stage\",\"stages\":{\"success\":[\"get\",\"route\",\"negotiate\"],\"failure\":[\"authenticate\",\"message\"]}}}";
+		TuleapErrorMessage message = parser.getErrorMessage(json);
+		assertEquals(401, message.getError().getCode());
+		assertEquals("Unauthorized: X-Auth-Token HTTP header required", message.getError().getMessage());
+		assertEquals("TokenAuthentication.class.php:85 at authenticate stage", message.getDebug().getSource());
+		assertArrayEquals(new String[] {"get", "route", "negotiate" }, message.getDebug().getStages()
+				.getSuccess());
+		assertArrayEquals(new String[] {"authenticate", "message" }, message.getDebug().getStages()
+				.getFailure());
 	}
 
 	/**

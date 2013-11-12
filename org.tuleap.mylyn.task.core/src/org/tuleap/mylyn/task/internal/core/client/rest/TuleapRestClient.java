@@ -29,6 +29,9 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.restlet.data.Method;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
+import org.tuleap.mylyn.task.internal.core.model.TuleapDebugPart;
+import org.tuleap.mylyn.task.internal.core.model.TuleapErrorMessage;
+import org.tuleap.mylyn.task.internal.core.model.TuleapErrorPart;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPlanning;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
@@ -241,10 +244,26 @@ public class TuleapRestClient {
 	private void checkServerError(RestResource restResource, String method, ServerResponse response)
 			throws CoreException {
 		if (!response.isOk()) {
-			String message = TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.errorReturnedByServer, restResource.getUrl(), method,
-					jsonParser.getErrorMessage(response.getBody()));
-			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, message));
+			TuleapErrorMessage message = jsonParser.getErrorMessage(response.getBody());
+			TuleapErrorPart errorPart = message.getError();
+			TuleapDebugPart debugPart = message.getDebug();
+			String msg;
+			if (errorPart == null) {
+				msg = response.getBody();
+			} else {
+				if (debugPart != null) {
+					msg = TuleapMylynTasksMessages.getString(
+							TuleapMylynTasksMessagesKeys.errorReturnedByServer, restResource.getUrl(),
+							method, Integer.valueOf(errorPart.getCode()), errorPart.getMessage(), debugPart
+									.getSource());
+				} else {
+					msg = TuleapMylynTasksMessages.getString(
+							TuleapMylynTasksMessagesKeys.errorReturnedByServer, restResource.getUrl(),
+							method, Integer.valueOf(errorPart.getCode()), errorPart.getMessage(),
+							"no debug information provided"); //$NON-NLS-1$
+				}
+			}
+			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, msg));
 		}
 	}
 

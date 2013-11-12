@@ -248,23 +248,27 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	public static String notAuthorizedToPerformOperation;
 
 	/**
-	 * The server returned an error. 3 parameters:
+	 * The server returned an error. 4 parameters:
 	 * <ol>
 	 * <li>URL</li>
 	 * <li>HTTP method</li>
+	 * <li>Error code</li>
 	 * <li>Error message returned by the server</li>
 	 * </ol>
 	 */
 	public static String errorReturnedByServer;
 
 	/**
-	 * Formatting of JSON error messages. 2 parameters:
+	 * The server returned an error. 5 parameters:
 	 * <ol>
-	 * <li>code</li>
-	 * <li>message</li>
+	 * <li>URL</li>
+	 * <li>HTTP method</li>
+	 * <li>Error code</li>
+	 * <li>Error message returned by the server</li>
+	 * <li>Debug source returned by the server</li>
 	 * </ol>
 	 */
-	public static String jsonErrorMessage;
+	public static String errorReturnedByServerWithDebug;
 
 	/**
 	 * Invalid pagination header. No parameter.
