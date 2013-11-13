@@ -15,8 +15,8 @@ import com.google.common.collect.Maps;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Map.Entry;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -57,49 +57,21 @@ public class TuleapRestConnector implements IRestConnector {
 	private final AbstractWebLocation location;
 
 	/**
-	 * The best API version supported known at development time.
-	 */
-	private final String bestApiVersion;
-
-	/**
 	 * The logger.
 	 */
 	private final ILog logger;
-
-	/**
-	 * The cached resource factory, that holds the API version to use.
-	 */
-	private RestResourceFactory restResourceFactory;
 
 	/**
 	 * the constructor.
 	 * 
 	 * @param location
 	 *            The abstract web location, to support proxies.
-	 * @param bestApiVersion
-	 *            The best API version supported known at development time.
 	 * @param logger
 	 *            The logger.
 	 */
-	public TuleapRestConnector(AbstractWebLocation location, String bestApiVersion, ILog logger) {
+	public TuleapRestConnector(AbstractWebLocation location, ILog logger) {
 		this.location = location;
-		this.bestApiVersion = bestApiVersion;
 		this.logger = logger;
-	}
-
-	/**
-	 * Provides the accessible REST resources with the best version of API possible.
-	 * 
-	 * @return A new RestResources instance which maps the best known REST API on the server.
-	 * @throws CoreException
-	 *             If the server of its REST API cannot be accessed for any reason.
-	 */
-	public RestResourceFactory getResourceFactory() throws CoreException {
-		if (restResourceFactory == null) {
-			// No redirection is possible for the time being
-			restResourceFactory = new RestResourceFactory(location.getUrl(), bestApiVersion, this);
-		}
-		return restResourceFactory;
 	}
 
 	/**
@@ -140,10 +112,15 @@ public class TuleapRestConnector implements IRestConnector {
 
 		Client c = new Client(Protocol.HTTP);
 		Object object = request.getAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
-		if (object == null) {
-			object = new Form();
-			// TODO Use headers to retrieve non-standard attributes (pagination)
-			request.getAttributes().put(HeaderConstants.ATTRIBUTE_HEADERS, object);
+		Form form;
+		if (object instanceof Form) {
+			form = (Form)object;
+		} else {
+			form = new Form();
+			request.getAttributes().put(HeaderConstants.ATTRIBUTE_HEADERS, form);
+		}
+		for (Entry<String, String> entry : headers.entrySet()) {
+			form.add(entry.getKey(), entry.getValue());
 		}
 
 		Response response = c.handle(request);
@@ -165,8 +142,8 @@ public class TuleapRestConnector implements IRestConnector {
 		Map<String, Object> attributes = response.getAttributes();
 		Object formObject = attributes.get(HeaderConstants.ATTRIBUTE_HEADERS);
 		if (formObject instanceof Form) {
-			Form form = (Form)formObject;
-			responseHeader = form.getValuesMap();
+			Form responseForm = (Form)formObject;
+			responseHeader = responseForm.getValuesMap();
 		}
 		ServerResponse serverResponse = new ServerResponse(response.getStatus().getCode(), responseBody,
 				responseHeader);

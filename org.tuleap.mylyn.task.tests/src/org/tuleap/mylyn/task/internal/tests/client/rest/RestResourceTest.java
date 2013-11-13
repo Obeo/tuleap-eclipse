@@ -19,8 +19,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.junit.Before;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.client.rest.ITuleapHeaders;
-import org.tuleap.mylyn.task.internal.core.client.rest.RestOpGet;
-import org.tuleap.mylyn.task.internal.core.client.rest.RestOpPut;
+import org.tuleap.mylyn.task.internal.core.client.rest.RestOperation;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestResource;
 import org.tuleap.mylyn.task.internal.core.client.rest.ServerResponse;
 
@@ -48,7 +47,7 @@ public class RestResourceTest {
 		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET,PUT"); //$NON-NLS-1$
 		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET,PUT"); //$NON-NLS-1$
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
-		RestOpGet get = r.get();
+		RestOperation get = r.get();
 		assertNotNull(get);
 		assertEquals("GET", get.getMethodName()); //$NON-NLS-1$
 		assertEquals("/server/api/v12.5/my/url", get.getUrl()); //$NON-NLS-1$
@@ -62,7 +61,7 @@ public class RestResourceTest {
 		assertNotNull(get);
 		assertEquals("GET", get.getMethodName()); //$NON-NLS-1$
 		assertEquals("/server/api/v12.5/my/url", get.getUrl()); //$NON-NLS-1$
-		RestOpPut put = r.put();
+		RestOperation put = r.put();
 		assertNotNull(put);
 		assertEquals("PUT", put.getMethodName()); //$NON-NLS-1$
 		assertEquals("/server/api/v12.5/my/url", put.getUrl()); //$NON-NLS-1$

@@ -176,8 +176,16 @@ public class MilestoneTaskDataConverter {
 			}
 		}
 		for (TuleapBacklogItem backlogItem : backlogItems) {
+			int projectId;
+			// TODO LDE remove this? Due to a bug in tuleap that omits project refs in backlog items
+			TuleapReference project = backlogItem.getProject();
+			if (project != null) {
+				projectId = project.getId();
+			} else {
+				projectId = Integer.parseInt(taskData.getRoot().getAttribute("mtc_project_id").getValue());
+			}
 			BacklogItemWrapper backlogItemWrapper = milestonePlanning.addBacklogItem(TuleapTaskIdentityUtil
-					.getTaskDataId(backlogItem.getProject().getId(), 0, backlogItem.getId()));
+					.getTaskDataId(projectId, 0, backlogItem.getId()));
 			// FIXME Replace 0 above
 			backlogItemWrapper.setDisplayId(Integer.toString(backlogItem.getId()));
 			TuleapReference assignedMilestone = backlogItem.getAssignedMilestone();

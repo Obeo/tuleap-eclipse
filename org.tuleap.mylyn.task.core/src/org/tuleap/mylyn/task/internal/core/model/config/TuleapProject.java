@@ -166,7 +166,7 @@ public class TuleapProject implements Serializable {
 	public boolean isBacklogTracker(int trackerId) {
 		boolean ret = false;
 		loop: for (TuleapPlanning planning : planningsById.values()) {
-			List<TuleapReference> backlogTrackers = planning.getBacklogTrackers();
+			TuleapReference[] backlogTrackers = planning.getBacklogTrackers();
 			if (backlogTrackers == null) {
 				continue;
 			}

@@ -50,7 +50,7 @@ public class JsonResponsePaginatedIterator implements Iterator<JsonElement> {
 	/**
 	 * The REST operation to perform.
 	 */
-	private final AbstractRestOperation operation;
+	private final RestOperation operation;
 
 	/**
 	 * The headers to send.
@@ -78,22 +78,16 @@ public class JsonResponsePaginatedIterator implements Iterator<JsonElement> {
 	 * 
 	 * @param operation
 	 *            The REST operation to perform, several times if there is pagination involved.
-	 * @param headers
-	 *            the HTTP headers to send the first time. These headers will NOT be modified, but a copy will
-	 *            be used and modified to handle pagination.
-	 * @param body
-	 *            TYhe body to send, will always be sent unmodified.
 	 * @param firstResponse
 	 *            The first response received from the server.
 	 */
-	public JsonResponsePaginatedIterator(AbstractRestOperation operation, Map<String, String> headers,
-			String body, ServerResponse firstResponse) {
+	public JsonResponsePaginatedIterator(RestOperation operation, ServerResponse firstResponse) {
 		Assert.isNotNull(operation);
 		Assert.isNotNull(firstResponse);
 		this.operation = operation;
 		this.headers = Maps.newHashMap();
-		this.headers.putAll(headers);
-		this.body = body;
+		this.headers.putAll(operation.requestHeaders);
+		this.body = operation.body;
 		this.currentResponse = firstResponse;
 		extractCounters(firstResponse);
 	}

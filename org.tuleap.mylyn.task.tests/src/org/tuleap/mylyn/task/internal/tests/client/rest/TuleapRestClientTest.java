@@ -93,7 +93,7 @@ public class TuleapRestClientTest {
 		MockListRestConnector listConnector = new MockListRestConnector();
 		restResourceFactory = new RestResourceFactory(serverUrl, apiVersion, listConnector);
 		listConnector.setResourceFactory(restResourceFactory);
-		client = new TuleapRestClient(listConnector, jsonParser, null, repository, null);
+		client = new TuleapRestClient(restResourceFactory, jsonParser, null, repository, null);
 
 		String sprint250 = ParserUtil.loadFile("/milestones/sprint250.json"); //$NON-NLS-1$
 
@@ -172,7 +172,7 @@ public class TuleapRestClientTest {
 		MockListRestConnector listConnector = new MockListRestConnector();
 		restResourceFactory = new RestResourceFactory(serverUrl, apiVersion, listConnector);
 		listConnector.setResourceFactory(restResourceFactory);
-		client = new TuleapRestClient(listConnector, jsonParser, null, repository, null);
+		client = new TuleapRestClient(restResourceFactory, jsonParser, null, repository, null);
 
 		String tp30 = ParserUtil.loadFile("/top_plannings/top_planning_30.json"); //$NON-NLS-1$
 
@@ -242,7 +242,7 @@ public class TuleapRestClientTest {
 		MockListRestConnector listConnector = new MockListRestConnector();
 		restResourceFactory = new RestResourceFactory(serverUrl, apiVersion, listConnector);
 		listConnector.setResourceFactory(restResourceFactory);
-		client = new TuleapRestClient(listConnector, jsonParser, null, repository, null);
+		client = new TuleapRestClient(restResourceFactory, jsonParser, null, repository, null);
 
 		Map<String, String> respHeaders = Maps.newHashMap();
 		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
@@ -360,6 +360,6 @@ public class TuleapRestClientTest {
 
 		connector.setResourceFactory(restResourceFactory);
 		jsonParser = new TuleapJsonParser();
-		client = new TuleapRestClient(connector, jsonParser, null, repository, null);
+		client = new TuleapRestClient(restResourceFactory, jsonParser, null, repository, null);
 	}
 }

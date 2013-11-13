@@ -12,23 +12,12 @@ package org.tuleap.mylyn.task.internal.core.client.rest;
 
 import java.util.Map;
 
-import org.eclipse.core.runtime.CoreException;
-
 /**
  * A rest connector can emit requests and return server responses.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
 public interface IRestConnector {
-
-	/**
-	 * Provides the {@link RestResourceFactory} to use with this connector.
-	 * 
-	 * @return The {@link RestResourceFactory} to use with this connector.
-	 * @throws CoreException
-	 *             if a problem occurs while building the resource factory.
-	 */
-	RestResourceFactory getResourceFactory() throws CoreException;
 
 	/**
 	 * Send a request.

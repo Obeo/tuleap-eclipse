@@ -17,35 +17,28 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
-import org.restlet.data.Method;
+import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 
 /**
- * GET operation on a REST resource.
+ * Iterable over an operation response JSON elements, that takes care of pagination if needed.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class RestOpGet extends AbstractRestOperation implements Iterable<JsonElement> {
+public class RestOperationIterable implements Iterable<JsonElement> {
+
+	/**
+	 * The RESt operation.
+	 */
+	private RestOperation operation;
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param fullUrl
-	 *            The resource's URL.
-	 * @param connector
-	 *            the connector to use to "task to" the server.
+	 * @param operation
+	 *            the REST operation to iterate over.
 	 */
-	public RestOpGet(String fullUrl, IRestConnector connector) {
-		super(fullUrl, connector);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.client.rest.AbstractRestOperation#getMethodName()
-	 */
-	@Override
-	public String getMethodName() {
-		return Method.GET.getName();
+	public RestOperationIterable(RestOperation operation) {
+		this.operation = operation;
 	}
 
 	/**
@@ -54,19 +47,19 @@ public class RestOpGet extends AbstractRestOperation implements Iterable<JsonEle
 	 * @return An iterator that will provide all the elements, taking care of pagination if needed.
 	 */
 	public Iterator<JsonElement> iterator() {
-		ServerResponse response = run();
+		ServerResponse response = operation.run();
 		Iterator<JsonElement> it;
 		try {
-			checkServerError(response);
+			operation.checkServerError(response);
 			Map<String, String> responseHeaders = response.getHeaders();
 			// ONLY X-PAGINATION-SIZE needs be checked, other values are not mandatory
 			if (responseHeaders.containsKey(ITuleapHeaders.HEADER_X_PAGINATION_SIZE)) {
-				it = new JsonResponsePaginatedIterator(this, requestHeaders, body, response);
+				it = new JsonResponsePaginatedIterator(operation, response);
 			} else {
 				it = new JsonResponseIterator(response);
 			}
 		} catch (CoreException e) {
-			logger.log(e.getStatus());
+			TuleapCoreActivator.log(e.getStatus());
 			it = Iterators.emptyIterator();
 		}
 		return it;

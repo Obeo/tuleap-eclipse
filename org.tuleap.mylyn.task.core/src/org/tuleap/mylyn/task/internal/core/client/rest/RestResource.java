@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
+import org.tuleap.mylyn.task.internal.core.model.TuleapToken;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
@@ -44,6 +45,11 @@ public class RestResource {
 	public static final int PUT = 1 << 2;
 
 	/**
+	 * Flag indicating the DELETE method is supported.
+	 */
+	public static final int DELETE = 1 << 3;
+
+	/**
 	 * Label of the GET HTTP method.
 	 */
 	public static final String GET_LABEL = "GET"; //$NON-NLS-1$
@@ -57,6 +63,11 @@ public class RestResource {
 	 * Label of the PUT HTTP method.
 	 */
 	public static final String PUT_LABEL = "PUT"; //$NON-NLS-1$
+
+	/**
+	 * Label of the DELETE HTTP method.
+	 */
+	public static final String DELETE_LABEL = "DELETE"; //$NON-NLS-1$
 
 	/**
 	 * The serverUrl of the REST API on the server, for example {@code http://localhost:3001}.
@@ -92,6 +103,11 @@ public class RestResource {
 	 * Cached ServerResponse received after sending an OPTIONS request to this resource's URL.
 	 */
 	private ServerResponse optionsResponse;
+
+	/**
+	 * The authentication token to use.
+	 */
+	private TuleapToken token;
 
 	/**
 	 * Constructor.
@@ -143,66 +159,96 @@ public class RestResource {
 	}
 
 	/**
+	 * Creates a DELETE operation for this resource after checking it makes sense by sending an OPTIONS call
+	 * to this resource's URL.
+	 * 
+	 * @return A new instance of {@link RestOperation} created with this resource operation factory.
+	 * @throws CoreException
+	 *             If a problem occurs while checking whether the DELETE method is supported by the server for
+	 *             this resource.
+	 */
+	public RestOperation delete() throws CoreException {
+		if ((supportedMethods & DELETE) == 0) {
+			throw new UnsupportedOperationException(TuleapMylynTasksMessages.getString(
+					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, DELETE_LABEL, getUrl()));
+		}
+		checkOptionsAllows(DELETE_LABEL);
+		return RestOperation.delete(getFullUrl(), connector).withToken(token);
+	}
+
+	/**
 	 * Creates a GET operation for this resource after checking it makes sense by sending an OPTIONS call to
 	 * this resource's URL.
 	 * 
-	 * @return A new instance of {@link RestOpGet} created with this resource operation factory.
+	 * @return A new instance of {@link RestOperation} created with this resource operation factory.
 	 * @throws CoreException
 	 *             If a problem occurs while checking whether the GET method is supported by the server for
 	 *             this resource.
 	 */
-	public RestOpGet get() throws CoreException {
+	public RestOperation get() throws CoreException {
 		if ((supportedMethods & GET) == 0) {
 			throw new UnsupportedOperationException(TuleapMylynTasksMessages.getString(
 					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, GET_LABEL, getUrl()));
 		}
 		checkOptionsAllows(GET_LABEL);
-		return new RestOpGet(getFullUrl(), connector);
+		return RestOperation.get(getFullUrl(), connector).withToken(token);
 	}
 
 	/**
 	 * Creates an OPTIONS operation for this resource.
 	 * 
-	 * @return A new instance of {@link RestOpOptions} created with this resource operation factory.
+	 * @return A new instance of {@link RestOperation} created with this resource operation factory.
 	 */
-	public RestOpOptions options() {
-		return new RestOpOptions(getFullUrl(), connector);
+	public RestOperation options() {
+		return RestOperation.options(getFullUrl(), connector).withToken(token);
 	}
 
 	/**
 	 * Creates a POST operation for this resource after checking it makes sense by sending an OPTIONS call to
 	 * this resource's URL.
 	 * 
-	 * @return A new instance of {@link RestOpPost} created with this resource operation factory.
+	 * @return A new instance of {@link RestOperation} created with this resource operation factory.
 	 * @throws CoreException
 	 *             If a problem occurs while checking whether the GET method is supported by the server for
 	 *             this resource.
 	 */
-	public RestOpPost post() throws CoreException {
+	public RestOperation post() throws CoreException {
 		if ((supportedMethods & POST) == 0) {
 			throw new UnsupportedOperationException(TuleapMylynTasksMessages.getString(
 					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, POST_LABEL, getUrl()));
 		}
 		checkOptionsAllows(POST_LABEL);
-		return new RestOpPost(getFullUrl(), connector);
+		return RestOperation.post(getFullUrl(), connector).withToken(token);
 	}
 
 	/**
 	 * Creates a PUT operation for this resource after checking it makes sense by sending an OPTIONS call to
 	 * this resource's URL.
 	 * 
-	 * @return A new instance of {@link RestOpPut} created with this resource operation factory.
+	 * @return A new instance of {@link RestOperation} created with this resource operation factory.
 	 * @throws CoreException
 	 *             If a problem occurs while checking whether the GET method is supported by the server for
 	 *             this resource.
 	 */
-	public RestOpPut put() throws CoreException {
+	public RestOperation put() throws CoreException {
 		if ((supportedMethods & PUT) == 0) {
 			throw new UnsupportedOperationException(TuleapMylynTasksMessages.getString(
 					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, PUT_LABEL, getUrl()));
 		}
 		checkOptionsAllows(PUT_LABEL);
-		return new RestOpPut(getFullUrl(), connector);
+		return RestOperation.put(getFullUrl(), connector).withToken(token);
+	}
+
+	/**
+	 * Sets the authentication to use.
+	 * 
+	 * @param someToken
+	 *            The authentication token to use.
+	 * @return this, for a fluent API.
+	 */
+	public RestResource withToken(TuleapToken someToken) {
+		this.token = someToken;
+		return this;
 	}
 
 	/**
@@ -215,9 +261,9 @@ public class RestResource {
 	 * @throws CoreException
 	 *             if this resource is not accessible with the given headers, whatever the reason.
 	 */
-	protected void checkOptionsAllows(final String method) throws CoreException {
+	private void checkOptionsAllows(String method) throws CoreException {
 		if (optionsResponse == null) {
-			RestOpOptions options = options();
+			RestOperation options = options();
 			optionsResponse = options.run();
 		}
 		// Check the available operations
@@ -234,16 +280,48 @@ public class RestResource {
 					TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.errorReturnedByServer,
 							url, "OPTIONS", message))); //$NON-NLS-1$
 		}
-		if (!headerAllows.contains(method.toString())) {
+		if (!headerAllows.contains(method)) {
 			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
 					TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.cannotPerformOperation,
 							getUrl(), method)));
 		}
-		if (!headerCorsAllows.contains(method.toString())) {
-			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
-					TuleapMylynTasksMessages.getString(
-							TuleapMylynTasksMessagesKeys.notAuthorizedToPerformOperation, getUrl(), method)));
+		// FIXME uncomment when Tuleap supports CORS attributes in headers
+		// if (!headerCorsAllows.contains(method.toString())) {
+		// throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
+		// TuleapMylynTasksMessages.getString(
+		// TuleapMylynTasksMessagesKeys.notAuthorizedToPerformOperation, getUrl(), method)));
+		// }
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder b = new StringBuilder();
+		b.append(getFullUrl()).append(" ["); //$NON-NLS-1$
+		boolean needComma = false;
+		if ((supportedMethods & GET) == 0) {
+			b.append("GET"); //$NON-NLS-1$
+			needComma = true;
 		}
+		if ((supportedMethods & PUT) == 0) {
+			if (needComma) {
+				b.append(", "); //$NON-NLS-1$
+			}
+			b.append("PUT"); //$NON-NLS-1$
+			needComma = true;
+		}
+		if ((supportedMethods & POST) == 0) {
+			if (needComma) {
+				b.append(", "); //$NON-NLS-1$
+			}
+			b.append("POST"); //$NON-NLS-1$
+		}
+		b.append("]"); //$NON-NLS-1$
+		return b.toString();
 	}
 
 	/**
@@ -321,6 +399,11 @@ public class RestResource {
 		String REPORTS = "reports"; //$NON-NLS-1$
 
 		/**
+		 * "tokens".
+		 */
+		String TOKENS = "tokens"; //$NON-NLS-1$
+
+		/**
 		 * "top_plannings".
 		 */
 		String TOP_PLANNINGS = "top_plannings"; //$NON-NLS-1$
@@ -339,12 +422,6 @@ public class RestResource {
 		 * "users".
 		 */
 		String USERS = "users"; //$NON-NLS-1$
-
-		/**
-		 * "tokens".
-		 */
-
-		String TOKENS = "tokens"; //$NON-NLS-1$
 
 	}
 }

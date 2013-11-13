@@ -276,7 +276,7 @@ public interface ITuleapConstants {
 	/**
 	 * The key used for the list of backlog item trackers in a planning.
 	 */
-	String JSON_BACKLOG_ITEM_TRACKERS = "backlog_item_trackers"; //$NON-NLS-1$
+	String JSON_BACKLOG_TRACKERS = "backlog_trackers"; //$NON-NLS-1$
 
 	/**
 	 * The key used for the status of a backlog item ("Open" or "Closed").

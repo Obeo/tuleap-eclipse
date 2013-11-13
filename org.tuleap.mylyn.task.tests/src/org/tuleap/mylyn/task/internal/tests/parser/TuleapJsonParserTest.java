@@ -157,9 +157,9 @@ public class TuleapJsonParserTest {
 		assertEquals("plannings/400", item.getUri());
 		assertEquals(901, item.getMilestoneTracker().getId());
 		assertEquals("trackers/901", item.getMilestoneTracker().getUri());
-		List<TuleapReference> trackers = item.getBacklogTrackers();
-		assertEquals(1, trackers.size());
-		TuleapReference trackerRef = trackers.get(0);
+		TuleapReference[] trackers = item.getBacklogTrackers();
+		assertEquals(1, trackers.length);
+		TuleapReference trackerRef = trackers[0];
 		assertEquals(801, trackerRef.getId());
 		assertEquals("trackers/801", trackerRef.getUri());
 		assertEquals("plannings/400/milestones", item.getMilestonesUri());
@@ -180,9 +180,9 @@ public class TuleapJsonParserTest {
 		assertEquals("plannings/401", item.getUri());
 		assertEquals(902, item.getMilestoneTracker().getId());
 		assertEquals("trackers/902", item.getMilestoneTracker().getUri());
-		List<TuleapReference> trackers = item.getBacklogTrackers();
-		assertEquals(1, trackers.size());
-		TuleapReference trackerRef = trackers.get(0);
+		TuleapReference[] trackers = item.getBacklogTrackers();
+		assertEquals(1, trackers.length);
+		TuleapReference trackerRef = trackers[0];
 		assertEquals(802, trackerRef.getId());
 		assertEquals("trackers/802", trackerRef.getUri());
 		assertEquals("plannings/401/milestones", item.getMilestonesUri());

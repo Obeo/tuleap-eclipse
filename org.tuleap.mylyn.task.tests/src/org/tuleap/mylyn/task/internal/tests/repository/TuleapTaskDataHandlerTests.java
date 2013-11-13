@@ -127,7 +127,7 @@ public class TuleapTaskDataHandlerTests {
 
 		TuleapPlanning planning = new TuleapPlanning(123456, projectRef);
 		planning.setMilestoneTracker(new TuleapReference(milestoneTrackerId, ""));
-		planning.addBacklogTracker(new TuleapReference(backlogItemTrackerId, ""));
+		planning.setBacklogTrackers(new TuleapReference[] {new TuleapReference(backlogItemTrackerId, "") });
 
 		project.addPlanning(planning);
 
@@ -161,8 +161,8 @@ public class TuleapTaskDataHandlerTests {
 		};
 
 		TuleapTaskDataHandler tuleapTaskDataHandler = new TuleapTaskDataHandler(repositoryConnector);
-		TuleapTracker configuration = this.tuleapServer.getProject(
-				projectRef.getId()).getTracker(configurationId);
+		TuleapTracker configuration = this.tuleapServer.getProject(projectRef.getId()).getTracker(
+				configurationId);
 
 		TaskData taskData = new TaskData(tuleapTaskDataHandler.getAttributeMapper(repository),
 				ITuleapConstants.CONNECTOR_KIND, this.repository.getRepositoryUrl(), "");
@@ -429,8 +429,8 @@ public class TuleapTaskDataHandlerTests {
 		TaskData taskData = new TaskData(new TaskAttributeMapper(this.repository),
 				ITuleapConstants.CONNECTOR_KIND, "", "");
 
-		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer
-				.getProject(projectRef.getId()).getTracker(trackerRef.getId()));
+		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer.getProject(
+				projectRef.getId()).getTracker(trackerRef.getId()));
 		mapper.initializeEmptyTaskData();
 
 		String taskId = TuleapTaskIdentityUtil.getTaskDataId(projectRef.getId(), trackerRef.getId(),
@@ -448,8 +448,8 @@ public class TuleapTaskDataHandlerTests {
 		TaskData taskData = new TaskData(new TaskAttributeMapper(this.repository),
 				ITuleapConstants.CONNECTOR_KIND, "", "");
 
-		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer
-				.getProject(projectRef.getId()).getTracker(milestoneTrackerId));
+		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer.getProject(
+				projectRef.getId()).getTracker(milestoneTrackerId));
 		mapper.initializeEmptyTaskData();
 
 		String taskId = TuleapTaskIdentityUtil.getTaskDataId(projectRef.getId(), milestoneTrackerId,
@@ -467,8 +467,8 @@ public class TuleapTaskDataHandlerTests {
 		TaskData taskData = new TaskData(new TaskAttributeMapper(this.repository),
 				ITuleapConstants.CONNECTOR_KIND, "", "");
 
-		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer
-				.getProject(projectRef.getId()).getTracker(backlogItemTrackerId));
+		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer.getProject(
+				projectRef.getId()).getTracker(backlogItemTrackerId));
 		mapper.initializeEmptyTaskData();
 
 		String taskId = TuleapTaskIdentityUtil.getTaskDataId(projectRef.getId(), backlogItemTrackerId,
@@ -487,8 +487,8 @@ public class TuleapTaskDataHandlerTests {
 		TaskData taskData = new TaskData(new TaskAttributeMapper(this.repository),
 				ITuleapConstants.CONNECTOR_KIND, "", taskId);
 
-		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer
-				.getProject(projectRef.getId()).getTracker(trackerRef.getId()));
+		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer.getProject(
+				projectRef.getId()).getTracker(trackerRef.getId()));
 		mapper.initializeEmptyTaskData();
 
 		this.testPostTaskData(taskData, taskId, ResponseKind.TASK_UPDATED);
@@ -505,8 +505,8 @@ public class TuleapTaskDataHandlerTests {
 		TaskData taskData = new TaskData(new TaskAttributeMapper(this.repository),
 				ITuleapConstants.CONNECTOR_KIND, "", taskId);
 
-		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer
-				.getProject(projectRef.getId()).getTracker(milestoneTrackerId));
+		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer.getProject(
+				projectRef.getId()).getTracker(milestoneTrackerId));
 		mapper.initializeEmptyTaskData();
 
 		this.testPostTaskData(taskData, taskId, ResponseKind.TASK_UPDATED);

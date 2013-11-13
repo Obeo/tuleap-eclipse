@@ -11,7 +11,7 @@
       "id" : 901,
       "uri" : "trackers/901"
     },
-    "backlog_item_trackers" : [
+    "backlog_trackers" : [
       {
         "id" : 801,
         "uri" : "trackers/801"
@@ -31,7 +31,7 @@
       "id" : 902,
       "uri" : "trackers/902"
     },
-    "backlog_item_trackers" : [
+    "backlog_trackers" : [
       {
         "id" : 802,
         "uri" : "trackers/802"

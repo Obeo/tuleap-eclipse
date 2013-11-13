@@ -393,19 +393,23 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			TuleapRestClient tuleapRestClient = this.getClientManager().getRestClient(taskRepository);
 			TuleapSoapClient tuleapSoapClient = this.getClientManager().getSoapClient(taskRepository);
 			try {
-				TuleapServer tuleapServerConfigurationRest = tuleapRestClient
-						.getTuleapServerConfiguration(monitor);
+				// TODO While Tuleap does not handle URI /projects, this cannot work.
+				// TuleapServer tuleapServerConfigurationRest = tuleapRestClient
+				// .getServer(monitor);
 				TuleapServer tuleapServerConfigurationSoap = tuleapSoapClient
 						.getTuleapServerConfiguration(monitor);
 
 				// put the configuration in this.repositoryConfigurations
 				List<TuleapProject> allProjects = tuleapServerConfigurationSoap.getAllProjects();
+				tuleapRestClient.login(monitor);
 				for (TuleapProject project : allProjects) {
-					tuleapServerConfigurationRest.addProject(project);
+					// Retrieve plannings via the REST API
+					tuleapRestClient.loadPlanningsInto(project);
+					tuleapServerConfigurationSoap.addProject(project);
 				}
 
 				this.repositoryConfigurations.put(taskRepository.getRepositoryUrl(),
-						tuleapServerConfigurationRest);
+						tuleapServerConfigurationSoap);
 			} catch (CoreException e) {
 				TuleapCoreActivator.log(e, true);
 			}

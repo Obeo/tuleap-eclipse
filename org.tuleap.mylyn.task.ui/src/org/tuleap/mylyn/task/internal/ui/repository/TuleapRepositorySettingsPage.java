@@ -26,6 +26,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.widgets.Composite;
 import org.tuleap.mylyn.task.internal.core.client.rest.ITuleapAPIVersions;
+import org.tuleap.mylyn.task.internal.core.client.rest.RestResourceFactory;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestConnector;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
@@ -202,9 +203,10 @@ public class TuleapRepositorySettingsPage extends AbstractRepositorySettingsPage
 					return location.getCredentials(type);
 				}
 			};
-			TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(webLocationRest,
-					ITuleapAPIVersions.BEST_VERSION, logger);
-			TuleapRestClient tuleapRestClient = new TuleapRestClient(tuleapRestConnector, jsonParser,
+			TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(location, logger);
+			RestResourceFactory resourceFactory = new RestResourceFactory(location.getUrl(),
+					ITuleapAPIVersions.BEST_VERSION, tuleapRestConnector);
+			TuleapRestClient tuleapRestClient = new TuleapRestClient(resourceFactory, jsonParser,
 					jsonSerializer, taskRepository, logger);
 
 			this.tuleapValidator = new TuleapValidator(location, tuleapSoapClient, tuleapRestClient,

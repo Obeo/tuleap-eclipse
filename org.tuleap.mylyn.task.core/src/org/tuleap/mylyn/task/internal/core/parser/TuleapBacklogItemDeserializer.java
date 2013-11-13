@@ -18,6 +18,7 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
+import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem.Status;
@@ -49,8 +50,12 @@ public class TuleapBacklogItemDeserializer extends AbstractDetailedElementDeseri
 
 		JsonElement elt = jsonObject.get(ITuleapConstants.INITIAL_EFFORT);
 		if (elt != null) {
-			Float initialEffort = Float.valueOf(elt.getAsFloat());
-			backlogItem.setInitialEffort(initialEffort);
+			try {
+				Float initialEffort = Float.valueOf(elt.getAsFloat());
+				backlogItem.setInitialEffort(initialEffort);
+			} catch (NumberFormatException e) {
+				TuleapCoreActivator.log(e, false);
+			}
 		}
 
 		elt = jsonObject.get(ITuleapConstants.JSON_ASSIGNED_MILESTONE);

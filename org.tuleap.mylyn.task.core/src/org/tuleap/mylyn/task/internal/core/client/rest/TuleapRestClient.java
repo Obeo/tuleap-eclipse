@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.client.rest;
 
+import com.google.common.collect.Lists;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -23,6 +27,8 @@ import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
@@ -32,6 +38,7 @@ import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.model.TuleapDebugPart;
 import org.tuleap.mylyn.task.internal.core.model.TuleapErrorMessage;
 import org.tuleap.mylyn.task.internal.core.model.TuleapErrorPart;
+import org.tuleap.mylyn.task.internal.core.model.TuleapToken;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPlanning;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
@@ -49,7 +56,6 @@ import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.serializer.TuleapBacklogItemSerializer;
 import org.tuleap.mylyn.task.internal.core.serializer.TuleapCardSerializer;
-import org.tuleap.mylyn.task.internal.core.serializer.TuleapMilestoneSerializer;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
@@ -66,11 +72,6 @@ import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class TuleapRestClient {
-
-	/**
-	 * Utility class used to communicate using HTTP with the server.
-	 */
-	private final IRestConnector tuleapRestConnector;
 
 	/**
 	 * The JSON parser.
@@ -93,10 +94,20 @@ public class TuleapRestClient {
 	private ILog logger;
 
 	/**
+	 * Factory of RESt resources.
+	 */
+	private RestResourceFactory restResourceFactory;
+
+	/**
+	 * The current authentication token.
+	 */
+	private TuleapToken token;
+
+	/**
 	 * The constructor.
 	 * 
-	 * @param tuleapRestConnector
-	 *            The connector is used for HTTP communication
+	 * @param resourceFactory
+	 *            The RESt resource factory to use
 	 * @param jsonParser
 	 *            The Tuleap JSON parser
 	 * @param jsonSerializer
@@ -106,9 +117,9 @@ public class TuleapRestClient {
 	 * @param logger
 	 *            The logger
 	 */
-	public TuleapRestClient(IRestConnector tuleapRestConnector, TuleapJsonParser jsonParser,
+	public TuleapRestClient(RestResourceFactory resourceFactory, TuleapJsonParser jsonParser,
 			TuleapJsonSerializer jsonSerializer, TaskRepository taskRepository, ILog logger) {
-		this.tuleapRestConnector = tuleapRestConnector;
+		this.restResourceFactory = resourceFactory;
 		this.jsonParser = jsonParser;
 		this.jsonSerializer = jsonSerializer;
 		this.taskRepository = taskRepository;
@@ -128,13 +139,8 @@ public class TuleapRestClient {
 	 *             In case of error during the log in or log out process
 	 */
 	public IStatus validateConnection(IProgressMonitor monitor) throws CoreException {
-		// Test the connection first
-		RestResourceFactory restResourceFactory = tuleapRestConnector.getResourceFactory();
-
-		restResourceFactory.user();
-
-		// If we made it here without exception, everything is fine since all the potential errors in the
-		// validation process would be considered as critical, they would throw a CoreException
+		// FIXME when Tuleap has a convenient route
+		// resourceFactory.user().get().checkedRun();
 		return Status.OK_STATUS;
 	}
 
@@ -147,15 +153,11 @@ public class TuleapRestClient {
 	 * @throws CoreException
 	 *             In case of error during the retrieval of the configuration
 	 */
-	public TuleapServer getTuleapServerConfiguration(IProgressMonitor monitor) throws CoreException {
-		// Test the connection
-		RestResourceFactory restResourceFactory = tuleapRestConnector.getResourceFactory();
-
+	public TuleapServer getServer(IProgressMonitor monitor) throws CoreException {
 		TuleapServer tuleapServer = new TuleapServer(this.taskRepository.getRepositoryUrl());
 		tuleapServer.setLastUpdate(new Date().getTime());
 
-		// Check that we can get the list of projects
-		RestResource restProjects = restResourceFactory.projects();
+		RestResource restProjects = restResourceFactory.projects().withToken(token);
 
 		// Retrieve the projects and create the configuration of each project
 		ServerResponse projectsGetServerResponse = restProjects.get().run();
@@ -169,16 +171,7 @@ public class TuleapRestClient {
 		for (TuleapProject project : projects) {
 			tuleapServer.addProject(project);
 
-			// Retrieve the plannings of the project
-			RestResource plannings = restResourceFactory.projectPlannings(project.getIdentifier());
-			ServerResponse planningsResponse = plannings.get().run();
-
-			checkServerError(plannings, Method.GET.toString(), planningsResponse);
-
-			List<TuleapPlanning> planningList = jsonParser.parsePlanningList(planningsResponse.getBody());
-			for (TuleapPlanning planning : planningList) {
-				project.addPlanning(planning);
-			}
+			loadPlanningsInto(project);
 
 			// TODO SBE Restore this code!
 
@@ -230,6 +223,27 @@ public class TuleapRestClient {
 	}
 
 	/**
+	 * Loads the planning into a given project configuration after fetching them from the remote server via
+	 * the REST API.
+	 * 
+	 * @param project
+	 *            The project in which plannings must be loaded
+	 * @throws CoreException
+	 *             If anything goes wrong.
+	 */
+	public void loadPlanningsInto(TuleapProject project) throws CoreException {
+		// Retrieve the plannings of the project
+		RestResource plannings = restResourceFactory.projectPlannings(project.getIdentifier()).withToken(
+				token);
+		RestOperation operation = plannings.get();
+		ServerResponse planningsResponse = operation.checkedRun();
+		List<TuleapPlanning> planningList = jsonParser.parsePlanningList(planningsResponse.getBody());
+		for (TuleapPlanning planning : planningList) {
+			project.addPlanning(planning);
+		}
+	}
+
+	/**
 	 * Throws a CoreException that encapsulates useful info about a server error.
 	 * 
 	 * @param restResource
@@ -267,49 +281,92 @@ public class TuleapRestClient {
 		}
 	}
 
+	/**
+	 * Throws a CoreException that encapsulates useful info about a server error.
+	 * 
+	 * @param restOperation
+	 *            The RESt operation that returned the given response.
+	 * @param response
+	 *            The error response received from the server.
+	 * @throws CoreException
+	 *             If the given response does not have a status OK (200).
+	 */
+	private void checkServerError(RestOperation restOperation, ServerResponse response) throws CoreException {
+		if (!response.isOk()) {
+			TuleapErrorMessage message = jsonParser.getErrorMessage(response.getBody());
+			TuleapErrorPart errorPart = message.getError();
+			TuleapDebugPart debugPart = message.getDebug();
+			String msg;
+			if (errorPart == null) {
+				msg = response.getBody();
+			} else {
+				if (debugPart != null) {
+					msg = TuleapMylynTasksMessages.getString(
+							TuleapMylynTasksMessagesKeys.errorReturnedByServer, restOperation.getUrl(),
+							restOperation.getMethodName(), Integer.valueOf(errorPart.getCode()), errorPart
+									.getMessage(), debugPart.getSource());
+				} else {
+					msg = TuleapMylynTasksMessages.getString(
+							TuleapMylynTasksMessagesKeys.errorReturnedByServer, restOperation.getUrl(),
+							restOperation.getMethodName(), Integer.valueOf(errorPart.getCode()), errorPart
+									.getMessage(), "no debug information provided"); //$NON-NLS-1$
+				}
+			}
+			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, msg));
+		}
+	}
+
 	// TODO get user groups of a project
 
 	// TODO get users of a group
 
 	/**
-	 * Create the token on the server.
+	 * Creates an authorization token on the server and stores it so that it can be used.
 	 * 
-	 * @param taskRepositoryCredentials
-	 *            The task repository credentials
 	 * @param monitor
 	 *            The progress monitor.
 	 * @throws CoreException
-	 *             In case of error during the update of the artifact.
+	 *             In case of error during the authentication.
 	 */
+	public void login(IProgressMonitor monitor) throws CoreException {
+		RestResource restBacklogItem = restResourceFactory.tokens();
 
-	public void createToken(TaskRepositoryCredentials taskRepositoryCredentials, IProgressMonitor monitor)
-			throws CoreException {
-		// Test the connection
-		RestResourceFactory restResources = tuleapRestConnector.getResourceFactory();
-		RestResource restBacklogItem = restResources.tokens();
-
-		String changesToPost = getCredentials(taskRepositoryCredentials);
-
-		// Send the POST request
-		ServerResponse response = restBacklogItem.post().withBody(changesToPost).run();
-		if (!response.isOk()) {
-			// Invalid login? server error?
-			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, response
-					.getBody()));
+		AuthenticationCredentials credentials = taskRepository.getCredentials(AuthenticationType.REPOSITORY);
+		// Credentials can be null?
+		if (credentials != null) {
+			String credentialsToPost = getCredentials(credentials);
+			// Send the POST request
+			RestOperation postOperation = restBacklogItem.post().withBody(credentialsToPost);
+			ServerResponse response = postOperation.run();
+			checkServerError(postOperation, response);
+			GsonBuilder builder = new GsonBuilder()
+					.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
+			Gson gson = builder.create();
+			this.token = gson.fromJson(response.getBody(), TuleapToken.class);
 		}
+	}
+
+	/**
+	 * Deletes the current authentication token.
+	 * 
+	 * @param monitor
+	 *            The progress monitor to use.
+	 */
+	public void logout(IProgressMonitor monitor) {
+		// TODO
 	}
 
 	/**
 	 * Create the POST token body.
 	 * 
-	 * @param taskRepositoryCredentials
+	 * @param credentials
 	 *            The task repository credentials
 	 * @return The POST token body
 	 */
-	private String getCredentials(TaskRepositoryCredentials taskRepositoryCredentials) {
+	private String getCredentials(AuthenticationCredentials credentials) {
 		JsonObject tokenObject = new JsonObject();
-		tokenObject.add("username", new JsonPrimitive(taskRepositoryCredentials.getUserName())); //$NON-NLS-1$
-		tokenObject.add("password", new JsonPrimitive(taskRepositoryCredentials.getPassword())); //$NON-NLS-1$
+		tokenObject.add("username", new JsonPrimitive(credentials.getUserName())); //$NON-NLS-1$
+		tokenObject.add("password", new JsonPrimitive(credentials.getPassword())); //$NON-NLS-1$
 		return tokenObject.toString();
 	}
 
@@ -545,8 +602,7 @@ public class TuleapRestClient {
 	 *             If anything goes wrong.
 	 */
 	public TuleapMilestone getMilestone(int milestoneId, IProgressMonitor monitor) throws CoreException {
-		RestResourceFactory restResourceFactory = tuleapRestConnector.getResourceFactory();
-		RestResource milestoneResource = restResourceFactory.milestone(milestoneId);
+		RestResource milestoneResource = restResourceFactory.milestone(milestoneId).withToken(token);
 		ServerResponse response = milestoneResource.get().run();
 		checkServerError(milestoneResource, Method.GET.toString(), response);
 		TuleapMilestone milestone = this.jsonParser.parseMilestone(response.getBody());
@@ -566,11 +622,15 @@ public class TuleapRestClient {
 	 */
 	public List<TuleapBacklogItem> getBacklogItems(int milestoneId, IProgressMonitor monitor)
 			throws CoreException {
-		RestResourceFactory restResourceFactory = tuleapRestConnector.getResourceFactory();
-		RestResource backlogItemsResource = restResourceFactory.milestonesBacklogItems(milestoneId);
-		ServerResponse response = backlogItemsResource.get().run();
-		checkServerError(backlogItemsResource, Method.GET.toString(), response);
-		return this.jsonParser.parseBacklogItems(response.getBody());
+		RestResource backlogItemsResource = restResourceFactory.milestonesBacklogItems(milestoneId)
+				.withToken(token);
+		RestOperation operation = backlogItemsResource.get();
+		RestOperationIterable jsonElements = new RestOperationIterable(operation);
+		List<TuleapBacklogItem> backlogItems = Lists.newArrayList();
+		for (JsonElement e : jsonElements) {
+			backlogItems.add(jsonParser.parseBacklogItem(e));
+		}
+		return backlogItems;
 	}
 
 	/**
@@ -586,11 +646,15 @@ public class TuleapRestClient {
 	 */
 	public List<TuleapMilestone> getSubMilestones(int milestoneId, IProgressMonitor monitor)
 			throws CoreException {
-		RestResourceFactory restResourceFactory = tuleapRestConnector.getResourceFactory();
-		RestResource subMilestonesResource = restResourceFactory.milestonesSubmilestones(milestoneId);
-		ServerResponse response = subMilestonesResource.get().run();
-		checkServerError(subMilestonesResource, Method.GET.toString(), response);
-		return this.jsonParser.parseMilestones(response.getBody());
+		RestResource subMilestonesResource = restResourceFactory.milestonesSubmilestones(milestoneId)
+				.withToken(token);
+		RestOperation operation = subMilestonesResource.get();
+		RestOperationIterable jsonElements = new RestOperationIterable(operation);
+		List<TuleapMilestone> milestones = Lists.newArrayList();
+		for (JsonElement e : jsonElements) {
+			milestones.add(jsonParser.parseMilestone(e));
+		}
+		return milestones;
 	}
 
 	/**
@@ -605,8 +669,7 @@ public class TuleapRestClient {
 	 *             If a problem occurs.
 	 */
 	public TuleapCardwall getCardwall(int milestoneId, IProgressMonitor monitor) throws CoreException {
-		RestResourceFactory restResourceFactory = tuleapRestConnector.getResourceFactory();
-		RestResource restCardwall = restResourceFactory.milestonesCardwall(milestoneId);
+		RestResource restCardwall = restResourceFactory.milestonesCardwall(milestoneId).withToken(token);
 		ServerResponse cardwallResponse = restCardwall.get().run();
 		checkServerError(restCardwall, Method.GET.toString(), cardwallResponse);
 		TuleapCardwall cardwall = jsonParser.parseCardwall(cardwallResponse.getBody());
@@ -644,9 +707,8 @@ public class TuleapRestClient {
 
 	public void updateBacklogItem(TuleapBacklogItem tuleapBacklogItem, IProgressMonitor monitor)
 			throws CoreException {
-		// Test the connection
-		RestResourceFactory restResources = tuleapRestConnector.getResourceFactory();
-		RestResource restBacklogItem = restResources.backlogItem(tuleapBacklogItem.getId());
+		RestResource restBacklogItem = restResourceFactory.backlogItem(tuleapBacklogItem.getId()).withToken(
+				token);
 
 		// from POJO to JSON
 		JsonElement backlogItem = new TuleapBacklogItemSerializer().serialize(tuleapBacklogItem, null, null);
@@ -654,12 +716,9 @@ public class TuleapRestClient {
 		String changesToPut = backlogItem.toString();
 
 		// Send the PUT request
-		ServerResponse response = restBacklogItem.put().withBody(changesToPut).run();
-		if (!response.isOk()) {
-			// Invalid login? server error?
-			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, response
-					.getBody()));
-		}
+		RestOperation op = restBacklogItem.put().withBody(changesToPut);
+		ServerResponse response = op.run();
+		checkServerError(op, response);
 	}
 
 	/**
@@ -677,47 +736,14 @@ public class TuleapRestClient {
 
 	public void updateMilestoneBacklogItems(int milestoneId, List<TuleapBacklogItem> backlogItems,
 			IProgressMonitor monitor) throws CoreException {
-		// Test the connection
-
-		RestResourceFactory restResources = tuleapRestConnector.getResourceFactory();
-		RestResource restMilestonesBacklogItems = restResources.milestonesBacklogItems(milestoneId);
+		RestResource restMilestonesBacklogItems = restResourceFactory.milestonesBacklogItems(milestoneId)
+				.withToken(token);
 
 		// from POJO to JSON
 		String changesToPut = backlogItems.toString();
 
 		// Send the PUT request
 		ServerResponse response = restMilestonesBacklogItems.put().withBody(changesToPut).run();
-
-		if (!response.isOk()) {
-			// Invalid login? server error?
-			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, response
-					.getBody()));
-		}
-	}
-
-	/**
-	 * Updates the milestone fields on the server.
-	 * 
-	 * @param tuleapMilestone
-	 *            The milestone to update.
-	 * @param monitor
-	 *            The progress monitor.
-	 * @throws CoreException
-	 *             In case of error during the update of the artifact.
-	 */
-	// TODO Remove this, replace by updateArtifact
-	private void updateMilestoneFields(TuleapMilestone tuleapMilestone, IProgressMonitor monitor)
-			throws CoreException {
-		// Test the connection
-		RestResourceFactory restResources = tuleapRestConnector.getResourceFactory();
-		RestResource restMilestone = restResources.milestone(tuleapMilestone.getId());
-
-		// from POJO to JSON
-		JsonElement milestoneObject = new TuleapMilestoneSerializer().serialize(tuleapMilestone, null, null);
-		String changesToPut = milestoneObject.toString();
-
-		// Send the PUT request
-		ServerResponse response = restMilestone.put().withBody(changesToPut).run();
 
 		if (!response.isOk()) {
 			// Invalid login? server error?
@@ -738,9 +764,7 @@ public class TuleapRestClient {
 	 */
 
 	private void updateCard(TuleapCard tuleapCard, IProgressMonitor monitor) throws CoreException {
-		// Test the connection
-		RestResourceFactory restResources = tuleapRestConnector.getResourceFactory();
-		RestResource restCards = restResources.cards(tuleapCard.getId());
+		RestResource restCards = restResourceFactory.cards(tuleapCard.getId()).withToken(token);
 
 		// from POJO to JSON
 		JsonElement card = new TuleapCardSerializer().serialize(tuleapCard, null, null);
@@ -788,8 +812,7 @@ public class TuleapRestClient {
 	 *             In case of error during the retrieval of the BacklogItem
 	 */
 	public TuleapBacklogItem getBacklogItem(int backlogItemId, IProgressMonitor monitor) throws CoreException {
-		RestResourceFactory restResourceFactory = tuleapRestConnector.getResourceFactory();
-		RestResource restBacklogItem = restResourceFactory.backlogItem(backlogItemId);
+		RestResource restBacklogItem = restResourceFactory.backlogItem(backlogItemId).withToken(token);
 
 		ServerResponse backlogItemResponse = restBacklogItem.get().run();
 
@@ -813,17 +836,16 @@ public class TuleapRestClient {
 	 */
 	public List<TuleapTopPlanning> getTopPlannings(int projectId, IProgressMonitor monitor)
 			throws CoreException {
-		RestResourceFactory restResourceFactory = tuleapRestConnector.getResourceFactory();
-
 		// 1- Retrieve the list of top plannings
-		RestResource restProjectTopPlannings = restResourceFactory.projectsTopPlannings(projectId);
+		RestResource restProjectTopPlannings = restResourceFactory.projectsTopPlannings(projectId).withToken(
+				token);
 		ServerResponse response = restProjectTopPlannings.get().run();
 
 		checkServerError(restProjectTopPlannings, Method.GET.toString(), response);
 
 		List<TuleapTopPlanning> topPlannings = this.jsonParser.parseTopPlannings(response.getBody());
 		for (TuleapTopPlanning topPlanning : topPlannings) {
-			loadTopPlanningElements(restResourceFactory, topPlanning);
+			loadTopPlanningElements(topPlanning);
 		}
 
 		return topPlannings;
@@ -841,32 +863,28 @@ public class TuleapRestClient {
 	 *             If anything goes wrong.
 	 */
 	public TuleapTopPlanning getTopPlanning(int topPlanningId, IProgressMonitor monitor) throws CoreException {
-		RestResourceFactory restResourceFactory = tuleapRestConnector.getResourceFactory();
-
-		RestResource restTopPlannings = restResourceFactory.topPlannings(topPlanningId);
+		RestResource restTopPlannings = restResourceFactory.topPlannings(topPlanningId).withToken(token);
 		ServerResponse response = restTopPlannings.get().run();
 
 		checkServerError(restTopPlannings, Method.GET.toString(), response);
 
 		TuleapTopPlanning topPlanning = this.jsonParser.parseTopPlanning(response.getBody());
-		return loadTopPlanningElements(restResourceFactory, topPlanning);
+		return loadTopPlanningElements(topPlanning);
 	}
 
 	/**
 	 * Loads the sub-milestones and the backlog items of a top-planning.
 	 * 
-	 * @param restResourceFactory
-	 *            The {@link RestResourceFactory} to use.
 	 * @param topPlanning
 	 *            The top planning to load, which will be modified by this method.
 	 * @return The given top planning, just for fluency of the PIA.
 	 * @throws CoreException
 	 *             If something goes wrong.
 	 */
-	private TuleapTopPlanning loadTopPlanningElements(RestResourceFactory restResourceFactory,
-			TuleapTopPlanning topPlanning) throws CoreException {
+	private TuleapTopPlanning loadTopPlanningElements(TuleapTopPlanning topPlanning) throws CoreException {
 		// 2- Retrieve the milestones of this top planning
-		RestResource restMilestones = restResourceFactory.topPlanningsMilestones(topPlanning.getId());
+		RestResource restMilestones = restResourceFactory.topPlanningsMilestones(topPlanning.getId())
+				.withToken(token);
 		ServerResponse milestonesResponse = restMilestones.get().run();
 
 		checkServerError(restMilestones, Method.GET.toString(), milestonesResponse);
@@ -880,7 +898,8 @@ public class TuleapRestClient {
 		}
 
 		// 3- Retrieve the backlog items of this top planning
-		RestResource restBacklogItems = restResourceFactory.topPlanningsBacklogItems(topPlanning.getId());
+		RestResource restBacklogItems = restResourceFactory.topPlanningsBacklogItems(topPlanning.getId())
+				.withToken(token);
 		ServerResponse backlogItemsResponse = restBacklogItems.get().run();
 
 		checkServerError(restBacklogItems, Method.GET.toString(), backlogItemsResponse);

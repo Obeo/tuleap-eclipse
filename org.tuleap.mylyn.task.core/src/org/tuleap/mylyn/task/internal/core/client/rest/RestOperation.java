@@ -23,10 +23,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.restlet.data.Method;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.model.TuleapDebugPart;
 import org.tuleap.mylyn.task.internal.core.model.TuleapErrorMessage;
 import org.tuleap.mylyn.task.internal.core.model.TuleapErrorPart;
+import org.tuleap.mylyn.task.internal.core.model.TuleapToken;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
@@ -36,7 +38,7 @@ import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public abstract class AbstractRestOperation {
+public class RestOperation {
 
 	/**
 	 * String to send in the body when no data needs to be in the request body. {@code null} provokes an
@@ -53,6 +55,11 @@ public abstract class AbstractRestOperation {
 	 * The body to send in the request.
 	 */
 	protected String body;
+
+	/**
+	 * Authentication token to use..
+	 */
+	protected TuleapToken token;
 
 	/**
 	 * HTTP headers to send.
@@ -76,16 +83,89 @@ public abstract class AbstractRestOperation {
 	protected final IRestConnector connector;
 
 	/**
+	 * The HTTP method to use.
+	 */
+	protected final Method method;
+
+	/**
 	 * Constructor.
 	 * 
 	 * @param fullUrl
 	 *            The full URL of the resource to connect to.
 	 * @param connector
 	 *            the connector to use to "task to" the server.
+	 * @param method
+	 *            the HTTP method to use.
 	 */
-	public AbstractRestOperation(String fullUrl, IRestConnector connector) {
+	public RestOperation(String fullUrl, IRestConnector connector, Method method) {
 		this.fullUrl = fullUrl;
 		this.connector = connector;
+		this.method = method;
+	}
+
+	/**
+	 * Instantiates a new GET operation for the given URL.
+	 * 
+	 * @param fullUrl
+	 *            The full URL of the resource to connect to.
+	 * @param connector
+	 *            the connector to use to "task to" the server.
+	 * @return a new REST operation for the GET method.
+	 */
+	public static RestOperation get(String fullUrl, IRestConnector connector) {
+		return new RestOperation(fullUrl, connector, Method.GET);
+	}
+
+	/**
+	 * Instantiates a new PUT operation for the given URL.
+	 * 
+	 * @param fullUrl
+	 *            The full URL of the resource to connect to.
+	 * @param connector
+	 *            the connector to use to "task to" the server.
+	 * @return a new REST operation for the PUT method.
+	 */
+	public static RestOperation put(String fullUrl, IRestConnector connector) {
+		return new RestOperation(fullUrl, connector, Method.PUT);
+	}
+
+	/**
+	 * Instantiates a new POST operation for the given URL.
+	 * 
+	 * @param fullUrl
+	 *            The full URL of the resource to connect to.
+	 * @param connector
+	 *            the connector to use to "task to" the server.
+	 * @return a new REST operation for the POST method.
+	 */
+	public static RestOperation post(String fullUrl, IRestConnector connector) {
+		return new RestOperation(fullUrl, connector, Method.POST);
+	}
+
+	/**
+	 * Instantiates a new OPTIONS operation for the given URL.
+	 * 
+	 * @param fullUrl
+	 *            The full URL of the resource to connect to.
+	 * @param connector
+	 *            the connector to use to "task to" the server.
+	 * @return a new REST operation for the OPTIONS method.
+	 */
+	public static RestOperation options(String fullUrl, IRestConnector connector) {
+		return new RestOperation(fullUrl, connector, Method.OPTIONS);
+	}
+
+	/**
+	 * Instantiates a new DELETE operation for the given URL.
+	 * 
+	 * @param fullUrl
+	 *            The full URL of the resource to connect to.
+	 * @param connector
+	 *            the connector to use to "task to" the server.
+	 * @return a new REST operation for the DELETE method.
+	 */
+	public static RestOperation delete(String fullUrl, IRestConnector connector) {
+		return new RestOperation(fullUrl, connector, Method.DELETE);
 	}
 
 	/**
@@ -102,7 +182,9 @@ public abstract class AbstractRestOperation {
 	 * 
 	 * @return The name of the HTTP method to invoke.
 	 */
-	public abstract String getMethodName();
+	public String getMethodName() {
+		return method.getName();
+	}
 
 	/**
 	 * Computes the full URL to use to send the request, by concatenating the server address, the root API
@@ -135,10 +217,30 @@ public abstract class AbstractRestOperation {
 	 * @return The response received from the server after sending it the relevant request.
 	 */
 	public ServerResponse run() {
+		String data;
 		if (body == null) {
-			return sendRequest(getMethodName(), requestHeaders, EMPTY_BODY);
+			data = EMPTY_BODY;
+		} else {
+			data = body;
 		}
-		return sendRequest(getMethodName(), requestHeaders, body);
+		if (token != null) {
+			requestHeaders.put("X-Auth-Token", token.getToken());
+			requestHeaders.put("X-Auth-UserId", token.getUserId());
+		}
+		return connector.sendRequest(getMethodName(), getUrlWithQueryParameters(), requestHeaders, data);
+	}
+
+	/**
+	 * Runs this operation by sending the relevant request, and checks the received response.
+	 * 
+	 * @return The received {@link ServerResponse}.
+	 * @throws CoreException
+	 *             If the received response status is not 200 OK.
+	 */
+	public ServerResponse checkedRun() throws CoreException {
+		ServerResponse response = run();
+		checkServerError(response);
+		return response;
 	}
 
 	/**
@@ -174,13 +276,25 @@ public abstract class AbstractRestOperation {
 	}
 
 	/**
+	 * Sets the authentication token to use for the request.
+	 * 
+	 * @param someToken
+	 *            The token to use. Can be <code>null</code> if no token is needed.
+	 * @return The instance on which this method has been called, for a fluent API.
+	 */
+	public RestOperation withToken(TuleapToken someToken) {
+		this.token = someToken;
+		return this;
+	}
+
+	/**
 	 * Sets the body to send in the request.
 	 * 
 	 * @param someBody
 	 *            The body to send.
 	 * @return The instance on which this method has been called, for a fluent API.
 	 */
-	public AbstractRestOperation withBody(String someBody) {
+	public RestOperation withBody(String someBody) {
 		this.body = someBody;
 		return this;
 	}
@@ -195,7 +309,7 @@ public abstract class AbstractRestOperation {
 	 *            replaced.
 	 * @return The instance on which this method has been called, for a fluent API.
 	 */
-	public AbstractRestOperation withHeader(String key, String value) {
+	public RestOperation withHeader(String key, String value) {
 		this.requestHeaders.put(key, value);
 		return this;
 	}
@@ -208,7 +322,7 @@ public abstract class AbstractRestOperation {
 	 *            removed. The given map's entries are added to the existing map of headers.
 	 * @return The instance on which this method has been called, for a fluent API.
 	 */
-	public AbstractRestOperation withHeaders(Map<String, String> someHeaders) {
+	public RestOperation withHeaders(Map<String, String> someHeaders) {
 		this.requestHeaders.putAll(requestHeaders);
 		return this;
 	}
@@ -222,7 +336,7 @@ public abstract class AbstractRestOperation {
 	 *            The values for the parameter. Former entries are removed if there were any.
 	 * @return The instance on which this method has been called, for a fluent API.
 	 */
-	public AbstractRestOperation withQueryParameter(String key, String... values) {
+	public RestOperation withQueryParameter(String key, String... values) {
 		requestParameters.replaceValues(key, Arrays.asList(values));
 		return this;
 	}
@@ -234,7 +348,7 @@ public abstract class AbstractRestOperation {
 	 *            The query parameters to add to the resource.
 	 * @return The instance on which this method has been called, for a fluent API.
 	 */
-	public AbstractRestOperation withQueryParameters(Multimap<String, String> queryParameters) {
+	public RestOperation withQueryParameters(Multimap<String, String> queryParameters) {
 		requestParameters.putAll(queryParameters);
 		return this;
 	}
@@ -244,7 +358,7 @@ public abstract class AbstractRestOperation {
 	 * 
 	 * @return The instance on which this method has been called, for a fluent API.
 	 */
-	public AbstractRestOperation withoutQueryParameter() {
+	public RestOperation withoutQueryParameter() {
 		requestParameters.clear();
 		return this;
 	}
@@ -256,23 +370,8 @@ public abstract class AbstractRestOperation {
 	 *            Key to remove from the query parameters, all entries will be removed for this key.
 	 * @return The instance on which this method has been called, for a fluent API.
 	 */
-	public AbstractRestOperation withoutQueryParameters(String key) {
+	public RestOperation withoutQueryParameters(String key) {
 		requestParameters.removeAll(key);
 		return this;
-	}
-
-	/**
-	 * Send a request.
-	 * 
-	 * @param method
-	 *            HTTP method to use (OPTIONS, GET, POST, PUT, ...)
-	 * @param headers
-	 *            Headers to send
-	 * @param data
-	 *            Data to send
-	 * @return The received serve response, as is.
-	 */
-	protected ServerResponse sendRequest(String method, Map<String, String> headers, String data) {
-		return connector.sendRequest(method, getUrlWithQueryParameters(), headers, data);
 	}
 }

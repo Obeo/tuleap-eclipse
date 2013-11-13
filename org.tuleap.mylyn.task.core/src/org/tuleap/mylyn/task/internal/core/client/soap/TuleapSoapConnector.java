@@ -573,7 +573,7 @@ public class TuleapSoapConnector {
 			tuleapField = new TuleapComputedValue(fieldIdentifier);
 		} else {
 			TuleapCoreActivator.log(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.unsupportedTrackerFieldType, type), true);
+					TuleapMylynTasksMessagesKeys.unsupportedTrackerFieldType, type), false);
 		}
 
 		monitor.worked(1);

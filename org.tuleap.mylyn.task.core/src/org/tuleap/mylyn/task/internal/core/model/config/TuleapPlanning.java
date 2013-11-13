@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model.config;
 
-import com.google.common.collect.Lists;
-
-import java.util.List;
+import java.io.Serializable;
 
 import org.tuleap.mylyn.task.internal.core.model.data.AbstractTuleapProjectElement;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
@@ -22,7 +20,12 @@ import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class TuleapPlanning extends AbstractTuleapProjectElement {
+public class TuleapPlanning extends AbstractTuleapProjectElement implements Serializable {
+
+	/**
+	 * The serial version UID.
+	 */
+	private static final long serialVersionUID = 5106404307922739802L;
 
 	/**
 	 * Reference to the tracker that contains the milestone artifacts of this planning.
@@ -32,7 +35,7 @@ public class TuleapPlanning extends AbstractTuleapProjectElement {
 	/**
 	 * References to the trackers that contain the backlog item artifacts of this planning.
 	 */
-	private List<TuleapReference> backlogTrackers;
+	private TuleapReference[] backlogTrackers;
 
 	/**
 	 * REST URI to retrieve the milestones of this planning. They are the milestones of the artifacts of the
@@ -104,10 +107,7 @@ public class TuleapPlanning extends AbstractTuleapProjectElement {
 	 * 
 	 * @return the backlogTrackers, a list that is never <code>null</code> but possibly empty.
 	 */
-	public List<TuleapReference> getBacklogTrackers() {
-		if (backlogTrackers == null) {
-			backlogTrackers = Lists.newArrayList();
-		}
+	public TuleapReference[] getBacklogTrackers() {
 		return backlogTrackers;
 	}
 
@@ -117,18 +117,8 @@ public class TuleapPlanning extends AbstractTuleapProjectElement {
 	 * @param backlogTrackers
 	 *            the backlogTrackers to set
 	 */
-	public void setBacklogTrackers(List<TuleapReference> backlogTrackers) {
+	public void setBacklogTrackers(TuleapReference[] backlogTrackers) {
 		this.backlogTrackers = backlogTrackers;
-	}
-
-	/**
-	 * Adds a backlog tracker reference.
-	 * 
-	 * @param backlogTracker
-	 *            the backlogTracker to add
-	 */
-	public void addBacklogTracker(TuleapReference backlogTracker) {
-		getBacklogTrackers().add(backlogTracker);
 	}
 
 	/**

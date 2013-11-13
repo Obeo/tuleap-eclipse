@@ -16,7 +16,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
@@ -25,12 +24,10 @@ import java.util.List;
 import org.tuleap.mylyn.task.internal.core.model.TuleapErrorMessage;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPlanning;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
-import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCardwall;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapTopPlanning;
-import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**
  * This class is used to encapsulate all the logic of the JSON parsing.
@@ -135,15 +132,15 @@ public class TuleapJsonParser {
 		TuleapPlanning planning = gson.fromJson(planningElement, TuleapPlanning.class);
 
 		// Need to handle specifically the list of backlog item trackers
-		JsonObject jsonObject = planningElement.getAsJsonObject();
-		JsonElement biTrackerElement = jsonObject.get(ITuleapConstants.JSON_BACKLOG_ITEM_TRACKERS);
-		if (biTrackerElement.isJsonArray()) {
-			JsonArray biTrackerArray = biTrackerElement.getAsJsonArray();
-			for (JsonElement biElt : biTrackerArray) {
-				TuleapReference biTracker = gson.fromJson(biElt, TuleapReference.class);
-				planning.addBacklogTracker(biTracker);
-			}
-		}
+		// JsonObject jsonObject = planningElement.getAsJsonObject();
+		// JsonElement biTrackerElement = jsonObject.get(ITuleapConstants.JSON_BACKLOG_TRACKERS);
+		// if (biTrackerElement != null && biTrackerElement.isJsonArray()) {
+		// JsonArray biTrackerArray = biTrackerElement.getAsJsonArray();
+		// for (JsonElement biElt : biTrackerArray) {
+		// TuleapReference biTracker = gson.fromJson(biElt, TuleapReference.class);
+		// planning.addBacklogTracker(biTracker);
+		// }
+		// }
 		return planning;
 	}
 
@@ -216,7 +213,18 @@ public class TuleapJsonParser {
 	public TuleapMilestone parseMilestone(String jsonResponse) {
 		JsonParser parser = new JsonParser();
 		JsonElement milestoneElement = parser.parse(jsonResponse);
-		return new TuleapMilestoneDeserializer().deserialize(milestoneElement, TuleapMilestone.class, null);
+		return parseMilestone(milestoneElement);
+	}
+
+	/**
+	 * Parses a JSON String representing a milestone into a POJO.
+	 * 
+	 * @param element
+	 *            The JSON element representing an milestone
+	 * @return a POJO populated with the data from the JSON String.
+	 */
+	public TuleapMilestone parseMilestone(JsonElement element) {
+		return new TuleapMilestoneDeserializer().deserialize(element, TuleapMilestone.class, null);
 		// GsonBuilder builder = new GsonBuilder();
 		// Gson gson = builder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
 		// return gson.fromJson(json, TuleapMilestone.class);
@@ -232,7 +240,18 @@ public class TuleapJsonParser {
 	public TuleapBacklogItem parseBacklogItem(String jsonResponse) {
 		JsonParser parser = new JsonParser();
 		JsonElement backlogElement = parser.parse(jsonResponse);
-		return new TuleapBacklogItemDeserializer().deserialize(backlogElement, TuleapBacklogItem.class, null);
+		return parseBacklogItem(backlogElement);
+	}
+
+	/**
+	 * Parses a JSON String representing a backlogItem into a POJO.
+	 * 
+	 * @param element
+	 *            The JSON element representing a backlogItem
+	 * @return a POJO populated with the data from the JSON String.
+	 */
+	public TuleapBacklogItem parseBacklogItem(JsonElement element) {
+		return new TuleapBacklogItemDeserializer().deserialize(element, TuleapBacklogItem.class, null);
 	}
 
 	/**

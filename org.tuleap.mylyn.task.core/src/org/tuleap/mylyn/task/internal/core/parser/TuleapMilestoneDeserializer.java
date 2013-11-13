@@ -17,7 +17,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
-import java.text.ParseException;
 
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
@@ -49,43 +48,35 @@ public class TuleapMilestoneDeserializer extends AbstractDetailedElementDeserial
 				TuleapReference.class));
 
 		JsonElement elt = jsonObject.get(ITuleapConstants.START_DATE);
-		if (elt != null) {
+		if (elt != null && !elt.isJsonNull()) {
 			String startDate = elt.getAsString();
-			try {
-				milestone.setStartDate(dateFormat.parse(startDate));
-			} catch (ParseException e) {
-				// TODO manage the exception properly
-			}
+			milestone.setStartDate(dateParser.parseDateTime(startDate).toDate());
 		}
 
 		elt = jsonObject.get(ITuleapConstants.END_DATE);
-		if (elt != null) {
+		if (elt != null && !elt.isJsonNull()) {
 			String endDate = elt.getAsString();
-			try {
-				milestone.setEndDate(dateFormat.parse(endDate));
-			} catch (ParseException e) {
-				// TODO manage the exception properly
-			}
+			milestone.setEndDate(dateParser.parseDateTime(endDate).toDate());
 		}
 
 		elt = jsonObject.get(ITuleapConstants.CAPACITY);
-		if (elt != null) {
+		if (elt != null && !elt.isJsonNull()) {
 			Float capacity = Float.valueOf(elt.getAsFloat());
 			milestone.setCapacity(capacity);
 		}
 
 		elt = jsonObject.get(ITuleapConstants.JSON_STATUS_VALUE);
-		if (elt != null) {
+		if (elt != null && !elt.isJsonNull()) {
 			milestone.setStatusValue(elt.getAsString());
 		}
 
 		elt = jsonObject.get(ITuleapConstants.JSON_SUB_MILESTONES_URI);
-		if (elt != null) {
+		if (elt != null && !elt.isJsonNull()) {
 			milestone.setSubMilestonesUri(elt.getAsString());
 		}
 
 		elt = jsonObject.get(ITuleapConstants.JSON_BACKLOG_ITEMS_URI);
-		if (elt != null) {
+		if (elt != null && !elt.isJsonNull()) {
 			milestone.setBacklogItemsUri(elt.getAsString());
 		}
 

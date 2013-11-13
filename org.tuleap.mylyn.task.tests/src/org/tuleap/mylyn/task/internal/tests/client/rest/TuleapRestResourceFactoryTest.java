@@ -16,10 +16,10 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.client.rest.ITuleapHeaders;
-import org.tuleap.mylyn.task.internal.core.client.rest.RestOpGet;
-import org.tuleap.mylyn.task.internal.core.client.rest.RestOpPut;
+import org.tuleap.mylyn.task.internal.core.client.rest.RestOperation;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestResource;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestResourceFactory;
 import org.tuleap.mylyn.task.internal.core.client.rest.ServerResponse;
@@ -74,7 +74,7 @@ public class TuleapRestResourceFactoryTest {
 		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT");
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
 
-		RestOpPut put = milestone.put();
+		RestOperation put = milestone.put();
 		assertNotNull(put);
 		assertEquals("PUT", put.getMethodName());
 		assertEquals("/server/api/v12.5/milestones/123", put.getUrl());
@@ -103,7 +103,7 @@ public class TuleapRestResourceFactoryTest {
 		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET");
 		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
-		RestOpGet get = r.get();
+		RestOperation get = r.get();
 		assertNotNull(get);
 		assertEquals("GET", get.getMethodName());
 		assertEquals("/server/api/v12.5/milestones/123/backlog_items", get.getUrl());
@@ -122,7 +122,7 @@ public class TuleapRestResourceFactoryTest {
 		headers.put(ITuleapHeaders.ALLOW, "OPTIONS");
 		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
-		RestOpGet get = r.get();
+		RestOperation get = r.get();
 		assertNotNull(get);
 	}
 
@@ -134,13 +134,14 @@ public class TuleapRestResourceFactoryTest {
 	 * @throws CoreException
 	 */
 	@Test(expected = CoreException.class)
+	@Ignore("Reactivate when Tuleap supports CORS header attributes")
 	public void testGetMilestonesBacklogItemsGetWhenServerDoesNotAllowCorsGet() throws CoreException {
 		RestResource r = factory.milestonesBacklogItems(123);
 		Map<String, String> headers = Maps.newTreeMap();
 		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET");
 		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS");
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
-		RestOpGet get = r.get();
+		RestOperation get = r.get();
 		assertNotNull(get);
 	}
 
@@ -170,7 +171,7 @@ public class TuleapRestResourceFactoryTest {
 		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT");
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
 
-		RestOpPut put = r.put();
+		RestOperation put = r.put();
 		assertNotNull(put);
 		assertEquals("PUT", put.getMethodName());
 		assertEquals("/server/api/v12.5/milestones/123/backlog_items", put.getUrl());

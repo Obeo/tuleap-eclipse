@@ -13,7 +13,6 @@ package org.tuleap.mylyn.task.internal.tests.parser;
 import com.google.gson.JsonDeserializer;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
@@ -30,11 +29,6 @@ import static org.junit.Assert.assertNotNull;
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
 public class TuleapMilestoneDeserializerTests extends AbstractDeserializerTest<TuleapMilestone> {
-
-	/**
-	 * The pattern used to format date following the ISO8601 standard.
-	 */
-	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS"); //$NON-NLS-1$
 
 	/**
 	 * {@inheritDoc}
@@ -85,10 +79,10 @@ public class TuleapMilestoneDeserializerTests extends AbstractDeserializerTest<T
 		assertEquals("milestones/200", tuleapMilestone.getUri()); //$NON-NLS-1$
 		assertEquals("milestones?id=200&group_id=3", tuleapMilestone.getHtmlUrl()); //$NON-NLS-1$
 		assertEquals(1, tuleapMilestone.getSubmittedBy());
-		assertEquals(dateFormat.parse("20130923114418963"), tuleapMilestone.getSubmittedOn());
-		assertEquals(dateFormat.parse("20130924153318523"), tuleapMilestone.getLastUpdatedOn());
-		assertEquals(dateFormat.parse("20130923114418963"), tuleapMilestone.getStartDate());
-		assertEquals(dateFormat.parse("20131023114418963"), tuleapMilestone.getEndDate());
+		assertEquals(ParserUtil.parseDate("2013-09-23T11:44:18.963Z"), tuleapMilestone.getSubmittedOn());
+		assertEquals(ParserUtil.parseDate("2013-09-24T15:33:18.523Z"), tuleapMilestone.getLastUpdatedOn());
+		assertEquals(ParserUtil.parseDate("2013-09-23T11:44:18.963Z"), tuleapMilestone.getStartDate());
+		assertEquals(ParserUtil.parseDate("2013-10-23T11:44:18.963Z"), tuleapMilestone.getEndDate());
 		assertEquals(100, tuleapMilestone.getCapacity().floatValue(), 0);
 		assertEquals("Done", tuleapMilestone.getStatusValue());
 		assertEquals("milestones/200/milestones", tuleapMilestone.getSubMilestonesUri());
@@ -111,8 +105,8 @@ public class TuleapMilestoneDeserializerTests extends AbstractDeserializerTest<T
 		assertEquals(3, tuleapMilestone.getProject().getId());
 		assertEquals("projects/3", tuleapMilestone.getProject().getUri());
 		assertEquals("Release TU", tuleapMilestone.getLabel()); //$NON-NLS-1$
-		assertEquals(dateFormat.parse("20131023114418963"), tuleapMilestone.getStartDate());
-		assertEquals(dateFormat.parse("20131123114418963"), tuleapMilestone.getEndDate());
+		assertEquals(ParserUtil.parseDate("2013-10-23T11:44:18.963Z"), tuleapMilestone.getStartDate());
+		assertEquals(ParserUtil.parseDate("2013-11-23T11:44:18.963Z"), tuleapMilestone.getEndDate());
 		assertEquals(75, tuleapMilestone.getCapacity(), 0);
 		assertEquals("milestones/201", tuleapMilestone.getUri()); //$NON-NLS-1$
 		assertEquals("milestones?id=201&group_id=3", tuleapMilestone.getHtmlUrl()); //$NON-NLS-1$

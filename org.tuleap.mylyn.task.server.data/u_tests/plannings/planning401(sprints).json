@@ -10,7 +10,7 @@
     "id" : 902,
     "uri" : "trackers/902"
   },
-  "backlog_item_trackers" : [
+  "backlog_trackers" : [
     {
       "id" : 802,
       "uri" : "trackers/802"

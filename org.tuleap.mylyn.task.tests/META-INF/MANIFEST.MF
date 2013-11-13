@@ -30,7 +30,8 @@ Require-Bundle: org.junit;bundle-version="4.11.0",
  org.tuleap.mylyn.task.agile.core;bundle-version="1.0.0",
  com.google.guava;bundle-version="11.0.2",
  org.apache.axis,
- org.restlet;bundle-version="2.0.5"
+ org.restlet;bundle-version="2.0.5",
+ org.joda.time;bundle-version="1.6.0"
 Export-Package: org.tuleap.mylyn.task.internal.tests;x-internal:=true,
  org.tuleap.mylyn.task.internal.tests.client.rest;x-internal:=true,
  org.tuleap.mylyn.task.internal.tests.client.soap;x-internal:=true,

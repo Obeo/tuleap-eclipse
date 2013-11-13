@@ -24,6 +24,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.client.rest.ITuleapAPIVersions;
+import org.tuleap.mylyn.task.internal.core.client.rest.RestResourceFactory;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestConnector;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
@@ -132,9 +133,10 @@ public class TuleapClientManager implements IRepositoryListener {
 				return webLocation.getCredentials(type);
 			}
 		};
-		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(webLocationRest,
-				ITuleapAPIVersions.BEST_VERSION, logger);
-		TuleapRestClient tuleapRestClient = new TuleapRestClient(tuleapRestConnector, jsonParser,
+		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(webLocation, logger);
+		RestResourceFactory restResourceFactory = new RestResourceFactory(webLocation.getUrl(),
+				ITuleapAPIVersions.BEST_VERSION, tuleapRestConnector);
+		TuleapRestClient tuleapRestClient = new TuleapRestClient(restResourceFactory, jsonParser,
 				jsonSerializer, taskRepository, logger);
 		this.restClientCache.put(taskRepository, tuleapRestClient);
 	}

@@ -19,7 +19,8 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.client.rest.ITuleapHeaders;
-import org.tuleap.mylyn.task.internal.core.client.rest.RestOpGet;
+import org.tuleap.mylyn.task.internal.core.client.rest.RestOperation;
+import org.tuleap.mylyn.task.internal.core.client.rest.RestOperationIterable;
 import org.tuleap.mylyn.task.internal.core.client.rest.ServerResponse;
 
 import static org.junit.Assert.assertEquals;
@@ -27,7 +28,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Tests of {@link RestOpGet} and other REST operations.
+ * Tests of {@link RestOperation}.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
@@ -37,7 +38,7 @@ public class RestOperationsTest {
 
 	@Test
 	public void testBasicBehavior() {
-		RestOpGet op = new RestOpGet("some/url", connector);
+		RestOperation op = RestOperation.get("some/url", connector);
 		assertEquals("GET", op.getMethodName());
 		assertEquals("some/url", op.getUrl());
 		assertEquals("some/url", op.getUrlWithQueryParameters());
@@ -72,7 +73,7 @@ public class RestOperationsTest {
 	 */
 	@Test
 	public void testExecutionOfGet() {
-		RestOpGet op = new RestOpGet("some/url", connector);
+		RestOperation op = RestOperation.get("some/url", connector);
 		Map<String, String> responseHeaders = Maps.newLinkedHashMap();
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, "body", responseHeaders);
 		connector.setResponse(response);
@@ -82,23 +83,23 @@ public class RestOperationsTest {
 
 	@Test
 	public void testIteratingOnGetWithJsonObject() {
-		RestOpGet op = new RestOpGet("some/url", connector);
+		RestOperation op = RestOperation.get("some/url", connector);
 		Map<String, String> responseHeaders = Maps.newLinkedHashMap();
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, "{'a':'1'}", responseHeaders);
 		connector.setResponse(response);
-		Iterator<JsonElement> iterator = op.iterator();
+		Iterator<JsonElement> iterator = new RestOperationIterable(op).iterator();
 		assertEquals("{\"a\":\"1\"}", iterator.next().toString());
 		assertFalse(iterator.hasNext());
 	}
 
 	@Test
 	public void testIteratingOnGetWithArrayWithoutPagination() {
-		RestOpGet op = new RestOpGet("some/url", connector);
+		RestOperation op = RestOperation.get("some/url", connector);
 		Map<String, String> responseHeaders = Maps.newLinkedHashMap();
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, "[{'a':'1'},{'a':'2'}]",
 				responseHeaders);
 		connector.setResponse(response);
-		Iterator<JsonElement> iterator = op.iterator();
+		Iterator<JsonElement> iterator = new RestOperationIterable(op).iterator();
 		assertEquals("{\"a\":\"1\"}", iterator.next().toString());
 		assertEquals("{\"a\":\"2\"}", iterator.next().toString());
 		assertFalse(iterator.hasNext());
@@ -108,7 +109,7 @@ public class RestOperationsTest {
 	public void testIteratingOnGetWithArrayWithPagination() {
 		MockPaginatingRestConnector paginatingConnector = new MockPaginatingRestConnector();
 
-		RestOpGet op = new RestOpGet("some/url", paginatingConnector);
+		RestOperation op = RestOperation.get("some/url", paginatingConnector);
 		Map<String, String> responseHeaders = Maps.newLinkedHashMap();
 
 		responseHeaders.put(ITuleapHeaders.HEADER_X_PAGINATION_SIZE, "3");
@@ -128,7 +129,7 @@ public class RestOperationsTest {
 		paginatingConnector.putResponse(0, response);
 		paginatingConnector.putResponse(2, response2);
 
-		Iterator<JsonElement> iterator = op.iterator();
+		Iterator<JsonElement> iterator = new RestOperationIterable(op).iterator();
 		assertTrue(iterator.hasNext());
 		assertEquals("{\"a\":\"1\"}", iterator.next().toString());
 		assertTrue(iterator.hasNext());

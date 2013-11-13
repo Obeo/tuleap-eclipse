@@ -80,11 +80,13 @@ public class TuleapProjectConfigurationTests {
 		reference = new TuleapReference();
 		reference.setId(321);
 		reference.setUri("trackers/321");
-		planning.getBacklogTrackers().add(reference);
+		TuleapReference[] trackers = new TuleapReference[2];
+		trackers[0] = reference;
 		reference = new TuleapReference();
 		reference.setId(322);
 		reference.setUri("trackers/322");
-		planning.getBacklogTrackers().add(reference);
+		trackers[1] = reference;
+		planning.setBacklogTrackers(trackers);
 
 		project.addPlanning(planning);
 
@@ -120,11 +122,13 @@ public class TuleapProjectConfigurationTests {
 		reference = new TuleapReference();
 		reference.setId(321);
 		reference.setUri("trackers/321");
-		planning.getBacklogTrackers().add(reference);
+		TuleapReference[] trackers = new TuleapReference[2];
+		trackers[0] = reference;
 		reference = new TuleapReference();
 		reference.setId(322);
 		reference.setUri("trackers/322");
-		planning.getBacklogTrackers().add(reference);
+		trackers[1] = reference;
+		planning.setBacklogTrackers(trackers);
 
 		project.addPlanning(planning);
 

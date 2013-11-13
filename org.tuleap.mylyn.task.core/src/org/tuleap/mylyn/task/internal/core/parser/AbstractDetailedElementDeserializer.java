@@ -16,11 +16,15 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import org.tuleap.mylyn.task.internal.core.model.data.AbstractTuleapDetailedElement;
-import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
+
+import static org.tuleap.mylyn.task.internal.core.util.ITuleapConstants.HTML_URL;
+import static org.tuleap.mylyn.task.internal.core.util.ITuleapConstants.LAST_UPDATED_ON;
+import static org.tuleap.mylyn.task.internal.core.util.ITuleapConstants.SUBMITTED_BY;
+import static org.tuleap.mylyn.task.internal.core.util.ITuleapConstants.SUBMITTED_ON;
 
 /**
  * This class is used to deserialize a JSON representation of a Tuleap object, for objects that have a
@@ -36,7 +40,7 @@ public abstract class AbstractDetailedElementDeserializer<T extends AbstractTule
 	/**
 	 * The pattern used to format date following the ISO8601 standard.
 	 */
-	protected SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"); //$NON-NLS-1$
+	protected DateTimeFormatter dateParser = ISODateTimeFormat.dateTimeParser();
 
 	/**
 	 * {@inheritDoc}
@@ -52,20 +56,26 @@ public abstract class AbstractDetailedElementDeserializer<T extends AbstractTule
 
 		JsonObject jsonObject = rootJsonElement.getAsJsonObject();
 
-		String htmlUrl = jsonObject.get(ITuleapConstants.HTML_URL).getAsString();
-		String submittedOn = jsonObject.get(ITuleapConstants.SUBMITTED_ON).getAsString();
-		int submittedBy = jsonObject.get(ITuleapConstants.SUBMITTED_BY).getAsInt();
-		String lastUpdatedOn = jsonObject.get(ITuleapConstants.LAST_UPDATED_ON).getAsString();
-
-		pojo.setHtmlUrl(htmlUrl);
-		try {
-			pojo.setSubmittedOn(dateFormat.parse(submittedOn));
-			pojo.setLastUpdatedOn(dateFormat.parse(lastUpdatedOn));
-		} catch (ParseException e) {
-			throw new JsonParseException("Invalid date: " + e.getMessage()); //$NON-NLS-1$
+		JsonElement element = jsonObject.get(HTML_URL);
+		if (element != null && !element.isJsonNull()) {
+			String htmlUrl = element.getAsString();
+			pojo.setHtmlUrl(htmlUrl);
 		}
-		pojo.setSubmittedBy(submittedBy);
-
+		element = jsonObject.get(SUBMITTED_ON);
+		if (element != null && !element.isJsonNull()) {
+			String submittedOn = jsonObject.get(SUBMITTED_ON).getAsString();
+			pojo.setSubmittedOn(dateParser.parseDateTime(submittedOn).toDate());
+		}
+		element = jsonObject.get(SUBMITTED_BY);
+		if (element != null && !element.isJsonNull()) {
+			int submittedBy = jsonObject.get(SUBMITTED_BY).getAsInt();
+			pojo.setSubmittedBy(submittedBy);
+		}
+		element = jsonObject.get(LAST_UPDATED_ON);
+		if (element != null && !element.isJsonNull()) {
+			String lastUpdatedOn = jsonObject.get(LAST_UPDATED_ON).getAsString();
+			pojo.setLastUpdatedOn(dateParser.parseDateTime(lastUpdatedOn).toDate());
+		}
 		return pojo;
 	}
 

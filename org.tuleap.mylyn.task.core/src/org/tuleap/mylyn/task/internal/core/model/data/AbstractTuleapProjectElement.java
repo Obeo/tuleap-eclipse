@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model.data;
 
+import java.io.Serializable;
+
 /**
  * Ancestor of all tuleap configurable elements that belong to a project and have and ID, a REST URL, and an
  * HTML URL.
@@ -18,7 +20,12 @@ package org.tuleap.mylyn.task.internal.core.model.data;
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public abstract class AbstractTuleapProjectElement {
+public abstract class AbstractTuleapProjectElement implements Serializable {
+
+	/**
+	 * The serial version UID.
+	 */
+	private static final long serialVersionUID = -9094875261952671674L;
 
 	/**
 	 * The id of the element.

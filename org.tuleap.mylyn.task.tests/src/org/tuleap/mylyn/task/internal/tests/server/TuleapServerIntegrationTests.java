@@ -22,6 +22,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 import org.junit.Before;
 import org.junit.Test;
+import org.tuleap.mylyn.task.internal.core.client.rest.RestResourceFactory;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestConnector;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
@@ -53,12 +54,12 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 	@Test
 	public void testValidAuthentication() {
 		TestLogger logger = new TestLogger();
-		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(location, "v3.14", //$NON-NLS-1$
-				logger);
+		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(location, logger);
 		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
 		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
-
-		TuleapRestClient tuleapServer = new TuleapRestClient(tuleapRestConnector, tuleapJsonParser,
+		RestResourceFactory restResourceFactory = new RestResourceFactory(location.getUrl(), "v3.14",
+				tuleapRestConnector);
+		TuleapRestClient tuleapServer = new TuleapRestClient(restResourceFactory, tuleapJsonParser,
 				tuleapJsonSerializer, this.repository, logger);
 		try {
 			IStatus connectionStatus = tuleapServer.validateConnection(new NullProgressMonitor());
@@ -77,14 +78,13 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 		// Setting a wrong password for the test
 		this.repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(
 				"admin", "wrong"), false); //$NON-NLS-1$ //$NON-NLS-2$
-
 		TestLogger logger = new TestLogger();
-		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(location, "v3.14", //$NON-NLS-1$
-				logger);
+		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(location, logger);
 		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
 		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
-
-		TuleapRestClient tuleapServer = new TuleapRestClient(tuleapRestConnector, tuleapJsonParser,
+		RestResourceFactory restResourceFactory = new RestResourceFactory(location.getUrl(), "v3.14",
+				tuleapRestConnector);
+		TuleapRestClient tuleapServer = new TuleapRestClient(restResourceFactory, tuleapJsonParser,
 				tuleapJsonSerializer, this.repository, logger);
 		try {
 			tuleapServer.validateConnection(new NullProgressMonitor());
@@ -101,11 +101,12 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 	@Test
 	public void testGetTopPlannings() {
 		TestLogger logger = new TestLogger();
-		TuleapRestConnector restConnector = new TuleapRestConnector(location, "v3.14", logger); //$NON-NLS-1$
+		TuleapRestConnector restConnector = new TuleapRestConnector(location, logger);
 		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
 		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
-
-		TuleapRestClient tuleapServer = new TuleapRestClient(restConnector, tuleapJsonParser,
+		RestResourceFactory restResourceFactory = new RestResourceFactory(location.getUrl(), "v3.14",
+				restConnector);
+		TuleapRestClient tuleapServer = new TuleapRestClient(restResourceFactory, tuleapJsonParser,
 				tuleapJsonSerializer, this.repository, logger);
 		try {
 			List<TuleapTopPlanning> topPlannings = tuleapServer.getTopPlannings(3, null);
@@ -127,11 +128,12 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 	@Test
 	public void testGetMilestones() {
 		TestLogger logger = new TestLogger();
-		TuleapRestConnector restConnector = new TuleapRestConnector(location, "v3.14", logger); //$NON-NLS-1$
+		TuleapRestConnector restConnector = new TuleapRestConnector(location, logger);
 		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
 		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
-
-		TuleapRestClient tuleapServer = new TuleapRestClient(restConnector, tuleapJsonParser,
+		RestResourceFactory restResourceFactory = new RestResourceFactory(location.getUrl(), "v3.14",
+				restConnector);
+		TuleapRestClient tuleapServer = new TuleapRestClient(restResourceFactory, tuleapJsonParser,
 				tuleapJsonSerializer, this.repository, logger);
 		try {
 			List<TuleapMilestone> milestoneItems = tuleapServer.getSubMilestones(200, null);
