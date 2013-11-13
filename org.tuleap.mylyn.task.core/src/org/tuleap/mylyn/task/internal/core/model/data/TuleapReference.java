@@ -10,13 +10,19 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model.data;
 
+import java.io.Serializable;
 
 /**
  * Used to reference a tuleap resource. POJO to deserialize a JSON tracker reference for example.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class TuleapReference {
+public class TuleapReference implements Serializable {
+
+	/**
+	 * The serial version UID.
+	 */
+	private static final long serialVersionUID = -394549517237855801L;
 
 	/**
 	 * The tracker id.
