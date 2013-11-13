@@ -79,10 +79,10 @@ public class TuleapMilestoneDeserializerTests extends AbstractDeserializerTest<T
 		assertEquals("milestones/200", tuleapMilestone.getUri()); //$NON-NLS-1$
 		assertEquals("milestones?id=200&group_id=3", tuleapMilestone.getHtmlUrl()); //$NON-NLS-1$
 		assertEquals(1, tuleapMilestone.getSubmittedBy());
-		assertEquals(ParserUtil.parseDate("2013-09-23T11:44:18.963Z"), tuleapMilestone.getSubmittedOn());
-		assertEquals(ParserUtil.parseDate("2013-09-24T15:33:18.523Z"), tuleapMilestone.getLastUpdatedOn());
-		assertEquals(ParserUtil.parseDate("2013-09-23T11:44:18.963Z"), tuleapMilestone.getStartDate());
-		assertEquals(ParserUtil.parseDate("2013-10-23T11:44:18.963Z"), tuleapMilestone.getEndDate());
+		assertEquals(ParserUtil.getUTCDate(2013, 8, 23, 11, 44, 18, 963), tuleapMilestone.getSubmittedOn());
+		assertEquals(ParserUtil.getUTCDate(2013, 8, 24, 15, 33, 18, 523), tuleapMilestone.getLastUpdatedOn());
+		assertEquals(ParserUtil.getUTCDate(2013, 8, 23, 11, 44, 18, 963), tuleapMilestone.getStartDate());
+		assertEquals(ParserUtil.getUTCDate(2013, 9, 23, 11, 44, 18, 963), tuleapMilestone.getEndDate());
 		assertEquals(100, tuleapMilestone.getCapacity().floatValue(), 0);
 		assertEquals("Done", tuleapMilestone.getStatusValue());
 		assertEquals("milestones/200/milestones", tuleapMilestone.getSubMilestonesUri());
@@ -105,8 +105,8 @@ public class TuleapMilestoneDeserializerTests extends AbstractDeserializerTest<T
 		assertEquals(3, tuleapMilestone.getProject().getId());
 		assertEquals("projects/3", tuleapMilestone.getProject().getUri());
 		assertEquals("Release TU", tuleapMilestone.getLabel()); //$NON-NLS-1$
-		assertEquals(ParserUtil.parseDate("2013-10-23T11:44:18.963Z"), tuleapMilestone.getStartDate());
-		assertEquals(ParserUtil.parseDate("2013-11-23T11:44:18.963Z"), tuleapMilestone.getEndDate());
+		assertEquals(ParserUtil.getUTCDate(2013, 9, 23, 11, 44, 18, 963), tuleapMilestone.getStartDate());
+		assertEquals(ParserUtil.getUTCDate(2013, 10, 23, 11, 44, 18, 963), tuleapMilestone.getEndDate());
 		assertEquals(75, tuleapMilestone.getCapacity(), 0);
 		assertEquals("milestones/201", tuleapMilestone.getUri()); //$NON-NLS-1$
 		assertEquals("milestones?id=201&group_id=3", tuleapMilestone.getHtmlUrl()); //$NON-NLS-1$

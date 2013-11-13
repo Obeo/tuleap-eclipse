@@ -15,10 +15,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import org.eclipse.core.runtime.Platform;
-import org.joda.time.format.ISODateTimeFormat;
 import org.osgi.framework.Bundle;
 
 /**
@@ -38,17 +40,6 @@ public final class ParserUtil {
 	 */
 	private ParserUtil() {
 		// Prevents instantiation
-	}
-
-	/**
-	 * Parses a ISO 8601 date.
-	 * 
-	 * @param date
-	 *            The date to parse in ISO 8601
-	 * @return The parsed date
-	 */
-	public static Date parseDate(String date) {
-		return ISODateTimeFormat.dateTimeParser().parseDateTime(date).toDate();
 	}
 
 	/**
@@ -129,6 +120,25 @@ public final class ParserUtil {
 		}
 
 		return result;
+	}
+
+	/**
+	 * Retuns a UTC date.
+	 * 
+	 * @param year
+	 * @param month
+	 * @param date
+	 * @param h
+	 * @param m
+	 * @param s
+	 * @param milli
+	 * @return The date.
+	 */
+	public static Date getUTCDate(int year, int month, int date, int h, int m, int s, int milli) {
+		GregorianCalendar c = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
+		c.set(year, month, date, h, m, s);
+		c.set(Calendar.MILLISECOND, milli);
+		return c.getTime();
 	}
 
 }

@@ -17,7 +17,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
+import java.text.ParseException;
 
+import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
@@ -50,13 +52,21 @@ public class TuleapMilestoneDeserializer extends AbstractDetailedElementDeserial
 		JsonElement elt = jsonObject.get(ITuleapConstants.START_DATE);
 		if (elt != null && !elt.isJsonNull()) {
 			String startDate = elt.getAsString();
-			milestone.setStartDate(dateParser.parseDateTime(startDate).toDate());
+			try {
+				milestone.setStartDate(parseISO8601Date(startDate));
+			} catch (ParseException e) {
+				TuleapCoreActivator.log(e, false);
+			}
 		}
 
 		elt = jsonObject.get(ITuleapConstants.END_DATE);
 		if (elt != null && !elt.isJsonNull()) {
 			String endDate = elt.getAsString();
-			milestone.setEndDate(dateParser.parseDateTime(endDate).toDate());
+			try {
+				milestone.setEndDate(parseISO8601Date(endDate));
+			} catch (ParseException e) {
+				TuleapCoreActivator.log(e, false);
+			}
 		}
 
 		elt = jsonObject.get(ITuleapConstants.CAPACITY);

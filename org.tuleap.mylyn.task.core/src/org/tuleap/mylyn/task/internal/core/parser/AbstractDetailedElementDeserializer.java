@@ -16,9 +16,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
+import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.model.data.AbstractTuleapDetailedElement;
 
 import static org.tuleap.mylyn.task.internal.core.util.ITuleapConstants.HTML_URL;
@@ -38,9 +41,25 @@ import static org.tuleap.mylyn.task.internal.core.util.ITuleapConstants.SUBMITTE
 public abstract class AbstractDetailedElementDeserializer<T extends AbstractTuleapDetailedElement> extends AbstractProjectElementDeserializer<T> {
 
 	/**
-	 * The pattern used to format date following the ISO8601 standard.
+	 * Date format ISO-8601 with milliseconds when using a timezone with a sign and 4 digits separated by a
+	 * colon.
 	 */
-	protected DateTimeFormatter dateParser = ISODateTimeFormat.dateTimeParser();
+	private static final String DATE_FORMAT_MILLIS_WITH_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"; //$NON-NLS-1$
+
+	/**
+	 * Date format ISO-8601 with milliseconds when using the default timezone.
+	 */
+	private static final String DATE_FORMAT_MILLIS_WITH_DEFAULT_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"; //$NON-NLS-1$
+
+	/**
+	 * Date format ISO-8601 when using a timezone with a sign and 4 digits separated by a colon.
+	 */
+	private static final String DATE_FORMAT_WITH_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ssZ"; //$NON-NLS-1$
+
+	/**
+	 * Date format ISO-8601 when using the default timezone.
+	 */
+	private static final String DATE_FORMAT_WITH_DEFAULT_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ss'Z'"; //$NON-NLS-1$
 
 	/**
 	 * {@inheritDoc}
@@ -64,7 +83,11 @@ public abstract class AbstractDetailedElementDeserializer<T extends AbstractTule
 		element = jsonObject.get(SUBMITTED_ON);
 		if (element != null && !element.isJsonNull()) {
 			String submittedOn = jsonObject.get(SUBMITTED_ON).getAsString();
-			pojo.setSubmittedOn(dateParser.parseDateTime(submittedOn).toDate());
+			try {
+				pojo.setSubmittedOn(parseISO8601Date(submittedOn));
+			} catch (ParseException e) {
+				TuleapCoreActivator.log(e, false);
+			}
 		}
 		element = jsonObject.get(SUBMITTED_BY);
 		if (element != null && !element.isJsonNull()) {
@@ -74,9 +97,41 @@ public abstract class AbstractDetailedElementDeserializer<T extends AbstractTule
 		element = jsonObject.get(LAST_UPDATED_ON);
 		if (element != null && !element.isJsonNull()) {
 			String lastUpdatedOn = jsonObject.get(LAST_UPDATED_ON).getAsString();
-			pojo.setLastUpdatedOn(dateParser.parseDateTime(lastUpdatedOn).toDate());
+			try {
+				pojo.setLastUpdatedOn(parseISO8601Date(lastUpdatedOn));
+			} catch (ParseException e) {
+				TuleapCoreActivator.log(e, false);
+			}
 		}
 		return pojo;
+	}
+
+	/**
+	 * Parses a date in ISO 8601 format, without Joda time...
+	 * 
+	 * @param dateIso8601
+	 *            Date to parse.
+	 * @throws ParseException
+	 *             if the given date is not in the right format.
+	 * @return The parsed date.
+	 */
+	public Date parseISO8601Date(String dateIso8601) throws ParseException {
+		SimpleDateFormat format;
+		if (dateIso8601.endsWith("Z")) { //$NON-NLS-1$
+			if (dateIso8601.indexOf('.') > 0) {
+				format = new SimpleDateFormat(DATE_FORMAT_MILLIS_WITH_DEFAULT_TIMEZONE);
+			} else {
+				format = new SimpleDateFormat(DATE_FORMAT_WITH_DEFAULT_TIMEZONE);
+			}
+			format.setTimeZone(TimeZone.getTimeZone("UTC")); //$NON-NLS-1$
+			return format.parse(dateIso8601);
+		}
+		if (dateIso8601.indexOf('.') > 0) {
+			format = new SimpleDateFormat(DATE_FORMAT_MILLIS_WITH_TIMEZONE);
+		} else {
+			format = new SimpleDateFormat(DATE_FORMAT_WITH_TIMEZONE);
+		}
+		return format.parse(dateIso8601.replaceFirst(":(\\d\\d)$", "$1")); //$NON-NLS-1$//$NON-NLS-2$
 	}
 
 }

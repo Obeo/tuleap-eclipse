@@ -58,8 +58,8 @@ public class TuleapBacklogItemDeserializerTest extends AbstractDeserializerTest<
 		assertEquals("backlog_items/301", item.getUri());
 		assertEquals("backlog_items?id=301&group_id=3", item.getHtmlUrl());
 		assertEquals(1, item.getSubmittedBy());
-		assertEquals(ParserUtil.parseDate("2013-09-23T11:44:18.963Z"), item.getSubmittedOn());
-		assertEquals(ParserUtil.parseDate("2013-09-24T15:33:18.523Z"), item.getLastUpdatedOn());
+		assertEquals(ParserUtil.getUTCDate(2013, 8, 23, 11, 44, 18, 963), item.getSubmittedOn());
+		assertEquals(ParserUtil.getUTCDate(2013, 8, 24, 15, 33, 18, 523), item.getLastUpdatedOn());
 		assertEquals(40.5f, item.getInitialEffort(), 0f);
 		assertEquals(201, item.getAssignedMilestone().getId());
 		assertEquals(TuleapBacklogItem.Status.OPEN, item.getStatus());
@@ -83,8 +83,8 @@ public class TuleapBacklogItemDeserializerTest extends AbstractDeserializerTest<
 		assertEquals("backlog_items/300", item.getUri());
 		assertEquals("backlog_items?id=300&group_id=3", item.getHtmlUrl());
 		assertEquals(1, item.getSubmittedBy());
-		assertEquals(ParserUtil.parseDate("2013-09-23T11:44:18.963Z"), item.getSubmittedOn());
-		assertEquals(ParserUtil.parseDate("2013-09-24T15:33:18.523Z"), item.getLastUpdatedOn());
+		assertEquals(ParserUtil.getUTCDate(2013, 8, 23, 11, 44, 18, 963), item.getSubmittedOn());
+		assertEquals(ParserUtil.getUTCDate(2013, 8, 24, 15, 33, 18, 523), item.getLastUpdatedOn());
 		assertEquals(30f, item.getInitialEffort(), 0f);
 		assertEquals(200, item.getAssignedMilestone().getId());
 		assertEquals(TuleapBacklogItem.Status.CLOSED, item.getStatus());
@@ -122,8 +122,8 @@ public class TuleapBacklogItemDeserializerTest extends AbstractDeserializerTest<
 		assertEquals("backlog_items/350", item.getUri());
 		assertEquals("backlog_items?id=350&group_id=3", item.getHtmlUrl());
 		assertEquals(1, item.getSubmittedBy());
-		assertEquals(ParserUtil.parseDate("2013-09-23T11:44:18.963Z"), item.getSubmittedOn());
-		assertEquals(ParserUtil.parseDate("2013-09-24T15:33:18.523Z"), item.getLastUpdatedOn());
+		assertEquals(ParserUtil.getUTCDate(2013, 8, 23, 11, 44, 18, 963), item.getSubmittedOn());
+		assertEquals(ParserUtil.getUTCDate(2013, 8, 24, 15, 33, 18, 523), item.getLastUpdatedOn());
 
 		assertEquals(5f, item.getInitialEffort(), 0f);
 		assertEquals(250, item.getAssignedMilestone().getId());
