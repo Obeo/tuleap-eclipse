@@ -130,17 +130,6 @@ public class TuleapJsonParser {
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		Gson gson = gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
 		TuleapPlanning planning = gson.fromJson(planningElement, TuleapPlanning.class);
-
-		// Need to handle specifically the list of backlog item trackers
-		// JsonObject jsonObject = planningElement.getAsJsonObject();
-		// JsonElement biTrackerElement = jsonObject.get(ITuleapConstants.JSON_BACKLOG_TRACKERS);
-		// if (biTrackerElement != null && biTrackerElement.isJsonArray()) {
-		// JsonArray biTrackerArray = biTrackerElement.getAsJsonArray();
-		// for (JsonElement biElt : biTrackerArray) {
-		// TuleapReference biTracker = gson.fromJson(biElt, TuleapReference.class);
-		// planning.addBacklogTracker(biTracker);
-		// }
-		// }
 		return planning;
 	}
 
