@@ -19,6 +19,8 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -341,6 +343,41 @@ public class TuleapRestClientTest {
 	}
 
 	/**
+	 * Test that the token creation on the server is well done.
+	 * 
+	 * @throws CoreException
+	 */
+	@Test
+	public void testlogin() throws CoreException {
+
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,POST"); //$NON-NLS-1$
+		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,POST"); //$NON-NLS-1$
+
+		String token = ParserUtil.loadFile("/tokens/token-0.json");
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, token, respHeaders);
+
+		connector.setResponse(response);
+		client.login(new NullProgressMonitor());
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(2, requestsSent.size());
+
+		ServerRequest request0 = requestsSent.get(0);
+		assertEquals("https://test/url/api/v12.3/tokens", request0.url); //$NON-NLS-1$
+		assertEquals("OPTIONS", request0.method); //$NON-NLS-1$
+
+		ServerRequest request1 = requestsSent.get(1);
+		assertEquals("https://test/url/api/v12.3/tokens", request1.url); //$NON-NLS-1$
+		assertEquals("POST", request1.method); //$NON-NLS-1$
+		assertEquals("{\"username\":\"admin\",\"password\":\"password\"}", //$NON-NLS-1$
+				request1.body);
+
+		// TODO: Test the token received from the server when we can access its value
+	}
+
+	/**
 	 * Initialize the milestone to update.
 	 * 
 	 * @return the milestone to update
@@ -357,7 +394,8 @@ public class TuleapRestClientTest {
 		connector = new MockRestConnector();
 		this.restResourceFactory = new RestResourceFactory(serverUrl, apiVersion, connector);
 		this.repository = new TaskRepository(ITuleapConstants.CONNECTOR_KIND, serverUrl);
-
+		this.repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("admin",
+				"password"), true);
 		connector.setResourceFactory(restResourceFactory);
 		jsonParser = new TuleapJsonParser();
 		client = new TuleapRestClient(restResourceFactory, jsonParser, null, repository, null);
