@@ -141,6 +141,10 @@ public class TuleapRestClient {
 	public IStatus validateConnection(IProgressMonitor monitor) throws CoreException {
 		// FIXME when Tuleap has a convenient route
 		// resourceFactory.user().get().checkedRun();
+		if (monitor != null) {
+			monitor.beginTask(TuleapMylynTasksMessages
+					.getString(TuleapMylynTasksMessagesKeys.validateConnection), 10);
+		}
 		return Status.OK_STATUS;
 	}
 
@@ -157,9 +161,19 @@ public class TuleapRestClient {
 		TuleapServer tuleapServer = new TuleapServer(this.taskRepository.getRepositoryUrl());
 		tuleapServer.setLastUpdate(new Date().getTime());
 
+		if (monitor != null) {
+			monitor.beginTask(TuleapMylynTasksMessages
+					.getString(TuleapMylynTasksMessagesKeys.retrieveTuleapInstanceConfiguration), 100);
+		}
+
 		RestResource restProjects = restResourceFactory.projects().withToken(token);
 
 		// Retrieve the projects and create the configuration of each project
+
+		if (monitor != null) {
+			monitor.subTask(TuleapMylynTasksMessages
+					.getString(TuleapMylynTasksMessagesKeys.retrievingProjectsList));
+		}
 		ServerResponse projectsGetServerResponse = restProjects.get().run();
 
 		checkServerError(restProjects, Method.GET.toString(), projectsGetServerResponse);
@@ -331,6 +345,9 @@ public class TuleapRestClient {
 	public void login(IProgressMonitor monitor) throws CoreException {
 		RestResource restBacklogItem = restResourceFactory.tokens();
 
+		if (monitor != null) {
+			monitor.beginTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.login), 10);
+		}
 		AuthenticationCredentials credentials = taskRepository.getCredentials(AuthenticationType.REPOSITORY);
 		// Credentials can be null?
 		if (credentials != null) {
@@ -602,6 +619,10 @@ public class TuleapRestClient {
 	 *             If anything goes wrong.
 	 */
 	public TuleapMilestone getMilestone(int milestoneId, IProgressMonitor monitor) throws CoreException {
+		if (monitor != null) {
+			monitor.subTask(TuleapMylynTasksMessages.getString(
+					TuleapMylynTasksMessagesKeys.retrievingMilestone, Integer.valueOf(milestoneId)));
+		}
 		RestResource milestoneResource = restResourceFactory.milestone(milestoneId).withToken(token);
 		ServerResponse response = milestoneResource.get().run();
 		checkServerError(milestoneResource, Method.GET.toString(), response);
@@ -622,6 +643,10 @@ public class TuleapRestClient {
 	 */
 	public List<TuleapBacklogItem> getBacklogItems(int milestoneId, IProgressMonitor monitor)
 			throws CoreException {
+		if (monitor != null) {
+			monitor.subTask(TuleapMylynTasksMessages.getString(
+					TuleapMylynTasksMessagesKeys.retrievingBacklogItems, Integer.valueOf(milestoneId)));
+		}
 		RestResource backlogItemsResource = restResourceFactory.milestonesBacklogItems(milestoneId)
 				.withToken(token);
 		RestOperation operation = backlogItemsResource.get();
@@ -646,6 +671,10 @@ public class TuleapRestClient {
 	 */
 	public List<TuleapMilestone> getSubMilestones(int milestoneId, IProgressMonitor monitor)
 			throws CoreException {
+		if (monitor != null) {
+			monitor.subTask(TuleapMylynTasksMessages.getString(
+					TuleapMylynTasksMessagesKeys.retrievingSubMilestones, Integer.valueOf(milestoneId)));
+		}
 		RestResource subMilestonesResource = restResourceFactory.milestonesSubmilestones(milestoneId)
 				.withToken(token);
 		RestOperation operation = subMilestonesResource.get();
@@ -669,6 +698,10 @@ public class TuleapRestClient {
 	 *             If a problem occurs.
 	 */
 	public TuleapCardwall getCardwall(int milestoneId, IProgressMonitor monitor) throws CoreException {
+		if (monitor != null) {
+			monitor.subTask(TuleapMylynTasksMessages.getString(
+					TuleapMylynTasksMessagesKeys.retrievingCardwall, Integer.valueOf(milestoneId)));
+		}
 		RestResource restCardwall = restResourceFactory.milestonesCardwall(milestoneId).withToken(token);
 		ServerResponse cardwallResponse = restCardwall.get().run();
 		checkServerError(restCardwall, Method.GET.toString(), cardwallResponse);
@@ -687,6 +720,9 @@ public class TuleapRestClient {
 	 *             In case of error during the update of the artifact.
 	 */
 	public void updateCardwall(TuleapCardwall cardwall, IProgressMonitor monitor) throws CoreException {
+		if (monitor != null) {
+			monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.updatingCardwall));
+		}
 		for (TuleapSwimlane tuleapSwimlane : cardwall.getSwimlanes()) {
 			for (TuleapCard tuleapCard : tuleapSwimlane.getCards()) {
 				this.updateCard(tuleapCard, monitor);
@@ -707,6 +743,11 @@ public class TuleapRestClient {
 
 	public void updateBacklogItem(TuleapBacklogItem tuleapBacklogItem, IProgressMonitor monitor)
 			throws CoreException {
+		if (monitor != null) {
+			monitor.subTask(TuleapMylynTasksMessages.getString(
+					TuleapMylynTasksMessagesKeys.updatingBacklogItem, Integer.valueOf(tuleapBacklogItem
+							.getId())));
+		}
 		RestResource restBacklogItem = restResourceFactory.backlogItem(tuleapBacklogItem.getId()).withToken(
 				token);
 
@@ -736,6 +777,10 @@ public class TuleapRestClient {
 
 	public void updateMilestoneBacklogItems(int milestoneId, List<TuleapBacklogItem> backlogItems,
 			IProgressMonitor monitor) throws CoreException {
+		if (monitor != null) {
+			monitor.subTask(TuleapMylynTasksMessages.getString(
+					TuleapMylynTasksMessagesKeys.updatingBacklogItems, Integer.valueOf(milestoneId)));
+		}
 		RestResource restMilestonesBacklogItems = restResourceFactory.milestonesBacklogItems(milestoneId)
 				.withToken(token);
 
@@ -764,6 +809,10 @@ public class TuleapRestClient {
 	 */
 
 	private void updateCard(TuleapCard tuleapCard, IProgressMonitor monitor) throws CoreException {
+		if (monitor != null) {
+			monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.updatingCard,
+					Integer.valueOf(tuleapCard.getId())));
+		}
 		RestResource restCards = restResourceFactory.cards(tuleapCard.getId()).withToken(token);
 
 		// from POJO to JSON
@@ -790,6 +839,10 @@ public class TuleapRestClient {
 	 * @return The identifier of the Tuleap milestone created
 	 */
 	public String createMilestone(TuleapMilestone tuleapMilestone, IProgressMonitor monitor) {
+		if (monitor != null) {
+			monitor.subTask(TuleapMylynTasksMessages.getString(
+					TuleapMylynTasksMessagesKeys.creatingMilestone, Integer.valueOf(tuleapMilestone.getId())));
+		}
 		int projectId = -1;
 		int configurationId = -1;
 		// TODO int configurationId = tuleapMilestone.getConfigurationId();
@@ -812,6 +865,10 @@ public class TuleapRestClient {
 	 *             In case of error during the retrieval of the BacklogItem
 	 */
 	public TuleapBacklogItem getBacklogItem(int backlogItemId, IProgressMonitor monitor) throws CoreException {
+		if (monitor != null) {
+			monitor.subTask(TuleapMylynTasksMessages.getString(
+					TuleapMylynTasksMessagesKeys.retrievingBacklogItem, Integer.valueOf(backlogItemId)));
+		}
 		RestResource restBacklogItem = restResourceFactory.backlogItem(backlogItemId).withToken(token);
 
 		ServerResponse backlogItemResponse = restBacklogItem.get().run();
@@ -836,6 +893,10 @@ public class TuleapRestClient {
 	 */
 	public List<TuleapTopPlanning> getTopPlannings(int projectId, IProgressMonitor monitor)
 			throws CoreException {
+		if (monitor != null) {
+			monitor.subTask(TuleapMylynTasksMessages.getString(
+					TuleapMylynTasksMessagesKeys.retrievingTopPlannings, Integer.valueOf(projectId)));
+		}
 		// 1- Retrieve the list of top plannings
 		RestResource restProjectTopPlannings = restResourceFactory.projectsTopPlannings(projectId).withToken(
 				token);
@@ -863,6 +924,10 @@ public class TuleapRestClient {
 	 *             If anything goes wrong.
 	 */
 	public TuleapTopPlanning getTopPlanning(int topPlanningId, IProgressMonitor monitor) throws CoreException {
+		if (monitor != null) {
+			monitor.subTask(TuleapMylynTasksMessages.getString(
+					TuleapMylynTasksMessagesKeys.retrievingTopPlanning, Integer.valueOf(topPlanningId)));
+		}
 		RestResource restTopPlannings = restResourceFactory.topPlannings(topPlanningId).withToken(token);
 		ServerResponse response = restTopPlannings.get().run();
 

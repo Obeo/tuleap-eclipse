@@ -284,6 +284,71 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	 */
 	public static String operationNotAllowedOnResource;
 
+	/**
+	 * Retrieve the list of projects.
+	 */
+	public static String retrievingProjectsList;
+
+	/**
+	 * Retrieve a milestone.
+	 */
+	public static String retrievingMilestone;
+
+	/**
+	 * Retrieve backlogItems of a specific milestone.
+	 */
+	public static String retrievingBacklogItems;
+
+	/**
+	 * Retrieve submilestones of a specific milestone.
+	 */
+	public static String retrievingSubMilestones;
+
+	/**
+	 * Retrieve cardwall of a specific milestone.
+	 */
+	public static String retrievingCardwall;
+
+	/**
+	 * Updating the cardwall.
+	 */
+	public static String updatingCardwall;
+
+	/**
+	 * Updating a backlogItem.
+	 */
+	public static String updatingBacklogItem;
+
+	/**
+	 * Update backlogItems of a specific milestone.
+	 */
+	public static String updatingBacklogItems;
+
+	/**
+	 * Updating a card.
+	 */
+	public static String updatingCard;
+
+	/**
+	 * Create a milestone.
+	 */
+	public static String creatingMilestone;
+
+	/**
+	 * Retrieve a backlogItem.
+	 */
+	public static String retrievingBacklogItem;
+
+	/**
+	 * Retrieving topPlanning of a specific project.
+	 */
+	public static String retrievingTopPlannings;
+
+	/**
+	 * Retrieving a topPlanning.
+	 */
+	public static String retrievingTopPlanning;
+
 	static {
 		// load message values from bundle file
 		reloadMessages();
