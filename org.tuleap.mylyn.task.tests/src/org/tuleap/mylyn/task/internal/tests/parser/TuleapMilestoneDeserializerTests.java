@@ -73,6 +73,8 @@ public class TuleapMilestoneDeserializerTests extends AbstractDeserializerTest<T
 		assertEquals(200, tuleapMilestone.getId());
 		assertEquals(200, tuleapMilestone.getArtifact().getId());
 		assertEquals("artifacts/200", tuleapMilestone.getArtifact().getUri());
+		assertEquals(901, tuleapMilestone.getArtifact().getTracker().getId());
+		assertEquals("trackers/901", tuleapMilestone.getArtifact().getTracker().getUri());
 		assertEquals(3, tuleapMilestone.getProject().getId());
 		assertEquals("projects/3", tuleapMilestone.getProject().getUri());
 		assertEquals("Release 0.9", tuleapMilestone.getLabel()); //$NON-NLS-1$
@@ -102,6 +104,8 @@ public class TuleapMilestoneDeserializerTests extends AbstractDeserializerTest<T
 		assertEquals(201, tuleapMilestone.getId());
 		assertEquals(201, tuleapMilestone.getArtifact().getId());
 		assertEquals("artifacts/201", tuleapMilestone.getArtifact().getUri());
+		assertEquals(901, tuleapMilestone.getArtifact().getTracker().getId());
+		assertEquals("trackers/901", tuleapMilestone.getArtifact().getTracker().getUri());
 		assertEquals(3, tuleapMilestone.getProject().getId());
 		assertEquals("projects/3", tuleapMilestone.getProject().getUri());
 		assertEquals("Release TU", tuleapMilestone.getLabel()); //$NON-NLS-1$

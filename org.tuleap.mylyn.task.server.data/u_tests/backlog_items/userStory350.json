@@ -2,7 +2,10 @@
   "id" : 350,
   "artifact" : {
     "id" : 350,
-    "uri" : "artifacts/350"
+    "uri" : "artifacts/350",
+    "tracker" : {
+    "id" : 802,
+    "uri" : "trackers/802"}
   },
   "project" : {
     "id" : 3,

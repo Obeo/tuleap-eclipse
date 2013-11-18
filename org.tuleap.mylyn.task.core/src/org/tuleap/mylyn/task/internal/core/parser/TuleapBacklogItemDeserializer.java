@@ -19,6 +19,7 @@ import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
 
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
+import org.tuleap.mylyn.task.internal.core.model.data.ArtifactReference;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem.Status;
@@ -46,7 +47,7 @@ public class TuleapBacklogItemDeserializer extends AbstractDetailedElementDeseri
 
 		Gson gson = new Gson();
 		backlogItem.setArtifact(gson.fromJson(jsonObject.get(ITuleapConstants.JSON_ARTIFACT),
-				TuleapReference.class));
+				ArtifactReference.class));
 
 		JsonElement elt = jsonObject.get(ITuleapConstants.INITIAL_EFFORT);
 		if (elt != null) {

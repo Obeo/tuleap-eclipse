@@ -52,6 +52,8 @@ public class TuleapBacklogItemDeserializerTest extends AbstractDeserializerTest<
 		assertEquals(301, item.getId());
 		assertEquals(301, item.getArtifact().getId());
 		assertEquals("artifacts/301", item.getArtifact().getUri());
+		assertEquals(801, item.getArtifact().getTracker().getId());
+		assertEquals("trackers/801", item.getArtifact().getTracker().getUri());
 		assertEquals(3, item.getProject().getId());
 		assertEquals("projects/3", item.getProject().getUri());
 		assertEquals("Another important Epic", item.getLabel());
@@ -77,6 +79,8 @@ public class TuleapBacklogItemDeserializerTest extends AbstractDeserializerTest<
 		assertEquals(300, item.getId());
 		assertEquals(300, item.getArtifact().getId());
 		assertEquals("artifacts/300", item.getArtifact().getUri());
+		assertEquals(801, item.getArtifact().getTracker().getId());
+		assertEquals("trackers/801", item.getArtifact().getTracker().getUri());
 		assertEquals(3, item.getProject().getId());
 		assertEquals("projects/3", item.getProject().getUri());
 		assertEquals("An important Epic", item.getLabel());
@@ -116,6 +120,8 @@ public class TuleapBacklogItemDeserializerTest extends AbstractDeserializerTest<
 		assertEquals(350, item.getId());
 		assertEquals(350, item.getArtifact().getId());
 		assertEquals("artifacts/350", item.getArtifact().getUri());
+		assertEquals(802, item.getArtifact().getTracker().getId());
+		assertEquals("trackers/802", item.getArtifact().getTracker().getUri());
 		assertEquals(3, item.getProject().getId());
 		assertEquals("projects/3", item.getProject().getUri());
 		assertEquals("An important User Story", item.getLabel());

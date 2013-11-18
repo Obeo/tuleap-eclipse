@@ -2,7 +2,10 @@
   "id" : 301,
   "artifact" : {
     "id" : 301,
-    "uri" : "artifacts/301"
+    "uri" : "artifacts/301",
+    "tracker" : {
+    "id" : 801,
+    "uri" : "trackers/801"}
   },
   "project" : {
     "id" : 3,

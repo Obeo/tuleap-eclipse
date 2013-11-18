@@ -20,7 +20,7 @@ import java.lang.reflect.Type;
 import java.text.ParseException;
 
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
-import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
+import org.tuleap.mylyn.task.internal.core.model.data.ArtifactReference;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
@@ -47,7 +47,7 @@ public class TuleapMilestoneDeserializer extends AbstractDetailedElementDeserial
 		JsonObject jsonObject = rootJsonElement.getAsJsonObject();
 
 		milestone.setArtifact(new Gson().fromJson(jsonObject.get(ITuleapConstants.JSON_ARTIFACT),
-				TuleapReference.class));
+				ArtifactReference.class));
 
 		JsonElement elt = jsonObject.get(ITuleapConstants.START_DATE);
 		if (elt != null && !elt.isJsonNull()) {
