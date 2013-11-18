@@ -255,13 +255,19 @@ public final class RestResourceFactory {
 	 * 
 	 * @param urlFragments
 	 *            Fragments to concatenate.
-	 * @return The URL built by concatenating the given fragments, separated by a slash ('/') character.
+	 * @return The URL built by concatenating the given fragments, separated by a slash ('/') character. If
+	 *         the first fragment does not start with a slash, a slash in prepended to ensure the URI built
+	 *         starts with a slash.
 	 */
 	private String url(String... urlFragments) {
 		Assert.isNotNull(urlFragments);
 		Assert.isTrue(urlFragments.length > 0);
 		StringBuilder b = new StringBuilder();
-		b.append(urlFragments[0]);
+		String string = urlFragments[0];
+		if (string.charAt(0) != '/') {
+			b.append('/');
+		}
+		b.append(string);
 		int i = 1;
 		while (i < urlFragments.length) {
 			b.append('/').append(urlFragments[i++]);
