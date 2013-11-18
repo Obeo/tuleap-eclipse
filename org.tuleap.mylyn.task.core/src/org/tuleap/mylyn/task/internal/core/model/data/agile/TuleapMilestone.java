@@ -13,6 +13,7 @@ package org.tuleap.mylyn.task.internal.core.model.data.agile;
 import java.util.Date;
 
 import org.tuleap.mylyn.task.internal.core.model.data.AbstractTuleapDetailedElement;
+import org.tuleap.mylyn.task.internal.core.model.data.ArtifactReference;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 
 /**
@@ -25,7 +26,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement {
 	/**
 	 * Reference to the artifact that contains this item's details.
 	 */
-	private TuleapReference artifact;
+	private ArtifactReference artifact;
 
 	/**
 	 * The milestone's start date.
@@ -119,7 +120,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement {
 	 * 
 	 * @return the artifactRef
 	 */
-	public TuleapReference getArtifact() {
+	public ArtifactReference getArtifact() {
 		return artifact;
 	}
 
@@ -129,7 +130,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement {
 	 * @param artifact
 	 *            the artifact reference
 	 */
-	public void setArtifact(TuleapReference artifact) {
+	public void setArtifact(ArtifactReference artifact) {
 		this.artifact = artifact;
 	}
 
