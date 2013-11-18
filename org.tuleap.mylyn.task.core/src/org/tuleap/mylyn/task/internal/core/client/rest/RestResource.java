@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
-import org.tuleap.mylyn.task.internal.core.model.TuleapToken;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
@@ -105,9 +104,9 @@ public class RestResource {
 	private ServerResponse optionsResponse;
 
 	/**
-	 * The authentication token to use.
+	 * The authenticator to use.
 	 */
-	private TuleapToken token;
+	private IAuthenticator authenticator;
 
 	/**
 	 * Constructor.
@@ -173,7 +172,7 @@ public class RestResource {
 					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, DELETE_LABEL, getUrl()));
 		}
 		checkOptionsAllows(DELETE_LABEL);
-		return RestOperation.delete(getFullUrl(), connector).withToken(token);
+		return RestOperation.delete(getFullUrl(), connector).withAuthenticator(authenticator);
 	}
 
 	/**
@@ -191,7 +190,7 @@ public class RestResource {
 					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, GET_LABEL, getUrl()));
 		}
 		checkOptionsAllows(GET_LABEL);
-		return RestOperation.get(getFullUrl(), connector).withToken(token);
+		return RestOperation.get(getFullUrl(), connector).withAuthenticator(authenticator);
 	}
 
 	/**
@@ -200,7 +199,7 @@ public class RestResource {
 	 * @return A new instance of {@link RestOperation} created with this resource operation factory.
 	 */
 	public RestOperation options() {
-		return RestOperation.options(getFullUrl(), connector).withToken(token);
+		return RestOperation.options(getFullUrl(), connector).withAuthenticator(authenticator);
 	}
 
 	/**
@@ -218,7 +217,7 @@ public class RestResource {
 					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, POST_LABEL, getUrl()));
 		}
 		checkOptionsAllows(POST_LABEL);
-		return RestOperation.post(getFullUrl(), connector).withToken(token);
+		return RestOperation.post(getFullUrl(), connector).withAuthenticator(authenticator);
 	}
 
 	/**
@@ -236,18 +235,18 @@ public class RestResource {
 					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, PUT_LABEL, getUrl()));
 		}
 		checkOptionsAllows(PUT_LABEL);
-		return RestOperation.put(getFullUrl(), connector).withToken(token);
+		return RestOperation.put(getFullUrl(), connector).withAuthenticator(authenticator);
 	}
 
 	/**
-	 * Sets the authentication to use.
+	 * Sets the authenticator to use.
 	 * 
-	 * @param someToken
-	 *            The authentication token to use.
+	 * @param anAuthenticator
+	 *            The authenticator to use.
 	 * @return this, for a fluent API.
 	 */
-	public RestResource withToken(TuleapToken someToken) {
-		this.token = someToken;
+	public RestResource withAuthenticator(IAuthenticator anAuthenticator) {
+		this.authenticator = anAuthenticator;
 		return this;
 	}
 

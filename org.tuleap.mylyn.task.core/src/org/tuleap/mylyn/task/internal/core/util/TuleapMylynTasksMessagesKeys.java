@@ -276,6 +276,11 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	public static String invalidPaginationHeader;
 
 	/**
+	 * Invalid credentials. No parameter.
+	 */
+	public static String invalidCredentials;
+
+	/**
 	 * Method &lt;METHOD> is not supported for resource &lt;URL>. 2 parameters:
 	 * <ol>
 	 * <li>HTTP method</li>

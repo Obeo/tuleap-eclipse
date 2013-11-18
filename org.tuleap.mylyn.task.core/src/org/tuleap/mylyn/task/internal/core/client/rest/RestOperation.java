@@ -57,9 +57,9 @@ public class RestOperation {
 	protected String body;
 
 	/**
-	 * Authentication token to use..
+	 * Authenticator to use.
 	 */
-	protected TuleapToken token;
+	protected IAuthenticator authenticator;
 
 	/**
 	 * HTTP headers to send.
@@ -223,11 +223,35 @@ public class RestOperation {
 		} else {
 			data = body;
 		}
-		if (token != null) {
-			requestHeaders.put("X-Auth-Token", token.getToken());
-			requestHeaders.put("X-Auth-UserId", token.getUserId());
+		if (authenticator != null) {
+			TuleapToken token = authenticator.getToken();
+			if (token != null) {
+				requestHeaders.put("X-Auth-Token", token.getToken());
+				requestHeaders.put("X-Auth-UserId", token.getUserId());
+			}
 		}
-		return connector.sendRequest(getMethodName(), getUrlWithQueryParameters(), requestHeaders, data);
+		ServerResponse response = connector.sendRequest(getMethodName(), getUrlWithQueryParameters(),
+				requestHeaders, data);
+		if (response.getStatus() == ServerResponse.STATUS_UNAUTHORIZED) {
+			// Try to login
+			if (authenticator != null) {
+				try {
+					authenticator.login();
+					TuleapToken token = authenticator.getToken();
+					if (token != null) {
+						requestHeaders.put("X-Auth-Token", token.getToken());
+						requestHeaders.put("X-Auth-UserId", token.getUserId());
+						response = connector.sendRequest(getMethodName(), getUrlWithQueryParameters(),
+								requestHeaders, data);
+					}
+				} catch (CoreException e) {
+					logger.log(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
+							TuleapMylynTasksMessages
+									.getString(TuleapMylynTasksMessagesKeys.invalidCredentials)));
+				}
+			}
+		}
+		return response;
 	}
 
 	/**
@@ -278,12 +302,12 @@ public class RestOperation {
 	/**
 	 * Sets the authentication token to use for the request.
 	 * 
-	 * @param someToken
+	 * @param anAuthenticator
 	 *            The token to use. Can be <code>null</code> if no token is needed.
 	 * @return The instance on which this method has been called, for a fluent API.
 	 */
-	public RestOperation withToken(TuleapToken someToken) {
-		this.token = someToken;
+	public RestOperation withAuthenticator(IAuthenticator anAuthenticator) {
+		this.authenticator = anAuthenticator;
 		return this;
 	}
 
@@ -373,5 +397,17 @@ public class RestOperation {
 	public RestOperation withoutQueryParameters(String key) {
 		requestParameters.removeAll(key);
 		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder b = new StringBuilder();
+		b.append(method.getName()).append(' ').append(fullUrl);
+		return b.toString();
 	}
 }

@@ -29,6 +29,7 @@ import org.tuleap.mylyn.task.internal.core.client.rest.ITuleapHeaders;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestResourceFactory;
 import org.tuleap.mylyn.task.internal.core.client.rest.ServerResponse;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
+import org.tuleap.mylyn.task.internal.core.model.TuleapToken;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
@@ -358,7 +359,7 @@ public class TuleapRestClientTest {
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, token, respHeaders);
 
 		connector.setResponse(response);
-		client.login(new NullProgressMonitor());
+		client.login();
 
 		// Let's check the requests that have been sent.
 		List<ServerRequest> requestsSent = connector.getRequestsSent();
@@ -374,7 +375,77 @@ public class TuleapRestClientTest {
 		assertEquals("{\"username\":\"admin\",\"password\":\"password\"}", //$NON-NLS-1$
 				request1.body);
 
-		// TODO: Test the token received from the server when we can access its value
+		TuleapToken token2 = client.getToken();
+		assertEquals("Zza25pV0V5eXFhJDJ5JDE1JHpSbU1nMldoRUo1b21QNFQ4eEhDUC4xM0FybW9Ud3FwdmRUejA3R1B2WF",
+				token2.getToken());
+		assertEquals("539", token2.getUserId());
+	}
+
+	/**
+	 * Test that checks that a TuleapRestClient that has no token (yet) will automatically login and retrieve
+	 * a token, then re-run a request.
+	 * 
+	 * @throws CoreException
+	 *             if something goes wrong.
+	 */
+	@Test
+	public void testAutomaticLoginWhenNoTokenIsKnown() throws CoreException {
+		MockListRestConnector listConnector = new MockListRestConnector();
+		this.restResourceFactory = new RestResourceFactory(serverUrl, apiVersion, listConnector);
+		this.repository = new TaskRepository(ITuleapConstants.CONNECTOR_KIND, serverUrl);
+		this.repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("admin",
+				"password"), true);
+		listConnector.setResourceFactory(restResourceFactory);
+
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET,PUT,POST"); //$NON-NLS-1$
+		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET,PUT,POST"); //$NON-NLS-1$
+
+		ServerResponse response401Unauthorized = new ServerResponse(ServerResponse.STATUS_UNAUTHORIZED, "",
+				respHeaders);
+
+		String tokenJson = ParserUtil.loadFile("/tokens/token-0.json");
+		ServerResponse tokenOptionsResponse = new ServerResponse(ServerResponse.STATUS_OK, "", respHeaders);
+		ServerResponse tokenResponse = new ServerResponse(ServerResponse.STATUS_OK, tokenJson, respHeaders);
+
+		String milestoneJson = ParserUtil.loadFile("/milestones/release200.json");
+		ServerResponse milestoneOptionsResponse = new ServerResponse(ServerResponse.STATUS_OK, "",
+				respHeaders);
+		ServerResponse milestoneResponse = new ServerResponse(ServerResponse.STATUS_OK, milestoneJson,
+				respHeaders);
+
+		listConnector.addServerResponse(response401Unauthorized);
+		listConnector.addServerResponse(tokenOptionsResponse);
+		listConnector.addServerResponse(tokenResponse);
+		listConnector.addServerResponse(milestoneOptionsResponse);
+		listConnector.addServerResponse(milestoneResponse);
+		// Need to create a new client to use the specific connector.
+		client = new TuleapRestClient(restResourceFactory, jsonParser, null, repository, null);
+
+		TuleapMilestone milestone = client.getMilestone(200, null);
+		assertNotNull(milestone);
+		List<ServerRequest> requestsSent = listConnector.requestsSent;
+		assertEquals(5, requestsSent.size());
+
+		ServerRequest req = requestsSent.get(0);
+		assertEquals("OPTIONS", req.method);
+		assertEquals("https://test/url/api/v12.3/milestones/200", req.url);
+
+		req = requestsSent.get(1);
+		assertEquals("OPTIONS", req.method);
+		assertEquals("https://test/url/api/v12.3/tokens", req.url);
+
+		req = requestsSent.get(2);
+		assertEquals("POST", req.method);
+		assertEquals("https://test/url/api/v12.3/tokens", req.url);
+
+		req = requestsSent.get(3);
+		assertEquals("OPTIONS", req.method);
+		assertEquals("https://test/url/api/v12.3/milestones/200", req.url);
+
+		req = requestsSent.get(4);
+		assertEquals("GET", req.method);
+		assertEquals("https://test/url/api/v12.3/milestones/200", req.url);
 	}
 
 	/**

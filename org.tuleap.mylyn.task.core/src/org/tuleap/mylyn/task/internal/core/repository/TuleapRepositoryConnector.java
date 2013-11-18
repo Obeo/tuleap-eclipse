@@ -401,7 +401,6 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 				// put the configuration in this.repositoryConfigurations
 				List<TuleapProject> allProjects = tuleapServerConfigurationSoap.getAllProjects();
-				tuleapRestClient.login(monitor);
 				for (TuleapProject project : allProjects) {
 					// Retrieve plannings via the REST API
 					tuleapRestClient.loadPlanningsInto(project);

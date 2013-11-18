@@ -32,12 +32,7 @@ import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
-import org.restlet.data.Method;
-import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
-import org.tuleap.mylyn.task.internal.core.model.TuleapDebugPart;
-import org.tuleap.mylyn.task.internal.core.model.TuleapErrorMessage;
-import org.tuleap.mylyn.task.internal.core.model.TuleapErrorPart;
 import org.tuleap.mylyn.task.internal.core.model.TuleapToken;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPlanning;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
@@ -71,7 +66,7 @@ import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public class TuleapRestClient {
+public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * The JSON parser.
@@ -166,7 +161,7 @@ public class TuleapRestClient {
 					.getString(TuleapMylynTasksMessagesKeys.retrieveTuleapInstanceConfiguration), 100);
 		}
 
-		RestResource restProjects = restResourceFactory.projects().withToken(token);
+		RestResource restProjects = restResourceFactory.projects().withAuthenticator(this);
 
 		// Retrieve the projects and create the configuration of each project
 
@@ -174,11 +169,10 @@ public class TuleapRestClient {
 			monitor.subTask(TuleapMylynTasksMessages
 					.getString(TuleapMylynTasksMessagesKeys.retrievingProjectsList));
 		}
-		ServerResponse projectsGetServerResponse = restProjects.get().run();
+		RestOperation operation = restProjects.get();
+		ServerResponse projectsServerResponse = operation.checkedRun();
 
-		checkServerError(restProjects, Method.GET.toString(), projectsGetServerResponse);
-
-		String projectsGetResponseBody = projectsGetServerResponse.getBody();
+		String projectsGetResponseBody = projectsServerResponse.getBody();
 		List<TuleapProject> projects = this.jsonParser.parseProjectConfigurations(projectsGetResponseBody);
 
 		// For each project that has the tracker service
@@ -247,86 +241,13 @@ public class TuleapRestClient {
 	 */
 	public void loadPlanningsInto(TuleapProject project) throws CoreException {
 		// Retrieve the plannings of the project
-		RestResource plannings = restResourceFactory.projectPlannings(project.getIdentifier()).withToken(
-				token);
+		RestResource plannings = restResourceFactory.projectPlannings(project.getIdentifier())
+				.withAuthenticator(this);
 		RestOperation operation = plannings.get();
-		ServerResponse planningsResponse = operation.checkedRun();
-		List<TuleapPlanning> planningList = jsonParser.parsePlanningList(planningsResponse.getBody());
+		ServerResponse response = operation.checkedRun();
+		List<TuleapPlanning> planningList = jsonParser.parsePlanningList(response.getBody());
 		for (TuleapPlanning planning : planningList) {
 			project.addPlanning(planning);
-		}
-	}
-
-	/**
-	 * Throws a CoreException that encapsulates useful info about a server error.
-	 * 
-	 * @param restResource
-	 *            The restResource that returned the given response.
-	 * @param method
-	 *            The HTTP method invoked
-	 * @param response
-	 *            The error response received from the server.
-	 * @throws CoreException
-	 *             If the given response does not have a status OK (200).
-	 */
-	private void checkServerError(RestResource restResource, String method, ServerResponse response)
-			throws CoreException {
-		if (!response.isOk()) {
-			TuleapErrorMessage message = jsonParser.getErrorMessage(response.getBody());
-			TuleapErrorPart errorPart = message.getError();
-			TuleapDebugPart debugPart = message.getDebug();
-			String msg;
-			if (errorPart == null) {
-				msg = response.getBody();
-			} else {
-				if (debugPart != null) {
-					msg = TuleapMylynTasksMessages.getString(
-							TuleapMylynTasksMessagesKeys.errorReturnedByServer, restResource.getUrl(),
-							method, Integer.valueOf(errorPart.getCode()), errorPart.getMessage(), debugPart
-									.getSource());
-				} else {
-					msg = TuleapMylynTasksMessages.getString(
-							TuleapMylynTasksMessagesKeys.errorReturnedByServer, restResource.getUrl(),
-							method, Integer.valueOf(errorPart.getCode()), errorPart.getMessage(),
-							"no debug information provided"); //$NON-NLS-1$
-				}
-			}
-			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, msg));
-		}
-	}
-
-	/**
-	 * Throws a CoreException that encapsulates useful info about a server error.
-	 * 
-	 * @param restOperation
-	 *            The RESt operation that returned the given response.
-	 * @param response
-	 *            The error response received from the server.
-	 * @throws CoreException
-	 *             If the given response does not have a status OK (200).
-	 */
-	private void checkServerError(RestOperation restOperation, ServerResponse response) throws CoreException {
-		if (!response.isOk()) {
-			TuleapErrorMessage message = jsonParser.getErrorMessage(response.getBody());
-			TuleapErrorPart errorPart = message.getError();
-			TuleapDebugPart debugPart = message.getDebug();
-			String msg;
-			if (errorPart == null) {
-				msg = response.getBody();
-			} else {
-				if (debugPart != null) {
-					msg = TuleapMylynTasksMessages.getString(
-							TuleapMylynTasksMessagesKeys.errorReturnedByServer, restOperation.getUrl(),
-							restOperation.getMethodName(), Integer.valueOf(errorPart.getCode()), errorPart
-									.getMessage(), debugPart.getSource());
-				} else {
-					msg = TuleapMylynTasksMessages.getString(
-							TuleapMylynTasksMessagesKeys.errorReturnedByServer, restOperation.getUrl(),
-							restOperation.getMethodName(), Integer.valueOf(errorPart.getCode()), errorPart
-									.getMessage(), "no debug information provided"); //$NON-NLS-1$
-				}
-			}
-			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, msg));
 		}
 	}
 
@@ -337,40 +258,35 @@ public class TuleapRestClient {
 	/**
 	 * Creates an authorization token on the server and stores it so that it can be used.
 	 * 
-	 * @param monitor
-	 *            The progress monitor.
 	 * @throws CoreException
 	 *             In case of error during the authentication.
 	 */
-	public void login(IProgressMonitor monitor) throws CoreException {
+	public void login() throws CoreException {
 		RestResource restBacklogItem = restResourceFactory.tokens();
-
-		if (monitor != null) {
-			monitor.beginTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.login), 10);
-		}
 		AuthenticationCredentials credentials = taskRepository.getCredentials(AuthenticationType.REPOSITORY);
 		// Credentials can be null?
 		if (credentials != null) {
 			String credentialsToPost = getCredentials(credentials);
 			// Send the POST request
+			// It is on purpose that there is no authenticator here!
 			RestOperation postOperation = restBacklogItem.post().withBody(credentialsToPost);
-			ServerResponse response = postOperation.run();
-			checkServerError(postOperation, response);
+			ServerResponse response = postOperation.checkedRun();
 			GsonBuilder builder = new GsonBuilder()
 					.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
 			Gson gson = builder.create();
 			this.token = gson.fromJson(response.getBody(), TuleapToken.class);
+		} else {
+			token = null;
 		}
 	}
 
 	/**
-	 * Deletes the current authentication token.
+	 * {@inheritDoc}
 	 * 
-	 * @param monitor
-	 *            The progress monitor to use.
+	 * @see org.tuleap.mylyn.task.internal.core.client.rest.IAuthenticator#getToken()
 	 */
-	public void logout(IProgressMonitor monitor) {
-		// TODO
+	public TuleapToken getToken() {
+		return token;
 	}
 
 	/**
@@ -623,9 +539,8 @@ public class TuleapRestClient {
 			monitor.subTask(TuleapMylynTasksMessages.getString(
 					TuleapMylynTasksMessagesKeys.retrievingMilestone, Integer.valueOf(milestoneId)));
 		}
-		RestResource milestoneResource = restResourceFactory.milestone(milestoneId).withToken(token);
-		ServerResponse response = milestoneResource.get().run();
-		checkServerError(milestoneResource, Method.GET.toString(), response);
+		RestResource milestoneResource = restResourceFactory.milestone(milestoneId).withAuthenticator(this);
+		ServerResponse response = milestoneResource.get().checkedRun();
 		TuleapMilestone milestone = this.jsonParser.parseMilestone(response.getBody());
 		return milestone;
 	}
@@ -648,7 +563,7 @@ public class TuleapRestClient {
 					TuleapMylynTasksMessagesKeys.retrievingBacklogItems, Integer.valueOf(milestoneId)));
 		}
 		RestResource backlogItemsResource = restResourceFactory.milestonesBacklogItems(milestoneId)
-				.withToken(token);
+				.withAuthenticator(this);
 		RestOperation operation = backlogItemsResource.get();
 		RestOperationIterable jsonElements = new RestOperationIterable(operation);
 		List<TuleapBacklogItem> backlogItems = Lists.newArrayList();
@@ -676,7 +591,7 @@ public class TuleapRestClient {
 					TuleapMylynTasksMessagesKeys.retrievingSubMilestones, Integer.valueOf(milestoneId)));
 		}
 		RestResource subMilestonesResource = restResourceFactory.milestonesSubmilestones(milestoneId)
-				.withToken(token);
+				.withAuthenticator(this);
 		RestOperation operation = subMilestonesResource.get();
 		RestOperationIterable jsonElements = new RestOperationIterable(operation);
 		List<TuleapMilestone> milestones = Lists.newArrayList();
@@ -702,9 +617,9 @@ public class TuleapRestClient {
 			monitor.subTask(TuleapMylynTasksMessages.getString(
 					TuleapMylynTasksMessagesKeys.retrievingCardwall, Integer.valueOf(milestoneId)));
 		}
-		RestResource restCardwall = restResourceFactory.milestonesCardwall(milestoneId).withToken(token);
-		ServerResponse cardwallResponse = restCardwall.get().run();
-		checkServerError(restCardwall, Method.GET.toString(), cardwallResponse);
+		RestResource restCardwall = restResourceFactory.milestonesCardwall(milestoneId).withAuthenticator(
+				this);
+		ServerResponse cardwallResponse = restCardwall.get().checkedRun();
 		TuleapCardwall cardwall = jsonParser.parseCardwall(cardwallResponse.getBody());
 		return cardwall;
 	}
@@ -748,8 +663,8 @@ public class TuleapRestClient {
 					TuleapMylynTasksMessagesKeys.updatingBacklogItem, Integer.valueOf(tuleapBacklogItem
 							.getId())));
 		}
-		RestResource restBacklogItem = restResourceFactory.backlogItem(tuleapBacklogItem.getId()).withToken(
-				token);
+		RestResource restBacklogItem = restResourceFactory.backlogItem(tuleapBacklogItem.getId())
+				.withAuthenticator(this);
 
 		// from POJO to JSON
 		JsonElement backlogItem = new TuleapBacklogItemSerializer().serialize(tuleapBacklogItem, null, null);
@@ -757,9 +672,8 @@ public class TuleapRestClient {
 		String changesToPut = backlogItem.toString();
 
 		// Send the PUT request
-		RestOperation op = restBacklogItem.put().withBody(changesToPut);
-		ServerResponse response = op.run();
-		checkServerError(op, response);
+		RestOperation operation = restBacklogItem.put().withBody(changesToPut);
+		ServerResponse response = operation.checkedRun();
 	}
 
 	/**
@@ -782,19 +696,14 @@ public class TuleapRestClient {
 					TuleapMylynTasksMessagesKeys.updatingBacklogItems, Integer.valueOf(milestoneId)));
 		}
 		RestResource restMilestonesBacklogItems = restResourceFactory.milestonesBacklogItems(milestoneId)
-				.withToken(token);
+				.withAuthenticator(this);
 
 		// from POJO to JSON
 		String changesToPut = backlogItems.toString();
 
 		// Send the PUT request
-		ServerResponse response = restMilestonesBacklogItems.put().withBody(changesToPut).run();
-
-		if (!response.isOk()) {
-			// Invalid login? server error?
-			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, response
-					.getBody()));
-		}
+		RestOperation operation = restMilestonesBacklogItems.put().withBody(changesToPut);
+		ServerResponse response = operation.checkedRun();
 	}
 
 	/**
@@ -813,20 +722,15 @@ public class TuleapRestClient {
 			monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.updatingCard,
 					Integer.valueOf(tuleapCard.getId())));
 		}
-		RestResource restCards = restResourceFactory.cards(tuleapCard.getId()).withToken(token);
+		RestResource restCards = restResourceFactory.cards(tuleapCard.getId()).withAuthenticator(this);
 
 		// from POJO to JSON
 		JsonElement card = new TuleapCardSerializer().serialize(tuleapCard, null, null);
 		String changesToPut = card.toString();
 
 		// Send the PUT request
-		ServerResponse response = restCards.put().withBody(changesToPut).run();
-
-		if (!response.isOk()) {
-			// Invalid login? server error?
-			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, response
-					.getBody()));
-		}
+		RestOperation operation = restCards.put().withBody(changesToPut);
+		operation.checkedRun();
 	}
 
 	/**
@@ -869,13 +773,12 @@ public class TuleapRestClient {
 			monitor.subTask(TuleapMylynTasksMessages.getString(
 					TuleapMylynTasksMessagesKeys.retrievingBacklogItem, Integer.valueOf(backlogItemId)));
 		}
-		RestResource restBacklogItem = restResourceFactory.backlogItem(backlogItemId).withToken(token);
+		RestResource restBacklogItem = restResourceFactory.backlogItem(backlogItemId).withAuthenticator(this);
 
-		ServerResponse backlogItemResponse = restBacklogItem.get().run();
+		RestOperation operation = restBacklogItem.get();
+		ServerResponse response = operation.checkedRun();
 
-		checkServerError(restBacklogItem, Method.GET.toString(), backlogItemResponse);
-
-		TuleapBacklogItem backlogItem = this.jsonParser.parseBacklogItem(backlogItemResponse.getBody());
+		TuleapBacklogItem backlogItem = this.jsonParser.parseBacklogItem(response.getBody());
 
 		return backlogItem;
 	}
@@ -898,11 +801,10 @@ public class TuleapRestClient {
 					TuleapMylynTasksMessagesKeys.retrievingTopPlannings, Integer.valueOf(projectId)));
 		}
 		// 1- Retrieve the list of top plannings
-		RestResource restProjectTopPlannings = restResourceFactory.projectsTopPlannings(projectId).withToken(
-				token);
-		ServerResponse response = restProjectTopPlannings.get().run();
-
-		checkServerError(restProjectTopPlannings, Method.GET.toString(), response);
+		RestResource restProjectTopPlannings = restResourceFactory.projectsTopPlannings(projectId)
+				.withAuthenticator(this);
+		RestOperation operation = restProjectTopPlannings.get();
+		ServerResponse response = operation.checkedRun();
 
 		List<TuleapTopPlanning> topPlannings = this.jsonParser.parseTopPlannings(response.getBody());
 		for (TuleapTopPlanning topPlanning : topPlannings) {
@@ -928,10 +830,10 @@ public class TuleapRestClient {
 			monitor.subTask(TuleapMylynTasksMessages.getString(
 					TuleapMylynTasksMessagesKeys.retrievingTopPlanning, Integer.valueOf(topPlanningId)));
 		}
-		RestResource restTopPlannings = restResourceFactory.topPlannings(topPlanningId).withToken(token);
-		ServerResponse response = restTopPlannings.get().run();
-
-		checkServerError(restTopPlannings, Method.GET.toString(), response);
+		RestResource restTopPlannings = restResourceFactory.topPlannings(topPlanningId).withAuthenticator(
+				this);
+		RestOperation operation = restTopPlannings.get();
+		ServerResponse response = operation.checkedRun();
 
 		TuleapTopPlanning topPlanning = this.jsonParser.parseTopPlanning(response.getBody());
 		return loadTopPlanningElements(topPlanning);
@@ -949,10 +851,9 @@ public class TuleapRestClient {
 	private TuleapTopPlanning loadTopPlanningElements(TuleapTopPlanning topPlanning) throws CoreException {
 		// 2- Retrieve the milestones of this top planning
 		RestResource restMilestones = restResourceFactory.topPlanningsMilestones(topPlanning.getId())
-				.withToken(token);
-		ServerResponse milestonesResponse = restMilestones.get().run();
-
-		checkServerError(restMilestones, Method.GET.toString(), milestonesResponse);
+				.withAuthenticator(this);
+		RestOperation opMilestones = restMilestones.get();
+		ServerResponse milestonesResponse = opMilestones.checkedRun();
 
 		// TODO Pagination
 		String jsonMilestones = milestonesResponse.getBody();
@@ -964,10 +865,9 @@ public class TuleapRestClient {
 
 		// 3- Retrieve the backlog items of this top planning
 		RestResource restBacklogItems = restResourceFactory.topPlanningsBacklogItems(topPlanning.getId())
-				.withToken(token);
-		ServerResponse backlogItemsResponse = restBacklogItems.get().run();
-
-		checkServerError(restBacklogItems, Method.GET.toString(), backlogItemsResponse);
+				.withAuthenticator(this);
+		RestOperation opBacklogItems = restBacklogItems.get();
+		ServerResponse backlogItemsResponse = opBacklogItems.checkedRun();
 
 		// TODO Pagination
 		String jsonBacklogItems = backlogItemsResponse.getBody();
