@@ -1,54 +1,53 @@
-[
-  {
-    "id" : 200,
-    "artifact" : {
-      "id" : 200,
-      "uri" : "artifacts/200",
-      "tracker" : {
-      "id" : 901,
-      "uri" : "trackers/901"}
-    },
-    "project" : {
-      "id" : 3,
-      "uri" : "projects/3"
-    },
-    "label" : "Release 0.9",
-    "uri" : "milestones/200",
-    "html_url" : "milestones?id=200&group_id=3",
-    "submitted_by": 1,
-    "submitted_on": "2013-09-23T11:44:18.963Z",
-    "last_updated_on": "2013-09-24T15:33:18.523Z",
-    "start_date" : "2013-09-23T11:44:18.963Z",
-    "end_date" : "2013-10-23T11:44:18.963Z",
-    "capacity" : 100,
-    "status_value" : "Done",
-    "sub_milestones_uri" : "milestones/200/milestones",
-    "backlog_items_uri" : "milestones/200/backlog_items"
-  },
-  {
-    "id" : 201,
-    "artifact" : {
-      "id" : 201,
-      "uri" : "artifacts/201",
-      "tracker" : {
-      "id" : 901,
-      "uri" : "trackers/901"}
-    },
-    "project" : {
-      "id" : 3,
-      "uri" : "projects/3"
-    },
-    "label" : "Release TU",
-    "uri" : "milestones/201",
-    "html_url" : "milestones?id=201&group_id=3",
-    "submitted_by": 1,
-    "submitted_on": "2013-09-23T11:44:18.963Z",
-    "last_updated_on": "2013-09-24T15:33:18.523Z",
-    "start_date" : "2013-10-23T11:44:18.963Z",
-    "end_date" : "2013-11-23T11:44:18.963Z",
-    "capacity" : 75,
-    "status_value" : "Current",
-    "sub_milestones_uri" : "milestones/201/milestones",
-    "backlog_items_uri" : "milestones/201/backlog_items"
-  }
-]
+[ {
+	"id" : 200,
+	"artifact" : {
+		"id" : 200,
+		"uri" : "artifacts/200",
+		"tracker" : {
+			"id" : 901,
+			"uri" : "trackers/901"
+		}
+	},
+	"project" : {
+		"id" : 3,
+		"uri" : "projects/3"
+	},
+	"label" : "Release 0.9",
+	"uri" : "milestones/200",
+	"html_url" : "milestones?id=200&group_id=3",
+	"submitted_by" : 1,
+	"submitted_on" : "2013-09-23T11:44:18.963Z",
+	"last_updated_on" : "2013-09-24T15:33:18.523Z",
+	"start_date" : "2013-09-23T11:44:18.963Z",
+	"end_date" : "2013-10-23T11:44:18.963Z",
+	"capacity" : 100,
+	"status_value" : "Done",
+	"sub_milestones_uri" : "milestones/200/milestones",
+	"backlog_items_uri" : "milestones/200/backlog_items"
+}, {
+	"id" : 201,
+	"artifact" : {
+		"id" : 201,
+		"uri" : "artifacts/201",
+		"tracker" : {
+			"id" : 901,
+			"uri" : "trackers/901"
+		}
+	},
+	"project" : {
+		"id" : 3,
+		"uri" : "projects/3"
+	},
+	"label" : "Release TU",
+	"uri" : "milestones/201",
+	"html_url" : "milestones?id=201&group_id=3",
+	"submitted_by" : 1,
+	"submitted_on" : "2013-09-23T11:44:18.963Z",
+	"last_updated_on" : "2013-09-24T15:33:18.523Z",
+	"start_date" : "2013-10-23T11:44:18.963Z",
+	"end_date" : "2013-11-23T11:44:18.963Z",
+	"capacity" : 75,
+	"status_value" : "Current",
+	"sub_milestones_uri" : "milestones/201/milestones",
+	"backlog_items_uri" : "milestones/201/backlog_items"
+} ]
