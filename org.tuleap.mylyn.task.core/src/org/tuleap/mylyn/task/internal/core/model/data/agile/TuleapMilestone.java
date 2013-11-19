@@ -11,7 +11,6 @@
 package org.tuleap.mylyn.task.internal.core.model.data.agile;
 
 import java.util.Date;
-import java.util.List;
 
 import org.tuleap.mylyn.task.internal.core.model.data.AbstractTuleapDetailedElement;
 import org.tuleap.mylyn.task.internal.core.model.data.ArtifactReference;
@@ -63,21 +62,6 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement {
 	 * The milestone's status label.
 	 */
 	private String statusValue;
-
-	/**
-	 * The backlog backlogItems list.
-	 */
-	private List<TuleapBacklogItem> backlog;
-
-	/**
-	 * The milestone backlogItems list.
-	 */
-	private List<TuleapBacklogItem> content;
-
-	/**
-	 * The milestone submilestones list.
-	 */
-	private List<TuleapMilestone> subMilestones;
 
 	/**
 	 * Default constructor for deserialization.
@@ -281,63 +265,6 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement {
 	 */
 	public void setStatusValue(String statusValue) {
 		this.statusValue = statusValue;
-	}
-
-	/**
-	 * Get backlog backlogItems list.
-	 * 
-	 * @return the backlog
-	 */
-	public List<TuleapBacklogItem> getBacklog() {
-		return backlog;
-	}
-
-	/**
-	 * Set backlog backlogItems list.
-	 * 
-	 * @param backlog
-	 *            the backlog to set
-	 */
-	public void setBacklog(List<TuleapBacklogItem> backlog) {
-		this.backlog = backlog;
-	}
-
-	/**
-	 * Get the milestone backlogItems list.
-	 * 
-	 * @return the content
-	 */
-	public List<TuleapBacklogItem> getContent() {
-		return content;
-	}
-
-	/**
-	 * Set the milestone backlogItems list.
-	 * 
-	 * @param content
-	 *            the content to set
-	 */
-	public void setContent(List<TuleapBacklogItem> content) {
-		this.content = content;
-	}
-
-	/**
-	 * Get the milestone submilestones list.
-	 * 
-	 * @return the subMilestones
-	 */
-	public List<TuleapMilestone> getSubMilestones() {
-		return subMilestones;
-	}
-
-	/**
-	 * Set the milestone submilestones list.
-	 * 
-	 * @param subMilestones
-	 *            the subMilestones to set
-	 */
-	public void setSubMilestones(List<TuleapMilestone> subMilestones) {
-		this.subMilestones = subMilestones;
 	}
 
 }
