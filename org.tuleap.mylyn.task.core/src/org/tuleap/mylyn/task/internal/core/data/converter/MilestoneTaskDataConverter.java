@@ -369,13 +369,15 @@ public class MilestoneTaskDataConverter {
 	 * 
 	 * @param taskData
 	 *            The task data to fill.
+	 * @param milestone
+	 *            The milestone to add.
 	 * @param milestoneContent
 	 *            The backlogItems list to add to the milestone content.
 	 * @param monitor
 	 *            The progress monitor to use.
 	 */
-	public void addSubmilestone(TaskData taskData, List<TuleapBacklogItem> milestoneContent,
-			IProgressMonitor monitor) {
+	public void addSubmilestone(TaskData taskData, TuleapMilestone milestone,
+			List<TuleapBacklogItem> milestoneContent, IProgressMonitor monitor) {
 		// TODO: FIB: Implement this method.
 	}
 }
