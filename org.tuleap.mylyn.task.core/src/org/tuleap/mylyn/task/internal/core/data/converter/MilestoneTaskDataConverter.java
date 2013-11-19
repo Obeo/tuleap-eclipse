@@ -349,4 +349,33 @@ public class MilestoneTaskDataConverter {
 		MilestonePlanningWrapper wrapper = new MilestonePlanningWrapper(taskData.getRoot());
 		return TuleapTaskIdentityUtil.getElementIdFromTaskDataId(wrapper.getId());
 	}
+
+	/**
+	 * Populates the milestone backlog with the given list of backlogItems.
+	 * 
+	 * @param taskData
+	 *            The task data to fill.
+	 * @param backlog
+	 *            The backlogItems list to add to the milestone backlog.
+	 * @param monitor
+	 *            The progress monitor to use.
+	 */
+	public void populateBacklog(TaskData taskData, List<TuleapBacklogItem> backlog, IProgressMonitor monitor) {
+		// TODO: FIB: Implement this method.
+	}
+
+	/**
+	 * Add a submilestone with its given list of backlogItems.
+	 * 
+	 * @param taskData
+	 *            The task data to fill.
+	 * @param milestoneContent
+	 *            The backlogItems list to add to the milestone content.
+	 * @param monitor
+	 *            The progress monitor to use.
+	 */
+	public void addSubmilestone(TaskData taskData, List<TuleapBacklogItem> milestoneContent,
+			IProgressMonitor monitor) {
+		// TODO: FIB: Implement this method.
+	}
 }
