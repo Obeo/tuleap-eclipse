@@ -26,6 +26,11 @@ import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 public class TuleapTopPlanning extends AbstractTuleapProjectElement implements IPlanning {
 
 	/**
+	 * The serial version UID.
+	 */
+	private static final long serialVersionUID = -2127686516438714551L;
+
+	/**
 	 * The top planning's milestones.
 	 */
 	private final List<TuleapMilestone> milestones = Lists.newArrayList();

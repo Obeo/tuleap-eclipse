@@ -23,6 +23,11 @@ import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 public class TuleapCard extends AbstractTuleapConfigurableElement {
 
 	/**
+	 * The serial version UID.
+	 */
+	private static final long serialVersionUID = -9085306379796432358L;
+
+	/**
 	 * The card color.
 	 */
 	private String color;

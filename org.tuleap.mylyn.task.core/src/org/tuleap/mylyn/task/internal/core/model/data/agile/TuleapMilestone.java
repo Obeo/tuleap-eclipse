@@ -24,6 +24,11 @@ import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 public class TuleapMilestone extends AbstractTuleapDetailedElement {
 
 	/**
+	 * The serial version UID.
+	 */
+	private static final long serialVersionUID = 3813535438833875372L;
+
+	/**
 	 * Reference to the artifact that contains this item's details.
 	 */
 	private ArtifactReference artifact;
