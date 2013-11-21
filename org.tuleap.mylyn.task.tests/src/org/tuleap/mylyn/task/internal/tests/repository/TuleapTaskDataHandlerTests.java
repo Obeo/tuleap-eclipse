@@ -371,12 +371,7 @@ public class TuleapTaskDataHandlerTests {
 
 		// Mock rest client
 		final TuleapRestClient tuleapRestClient = new TuleapRestClient(null, null, null, null, null) {
-			@Override
-			public String createMilestone(TuleapMilestone tuleapMilestone, IProgressMonitor monitor) {
-				return TuleapTaskIdentityUtil.getTaskDataId(projectRef.getId(), milestoneTrackerId,
-						milestoneId);
-			}
-
+			// Nothing here for the moment
 		};
 
 		// mock client manager

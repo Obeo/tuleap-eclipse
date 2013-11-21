@@ -32,7 +32,6 @@ import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
-import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.model.TuleapToken;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPlanning;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
@@ -750,7 +749,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 		// Send the PUT request
 		RestOperation operation = restBacklogItem.put().withBody(changesToPut);
-		ServerResponse response = operation.checkedRun();
+		operation.checkedRun();
 	}
 
 	/**
@@ -780,7 +779,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 		// Send the PUT request
 		RestOperation operation = restMilestonesBacklogItems.put().withBody(changesToPut);
-		ServerResponse response = operation.checkedRun();
+		operation.checkedRun();
 	}
 
 	/**
@@ -808,30 +807,6 @@ public class TuleapRestClient implements IAuthenticator {
 		// Send the PUT request
 		RestOperation operation = restCards.put().withBody(changesToPut);
 		operation.checkedRun();
-	}
-
-	/**
-	 * Creates the Tuleap milestone on the server.
-	 * 
-	 * @param tuleapMilestone
-	 *            The tuleap milestone
-	 * @param monitor
-	 *            The progress monitor
-	 * @return The identifier of the Tuleap milestone created
-	 */
-	public String createMilestone(TuleapMilestone tuleapMilestone, IProgressMonitor monitor) {
-		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.creatingMilestone, Integer.valueOf(tuleapMilestone.getId())));
-		}
-		int projectId = -1;
-		int configurationId = -1;
-		// TODO int configurationId = tuleapMilestone.getConfigurationId();
-
-		// TODO SBE create the milestone on the server
-
-		int milestoneId = -1;
-		return TuleapTaskIdentityUtil.getTaskDataId(projectId, configurationId, milestoneId);
 	}
 
 	/**
