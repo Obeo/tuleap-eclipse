@@ -81,7 +81,6 @@ public class TuleapRestConnector implements IRestConnector {
 	 *      java.lang.String, java.util.Map, java.lang.String)
 	 */
 	public ServerResponse sendRequest(String method, String url, Map<String, String> headers, String data) {
-		// TODO Support proxies! (AbstractWebLocation in TuleapRestClient?)
 		Request request = new Request(Method.valueOf(method), url);
 
 		Preference<CharacterSet> preferenceCharset = new Preference<CharacterSet>(CharacterSet.UTF_8);
