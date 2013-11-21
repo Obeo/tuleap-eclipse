@@ -33,14 +33,12 @@ import org.tuleap.mylyn.task.internal.core.model.TuleapToken;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
-import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapTopPlanning;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.tests.client.rest.MockRestConnector.ServerRequest;
 import org.tuleap.mylyn.task.internal.tests.parser.ParserUtil;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapBacklogItemDeserializerTest;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapMilestoneDeserializerTests;
-import org.tuleap.mylyn.task.internal.tests.parser.TuleapTopPlanningDeserializerTests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -211,70 +209,6 @@ public class TuleapRestClientTest {
 		ServerRequest request1 = requestsSent.get(1);
 		assertEquals("https://test/url/api/v12.3/backlog_items/350", request1.url); //$NON-NLS-1$
 		assertEquals("GET", request1.method); //$NON-NLS-1$
-	}
-
-	@Test
-	@Ignore("Fix me when top plannings are back")
-	public void testRetrieveTopPlanning() throws CoreException, ParseException {
-		MockListRestConnector listConnector = new MockListRestConnector();
-		restResourceFactory = new RestResourceFactory(serverUrl, apiVersion, listConnector);
-		listConnector.setResourceFactory(restResourceFactory);
-		client = new TuleapRestClient(restResourceFactory, jsonParser, null, repository, null);
-
-		String tp30 = ParserUtil.loadFile("/top_plannings/top_planning_30.json"); //$NON-NLS-1$
-
-		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
-		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
-		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, tp30, respHeaders);
-		listConnector.addServerResponse(response).addServerResponse(response);
-
-		String milestones = ParserUtil.loadFile("/top_plannings/milestones.json"); //$NON-NLS-1$
-
-		Map<String, String> respHeaders2 = Maps.newHashMap();
-		respHeaders2.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
-		respHeaders2.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
-		ServerResponse response2 = new ServerResponse(ServerResponse.STATUS_OK, milestones, respHeaders2);
-		listConnector.addServerResponse(response2).addServerResponse(response2);
-
-		String items = ParserUtil.loadFile("/top_plannings/backlog_items.json"); //$NON-NLS-1$
-
-		Map<String, String> respHeaders3 = Maps.newHashMap();
-		respHeaders3.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
-		respHeaders3.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
-		ServerResponse response3 = new ServerResponse(ServerResponse.STATUS_OK, items, respHeaders3);
-		listConnector.addServerResponse(response3).addServerResponse(response3);
-
-		TuleapTopPlanning tp = client.getTopPlanning(30, null);
-		new TuleapTopPlanningDeserializerTests().checkTopPlanning30(tp);
-
-		// Let's check the requests that have been sent.
-		List<ServerRequest> requestsSent = listConnector.getRequestsSent();
-		assertEquals(6, requestsSent.size());
-
-		ServerRequest request = requestsSent.get(0);
-		assertEquals("https://test/url/api/v12.3/top_plannings/30", request.url); //$NON-NLS-1$
-		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
-
-		request = requestsSent.get(1);
-		assertEquals("https://test/url/api/v12.3/top_plannings/30", request.url); //$NON-NLS-1$
-		assertEquals("GET", request.method); //$NON-NLS-1$
-
-		request = requestsSent.get(2);
-		assertEquals("https://test/url/api/v12.3/top_plannings/30/milestones", request.url); //$NON-NLS-1$
-		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
-
-		request = requestsSent.get(3);
-		assertEquals("https://test/url/api/v12.3/top_plannings/30/milestones", request.url); //$NON-NLS-1$
-		assertEquals("GET", request.method); //$NON-NLS-1$
-
-		request = requestsSent.get(4);
-		assertEquals("https://test/url/api/v12.3/top_plannings/30/backlog_items", request.url); //$NON-NLS-1$
-		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
-
-		request = requestsSent.get(5);
-		assertEquals("https://test/url/api/v12.3/top_plannings/30/backlog_items", request.url); //$NON-NLS-1$
-		assertEquals("GET", request.method); //$NON-NLS-1$
 	}
 
 	/**

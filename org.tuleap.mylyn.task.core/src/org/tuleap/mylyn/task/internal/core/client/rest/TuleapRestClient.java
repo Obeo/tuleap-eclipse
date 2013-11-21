@@ -45,7 +45,6 @@ import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCard;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCardwall;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapSwimlane;
-import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapTopPlanning;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
@@ -634,6 +633,52 @@ public class TuleapRestClient implements IAuthenticator {
 	}
 
 	/**
+	 * Retrieve a project's milestones.
+	 * 
+	 * @param projectId
+	 *            ID of the project
+	 * @param monitor
+	 *            Progress monitor to use
+	 * @return A list, never null but possibly empty, containing the project's top-level milestones.
+	 * @throws CoreException
+	 *             If the server returns a status code different from 200 OK.
+	 */
+	public List<TuleapMilestone> getProjectMilestones(int projectId, IProgressMonitor monitor)
+			throws CoreException {
+		RestResource r = restResourceFactory.projectMilestones(projectId).withAuthenticator(this);
+		RestOperation operation = r.get();
+		RestOperationIterable jsonElements = new RestOperationIterable(operation);
+		List<TuleapMilestone> milestones = Lists.newArrayList();
+		for (JsonElement e : jsonElements) {
+			milestones.add(jsonParser.parseMilestone(e));
+		}
+		return milestones;
+	}
+
+	/**
+	 * Retrieve a project's backlog.
+	 * 
+	 * @param projectId
+	 *            ID of the project
+	 * @param monitor
+	 *            Progress monitor to use
+	 * @return A list, never null but possibly empty, containing the project's top-level milestones.
+	 * @throws CoreException
+	 *             If the server returns a status code different from 200 OK.
+	 */
+	public List<TuleapBacklogItem> getProjectBacklog(int projectId, IProgressMonitor monitor)
+			throws CoreException {
+		RestResource r = restResourceFactory.projectBacklog(projectId).withAuthenticator(this);
+		RestOperation operation = r.get();
+		RestOperationIterable jsonElements = new RestOperationIterable(operation);
+		List<TuleapBacklogItem> backlogItems = Lists.newArrayList();
+		for (JsonElement e : jsonElements) {
+			backlogItems.add(jsonParser.parseBacklogItem(e));
+		}
+		return backlogItems;
+	}
+
+	/**
 	 * Retrieves the cardwall of a milestone, if there is one.
 	 * 
 	 * @param milestoneId
@@ -813,101 +858,5 @@ public class TuleapRestClient implements IAuthenticator {
 		TuleapBacklogItem backlogItem = this.jsonParser.parseBacklogItem(response.getBody());
 
 		return backlogItem;
-	}
-
-	/**
-	 * Retrieve the top planning(s) of a given project.
-	 * 
-	 * @param projectId
-	 *            The project id
-	 * @param monitor
-	 *            The monitor to use
-	 * @return A list of the top plannings of the project.
-	 * @throws CoreException
-	 *             If anything goes wrong.
-	 */
-	public List<TuleapTopPlanning> getTopPlannings(int projectId, IProgressMonitor monitor)
-			throws CoreException {
-		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.retrievingTopPlannings, Integer.valueOf(projectId)));
-		}
-		// 1- Retrieve the list of top plannings
-		RestResource restProjectTopPlannings = restResourceFactory.projectsTopPlannings(projectId)
-				.withAuthenticator(this);
-		RestOperation operation = restProjectTopPlannings.get();
-		ServerResponse response = operation.checkedRun();
-
-		List<TuleapTopPlanning> topPlannings = this.jsonParser.parseTopPlannings(response.getBody());
-		for (TuleapTopPlanning topPlanning : topPlannings) {
-			loadTopPlanningElements(topPlanning);
-		}
-
-		return topPlannings;
-	}
-
-	/**
-	 * Retrieve the top planning(s) of a given project.
-	 * 
-	 * @param topPlanningId
-	 *            The top planning id
-	 * @param monitor
-	 *            The monitor to use
-	 * @return A list of the top plannings of the project.
-	 * @throws CoreException
-	 *             If anything goes wrong.
-	 */
-	public TuleapTopPlanning getTopPlanning(int topPlanningId, IProgressMonitor monitor) throws CoreException {
-		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.retrievingTopPlanning, Integer.valueOf(topPlanningId)));
-		}
-		RestResource restTopPlannings = restResourceFactory.topPlannings(topPlanningId).withAuthenticator(
-				this);
-		RestOperation operation = restTopPlannings.get();
-		ServerResponse response = operation.checkedRun();
-
-		TuleapTopPlanning topPlanning = this.jsonParser.parseTopPlanning(response.getBody());
-		return loadTopPlanningElements(topPlanning);
-	}
-
-	/**
-	 * Loads the sub-milestones and the backlog items of a top-planning.
-	 * 
-	 * @param topPlanning
-	 *            The top planning to load, which will be modified by this method.
-	 * @return The given top planning, just for fluency of the PIA.
-	 * @throws CoreException
-	 *             If something goes wrong.
-	 */
-	private TuleapTopPlanning loadTopPlanningElements(TuleapTopPlanning topPlanning) throws CoreException {
-		// 2- Retrieve the milestones of this top planning
-		RestResource restMilestones = restResourceFactory.topPlanningsMilestones(topPlanning.getId())
-				.withAuthenticator(this);
-		RestOperation opMilestones = restMilestones.get();
-		ServerResponse milestonesResponse = opMilestones.checkedRun();
-
-		// TODO Pagination
-		String jsonMilestones = milestonesResponse.getBody();
-
-		List<TuleapMilestone> tuleapMilestones = this.jsonParser.parseMilestones(jsonMilestones);
-		for (TuleapMilestone tuleapMilestone : tuleapMilestones) {
-			topPlanning.addSubMilestone(tuleapMilestone);
-		}
-
-		// 3- Retrieve the backlog items of this top planning
-		RestResource restBacklogItems = restResourceFactory.topPlanningsBacklogItems(topPlanning.getId())
-				.withAuthenticator(this);
-		RestOperation opBacklogItems = restBacklogItems.get();
-		ServerResponse backlogItemsResponse = opBacklogItems.checkedRun();
-
-		// TODO Pagination
-		String jsonBacklogItems = backlogItemsResponse.getBody();
-
-		List<TuleapBacklogItem> backlogItems = this.jsonParser.parseBacklogItems(jsonBacklogItems);
-		for (TuleapBacklogItem tuleapBacklogItem : backlogItems) {
-			topPlanning.addBacklogItem(tuleapBacklogItem);
-		}
-		return topPlanning;
 	}
 }

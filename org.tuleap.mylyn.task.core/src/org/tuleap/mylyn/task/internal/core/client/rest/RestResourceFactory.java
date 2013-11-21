@@ -146,48 +146,26 @@ public final class RestResourceFactory {
 	}
 
 	/**
-	 * Provides access to the {code /projects/:projectId/top_plannings} HTTP resource.
+	 * Provides access to the {code /projects/:id/milestones} HTTP resource to get a project top-level
+	 * milestones.
 	 * 
 	 * @param projectId
 	 *            the project id
-	 * @return A resource that gives access to the {code /projects/:projectId/top_plannings} HTTP resource.
+	 * @return A resource that gives access to the {code /projects/:id/milestones} HTTP resource.
 	 */
-	public RestResource projectsTopPlannings(int projectId) {
-		return resource(RestResource.GET, URL.PROJECTS, Integer.toString(projectId), URL.TOP_PLANNINGS);
+	public RestResource projectMilestones(int projectId) {
+		return resource(RestResource.GET, URL.PROJECTS, Integer.toString(projectId), URL.MILESTONES);
 	}
 
 	/**
-	 * Provides access to the {code /top_plannings/:id} HTTP resource.
+	 * Provides access to the {code /projects/:id/backlog} HTTP resource to get a project backlog.
 	 * 
-	 * @param topPlanningId
-	 *            the top planning id
-	 * @return A resource that gives access to the {code /top_plannings/:id} HTTP resource.
+	 * @param projectId
+	 *            the project id
+	 * @return A resource that gives access to the {code /projects/:id/backlog} HTTP resource.
 	 */
-	public RestResource topPlannings(int topPlanningId) {
-		return resource(RestResource.GET, URL.TOP_PLANNINGS, Integer.toString(topPlanningId));
-	}
-
-	/**
-	 * Provides access to the {code /top_plannings/:id/milestones} HTTP resource.
-	 * 
-	 * @param topPlanningId
-	 *            the top planning id
-	 * @return A resource that gives access to the {code /top_plannings/:id/milestones} HTTP resource.
-	 */
-	public RestResource topPlanningsMilestones(int topPlanningId) {
-		return resource(RestResource.GET, URL.TOP_PLANNINGS, Integer.toString(topPlanningId), URL.MILESTONES);
-	}
-
-	/**
-	 * Provides access to the {code /top_plannings/:id/backlog_items} HTTP resource.
-	 * 
-	 * @param topPlanningId
-	 *            the top planning id
-	 * @return A resource that gives access to the {code /top_plannings/:id/backlog_items} HTTP resource.
-	 */
-	public RestResource topPlanningsBacklogItems(int topPlanningId) {
-		return resource(RestResource.GET, URL.TOP_PLANNINGS, Integer.toString(topPlanningId),
-				URL.BACKLOG_ITEMS);
+	public RestResource projectBacklog(int projectId) {
+		return resource(RestResource.GET, URL.PROJECTS, Integer.toString(projectId), URL.BACKLOG);
 	}
 
 	/**

@@ -35,7 +35,6 @@ import org.tuleap.mylyn.task.internal.tests.parser.TuleapCardwallConfigurationDe
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapJsonParserTest;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapMilestoneDeserializerTests;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapProjectConfigurationDeserializerTests;
-import org.tuleap.mylyn.task.internal.tests.parser.TuleapTopPlanningDeserializerTests;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapTrackerConfigurationDeserializerTests;
 import org.tuleap.mylyn.task.internal.tests.repository.TuleapRepositoryConnectorTests;
 import org.tuleap.mylyn.task.internal.tests.repository.TuleapTaskDataHandlerTests;
@@ -56,10 +55,9 @@ import org.tuleap.mylyn.task.internal.tests.server.ServerResponseTest;
 		TuleapTrackerConfigurationTests.class, TuleapBacklogItemDeserializerTest.class,
 		TuleapMilestoneDeserializerTests.class, ServerResponseTest.class, TuleapJsonParserTest.class,
 		TuleapProjectConfigurationTests.class, TuleapCardwallConfigurationDeserializerTests.class,
-		TuleapMilestoneSerializerTests.class, TuleapTopPlanningDeserializerTests.class,
-		TuleapBacklogItemsSerializerTests.class, MilestoneTaskDataConverterTest.class,
-		TuleapSoapConnectorTests.class, TuleapRepositoryConnectorTests.class,
-		TuleapTaskDataHandlerTests.class, TuleapWorkflowTests.class,
+		TuleapMilestoneSerializerTests.class, TuleapBacklogItemsSerializerTests.class,
+		MilestoneTaskDataConverterTest.class, TuleapSoapConnectorTests.class,
+		TuleapRepositoryConnectorTests.class, TuleapTaskDataHandlerTests.class, TuleapWorkflowTests.class,
 		TuleapConfigurableElementMapperTests.class, TuleapRestResourceFactoryTest.class,
 		RestResourceTest.class, RestOperationsTest.class, TuleapRestClientTest.class,
 		TuleapBacklogItemSerializerTests.class, BacklogItemTaskDataConverterTest.class,

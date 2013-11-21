@@ -12,6 +12,7 @@ package org.tuleap.mylyn.task.internal.tests.repository;
 
 import com.google.common.collect.Lists;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +28,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.junit.Test;
+import org.tuleap.mylyn.task.agile.core.data.planning.MilestonePlanningWrapper;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapQueryConstants;
 import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
@@ -38,9 +40,11 @@ import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBoxItem;
+import org.tuleap.mylyn.task.internal.core.model.data.ArtifactReference;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
-import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapTopPlanning;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapTaskDataCollector;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
@@ -277,25 +281,63 @@ public class TuleapRepositoryConnectorTests {
 	 */
 	@Test
 	public void testPerformQueryTopLevelPlanning() {
-		TuleapReference projectRef = new TuleapReference(979, "projects/979");
-		int topPlanningId = 121;
+		final TuleapReference projectRef = new TuleapReference(979, "projects/979");
 
 		final TuleapServer tuleapServer = new TuleapServer("https://tuleap.net");
 
 		TuleapProject tuleapProject = new TuleapProject("", projectRef.getId());
 		tuleapServer.addProject(tuleapProject);
 
-		final TuleapTopPlanning tuleapTopPlanning = new TuleapTopPlanning(topPlanningId, projectRef,
-				"Top planning", "/top/planning");
+		// MockListRestConnector connector = new MockListRestConnector();
+
+		final TaskRepository taskRepository = new TaskRepository(ITuleapConstants.CONNECTOR_KIND,
+				"https://tuleap.net");
+
+		// final RestResourceFactory resourceFactory = new RestResourceFactory("", "", connector);
 
 		final TuleapClientManager tuleapClientManager = new TuleapClientManager() {
 			@Override
-			public TuleapRestClient getRestClient(TaskRepository taskRepository) {
+			public TuleapRestClient getRestClient(TaskRepository repository) {
 				return new TuleapRestClient(null, null, null, null, null) {
 					@Override
-					public List<TuleapTopPlanning> getTopPlannings(int id, IProgressMonitor monitor)
+					public List<TuleapBacklogItem> getProjectBacklog(int projectId, IProgressMonitor monitor)
 							throws CoreException {
-						return Lists.newArrayList(tuleapTopPlanning);
+						if (projectId == projectRef.getId()) {
+							TuleapBacklogItem item = new TuleapBacklogItem();
+							item.setId(123);
+							item.setArtifact(new ArtifactReference(123, "artifacts/123", new TuleapReference(
+									12, "trackers/12")));
+							item.setLabel("Backlog item");
+							item.setProject(projectRef);
+							return Collections.singletonList(item);
+						}
+						return Collections.emptyList();
+					}
+
+					@Override
+					public List<TuleapMilestone> getProjectMilestones(int projectId, IProgressMonitor monitor)
+							throws CoreException {
+						if (projectId == projectRef.getId()) {
+							TuleapMilestone milestone = new TuleapMilestone(100, projectRef);
+							milestone.setLabel("Milestone");
+							return Collections.singletonList(milestone);
+						}
+						return Collections.emptyList();
+					}
+
+					@Override
+					public List<TuleapBacklogItem> getMilestoneContent(int milestoneId,
+							IProgressMonitor monitor) throws CoreException {
+						if (milestoneId == 100) {
+							TuleapBacklogItem item = new TuleapBacklogItem();
+							item.setId(333);
+							item.setArtifact(new ArtifactReference(123, "artifacts/333", new TuleapReference(
+									12, "trackers/12")));
+							item.setLabel("Backlog item");
+							item.setProject(projectRef);
+							return Collections.singletonList(item);
+						}
+						return Collections.emptyList();
 					}
 				};
 			}
@@ -313,9 +355,6 @@ public class TuleapRepositoryConnectorTests {
 			}
 		};
 
-		TaskRepository taskRepository = new TaskRepository(ITuleapConstants.CONNECTOR_KIND,
-				"https://tuleap.net");
-
 		// All from tracker
 		TuleapTaskDataCollector collector = new TuleapTaskDataCollector();
 
@@ -328,8 +367,12 @@ public class TuleapRepositoryConnectorTests {
 				new NullProgressMonitor());
 
 		assertThat(collector.getTaskData().size(), is(1));
+		TaskData taskData = collector.getTaskData().iterator().next();
 		assertThat(collector.getTaskData().iterator().next().getTaskId(), is(TuleapTaskIdentityUtil
-				.getTaskDataId(projectRef.getId(), TuleapTaskIdentityUtil.IRRELEVANT_ID, topPlanningId)));
+				.getTaskDataId(projectRef.getId(), TuleapTaskIdentityUtil.IRRELEVANT_ID, projectRef.getId())));
+		MilestonePlanningWrapper wrapper = new MilestonePlanningWrapper(taskData.getRoot());
+		assertEquals(2, wrapper.getAllBacklogItems().size());
+		assertEquals(1, wrapper.getSubMilestones().size());
 	}
 
 	/**

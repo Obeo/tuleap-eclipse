@@ -348,17 +348,6 @@ public class TuleapRestResourceFactoryTest {
 	}
 
 	/**
-	 * Checks the basic properties of {@link RestResourceFactory#projectsTopPlannings(int)}.
-	 */
-	@Test
-	public void testGetProjectTopPlannings() {
-		RestResource r = factory.projectsTopPlannings(321);
-		assertNotNull(r);
-		assertEquals("/projects/321/top_plannings", r.getUrl());
-		assertEquals("/server/api/v12.5/projects/321/top_plannings", r.getFullUrl());
-	}
-
-	/**
 	 * Checks the basic properties of {@link RestResourceFactory#projectsTrackers(int)}.
 	 */
 	@Test
@@ -367,39 +356,6 @@ public class TuleapRestResourceFactoryTest {
 		assertNotNull(r);
 		assertEquals("/projects/321/trackers", r.getUrl());
 		assertEquals("/server/api/v12.5/projects/321/trackers", r.getFullUrl());
-	}
-
-	/**
-	 * Checks the basic properties of {@link RestResourceFactory#topPlannings(int)}.
-	 */
-	@Test
-	public void testGetTopPlanning() {
-		RestResource r = factory.topPlannings(321);
-		assertNotNull(r);
-		assertEquals("/top_plannings/321", r.getUrl());
-		assertEquals("/server/api/v12.5/top_plannings/321", r.getFullUrl());
-	}
-
-	/**
-	 * Checks the basic properties of {@link RestResourceFactory#topPlanningsBacklogItems(int)}.
-	 */
-	@Test
-	public void testGetTopPlanningBacklogItems() {
-		RestResource r = factory.topPlanningsBacklogItems(321);
-		assertNotNull(r);
-		assertEquals("/top_plannings/321/backlog_items", r.getUrl());
-		assertEquals("/server/api/v12.5/top_plannings/321/backlog_items", r.getFullUrl());
-	}
-
-	/**
-	 * Checks the basic properties of {@link RestResourceFactory#topPlanningsMilestones(int)}.
-	 */
-	@Test
-	public void testGetTopPlanningMilestones() {
-		RestResource r = factory.topPlanningsMilestones(321);
-		assertNotNull(r);
-		assertEquals("/top_plannings/321/milestones", r.getUrl());
-		assertEquals("/server/api/v12.5/top_plannings/321/milestones", r.getFullUrl());
 	}
 
 	/**

@@ -354,6 +354,11 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	 */
 	public static String retrievingTopPlanning;
 
+	/**
+	 * The "General Planning" label, used for top planning task keys.
+	 */
+	public static String generalPlanning;
+
 	static {
 		// load message values from bundle file
 		reloadMessages();

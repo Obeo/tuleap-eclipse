@@ -413,11 +413,6 @@ public class RestResource {
 		String TOKENS = "tokens"; //$NON-NLS-1$
 
 		/**
-		 * "top_plannings".
-		 */
-		String TOP_PLANNINGS = "top_plannings"; //$NON-NLS-1$
-
-		/**
 		 * "trackers".
 		 */
 		String TRACKERS = "trackers"; //$NON-NLS-1$

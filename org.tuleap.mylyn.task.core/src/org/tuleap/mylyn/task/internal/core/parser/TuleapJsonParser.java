@@ -27,7 +27,6 @@ import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCardwall;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
-import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapTopPlanning;
 
 /**
  * This class is used to encapsulate all the logic of the JSON parsing.
@@ -58,28 +57,6 @@ public class TuleapJsonParser {
 			result.add(tuleapProject);
 		}
 		return result;
-	}
-
-	/**
-	 * Parse the top plannings from the json response.
-	 * 
-	 * @param jsonResponse
-	 *            The json response
-	 * @return The top plannings parsed
-	 */
-	public List<TuleapTopPlanning> parseTopPlannings(String jsonResponse) {
-		List<TuleapTopPlanning> topPlannings = new ArrayList<TuleapTopPlanning>();
-
-		JsonParser parser = new JsonParser();
-
-		JsonArray topPlanningsArray = parser.parse(jsonResponse).getAsJsonArray();
-		for (JsonElement element : topPlanningsArray) {
-			TuleapTopPlanning milestone = new TuleapTopPlanningDeserializer().deserialize(element,
-					TuleapTopPlanning.class, null);
-			topPlannings.add(milestone);
-		}
-
-		return topPlannings;
 	}
 
 	/**
@@ -131,20 +108,6 @@ public class TuleapJsonParser {
 		Gson gson = gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
 		TuleapPlanning planning = gson.fromJson(planningElement, TuleapPlanning.class);
 		return planning;
-	}
-
-	/**
-	 * Parse one top planning from the json response.
-	 * 
-	 * @param jsonResponse
-	 *            The json response
-	 * @return The top planning parsed
-	 */
-	public TuleapTopPlanning parseTopPlanning(String jsonResponse) {
-		JsonParser parser = new JsonParser();
-		JsonElement topPlanningElement = parser.parse(jsonResponse);
-		return new TuleapTopPlanningDeserializer().deserialize(topPlanningElement, TuleapTopPlanning.class,
-				null);
 	}
 
 	/**

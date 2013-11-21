@@ -49,7 +49,6 @@ import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.data.converter.ArtifactTaskDataConverter;
-import org.tuleap.mylyn.task.internal.core.data.converter.MilestoneTaskDataConverter;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
@@ -57,9 +56,6 @@ import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
-import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
-import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
-import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapTopPlanning;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
@@ -285,107 +281,104 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			TaskDataCollector collector, ISynchronizationSession session, IProgressMonitor monitor) {
 		// Populate the collector with the task data resulting from the query
 		String queryKind = query.getAttribute(ITuleapQueryConstants.QUERY_KIND);
-
-		TuleapServer repositoryConfiguration = this.getTuleapServerConfiguration(taskRepository
-				.getRepositoryUrl());
-		TaskAttributeMapper attributeMapper = this.getTaskDataHandler().getAttributeMapper(taskRepository);
-
 		if (ITuleapQueryConstants.QUERY_KIND_REPORT.equals(queryKind)
 				|| ITuleapQueryConstants.QUERY_KIND_CUSTOM.equals(queryKind)) {
-			TuleapSoapClient soapClient = this.getClientManager().getSoapClient(taskRepository);
-
-			int trackerId = Integer.valueOf(query.getAttribute(ITuleapQueryConstants.QUERY_CONFIGURATION_ID))
-					.intValue();
-
-			TuleapTracker tracker = repositoryConfiguration.getTracker(trackerId);
-			try {
-				tracker = this.refreshTracker(taskRepository, tracker, monitor);
-			} catch (CoreException e) {
-				TuleapCoreActivator.log(e, true);
-			}
-
-			ArtifactTaskDataConverter artifactTaskDataConverter = new ArtifactTaskDataConverter(tracker,
-					taskRepository, this);
-
-			List<TuleapArtifact> artifacts = soapClient.getArtifactsFromQuery(query, repositoryConfiguration,
-					tracker, monitor);
-			for (TuleapArtifact artifact : artifacts) {
-				String taskDataId = TuleapTaskIdentityUtil.getTaskDataId(tracker
-						.getTuleapProjectConfiguration().getIdentifier(), artifact.getTracker().getId(),
-						artifact.getId());
-
-				TaskData taskData = new TaskData(attributeMapper, this.getConnectorKind(), taskRepository
-						.getRepositoryUrl(), taskDataId);
-				artifactTaskDataConverter.populateTaskData(taskData, artifact, monitor);
-
-				// If the tracker is a milestone tracker, retrieve milestone-specific informations
-				if (tracker.getTuleapProjectConfiguration().isMilestoneTracker(tracker.getIdentifier())) {
-					TuleapRestClient restClient = clientManager.getRestClient(taskRepository);
-					try {
-						TuleapMilestone milestone = restClient.getMilestone(artifact.getId(), monitor);
-						MilestoneTaskDataConverter milestoneConverter = new MilestoneTaskDataConverter(
-								taskRepository, this);
-						milestoneConverter.populateTaskData(taskData, milestone, monitor);
-
-						// Fetch planning
-
-						List<TuleapBacklogItem> backlog = restClient.getMilestoneBacklog(artifact.getId(),
-								monitor);
-						milestoneConverter.populateBacklog(taskData, backlog, monitor);
-
-						List<TuleapMilestone> subMilestones = restClient.getSubMilestones(artifact.getId(),
-								monitor);
-
-						for (TuleapMilestone tuleapMilestone : subMilestones) {
-							List<TuleapBacklogItem> content = restClient.getMilestoneContent(tuleapMilestone
-									.getId(), monitor);
-							milestoneConverter.addSubmilestone(taskData, tuleapMilestone, content, monitor);
-						}
-
-						// TODO Cardwall, when cardwall is active
-					} catch (CoreException e) {
-						TuleapCoreActivator.log(e, true);
-					}
-				}
-
-				try {
-					collector.accept(taskData);
-				} catch (IllegalArgumentException exception) {
-					// Do not log, the query has been deleted while it was executed, see:
-					// org.eclipse.mylyn.internal.tasks.core.TaskList.getValidElement(IRepositoryElement)
-				}
-			}
+			performStandardQuery(taskRepository, query, collector, monitor);
 		} else if (ITuleapQueryConstants.QUERY_KIND_TOP_LEVEL_PLANNING.equals(queryKind)) {
-			int projectId = Integer.valueOf(query.getAttribute(ITuleapQueryConstants.QUERY_PROJECT_ID))
-					.intValue();
-
-			// null -> the top plannings do not have a configuration
-			MilestoneTaskDataConverter milestoneTaskDataConverter = new MilestoneTaskDataConverter(
-					taskRepository, this);
-
-			TuleapRestClient restClient = this.getClientManager().getRestClient(taskRepository);
-			try {
-				List<TuleapTopPlanning> topPlannings = restClient.getTopPlannings(projectId, monitor);
-				for (TuleapTopPlanning tuleapTopPlanning : topPlannings) {
-					String taskDataId = TuleapTaskIdentityUtil.getTaskDataId(projectId,
-							TuleapTaskIdentityUtil.IRRELEVANT_ID, tuleapTopPlanning.getId());
-
-					TaskData taskData = new TaskData(attributeMapper, this.getConnectorKind(), taskRepository
-							.getRepositoryUrl(), taskDataId);
-					milestoneTaskDataConverter.populateTaskData(taskData, tuleapTopPlanning, projectId,
-							monitor);
-					try {
-						collector.accept(taskData);
-					} catch (IllegalArgumentException exception) {
-						// Do not log, the query has been deleted while it was executed, see:
-						// org.eclipse.mylyn.internal.tasks.core.TaskList.getValidElement(IRepositoryElement)
-					}
-				}
-			} catch (CoreException e) {
-				TuleapCoreActivator.log(e, true);
-			}
+			performProjectPlanningQuery(taskRepository, query, collector, monitor);
 		}
 		return Status.OK_STATUS;
+	}
+
+	/**
+	 * Perform a "standard" query, which is configured by a set of criteria.
+	 * 
+	 * @param taskRepository
+	 *            The task repository
+	 * @param query
+	 *            The qeury to execute
+	 * @param collector
+	 *            The taks data collector
+	 * @param monitor
+	 *            The progress monitor
+	 */
+	private void performStandardQuery(TaskRepository taskRepository, IRepositoryQuery query,
+			TaskDataCollector collector, IProgressMonitor monitor) {
+		TuleapSoapClient soapClient = this.getClientManager().getSoapClient(taskRepository);
+		int trackerId = Integer.valueOf(query.getAttribute(ITuleapQueryConstants.QUERY_CONFIGURATION_ID))
+				.intValue();
+		TuleapServer server = this.getTuleapServerConfiguration(taskRepository.getRepositoryUrl());
+		TuleapTracker tracker = server.getTracker(trackerId);
+		try {
+			tracker = this.refreshTracker(taskRepository, tracker, monitor);
+		} catch (CoreException e) {
+			TuleapCoreActivator.log(e, true);
+		}
+		ArtifactTaskDataConverter artifactTaskDataConverter = new ArtifactTaskDataConverter(tracker,
+				taskRepository, this);
+		List<TuleapArtifact> artifacts = soapClient.getArtifactsFromQuery(query, server, tracker, monitor);
+		for (TuleapArtifact artifact : artifacts) {
+			String taskDataId = TuleapTaskIdentityUtil.getTaskDataId(tracker.getTuleapProjectConfiguration()
+					.getIdentifier(), artifact.getTracker().getId(), artifact.getId());
+
+			TaskAttributeMapper attributeMapper = this.getTaskDataHandler()
+					.getAttributeMapper(taskRepository);
+			TaskData taskData = new TaskData(attributeMapper, this.getConnectorKind(), taskRepository
+					.getRepositoryUrl(), taskDataId);
+			artifactTaskDataConverter.populateTaskData(taskData, artifact, monitor);
+
+			// If the tracker is a milestone tracker, retrieve milestone-specific informations
+			if (tracker.getTuleapProjectConfiguration().isMilestoneTracker(tracker.getIdentifier())) {
+				try {
+					taskDataHandler.fetchMilestoneData(taskData, tracker.getTuleapProjectConfiguration(),
+							tracker, taskRepository, monitor);
+				} catch (CoreException e) {
+					TuleapCoreActivator.log(e, true);
+				}
+			}
+
+			try {
+				collector.accept(taskData);
+			} catch (IllegalArgumentException exception) {
+				// Do not log, the query has been deleted while it was executed, see:
+				// org.eclipse.mylyn.internal.tasks.core.TaskList.getValidElement(IRepositoryElement)
+			}
+		}
+	}
+
+	/**
+	 * Perform a query of type "Top-level planning".
+	 * 
+	 * @param taskRepository
+	 *            The task repository
+	 * @param query
+	 *            The query
+	 * @param collector
+	 *            The data collector
+	 * @param monitor
+	 *            The progress monitor
+	 */
+	private void performProjectPlanningQuery(TaskRepository taskRepository, IRepositoryQuery query,
+			TaskDataCollector collector, IProgressMonitor monitor) {
+		int projectId = Integer.valueOf(query.getAttribute(ITuleapQueryConstants.QUERY_PROJECT_ID))
+				.intValue();
+		try {
+			String taskDataId = TuleapTaskIdentityUtil.getProjectPlanningTaskDataId(projectId);
+			TaskAttributeMapper attributeMapper = this.getTaskDataHandler()
+					.getAttributeMapper(taskRepository);
+			TaskData taskData = new TaskData(attributeMapper, this.getConnectorKind(), taskRepository
+					.getRepositoryUrl(), taskDataId);
+			taskDataHandler.fetchProjectPlanningData(taskData, taskRepository, monitor);
+
+			try {
+				collector.accept(taskData);
+			} catch (IllegalArgumentException exception) {
+				// Do not log, the query has been deleted while it was executed, see:
+				// org.eclipse.mylyn.internal.tasks.core.TaskList.getValidElement(IRepositoryElement)
+			}
+		} catch (CoreException e) {
+			TuleapCoreActivator.log(e, true);
+		}
 	}
 
 	/**

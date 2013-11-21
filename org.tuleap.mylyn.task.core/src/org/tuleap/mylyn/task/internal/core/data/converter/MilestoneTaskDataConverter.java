@@ -11,14 +11,11 @@
 package org.tuleap.mylyn.task.internal.core.data.converter;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.agile.core.data.AgileTaskKindUtil;
 import org.tuleap.mylyn.task.agile.core.data.cardwall.CardWrapper;
@@ -27,9 +24,7 @@ import org.tuleap.mylyn.task.agile.core.data.cardwall.SwimlaneWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.BacklogItemWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.MilestonePlanningWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.SubMilestoneWrapper;
-import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
-import org.tuleap.mylyn.task.internal.core.data.TuleapTaskMapper;
 import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
@@ -40,7 +35,6 @@ import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCardwall;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapStatus;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapSwimlane;
-import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapTopPlanning;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 
 /**
@@ -106,32 +100,6 @@ public class MilestoneTaskDataConverter {
 	}
 
 	/**
-	 * Fills the task data related to the given top planning.
-	 * 
-	 * @param taskData
-	 *            The task data
-	 * @param tuleapTopPlanning
-	 *            The top planning
-	 * @param projectId
-	 *            the project id
-	 * @param monitor
-	 *            The progress monitor to use
-	 */
-	public void populateTaskData(TaskData taskData, TuleapTopPlanning tuleapTopPlanning, int projectId,
-			IProgressMonitor monitor) {
-		// Task Key
-		// TODO Externalize String
-		String taskKey = TuleapTaskIdentityUtil.getTaskDataKey(Integer.toString(projectId),
-				"General Planning", tuleapTopPlanning.getId()); //$NON-NLS-1$
-		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, null);
-		TaskAttribute taskKeyAtt = taskData.getRoot().createMappedAttribute(TaskAttribute.TASK_KEY);
-		taskKeyAtt.setValue(taskKey);
-		mapper.setTaskKey(taskKey);
-
-		AgileTaskKindUtil.setAgileTaskKind(taskData, AgileTaskKindUtil.TASK_KIND_TOP_PLANNING);
-	}
-
-	/**
 	 * Populate the given task data with milestone data.
 	 * 
 	 * @param taskData
@@ -144,61 +112,6 @@ public class MilestoneTaskDataConverter {
 	public void populateTaskData(TaskData taskData, TuleapMilestone milestone, IProgressMonitor monitor) {
 		// TODO Is this the right way to mark a TaskData as a milestone?
 		AgileTaskKindUtil.setAgileTaskKind(taskData, AgileTaskKindUtil.TASK_KIND_MILESTONE);
-	}
-
-	/**
-	 * Populates the planning data in a task data from the given pojo.
-	 * 
-	 * @param taskData
-	 *            The task data to fill.
-	 * @param subMilestones
-	 *            The sub-milestones.
-	 * @param backlogItems
-	 *            The backlog items.
-	 * @param monitor
-	 *            The progress monitor to use
-	 */
-	public void populatePlanning(TaskData taskData, List<TuleapMilestone> subMilestones,
-			List<TuleapBacklogItem> backlogItems, IProgressMonitor monitor) {
-		MilestonePlanningWrapper milestonePlanning = new MilestonePlanningWrapper(taskData.getRoot());
-
-		Map<Integer, String> milestoneInternalIdByTuleapId = Maps.newHashMap();
-		for (TuleapMilestone subMilestone : subMilestones) {
-			String internalMilestoneId = TuleapTaskIdentityUtil.getTaskDataId(subMilestone.getProject()
-					.getId(), 0, subMilestone.getId());
-			milestoneInternalIdByTuleapId.put(Integer.valueOf(subMilestone.getId()), internalMilestoneId);
-			SubMilestoneWrapper subMilestoneWrapper = milestonePlanning.addSubMilestone(internalMilestoneId);
-			subMilestoneWrapper.setDisplayId(Integer.toString(subMilestone.getId()));
-			subMilestoneWrapper.setLabel(subMilestone.getLabel());
-			if (subMilestone.getStartDate() != null) {
-				subMilestoneWrapper.setStartDate(subMilestone.getStartDate());
-			}
-			if (subMilestone.getEndDate() != null) {
-				subMilestoneWrapper.setEndDate(subMilestone.getEndDate());
-			}
-			if (subMilestone.getCapacity() != null) {
-				subMilestoneWrapper.setCapacity(subMilestone.getCapacity().floatValue());
-			}
-		}
-		for (TuleapBacklogItem backlogItem : backlogItems) {
-			int projectId;
-			// TODO LDE remove this? Due to a bug in tuleap that omits project refs in backlog items
-			TuleapReference project = backlogItem.getProject();
-			if (project != null) {
-				projectId = project.getId();
-			} else {
-				projectId = Integer.parseInt(taskData.getRoot().getAttribute(PROJECT_ID).getValue());
-			}
-			BacklogItemWrapper backlogItemWrapper = milestonePlanning.addBacklogItem(TuleapTaskIdentityUtil
-					.getTaskDataId(projectId, 0, backlogItem.getId()));
-			// FIXME Replace 0 above
-			backlogItemWrapper.setDisplayId(Integer.toString(backlogItem.getId()));
-
-			backlogItemWrapper.setLabel(backlogItem.getLabel());
-			if (backlogItem.getInitialEffort() != null) {
-				backlogItemWrapper.setInitialEffort(backlogItem.getInitialEffort().floatValue());
-			}
-		}
 	}
 
 	/**
@@ -268,36 +181,6 @@ public class MilestoneTaskDataConverter {
 				}
 			}
 		}
-	}
-
-	/**
-	 * Creates a milestone POJO from the related task data.
-	 * 
-	 * @param taskData
-	 *            The updated task data.
-	 * @return The updated milestone POJO.
-	 * @deprecated
-	 */
-	@Deprecated
-	public TuleapMilestone createTuleapMilestone(TaskData taskData) {
-		TuleapTaskMapper mapper = new TuleapTaskMapper(taskData);
-
-		TuleapMilestone tuleapMilestone = null;
-
-		int projectId = mapper.getProjectId();
-		TuleapReference projectRef = new TuleapReference();
-		projectRef.setId(projectId);
-		projectRef.setUri("projects/" + projectId);
-		if (taskData.isNew()) {
-			// TODO SBE find the identifier of the parent milestone
-			tuleapMilestone = new TuleapMilestone(projectRef);
-		} else {
-			int id = mapper.getId();
-			tuleapMilestone = new TuleapMilestone(id, projectRef);
-		}
-
-		// TODO SBE populate the backlog items etc...
-		return tuleapMilestone;
 	}
 
 	/**

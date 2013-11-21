@@ -27,7 +27,6 @@ import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestConnector;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
-import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapTopPlanning;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
@@ -92,33 +91,6 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 		} catch (CoreException e) {
 			assertEquals(IStatus.ERROR, e.getStatus().getSeverity());
 			assertEquals("Error 401: Unauthorized", e.getMessage()); //$NON-NLS-1$ 
-		}
-	}
-
-	/**
-	 * Test of top plannings retrieval.
-	 */
-	@Test
-	public void testGetTopPlannings() {
-		TestLogger logger = new TestLogger();
-		TuleapRestConnector restConnector = new TuleapRestConnector(location, logger);
-		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
-		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
-		RestResourceFactory restResourceFactory = new RestResourceFactory(location.getUrl(), "v3.14",
-				restConnector);
-		TuleapRestClient tuleapServer = new TuleapRestClient(restResourceFactory, tuleapJsonParser,
-				tuleapJsonSerializer, this.repository, logger);
-		try {
-			List<TuleapTopPlanning> topPlannings = tuleapServer.getTopPlannings(3, null);
-			assertEquals(1, topPlannings.size());
-			TuleapTopPlanning topPlanning = topPlannings.get(0);
-			assertEquals(30, topPlanning.getId());
-			List<TuleapMilestone> milestones = topPlanning.getSubMilestones();
-			assertEquals(2, milestones.size());
-			List<TuleapBacklogItem> backlogItems = topPlanning.getBacklogItems();
-			assertEquals(3, backlogItems.size());
-		} catch (CoreException e) {
-			fail(e.getMessage());
 		}
 	}
 
