@@ -222,7 +222,6 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			// Sets the creation date and last modification date.
 			if (initializationData instanceof TuleapTaskMapping) {
 				TuleapTaskMapping tuleapTaskMapping = (TuleapTaskMapping)initializationData;
-
 				TuleapTracker tracker = tuleapTaskMapping.getTracker();
 
 				if (tracker != null) {
@@ -235,6 +234,13 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 							TuleapMylynTasksMessagesKeys.defaultNewTitle, tracker.getItemName()));
 
 					isInitialized = true;
+				}
+
+				if (initializationData instanceof TuleapMilestoneMapping) {
+					TuleapMilestoneMapping milestoneMapping = (TuleapMilestoneMapping)initializationData;
+					String parentMilestoneId = milestoneMapping.getParentMilestoneId();
+					// TODO SBE Set the identifier of the parent milestone in the task data and
+					// synchronize it later...
 				}
 			}
 		}
@@ -448,12 +454,12 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			List<TuleapMilestone> subMilestones = restClient.getSubMilestones(milestoneId, monitor);
 
 			for (TuleapMilestone tuleapMilestone : subMilestones) {
-				List<TuleapBacklogItem> content = restClient.getMilestoneContent(tuleapMilestone
-						.getId(), monitor);
+				List<TuleapBacklogItem> content = restClient.getMilestoneContent(tuleapMilestone.getId(),
+						monitor);
 				taskDataConverter.addSubmilestone(taskData, tuleapMilestone, content, monitor);
 			}
 
-					// Fetch cardwall if necessary
+			// Fetch cardwall if necessary
 			if (projectConfiguration.isCardwallActive(tracker.getIdentifier())) {
 				TuleapCardwall cardwall = restClient.getCardwall(milestoneId, monitor);
 				taskDataConverter.populateCardwall(taskData, cardwall, monitor);
