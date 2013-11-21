@@ -20,7 +20,6 @@ import java.lang.reflect.Type;
 
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.model.data.ArtifactReference;
-import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem.Status;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
@@ -57,11 +56,6 @@ public class TuleapBacklogItemDeserializer extends AbstractDetailedElementDeseri
 			} catch (NumberFormatException e) {
 				TuleapCoreActivator.log(e, false);
 			}
-		}
-
-		elt = jsonObject.get(ITuleapConstants.JSON_ASSIGNED_MILESTONE);
-		if (elt != null) {
-			backlogItem.setAssignedMilestone(gson.fromJson(elt, TuleapReference.class));
 		}
 
 		elt = jsonObject.get(ITuleapConstants.JSON_STATUS);

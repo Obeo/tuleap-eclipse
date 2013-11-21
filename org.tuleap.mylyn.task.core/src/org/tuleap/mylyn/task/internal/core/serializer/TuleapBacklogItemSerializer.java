@@ -17,7 +17,6 @@ import com.google.gson.JsonSerializationContext;
 
 import java.lang.reflect.Type;
 
-import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
@@ -43,15 +42,6 @@ public class TuleapBacklogItemSerializer extends AbstractProjectElementSerialize
 		if (backlogItem.getInitialEffort() != null) {
 			backlogItemObject.add(ITuleapConstants.INITIAL_EFFORT, new JsonPrimitive(backlogItem
 					.getInitialEffort()));
-		}
-		TuleapReference assignedMilestone = backlogItem.getAssignedMilestone();
-		if (assignedMilestone != null) {
-			// We only want to serialize the id, not the uri that is read-only
-			// Gson gson = new Gson();
-			// JsonElement jsonTree = gson.toJsonTree(assignedMilestone);
-			JsonObject ref = new JsonObject();
-			ref.add(ITuleapConstants.ID, new JsonPrimitive(Integer.valueOf(assignedMilestone.getId())));
-			backlogItemObject.add(ITuleapConstants.JSON_ASSIGNED_MILESTONE, ref);
 		}
 		return backlogItemObject;
 	}
