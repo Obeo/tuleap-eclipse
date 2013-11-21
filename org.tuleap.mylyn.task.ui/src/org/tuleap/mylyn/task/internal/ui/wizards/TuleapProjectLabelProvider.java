@@ -11,7 +11,10 @@
 package org.tuleap.mylyn.task.internal.ui.wizards;
 
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.graphics.Image;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
+import org.tuleap.mylyn.task.internal.ui.TuleapTasksUIPlugin;
+import org.tuleap.mylyn.task.internal.ui.util.ITuleapUIConstants;
 
 /**
  * The label provider of the tree viewer of the first page used to create new task or queries.
@@ -30,5 +33,16 @@ public class TuleapProjectLabelProvider extends LabelProvider {
 			return ((TuleapProject)element).getName();
 		}
 		return super.getText(element);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
+	 */
+	@Override
+	public Image getImage(Object element) {
+		return TuleapTasksUIPlugin.getDefault()
+				.getImage(ITuleapUIConstants.Icons.TULEAP_PROJECT_UNLOCK_16X16);
 	}
 }

@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.ui.editor;
 
-import org.eclipse.mylyn.commons.ui.CommonImages;
-import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
@@ -19,7 +17,10 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
-import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
+import org.tuleap.mylyn.task.internal.ui.TuleapTasksUIPlugin;
+import org.tuleap.mylyn.task.internal.ui.util.ITuleapUIConstants;
+import org.tuleap.mylyn.task.internal.ui.util.TuleapUIMessages;
+import org.tuleap.mylyn.task.internal.ui.util.TuleapUiMessagesKeys;
 
 /**
  * The editor page factory will instantiate the editor page for Tuleap related content.
@@ -55,7 +56,7 @@ public class TuleapTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 	 */
 	@Override
 	public Image getPageImage() {
-		return CommonImages.getImage(TasksUiImages.REPOSITORY_SMALL);
+		return TuleapTasksUIPlugin.getDefault().getImage(ITuleapUIConstants.Icons.TULEAP_LOGO_16X16);
 	}
 
 	/**
@@ -65,7 +66,7 @@ public class TuleapTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 	 */
 	@Override
 	public String getPageText() {
-		return TuleapMylynTasksUIMessages.getString("TuleapTaskEditorPageFactory.PageText"); //$NON-NLS-1$
+		return TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapTabName);
 	}
 
 	/**

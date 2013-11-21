@@ -27,13 +27,43 @@ public interface ITuleapUIConstants {
 	 */
 	public interface Icons {
 		/**
-		 * The icon of the wizard.
+		 * The Tuleap logo in 16x16.
 		 */
-		String WIZARD_TULEAP_LOGO_48 = "/icons/wizards/tuleap-logo_48x48.png"; //$NON-NLS-1$
+		String TULEAP_LOGO_16X16 = "/icons/tools/tuleap-logo_16x16.png"; //$NON-NLS-1$
 
 		/**
-		 * The icon of the connector.
+		 * The Tuleap logo in 48x48.
 		 */
-		String VIEW_TULEAP_LOGO_16 = "/icons/tools/tuleap-logo_16x16.png"; //$NON-NLS-1$
+		String TULEAP_LOGO_48X48 = "/icons/wizards/tuleap-logo_48x48.png"; //$NON-NLS-1$
+
+		/**
+		 * The Tuleap logo for wizards.
+		 */
+		String TULEAP_LOGO_WIZARD_75X66 = "/icons/wizards/tuleap-logo_wizard_75x66.png"; //$NON-NLS-1$
+
+		/**
+		 * The Tuleap locked project icon.
+		 */
+		String TULEAP_PROJECT_LOCK_16X16 = "/icons/wizards/tuleap-project-lock_16x16.png"; //$NON-NLS-1$
+
+		/**
+		 * The Tuleap unlocked project icon.
+		 */
+		String TULEAP_PROJECT_UNLOCK_16X16 = "/icons/wizards/tuleap-project-unlock_16x16.png"; //$NON-NLS-1$
+
+		/**
+		 * The Tuleap tracker icon.
+		 */
+		String TULEAP_TRACKER_16X16 = "/icons/wizards/tuleap-tracker_16x16.png"; //$NON-NLS-1$
+
+		/**
+		 * The Tuleap planning icon.
+		 */
+		String TULEAP_PLANNING_16X16 = "/icons/wizards/tuleap-planning_16x16.png"; //$NON-NLS-1$
+
+		/**
+		 * The Tuleap cardwall icon.
+		 */
+		String TULEAP_CARDWALL_16X16 = "/icons/wizards/tuleap-cardwall_16x16.png"; //$NON-NLS-1$
 	}
 }

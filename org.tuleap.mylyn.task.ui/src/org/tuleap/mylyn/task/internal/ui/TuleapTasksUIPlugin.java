@@ -26,7 +26,8 @@ import org.osgi.framework.BundleContext;
 import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
-import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
+import org.tuleap.mylyn.task.internal.ui.util.TuleapUIMessages;
+import org.tuleap.mylyn.task.internal.ui.util.TuleapUiMessagesKeys;
 
 /**
  * The activator in charge of managing the lifecycle of the bundle.
@@ -134,8 +135,8 @@ public class TuleapTasksUIPlugin extends AbstractUIPlugin {
 	 */
 	public static void log(Exception e, boolean blocker) {
 		if (e == null) {
-			throw new NullPointerException(TuleapMylynTasksUIMessages
-					.getString("TuleapTasksUIPlugin.LogNullException")); //$NON-NLS-1$
+			throw new NullPointerException(TuleapUIMessages
+					.getString(TuleapUiMessagesKeys.logNullException));
 		}
 
 		if (getDefault() == null) {
@@ -150,8 +151,8 @@ public class TuleapTasksUIPlugin extends AbstractUIPlugin {
 			if (blocker) {
 				severity = IStatus.ERROR;
 			}
-			log(new Status(severity, PLUGIN_ID, severity, TuleapMylynTasksUIMessages
-					.getString("TuleapTasksUIPlugin.ElementNotFound"), e)); //$NON-NLS-1$
+			log(new Status(severity, PLUGIN_ID, severity, TuleapUIMessages
+					.getString(TuleapUiMessagesKeys.elementNotFound), e));
 		} else {
 			int severity = IStatus.WARNING;
 			if (blocker) {
@@ -171,8 +172,8 @@ public class TuleapTasksUIPlugin extends AbstractUIPlugin {
 		// Eclipse platform displays NullPointer on standard error instead of throwing it.
 		// We'll handle this by throwing it ourselves.
 		if (status == null) {
-			throw new NullPointerException(TuleapMylynTasksUIMessages
-					.getString("TuleapTasksUIPlugin.LogNullStatus")); //$NON-NLS-1$
+			throw new NullPointerException(TuleapUIMessages
+					.getString(TuleapUiMessagesKeys.logNullStatus));
 		}
 
 		if (getDefault() != null) {
@@ -208,8 +209,8 @@ public class TuleapTasksUIPlugin extends AbstractUIPlugin {
 			}
 			String errorMessage = message;
 			if (errorMessage == null || "".equals(errorMessage)) { //$NON-NLS-1$
-				errorMessage = TuleapMylynTasksUIMessages
-						.getString("TuleapTasksUIPlugin.UnexpectedException"); //$NON-NLS-1$
+				errorMessage = TuleapUIMessages
+						.getString(TuleapUiMessagesKeys.unexpectedException);
 			}
 			log(new Status(severity, PLUGIN_ID, errorMessage));
 		}

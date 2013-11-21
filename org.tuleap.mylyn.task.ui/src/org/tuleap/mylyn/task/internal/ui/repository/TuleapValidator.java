@@ -22,7 +22,8 @@ import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.ui.TuleapTasksUIPlugin;
-import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
+import org.tuleap.mylyn.task.internal.ui.util.TuleapUIMessages;
+import org.tuleap.mylyn.task.internal.ui.util.TuleapUiMessagesKeys;
 
 /**
  * The Tuleap validator will be used inside of the repository setting page in orde rto check the
@@ -83,10 +84,10 @@ public class TuleapValidator {
 	 * @return A status indicating if the validation went well.
 	 */
 	public IStatus validate(IProgressMonitor monitor) throws CoreException {
-		IStatus status = new Status(IStatus.ERROR, TuleapTasksUIPlugin.PLUGIN_ID, TuleapMylynTasksUIMessages
-				.getString("TuleapValidator.InvalidRepositoryConnector")); //$NON-NLS-1$ 
+		IStatus status = new Status(IStatus.ERROR, TuleapTasksUIPlugin.PLUGIN_ID, TuleapUIMessages
+				.getString(TuleapUiMessagesKeys.invalidRepositoryConnector));
 		if (ITuleapConstants.CONNECTOR_KIND.equals(this.taskRepository.getConnectorKind())) {
-			monitor.beginTask(TuleapMylynTasksUIMessages.getString("TuleapValidator.ValidateConnection"), //$NON-NLS-1$
+			monitor.beginTask(TuleapUIMessages.getString(TuleapUiMessagesKeys.validateConnection),
 					10);
 			AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
 			if (credentials != null) {
@@ -97,8 +98,8 @@ public class TuleapValidator {
 				}
 			} else {
 				// No credentials -> invalid
-				status = new Status(IStatus.ERROR, TuleapTasksUIPlugin.PLUGIN_ID, TuleapMylynTasksUIMessages
-						.getString("TuleapValidator.MissingCredentials")); //$NON-NLS-1$ 
+				status = new Status(IStatus.ERROR, TuleapTasksUIPlugin.PLUGIN_ID, TuleapUIMessages
+						.getString(TuleapUiMessagesKeys.missingCredentials));
 			}
 
 		}

@@ -245,7 +245,7 @@ public class TuleapTaskDataHandlerTests {
 				"", new Date(), new Date());
 
 		// Mock soap client
-		final TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(null, null, null, null, null) {
+		final TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(null, null) {
 			@Override
 			public TuleapArtifact getArtifact(String id, TuleapServer serverConfiguration,
 					IProgressMonitor monitor) throws CoreException {
@@ -354,7 +354,7 @@ public class TuleapTaskDataHandlerTests {
 	 */
 	private void testPostTaskData(TaskData taskData, String taskId, ResponseKind responseKind) {
 		// Mock soap client
-		final TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(null, null, null, null, null) {
+		final TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(null, null) {
 			@Override
 			public String createArtifact(TuleapArtifact artifact, IProgressMonitor monitor)
 					throws CoreException {

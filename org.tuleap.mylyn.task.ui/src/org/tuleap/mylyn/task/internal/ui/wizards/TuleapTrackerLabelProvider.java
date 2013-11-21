@@ -11,7 +11,10 @@
 package org.tuleap.mylyn.task.internal.ui.wizards;
 
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.graphics.Image;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
+import org.tuleap.mylyn.task.internal.ui.TuleapTasksUIPlugin;
+import org.tuleap.mylyn.task.internal.ui.util.ITuleapUIConstants;
 
 /**
  * The label provider used to display the trackers in the tracker selection page.
@@ -32,5 +35,32 @@ public class TuleapTrackerLabelProvider extends LabelProvider {
 
 		}
 		return super.getText(element);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
+	 */
+	@Override
+	public Image getImage(Object element) {
+		Image image = null;
+		if (element instanceof TuleapTracker) {
+			TuleapTracker tuleapTracker = (TuleapTracker)element;
+			int trackerId = tuleapTracker.getIdentifier();
+
+			if (tuleapTracker.getTuleapProjectConfiguration().isMilestoneTracker(trackerId)
+					&& tuleapTracker.getTuleapProjectConfiguration().isCardwallActive(trackerId)) {
+				image = TuleapTasksUIPlugin.getDefault().getImage(
+						ITuleapUIConstants.Icons.TULEAP_CARDWALL_16X16);
+			} else if (tuleapTracker.getTuleapProjectConfiguration().isMilestoneTracker(trackerId)) {
+				image = TuleapTasksUIPlugin.getDefault().getImage(
+						ITuleapUIConstants.Icons.TULEAP_PLANNING_16X16);
+			} else {
+				image = TuleapTasksUIPlugin.getDefault().getImage(
+						ITuleapUIConstants.Icons.TULEAP_TRACKER_16X16);
+			}
+		}
+		return image;
 	}
 }

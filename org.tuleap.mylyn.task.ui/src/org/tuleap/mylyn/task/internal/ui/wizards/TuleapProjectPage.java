@@ -20,6 +20,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardPage;
@@ -29,6 +30,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -39,7 +41,10 @@ import org.eclipse.ui.dialogs.PatternFilter;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
-import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
+import org.tuleap.mylyn.task.internal.ui.TuleapTasksUIPlugin;
+import org.tuleap.mylyn.task.internal.ui.util.ITuleapUIConstants;
+import org.tuleap.mylyn.task.internal.ui.util.TuleapUIMessages;
+import org.tuleap.mylyn.task.internal.ui.util.TuleapUiMessagesKeys;
 
 /**
  * This page will let the user select the project on which the task will be created.
@@ -69,9 +74,9 @@ public class TuleapProjectPage extends WizardPage {
 	 *            The task repository
 	 */
 	public TuleapProjectPage(TaskRepository taskRepository) {
-		super(TuleapMylynTasksUIMessages.getString("TuleapProjectPage.PageName")); //$NON-NLS-1$
-		this.setTitle(TuleapMylynTasksUIMessages.getString("TuleapProjectPage.PageTitle")); //$NON-NLS-1$
-		this.setDescription(TuleapMylynTasksUIMessages.getString("TuleapProjectPage.PageDescription")); //$NON-NLS-1$
+		super(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapProjectPageName));
+		this.setTitle(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapProjectPageTitle));
+		this.setDescription(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapProjectPageDescription));
 		this.repository = taskRepository;
 	}
 
@@ -102,19 +107,22 @@ public class TuleapProjectPage extends WizardPage {
 			public void selectionChanged(SelectionChangedEvent event) {
 				TuleapProject projectSelected = TuleapProjectPage.this.getProjectSelected();
 				if (projectSelected == null) {
-					TuleapProjectPage.this.setErrorMessage(TuleapMylynTasksUIMessages
-							.getString("TuleapProjectPage.SelectAProject")); //$NON-NLS-1$
+					TuleapProjectPage.this.setErrorMessage(TuleapUIMessages
+							.getString(TuleapUiMessagesKeys.tuleapProjectPageSelectAProject));
 				} else {
 					TuleapProjectPage.this.setErrorMessage(null);
 					TuleapProjectPage.this.setMessage(null);
 				}
 				IWizard wizard = TuleapProjectPage.this.getWizard();
-				wizard.getContainer().updateButtons();
+				if (wizard.getContainer().getCurrentPage() != null) {
+					wizard.getContainer().updateButtons();
+				}
 			}
 		});
 
 		Button updateButton = new Button(composite, SWT.LEFT | SWT.PUSH);
-		updateButton.setText(TuleapMylynTasksUIMessages.getString("TuleapProjectPage.UpdateProjectsList")); //$NON-NLS-1$
+		updateButton.setText(TuleapUIMessages
+				.getString(TuleapUiMessagesKeys.tuleapProjectPageUpdateProjectsList));
 		updateButton.setLayoutData(new GridData());
 		updateButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -174,6 +182,10 @@ public class TuleapProjectPage extends WizardPage {
 			}
 
 			this.projectsTree.getViewer().setInput(projectsList);
+			if (projectsList.size() > 0) {
+				IStructuredSelection selection = new StructuredSelection(projectsList.get(0));
+				this.projectsTree.getViewer().setSelection(selection);
+			}
 		}
 	}
 
@@ -199,5 +211,15 @@ public class TuleapProjectPage extends WizardPage {
 	@Override
 	public boolean isPageComplete() {
 		return this.getProjectSelected() != null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.wizard.WizardPage#getImage()
+	 */
+	@Override
+	public Image getImage() {
+		return TuleapTasksUIPlugin.getDefault().getImage(ITuleapUIConstants.Icons.TULEAP_LOGO_WIZARD_75X66);
 	}
 }

@@ -13,23 +13,23 @@ package org.tuleap.mylyn.task.internal.core.client.soap;
 import java.net.MalformedURLException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.xml.rpc.ServiceException;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapTrackerReport;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
 
 /**
@@ -47,46 +47,21 @@ public class TuleapSoapClient {
 	private final TuleapSoapConnector soapConnector;
 
 	/**
-	 * The task repository.
-	 */
-	private TaskRepository taskRepository;
-
-	/**
 	 * The SOAP parser.
 	 */
 	private TuleapSoapParser tuleapSoapParser;
 
 	/**
-	 * The SOAP serializer.
-	 */
-	private TuleapSoapSerializer tuleapSoapSerializer;
-
-	/**
-	 * The logger.
-	 */
-	private ILog logger;
-
-	/**
 	 * The constructor.
 	 * 
-	 * @param repository
-	 *            The task repository
 	 * @param tuleapSoapConnector
 	 *            The Tuleap SOAP connector
 	 * @param tuleapSoapParser
 	 *            The Tuleap SOAP parser
-	 * @param tuleapSoapSerializer
-	 *            The Tuleap SOAP serializer
-	 * @param logger
-	 *            the logger
 	 */
-	public TuleapSoapClient(TaskRepository repository, TuleapSoapConnector tuleapSoapConnector,
-			TuleapSoapParser tuleapSoapParser, TuleapSoapSerializer tuleapSoapSerializer, ILog logger) {
+	public TuleapSoapClient(TuleapSoapConnector tuleapSoapConnector, TuleapSoapParser tuleapSoapParser) {
 		this.soapConnector = tuleapSoapConnector;
-		this.taskRepository = repository;
 		this.tuleapSoapParser = tuleapSoapParser;
-		this.tuleapSoapSerializer = tuleapSoapSerializer;
-		this.logger = logger;
 	}
 
 	/**
@@ -124,8 +99,7 @@ public class TuleapSoapClient {
 	 * @throws CoreException
 	 *             In case of error during the retrieval of the configuration
 	 */
-	public TuleapServer getTuleapServerConfiguration(IProgressMonitor monitor)
-			throws CoreException {
+	public TuleapServer getTuleapServerConfiguration(IProgressMonitor monitor) throws CoreException {
 		return soapConnector.getTuleapServerConfiguration(monitor);
 	}
 
@@ -140,8 +114,8 @@ public class TuleapSoapClient {
 	 *            The progress monitor
 	 * @return The configuration of the tracker with the given identifier
 	 */
-	public TuleapTracker getTuleapTrackerConfiguration(
-			TuleapProject projectConfiguration, int trackerId, IProgressMonitor monitor) {
+	public TuleapTracker getTuleapTrackerConfiguration(TuleapProject projectConfiguration, int trackerId,
+			IProgressMonitor monitor) {
 		return this.soapConnector.getTuleapTrackerConfiguration(projectConfiguration.getIdentifier(),
 				trackerId, monitor);
 	}
@@ -160,8 +134,7 @@ public class TuleapSoapClient {
 	 * @return The list of the Tuleap artifact
 	 */
 	public List<TuleapArtifact> getArtifactsFromQuery(IRepositoryQuery query,
-			TuleapServer serverConfiguration,
-			TuleapTracker tuleapTracker, IProgressMonitor monitor) {
+			TuleapServer serverConfiguration, TuleapTracker tuleapTracker, IProgressMonitor monitor) {
 		List<TuleapArtifact> artifacts = new ArrayList<TuleapArtifact>();
 
 		List<CommentedArtifact> artifactsToConvert = soapConnector.performQuery(query, serverConfiguration,
@@ -198,8 +171,8 @@ public class TuleapSoapClient {
 				CommentedArtifact artifact = soapConnector.getArtifact(artifactId, serverConfiguration,
 						monitor);
 
-				tuleapArtifact = this.tuleapSoapParser.parseArtifact(serverConfiguration
-						.getTracker(artifact.getArtifact().getTracker_id()), artifact);
+				tuleapArtifact = this.tuleapSoapParser.parseArtifact(serverConfiguration.getTracker(artifact
+						.getArtifact().getTracker_id()), artifact);
 			} catch (MalformedURLException e) {
 				IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
 				throw new CoreException(status);
@@ -266,5 +239,18 @@ public class TuleapSoapClient {
 			IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
 			throw new CoreException(status);
 		}
+	}
+
+	/**
+	 * Returns the list of the reports of the tracker.
+	 * 
+	 * @param trackerId
+	 *            The identifier of the tracker
+	 * @param monitor
+	 *            The progress monitor
+	 * @return The list of the reports of the tracker
+	 */
+	public Collection<? extends TuleapTrackerReport> getReports(int trackerId, IProgressMonitor monitor) {
+		return soapConnector.getReports(trackerId, monitor);
 	}
 }

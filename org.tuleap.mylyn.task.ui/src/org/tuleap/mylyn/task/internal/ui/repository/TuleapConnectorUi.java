@@ -29,17 +29,13 @@ import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskSearchPage;
-import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
-import org.tuleap.mylyn.task.internal.core.client.ITuleapQueryConstants;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapUrlUtil;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
-import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
-import org.tuleap.mylyn.task.internal.ui.wizards.NewTuleapTaskWizard;
-import org.tuleap.mylyn.task.internal.ui.wizards.TuleapTaskAttachmentPage;
-import org.tuleap.mylyn.task.internal.ui.wizards.TuleapTrackerPage;
-import org.tuleap.mylyn.task.internal.ui.wizards.query.TuleapCustomQueryPage;
-import org.tuleap.mylyn.task.internal.ui.wizards.query.TuleapQueryPage;
-import org.tuleap.mylyn.task.internal.ui.wizards.query.TuleapQueryProjectPage;
+import org.tuleap.mylyn.task.internal.ui.util.TuleapUIMessages;
+import org.tuleap.mylyn.task.internal.ui.util.TuleapUiMessagesKeys;
+import org.tuleap.mylyn.task.internal.ui.wizards.attachment.TuleapTaskAttachmentPage;
+import org.tuleap.mylyn.task.internal.ui.wizards.newtask.NewTuleapTaskWizard;
+import org.tuleap.mylyn.task.internal.ui.wizards.query.TuleapRepositoryQueryWizard;
 
 /**
  * Utility class managing all the user interface related operations with the Tuleap repository.
@@ -107,7 +103,7 @@ public class TuleapConnectorUi extends AbstractRepositoryConnectorUi {
 		String taskKind = task.getTaskKind();
 		if (taskKind == null || taskKind.length() == 0 || taskKind.equals(ITuleapConstants.CONNECTOR_KIND)) {
 			// By default, use the name "Artifact" if we don"t have anything, or just "tuleap"
-			taskKind = TuleapMylynTasksUIMessages.getString("TuleapConnectorUi.TaskKindLabel"); //$NON-NLS-1$
+			taskKind = TuleapUIMessages.getString(TuleapUiMessagesKeys.taskKindLabel);
 		}
 		return taskKind;
 	}
@@ -162,24 +158,14 @@ public class TuleapConnectorUi extends AbstractRepositoryConnectorUi {
 	 */
 	@Override
 	public IWizard getQueryWizard(TaskRepository taskRepository, IRepositoryQuery queryToEdit) {
-		RepositoryQueryWizard wizard = new RepositoryQueryWizard(taskRepository);
-		wizard.setNeedsProgressMonitor(true);
+		TuleapRepositoryQueryWizard wizard = null;
 
-		if (queryToEdit != null) {
-			String queryKind = queryToEdit.getAttribute(ITuleapQueryConstants.QUERY_KIND);
-			if (ITuleapQueryConstants.QUERY_KIND_CUSTOM.equals(queryKind)) {
-				// edit an existing custom query
-				wizard.addPage(new TuleapCustomQueryPage(taskRepository, queryToEdit));
-			} else {
-				// edit an exiting default query
-				wizard.addPage(new TuleapQueryPage(taskRepository, queryToEdit));
-			}
+		if (queryToEdit == null) {
+			wizard = new TuleapRepositoryQueryWizard(taskRepository);
 		} else {
-			// new query
-			wizard.addPage(new TuleapQueryProjectPage(taskRepository));
-			wizard.addPage(new TuleapTrackerPage(taskRepository));
-			wizard.addPage(new TuleapQueryPage(taskRepository));
+			wizard = new TuleapRepositoryQueryWizard(taskRepository, queryToEdit);
 		}
+
 		return wizard;
 	}
 

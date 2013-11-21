@@ -760,11 +760,7 @@ public class TuleapSoapConnector {
 						sessionHash, reportId, 0, maxHits);
 			} else {
 				List<Criteria> criterias = new ArrayList<Criteria>();
-				if (ITuleapQueryConstants.QUERY_KIND_ALL_FROM_TRACKER.equals(query
-						.getAttribute(ITuleapQueryConstants.QUERY_KIND))
-						&& query.getAttribute(ITuleapQueryConstants.QUERY_CONFIGURATION_ID) != null) {
-					// Download all artifacts from the given tracker -> no criteria
-				} else if (ITuleapQueryConstants.QUERY_KIND_CUSTOM.equals(query
+				if (ITuleapQueryConstants.QUERY_KIND_CUSTOM.equals(query
 						.getAttribute(ITuleapQueryConstants.QUERY_KIND))
 						&& query.getAttribute(ITuleapQueryConstants.QUERY_CONFIGURATION_ID) != null) {
 					// Custom query

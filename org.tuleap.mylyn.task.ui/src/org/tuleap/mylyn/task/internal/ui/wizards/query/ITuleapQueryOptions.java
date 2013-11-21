@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.ui.wizards.query;
 
-import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
 
 /**
  * This interface contains the list of options available for each type of widget.
@@ -33,44 +32,37 @@ public interface ITuleapQueryOptions {
 		/**
 		 * Contains.
 		 */
-		String STRING_OPTIONS_CONTAINS = TuleapMylynTasksUIMessages
-				.getString("ITuleapQueryOptions.StringsOptions.Contains"); //$NON-NLS-1$
+		String STRING_OPTIONS_CONTAINS = "contains"; //$NON-NLS-1$
 
 		/**
 		 * Starts with.
 		 */
-		String STRING_OPTIONS_STARTS_WITH = TuleapMylynTasksUIMessages
-				.getString("ITuleapQueryOptions.StringsOptions.StartsWith"); //$NON-NLS-1$
+		String STRING_OPTIONS_STARTS_WITH = "starts with"; //$NON-NLS-1$
 
 		/**
 		 * Ends with.
 		 */
-		String STRING_OPTIONS_ENDS_WITH = TuleapMylynTasksUIMessages
-				.getString("ITuleapQueryOptions.StringsOptions.EndsWith"); //$NON-NLS-1$
+		String STRING_OPTIONS_ENDS_WITH = "ends with"; //$NON-NLS-1$
 
 		/**
 		 * Equals.
 		 */
-		String STRING_OPTIONS_EQUALS = TuleapMylynTasksUIMessages
-				.getString("ITuleapQueryOptions.StringsOptions.Equals"); //$NON-NLS-1$
+		String STRING_OPTIONS_EQUALS = "equals"; //$NON-NLS-1$
 
 		/**
 		 * Date equals.
 		 */
-		String STRING_OPTIONS_DATE_EQUALS = TuleapMylynTasksUIMessages
-				.getString("ITuleapQueryOptions.StringsOptions.DateEquals"); //$NON-NLS-1$
+		String STRING_OPTIONS_DATE_EQUALS = "="; //$NON-NLS-1$
 
 		/**
 		 * Before.
 		 */
-		String STRING_OPTIONS_BEFORE = TuleapMylynTasksUIMessages
-				.getString("ITuleapQueryOptions.StringsOptions.DateBefore"); //$NON-NLS-1$
+		String STRING_OPTIONS_BEFORE = "<"; //$NON-NLS-1$
 
 		/**
 		 * After.
 		 */
-		String STRING_OPTIONS_AFTER = TuleapMylynTasksUIMessages
-				.getString("ITuleapQueryOptions.StringsOptions.DateAfter"); //$NON-NLS-1$
+		String STRING_OPTIONS_AFTER = ">"; //$NON-NLS-1$
 
 	}
 }

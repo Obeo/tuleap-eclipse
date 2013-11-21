@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.ui.repository;
 
-import java.net.Proxy;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -32,12 +30,12 @@ import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestConnector;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapConnector;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapParser;
-import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapSerializer;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.ui.TuleapTasksUIPlugin;
-import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
+import org.tuleap.mylyn.task.internal.ui.util.TuleapUIMessages;
+import org.tuleap.mylyn.task.internal.ui.util.TuleapUiMessagesKeys;
 
 /**
  * The wizard page displaying the settings of the Tuleap repository.
@@ -54,9 +52,8 @@ public class TuleapRepositorySettingsPage extends AbstractRepositorySettingsPage
 	 *            the Mylyn task repository.
 	 */
 	public TuleapRepositorySettingsPage(TaskRepository taskRepository) {
-		super(TuleapMylynTasksUIMessages.getString("TuleapRepositorySettingsPage.Name"), //$NON-NLS-1$
-				TuleapMylynTasksUIMessages.getString("TuleapRepositorySettingsPage.Description"), //$NON-NLS-1$
-				taskRepository);
+		super(TuleapUIMessages.getString(TuleapUiMessagesKeys.repositorySettingsPageName), TuleapUIMessages
+				.getString(TuleapUiMessagesKeys.repositorySettingsPageDescription), taskRepository);
 		this.setNeedsAnonymousLogin(true);
 		this.setNeedsValidateOnFinish(true);
 		this.setNeedsHttpAuth(true);
@@ -182,27 +179,13 @@ public class TuleapRepositorySettingsPage extends AbstractRepositorySettingsPage
 
 			ILog logger = Platform.getLog(Platform.getBundle(TuleapTasksUIPlugin.PLUGIN_ID));
 			TuleapSoapParser tuleapSoapParser = new TuleapSoapParser();
-			TuleapSoapSerializer tuleapSoapSerializer = new TuleapSoapSerializer();
 			TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(location);
 
-			TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(taskRepository, tuleapSoapConnector,
-					tuleapSoapParser, tuleapSoapSerializer, logger);
+			TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(tuleapSoapConnector, tuleapSoapParser);
 
 			TuleapJsonParser jsonParser = new TuleapJsonParser();
 			TuleapJsonSerializer jsonSerializer = new TuleapJsonSerializer();
-			// TODO Temporary hack to access a different REST server
-			AbstractWebLocation webLocationRest = new AbstractWebLocation(taskRepository.getRepositoryLabel()) {
 
-				@Override
-				public Proxy getProxyForHost(String host, String proxyType) {
-					return location.getProxyForHost(host, proxyType);
-				}
-
-				@Override
-				public AuthenticationCredentials getCredentials(AuthenticationType type) {
-					return location.getCredentials(type);
-				}
-			};
 			TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(location, logger);
 			RestResourceFactory resourceFactory = new RestResourceFactory(location.getUrl(),
 					ITuleapAPIVersions.BEST_VERSION, tuleapRestConnector);

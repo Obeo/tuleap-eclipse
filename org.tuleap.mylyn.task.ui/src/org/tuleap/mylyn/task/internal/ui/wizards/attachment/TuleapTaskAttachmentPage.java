@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.tuleap.mylyn.task.internal.ui.wizards;
+package org.tuleap.mylyn.task.internal.ui.wizards.attachment;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,7 +40,8 @@ import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapFileUpload;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
-import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
+import org.tuleap.mylyn.task.internal.ui.util.TuleapUIMessages;
+import org.tuleap.mylyn.task.internal.ui.util.TuleapUiMessagesKeys;
 
 /**
  * This page will be the last shown in the wizard to upload attachments. It will let the user select the field
@@ -99,8 +100,8 @@ public class TuleapTaskAttachmentPage extends TaskAttachmentPage {
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		composite.setLayout(new GridLayout(3, false));
 
-		new Label(composite, SWT.NONE).setText(TuleapMylynTasksUIMessages
-				.getString("TuleapTaskAttachmentPage.AttachmentSelectionLabel")); //$NON-NLS-1$
+		new Label(composite, SWT.NONE).setText(TuleapUIMessages
+				.getString(TuleapUiMessagesKeys.tuleapTaskAttachmentPageSelectionLabel));
 		final Combo fieldNameCombo = new Combo(composite, SWT.NONE);
 		fieldNameCombo.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 2, 1));
 
@@ -150,8 +151,7 @@ public class TuleapTaskAttachmentPage extends TaskAttachmentPage {
 
 			List<String> attachmentFieldsName = new ArrayList<String>();
 
-			TuleapProject projectConfiguration = repositoryConfiguration
-					.getProject(projectId);
+			TuleapProject projectConfiguration = repositoryConfiguration.getProject(projectId);
 			TuleapTracker configuration = projectConfiguration.getTracker(trackerId);
 			Collection<AbstractTuleapField> fields = configuration.getFields();
 			for (AbstractTuleapField abstractTuleapField : fields) {

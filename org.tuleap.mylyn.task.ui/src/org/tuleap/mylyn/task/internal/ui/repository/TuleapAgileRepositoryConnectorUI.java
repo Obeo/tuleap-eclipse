@@ -11,16 +11,25 @@
 package org.tuleap.mylyn.task.internal.ui.repository;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
+import org.tuleap.mylyn.task.agile.core.IMilestoneMapping;
 import org.tuleap.mylyn.task.agile.core.data.AgileTaskKindUtil;
 import org.tuleap.mylyn.task.agile.ui.AbstractAgileRepositoryConnectorUI;
 import org.tuleap.mylyn.task.agile.ui.editors.ITaskEditorPageFactoryConstants;
+import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
+import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.ui.editor.TuleapTaskEditorPageFactory;
-import org.tuleap.mylyn.task.internal.ui.wizards.NewTuleapTaskWizard;
+import org.tuleap.mylyn.task.internal.ui.wizards.newsubmilestone.NewTuleapMilestoneWizard;
 
 /**
  * Agile repository connector UI for Tuleap, which is exposed as an OSGI service.
@@ -46,32 +55,38 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.agile.ui.AbstractAgileRepositoryConnectorUI#getNewMilestoneWizard(org.eclipse.mylyn.tasks.core.data.TaskData,
-	 *      org.eclipse.mylyn.tasks.core.TaskRepository, org.eclipse.core.runtime.IProgressMonitor)
+	 * @see org.tuleap.mylyn.task.agile.ui.AbstractAgileRepositoryConnectorUI#getNewMilestoneMapping(org.eclipse.mylyn.tasks.core.data.TaskData,
+	 *      java.lang.String, org.eclipse.mylyn.tasks.core.TaskRepository,
+	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	public IWizard getNewMilestoneWizard(TaskData planningTaskData, TaskRepository taskRepository,
-			IProgressMonitor monitor) {
-		// TODO How can we find the tracker in which the task will be created?
-		// TODO Create an interface for wizards used in order to skip useless pages in order to filter the
-		// content of the wizard. We don't want to see all the pages of the Tuleap wizard,just the tracker
-		// selection.
-		NewTuleapTaskWizard wizard = new NewTuleapTaskWizard(taskRepository, null);
+	public IMilestoneMapping getNewMilestoneMapping(TaskData planningTaskData, String parentMilestoneId,
+			TaskRepository taskRepository, IProgressMonitor monitor) {
+		// Display the wizard used to select the kind of the milestone to select
+		String connectorKind = taskRepository.getConnectorKind();
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+				connectorKind);
+		if (connector instanceof TuleapRepositoryConnector) {
+			TuleapRepositoryConnector tuleapRepositoryConnector = (TuleapRepositoryConnector)connector;
+			TuleapServer serverConfiguration = tuleapRepositoryConnector
+					.getTuleapServerConfiguration(taskRepository.getRepositoryUrl());
 
-		// TuleapTaskMapper mapper = new TuleapTaskMapper(planningTaskData, null);
-		// int trackerId = mapper.getTrackerId();
-		//
-		// String connectorKind = taskRepository.getConnectorKind();
-		// AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-		// connectorKind);
-		// if (connector instanceof TuleapRepositoryConnector) {
-		// TuleapRepositoryConnector tuleapRepositoryConnector = (TuleapRepositoryConnector)connector;
-		// TuleapServer repositoryConfiguration = tuleapRepositoryConnector
-		// .getRepositoryConfiguration(taskRepository.getRepositoryUrl());
-		//
-		// }
+			int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(planningTaskData.getTaskId());
+			TuleapProject project = serverConfiguration.getProject(projectId);
 
-		return wizard;
+			NewTuleapMilestoneWizard wizard = new NewTuleapMilestoneWizard(project, parentMilestoneId);
+
+			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+			WizardDialog dialog = new WizardDialog(shell, wizard);
+
+			int result = dialog.open();
+			if (result == WizardDialog.OK) {
+				return wizard.getMilestoneMapping();
+			}
+		}
+
+		// The creation has been cancelled
+		return null;
 		// AbstractRepositoryConnector de tuleap
 		// repositoryConnector.getTaskDataHandler().initializeTaskData(TaskRepository, TaskData, ITaskMapping,
 		// IProgressMonitor);

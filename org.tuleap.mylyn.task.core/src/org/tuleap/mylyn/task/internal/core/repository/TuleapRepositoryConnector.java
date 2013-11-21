@@ -290,8 +290,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 				.getRepositoryUrl());
 		TaskAttributeMapper attributeMapper = this.getTaskDataHandler().getAttributeMapper(taskRepository);
 
-		if (ITuleapQueryConstants.QUERY_KIND_ALL_FROM_TRACKER.equals(queryKind)
-				|| ITuleapQueryConstants.QUERY_KIND_REPORT.equals(queryKind)
+		if (ITuleapQueryConstants.QUERY_KIND_REPORT.equals(queryKind)
 				|| ITuleapQueryConstants.QUERY_KIND_CUSTOM.equals(queryKind)) {
 			TuleapSoapClient soapClient = this.getClientManager().getSoapClient(taskRepository);
 

@@ -10,35 +10,30 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.ui.wizards;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
-import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
-import org.tuleap.mylyn.task.internal.ui.util.TuleapMylynTasksUIMessages;
-import org.tuleap.mylyn.task.internal.ui.wizards.query.TuleapQueryProjectPage;
+import org.tuleap.mylyn.task.internal.ui.TuleapTasksUIPlugin;
+import org.tuleap.mylyn.task.internal.ui.util.ITuleapUIConstants;
+import org.tuleap.mylyn.task.internal.ui.util.TuleapUIMessages;
+import org.tuleap.mylyn.task.internal.ui.util.TuleapUiMessagesKeys;
 
 /**
  * This page will be used when a new task is created in order to let the user select the tracker for which the
@@ -55,9 +50,9 @@ public class TuleapTrackerPage extends WizardPage {
 	private static final int HEIGHT_HINT = 250;
 
 	/**
-	 * The task repository.
+	 * The project used.
 	 */
-	private TaskRepository repository;
+	private TuleapProject project;
 
 	/**
 	 * The widget where the available trackers will be displayed.
@@ -65,16 +60,21 @@ public class TuleapTrackerPage extends WizardPage {
 	private FilteredTree trackerTree;
 
 	/**
+	 * The label containing the description of the tracker.
+	 */
+	private Label trackerDescriptionLabel;
+
+	/**
 	 * The constructor.
 	 * 
-	 * @param taskRepository
-	 *            The task repository
+	 * @param project
+	 *            The project used
 	 */
-	public TuleapTrackerPage(TaskRepository taskRepository) {
-		super(TuleapMylynTasksUIMessages.getString("TuleapTrackerPage.PageName")); //$NON-NLS-1$
-		this.setTitle(TuleapMylynTasksUIMessages.getString("TuleapTrackerPage.PageTitle")); //$NON-NLS-1$
-		this.setDescription(TuleapMylynTasksUIMessages.getString("TuleapTrackerPage.PageDescription")); //$NON-NLS-1$
-		this.repository = taskRepository;
+	public TuleapTrackerPage(TuleapProject project) {
+		super(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapTrackerPageName));
+		this.setTitle(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapTrackerPageTitle));
+		this.setDescription(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapTrackerPageDescription));
+		this.project = project;
 	}
 
 	/**
@@ -99,16 +99,33 @@ public class TuleapTrackerPage extends WizardPage {
 		TreeViewer viewer = trackerTree.getViewer();
 		viewer.setLabelProvider(new TuleapTrackerLabelProvider());
 		viewer.setContentProvider(new TuleapTrackerContentProvider());
+
+		List<TuleapTracker> trackers = this.project.getAllTrackers();
+		this.trackerTree.getViewer().setInput(trackers);
+
+		trackerDescriptionLabel = new Label(composite, SWT.NONE);
+
+		if (trackers.size() > 0) {
+			IStructuredSelection selection = new StructuredSelection(trackers.get(0));
+			this.trackerTree.getViewer().setSelection(selection);
+			String description = trackers.get(0).getDescription();
+			trackerDescriptionLabel.setText(TuleapUIMessages.getString(
+					TuleapUiMessagesKeys.tuleapTrackerPageDescriptionLabel, description));
+		}
+
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			public void selectionChanged(SelectionChangedEvent event) {
 				TuleapTracker trackerSelected = TuleapTrackerPage.this.getTrackerSelected();
 				if (trackerSelected == null) {
-					TuleapTrackerPage.this.setErrorMessage(TuleapMylynTasksUIMessages
-							.getString("TuleapTrackerPage.SelectATracker")); //$NON-NLS-1$
+					TuleapTrackerPage.this.setErrorMessage(TuleapUIMessages
+							.getString(TuleapUiMessagesKeys.tuleapTrackerPageSelectATracker));
 				} else {
 					TuleapTrackerPage.this.setErrorMessage(null);
 					TuleapTrackerPage.this.setMessage(null);
+					String description = trackerSelected.getDescription();
+					TuleapTrackerPage.this.trackerDescriptionLabel.setText(TuleapUIMessages.getString(
+							TuleapUiMessagesKeys.tuleapTrackerPageDescriptionLabel, description));
 				}
 				IWizard wizard = TuleapTrackerPage.this.getWizard();
 				wizard.getContainer().updateButtons();
@@ -117,69 +134,7 @@ public class TuleapTrackerPage extends WizardPage {
 
 		Dialog.applyDialogFont(composite);
 
-		this.updateTrackersList(false, false);
-
 		setControl(composite);
-	}
-
-	/**
-	 * Updates the list of the trackers that should be displayed in the widget.
-	 * 
-	 * @param forceRefresh
-	 *            Indicates if we should force the refresh of the list of the trackers.
-	 * @param inWizard
-	 *            Indicates if we should display the progression in the wizard or in an external progress
-	 *            monitor.
-	 */
-	private void updateTrackersList(final boolean forceRefresh, boolean inWizard) {
-		String connectorKind = this.repository.getConnectorKind();
-		final AbstractRepositoryConnector repositoryConnector = TasksUi.getRepositoryManager()
-				.getRepositoryConnector(connectorKind);
-		final List<TuleapTracker> trackersList = new ArrayList<TuleapTracker>();
-		if (repositoryConnector instanceof ITuleapRepositoryConnector) {
-			final List<TuleapTracker> allTrackerConfigurations = new ArrayList<TuleapTracker>();
-
-			IWizardPage previousPage = TuleapTrackerPage.this.getPreviousPage();
-
-			TuleapProject projectSelected = null;
-			if (previousPage instanceof TuleapProjectPage) {
-				projectSelected = ((TuleapProjectPage)previousPage).getProjectSelected();
-			} else if (previousPage instanceof TuleapQueryProjectPage) {
-				projectSelected = ((TuleapQueryProjectPage)previousPage).getProjectSelected();
-			}
-
-			if (projectSelected != null) {
-				allTrackerConfigurations.addAll(projectSelected.getAllTrackers());
-			}
-
-			IRunnableWithProgress runnable = new IRunnableWithProgress() {
-
-				public void run(IProgressMonitor monitor) throws InvocationTargetException,
-						InterruptedException {
-					for (TuleapTracker tuleapTracker : allTrackerConfigurations) {
-						trackersList.add(tuleapTracker);
-					}
-				}
-			};
-
-			try {
-				if (inWizard) {
-					this.getContainer().run(true, false, runnable);
-				} else {
-					PlatformUI.getWorkbench().getProgressService().run(true, false, runnable);
-				}
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} finally {
-				if (inWizard) {
-					this.getWizard().getContainer().updateButtons();
-				}
-			}
-
-			this.trackerTree.getViewer().setInput(trackersList);
-		}
 	}
 
 	/**
@@ -208,11 +163,10 @@ public class TuleapTrackerPage extends WizardPage {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.jface.dialogs.DialogPage#setVisible(boolean)
+	 * @see org.eclipse.jface.wizard.WizardPage#getImage()
 	 */
 	@Override
-	public void setVisible(boolean visible) {
-		this.updateTrackersList(false, true);
-		super.setVisible(visible);
+	public Image getImage() {
+		return TuleapTasksUIPlugin.getDefault().getImage(ITuleapUIConstants.Icons.TULEAP_LOGO_WIZARD_75X66);
 	}
 }

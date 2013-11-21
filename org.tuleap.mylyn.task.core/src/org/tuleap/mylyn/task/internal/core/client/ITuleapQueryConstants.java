@@ -24,11 +24,6 @@ public interface ITuleapQueryConstants {
 	String QUERY_KIND = "tuleap_query_kind"; //$NON-NLS-1$
 
 	/**
-	 * The key used to specify that the query is looking for all artifacts from a specific tracker.
-	 */
-	String QUERY_KIND_ALL_FROM_TRACKER = "tuleap_query_all_from_tracker"; //$NON-NLS-1$
-
-	/**
 	 * The key used to specify that the query is a custom query.
 	 */
 	String QUERY_KIND_CUSTOM = "tuleap_query_custom"; //$NON-NLS-1$
