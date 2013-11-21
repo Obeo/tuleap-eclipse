@@ -202,15 +202,27 @@ public final class RestResourceFactory {
 	}
 
 	/**
-	 * Provides access to the {code /milestones/:id/backlog_items} HTTP resource.
+	 * Provides access to the {code /milestones/:id/backlog} HTTP resource.
 	 * 
 	 * @param milestoneId
 	 *            the milestone id
-	 * @return A resource that gives access to the {code /milestones/:id/backlog_items} HTTP resource.
+	 * @return A resource that gives access to the {code /milestones/:id/backlog} HTTP resource.
 	 */
-	public RestResource milestonesBacklogItems(int milestoneId) {
+	public RestResource milestoneBacklog(int milestoneId) {
 		return resource(RestResource.GET | RestResource.PUT, URL.MILESTONES, Integer.toString(milestoneId),
-				URL.BACKLOG_ITEMS);
+				URL.BACKLOG);
+	}
+
+	/**
+	 * Provides access to the {code /milestones/:id/content} HTTP resource.
+	 * 
+	 * @param milestoneId
+	 *            the milestone id
+	 * @return A resource that gives access to the {code /milestones/:id/content} HTTP resource.
+	 */
+	public RestResource milestoneContent(int milestoneId) {
+		return resource(RestResource.GET | RestResource.PUT, URL.MILESTONES, Integer.toString(milestoneId),
+				URL.CONTENT);
 	}
 
 	/**

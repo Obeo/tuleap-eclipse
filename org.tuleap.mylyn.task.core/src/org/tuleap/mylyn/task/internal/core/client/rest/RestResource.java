@@ -343,6 +343,11 @@ public class RestResource {
 		String ARTIFACTS = "artifacts"; //$NON-NLS-1$
 
 		/**
+		 * "backlog".
+		 */
+		String BACKLOG = "backlog"; //$NON-NLS-1$
+
+		/**
 		 * "backlog_items".
 		 */
 		String BACKLOG_ITEMS = "backlog_items"; //$NON-NLS-1$
@@ -361,6 +366,11 @@ public class RestResource {
 		 * "chunked_upload".
 		 */
 		String CHUNKED_UPLOAD = "chunked_upload"; //$NON-NLS-1$
+
+		/**
+		 * "content".
+		 */
+		String CONTENT = "content"; //$NON-NLS-1$
 
 		/**
 		 * "files".
@@ -421,6 +431,5 @@ public class RestResource {
 		 * "users".
 		 */
 		String USERS = "users"; //$NON-NLS-1$
-
 	}
 }
