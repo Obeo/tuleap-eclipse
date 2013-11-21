@@ -41,6 +41,16 @@ import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 public class RestOperation {
 
 	/**
+	 * Header key for tuleap user id.
+	 */
+	public static final String X_AUTH_USER_ID = "X-Auth-UserId"; //$NON-NLS-1$
+
+	/**
+	 * Header key for tuleap authentication token.
+	 */
+	public static final String X_AUTH_TOKEN = "X-Auth-Token"; //$NON-NLS-1$
+
+	/**
 	 * String to send in the body when no data needs to be in the request body. {@code null} provokes an
 	 * exception in Restlet.
 	 */
@@ -226,8 +236,8 @@ public class RestOperation {
 		if (authenticator != null) {
 			TuleapToken token = authenticator.getToken();
 			if (token != null) {
-				requestHeaders.put("X-Auth-Token", token.getToken());
-				requestHeaders.put("X-Auth-UserId", token.getUserId());
+				requestHeaders.put(X_AUTH_TOKEN, token.getToken());
+				requestHeaders.put(X_AUTH_USER_ID, token.getUserId());
 			}
 		}
 		ServerResponse response = connector.sendRequest(getMethodName(), getUrlWithQueryParameters(),
@@ -239,8 +249,8 @@ public class RestOperation {
 					authenticator.login();
 					TuleapToken token = authenticator.getToken();
 					if (token != null) {
-						requestHeaders.put("X-Auth-Token", token.getToken());
-						requestHeaders.put("X-Auth-UserId", token.getUserId());
+						requestHeaders.put(X_AUTH_TOKEN, token.getToken());
+						requestHeaders.put(X_AUTH_USER_ID, token.getUserId());
 						response = connector.sendRequest(getMethodName(), getUrlWithQueryParameters(),
 								requestHeaders, data);
 					}
