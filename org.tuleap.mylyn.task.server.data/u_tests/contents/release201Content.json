@@ -1,0 +1,23 @@
+[ {
+	"id" : 301,
+	"artifact" : {
+		"id" : 301,
+		"uri" : "artifacts/301",
+		"tracker" : {
+			"id" : 801,
+			"uri" : "trackers/801"
+		}
+	},
+	"project" : {
+		"id" : 3,
+		"uri" : "projects/3"
+	},
+	"label" : "Another important Epic",
+	"uri" : "backlog_items/301",
+	"html_url" : "backlog_items?id=301&group_id=3",
+	"submitted_by" : 1,
+	"submitted_on" : "2013-09-23T11:44:18.963Z",
+	"last_updated_on" : "2013-09-24T15:33:18.523Z",
+	"initial_effort" : 40.5,
+	"status" : "Open"
+} ]
