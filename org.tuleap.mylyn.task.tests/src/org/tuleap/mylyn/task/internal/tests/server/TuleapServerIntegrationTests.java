@@ -57,7 +57,7 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
 		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
 		RestResourceFactory restResourceFactory = new RestResourceFactory(location.getUrl(), "v3.14",
-				tuleapRestConnector);
+				tuleapRestConnector, new TestLogger());
 		TuleapRestClient tuleapServer = new TuleapRestClient(restResourceFactory, tuleapJsonParser,
 				tuleapJsonSerializer, this.repository, logger);
 		try {
@@ -82,7 +82,7 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
 		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
 		RestResourceFactory restResourceFactory = new RestResourceFactory(location.getUrl(), "v3.14",
-				tuleapRestConnector);
+				tuleapRestConnector, new TestLogger());
 		TuleapRestClient tuleapServer = new TuleapRestClient(restResourceFactory, tuleapJsonParser,
 				tuleapJsonSerializer, this.repository, logger);
 		try {
@@ -104,7 +104,7 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
 		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
 		RestResourceFactory restResourceFactory = new RestResourceFactory(location.getUrl(), "v3.14",
-				restConnector);
+				restConnector, new TestLogger());
 		TuleapRestClient tuleapServer = new TuleapRestClient(restResourceFactory, tuleapJsonParser,
 				tuleapJsonSerializer, this.repository, logger);
 		try {

@@ -22,6 +22,7 @@ import org.tuleap.mylyn.task.internal.core.client.rest.ITuleapHeaders;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestOperation;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestResource;
 import org.tuleap.mylyn.task.internal.core.client.rest.ServerResponse;
+import org.tuleap.mylyn.task.internal.tests.TestLogger;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -42,7 +43,7 @@ public class RestResourceTest {
 	@Test
 	public void testRestResourceManipulation() throws CoreException {
 		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.GET | RestResource.PUT, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-				connector);
+				connector, new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
 		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET,PUT"); //$NON-NLS-1$
 		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET,PUT"); //$NON-NLS-1$

@@ -201,7 +201,8 @@ public class TuleapRepositorySettingsPage extends AbstractRepositorySettingsPage
 
 			TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(location, logger);
 			RestResourceFactory resourceFactory = new RestResourceFactory(location.getUrl(),
-					ITuleapAPIVersions.BEST_VERSION, tuleapRestConnector);
+					ITuleapAPIVersions.BEST_VERSION, tuleapRestConnector, TuleapTasksUIPlugin.getDefault()
+							.getLog());
 			TuleapRestClient tuleapRestClient = new TuleapRestClient(resourceFactory, jsonParser,
 					jsonSerializer, taskRepository, logger);
 

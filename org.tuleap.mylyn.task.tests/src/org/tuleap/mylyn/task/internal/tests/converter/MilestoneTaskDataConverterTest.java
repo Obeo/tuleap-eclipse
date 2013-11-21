@@ -611,7 +611,7 @@ public class MilestoneTaskDataConverterTest {
 					+ ID_SEPARATOR + AbstractTaskAttributeWrapper.SUFFIX_ID);
 			assertNotNull(itemId);
 			assertEquals(PROJECT_ID + ":" + BACKLOG_ITEM_TYPE_ID + "#23" + i, itemId.getValue()); //$NON-NLS-1$ //$NON-NLS-2$
-			assertEquals(TaskAttribute.TYPE_INTEGER, itemId.getMetaData().getType());
+			assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, itemId.getMetaData().getType());
 
 			TaskAttribute itemLabel = itemAtt.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + i
 					+ ID_SEPARATOR + AbstractTaskAttributeWrapper.SUFFIX_LABEL);
@@ -680,7 +680,7 @@ public class MilestoneTaskDataConverterTest {
 					+ ID_SEPARATOR + AbstractTaskAttributeWrapper.SUFFIX_ID);
 			assertNotNull(itemId);
 			assertEquals(PROJECT_ID + ":" + BACKLOG_ITEM_TYPE_ID + "#23" + i, itemId.getValue()); //$NON-NLS-1$ //$NON-NLS-2$
-			assertEquals(TaskAttribute.TYPE_INTEGER, itemId.getMetaData().getType());
+			assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, itemId.getMetaData().getType());
 
 			TaskAttribute itemLabel = itemAtt.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + i
 					+ ID_SEPARATOR + AbstractTaskAttributeWrapper.SUFFIX_LABEL);

@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
@@ -81,11 +82,10 @@ public class RestOperation {
 	 */
 	protected final LinkedHashMultimap<String, String> requestParameters = LinkedHashMultimap.create();
 
-	// TODO Inject a logger
 	/**
 	 * The logger.
 	 */
-	protected ILog logger;
+	protected final ILog logger;
 
 	/**
 	 * The connector to use.
@@ -106,11 +106,18 @@ public class RestOperation {
 	 *            the connector to use to "task to" the server.
 	 * @param method
 	 *            the HTTP method to use.
+	 * @param logger
+	 *            The logger to use.
 	 */
-	public RestOperation(String fullUrl, IRestConnector connector, Method method) {
+	public RestOperation(String fullUrl, IRestConnector connector, Method method, ILog logger) {
+		Assert.isNotNull(fullUrl);
 		this.fullUrl = fullUrl;
+		Assert.isNotNull(connector);
 		this.connector = connector;
+		Assert.isNotNull(method);
 		this.method = method;
+		Assert.isNotNull(logger);
+		this.logger = logger;
 	}
 
 	/**
@@ -120,10 +127,12 @@ public class RestOperation {
 	 *            The full URL of the resource to connect to.
 	 * @param connector
 	 *            the connector to use to "task to" the server.
+	 * @param logger
+	 *            The logger to use.
 	 * @return a new REST operation for the GET method.
 	 */
-	public static RestOperation get(String fullUrl, IRestConnector connector) {
-		return new RestOperation(fullUrl, connector, Method.GET);
+	public static RestOperation get(String fullUrl, IRestConnector connector, ILog logger) {
+		return new RestOperation(fullUrl, connector, Method.GET, logger);
 	}
 
 	/**
@@ -133,10 +142,12 @@ public class RestOperation {
 	 *            The full URL of the resource to connect to.
 	 * @param connector
 	 *            the connector to use to "task to" the server.
+	 * @param logger
+	 *            The logger to use.
 	 * @return a new REST operation for the PUT method.
 	 */
-	public static RestOperation put(String fullUrl, IRestConnector connector) {
-		return new RestOperation(fullUrl, connector, Method.PUT);
+	public static RestOperation put(String fullUrl, IRestConnector connector, ILog logger) {
+		return new RestOperation(fullUrl, connector, Method.PUT, logger);
 	}
 
 	/**
@@ -146,10 +157,12 @@ public class RestOperation {
 	 *            The full URL of the resource to connect to.
 	 * @param connector
 	 *            the connector to use to "task to" the server.
+	 * @param logger
+	 *            The logger to use.
 	 * @return a new REST operation for the POST method.
 	 */
-	public static RestOperation post(String fullUrl, IRestConnector connector) {
-		return new RestOperation(fullUrl, connector, Method.POST);
+	public static RestOperation post(String fullUrl, IRestConnector connector, ILog logger) {
+		return new RestOperation(fullUrl, connector, Method.POST, logger);
 	}
 
 	/**
@@ -159,10 +172,12 @@ public class RestOperation {
 	 *            The full URL of the resource to connect to.
 	 * @param connector
 	 *            the connector to use to "task to" the server.
+	 * @param logger
+	 *            The logger to use.
 	 * @return a new REST operation for the OPTIONS method.
 	 */
-	public static RestOperation options(String fullUrl, IRestConnector connector) {
-		return new RestOperation(fullUrl, connector, Method.OPTIONS);
+	public static RestOperation options(String fullUrl, IRestConnector connector, ILog logger) {
+		return new RestOperation(fullUrl, connector, Method.OPTIONS, logger);
 	}
 
 	/**
@@ -172,10 +187,12 @@ public class RestOperation {
 	 *            The full URL of the resource to connect to.
 	 * @param connector
 	 *            the connector to use to "task to" the server.
+	 * @param logger
+	 *            The logger to use.
 	 * @return a new REST operation for the DELETE method.
 	 */
-	public static RestOperation delete(String fullUrl, IRestConnector connector) {
-		return new RestOperation(fullUrl, connector, Method.DELETE);
+	public static RestOperation delete(String fullUrl, IRestConnector connector, ILog logger) {
+		return new RestOperation(fullUrl, connector, Method.DELETE, logger);
 	}
 
 	/**

@@ -23,6 +23,7 @@ import org.tuleap.mylyn.task.internal.core.client.rest.RestOperation;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestResource;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestResourceFactory;
 import org.tuleap.mylyn.task.internal.core.client.rest.ServerResponse;
+import org.tuleap.mylyn.task.internal.tests.TestLogger;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -375,6 +376,6 @@ public class TuleapRestResourceFactoryTest {
 	@Before
 	public void setUp() {
 		connector = new MockRestConnector();
-		factory = new RestResourceFactory("/server", "v12.5", connector);
+		factory = new RestResourceFactory("/server", "v12.5", connector, new TestLogger());
 	}
 }

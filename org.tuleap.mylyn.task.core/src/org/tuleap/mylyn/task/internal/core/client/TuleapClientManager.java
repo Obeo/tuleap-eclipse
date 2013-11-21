@@ -116,7 +116,8 @@ public class TuleapClientManager implements IRepositoryListener {
 		TuleapJsonSerializer jsonSerializer = new TuleapJsonSerializer();
 		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(webLocation, logger);
 		RestResourceFactory restResourceFactory = new RestResourceFactory(webLocation.getUrl(),
-				ITuleapAPIVersions.BEST_VERSION, tuleapRestConnector);
+				ITuleapAPIVersions.BEST_VERSION, tuleapRestConnector, TuleapCoreActivator.getDefault()
+						.getLog());
 		TuleapRestClient tuleapRestClient = new TuleapRestClient(restResourceFactory, jsonParser,
 				jsonSerializer, taskRepository, logger);
 		this.restClientCache.put(taskRepository, tuleapRestClient);

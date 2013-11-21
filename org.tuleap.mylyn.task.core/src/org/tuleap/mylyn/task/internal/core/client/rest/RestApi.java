@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.client.rest;
 
+import org.eclipse.core.runtime.ILog;
+
 /**
  * JSON Resource for the {@code /api/<version>} URL.
  * 
@@ -26,9 +28,11 @@ public class RestApi extends RestResource {
 	 *            Version of the REST API to use.
 	 * @param connector
 	 *            the connector to use.
+	 * @param logger
+	 *            The logger to use.
 	 */
-	protected RestApi(String serverUrl, String apiVersion, IRestConnector connector) {
-		super(serverUrl, apiVersion, "", GET, connector); //$NON-NLS-1$
+	protected RestApi(String serverUrl, String apiVersion, IRestConnector connector, ILog logger) {
+		super(serverUrl, apiVersion, "", GET, connector, logger); //$NON-NLS-1$
 	}
 
 	/**

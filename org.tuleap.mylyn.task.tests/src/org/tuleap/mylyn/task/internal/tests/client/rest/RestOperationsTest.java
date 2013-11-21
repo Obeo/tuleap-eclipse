@@ -22,6 +22,7 @@ import org.tuleap.mylyn.task.internal.core.client.rest.ITuleapHeaders;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestOperation;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestOperationIterable;
 import org.tuleap.mylyn.task.internal.core.client.rest.ServerResponse;
+import org.tuleap.mylyn.task.internal.tests.TestLogger;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -38,7 +39,7 @@ public class RestOperationsTest {
 
 	@Test
 	public void testBasicBehavior() {
-		RestOperation op = RestOperation.get("some/url", connector);
+		RestOperation op = RestOperation.get("some/url", connector, new TestLogger());
 		assertEquals("GET", op.getMethodName());
 		assertEquals("some/url", op.getUrl());
 		assertEquals("some/url", op.getUrlWithQueryParameters());
@@ -73,7 +74,7 @@ public class RestOperationsTest {
 	 */
 	@Test
 	public void testExecutionOfGet() {
-		RestOperation op = RestOperation.get("some/url", connector);
+		RestOperation op = RestOperation.get("some/url", connector, new TestLogger());
 		Map<String, String> responseHeaders = Maps.newLinkedHashMap();
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, "body", responseHeaders);
 		connector.setResponse(response);
@@ -83,7 +84,7 @@ public class RestOperationsTest {
 
 	@Test
 	public void testIteratingOnGetWithJsonObject() {
-		RestOperation op = RestOperation.get("some/url", connector);
+		RestOperation op = RestOperation.get("some/url", connector, new TestLogger());
 		Map<String, String> responseHeaders = Maps.newLinkedHashMap();
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, "{'a':'1'}", responseHeaders);
 		connector.setResponse(response);
@@ -94,7 +95,7 @@ public class RestOperationsTest {
 
 	@Test
 	public void testIteratingOnGetWithArrayWithoutPagination() {
-		RestOperation op = RestOperation.get("some/url", connector);
+		RestOperation op = RestOperation.get("some/url", connector, new TestLogger());
 		Map<String, String> responseHeaders = Maps.newLinkedHashMap();
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, "[{'a':'1'},{'a':'2'}]",
 				responseHeaders);
@@ -109,7 +110,7 @@ public class RestOperationsTest {
 	public void testIteratingOnGetWithArrayWithPagination() {
 		MockPaginatingRestConnector paginatingConnector = new MockPaginatingRestConnector();
 
-		RestOperation op = RestOperation.get("some/url", paginatingConnector);
+		RestOperation op = RestOperation.get("some/url", paginatingConnector, new TestLogger());
 		Map<String, String> responseHeaders = Maps.newLinkedHashMap();
 
 		responseHeaders.put(ITuleapHeaders.HEADER_X_PAGINATION_SIZE, "3");

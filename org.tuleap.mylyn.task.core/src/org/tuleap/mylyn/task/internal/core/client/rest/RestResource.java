@@ -86,7 +86,7 @@ public class RestResource {
 	/**
 	 * The logger.
 	 */
-	private ILog logger;
+	private final ILog logger;
 
 	/**
 	 * URL of this resource.
@@ -122,9 +122,11 @@ public class RestResource {
 	 *            post() operations.
 	 * @param connector
 	 *            The connector to use.
+	 * @param logger
+	 *            The logger
 	 */
 	public RestResource(String serverUrl, String apiVersion, String url, int supportedMethods,
-			IRestConnector connector) {
+			IRestConnector connector, ILog logger) {
 		this.serverUrl = serverUrl;
 		this.apiVersion = apiVersion;
 		Assert.isNotNull(url);
@@ -136,6 +138,8 @@ public class RestResource {
 		this.supportedMethods = supportedMethods;
 		Assert.isNotNull(connector);
 		this.connector = connector;
+		Assert.isNotNull(logger);
+		this.logger = logger;
 	}
 
 	/**
@@ -172,7 +176,7 @@ public class RestResource {
 					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, DELETE_LABEL, getUrl()));
 		}
 		checkOptionsAllows(DELETE_LABEL);
-		return RestOperation.delete(getFullUrl(), connector).withAuthenticator(authenticator);
+		return RestOperation.delete(getFullUrl(), connector, logger).withAuthenticator(authenticator);
 	}
 
 	/**
@@ -190,7 +194,7 @@ public class RestResource {
 					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, GET_LABEL, getUrl()));
 		}
 		checkOptionsAllows(GET_LABEL);
-		return RestOperation.get(getFullUrl(), connector).withAuthenticator(authenticator);
+		return RestOperation.get(getFullUrl(), connector, logger).withAuthenticator(authenticator);
 	}
 
 	/**
@@ -199,7 +203,7 @@ public class RestResource {
 	 * @return A new instance of {@link RestOperation} created with this resource operation factory.
 	 */
 	public RestOperation options() {
-		return RestOperation.options(getFullUrl(), connector).withAuthenticator(authenticator);
+		return RestOperation.options(getFullUrl(), connector, logger).withAuthenticator(authenticator);
 	}
 
 	/**
@@ -217,7 +221,7 @@ public class RestResource {
 					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, POST_LABEL, getUrl()));
 		}
 		checkOptionsAllows(POST_LABEL);
-		return RestOperation.post(getFullUrl(), connector).withAuthenticator(authenticator);
+		return RestOperation.post(getFullUrl(), connector, logger).withAuthenticator(authenticator);
 	}
 
 	/**
@@ -235,7 +239,7 @@ public class RestResource {
 					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, PUT_LABEL, getUrl()));
 		}
 		checkOptionsAllows(PUT_LABEL);
-		return RestOperation.put(getFullUrl(), connector).withAuthenticator(authenticator);
+		return RestOperation.put(getFullUrl(), connector, logger).withAuthenticator(authenticator);
 	}
 
 	/**

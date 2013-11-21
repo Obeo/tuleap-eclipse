@@ -35,6 +35,7 @@ import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
+import org.tuleap.mylyn.task.internal.tests.TestLogger;
 import org.tuleap.mylyn.task.internal.tests.client.rest.MockRestConnector.ServerRequest;
 import org.tuleap.mylyn.task.internal.tests.parser.ParserUtil;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapBacklogItemDeserializerTest;
@@ -136,7 +137,7 @@ public class TuleapRestClientTest {
 	@Ignore("Fix me when cardwalls are back in the game")
 	public void testRetrieveMilestoneWithCardwall() throws CoreException, ParseException {
 		MockListRestConnector listConnector = new MockListRestConnector();
-		restResourceFactory = new RestResourceFactory(serverUrl, apiVersion, listConnector);
+		restResourceFactory = new RestResourceFactory(serverUrl, apiVersion, listConnector, new TestLogger());
 		listConnector.setResourceFactory(restResourceFactory);
 		client = new TuleapRestClient(restResourceFactory, jsonParser, null, repository, null);
 
@@ -221,7 +222,7 @@ public class TuleapRestClientTest {
 	public void testUpdateMilestone() throws CoreException {
 
 		MockListRestConnector listConnector = new MockListRestConnector();
-		restResourceFactory = new RestResourceFactory(serverUrl, apiVersion, listConnector);
+		restResourceFactory = new RestResourceFactory(serverUrl, apiVersion, listConnector, new TestLogger());
 		listConnector.setResourceFactory(restResourceFactory);
 		client = new TuleapRestClient(restResourceFactory, jsonParser, null, repository, null);
 
@@ -369,7 +370,8 @@ public class TuleapRestClientTest {
 	@Test
 	public void testAutomaticLoginWhenNoTokenIsKnown() throws CoreException {
 		MockListRestConnector listConnector = new MockListRestConnector();
-		this.restResourceFactory = new RestResourceFactory(serverUrl, apiVersion, listConnector);
+		this.restResourceFactory = new RestResourceFactory(serverUrl, apiVersion, listConnector,
+				new TestLogger());
 		this.repository = new TaskRepository(ITuleapConstants.CONNECTOR_KIND, serverUrl);
 		this.repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("admin",
 				"password"), true);
@@ -441,7 +443,7 @@ public class TuleapRestClientTest {
 	@Before
 	public void setUp() {
 		connector = new MockRestConnector();
-		this.restResourceFactory = new RestResourceFactory(serverUrl, apiVersion, connector);
+		this.restResourceFactory = new RestResourceFactory(serverUrl, apiVersion, connector, new TestLogger());
 		this.repository = new TaskRepository(ITuleapConstants.CONNECTOR_KIND, serverUrl);
 		this.repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("admin",
 				"password"), true);

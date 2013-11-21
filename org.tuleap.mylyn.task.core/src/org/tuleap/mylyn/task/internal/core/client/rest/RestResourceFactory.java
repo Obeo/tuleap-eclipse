@@ -11,6 +11,7 @@
 package org.tuleap.mylyn.task.internal.core.client.rest;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.ILog;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestResource.URL;
 
 /**
@@ -36,6 +37,11 @@ public final class RestResourceFactory {
 	private final IRestConnector connector;
 
 	/**
+	 * The logger.
+	 */
+	private final ILog logger;
+
+	/**
 	 * Constructor.
 	 * 
 	 * @param serverUrl
@@ -44,12 +50,18 @@ public final class RestResourceFactory {
 	 *            the API version to use.
 	 * @param connector
 	 *            The connector to use.
+	 * @param logger
+	 *            The logger to use.
 	 */
-	public RestResourceFactory(String serverUrl, String apiVersion, IRestConnector connector) {
+	public RestResourceFactory(String serverUrl, String apiVersion, IRestConnector connector, ILog logger) {
+		Assert.isNotNull(serverUrl);
 		this.serverUrl = serverUrl;
+		Assert.isNotNull(apiVersion);
 		this.apiVersion = apiVersion;
 		Assert.isNotNull(connector);
 		this.connector = connector;
+		Assert.isNotNull(logger);
+		this.logger = logger;
 	}
 
 	/**
@@ -237,7 +249,7 @@ public final class RestResourceFactory {
 	 */
 	public RestResource resource(int supportedMethods, String... urlFragments) {
 		final String url = url(urlFragments);
-		return new RestResource(serverUrl, apiVersion, url, supportedMethods, connector);
+		return new RestResource(serverUrl, apiVersion, url, supportedMethods, connector, logger);
 	}
 
 	/**
