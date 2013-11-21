@@ -10,7 +10,9 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.tests.converter;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -21,6 +23,10 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.tuleap.mylyn.task.agile.core.data.AbstractBacklogItemWrapper;
+import org.tuleap.mylyn.task.agile.core.data.AbstractTaskAttributeWrapper;
+import org.tuleap.mylyn.task.agile.core.data.planning.BacklogItemWrapper;
+import org.tuleap.mylyn.task.agile.core.data.planning.MilestonePlanningWrapper;
 import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.data.converter.MilestoneTaskDataConverter;
@@ -28,9 +34,13 @@ import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -88,6 +98,10 @@ public class MilestoneTaskDataConverterTest {
 	private static final long START_TIME = 30 * 365L * 24L * 3600000L;
 
 	private static final long END_TIME = START_TIME + 20L * 24L * 3600000L;
+
+	private static final int BACKLOG_ITEM_TYPE_ID = 0;
+
+	private static final int PROJECT_ID = 200;
 
 	private TuleapReference projectRef = new TuleapReference(666, "p/666");
 
@@ -544,4 +558,142 @@ public class MilestoneTaskDataConverterTest {
 		fail("Implement");
 	}
 
+	/**
+	 * Tests adding a milestone.
+	 */
+	@Test
+	public void testAddSubmilestones() {
+		Date testDate = new Date();
+
+		TuleapMilestone milestone = new TuleapMilestone(50,
+				new TuleapReference(200, "p/200"), "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
+				"HTML URL", testDate, testDate); //$NON-NLS-1$
+
+		TuleapMilestone submilestone100 = new TuleapMilestone(100,
+				new TuleapReference(200, "p/200"), "The first submilestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
+				"HTML URL", testDate, testDate); //$NON-NLS-1$
+
+		TuleapBacklogItem item0 = new TuleapBacklogItem(230,
+				new TuleapReference(200, "p/200"), "item230", null, null, null, null); //$NON-NLS-1$
+		item0.setInitialEffort(Float.valueOf(201));
+		TuleapBacklogItem item1 = new TuleapBacklogItem(231,
+				new TuleapReference(200, "p/200"), "item231", null, null, null, null); //$NON-NLS-1$
+		item1.setInitialEffort(Float.valueOf(201));
+		TuleapBacklogItem item2 = new TuleapBacklogItem(232,
+				new TuleapReference(200, "p/200"), "item232", null, null, null, null); //$NON-NLS-1$
+		item2.setInitialEffort(Float.valueOf(201));
+		TuleapBacklogItem item3 = new TuleapBacklogItem(233,
+				new TuleapReference(200, "p/200"), "item233", null, null, null, null); //$NON-NLS-1$
+		item3.setInitialEffort(Float.valueOf(201));
+		List<TuleapBacklogItem> content = new ArrayList<TuleapBacklogItem>();
+		content.add(item0);
+		content.add(item1);
+		content.add(item2);
+		content.add(item3);
+
+		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(taskRepository, connector);
+		converter.populateTaskData(taskData, milestone, null);
+		converter.addSubmilestone(taskData, submilestone100, content, null);
+
+		TaskAttribute root = taskData.getRoot();
+
+		TaskAttribute planningAtt = root.getAttribute(MilestonePlanningWrapper.MILESTONE_PLANNING);
+
+		TaskAttribute backlogAtt = planningAtt.getAttribute(MilestonePlanningWrapper.BACKLOG);
+		assertNotNull(backlogAtt);
+
+		for (int i = 0; i < 4; i++) {
+
+			TaskAttribute itemAtt = backlogAtt.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + i);
+			assertNotNull(itemAtt);
+			assertTrue(itemAtt.getMetaData().isReadOnly());
+			TaskAttribute itemId = itemAtt.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + i
+					+ ID_SEPARATOR + AbstractTaskAttributeWrapper.SUFFIX_ID);
+			assertNotNull(itemId);
+			assertEquals(PROJECT_ID + ":" + BACKLOG_ITEM_TYPE_ID + "#23" + i, itemId.getValue()); //$NON-NLS-1$ //$NON-NLS-2$
+			assertEquals(TaskAttribute.TYPE_INTEGER, itemId.getMetaData().getType());
+
+			TaskAttribute itemLabel = itemAtt.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + i
+					+ ID_SEPARATOR + AbstractTaskAttributeWrapper.SUFFIX_LABEL);
+			assertNotNull(itemLabel);
+			assertEquals("item23" + i, itemLabel.getValue()); //$NON-NLS-1$
+			assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, itemLabel.getMetaData().getType());
+
+			TaskAttribute itemEffort = itemAtt.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + i
+					+ ID_SEPARATOR + AbstractBacklogItemWrapper.SUFFIX_BACKLOG_ITEM_POINTS);
+			assertNotNull(itemEffort);
+			assertEquals(Float.toString(201), itemEffort.getValue());
+			assertEquals(TaskAttribute.TYPE_DOUBLE, itemEffort.getMetaData().getType());
+
+			TaskAttribute itemAssignedMilestone = itemAtt.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM
+					+ i + ID_SEPARATOR + AbstractBacklogItemWrapper.SUFFIX_ASSIGNED_MILESTONE_ID);
+			assertNotNull(itemAssignedMilestone);
+			assertEquals(PROJECT_ID + ":" + BACKLOG_ITEM_TYPE_ID + "#100", itemAssignedMilestone.getValue()); //$NON-NLS-1$ //$NON-NLS-2$
+			assertEquals(TaskAttribute.TYPE_INTEGER, itemAssignedMilestone.getMetaData().getType());
+		}
+	}
+
+	/**
+	 * Tests populating the backlog.
+	 */
+	@Test
+	public void testPopulateBacklog() {
+		Date testDate = new Date();
+
+		TuleapMilestone milestone = new TuleapMilestone(50,
+				new TuleapReference(200, "p/200"), "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
+				"HTML URL", testDate, testDate); //$NON-NLS-1$
+
+		TuleapBacklogItem item0 = new TuleapBacklogItem(230,
+				new TuleapReference(200, "p/200"), "item230", null, null, null, null); //$NON-NLS-1$
+		item0.setInitialEffort(Float.valueOf(201));
+		TuleapBacklogItem item1 = new TuleapBacklogItem(231,
+				new TuleapReference(200, "p/200"), "item231", null, null, null, null); //$NON-NLS-1$
+		item1.setInitialEffort(Float.valueOf(201));
+		TuleapBacklogItem item2 = new TuleapBacklogItem(232,
+				new TuleapReference(200, "p/200"), "item232", null, null, null, null); //$NON-NLS-1$
+		item2.setInitialEffort(Float.valueOf(201));
+		TuleapBacklogItem item3 = new TuleapBacklogItem(233,
+				new TuleapReference(200, "p/200"), "item233", null, null, null, null); //$NON-NLS-1$
+		item3.setInitialEffort(Float.valueOf(201));
+		List<TuleapBacklogItem> backlog = new ArrayList<TuleapBacklogItem>();
+		backlog.add(item0);
+		backlog.add(item1);
+		backlog.add(item2);
+		backlog.add(item3);
+		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(taskRepository, connector);
+		converter.populateTaskData(taskData, milestone, null);
+		converter.populateBacklog(taskData, backlog, null);
+
+		TaskAttribute root = taskData.getRoot();
+
+		TaskAttribute planningAtt = root.getAttribute(MilestonePlanningWrapper.MILESTONE_PLANNING);
+
+		TaskAttribute backlogAtt = planningAtt.getAttribute(MilestonePlanningWrapper.BACKLOG);
+		assertNotNull(backlogAtt);
+
+		for (int i = 0; i < 4; i++) {
+			TaskAttribute itemAtt = backlogAtt.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + i);
+			assertNotNull(itemAtt);
+			assertTrue(itemAtt.getMetaData().isReadOnly());
+			TaskAttribute itemId = itemAtt.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + i
+					+ ID_SEPARATOR + AbstractTaskAttributeWrapper.SUFFIX_ID);
+			assertNotNull(itemId);
+			assertEquals(PROJECT_ID + ":" + BACKLOG_ITEM_TYPE_ID + "#23" + i, itemId.getValue()); //$NON-NLS-1$ //$NON-NLS-2$
+			assertEquals(TaskAttribute.TYPE_INTEGER, itemId.getMetaData().getType());
+
+			TaskAttribute itemLabel = itemAtt.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + i
+					+ ID_SEPARATOR + AbstractTaskAttributeWrapper.SUFFIX_LABEL);
+			assertNotNull(itemLabel);
+			assertEquals("item23" + i, itemLabel.getValue()); //$NON-NLS-1$
+			assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, itemLabel.getMetaData().getType());
+
+			TaskAttribute itemEffort = itemAtt.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + i
+					+ ID_SEPARATOR + AbstractBacklogItemWrapper.SUFFIX_BACKLOG_ITEM_POINTS);
+			assertNotNull(itemEffort);
+			assertEquals(Float.toString(201), itemEffort.getValue());
+			assertEquals(TaskAttribute.TYPE_DOUBLE, itemEffort.getMetaData().getType());
+		}
+
+	}
 }

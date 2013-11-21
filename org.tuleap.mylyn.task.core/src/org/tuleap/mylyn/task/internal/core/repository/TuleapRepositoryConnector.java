@@ -327,11 +327,20 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 								taskRepository, this);
 						milestoneConverter.populateTaskData(taskData, milestone, monitor);
 
+						// Fetch planning
+
+						List<TuleapBacklogItem> backlog = restClient.getMilestoneBacklog(artifact.getId(),
+								monitor);
+						milestoneConverter.populateBacklog(taskData, backlog, monitor);
+
 						List<TuleapMilestone> subMilestones = restClient.getSubMilestones(artifact.getId(),
 								monitor);
-						List<TuleapBacklogItem> backlogItems = restClient.getBacklogItems(artifact.getId(),
-								monitor);
-						milestoneConverter.populatePlanning(taskData, subMilestones, backlogItems, monitor);
+
+						for (TuleapMilestone tuleapMilestone : subMilestones) {
+							List<TuleapBacklogItem> content = restClient.getMilestoneContent(tuleapMilestone
+									.getId(), monitor);
+							milestoneConverter.addSubmilestone(taskData, tuleapMilestone, content, monitor);
+						}
 
 						// TODO Cardwall, when cardwall is active
 					} catch (CoreException e) {

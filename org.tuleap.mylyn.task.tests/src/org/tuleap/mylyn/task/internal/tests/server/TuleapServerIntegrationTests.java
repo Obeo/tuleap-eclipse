@@ -139,13 +139,13 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 			List<TuleapMilestone> milestoneItems = tuleapServer.getSubMilestones(200, null);
 			assertEquals(3, milestoneItems.size());
 
-			List<TuleapBacklogItem> backlogItems = tuleapServer.getBacklogItems(200, null);
+			List<TuleapBacklogItem> backlogItems = tuleapServer.getMilestoneBacklog(200, null);
 			assertEquals(0, backlogItems.size());
 
 			milestoneItems = tuleapServer.getSubMilestones(201, null);
 			assertEquals(0, milestoneItems.size());
 
-			backlogItems = tuleapServer.getBacklogItems(201, null);
+			backlogItems = tuleapServer.getMilestoneBacklog(201, null);
 			assertEquals(2, backlogItems.size());
 		} catch (CoreException e) {
 			fail(e.getMessage());

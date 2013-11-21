@@ -78,6 +78,11 @@ public class MilestoneTaskDataConverter {
 	public static final String MILESTONE_PLANNING = "mta_planning"; //$NON-NLS-1$
 
 	/**
+	 * Id of the project identifier task attribute.
+	 */
+	public static final String PROJECT_ID = "mtc_project_id"; //$NON-NLS-1$ 
+
+	/**
 	 * The task repository.
 	 */
 	private final TaskRepository taskRepository;
@@ -182,17 +187,13 @@ public class MilestoneTaskDataConverter {
 			if (project != null) {
 				projectId = project.getId();
 			} else {
-				projectId = Integer.parseInt(taskData.getRoot().getAttribute("mtc_project_id").getValue());
+				projectId = Integer.parseInt(taskData.getRoot().getAttribute(PROJECT_ID).getValue());
 			}
 			BacklogItemWrapper backlogItemWrapper = milestonePlanning.addBacklogItem(TuleapTaskIdentityUtil
 					.getTaskDataId(projectId, 0, backlogItem.getId()));
 			// FIXME Replace 0 above
 			backlogItemWrapper.setDisplayId(Integer.toString(backlogItem.getId()));
-			TuleapReference assignedMilestone = backlogItem.getAssignedMilestone();
-			if (assignedMilestone != null) {
-				backlogItemWrapper.setAssignedMilestoneId(milestoneInternalIdByTuleapId.get(Integer
-						.valueOf(assignedMilestone.getId())));
-			}
+
 			backlogItemWrapper.setLabel(backlogItem.getLabel());
 			if (backlogItem.getInitialEffort() != null) {
 				backlogItemWrapper.setInitialEffort(backlogItem.getInitialEffort().floatValue());
@@ -228,13 +229,6 @@ public class MilestoneTaskDataConverter {
 			swimlaneWrapper.getSwimlaneItem().setDisplayId(biDisplayId);
 			swimlaneWrapper.setDisplayId(biDisplayId);
 
-			TuleapReference assignedMilestone = backlogItem.getAssignedMilestone();
-			if (assignedMilestone != null) {
-				// FIXME Replace 0 below
-				swimlaneWrapper.getSwimlaneItem().setAssignedMilestoneId(
-						TuleapTaskIdentityUtil.getTaskDataId(backlogItem.getProject().getId(), 0, backlogItem
-								.getAssignedMilestone().getId()));
-			}
 			Float initialEffort = backlogItem.getInitialEffort();
 			if (initialEffort != null) {
 				swimlaneWrapper.getSwimlaneItem().setInitialEffort(initialEffort.floatValue());
@@ -331,7 +325,6 @@ public class MilestoneTaskDataConverter {
 				int assignedMilestoneId = TuleapTaskIdentityUtil.getElementIdFromTaskDataId(assignedId);
 				assignedMilestone.setId(assignedMilestoneId);
 				assignedMilestone.setUri("milestones/" + assignedMilestoneId); //$NON-NLS-1$
-				bi.setAssignedMilestone(assignedMilestone);
 			}
 			bi.setInitialEffort(biWrapper.getInitialEffort());
 		}
@@ -361,7 +354,25 @@ public class MilestoneTaskDataConverter {
 	 *            The progress monitor to use.
 	 */
 	public void populateBacklog(TaskData taskData, List<TuleapBacklogItem> backlog, IProgressMonitor monitor) {
-		// TODO: FIB: Implement this method.
+		MilestonePlanningWrapper milestonePlanning = new MilestonePlanningWrapper(taskData.getRoot());
+		for (TuleapBacklogItem backlogItem : backlog) {
+			int projectId;
+
+			TuleapReference project = backlogItem.getProject();
+			if (project != null) {
+				projectId = project.getId();
+			} else {
+				projectId = Integer.parseInt(taskData.getRoot().getAttribute(PROJECT_ID).getValue());
+			}
+			BacklogItemWrapper backlogItemWrapper = milestonePlanning.addBacklogItem(TuleapTaskIdentityUtil
+					.getTaskDataId(projectId, 0, backlogItem.getId()));
+			backlogItemWrapper.setDisplayId(Integer.toString(backlogItem.getId()));
+
+			backlogItemWrapper.setLabel(backlogItem.getLabel());
+			if (backlogItem.getInitialEffort() != null) {
+				backlogItemWrapper.setInitialEffort(backlogItem.getInitialEffort().floatValue());
+			}
+		}
 	}
 
 	/**
@@ -378,6 +389,43 @@ public class MilestoneTaskDataConverter {
 	 */
 	public void addSubmilestone(TaskData taskData, TuleapMilestone milestone,
 			List<TuleapBacklogItem> milestoneContent, IProgressMonitor monitor) {
-		// TODO: FIB: Implement this method.
+		MilestonePlanningWrapper milestonePlanning = new MilestonePlanningWrapper(taskData.getRoot());
+		String internalMilestoneId = TuleapTaskIdentityUtil.getTaskDataId(milestone.getProject().getId(), 0,
+				milestone.getId());
+
+		SubMilestoneWrapper subMilestoneWrapper = milestonePlanning.addSubMilestone(internalMilestoneId);
+		subMilestoneWrapper.setDisplayId(Integer.toString(milestone.getId()));
+		subMilestoneWrapper.setLabel(milestone.getLabel());
+		if (milestone.getStartDate() != null) {
+			subMilestoneWrapper.setStartDate(milestone.getStartDate());
+		}
+		if (milestone.getEndDate() != null) {
+			subMilestoneWrapper.setEndDate(milestone.getEndDate());
+		}
+		if (milestone.getCapacity() != null) {
+			subMilestoneWrapper.setCapacity(milestone.getCapacity().floatValue());
+		}
+
+		for (TuleapBacklogItem backlogItem : milestoneContent) {
+			int projectId;
+
+			TuleapReference project = backlogItem.getProject();
+			if (project != null) {
+				projectId = project.getId();
+			} else {
+				projectId = Integer.parseInt(taskData.getRoot().getAttribute(PROJECT_ID).getValue());
+			}
+			BacklogItemWrapper backlogItemWrapper = milestonePlanning.addBacklogItem(TuleapTaskIdentityUtil
+					.getTaskDataId(projectId, 0, backlogItem.getId()));
+			backlogItemWrapper.setDisplayId(Integer.toString(backlogItem.getId()));
+
+			backlogItemWrapper.setAssignedMilestoneId(internalMilestoneId);
+
+			backlogItemWrapper.setLabel(backlogItem.getLabel());
+			if (backlogItem.getInitialEffort() != null) {
+				backlogItemWrapper.setInitialEffort(backlogItem.getInitialEffort().floatValue());
+			}
+		}
+
 	}
 }

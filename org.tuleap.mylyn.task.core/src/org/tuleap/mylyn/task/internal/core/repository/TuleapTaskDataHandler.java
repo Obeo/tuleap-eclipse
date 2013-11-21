@@ -83,10 +83,9 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		int projectId = mapper.getProjectId();
 		int configurationId = mapper.getConfigurationId();
 
-		TuleapServer tuleapServer = this.connector
-				.getTuleapServerConfiguration(taskRepository.getRepositoryUrl());
-		TuleapProject projectConfiguration = tuleapServer
-				.getProject(projectId);
+		TuleapServer tuleapServer = this.connector.getTuleapServerConfiguration(taskRepository
+				.getRepositoryUrl());
+		TuleapProject projectConfiguration = tuleapServer.getProject(projectId);
 
 		TuleapTracker tuleapTracker = projectConfiguration.getTracker(configurationId);
 		tuleapTracker = this.connector.refreshTracker(taskRepository, tuleapTracker, monitor);
@@ -217,8 +216,8 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		}
 
 		boolean isInitialized = false;
-		TuleapServer repositoryConfiguration = this.connector
-				.getTuleapServerConfiguration(repository.getRepositoryUrl());
+		TuleapServer repositoryConfiguration = this.connector.getTuleapServerConfiguration(repository
+				.getRepositoryUrl());
 		if (repositoryConfiguration != null) {
 			// Sets the creation date and last modification date.
 			if (initializationData instanceof TuleapTaskMapping) {
@@ -267,12 +266,11 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 */
 	public TaskData getTaskData(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
-		TuleapServer serverConfiguration = this.connector
-				.getTuleapServerConfiguration(taskRepository.getRepositoryUrl());
+		TuleapServer serverConfiguration = this.connector.getTuleapServerConfiguration(taskRepository
+				.getRepositoryUrl());
 
 		int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(taskId);
-		TuleapProject projectConfiguration = serverConfiguration
-				.getProject(projectId);
+		TuleapProject projectConfiguration = serverConfiguration.getProject(projectId);
 
 		int configurationId = TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId(taskId);
 
@@ -321,8 +319,8 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		TuleapSoapClient tuleapSoapClient = this.connector.getClientManager().getSoapClient(taskRepository);
 		TuleapArtifact tuleapArtifact = tuleapSoapClient.getArtifact(taskId, serverConfiguration, monitor);
 		if (tuleapArtifact != null) {
-			TuleapTracker trackerConfiguration = serverConfiguration.getTracker(tuleapArtifact
-					.getTracker().getId());
+			TuleapTracker trackerConfiguration = serverConfiguration.getTracker(tuleapArtifact.getTracker()
+					.getId());
 
 			ArtifactTaskDataConverter artifactTaskDataConverter = new ArtifactTaskDataConverter(
 					trackerConfiguration, taskRepository, connector);
@@ -443,12 +441,19 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			taskDataConverter.populateTaskData(taskData, milestone, monitor);
 
 			// Fetch planning
+
+			List<TuleapBacklogItem> backlog = restClient.getMilestoneBacklog(milestoneId, monitor);
+			taskDataConverter.populateBacklog(taskData, backlog, monitor);
+
 			List<TuleapMilestone> subMilestones = restClient.getSubMilestones(milestoneId, monitor);
-			List<TuleapBacklogItem> backlogItems = restClient.getBacklogItems(milestoneId, monitor);
 
-			taskDataConverter.populatePlanning(taskData, subMilestones, backlogItems, monitor);
+			for (TuleapMilestone tuleapMilestone : subMilestones) {
+				List<TuleapBacklogItem> content = restClient.getMilestoneContent(tuleapMilestone
+						.getId(), monitor);
+				taskDataConverter.addSubmilestone(taskData, tuleapMilestone, content, monitor);
+			}
 
-			// Fetch cardwall if necessary
+					// Fetch cardwall if necessary
 			if (projectConfiguration.isCardwallActive(tracker.getIdentifier())) {
 				TuleapCardwall cardwall = restClient.getCardwall(milestoneId, monitor);
 				taskDataConverter.populateCardwall(taskData, cardwall, monitor);
