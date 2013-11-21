@@ -556,20 +556,52 @@ public class TuleapRestClient implements IAuthenticator {
 	 * @throws CoreException
 	 *             If anything goes wrong.
 	 */
-	public List<TuleapBacklogItem> getBacklogItems(int milestoneId, IProgressMonitor monitor)
+	public List<TuleapBacklogItem> getMilestoneBacklog(int milestoneId, IProgressMonitor monitor)
 			throws CoreException {
 		if (monitor != null) {
 			monitor.subTask(TuleapMylynTasksMessages.getString(
 					TuleapMylynTasksMessagesKeys.retrievingBacklogItems, Integer.valueOf(milestoneId)));
 		}
-		RestResource backlogItemsResource = restResourceFactory.milestonesBacklogItems(milestoneId)
-				.withAuthenticator(this);
-		RestOperation operation = backlogItemsResource.get();
+		// The backlog BacklogItems
+		RestResource backlogResource = restResourceFactory.milestoneBacklog(milestoneId).withAuthenticator(
+				this);
+		RestOperation operation = backlogResource.get();
 		RestOperationIterable jsonElements = new RestOperationIterable(operation);
 		List<TuleapBacklogItem> backlogItems = Lists.newArrayList();
 		for (JsonElement e : jsonElements) {
 			backlogItems.add(jsonParser.parseBacklogItem(e));
 		}
+
+		return backlogItems;
+	}
+
+	/**
+	 * Retrieve the backlog items of a given milestone.
+	 * 
+	 * @param milestoneId
+	 *            The milestone id
+	 * @param monitor
+	 *            The monitor to use
+	 * @return A list of backlog items of the milestone.
+	 * @throws CoreException
+	 *             If anything goes wrong.
+	 */
+	public List<TuleapBacklogItem> getMilestoneContent(int milestoneId, IProgressMonitor monitor)
+			throws CoreException {
+		if (monitor != null) {
+			monitor.subTask(TuleapMylynTasksMessages.getString(
+					TuleapMylynTasksMessagesKeys.retrievingBacklogItems, Integer.valueOf(milestoneId)));
+		}
+		// The backlog BacklogItems
+		RestResource backlogResource = restResourceFactory.milestoneContent(milestoneId).withAuthenticator(
+				this);
+		RestOperation operation = backlogResource.get();
+		RestOperationIterable jsonElements = new RestOperationIterable(operation);
+		List<TuleapBacklogItem> backlogItems = Lists.newArrayList();
+		for (JsonElement e : jsonElements) {
+			backlogItems.add(jsonParser.parseBacklogItem(e));
+		}
+
 		return backlogItems;
 	}
 
@@ -695,7 +727,7 @@ public class TuleapRestClient implements IAuthenticator {
 			monitor.subTask(TuleapMylynTasksMessages.getString(
 					TuleapMylynTasksMessagesKeys.updatingBacklogItems, Integer.valueOf(milestoneId)));
 		}
-		RestResource restMilestonesBacklogItems = restResourceFactory.milestonesBacklogItems(milestoneId)
+		RestResource restMilestonesBacklogItems = restResourceFactory.milestoneBacklog(milestoneId)
 				.withAuthenticator(this);
 
 		// from POJO to JSON

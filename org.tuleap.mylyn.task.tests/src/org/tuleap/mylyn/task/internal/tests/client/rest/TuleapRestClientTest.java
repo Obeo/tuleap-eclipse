@@ -91,6 +91,50 @@ public class TuleapRestClientTest {
 	}
 
 	@Test
+	public void testRetrieveMilestoneBacklog() throws CoreException, ParseException {
+		String jsonMilestone = ParserUtil.loadFile("/milestones/release200.json");
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonMilestone, respHeaders);
+		connector.setResponse(response);
+		client.getMilestoneBacklog(200, null);
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(2, requestsSent.size());
+		ServerRequest request = requestsSent.get(0);
+		assertEquals("https://test/url/api/v12.3/milestones/200/backlog", request.url); //$NON-NLS-1$
+		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
+
+		request = requestsSent.get(1);
+		assertEquals("https://test/url/api/v12.3/milestones/200/backlog", request.url); //$NON-NLS-1$
+		assertEquals("GET", request.method); //$NON-NLS-1$
+	}
+
+	@Test
+	public void testRetrieveMilestoneContent() throws CoreException, ParseException {
+		String jsonMilestone = ParserUtil.loadFile("/milestones/release200.json");
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonMilestone, respHeaders);
+		connector.setResponse(response);
+		client.getMilestoneContent(200, null);
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(2, requestsSent.size());
+		ServerRequest request = requestsSent.get(0);
+		assertEquals("https://test/url/api/v12.3/milestones/200/content", request.url); //$NON-NLS-1$
+		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
+
+		request = requestsSent.get(1);
+		assertEquals("https://test/url/api/v12.3/milestones/200/content", request.url); //$NON-NLS-1$
+		assertEquals("GET", request.method); //$NON-NLS-1$
+	}
+
+	@Test
 	@Ignore("Fix me when cardwalls are back in the game")
 	public void testRetrieveMilestoneWithCardwall() throws CoreException, ParseException {
 		MockListRestConnector listConnector = new MockListRestConnector();
