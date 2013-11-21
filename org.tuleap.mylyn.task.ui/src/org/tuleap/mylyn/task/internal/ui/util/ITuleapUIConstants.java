@@ -27,6 +27,11 @@ public interface ITuleapUIConstants {
 	 */
 	public interface Icons {
 		/**
+		 * The icon of the settings page of the repository.
+		 */
+		String BANNER_REPOSITORY_SETTINGS_75X66 = "/icons/wizards/banner-repository-settings_75x66.png"; //$NON-NLS-1$
+
+		/**
 		 * The Tuleap logo in 16x16.
 		 */
 		String TULEAP_LOGO_16X16 = "/icons/tools/tuleap-logo_16x16.png"; //$NON-NLS-1$

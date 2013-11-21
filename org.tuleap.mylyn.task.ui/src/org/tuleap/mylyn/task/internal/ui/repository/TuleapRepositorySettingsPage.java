@@ -22,6 +22,7 @@ import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.tuleap.mylyn.task.internal.core.client.rest.ITuleapAPIVersions;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestResourceFactory;
@@ -34,6 +35,7 @@ import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.ui.TuleapTasksUIPlugin;
+import org.tuleap.mylyn.task.internal.ui.util.ITuleapUIConstants;
 import org.tuleap.mylyn.task.internal.ui.util.TuleapUIMessages;
 import org.tuleap.mylyn.task.internal.ui.util.TuleapUiMessagesKeys;
 
@@ -67,6 +69,17 @@ public class TuleapRepositorySettingsPage extends AbstractRepositorySettingsPage
 	@Override
 	public String getConnectorKind() {
 		return ITuleapConstants.CONNECTOR_KIND;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.wizard.WizardPage#getImage()
+	 */
+	@Override
+	public Image getImage() {
+		return TuleapTasksUIPlugin.getDefault().getImage(
+				ITuleapUIConstants.Icons.BANNER_REPOSITORY_SETTINGS_75X66);
 	}
 
 	/**
