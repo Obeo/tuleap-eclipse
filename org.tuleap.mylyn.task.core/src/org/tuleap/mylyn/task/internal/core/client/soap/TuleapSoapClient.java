@@ -106,7 +106,7 @@ public class TuleapSoapClient {
 	/**
 	 * Returns the configuration of the tracker with the given identifier.
 	 * 
-	 * @param projectConfiguration
+	 * @param project
 	 *            The configuration of the project
 	 * @param trackerId
 	 *            The identifier of the tracker
@@ -114,10 +114,9 @@ public class TuleapSoapClient {
 	 *            The progress monitor
 	 * @return The configuration of the tracker with the given identifier
 	 */
-	public TuleapTracker getTuleapTrackerConfiguration(TuleapProject projectConfiguration, int trackerId,
+	public TuleapTracker getTuleapTrackerConfiguration(TuleapProject project, int trackerId,
 			IProgressMonitor monitor) {
-		return this.soapConnector.getTuleapTrackerConfiguration(projectConfiguration.getIdentifier(),
-				trackerId, monitor);
+		return this.soapConnector.getTuleapTrackerConfiguration(project.getIdentifier(), trackerId, monitor);
 	}
 
 	/**

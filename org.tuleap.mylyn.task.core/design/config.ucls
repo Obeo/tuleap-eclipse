@@ -23,10 +23,9 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <interface id="3" language="java" 
-    name="org.tuleap.mylyn.task.internal.core.model.config.ITuleapConfigurationConstants" 
+  <interface id="3" language="java" name="org.tuleap.mylyn.task.internal.core.model.config.ITuleapTrackerConstants" 
     project="org.tuleap.mylyn.task.core" 
-    file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/config/ITuleapConfigurationConstants.java" 
+    file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/config/ITuleapTrackerConstants.java" 
     binary="false" corner="BOTTOM_RIGHT">    
     <position height="1161" width="218" x="27" y="-465"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
@@ -128,12 +127,11 @@
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/config/field" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="111" width="323" x="338" y="51"/>    
-    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
-      visibility="true"/>  
+    <display autosize="false" stereotype="true" accessors="true"/>  
   </package>  
   <class id="13" language="java" name="org.tuleap.mylyn.task.internal.core.model.config.TuleapPlanning" 
     project="org.tuleap.mylyn.task.core" 
-    file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/config/TuleapPlanningConfiguration.java" 
+    file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/config/TuleapPlanning.java" 
     binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="901" y="-31"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
@@ -143,95 +141,71 @@
     </display>  
   </class>  
   <association id="14">    
-    <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="15" name="projectById"/>      
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="15" name="membersById"/>      
       <multiplicity id="16" minimum="0" maximum="2147483647"/>    
     </end>    
-    <end type="TARGET" refId="11" navigable="true"/>    
+    <end type="TARGET" refId="9" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="17">    
-    <end type="SOURCE" refId="11" navigable="false">      
-      <attribute id="18" name="groupsById"/>      
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="18" name="childrenTrackers"/>      
       <multiplicity id="19" minimum="0" maximum="2147483647"/>    
     </end>    
-    <end type="TARGET" refId="5" navigable="true"/>    
+    <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="20">    
-    <end type="SOURCE" refId="11" navigable="false">      
-      <attribute id="21" name="trackersById"/>      
-      <multiplicity id="22" minimum="0" maximum="2147483647"/>    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="21" name="parentTracker"/>      
+      <multiplicity id="22" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="23">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="24" name="fields"/>      
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="24" name="groupsById"/>      
       <multiplicity id="25" minimum="0" maximum="2147483647"/>    
     </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
+    <end type="TARGET" refId="5" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="26">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="27" name="tuleapProject"/>      
-      <multiplicity id="28" minimum="0" maximum="1"/>    
+      <attribute id="27" name="fields"/>      
+      <multiplicity id="28" minimum="0" maximum="2147483647"/>    
     </end>    
-    <end type="TARGET" refId="11" navigable="true"/>    
+    <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="29">    
+  <association id="29">    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="30" name="planningsById"/>      
+      <multiplicity id="31" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="32">    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="33" name="trackersById"/>      
+      <multiplicity id="34" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="35">    
     <end type="SOURCE" refId="2"/>    
     <end type="TARGET" refId="7"/>  
   </generalization>  
-  <association id="30">    
-    <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="31" name="personsById"/>      
-      <multiplicity id="32" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="33">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="34" name="parentTracker"/>      
-      <multiplicity id="35" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
   <association id="36">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="37" name="childrenTrackers"/>      
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="37" name="personsById"/>      
       <multiplicity id="38" minimum="0" maximum="2147483647"/>    
     </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="39">    
-    <end type="SOURCE" refId="11" navigable="false">      
-      <attribute id="40" name="serverConfiguration"/>      
-      <multiplicity id="41" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="42">    
-    <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="43" name="membersById"/>      
-      <multiplicity id="44" minimum="0" maximum="2147483647"/>    
-    </end>    
     <end type="TARGET" refId="9" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="45">    
-    <end type="SOURCE" refId="11" navigable="false">      
-      <attribute id="46" name="planningsById"/>      
-      <multiplicity id="47" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="13" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 

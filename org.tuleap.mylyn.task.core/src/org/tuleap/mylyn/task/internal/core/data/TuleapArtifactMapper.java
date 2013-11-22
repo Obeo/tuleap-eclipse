@@ -98,14 +98,14 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	}
 
 	/**
-	 * Initialize an empty task data from the given configuration.
+	 * Initialize an empty task data from the given tracker.
 	 */
 	public void initializeEmptyTaskData() {
 		createTaskKindTaskAttribute();
 
-		// The project id and the configuration id
-		setProjectId(tracker.getTuleapProjectConfiguration().getIdentifier());
-		setConfigurationId(tracker.getIdentifier());
+		// The project id and the tracker id
+		setProjectId(tracker.getProject().getIdentifier());
+		setTrackerId(tracker.getIdentifier());
 
 		createCreationDateTaskAttribute();
 		createLastUpdateDateTaskAttribute();
@@ -124,8 +124,8 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 			}
 		}
 
-		TuleapProject projectConfiguration = tracker.getTuleapProjectConfiguration();
-		if (projectConfiguration.isMilestoneTracker(tracker.getIdentifier())) {
+		TuleapProject project = tracker.getProject();
+		if (project.isMilestoneTracker(tracker.getIdentifier())) {
 			AgileTaskKindUtil.setAgileTaskKind(taskData, AgileTaskKindUtil.TASK_KIND_MILESTONE);
 		} else {
 			AgileTaskKindUtil.setAgileTaskKind(taskData, AgileTaskKindUtil.TASK_KIND_ARTIFACT);
@@ -220,44 +220,43 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 			attribute.setValue(name);
 		} else {
 			attribute.setValue(TuleapMylynTasksMessages
-					.getString(TuleapMylynTasksMessagesKeys.defaultConfigurationName));
+					.getString(TuleapMylynTasksMessagesKeys.defaultTrackerName));
 		}
 	}
 
 	/**
-	 * Sets the identifier of the configuration of the element (tracker id, backlog item type id, etc).
+	 * Sets the identifier of the tracker of the element (tracker id, backlog item type id, etc).
 	 * 
-	 * @param configurationId
-	 *            The identifier of the configuration of the element
+	 * @param trackerId
+	 *            The identifier of the tracker of the element
 	 */
-	private void setConfigurationId(int configurationId) {
+	private void setTrackerId(int trackerId) {
 		// should not appear in the attribute part so no task attribute type!
-		TaskAttribute configurationIdAtt = taskData.getRoot().getMappedAttribute(TRACKER_ID);
-		if (configurationIdAtt == null) {
-			configurationIdAtt = taskData.getRoot().createMappedAttribute(TRACKER_ID);
+		TaskAttribute trackerIdAtt = taskData.getRoot().getMappedAttribute(TRACKER_ID);
+		if (trackerIdAtt == null) {
+			trackerIdAtt = taskData.getRoot().createMappedAttribute(TRACKER_ID);
 		}
-		taskData.getAttributeMapper().setIntegerValue(configurationIdAtt, Integer.valueOf(configurationId));
+		taskData.getAttributeMapper().setIntegerValue(trackerIdAtt, Integer.valueOf(trackerId));
 	}
 
 	/**
-	 * Returns the identifier of the configuration or INVALID_CONFIGURATION_ID otherwise.
+	 * Returns the identifier of the tracker or IRRELEVANT_ID otherwise.
 	 * 
-	 * @return The identifier of the configuration or INVALID_CONFIGURATION_ID otherwise.
+	 * @return The identifier of the tracker or IRRELEVANT_ID otherwise.
 	 */
-	public int getConfigurationId() {
-		int configurationId = TuleapTaskIdentityUtil.IRRELEVANT_ID;
+	public int getTrackerId() {
+		int trackerId = TuleapTaskIdentityUtil.IRRELEVANT_ID;
 
 		if (this.taskData.isNew()) {
-			TaskAttribute configurationIdAtt = taskData.getRoot().getMappedAttribute(TRACKER_ID);
-			if (configurationIdAtt != null) {
-				configurationId = taskData.getAttributeMapper().getIntegerValue(configurationIdAtt)
-						.intValue();
+			TaskAttribute trackerIdAtt = taskData.getRoot().getMappedAttribute(TRACKER_ID);
+			if (trackerIdAtt != null) {
+				trackerId = taskData.getAttributeMapper().getIntegerValue(trackerIdAtt).intValue();
 			}
 		} else {
-			configurationId = TuleapTaskIdentityUtil.getTrackerIdFromTaskDataId(taskData.getTaskId());
+			trackerId = TuleapTaskIdentityUtil.getTrackerIdFromTaskDataId(taskData.getTaskId());
 		}
 
-		return configurationId;
+		return trackerId;
 	}
 
 	/**

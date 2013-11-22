@@ -74,7 +74,7 @@ public class TuleapProjectContentProvider implements ITreeContentProvider {
 	 */
 	public Object getParent(Object element) {
 		if (element instanceof TuleapTracker) {
-			return ((TuleapTracker)element).getTuleapProjectConfiguration();
+			return ((TuleapTracker)element).getProject();
 		}
 		return null;
 	}

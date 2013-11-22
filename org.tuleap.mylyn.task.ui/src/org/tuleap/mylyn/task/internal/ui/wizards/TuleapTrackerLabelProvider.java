@@ -49,11 +49,11 @@ public class TuleapTrackerLabelProvider extends LabelProvider {
 			TuleapTracker tuleapTracker = (TuleapTracker)element;
 			int trackerId = tuleapTracker.getIdentifier();
 
-			if (tuleapTracker.getTuleapProjectConfiguration().isMilestoneTracker(trackerId)
-					&& tuleapTracker.getTuleapProjectConfiguration().isCardwallActive(trackerId)) {
+			if (tuleapTracker.getProject().isMilestoneTracker(trackerId)
+					&& tuleapTracker.getProject().isCardwallActive(trackerId)) {
 				image = TuleapTasksUIPlugin.getDefault().getImage(
 						ITuleapUIConstants.Icons.TULEAP_CARDWALL_16X16);
-			} else if (tuleapTracker.getTuleapProjectConfiguration().isMilestoneTracker(trackerId)) {
+			} else if (tuleapTracker.getProject().isMilestoneTracker(trackerId)) {
 				image = TuleapTasksUIPlugin.getDefault().getImage(
 						ITuleapUIConstants.Icons.TULEAP_PLANNING_16X16);
 			} else {

@@ -85,8 +85,8 @@ public abstract class AbstractTuleapField extends AbstractTuleapFormElement {
 	}
 
 	/**
-	 * Creates an returns a new TaskAttribute using this field's configuration. This method is meant to be
-	 * overridden in the subclasses to provide the relevant behavior depending on the type of tuleap field.
+	 * Creates an returns a new TaskAttribute using this field. This method is meant to be overridden in the
+	 * subclasses to provide the relevant behavior depending on the type of tuleap field.
 	 * 
 	 * @param parent
 	 *            The parent task attribute in which the new task attribute must be created.
@@ -110,8 +110,7 @@ public abstract class AbstractTuleapField extends AbstractTuleapFormElement {
 
 	/**
 	 * Initializes a newly created TaskAttribute's metadata. The default behavior is simply to set the kind to
-	 * the value contained in this configuration, but this method should be subclassed to implement the
-	 * correct behavior.
+	 * the kind of this field, but this method should be subclassed to implement the correct behavior.
 	 * 
 	 * @param metaData
 	 *            The newly created task attribute's metadata.

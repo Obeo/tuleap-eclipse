@@ -18,7 +18,7 @@ package org.tuleap.mylyn.task.internal.core.model.config;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
-public interface ITuleapConfigurationConstants {
+public interface ITuleapTrackerConstants {
 	/**************************************************************************
 	 * Root
 	 **************************************************************************/

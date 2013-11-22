@@ -43,7 +43,7 @@ import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapQueryConstants;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
-import org.tuleap.mylyn.task.internal.core.model.config.ITuleapConfigurationConstants;
+import org.tuleap.mylyn.task.internal.core.model.config.ITuleapTrackerConstants;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapGroup;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
@@ -332,7 +332,7 @@ public class TuleapSoapConnector {
 			this.login(monitor);
 
 			monitor.beginTask(TuleapMylynTasksMessages
-					.getString(TuleapMylynTasksMessagesKeys.retrieveTuleapInstanceConfiguration), 100);
+					.getString(TuleapMylynTasksMessagesKeys.retrieveTuleapServer), 100);
 
 			monitor.worked(1);
 			monitor.subTask(TuleapMylynTasksMessages
@@ -542,7 +542,7 @@ public class TuleapSoapConnector {
 
 		String type = trackerField.getType();
 		int fieldIdentifier = trackerField.getField_id();
-		if (ITuleapConfigurationConstants.STRING.equals(type)) {
+		if (ITuleapTrackerConstants.STRING.equals(type)) {
 			tuleapField = new TuleapString(fieldIdentifier);
 
 			TrackerSemanticTitle trackerSemanticTitle = trackerSemantic.getTitle();
@@ -550,26 +550,26 @@ public class TuleapSoapConnector {
 			if (trackerSemanticTitleFieldName.equals(trackerField.getShort_name())) {
 				((TuleapString)tuleapField).setSemanticTitle(true);
 			}
-		} else if (ITuleapConfigurationConstants.TEXT.equals(type)) {
+		} else if (ITuleapTrackerConstants.TEXT.equals(type)) {
 			tuleapField = new TuleapText(fieldIdentifier);
-		} else if (ITuleapConfigurationConstants.SB.equals(type)) {
+		} else if (ITuleapTrackerConstants.SB.equals(type)) {
 			tuleapField = this.getTuleapSelectBox(trackerStructure, trackerField);
-		} else if (ITuleapConfigurationConstants.MSB.equals(type)
-				|| ITuleapConfigurationConstants.CB.equals(type)) {
+		} else if (ITuleapTrackerConstants.MSB.equals(type)
+				|| ITuleapTrackerConstants.CB.equals(type)) {
 			tuleapField = this.getTuleapMultiSelectBox(groupId, trackerStructure, trackerField);
-		} else if (ITuleapConfigurationConstants.DATE.equals(type)) {
+		} else if (ITuleapTrackerConstants.DATE.equals(type)) {
 			tuleapField = new TuleapDate(fieldIdentifier);
-		} else if (ITuleapConfigurationConstants.FILE.equals(type)) {
+		} else if (ITuleapTrackerConstants.FILE.equals(type)) {
 			tuleapField = new TuleapFileUpload(fieldIdentifier);
-		} else if (ITuleapConfigurationConstants.ARTLINK.equals(type)) {
+		} else if (ITuleapTrackerConstants.ARTLINK.equals(type)) {
 			tuleapField = new TuleapArtifactLink(fieldIdentifier);
-		} else if (ITuleapConfigurationConstants.INT.equals(type)) {
+		} else if (ITuleapTrackerConstants.INT.equals(type)) {
 			tuleapField = new TuleapInteger(fieldIdentifier);
-		} else if (ITuleapConfigurationConstants.TBL.equals(type)) {
+		} else if (ITuleapTrackerConstants.TBL.equals(type)) {
 			tuleapField = new TuleapOpenList(fieldIdentifier);
-		} else if (ITuleapConfigurationConstants.FLOAT.equals(type)) {
+		} else if (ITuleapTrackerConstants.FLOAT.equals(type)) {
 			tuleapField = new TuleapFloat(fieldIdentifier);
-		} else if (ITuleapConfigurationConstants.COMPUTED.equals(type)) {
+		} else if (ITuleapTrackerConstants.COMPUTED.equals(type)) {
 			tuleapField = new TuleapComputedValue(fieldIdentifier);
 		} else {
 			TuleapCoreActivator.log(TuleapMylynTasksMessages.getString(
@@ -747,7 +747,7 @@ public class TuleapSoapConnector {
 
 			monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.executingQuery));
 
-			String queryTrackerId = query.getAttribute(ITuleapQueryConstants.QUERY_CONFIGURATION_ID);
+			String queryTrackerId = query.getAttribute(ITuleapQueryConstants.QUERY_TRACKER_ID);
 			trackerId = Integer.valueOf(queryTrackerId).intValue();
 
 			ArtifactQueryResult artifactQueryResult = null;
@@ -762,7 +762,7 @@ public class TuleapSoapConnector {
 				List<Criteria> criterias = new ArrayList<Criteria>();
 				if (ITuleapQueryConstants.QUERY_KIND_CUSTOM.equals(query
 						.getAttribute(ITuleapQueryConstants.QUERY_KIND))
-						&& query.getAttribute(ITuleapQueryConstants.QUERY_CONFIGURATION_ID) != null) {
+						&& query.getAttribute(ITuleapQueryConstants.QUERY_TRACKER_ID) != null) {
 					// Custom query
 					criterias.addAll(this.getCriterias(query));
 				}
@@ -841,7 +841,7 @@ public class TuleapSoapConnector {
 		List<Criteria> criterias = new ArrayList<Criteria>();
 		for (Entry<String, String> entry : query.getAttributes().entrySet()) {
 			if (!(entry.getKey().equals(ITuleapQueryConstants.QUERY_KIND) || entry.getKey().equals(
-					ITuleapQueryConstants.QUERY_CONFIGURATION_ID))) {
+					ITuleapQueryConstants.QUERY_TRACKER_ID))) {
 				String[] attributes = this.getAttributes(entry.getValue());
 				CriteriaValueDate criteriaValueDate = null;
 				// First attribute is the value
@@ -1087,9 +1087,9 @@ public class TuleapSoapConnector {
 			return artifactFieldValue;
 		}
 
-		if (ITuleapConfigurationConstants.MSB.equals(trackerField.getType())
-				|| ITuleapConfigurationConstants.SB.equals(trackerField.getType())
-				|| ITuleapConfigurationConstants.CB.equals(trackerField.getType())) {
+		if (ITuleapTrackerConstants.MSB.equals(trackerField.getType())
+				|| ITuleapTrackerConstants.SB.equals(trackerField.getType())
+				|| ITuleapTrackerConstants.CB.equals(trackerField.getType())) {
 			// Regular select box, multi-select box or checkbox
 			AbstractFieldValue abstractFieldValue = artifact.getFieldValue(trackerField.getField_id());
 			if (abstractFieldValue instanceof BoundFieldValue) {
@@ -1148,8 +1148,8 @@ public class TuleapSoapConnector {
 		if (value == null || "".equals(value.trim())) { //$NON-NLS-1$			
 			boolean canSubmitEmptyValue = false;
 			canSubmitEmptyValue = canSubmitEmptyValue
-					|| ITuleapConfigurationConstants.STRING.equals(fieldType);
-			canSubmitEmptyValue = canSubmitEmptyValue || ITuleapConfigurationConstants.TEXT.equals(fieldType);
+					|| ITuleapTrackerConstants.STRING.equals(fieldType);
+			canSubmitEmptyValue = canSubmitEmptyValue || ITuleapTrackerConstants.TEXT.equals(fieldType);
 			return canSubmitEmptyValue;
 		}
 		return true;
@@ -1164,10 +1164,10 @@ public class TuleapSoapConnector {
 	 */
 	private boolean shouldConsider(String trackerFieldType) {
 		boolean shouldConsider = true;
-		shouldConsider = shouldConsider && !ITuleapConfigurationConstants.AID.equals(trackerFieldType);
-		shouldConsider = shouldConsider && !ITuleapConfigurationConstants.SUBON.equals(trackerFieldType);
-		shouldConsider = shouldConsider && !ITuleapConfigurationConstants.SUBBY.equals(trackerFieldType);
-		shouldConsider = shouldConsider && !ITuleapConfigurationConstants.LUD.equals(trackerFieldType);
+		shouldConsider = shouldConsider && !ITuleapTrackerConstants.AID.equals(trackerFieldType);
+		shouldConsider = shouldConsider && !ITuleapTrackerConstants.SUBON.equals(trackerFieldType);
+		shouldConsider = shouldConsider && !ITuleapTrackerConstants.SUBBY.equals(trackerFieldType);
+		shouldConsider = shouldConsider && !ITuleapTrackerConstants.LUD.equals(trackerFieldType);
 		return shouldConsider;
 	}
 

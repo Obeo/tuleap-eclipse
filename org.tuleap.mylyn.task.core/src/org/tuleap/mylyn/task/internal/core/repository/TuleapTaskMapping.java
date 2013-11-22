@@ -21,7 +21,7 @@ import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 public class TuleapTaskMapping extends TaskMapping {
 
 	/**
-	 * The configuration of the element.
+	 * The tracker of the element.
 	 */
 	private TuleapTracker tracker;
 
@@ -29,16 +29,16 @@ public class TuleapTaskMapping extends TaskMapping {
 	 * The constructor.
 	 * 
 	 * @param tracker
-	 *            The configuration of the element
+	 *            The tracker of the element
 	 */
 	public TuleapTaskMapping(TuleapTracker tracker) {
 		this.tracker = tracker;
 	}
 
 	/**
-	 * Returns the configuration in which the task is created.
+	 * Returns the tracker in which the task is created.
 	 * 
-	 * @return The configuration in which the task is created.
+	 * @return The tracker in which the task is created.
 	 */
 	public TuleapTracker getTracker() {
 		return this.tracker;

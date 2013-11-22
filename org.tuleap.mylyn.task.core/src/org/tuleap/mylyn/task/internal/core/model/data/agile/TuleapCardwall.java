@@ -16,7 +16,8 @@ import com.google.common.collect.Lists;
 import java.util.List;
 
 /**
- * The configuration of a card wall in Tuleap.
+ * A card wall in Tuleap, that contains columns (one column is understated and has no id), and a list of
+ * swimlanes, each swimlane containing cards.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */

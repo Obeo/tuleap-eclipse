@@ -82,7 +82,7 @@ public final class TuleapUrlUtil {
 	 */
 	public static String getTaskIdFromTaskUrl(String taskUrl) {
 		int projectId = TuleapTaskIdentityUtil.IRRELEVANT_ID;
-		int configurationId = TuleapTaskIdentityUtil.IRRELEVANT_ID;
+		int trackerId = TuleapTaskIdentityUtil.IRRELEVANT_ID;
 		int elementId = TuleapTaskIdentityUtil.IRRELEVANT_ID;
 
 		int indexOfRepository = taskUrl.indexOf(REPOSITORY_PROJECT_ID_URL_SEPARATOR);
@@ -95,7 +95,7 @@ public final class TuleapUrlUtil {
 		int indexOfTracker = taskUrl.indexOf(REPOSITORY_TRACKER_ID_URL_SEPARATOR);
 		indexOfSeparator = taskUrl.indexOf(PARAMETER_SEPARATOR, indexOfTracker);
 		if (indexOfTracker != -1 && indexOfSeparator != -1) {
-			configurationId = Integer.parseInt(taskUrl.substring(indexOfTracker
+			trackerId = Integer.parseInt(taskUrl.substring(indexOfTracker
 					+ REPOSITORY_TRACKER_ID_URL_SEPARATOR.length(), indexOfSeparator));
 		}
 
@@ -105,7 +105,7 @@ public final class TuleapUrlUtil {
 					+ REPOSITORY_ELEMENT_ID_URL_SEPARATOR.length()));
 		}
 
-		return TuleapTaskIdentityUtil.getTaskDataId(projectId, configurationId, elementId);
+		return TuleapTaskIdentityUtil.getTaskDataId(projectId, trackerId, elementId);
 	}
 
 	/**

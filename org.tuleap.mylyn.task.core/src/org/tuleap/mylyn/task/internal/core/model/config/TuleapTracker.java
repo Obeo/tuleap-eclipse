@@ -23,8 +23,8 @@ import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBoxIte
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapString;
 
 /**
- * The repository configuration will hold the latest known configuration of a given repository. This
- * configuration can dramatically evolve over time and it should be refreshed automatically or manually.
+ * The repository will hold the latest known trackers of a given repository. A tracker can dramatically evolve
+ * over time and should be refreshed automatically or manually.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
@@ -52,12 +52,12 @@ public class TuleapTracker implements Serializable {
 	private int identifier;
 
 	/**
-	 * The last time this configuration was updated.
+	 * The last time this tracker was updated.
 	 */
 	private long lastUpdateDate;
 
 	/**
-	 * The url of the configuration.
+	 * The url of the tracker.
 	 */
 	private String url;
 
@@ -107,15 +107,15 @@ public class TuleapTracker implements Serializable {
 	private TuleapFileUpload attachmentField;
 
 	/**
-	 * The configuration of the project containing the configuration.
+	 * The project containing the tracker.
 	 */
-	private TuleapProject tuleapProject;
+	private TuleapProject project;
 
 	/**
 	 * The constructor.
 	 * 
 	 * @param identifier
-	 *            The identifier of the configuration
+	 *            The identifier of the tracker
 	 * @param url
 	 *            The URL.
 	 * @param label
@@ -125,7 +125,7 @@ public class TuleapTracker implements Serializable {
 	 * @param description
 	 *            The description
 	 * @param lastUpdateDate
-	 *            The date at which the configuration was last updated.
+	 *            The date at which the tracker was last updated.
 	 */
 	public TuleapTracker(int identifier, String url, String label, String itemName, String description,
 			long lastUpdateDate) {
@@ -138,36 +138,36 @@ public class TuleapTracker implements Serializable {
 	}
 
 	/**
-	 * Returns the time at which the configuration was last updated.
+	 * Returns the time at which the tracker was last updated.
 	 * 
-	 * @return The time at which the configuration was last updated.
+	 * @return The time at which the tracker was last updated.
 	 */
 	public long getLastUpdateDate() {
 		return this.lastUpdateDate;
 	}
 
 	/**
-	 * Returns the url of the configuration.
+	 * Returns the url of the tracker.
 	 * 
-	 * @return The url of the configuration.
+	 * @return The url of the tracker.
 	 */
 	public String getUrl() {
 		return this.url;
 	}
 
 	/**
-	 * Returns the label of the configuration.
+	 * Returns the label of the tracker.
 	 * 
-	 * @return The label of the configuration.
+	 * @return The label of the tracker.
 	 */
 	public String getLabel() {
 		return this.label;
 	}
 
 	/**
-	 * Returns the item name of the configuration.
+	 * Returns the item name of the tracker.
 	 * 
-	 * @return The item name of the configuration.
+	 * @return The item name of the tracker.
 	 */
 	public String getItemName() {
 		return this.itemName;
@@ -192,37 +192,37 @@ public class TuleapTracker implements Serializable {
 	}
 
 	/**
-	 * Returns the configuration id.
+	 * Returns the tracker id.
 	 * 
-	 * @return The configuration id.
+	 * @return The tracker id.
 	 */
 	public int getIdentifier() {
 		return this.identifier;
 	}
 
 	/**
-	 * Sets the configuration of the project containing this tracker.
+	 * Sets the project containing this tracker.
 	 * 
-	 * @param projectConfiguration
-	 *            The configuration of the project containing this tracker
+	 * @param project
+	 *            The project containing this tracker
 	 */
-	public void setTuleapProjectConfiguration(TuleapProject projectConfiguration) {
-		this.tuleapProject = projectConfiguration;
+	public void setProject(TuleapProject project) {
+		this.project = project;
 	}
 
 	/**
-	 * Returns the configuration of the project containing this tracker.
+	 * Returns the project containing this tracker.
 	 * 
-	 * @return The configuration of the project containing this tracker.
+	 * @return The project containing this tracker.
 	 */
-	public TuleapProject getTuleapProjectConfiguration() {
-		return tuleapProject;
+	public TuleapProject getProject() {
+		return project;
 	}
 
 	/**
 	 * Gets the parent tracker.
 	 * 
-	 * @return the parent tracker configuration
+	 * @return the parent tracker
 	 */
 	public TuleapTracker getParentTracker() {
 		return this.parentTracker;
@@ -242,7 +242,7 @@ public class TuleapTracker implements Serializable {
 	 * from the actual tracker.
 	 * 
 	 * @param parentTracker
-	 *            the parent tracker configuration to set
+	 *            the parent tracker to set
 	 */
 	public void setParentTracker(TuleapTracker parentTracker) {
 		if (this.doSetParent(parentTracker)) {
@@ -252,24 +252,24 @@ public class TuleapTracker implements Serializable {
 	}
 
 	/**
-	 * Add a child tracker to this configuration that should be different from the parent tracker and the
-	 * actual one.
+	 * Add a child tracker to this tracker that should be different from the parent tracker and the actual
+	 * one.
 	 * 
-	 * @param childTrackerConfiguration
-	 *            the child tracker configuration
+	 * @param childTracker
+	 *            the child tracker
 	 */
-	public void addChildTracker(TuleapTracker childTrackerConfiguration) {
-		if (this.doAddChild(childTrackerConfiguration)) {
-			childTrackerConfiguration.doSetParent(this);
+	public void addChildTracker(TuleapTracker childTracker) {
+		if (this.doAddChild(childTracker)) {
+			childTracker.doSetParent(this);
 		}
 	}
 
 	/**
 	 * In order to avoid infinite loops we create this method that has the same behavior as the
-	 * setParentTracker(TuleapTrackerConfiguration parentTracker) one.
+	 * setParentTracker(TuleapTracker parentTracker) one.
 	 * 
 	 * @param theParentTracker
-	 *            the parent tracker configuration to set
+	 *            the parent tracker to set
 	 * @return <code>true</code> if the parent is really set.
 	 */
 	private boolean doSetParent(TuleapTracker theParentTracker) {
@@ -286,24 +286,22 @@ public class TuleapTracker implements Serializable {
 
 	/**
 	 * In order to avoid infinite loops we create this method that has the same behavior as the
-	 * addChildTracker(TuleapTrackerConfiguration childTrackerConfiguration) one.
+	 * addChildTracker(TuleapTracker childTracker) one.
 	 * 
-	 * @param childTrackerConfiguration
-	 *            the child tracker configuration
+	 * @param childTracker
+	 *            the child tracker
 	 * @return <code>true</code> if the child is really added to the collection of tracker's children.
 	 */
-	private boolean doAddChild(TuleapTracker childTrackerConfiguration) {
+	private boolean doAddChild(TuleapTracker childTracker) {
 		if (this.parentTracker == null) {
-			if (childTrackerConfiguration.identifier != this.identifier) {
-				this.childrenTrackers.put(Integer.valueOf(childTrackerConfiguration.identifier),
-						childTrackerConfiguration);
+			if (childTracker.identifier != this.identifier) {
+				this.childrenTrackers.put(Integer.valueOf(childTracker.identifier), childTracker);
 			}
-		} else if (childTrackerConfiguration.identifier != this.parentTracker.identifier
-				&& childTrackerConfiguration.identifier != this.identifier) {
-			this.childrenTrackers.put(Integer.valueOf(childTrackerConfiguration.identifier),
-					childTrackerConfiguration);
+		} else if (childTracker.identifier != this.parentTracker.identifier
+				&& childTracker.identifier != this.identifier) {
+			this.childrenTrackers.put(Integer.valueOf(childTracker.identifier), childTracker);
 		}
-		return this.childrenTrackers.containsKey(Integer.valueOf(childTrackerConfiguration.identifier));
+		return this.childrenTrackers.containsKey(Integer.valueOf(childTracker.identifier));
 	}
 
 	/**
@@ -317,11 +315,11 @@ public class TuleapTracker implements Serializable {
 	}
 
 	/**
-	 * Add a field to this configuration. If the given field has a specific semantic, it is cached in the
-	 * relevant field to allow for easy retrieval.
+	 * Add a field to this tracker. If the given field has a specific semantic, it is cached in the relevant
+	 * field to allow for easy retrieval.
 	 * 
 	 * @param field
-	 *            The field to add to the configuration
+	 *            The field to add to the tracker
 	 */
 	public void addField(AbstractTuleapField field) {
 		this.fields.put(Integer.valueOf(field.getIdentifier()), field);
@@ -340,7 +338,7 @@ public class TuleapTracker implements Serializable {
 	}
 
 	/**
-	 * Provides access to the cached title field. To use only after configuration creation.
+	 * Provides access to the cached title field. To use only after tracker creation.
 	 * 
 	 * @return The field with the "title" semantic or null if sucj field doesn't exists.
 	 */
@@ -349,7 +347,7 @@ public class TuleapTracker implements Serializable {
 	}
 
 	/**
-	 * Provides access to the cached status field. To use only used after configuration creation.
+	 * Provides access to the cached status field. To use only used after tracker creation.
 	 * 
 	 * @return The field with the "status" semantic or null if such a field doesn't exist.
 	 */
@@ -358,7 +356,7 @@ public class TuleapTracker implements Serializable {
 	}
 
 	/**
-	 * Provides access to the cached contributor field. To use only used after configuration creation.
+	 * Provides access to the cached contributor field. To use only used after tracker creation.
 	 * 
 	 * @return The field with the "contributor" semantic or null if such a field doesn't exist.
 	 */
@@ -367,7 +365,7 @@ public class TuleapTracker implements Serializable {
 	}
 
 	/**
-	 * Provides access to the cached initial effort field. To use only used after configuration creation.
+	 * Provides access to the cached initial effort field. To use only used after tracker creation.
 	 * 
 	 * @return The field with the "initial effort" semantic or null if such a field doesn't exist.
 	 */
@@ -376,9 +374,9 @@ public class TuleapTracker implements Serializable {
 	}
 
 	/**
-	 * Provides access to the attachment field of this configuration.
+	 * Provides access to the attachment field of this tracker.
 	 * 
-	 * @return The attachment field of this configuration.
+	 * @return The attachment field of this tracker.
 	 */
 	public TuleapFileUpload getAttachmentField() {
 		return attachmentField;
@@ -389,8 +387,8 @@ public class TuleapTracker implements Serializable {
 	 * 
 	 * @param statusItemId
 	 *            The status for which you want to know if it means the task is closed.
-	 * @return {@code true} if the configuration of the status field closed statuses contains the given
-	 *         status, {@false otherwise}.
+	 * @return {@code true} if the tracker of the status field closed statuses contains the given status,
+	 *         {@false otherwise}.
 	 */
 	public boolean hasClosedStatusMeaning(int statusItemId) {
 		if (statusField != null) {
@@ -404,11 +402,11 @@ public class TuleapTracker implements Serializable {
 	}
 
 	/**
-	 * Provides access to a configuration field by its id.
+	 * Provides access to a tracker field by its id.
 	 * 
 	 * @param id
 	 *            the field identifier
-	 * @return The configuration field or null if it doesn't exist.
+	 * @return The tracker field or null if it doesn't exist.
 	 */
 	public AbstractTuleapField getFieldById(int id) {
 		return fields.get(Integer.valueOf(id));

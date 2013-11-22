@@ -32,29 +32,28 @@ public interface ITuleapRepositoryConnector {
 	TuleapClientManager getClientManager();
 
 	/**
-	 * Returns the configuration of the Tuleap server.
+	 * Returns the Tuleap server.
 	 * 
 	 * @param repositoryUrl
 	 *            the URL of the repository
-	 * @return The configuration of the Tuleap server.
+	 * @return The Tuleap server.
 	 */
-	TuleapServer getTuleapServerConfiguration(String repositoryUrl);
+	TuleapServer getServer(String repositoryUrl);
 
 	/**
-	 * Returns a refreshed version of the given configuration. This operation will communicate with the
-	 * server. The server configuration will be modified to contain the refreshed version of the
-	 * configuration.
+	 * Returns a refreshed version of the given tracker. This operation will communicate with the server. The
+	 * server will be modified to contain the refreshed version of the tracker.
 	 * 
 	 * @param taskRepository
 	 *            the Mylyn task repository
-	 * @param configuration
-	 *            The configuration to refresh
+	 * @param tracker
+	 *            The tracker to refresh
 	 * @param monitor
 	 *            the progress monitor
-	 * @return A refreshed version of the given configuration
+	 * @return A refreshed version of the given tracker
 	 * @throws CoreException
 	 *             In case of issues during the connection with the server
 	 */
-	TuleapTracker refreshTracker(TaskRepository taskRepository, TuleapTracker configuration,
+	TuleapTracker refreshTracker(TaskRepository taskRepository, TuleapTracker tracker,
 			IProgressMonitor monitor) throws CoreException;
 }

@@ -161,11 +161,11 @@ public abstract class AbstractTuleapConfigurableElement extends AbstractTuleapDe
 	}
 
 	/**
-	 * Add a field to this configuration. If the given field has a specific semantic, it is cached in the
-	 * relevant field to allow for easy retrieval.
+	 * Add a field to this element. If the given field has a specific semantic, it is cached in the relevant
+	 * field to allow for easy retrieval.
 	 * 
 	 * @param field
-	 *            The field to add to the configuration
+	 *            The field to add
 	 */
 	public void addField(AbstractTuleapField field) {
 		this.fields.put(Integer.valueOf(field.getIdentifier()), field);
@@ -184,7 +184,7 @@ public abstract class AbstractTuleapConfigurableElement extends AbstractTuleapDe
 	}
 
 	/**
-	 * Provides access to the cached title field. To use only after configuration creation.
+	 * Provides access to the cached title field. To use only after element creation.
 	 * 
 	 * @return The field with the "title" semantic or null if sucj field doesn't exists.
 	 */
@@ -193,7 +193,7 @@ public abstract class AbstractTuleapConfigurableElement extends AbstractTuleapDe
 	}
 
 	/**
-	 * Provides access to the cached status field. To use only used after configuration creation.
+	 * Provides access to the cached status field. To use only used after element creation.
 	 * 
 	 * @return The field with the "status" semantic or null if such a field doesn't exist.
 	 */
@@ -202,7 +202,7 @@ public abstract class AbstractTuleapConfigurableElement extends AbstractTuleapDe
 	}
 
 	/**
-	 * Provides access to the cached contributor field. To use only used after configuration creation.
+	 * Provides access to the cached contributor field. To use only used after element creation.
 	 * 
 	 * @return The field with the "contributor" semantic or null if such a field doesn't exist.
 	 */
@@ -211,7 +211,7 @@ public abstract class AbstractTuleapConfigurableElement extends AbstractTuleapDe
 	}
 
 	/**
-	 * Provides access to the cached initial effort field. To use only used after configuration creation.
+	 * Provides access to the cached initial effort field. To use only used after element creation.
 	 * 
 	 * @return The field with the "initial effort" semantic or null if such a field doesn't exist.
 	 */
@@ -220,9 +220,9 @@ public abstract class AbstractTuleapConfigurableElement extends AbstractTuleapDe
 	}
 
 	/**
-	 * Provides access to the attachment field of this configuration.
+	 * Provides access to the attachment field of this element.
 	 * 
-	 * @return The attachment field of this configuration.
+	 * @return The attachment field.
 	 */
 	public TuleapFileUpload getAttachmentField() {
 		return attachmentField;
@@ -233,8 +233,8 @@ public abstract class AbstractTuleapConfigurableElement extends AbstractTuleapDe
 	 * 
 	 * @param statusItemId
 	 *            The status for which you want to know if it means the task is closed.
-	 * @return {@code true} if the configuration of the status field closed statuses contains the given
-	 *         status, {@false otherwise}.
+	 * @return {@code true} if the status field closed statuses contain the given status, {@false
+	 *         otherwise}.
 	 */
 	public boolean hasClosedStatusMeaning(int statusItemId) {
 		if (statusField != null) {
@@ -248,11 +248,11 @@ public abstract class AbstractTuleapConfigurableElement extends AbstractTuleapDe
 	}
 
 	/**
-	 * Provides access to a configuration field by its id.
+	 * Provides access to a field by its id.
 	 * 
 	 * @param id
 	 *            the field identifier
-	 * @return The configuration field or null if it doesn't exist.
+	 * @return The field or null if it doesn't exist.
 	 */
 	public AbstractTuleapField getFieldById(int id) {
 		return fields.get(Integer.valueOf(id));

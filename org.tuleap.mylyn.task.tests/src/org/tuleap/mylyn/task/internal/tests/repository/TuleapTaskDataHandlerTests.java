@@ -146,7 +146,7 @@ public class TuleapTaskDataHandlerTests {
 	private void testNewlyInitializedElementKind(int configurationId, String taskKind) {
 		ITuleapRepositoryConnector repositoryConnector = new ITuleapRepositoryConnector() {
 
-			public TuleapServer getTuleapServerConfiguration(String repositoryUrl) {
+			public TuleapServer getServer(String repositoryUrl) {
 				return TuleapTaskDataHandlerTests.this.tuleapServer;
 			}
 
@@ -282,7 +282,7 @@ public class TuleapTaskDataHandlerTests {
 		// mock repository connector
 		ITuleapRepositoryConnector repositoryConnector = new ITuleapRepositoryConnector() {
 
-			public TuleapServer getTuleapServerConfiguration(String repositoryUrl) {
+			public TuleapServer getServer(String repositoryUrl) {
 				return TuleapTaskDataHandlerTests.this.tuleapServer;
 			}
 
@@ -390,7 +390,7 @@ public class TuleapTaskDataHandlerTests {
 		// mock repository connector
 		ITuleapRepositoryConnector repositoryConnector = new ITuleapRepositoryConnector() {
 
-			public TuleapServer getTuleapServerConfiguration(String repositoryUrl) {
+			public TuleapServer getServer(String repositoryUrl) {
 				return TuleapTaskDataHandlerTests.this.tuleapServer;
 			}
 

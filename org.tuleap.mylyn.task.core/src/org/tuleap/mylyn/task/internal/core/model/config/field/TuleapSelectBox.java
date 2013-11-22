@@ -85,8 +85,8 @@ public class TuleapSelectBox extends AbstractTuleapSelectBox {
 	}
 
 	/**
-	 * Updates the given task attribute's options depending on the configuration workflow and the task's
-	 * current status.
+	 * Updates the given task attribute's options depending on the tracker workflow and the task's current
+	 * status.
 	 * 
 	 * @param attribute
 	 *            The task attribute to update.

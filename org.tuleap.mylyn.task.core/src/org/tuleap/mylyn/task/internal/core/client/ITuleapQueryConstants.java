@@ -44,9 +44,9 @@ public interface ITuleapQueryConstants {
 	String QUERY_REPORT_ID = "tuleap_query_report_id"; //$NON-NLS-1$
 
 	/**
-	 * The key used to identify the configuration id on which the query will be run.
+	 * The key used to identify the tracker id on which the query will be run.
 	 */
-	String QUERY_CONFIGURATION_ID = "tuleap_query_configuration_id"; //$NON-NLS-1$
+	String QUERY_TRACKER_ID = "tuleap_query_tracker_id"; //$NON-NLS-1$
 
 	/**
 	 * The key used to identify the project id on which the query will be run.

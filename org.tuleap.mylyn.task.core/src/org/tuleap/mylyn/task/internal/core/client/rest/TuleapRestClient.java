@@ -143,13 +143,13 @@ public class TuleapRestClient implements IAuthenticator {
 	}
 
 	/**
-	 * Returns the configuration of the Tuleap server.
+	 * Returns the Tuleap server.
 	 * 
 	 * @param monitor
 	 *            Used to monitor the progress
-	 * @return The configuration of the server
+	 * @return The server
 	 * @throws CoreException
-	 *             In case of error during the retrieval of the configuration
+	 *             In case of error during the retrieval of the server
 	 */
 	public TuleapServer getServer(IProgressMonitor monitor) throws CoreException {
 		TuleapServer tuleapServer = new TuleapServer(this.taskRepository.getRepositoryUrl());
@@ -157,13 +157,12 @@ public class TuleapRestClient implements IAuthenticator {
 
 		if (monitor != null) {
 			monitor.beginTask(TuleapMylynTasksMessages
-					.getString(TuleapMylynTasksMessagesKeys.retrieveTuleapInstanceConfiguration), 100);
+					.getString(TuleapMylynTasksMessagesKeys.retrieveTuleapServer), 100);
 		}
 
 		RestResource restProjects = restResourceFactory.projects().withAuthenticator(this);
 
-		// Retrieve the projects and create the configuration of each project
-
+		// Retrieve the projects and create each project
 		if (monitor != null) {
 			monitor.subTask(TuleapMylynTasksMessages
 					.getString(TuleapMylynTasksMessagesKeys.retrievingProjectsList));
@@ -172,7 +171,7 @@ public class TuleapRestClient implements IAuthenticator {
 		ServerResponse projectsServerResponse = operation.checkedRun();
 
 		String projectsGetResponseBody = projectsServerResponse.getBody();
-		List<TuleapProject> projects = this.jsonParser.parseProjectConfigurations(projectsGetResponseBody);
+		List<TuleapProject> projects = this.jsonParser.parseProjects(projectsGetResponseBody);
 
 		// For each project that has the tracker service
 		for (TuleapProject project : projects) {
@@ -182,23 +181,22 @@ public class TuleapRestClient implements IAuthenticator {
 
 			// TODO SBE Restore this code!
 
-			// if (projectConfig.hasService(ITuleapProjectServices.TRACKERS)) {
+			// if (project.hasService(ITuleapProjectServices.TRACKERS)) {
 			// // Check that we can get the list of trackers for this project
-			// RestProjectsTrackers restTrackers = restResources.projectsTrackers(projectConfig
+			// RestProjectsTrackers restTrackers = restResources.projectsTrackers(project
 			// .getIdentifier());
 			//
-			// // Retrieve the trackers and create the configuration of each tracker
+			// // Retrieve the trackers and create each tracker
 			// ServerResponse projectTrackersGetServerResponse = restTrackers.get(Collections
 			// .<String, String> emptyMap());
 			// // TODO Pagination on trackers?
 			// if (ITuleapServerStatus.OK == projectTrackersGetServerResponse.getStatus()) {
 			// String projectTrackersGetResponseBody = projectTrackersGetServerResponse.getBody();
-			// List<TuleapTrackerConfiguration> trackerConfigurations = this.jsonParser
-			// .getTrackerConfigurations(projectTrackersGetResponseBody);
-			// // Put the configuration of the trackers in their containing project's
-			// // configuration
-			// for (TuleapTrackerConfiguration trackerConfig : trackerConfigurations) {
-			// projectConfig.addTracker(trackerConfig);
+			// List<TuleapTracker> trackers = this.jsonParser
+			// .getTrackers(projectTrackersGetResponseBody);
+			// // Put the trackers in their containing project
+			// for (TuleapTracker tracker : trackers) {
+			// project.addTracker(tracker);
 			// }
 			//
 			// // adding the properties parent/children to trackers
@@ -212,8 +210,8 @@ public class TuleapRestClient implements IAuthenticator {
 			//							JsonObject hierarchy = tracker.get("hierarchy").getAsJsonObject(); //$NON-NLS-1$
 			//							int parentTrackerId = hierarchy.get("parent_tracker_id").getAsInt(); //$NON-NLS-1$
 			//
-			// projectConfig.getTrackerConfiguration(trackerId).setParentTracker(
-			// projectConfig.getTrackerConfiguration(parentTrackerId));
+			// project.getTracker(trackerId).setParentTracker(
+			// project.getTracker(parentTrackerId));
 			// }
 			//
 			// } else {
@@ -230,8 +228,7 @@ public class TuleapRestClient implements IAuthenticator {
 	}
 
 	/**
-	 * Loads the planning into a given project configuration after fetching them from the remote server via
-	 * the REST API.
+	 * Loads the planning into a given project after fetching them from the remote server via the REST API.
 	 * 
 	 * @param project
 	 *            The project in which plannings must be loaded

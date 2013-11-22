@@ -52,7 +52,7 @@ import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector
 public class ArtifactTaskDataConverter {
 
 	/**
-	 * The configuration of the kind of elements.
+	 * The tracker.
 	 */
 	protected final TuleapTracker tracker;
 
@@ -67,23 +67,23 @@ public class ArtifactTaskDataConverter {
 	protected final ITuleapRepositoryConnector connector;
 
 	/**
-	 * Map of refreshed configurations to only refresh them once during the "transaction".
+	 * Map of refreshed trackers to only refresh them once during the "transaction".
 	 */
 	private final Map<Integer, TuleapTracker> refreshedTrackersById = Maps.newHashMap();
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param configuration
-	 *            The configuration of the tracker.
+	 * @param tracker
+	 *            The tracker.
 	 * @param taskRepository
 	 *            The task repository to use.
 	 * @param connector
 	 *            The repository connector to use.
 	 */
-	public ArtifactTaskDataConverter(TuleapTracker configuration, TaskRepository taskRepository,
+	public ArtifactTaskDataConverter(TuleapTracker tracker, TaskRepository taskRepository,
 			ITuleapRepositoryConnector connector) {
-		this.tracker = configuration; // Can be null
+		this.tracker = tracker; // Can be null
 		Assert.isNotNull(taskRepository);
 		Assert.isNotNull(connector);
 		this.taskRepository = taskRepository;
@@ -105,8 +105,8 @@ public class ArtifactTaskDataConverter {
 		tuleapArtifactMapper.initializeEmptyTaskData();
 
 		// Task Key
-		String taskKey = TuleapTaskIdentityUtil.getTaskDataKey(this.tracker.getTuleapProjectConfiguration()
-				.getName(), this.tracker.getLabel(), element.getId());
+		String taskKey = TuleapTaskIdentityUtil.getTaskDataKey(this.tracker.getProject().getName(),
+				this.tracker.getLabel(), element.getId());
 		tuleapArtifactMapper.setTaskKey(taskKey);
 
 		// URL
@@ -225,12 +225,12 @@ public class ArtifactTaskDataConverter {
 	}
 
 	/**
-	 * Refresh the configuration if it has not already been refreshed.
+	 * Refresh the tracker if it has not already been refreshed.
 	 * 
 	 * @param projectId
 	 *            The project Id
 	 * @param trackerId
-	 *            The configuration Id
+	 *            The tracker Id
 	 * @param monitor
 	 *            The progress monitor to use
 	 */
@@ -239,17 +239,16 @@ public class ArtifactTaskDataConverter {
 		if (refreshedTrackersById.containsKey(Integer.valueOf(trackerId))) {
 			refreshedConfig = refreshedTrackersById.get(Integer.valueOf(trackerId));
 		} else {
-			// Let's refresh the configuration
+			// Let's refresh the tracker
 			// First, let's get the element's project config, in case the element comes from a
 			// different project, who knows...
-			TuleapProject projectConfiguration;
+			TuleapProject project;
 			if (tracker != null) {
-				projectConfiguration = tracker.getTuleapProjectConfiguration();
+				project = tracker.getProject();
 			} else {
-				projectConfiguration = connector.getTuleapServerConfiguration(taskRepository.getUrl())
-						.getProject(projectId);
+				project = connector.getServer(taskRepository.getUrl()).getProject(projectId);
 			}
-			refreshedConfig = projectConfiguration.getTracker(trackerId);
+			refreshedConfig = project.getTracker(trackerId);
 			try {
 				refreshedTrackersById.put(Integer.valueOf(trackerId), connector.refreshTracker(
 						taskRepository, refreshedConfig, monitor));
@@ -272,8 +271,6 @@ public class ArtifactTaskDataConverter {
 	 */
 	public void populateTaskData(TaskData taskData, TuleapArtifact tuleapArtifact, IProgressMonitor monitor) {
 		populateTaskDataConfigurableFields(taskData, tuleapArtifact);
-
-		// TODO Replace this with a mechanism to mark as ARTIFACT, and allow for marking as MILESTONE or BI
 		AgileTaskKindUtil.setAgileTaskKind(taskData, AgileTaskKindUtil.TASK_KIND_ARTIFACT);
 	}
 
@@ -288,7 +285,7 @@ public class ArtifactTaskDataConverter {
 		TuleapArtifactMapper tuleapArtifactMapper = new TuleapArtifactMapper(taskData, this.tracker);
 
 		TuleapArtifact tuleapArtifact = null;
-		int trackerId = tuleapArtifactMapper.getConfigurationId();
+		int trackerId = tuleapArtifactMapper.getTrackerId();
 		int projectId = tuleapArtifactMapper.getProjectId();
 		TuleapReference trackerRef = new TuleapReference();
 		trackerRef.setId(trackerId);

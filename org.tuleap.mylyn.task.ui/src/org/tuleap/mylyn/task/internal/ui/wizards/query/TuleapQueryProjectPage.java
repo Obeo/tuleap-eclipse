@@ -215,7 +215,7 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 	 * @return the server configuration.
 	 */
 	private TuleapServer getServerConfiguration() {
-		return ((ITuleapRepositoryConnector)getConnector()).getTuleapServerConfiguration(getTaskRepository()
+		return ((ITuleapRepositoryConnector)getConnector()).getServer(getTaskRepository()
 				.getRepositoryUrl());
 	}
 

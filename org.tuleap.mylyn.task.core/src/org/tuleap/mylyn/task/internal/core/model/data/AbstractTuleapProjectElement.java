@@ -56,8 +56,7 @@ public abstract class AbstractTuleapProjectElement implements Serializable {
 
 	/**
 	 * This constructor is used for the creation of the configurable elements that have not been synchronized
-	 * on the server yet. We need the identifier of the configuration to know the details of the artifact to
-	 * update.
+	 * on the server yet. We need the identifier of the project to know the details of the artifact to update.
 	 * 
 	 * @param project
 	 *            The reference to the project
@@ -68,7 +67,7 @@ public abstract class AbstractTuleapProjectElement implements Serializable {
 
 	/**
 	 * This constructor is used for the update of an existing element. We know the identifier of the element
-	 * and the identifier of its configuration.
+	 * and the identifier of its project.
 	 * 
 	 * @param id
 	 *            The identifier of the element

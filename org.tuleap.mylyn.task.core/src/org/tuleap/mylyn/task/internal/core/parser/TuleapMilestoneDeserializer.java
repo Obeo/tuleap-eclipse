@@ -25,7 +25,7 @@ import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**
- * This class is used to deserialize the JSON representation of a tracker configuration.
+ * This class is used to deserialize the JSON representation of a milestone.
  * 
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>

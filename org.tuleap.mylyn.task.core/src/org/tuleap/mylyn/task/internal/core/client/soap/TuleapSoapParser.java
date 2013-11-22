@@ -60,16 +60,16 @@ public class TuleapSoapParser {
 		Artifact artifactToParse = commentedArtifact.getArtifact();
 		int artifactId = artifactToParse.getArtifact_id();
 		int trackerId = artifactToParse.getTracker_id();
-		int projectId = tuleapTracker.getTuleapProjectConfiguration().getIdentifier();
+		int projectId = tuleapTracker.getProject().getIdentifier();
 
 		// Useless for regular artifacts (agile only)
 		String label = null;
 		String url = null;
 
-		String repositoryUrl = tuleapTracker.getTuleapProjectConfiguration().getServer()
+		String repositoryUrl = tuleapTracker.getProject().getServer()
 				.getUrl();
 
-		String taskId = TuleapTaskIdentityUtil.getTaskDataId(tuleapTracker.getTuleapProjectConfiguration()
+		String taskId = TuleapTaskIdentityUtil.getTaskDataId(tuleapTracker.getProject()
 				.getIdentifier(), trackerId, artifactId);
 		String htmlUrl = TuleapUrlUtil.getTaskUrlFromTaskId(repositoryUrl, taskId);
 
@@ -128,7 +128,7 @@ public class TuleapSoapParser {
 
 						FieldValueFileInfo[] fileInfo = artifactFieldValue.getField_value().getFile_info();
 						TuleapServer serverConfiguration = tuleapTracker
-								.getTuleapProjectConfiguration().getServer();
+								.getProject().getServer();
 						// Yes, this array can be null.
 						if (fileInfo != null) {
 							for (FieldValueFileInfo fieldValueFileInfo : fileInfo) {

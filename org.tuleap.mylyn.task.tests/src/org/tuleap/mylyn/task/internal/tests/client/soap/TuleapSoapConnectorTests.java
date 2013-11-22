@@ -31,7 +31,7 @@ import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.client.soap.CommentedArtifact;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapConnector;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
-import org.tuleap.mylyn.task.internal.core.model.config.ITuleapConfigurationConstants;
+import org.tuleap.mylyn.task.internal.core.model.config.ITuleapTrackerConstants;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
@@ -219,7 +219,7 @@ public class TuleapSoapConnectorTests {
 
 			int firstFieldId = 22;
 			TrackerField trackerField = new TrackerField(configurationId, firstFieldId, null, null,
-					ITuleapConfigurationConstants.ARTLINK, null, null, new String[] {"submit", "update" });
+					ITuleapTrackerConstants.ARTLINK, null, null, new String[] {"submit", "update" });
 			trackerFields[0] = trackerField;
 
 			int bindValueId1 = 4745;
@@ -228,7 +228,7 @@ public class TuleapSoapConnectorTests {
 
 			int secondFieldId = 4;
 			trackerField = new TrackerField(configurationId, secondFieldId, null, null,
-					ITuleapConfigurationConstants.CB, null, null, new String[] {"submit", "update" });
+					ITuleapTrackerConstants.CB, null, null, new String[] {"submit", "update" });
 			trackerField.setValues(new TrackerFieldBindValue[] {
 					new TrackerFieldBindValue(bindValueId1, null),
 					new TrackerFieldBindValue(bindValueId2, null),

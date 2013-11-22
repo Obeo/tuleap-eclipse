@@ -16,7 +16,9 @@ import org.tuleap.mylyn.task.internal.core.model.data.AbstractTuleapProjectEleme
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 
 /**
- * Configuration of a Planning in Tuleap.
+ * A Planning in Tuleap. It is used to configure milestones and backlog items, indicating which trackers are
+ * used to represent milestones and which trackers are used to represent backlog items assignable to each kind
+ * of milestone. A tracker used for milestones can be thought of as a "kind of milestone".
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */

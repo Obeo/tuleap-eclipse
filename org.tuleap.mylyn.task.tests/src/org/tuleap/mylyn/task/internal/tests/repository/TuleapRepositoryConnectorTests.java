@@ -171,7 +171,7 @@ public class TuleapRepositoryConnectorTests {
 
 		TuleapRepositoryConnector tuleapRepositoryConnector = new TuleapRepositoryConnector() {
 			@Override
-			public TuleapServer getTuleapServerConfiguration(String repositoryUrl) {
+			public TuleapServer getServer(String repositoryUrl) {
 				return tuleapServer;
 			}
 
@@ -195,7 +195,7 @@ public class TuleapRepositoryConnectorTests {
 
 		IRepositoryQuery query = new RepositoryQuery(ITuleapConstants.CONNECTOR_KIND, "");
 		query.setAttribute(ITuleapQueryConstants.QUERY_KIND, ITuleapQueryConstants.QUERY_KIND_REPORT);
-		query.setAttribute(ITuleapQueryConstants.QUERY_CONFIGURATION_ID, String.valueOf(trackerRef.getId()));
+		query.setAttribute(ITuleapQueryConstants.QUERY_TRACKER_ID, String.valueOf(trackerRef.getId()));
 
 		tuleapRepositoryConnector.performQuery(taskRepository, query, collector, null,
 				new NullProgressMonitor());
@@ -242,7 +242,7 @@ public class TuleapRepositoryConnectorTests {
 
 		TuleapRepositoryConnector tuleapRepositoryConnector = new TuleapRepositoryConnector() {
 			@Override
-			public TuleapServer getTuleapServerConfiguration(String repositoryUrl) {
+			public TuleapServer getServer(String repositoryUrl) {
 				return tuleapServer;
 			}
 
@@ -266,7 +266,7 @@ public class TuleapRepositoryConnectorTests {
 
 		IRepositoryQuery query = new RepositoryQuery(ITuleapConstants.CONNECTOR_KIND, "");
 		query.setAttribute(ITuleapQueryConstants.QUERY_KIND, ITuleapQueryConstants.QUERY_KIND_CUSTOM);
-		query.setAttribute(ITuleapQueryConstants.QUERY_CONFIGURATION_ID, String.valueOf(trackerRef.getId()));
+		query.setAttribute(ITuleapQueryConstants.QUERY_TRACKER_ID, String.valueOf(trackerRef.getId()));
 
 		tuleapRepositoryConnector.performQuery(taskRepository, query, collector, null,
 				new NullProgressMonitor());
@@ -345,7 +345,7 @@ public class TuleapRepositoryConnectorTests {
 
 		TuleapRepositoryConnector tuleapRepositoryConnector = new TuleapRepositoryConnector() {
 			@Override
-			public TuleapServer getTuleapServerConfiguration(String repositoryUrl) {
+			public TuleapServer getServer(String repositoryUrl) {
 				return tuleapServer;
 			}
 
@@ -422,7 +422,7 @@ public class TuleapRepositoryConnectorTests {
 
 		TuleapRepositoryConnector tuleapRepositoryConnector = new TuleapRepositoryConnector() {
 			@Override
-			public TuleapServer getTuleapServerConfiguration(String repositoryUrl) {
+			public TuleapServer getServer(String repositoryUrl) {
 				return tuleapServer;
 			}
 		};

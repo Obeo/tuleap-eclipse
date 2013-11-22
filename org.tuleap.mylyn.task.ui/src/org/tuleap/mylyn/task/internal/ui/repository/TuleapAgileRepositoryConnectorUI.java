@@ -69,7 +69,7 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 		if (connector instanceof TuleapRepositoryConnector) {
 			TuleapRepositoryConnector tuleapRepositoryConnector = (TuleapRepositoryConnector)connector;
 			TuleapServer serverConfiguration = tuleapRepositoryConnector
-					.getTuleapServerConfiguration(taskRepository.getRepositoryUrl());
+					.getServer(taskRepository.getRepositoryUrl());
 
 			int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(planningTaskData.getTaskId());
 			TuleapProject project = serverConfiguration.getProject(projectId);

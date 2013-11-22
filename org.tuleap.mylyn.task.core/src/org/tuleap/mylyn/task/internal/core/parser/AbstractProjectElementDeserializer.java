@@ -24,8 +24,8 @@ import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**
- * This class is used to deserialize a JSON representation of a Tuleap object, for objects that have a
- * configuration ID (top-plannings, for instance, have no configuration ID).
+ * This class is used to deserialize a JSON representation of a Tuleap object, for objects that have a tracker
+ * ID (top-plannings, for instance, have no tracker ID).
  * 
  * @param <T>
  *            The type of the agile element to deserialize.

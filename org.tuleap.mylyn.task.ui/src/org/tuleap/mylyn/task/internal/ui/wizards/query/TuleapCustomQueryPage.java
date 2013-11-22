@@ -109,7 +109,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 		this.setTitle(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapCustomQueryPageTitle));
 		this.setDescription(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapCustomQueryPageDescription));
 		this.trackerId = tuleapTracker.getIdentifier();
-		this.projectId = tuleapTracker.getTuleapProjectConfiguration().getIdentifier();
+		this.projectId = tuleapTracker.getProject().getIdentifier();
 	}
 
 	/**
@@ -129,7 +129,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 		// Case existing query to edit, the tracker id is provided by the query attributes
 		if (queryToEdit != null) {
 			String queryTrackerId = this.getQuery()
-					.getAttribute(ITuleapQueryConstants.QUERY_CONFIGURATION_ID);
+					.getAttribute(ITuleapQueryConstants.QUERY_TRACKER_ID);
 			this.trackerId = Integer.valueOf(queryTrackerId).intValue();
 			String queryProjectId = this.getQuery().getAttribute(ITuleapQueryConstants.QUERY_PROJECT_ID);
 			this.projectId = Integer.valueOf(queryProjectId).intValue();
@@ -178,13 +178,13 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 			if (previousPage instanceof TuleapTrackerPage) {
 				this.trackerId = ((TuleapTrackerPage)previousPage).getTrackerSelected().getIdentifier();
 				this.projectId = ((TuleapTrackerPage)previousPage).getTrackerSelected()
-						.getTuleapProjectConfiguration().getIdentifier();
+						.getProject().getIdentifier();
 			}
 		}
 
 		if (this.trackerId != -1 && this.projectId != -1) {
 			final TuleapRepositoryConnector repositoryConnector = (TuleapRepositoryConnector)connector;
-			TuleapServer repositoryConfiguration = repositoryConnector.getTuleapServerConfiguration(this
+			TuleapServer repositoryConfiguration = repositoryConnector.getServer(this
 					.getTaskRepository().getRepositoryUrl());
 			tuleapTracker = repositoryConfiguration.getTracker(this.trackerId);
 
@@ -566,7 +566,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 		if (this.trackerId != -1 && this.projectId != -1) {
 			query.setSummary(this.getQueryTitle());
 			query.setAttribute(ITuleapQueryConstants.QUERY_KIND, ITuleapQueryConstants.QUERY_KIND_CUSTOM);
-			query.setAttribute(ITuleapQueryConstants.QUERY_CONFIGURATION_ID, Integer.valueOf(this.trackerId)
+			query.setAttribute(ITuleapQueryConstants.QUERY_TRACKER_ID, Integer.valueOf(this.trackerId)
 					.toString());
 			query.setAttribute(ITuleapQueryConstants.QUERY_PROJECT_ID, Integer.valueOf(this.projectId)
 					.toString());

@@ -50,9 +50,9 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	public static String unexpectedException;
 
 	/**
-	 * The default name of a configuration.
+	 * The default name of a tracker.
 	 */
-	public static String defaultConfigurationName;
+	public static String defaultTrackerName;
 
 	/**
 	 * The status label.
@@ -130,9 +130,9 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	public static String login;
 
 	/**
-	 * Retrieve the Tuleap instance configuration.
+	 * Retrieve the Tuleap server.
 	 */
-	public static String retrieveTuleapInstanceConfiguration;
+	public static String retrieveTuleapServer;
 
 	/**
 	 * Retrieve the list of trackers.

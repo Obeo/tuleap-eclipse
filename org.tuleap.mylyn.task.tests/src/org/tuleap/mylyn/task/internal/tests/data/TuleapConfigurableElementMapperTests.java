@@ -187,7 +187,7 @@ public class TuleapConfigurableElementMapperTests {
 		assertFalse(metadata.isReadOnly());
 
 		assertEquals(projectId, mapper.getProjectId());
-		assertEquals(trackerId, mapper.getConfigurationId());
+		assertEquals(trackerId, mapper.getTrackerId());
 
 		// Also check that project id & tracker id task attributes are correctly created since they will be
 		// useful to mylyn

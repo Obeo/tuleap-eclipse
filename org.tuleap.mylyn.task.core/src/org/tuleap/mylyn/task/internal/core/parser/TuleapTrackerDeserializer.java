@@ -21,7 +21,7 @@ import java.lang.reflect.Type;
 
 import org.eclipse.core.runtime.Assert;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
-import org.tuleap.mylyn.task.internal.core.model.config.ITuleapConfigurationConstants;
+import org.tuleap.mylyn.task.internal.core.model.config.ITuleapTrackerConstants;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapGroup;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
@@ -42,7 +42,7 @@ import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapString;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapText;
 
 /**
- * This class is used to deserialize the JSON representation of a tracker configuration.
+ * This class is used to deserialize the JSON representation of a tracker.
  * 
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
@@ -175,19 +175,19 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 	private static final String PERMISSION_SUBMIT = "submit"; //$NON-NLS-1$
 
 	/**
-	 * The related project configuration.
+	 * The related project.
 	 */
-	protected final TuleapProject projectConfiguration;
+	protected final TuleapProject project;
 
 	/**
-	 * Constructor that receives the related project Configuration.
+	 * Constructor that receives the related project.
 	 * 
-	 * @param projectConfiguration
-	 *            The project configuration;
+	 * @param project
+	 *            The project.
 	 */
-	public TuleapTrackerDeserializer(TuleapProject projectConfiguration) {
-		Assert.isNotNull(projectConfiguration);
-		this.projectConfiguration = projectConfiguration;
+	public TuleapTrackerDeserializer(TuleapProject project) {
+		Assert.isNotNull(project);
+		this.project = project;
 	}
 
 	/**
@@ -224,18 +224,18 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 	}
 
 	/**
-	 * Populates the given configuration fields with the value parsed from the JSON object to parse.
+	 * Populates the given tracker with the fields parsed from the given JSON object .
 	 * 
 	 * @param tracker
-	 *            The configuration to populate
+	 *            The tracker to populate
 	 * @param jsonObject
 	 *            The JSON object to parse
-	 * @return The populated configuration
+	 * @return The populated tracker
 	 */
 	protected TuleapTracker populateConfigurableFields(TuleapTracker tracker, JsonObject jsonObject) {
 		JsonArray milestoneTypeFieldsArray = jsonObject.get(FIELDS).getAsJsonArray();
 
-		JsonElement eltSemantic = jsonObject.get(ITuleapConfigurationConstants.SEMANTIC);
+		JsonElement eltSemantic = jsonObject.get(ITuleapTrackerConstants.SEMANTIC);
 		JsonObject fieldSemantic = null;
 		if (eltSemantic != null) {
 			fieldSemantic = eltSemantic.getAsJsonObject();
@@ -249,29 +249,29 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 			// the field type
 			String fieldType = field.get(TYPE).getAsString();
 			AbstractTuleapField tuleapField = null;
-			if (ITuleapConfigurationConstants.STRING.equals(fieldType)) {
+			if (ITuleapTrackerConstants.STRING.equals(fieldType)) {
 				tuleapField = new TuleapString(fieldId);
-			} else if (ITuleapConfigurationConstants.TEXT.equals(fieldType)) {
+			} else if (ITuleapTrackerConstants.TEXT.equals(fieldType)) {
 				tuleapField = new TuleapText(fieldId);
-			} else if (ITuleapConfigurationConstants.COMPUTED.equals(fieldType)) {
+			} else if (ITuleapTrackerConstants.COMPUTED.equals(fieldType)) {
 				tuleapField = new TuleapComputedValue(fieldId);
-			} else if (ITuleapConfigurationConstants.SB.equals(fieldType)) {
+			} else if (ITuleapTrackerConstants.SB.equals(fieldType)) {
 				tuleapField = new TuleapSelectBox(fieldId);
-			} else if (ITuleapConfigurationConstants.MSB.equals(fieldType)) {
+			} else if (ITuleapTrackerConstants.MSB.equals(fieldType)) {
 				tuleapField = new TuleapMultiSelectBox(fieldId);
-			} else if (ITuleapConfigurationConstants.CB.equals(fieldType)) {
+			} else if (ITuleapTrackerConstants.CB.equals(fieldType)) {
 				tuleapField = new TuleapMultiSelectBox(fieldId);
-			} else if (ITuleapConfigurationConstants.DATE.equals(fieldType)) {
+			} else if (ITuleapTrackerConstants.DATE.equals(fieldType)) {
 				tuleapField = new TuleapDate(fieldId);
-			} else if (ITuleapConfigurationConstants.INT.equals(fieldType)) {
+			} else if (ITuleapTrackerConstants.INT.equals(fieldType)) {
 				tuleapField = new TuleapInteger(fieldId);
-			} else if (ITuleapConfigurationConstants.FLOAT.equals(fieldType)) {
+			} else if (ITuleapTrackerConstants.FLOAT.equals(fieldType)) {
 				tuleapField = new TuleapFloat(fieldId);
-			} else if (ITuleapConfigurationConstants.TBL.equals(fieldType)) {
+			} else if (ITuleapTrackerConstants.TBL.equals(fieldType)) {
 				tuleapField = new TuleapOpenList(fieldId);
-			} else if (ITuleapConfigurationConstants.ARTLINK.equals(fieldType)) {
+			} else if (ITuleapTrackerConstants.ARTLINK.equals(fieldType)) {
 				tuleapField = new TuleapArtifactLink(fieldId);
-			} else if (ITuleapConfigurationConstants.FILE.equals(fieldType)) {
+			} else if (ITuleapTrackerConstants.FILE.equals(fieldType)) {
 				tuleapField = new TuleapFileUpload(fieldId);
 			}
 
@@ -306,7 +306,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 					fieldBinding = bindingElement.getAsJsonObject();
 				}
 
-				// The semantic part configuration
+				// The semantic part
 				if (tuleapField instanceof TuleapMultiSelectBox) {
 					fillTuleapMultiSelectBoxField(tracker, (TuleapMultiSelectBox)tuleapField,
 							fieldValuesArray, fieldSemantic, fieldBinding);
@@ -331,7 +331,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 	 * Returns the TuleapMultiSelectBox created from the parsing of the JSON elements.
 	 * 
 	 * @param tracker
-	 *            The configuration
+	 *            The tracker
 	 * @param multiSelectBoxField
 	 *            The field
 	 * @param fieldValuesArray
@@ -351,7 +351,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 	 * Returns the TuleapSelectBox created from the parsing of the JSON elements.
 	 * 
 	 * @param tracker
-	 *            The configuration
+	 *            The tracker
 	 * @param selectBoxField
 	 *            The field
 	 * @param fieldValuesArray
@@ -374,7 +374,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 	 * Returns the TuleapSelectBox created from the parsing of the JSON elements.
 	 * 
 	 * @param tracker
-	 *            The configuration
+	 *            The tracker
 	 * @param selectBoxField
 	 *            The field
 	 * @param fieldValuesArray
@@ -431,14 +431,14 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 	 * @param selectBoxField
 	 *            The select box in which to put the users.
 	 * @param fieldBinding
-	 *            The JSON object that contains the group bindings configuration.
+	 *            The JSON object that contains the group bindings.
 	 */
 	private void fillUsers(AbstractTuleapSelectBox selectBoxField, JsonObject fieldBinding) {
 		JsonArray bindings = fieldBinding.get(BIND_LIST).getAsJsonArray();
 		for (JsonElement bindingElt : bindings) {
 			JsonObject binding = bindingElt.getAsJsonObject();
 			int ugroupId = binding.get(USER_GROUP_ID).getAsInt();
-			TuleapGroup group = projectConfiguration.getGroup(ugroupId);
+			TuleapGroup group = project.getGroup(ugroupId);
 			if (group != null) {
 				for (TuleapPerson person : group.getMembers()) {
 					TuleapSelectBoxItem item = new TuleapSelectBoxItem(person.getId());
@@ -451,10 +451,10 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 
 	/**
 	 * Finds the fields with the identifier matching the field_id used for the title semantic and indicate in
-	 * the configuration of the project that it represents the title.
+	 * the project that it represents the title.
 	 * 
 	 * @param tracker
-	 *            The configuration
+	 *            The tracker
 	 * @param fieldSemantic
 	 *            The semantic field
 	 */
@@ -480,7 +480,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 	 *            the select box field
 	 */
 	private void fillWorkflow(JsonObject jsonObject, TuleapSelectBox selectBoxField) {
-		JsonElement workflowJsonElement = jsonObject.get(ITuleapConfigurationConstants.WORKFLOW);
+		JsonElement workflowJsonElement = jsonObject.get(ITuleapTrackerConstants.WORKFLOW);
 		if (workflowJsonElement != null) {
 			JsonObject workflowJsonObject = workflowJsonElement.getAsJsonObject();
 
@@ -521,11 +521,11 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 		String description = null;
 		long lastUpdateDate = System.currentTimeMillis();
 
-		TuleapTracker trackerConfiguration = new TuleapTracker(identifier, url, label, itemName, description,
+		TuleapTracker tracker = new TuleapTracker(identifier, url, label, itemName, description,
 				lastUpdateDate);
 
-		trackerConfiguration = this.populateConfigurableFields(trackerConfiguration, jsonObject);
+		tracker = this.populateConfigurableFields(tracker, jsonObject);
 
-		return trackerConfiguration;
+		return tracker;
 	}
 }

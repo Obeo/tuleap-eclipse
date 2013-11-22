@@ -141,13 +141,13 @@ public class TuleapTaskAttachmentPage extends TaskAttachmentPage {
 		if (repositoryConnector instanceof TuleapRepositoryConnector) {
 			TuleapRepositoryConnector tuleapRepositoryConnector = (TuleapRepositoryConnector)repositoryConnector;
 			TuleapServer repositoryConfiguration = tuleapRepositoryConnector
-					.getTuleapServerConfiguration(taskRepository.getRepositoryUrl());
+					.getServer(taskRepository.getRepositoryUrl());
 
 			TaskAttribute attribute = this.getModel().getAttribute();
 			TaskData taskData = attribute.getTaskData();
 			TuleapArtifactMapper tuleapArtifactMapper = new TuleapArtifactMapper(taskData, null);
 			int projectId = tuleapArtifactMapper.getProjectId();
-			int trackerId = tuleapArtifactMapper.getConfigurationId();
+			int trackerId = tuleapArtifactMapper.getTrackerId();
 
 			List<String> attachmentFieldsName = new ArrayList<String>();
 

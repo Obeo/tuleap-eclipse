@@ -132,7 +132,7 @@ public class BacklogItemTaskDataConverterTest {
 		final TuleapClientManager clientManager = new TuleapClientManager();
 		repositoryConnector = new TuleapRepositoryConnector() {
 			@Override
-			public TuleapServer getTuleapServerConfiguration(String pRepositoryUrl) {
+			public TuleapServer getServer(String pRepositoryUrl) {
 				return tuleapServer;
 			}
 

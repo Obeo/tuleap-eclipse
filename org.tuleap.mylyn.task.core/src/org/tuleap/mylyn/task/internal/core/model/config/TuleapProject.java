@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.Assert;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 
 /**
- * This class will hold the configuration of a Tuleap project.
+ * This class will hold a Tuleap project.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
@@ -46,7 +46,7 @@ public class TuleapProject implements Serializable {
 	private int identifier;
 
 	/**
-	 * The parent server configuration.
+	 * The parent server.
 	 */
 	private TuleapServer server;
 
@@ -84,31 +84,31 @@ public class TuleapProject implements Serializable {
 	}
 
 	/**
-	 * Adds the given tracker configuration for the given tracker id in the Tuleap instance configuration.
+	 * Adds the given tracker for the given id in the Tuleap server.
 	 * 
-	 * @param trackerConfiguration
-	 *            The configuration of the tracker.
+	 * @param tracker
+	 *            The tracker.
 	 */
-	public void addTracker(TuleapTracker trackerConfiguration) {
-		this.trackersById.put(Integer.valueOf(trackerConfiguration.getIdentifier()), trackerConfiguration);
-		trackerConfiguration.setTuleapProjectConfiguration(this);
+	public void addTracker(TuleapTracker tracker) {
+		this.trackersById.put(Integer.valueOf(tracker.getIdentifier()), tracker);
+		tracker.setProject(this);
 	}
 
 	/**
-	 * Returns the tracker configuration for the given tracker id.
+	 * Returns the tracker for the given tracker id.
 	 * 
 	 * @param trackerId
 	 *            the id of the tracker
-	 * @return The tracker configuration for the given tracker id.
+	 * @return The tracker for the given tracker id.
 	 */
 	public TuleapTracker getTracker(int trackerId) {
 		return this.trackersById.get(Integer.valueOf(trackerId));
 	}
 
 	/**
-	 * Returns the list of all the tracker configurations.
+	 * Returns the list of all the tracker.
 	 * 
-	 * @return The list of all the tracker configurations.
+	 * @return The list of all the tracker.
 	 */
 	public List<TuleapTracker> getAllTrackers() {
 		return new ArrayList<TuleapTracker>(this.trackersById.values());
@@ -241,7 +241,7 @@ public class TuleapProject implements Serializable {
 	}
 
 	/**
-	 * Registers a user group with this project configuration.
+	 * Registers a user group with this project.
 	 * 
 	 * @param group
 	 *            User group to register with this project. Must not be {@code null}.
@@ -294,19 +294,19 @@ public class TuleapProject implements Serializable {
 	}
 
 	/**
-	 * The parent server configuration setter.
+	 * The parent server setter.
 	 * 
 	 * @param server
-	 *            The parent server configuration.
+	 *            The parent server.
 	 */
 	protected void setServer(TuleapServer server) {
 		this.server = server;
 	}
 
 	/**
-	 * The parent server configuration.
+	 * The parent server.
 	 * 
-	 * @return The parent server configuration.
+	 * @return The parent server.
 	 */
 	public TuleapServer getServer() {
 		return server;

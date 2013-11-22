@@ -30,8 +30,8 @@ import static org.tuleap.mylyn.task.internal.core.util.ITuleapConstants.SUBMITTE
 import static org.tuleap.mylyn.task.internal.core.util.ITuleapConstants.SUBMITTED_ON;
 
 /**
- * This class is used to deserialize a JSON representation of a Tuleap object, for objects that have a
- * configuration ID (top-plannings, for instance, have no configuration ID).
+ * This class is used to deserialize a JSON representation of a Tuleap object, for objects that have a tracker
+ * ID (top-plannings, for instance, have no tracker ID).
  * 
  * @param <T>
  *            The type of the agile element to deserialize.

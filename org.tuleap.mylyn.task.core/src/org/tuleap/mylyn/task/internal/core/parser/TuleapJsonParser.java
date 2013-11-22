@@ -36,13 +36,14 @@ import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 public class TuleapJsonParser {
 
 	/**
-	 * Parses the JSON representation of a collection of Tuleap projects and returns their configuration.
+	 * Parses the JSON representation of a collection of Tuleap projects and returns the projects.
 	 * 
 	 * @param jsonResponse
 	 *            The JSON representation of a collection of Tuleap projects
-	 * @return The list of the Tuleap project's configuration
+	 * @return The list of the projects
 	 */
-	public List<TuleapProject> parseProjectConfigurations(String jsonResponse) {
+	public List<TuleapProject> parseProjects(String jsonResponse) {
+		// FIXME this must be removed to use the pagination mechanism and a TuleapProject deserializer
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(TuleapProject.class, new TuleapProjectDeserializer());
 

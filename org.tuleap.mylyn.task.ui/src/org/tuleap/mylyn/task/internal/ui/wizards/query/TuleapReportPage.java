@@ -92,7 +92,7 @@ public class TuleapReportPage extends AbstractRepositoryQueryPage2 {
 		this.setTitle(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapReportPageTitle));
 		this.setDescription(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapReportPageDescription));
 		this.trackerId = tuleapTracker.getIdentifier();
-		this.projectId = tuleapTracker.getTuleapProjectConfiguration().getIdentifier();
+		this.projectId = tuleapTracker.getProject().getIdentifier();
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class TuleapReportPage extends AbstractRepositoryQueryPage2 {
 		this.setTitle(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapReportPageTitle));
 		this.setDescription(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapReportPageDescription));
 
-		String tracker = queryToEdit.getAttribute(ITuleapQueryConstants.QUERY_CONFIGURATION_ID);
+		String tracker = queryToEdit.getAttribute(ITuleapQueryConstants.QUERY_TRACKER_ID);
 		this.trackerId = Integer.valueOf(tracker).intValue();
 		String project = queryToEdit.getAttribute(ITuleapQueryConstants.QUERY_PROJECT_ID);
 		this.projectId = Integer.valueOf(project).intValue();
@@ -328,7 +328,7 @@ public class TuleapReportPage extends AbstractRepositoryQueryPage2 {
 	@Override
 	public void applyTo(IRepositoryQuery query) {
 		query.setSummary(this.getQueryTitle());
-		query.setAttribute(ITuleapQueryConstants.QUERY_CONFIGURATION_ID, String.valueOf(this.trackerId));
+		query.setAttribute(ITuleapQueryConstants.QUERY_TRACKER_ID, String.valueOf(this.trackerId));
 		query.setAttribute(ITuleapQueryConstants.QUERY_PROJECT_ID, String.valueOf(this.projectId));
 
 		query.setAttribute(ITuleapQueryConstants.QUERY_KIND, ITuleapQueryConstants.QUERY_KIND_REPORT);

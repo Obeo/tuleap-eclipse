@@ -100,7 +100,7 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 	}
 
 	/**
-	 * Indicates if the configuration of the tracker on which the task is contained has a fiel upload field.
+	 * Indicates if the tracker on which the task is contained has a fiel upload field.
 	 * 
 	 * @param repository
 	 *            The task repository
@@ -115,11 +115,9 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 		int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(task.getTaskId());
 		int trackerId = TuleapTaskIdentityUtil.getTrackerIdFromTaskDataId(task.getTaskId());
 
-		TuleapServer tuleapServer = this.connector
-				.getTuleapServerConfiguration(repository.getRepositoryUrl());
-		TuleapProject projectConfiguration = tuleapServer
-				.getProject(projectId);
-		TuleapTracker tracker = projectConfiguration.getTracker(trackerId);
+		TuleapServer tuleapServer = this.connector.getServer(repository.getRepositoryUrl());
+		TuleapProject project = tuleapServer.getProject(projectId);
+		TuleapTracker tracker = project.getTracker(trackerId);
 
 		if (tracker != null) {
 			hasFileUploadField = tracker.getAttachmentField() != null;
@@ -194,34 +192,28 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 				.createWebLocation(repository);
 		TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(abstractWebLocation);
 
-		TuleapTracker configuration = null;
+		TuleapTracker tracker = null;
 
-		// Let's find the tracker configuration
-		TuleapServer repositoryConfiguration = this.connector
-				.getTuleapServerConfiguration(repository.getRepositoryUrl());
+		TuleapServer server = this.connector.getServer(repository.getRepositoryUrl());
 
-		// If the attachement attribute is available, let's use it
+		// If the attachment attribute is available, let's use it
 		if (attachmentAttribute != null) {
 			TaskData taskData = attachmentAttribute.getTaskData();
-			TuleapArtifactMapper tuleapArtifactMapper = new TuleapArtifactMapper(
-					taskData, configuration);
+			TuleapArtifactMapper tuleapArtifactMapper = new TuleapArtifactMapper(taskData, tracker);
 
-			int trackerId = tuleapArtifactMapper.getConfigurationId();
+			int trackerId = tuleapArtifactMapper.getTrackerId();
 
-			List<TuleapProject> allProjectConfigurations = repositoryConfiguration
-					.getAllProjects();
-			for (TuleapProject tuleapProject : allProjectConfigurations) {
-				configuration = tuleapProject.getTracker(trackerId);
+			List<TuleapProject> allProjects = server.getAllProjects();
+			for (TuleapProject tuleapProject : allProjects) {
+				tracker = tuleapProject.getTracker(trackerId);
 			}
 		} else {
 			int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(task.getTaskId());
 			int trackerId = TuleapTaskIdentityUtil.getTrackerIdFromTaskDataId(task.getTaskId());
 
-			TuleapServer tuleapServer = this.connector
-					.getTuleapServerConfiguration(repository.getRepositoryUrl());
-			TuleapProject projectConfiguration = tuleapServer
-					.getProject(projectId);
-			configuration = projectConfiguration.getTracker(trackerId);
+			TuleapServer tuleapServer = this.connector.getServer(repository.getRepositoryUrl());
+			TuleapProject project = tuleapServer.getProject(projectId);
+			tracker = project.getTracker(trackerId);
 		}
 
 		// Field name and label (for context, let's take the first one available) and description
@@ -240,8 +232,8 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 			description = descriptionAttribute.getValue();
 		} else {
 			// Let's find the first valid value for the attachment field name
-			if (configuration != null) {
-				TuleapFileUpload fileUploadField = configuration.getAttachmentField();
+			if (tracker != null) {
+				TuleapFileUpload fileUploadField = tracker.getAttachmentField();
 				if (fileUploadField != null) {
 					fieldname = fileUploadField.getName();
 					fieldlabel = fileUploadField.getLabel();

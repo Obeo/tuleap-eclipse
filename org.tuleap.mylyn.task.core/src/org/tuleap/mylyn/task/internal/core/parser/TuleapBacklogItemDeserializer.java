@@ -25,7 +25,7 @@ import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem.St
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**
- * This class is used to deserialize the JSON representation of a project configuration.
+ * This class is used to deserialize the JSON representation of a project.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */

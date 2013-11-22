@@ -23,8 +23,7 @@ import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 public final class TuleapTaskIdentityUtil {
 
 	/**
-	 * The identifier to use for irrelevant ids. This will be used for the configuration id of Tuleap top
-	 * plannings
+	 * The identifier to use for irrelevant ids. This will be used for the tracker id of Tuleap top plannings
 	 */
 	public static final int IRRELEVANT_ID = -1;
 
@@ -34,9 +33,9 @@ public final class TuleapTaskIdentityUtil {
 	private static final String IRRELEVANT_ID_VALUE = "N/A"; //$NON-NLS-1$
 
 	/**
-	 * The separator between the project name or id and the configuration name of id.
+	 * The separator between the project name or id and the tracker name of id.
 	 */
-	private static final String CONFIGURATION_SEPARATOR = ":"; //$NON-NLS-1$
+	private static final String TRACKER_SEPARATOR = ":"; //$NON-NLS-1$
 
 	/**
 	 * The separator used in the key of the task data.
@@ -56,19 +55,18 @@ public final class TuleapTaskIdentityUtil {
 	}
 
 	/**
-	 * Returns the task data key from the project name, the configuration name (tracker name) and the given
-	 * artifact id.
+	 * Returns the task data key from the project name, the tracker name and the given artifact id.
 	 * 
 	 * @param projectName
 	 *            The name of the project
-	 * @param configurationName
-	 *            The name of the configuration.
+	 * @param trackerName
+	 *            The name of the tracker.
 	 * @param artifactId
 	 *            The id of the artifact
 	 * @return The task data id
 	 */
-	public static String getTaskDataKey(String projectName, String configurationName, int artifactId) {
-		return projectName + CONFIGURATION_SEPARATOR + configurationName + ELEMENT_NAME_SEPARATOR
+	public static String getTaskDataKey(String projectName, String trackerName, int artifactId) {
+		return projectName + TRACKER_SEPARATOR + trackerName + ELEMENT_NAME_SEPARATOR
 				+ Integer.valueOf(artifactId).toString();
 	}
 
@@ -91,7 +89,7 @@ public final class TuleapTaskIdentityUtil {
 	 * @return The task data id to use.
 	 */
 	public static String getProjectPlanningTaskDataKey(int projectId) {
-		return String.valueOf(projectId) + CONFIGURATION_SEPARATOR + ' '
+		return String.valueOf(projectId) + TRACKER_SEPARATOR + ' '
 				+ TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.generalPlanning);
 	}
 
@@ -100,21 +98,21 @@ public final class TuleapTaskIdentityUtil {
 	 * 
 	 * @param projectId
 	 *            The identifier of the project
-	 * @param configurationId
-	 *            The identifier of the configuration
+	 * @param trackerId
+	 *            The identifier of the tracker
 	 * @param elementId
 	 *            The identifier of the element
 	 * @return The task data id
 	 */
-	public static String getTaskDataId(int projectId, int configurationId, int elementId) {
+	public static String getTaskDataId(int projectId, int trackerId, int elementId) {
 		String projectIdentifier = IRRELEVANT_ID_VALUE;
 		if (IRRELEVANT_ID != projectId) {
 			projectIdentifier = String.valueOf(projectId);
 		}
 
-		String configurationIdentifier = IRRELEVANT_ID_VALUE;
-		if (IRRELEVANT_ID != configurationId) {
-			configurationIdentifier = String.valueOf(configurationId);
+		String trackerIdentifier = IRRELEVANT_ID_VALUE;
+		if (IRRELEVANT_ID != trackerId) {
+			trackerIdentifier = String.valueOf(trackerId);
 		}
 
 		String elementIdentifier = IRRELEVANT_ID_VALUE;
@@ -122,7 +120,7 @@ public final class TuleapTaskIdentityUtil {
 			elementIdentifier = String.valueOf(elementId);
 		}
 
-		return projectIdentifier + CONFIGURATION_SEPARATOR + configurationIdentifier + ELEMENT_ID_SEPARATOR
+		return projectIdentifier + TRACKER_SEPARATOR + trackerIdentifier + ELEMENT_ID_SEPARATOR
 				+ elementIdentifier;
 	}
 
@@ -134,7 +132,7 @@ public final class TuleapTaskIdentityUtil {
 	 * @return The identifier of the Tuleap project from the task data id
 	 */
 	public static int getProjectIdFromTaskDataId(String taskDataId) {
-		int indexOf = taskDataId.indexOf(CONFIGURATION_SEPARATOR);
+		int indexOf = taskDataId.indexOf(TRACKER_SEPARATOR);
 		if (indexOf != -1) {
 			String projectId = taskDataId.substring(0, indexOf);
 
@@ -154,24 +152,24 @@ public final class TuleapTaskIdentityUtil {
 	}
 
 	/**
-	 * Returns the identifier of the configuration from the task data id.
+	 * Returns the identifier of the tracker from the task data id.
 	 * 
 	 * @param taskDataId
 	 *            The task data id
-	 * @return The identifier of the configuration from the task data id
+	 * @return The identifier of the tracker from the task data id
 	 */
 	public static int getTrackerIdFromTaskDataId(String taskDataId) {
-		int indexOfConfiguration = taskDataId.indexOf(CONFIGURATION_SEPARATOR);
+		int indexOfTracker = taskDataId.indexOf(TRACKER_SEPARATOR);
 		int indexOfElement = taskDataId.indexOf(ELEMENT_ID_SEPARATOR);
-		if (indexOfConfiguration != -1 && indexOfElement != -1) {
-			String configurationId = taskDataId.substring(indexOfConfiguration
-					+ CONFIGURATION_SEPARATOR.length(), indexOfElement);
+		if (indexOfTracker != -1 && indexOfElement != -1) {
+			String trackerId = taskDataId.substring(indexOfTracker + TRACKER_SEPARATOR.length(),
+					indexOfElement);
 
-			if (!IRRELEVANT_ID_VALUE.equals(configurationId)) {
+			if (!IRRELEVANT_ID_VALUE.equals(trackerId)) {
 				int identifier = IRRELEVANT_ID;
 
 				try {
-					identifier = Integer.parseInt(configurationId);
+					identifier = Integer.parseInt(trackerId);
 				} catch (NumberFormatException e) {
 					TuleapCoreActivator.log(e, true);
 				}
