@@ -283,33 +283,33 @@ public class TuleapRestResourceFactoryTest {
 	}
 
 	/**
-	 * Checks the basic properties of {@link RestResourceFactory#milestonesCardwall(int)}.
+	 * Checks the basic properties of {@link RestResourceFactory#milestoneCardwall(int)}.
 	 */
 	@Test
 	public void testGetMilestonesCardwall() {
-		RestResource r = factory.milestonesCardwall(123);
+		RestResource r = factory.milestoneCardwall(123);
 		assertNotNull(r);
 		assertEquals("/milestones/123/cardwall", r.getUrl());
 		assertEquals("/server/api/v12.5/milestones/123/cardwall", r.getFullUrl());
 	}
 
 	/**
-	 * Checks the basic properties of {@link RestResourceFactory#milestonesSubmilestones(int)}.
+	 * Checks the basic properties of {@link RestResourceFactory#milestoneSubmilestones(int)}.
 	 */
 	@Test
 	public void testGetMilestonesSubmilestones() {
-		RestResource r = factory.milestonesSubmilestones(123);
+		RestResource r = factory.milestoneSubmilestones(123);
 		assertNotNull(r);
 		assertEquals("/milestones/123/milestones", r.getUrl());
 		assertEquals("/server/api/v12.5/milestones/123/milestones", r.getFullUrl());
 	}
 
 	/**
-	 * Checks the basic properties of {@link RestResourceFactory#artifacts(int)}.
+	 * Checks the basic properties of {@link RestResourceFactory#artifact(int)}.
 	 */
 	@Test
 	public void testGetArtifactsById() {
-		RestResource r = factory.artifacts(123);
+		RestResource r = factory.artifact(123);
 		assertNotNull(r);
 		assertEquals("/artifacts/123", r.getUrl());
 		assertEquals("/server/api/v12.5/artifacts/123", r.getFullUrl());
@@ -327,11 +327,11 @@ public class TuleapRestResourceFactoryTest {
 	}
 
 	/**
-	 * Checks the basic properties of {@link RestResourceFactory#cards(int)}.
+	 * Checks the basic properties of {@link RestResourceFactory#card(int)}.
 	 */
 	@Test
 	public void testGetCardsById() {
-		RestResource r = factory.cards(123);
+		RestResource r = factory.card(123);
 		assertNotNull(r);
 		assertEquals("/cards/123", r.getUrl());
 		assertEquals("/server/api/v12.5/cards/123", r.getFullUrl());

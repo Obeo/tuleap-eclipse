@@ -618,7 +618,7 @@ public class TuleapRestClient implements IAuthenticator {
 			monitor.subTask(TuleapMylynTasksMessages.getString(
 					TuleapMylynTasksMessagesKeys.retrievingSubMilestones, Integer.valueOf(milestoneId)));
 		}
-		RestResource subMilestonesResource = restResourceFactory.milestonesSubmilestones(milestoneId)
+		RestResource subMilestonesResource = restResourceFactory.milestoneSubmilestones(milestoneId)
 				.withAuthenticator(this);
 		RestOperation operation = subMilestonesResource.get();
 		RestOperationIterable jsonElements = new RestOperationIterable(operation);
@@ -691,7 +691,7 @@ public class TuleapRestClient implements IAuthenticator {
 			monitor.subTask(TuleapMylynTasksMessages.getString(
 					TuleapMylynTasksMessagesKeys.retrievingCardwall, Integer.valueOf(milestoneId)));
 		}
-		RestResource restCardwall = restResourceFactory.milestonesCardwall(milestoneId).withAuthenticator(
+		RestResource restCardwall = restResourceFactory.milestoneCardwall(milestoneId).withAuthenticator(
 				this);
 		ServerResponse cardwallResponse = restCardwall.get().checkedRun();
 		TuleapCardwall cardwall = jsonParser.parseCardwall(cardwallResponse.getBody());
@@ -803,7 +803,7 @@ public class TuleapRestClient implements IAuthenticator {
 			monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.updatingCard,
 					Integer.valueOf(tuleapCard.getId())));
 		}
-		RestResource restCards = restResourceFactory.cards(tuleapCard.getId()).withAuthenticator(this);
+		RestResource restCards = restResourceFactory.card(tuleapCard.getId()).withAuthenticator(this);
 
 		// from POJO to JSON
 		JsonElement card = new TuleapCardSerializer().serialize(tuleapCard, null, null);

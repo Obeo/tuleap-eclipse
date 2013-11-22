@@ -107,7 +107,7 @@ public final class RestResourceFactory {
 	 *            Id of the artifact.
 	 * @return A resource that gives access to the {code /artifacts/:id} HTTP resource.
 	 */
-	public RestResource artifacts(int artifactId) {
+	public RestResource artifact(int artifactId) {
 		return resource(RestResource.GET, URL.ARTIFACTS, Integer.toString(artifactId));
 	}
 
@@ -187,7 +187,7 @@ public final class RestResourceFactory {
 	 *            the milestone id
 	 * @return A resource that gives access to the {code /milestones/:id/milestones} HTTP resource.
 	 */
-	public RestResource milestonesSubmilestones(int milestoneId) {
+	public RestResource milestoneSubmilestones(int milestoneId) {
 		return resource(RestResource.GET, URL.MILESTONES, Integer.toString(milestoneId), URL.MILESTONES);
 	}
 
@@ -222,7 +222,7 @@ public final class RestResourceFactory {
 	 *            the milestone id
 	 * @return A resource that gives access to the {code /milestones/:id/cardwall} HTTP resource.
 	 */
-	public RestResource milestonesCardwall(int milestoneId) {
+	public RestResource milestoneCardwall(int milestoneId) {
 		return resource(RestResource.GET, URL.MILESTONES, Integer.toString(milestoneId), URL.CARDWALL);
 	}
 
@@ -233,7 +233,7 @@ public final class RestResourceFactory {
 	 *            the card id
 	 * @return A resource that gives access to the {code /cards/:id} HTTP resource.
 	 */
-	public RestResource cards(int cardId) {
+	public RestResource card(int cardId) {
 		return resource(RestResource.GET | RestResource.PUT, URL.CARDS, Integer.toString(cardId));
 	}
 
