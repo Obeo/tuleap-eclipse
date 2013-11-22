@@ -289,10 +289,8 @@ public class ArtifactTaskDataConverter {
 		int projectId = tuleapArtifactMapper.getProjectId();
 		TuleapReference trackerRef = new TuleapReference();
 		trackerRef.setId(trackerId);
-		trackerRef.setUri("trackers/" + trackerId);
 		TuleapReference projectRef = new TuleapReference();
 		projectRef.setId(projectId);
-		projectRef.setUri("projects/" + projectId);
 		if (taskData.isNew()) {
 			tuleapArtifact = new TuleapArtifact(trackerRef, projectRef);
 		} else {
