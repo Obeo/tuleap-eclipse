@@ -33,6 +33,11 @@ import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapString;
 public abstract class AbstractTuleapConfigurableElement extends AbstractTuleapDetailedElement {
 
 	/**
+	 * The serial version UID.
+	 */
+	private static final long serialVersionUID = 4736142751490732205L;
+
+	/**
 	 * The reference to the tracker that backs the element.
 	 */
 	private TuleapReference tracker;

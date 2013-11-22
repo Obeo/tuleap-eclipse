@@ -14,7 +14,6 @@ import com.google.common.collect.Maps;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -211,78 +210,6 @@ public class TuleapRestClientTest {
 		ServerRequest request1 = requestsSent.get(1);
 		assertEquals("https://test/url/api/v12.3/backlog_items/350", request1.url); //$NON-NLS-1$
 		assertEquals("GET", request1.method); //$NON-NLS-1$
-	}
-
-	/**
-	 * Test that the milestone update is well done.
-	 * 
-	 * @throws CoreException
-	 */
-	@Test
-	@Ignore
-	public void testUpdateMilestone() throws CoreException {
-
-		MockListRestConnector listConnector = new MockListRestConnector();
-		restResourceFactory = new RestResourceFactory(serverUrl, apiVersion, listConnector, new TestLogger());
-		listConnector.setResourceFactory(restResourceFactory);
-		client = new TuleapRestClient(restResourceFactory, jsonParser, null, repository, null);
-
-		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
-		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
-		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, "BacklogItems", respHeaders); //$NON-NLS-1$
-		listConnector.addServerResponse(response).addServerResponse(response);
-
-		Map<String, String> respHeaders2 = Maps.newHashMap();
-		respHeaders2.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
-		respHeaders2.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
-		ServerResponse response2 = new ServerResponse(ServerResponse.STATUS_OK, "Fields", respHeaders2); //$NON-NLS-1$
-		listConnector.addServerResponse(response2).addServerResponse(response2);
-
-		Map<String, String> respHeaders3 = Maps.newHashMap();
-		respHeaders3.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
-		respHeaders3.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
-		ServerResponse response3 = new ServerResponse(ServerResponse.STATUS_OK, "Cards", respHeaders3); //$NON-NLS-1$
-		listConnector.addServerResponse(response3).addServerResponse(response3);
-
-		TuleapMilestone tuleapMilestone = this.initializeMilestone();
-		// FIXME backlog items ! client.updateMilestone(tuleapMilestone, new NullProgressMonitor());
-
-		// Let's check the requests that have been sent.
-		List<ServerRequest> requestsSent = listConnector.getRequestsSent();
-		assertEquals(6, requestsSent.size());
-
-		// The milestone backlogItems
-		ServerRequest request0 = requestsSent.get(0);
-		assertEquals("https://test/url/api/v12.3/milestones/50/backlog_items", request0.url); //$NON-NLS-1$
-		assertEquals("OPTIONS", request0.method); //$NON-NLS-1$
-
-		ServerRequest request1 = requestsSent.get(1);
-		assertEquals("https://test/url/api/v12.3/milestones/50/backlog_items", request1.url); //$NON-NLS-1$
-		assertEquals("PUT", request1.method); //$NON-NLS-1$
-		assertEquals("[{\"id\":200,\"assigned_milestone_id\":100}]", request1.body); //$NON-NLS-1$
-
-		// The milestone fields
-		ServerRequest request2 = requestsSent.get(2);
-		assertEquals("https://test/url/api/v12.3/milestones/50", request2.url); //$NON-NLS-1$
-		assertEquals("OPTIONS", request2.method); //$NON-NLS-1$
-
-		ServerRequest request3 = requestsSent.get(3);
-		assertEquals("https://test/url/api/v12.3/milestones/50", request3.url); //$NON-NLS-1$
-		assertEquals("PUT", request1.method); //$NON-NLS-1$
-		assertEquals(
-				"{\"values\":[{\"field_id\":1000,\"value\":\"300, 301, 302\"},{\"field_id\":2000,\"bind_value_ids\":[1,2,3]},{\"field_id\":3000,\"file_descriptions\":[{\"file_id\":100000,\"description\":\"first description\"},{\"file_id\":100001,\"description\":\"second description\"}]}],\"milestone_type_id\":500,\"parent_milestone_id\":0,\"id\":50,\"label\":\"The first milestone\",\"configuration_id\":500}", //$NON-NLS-1$
-				request3.body);
-
-		// The milestone cards
-		ServerRequest request4 = requestsSent.get(4);
-		assertEquals("https://test/url/api/v12.3/cards/3001", request4.url); //$NON-NLS-1$
-		assertEquals("OPTIONS", request4.method); //$NON-NLS-1$
-
-		ServerRequest request5 = requestsSent.get(5);
-		assertEquals("https://test/url/api/v12.3/cards/3001", request5.url); //$NON-NLS-1$
-		assertEquals("PUT", request5.method); //$NON-NLS-1$
-		assertEquals("{\"id\":3001,\"configuration_id\":700}", request5.body); //$NON-NLS-1$
 	}
 
 	/**
@@ -491,18 +418,6 @@ public class TuleapRestClientTest {
 		req = requestsSent.get(4);
 		assertEquals("GET", req.method);
 		assertEquals("https://test/url/api/v12.3/milestones/200", req.url);
-	}
-
-	/**
-	 * Initialize the milestone to update.
-	 * 
-	 * @return the milestone to update
-	 */
-	private TuleapMilestone initializeMilestone() {
-		TuleapMilestone tuleapMilestone = new TuleapMilestone(50,
-				new TuleapReference(200, "p/200"), "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
-				"HTML URL", new Date(), new Date()); //$NON-NLS-1$
-		return tuleapMilestone;
 	}
 
 	@Before

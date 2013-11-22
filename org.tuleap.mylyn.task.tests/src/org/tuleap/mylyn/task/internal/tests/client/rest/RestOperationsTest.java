@@ -320,21 +320,25 @@ public class RestOperationsTest {
 		op.checkedRun();
 	}
 
+	@SuppressWarnings("unused")
 	@Test(expected = AssertionFailedException.class)
 	public void testConstructorWithNullUrl() {
 		new RestOperation(null, connector, Method.GET, logger);
 	}
 
+	@SuppressWarnings("unused")
 	@Test(expected = AssertionFailedException.class)
 	public void testConstructorWithNullConnector() {
 		new RestOperation("url", null, Method.GET, logger);
 	}
 
+	@SuppressWarnings("unused")
 	@Test(expected = AssertionFailedException.class)
 	public void testConstructorWithNullMethod() {
 		new RestOperation("url", connector, null, logger);
 	}
 
+	@SuppressWarnings("unused")
 	@Test(expected = AssertionFailedException.class)
 	public void testConstructorWithNullLogger() {
 		new RestOperation("url", connector, Method.GET, null);

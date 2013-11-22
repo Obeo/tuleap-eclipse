@@ -16,7 +16,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.CoreException;
 import org.tuleap.mylyn.task.internal.core.client.rest.IRestConnector;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestResourceFactory;
 import org.tuleap.mylyn.task.internal.core.client.rest.ServerResponse;
@@ -39,15 +38,6 @@ public class MockRestConnector implements IRestConnector {
 	 * The response this object will return.
 	 */
 	private ServerResponse response;
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.client.rest.IRestConnector#getResourceFactory()
-	 */
-	public RestResourceFactory getResourceFactory() throws CoreException {
-		return resourceFactory;
-	}
 
 	public ServerResponse sendRequest(String method, String url, Map<String, String> headers, String data) {
 		requestsSent.add(new ServerRequest(method, url, headers, data));
