@@ -219,7 +219,7 @@ public class TuleapSoapConnectorTests {
 
 			int firstFieldId = 22;
 			TrackerField trackerField = new TrackerField(configurationId, firstFieldId, null, null,
-					ITuleapTrackerConstants.ARTLINK, null, null, new String[] {"submit", "update" });
+					ITuleapTrackerConstants.TYPE_ARTIFACT_LINK, null, null, new String[] {"submit", "update" });
 			trackerFields[0] = trackerField;
 
 			int bindValueId1 = 4745;
@@ -228,7 +228,7 @@ public class TuleapSoapConnectorTests {
 
 			int secondFieldId = 4;
 			trackerField = new TrackerField(configurationId, secondFieldId, null, null,
-					ITuleapTrackerConstants.CB, null, null, new String[] {"submit", "update" });
+					ITuleapTrackerConstants.TYPE_CB, null, null, new String[] {"submit", "update" });
 			trackerField.setValues(new TrackerFieldBindValue[] {
 					new TrackerFieldBindValue(bindValueId1, null),
 					new TrackerFieldBindValue(bindValueId2, null),

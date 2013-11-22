@@ -264,7 +264,6 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 	 * @return The relevant item, or {@code null} if it cannot be found.
 	 */
 	public TuleapSelectBoxItem getItem(String itemId) {
-		// TODO See if itemId should be an int
 		return items.get(itemId);
 	}
 

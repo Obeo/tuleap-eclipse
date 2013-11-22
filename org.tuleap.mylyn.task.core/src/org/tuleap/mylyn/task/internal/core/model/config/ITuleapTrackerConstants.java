@@ -104,105 +104,103 @@ public interface ITuleapTrackerConstants {
 	String DESCRIPTION = "description"; //$NON-NLS-1$
 
 	/**************************************************************************
-	 * Dynamic elements.
+	 * Field types.
 	 **************************************************************************/
-	/**
-	 * Artifact ID.
-	 */
-	String AID = "aid"; //$NON-NLS-1$
-
-	/**
-	 * Last update date.
-	 */
-	String LUD = "lud"; //$NON-NLS-1$
-
-	/**
-	 * Artifact author.
-	 */
-	String SUBBY = "subby"; //$NON-NLS-1$
-
-	/**
-	 * Submission date.
-	 */
-	String SUBON = "subon"; //$NON-NLS-1$
-
-	/**
-	 * Cross references.
-	 */
-	String CROSS = "cross"; //$NON-NLS-1$
-
-	/**
-	 * Completion diagram.
-	 */
-	String BURNDOWN = "burndown"; //$NON-NLS-1$
 
 	/**
 	 * Computed field.
 	 */
-	String COMPUTED = "computed"; //$NON-NLS-1$
+	String TYPE_COMPUTED = "computed"; //$NON-NLS-1$
 
-	/**************************************************************************
-	 * Fields.
-	 **************************************************************************/
 	/**
 	 * String.
 	 */
-	String STRING = "string"; //$NON-NLS-1$
+	String TYPE_STRING = "string"; //$NON-NLS-1$
 
 	/**
 	 * Text.
 	 */
-	String TEXT = "text"; //$NON-NLS-1$
+	String TYPE_TEXT = "text"; //$NON-NLS-1$
 
 	/**
 	 * Select box.
 	 */
-	String SB = "sb"; //$NON-NLS-1$
+	String TYPE_SB = "sb"; //$NON-NLS-1$
 
 	/**
 	 * Multi select box.
 	 */
-	String MSB = "msb"; //$NON-NLS-1$
+	String TYPE_MSB = "msb"; //$NON-NLS-1$
 
 	/**
 	 * Check box.
 	 */
-	String CB = "cb"; //$NON-NLS-1$
+	String TYPE_CB = "cb"; //$NON-NLS-1$
 
 	/**
 	 * Date.
 	 */
-	String DATE = "date"; //$NON-NLS-1$
+	String TYPE_DATE = "date"; //$NON-NLS-1$
 
 	/**
 	 * File upload.
 	 */
-	String FILE = "file"; //$NON-NLS-1$
+	String TYPE_FILE = "file"; //$NON-NLS-1$
 
 	/**
 	 * Integer.
 	 */
-	String INT = "int"; //$NON-NLS-1$
+	String TYPE_INT = "int"; //$NON-NLS-1$
 
 	/**
 	 * Float.
 	 */
-	String FLOAT = "float"; //$NON-NLS-1$
+	String TYPE_FLOAT = "float"; //$NON-NLS-1$
 
 	/**
 	 * Open list.
 	 */
-	String TBL = "tbl"; //$NON-NLS-1$
+	String TYPE_TBL = "tbl"; //$NON-NLS-1$
 
 	/**
 	 * Artifact link.
 	 */
-	String ARTLINK = "art_link"; //$NON-NLS-1$
+	String TYPE_ARTIFACT_LINK = "art_link"; //$NON-NLS-1$
 
 	/**
 	 * Artifact permission.
 	 */
-	String PERM = "perm"; //$NON-NLS-1$
+	String TYPE_PERM = "perm"; //$NON-NLS-1$
+
+	/**
+	 * Type of field: Artifact ID.
+	 */
+	String TYPE_AID = "aid"; //$NON-NLS-1$
+
+	/**
+	 * Type of field: Submitted by.
+	 */
+	String TYPE_SUBMITTED_BY = "subby"; //$NON-NLS-1$
+
+	/**
+	 * Type of field: Submitted on.
+	 */
+	String TYPE_SUBMITTED_ON = "subon"; //$NON-NLS-1$
+
+	/**
+	 * Type of field: Burndown chart.
+	 */
+	String TYPE_BURNDOWN = "burndown"; //$NON-NLS-1$
+
+	/**
+	 * Type of field: Last updated on.
+	 */
+	String TYPE_LAST_UPDATED_ON = "lud"; //$NON-NLS-1$
+
+	/**
+	 * Type of field: Cross-references.
+	 */
+	String TYPE_CROSS_REFERENCES = "cross"; //$NON-NLS-1$
 
 	/**
 	 * TODO Shared field.

@@ -542,7 +542,7 @@ public class TuleapSoapConnector {
 
 		String type = trackerField.getType();
 		int fieldIdentifier = trackerField.getField_id();
-		if (ITuleapTrackerConstants.STRING.equals(type)) {
+		if (ITuleapTrackerConstants.TYPE_STRING.equals(type)) {
 			tuleapField = new TuleapString(fieldIdentifier);
 
 			TrackerSemanticTitle trackerSemanticTitle = trackerSemantic.getTitle();
@@ -550,26 +550,26 @@ public class TuleapSoapConnector {
 			if (trackerSemanticTitleFieldName.equals(trackerField.getShort_name())) {
 				((TuleapString)tuleapField).setSemanticTitle(true);
 			}
-		} else if (ITuleapTrackerConstants.TEXT.equals(type)) {
+		} else if (ITuleapTrackerConstants.TYPE_TEXT.equals(type)) {
 			tuleapField = new TuleapText(fieldIdentifier);
-		} else if (ITuleapTrackerConstants.SB.equals(type)) {
+		} else if (ITuleapTrackerConstants.TYPE_SB.equals(type)) {
 			tuleapField = this.getTuleapSelectBox(trackerStructure, trackerField);
-		} else if (ITuleapTrackerConstants.MSB.equals(type)
-				|| ITuleapTrackerConstants.CB.equals(type)) {
+		} else if (ITuleapTrackerConstants.TYPE_MSB.equals(type)
+				|| ITuleapTrackerConstants.TYPE_CB.equals(type)) {
 			tuleapField = this.getTuleapMultiSelectBox(groupId, trackerStructure, trackerField);
-		} else if (ITuleapTrackerConstants.DATE.equals(type)) {
+		} else if (ITuleapTrackerConstants.TYPE_DATE.equals(type)) {
 			tuleapField = new TuleapDate(fieldIdentifier);
-		} else if (ITuleapTrackerConstants.FILE.equals(type)) {
+		} else if (ITuleapTrackerConstants.TYPE_FILE.equals(type)) {
 			tuleapField = new TuleapFileUpload(fieldIdentifier);
-		} else if (ITuleapTrackerConstants.ARTLINK.equals(type)) {
+		} else if (ITuleapTrackerConstants.TYPE_ARTIFACT_LINK.equals(type)) {
 			tuleapField = new TuleapArtifactLink(fieldIdentifier);
-		} else if (ITuleapTrackerConstants.INT.equals(type)) {
+		} else if (ITuleapTrackerConstants.TYPE_INT.equals(type)) {
 			tuleapField = new TuleapInteger(fieldIdentifier);
-		} else if (ITuleapTrackerConstants.TBL.equals(type)) {
+		} else if (ITuleapTrackerConstants.TYPE_TBL.equals(type)) {
 			tuleapField = new TuleapOpenList(fieldIdentifier);
-		} else if (ITuleapTrackerConstants.FLOAT.equals(type)) {
+		} else if (ITuleapTrackerConstants.TYPE_FLOAT.equals(type)) {
 			tuleapField = new TuleapFloat(fieldIdentifier);
-		} else if (ITuleapTrackerConstants.COMPUTED.equals(type)) {
+		} else if (ITuleapTrackerConstants.TYPE_COMPUTED.equals(type)) {
 			tuleapField = new TuleapComputedValue(fieldIdentifier);
 		} else {
 			TuleapCoreActivator.log(TuleapMylynTasksMessages.getString(
@@ -1087,9 +1087,9 @@ public class TuleapSoapConnector {
 			return artifactFieldValue;
 		}
 
-		if (ITuleapTrackerConstants.MSB.equals(trackerField.getType())
-				|| ITuleapTrackerConstants.SB.equals(trackerField.getType())
-				|| ITuleapTrackerConstants.CB.equals(trackerField.getType())) {
+		if (ITuleapTrackerConstants.TYPE_MSB.equals(trackerField.getType())
+				|| ITuleapTrackerConstants.TYPE_SB.equals(trackerField.getType())
+				|| ITuleapTrackerConstants.TYPE_CB.equals(trackerField.getType())) {
 			// Regular select box, multi-select box or checkbox
 			AbstractFieldValue abstractFieldValue = artifact.getFieldValue(trackerField.getField_id());
 			if (abstractFieldValue instanceof BoundFieldValue) {
@@ -1148,8 +1148,8 @@ public class TuleapSoapConnector {
 		if (value == null || "".equals(value.trim())) { //$NON-NLS-1$			
 			boolean canSubmitEmptyValue = false;
 			canSubmitEmptyValue = canSubmitEmptyValue
-					|| ITuleapTrackerConstants.STRING.equals(fieldType);
-			canSubmitEmptyValue = canSubmitEmptyValue || ITuleapTrackerConstants.TEXT.equals(fieldType);
+					|| ITuleapTrackerConstants.TYPE_STRING.equals(fieldType);
+			canSubmitEmptyValue = canSubmitEmptyValue || ITuleapTrackerConstants.TYPE_TEXT.equals(fieldType);
 			return canSubmitEmptyValue;
 		}
 		return true;
@@ -1164,10 +1164,13 @@ public class TuleapSoapConnector {
 	 */
 	private boolean shouldConsider(String trackerFieldType) {
 		boolean shouldConsider = true;
-		shouldConsider = shouldConsider && !ITuleapTrackerConstants.AID.equals(trackerFieldType);
-		shouldConsider = shouldConsider && !ITuleapTrackerConstants.SUBON.equals(trackerFieldType);
-		shouldConsider = shouldConsider && !ITuleapTrackerConstants.SUBBY.equals(trackerFieldType);
-		shouldConsider = shouldConsider && !ITuleapTrackerConstants.LUD.equals(trackerFieldType);
+		shouldConsider = shouldConsider && !ITuleapTrackerConstants.TYPE_AID.equals(trackerFieldType);
+		shouldConsider = shouldConsider
+				&& !ITuleapTrackerConstants.TYPE_SUBMITTED_ON.equals(trackerFieldType);
+		shouldConsider = shouldConsider
+				&& !ITuleapTrackerConstants.TYPE_SUBMITTED_BY.equals(trackerFieldType);
+		shouldConsider = shouldConsider
+				&& !ITuleapTrackerConstants.TYPE_LAST_UPDATED_ON.equals(trackerFieldType);
 		return shouldConsider;
 	}
 
