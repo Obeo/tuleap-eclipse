@@ -136,7 +136,7 @@ public final class TuleapUrlUtil {
 				+ REPOSITORY_PROJECT_ID_URL_SEPARATOR
 				+ TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(taskId) + PARAMETER_SEPARATOR
 				+ REPOSITORY_TRACKER_ID_URL_SEPARATOR
-				+ TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId(taskId) + PARAMETER_SEPARATOR
+				+ TuleapTaskIdentityUtil.getTrackerIdFromTaskDataId(taskId) + PARAMETER_SEPARATOR
 				+ REPOSITORY_ELEMENT_ID_URL_SEPARATOR
 				+ TuleapTaskIdentityUtil.getElementIdFromTaskDataId(taskId);
 	}

@@ -160,7 +160,7 @@ public final class TuleapTaskIdentityUtil {
 	 *            The task data id
 	 * @return The identifier of the configuration from the task data id
 	 */
-	public static int getConfigurationIdFromTaskDataId(String taskDataId) {
+	public static int getTrackerIdFromTaskDataId(String taskDataId) {
 		int indexOfConfiguration = taskDataId.indexOf(CONFIGURATION_SEPARATOR);
 		int indexOfElement = taskDataId.indexOf(ELEMENT_ID_SEPARATOR);
 		if (indexOfConfiguration != -1 && indexOfElement != -1) {

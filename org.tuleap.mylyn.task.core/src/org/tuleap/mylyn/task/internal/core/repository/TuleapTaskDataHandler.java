@@ -284,10 +284,10 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(taskId);
 		TuleapProject project = server.getProject(projectId);
 
-		int configurationId = TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId(taskId);
+		int trackerId = TuleapTaskIdentityUtil.getTrackerIdFromTaskDataId(taskId);
 
 		TaskData taskData = null;
-		if (configurationId == TuleapTaskIdentityUtil.IRRELEVANT_ID) {
+		if (trackerId == TuleapTaskIdentityUtil.IRRELEVANT_ID) {
 			// Top Planning
 			TaskAttributeMapper attributeMapper = this.getAttributeMapper(taskRepository);
 			taskData = new TaskData(attributeMapper, ITuleapConstants.CONNECTOR_KIND, taskRepository
@@ -295,7 +295,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			// Load backlog and milestones into the TaskData
 			fetchProjectPlanningData(taskData, taskRepository, monitor);
 		} else {
-			TuleapTracker tracker = project.getTracker(configurationId);
+			TuleapTracker tracker = project.getTracker(trackerId);
 			tracker = this.connector.refreshTracker(taskRepository, tracker, monitor);
 			taskData = this.getArtifactTaskData(taskId, server, taskRepository, monitor);
 

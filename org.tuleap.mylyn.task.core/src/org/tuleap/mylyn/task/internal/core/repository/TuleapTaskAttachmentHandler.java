@@ -113,7 +113,7 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 		boolean hasFileUploadField = false;
 
 		int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(task.getTaskId());
-		int trackerId = TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId(task.getTaskId());
+		int trackerId = TuleapTaskIdentityUtil.getTrackerIdFromTaskDataId(task.getTaskId());
 
 		TuleapServer tuleapServer = this.connector
 				.getTuleapServerConfiguration(repository.getRepositoryUrl());
@@ -215,7 +215,7 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 			}
 		} else {
 			int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(task.getTaskId());
-			int trackerId = TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId(task.getTaskId());
+			int trackerId = TuleapTaskIdentityUtil.getTrackerIdFromTaskDataId(task.getTaskId());
 
 			TuleapServer tuleapServer = this.connector
 					.getTuleapServerConfiguration(repository.getRepositoryUrl());

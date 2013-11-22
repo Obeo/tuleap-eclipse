@@ -254,7 +254,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 						.intValue();
 			}
 		} else {
-			configurationId = TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId(taskData.getTaskId());
+			configurationId = TuleapTaskIdentityUtil.getTrackerIdFromTaskDataId(taskData.getTaskId());
 		}
 
 		return configurationId;

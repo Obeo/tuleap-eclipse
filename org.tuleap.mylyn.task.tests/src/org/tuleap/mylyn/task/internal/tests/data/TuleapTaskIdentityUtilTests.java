@@ -80,7 +80,7 @@ public class TuleapTaskIdentityUtilTests {
 	 */
 	@Test
 	public void testGetConfigurationIdFromTaskDataId() {
-		assertThat(TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId("123:17#42"), is(17));
+		assertThat(TuleapTaskIdentityUtil.getTrackerIdFromTaskDataId("123:17#42"), is(17));
 	}
 
 	/**
@@ -89,13 +89,13 @@ public class TuleapTaskIdentityUtilTests {
 	@Test
 	public void testGetIrrelevantConfigurationIdFromTaskDataId() {
 		assertThat(TuleapTaskIdentityUtil
-				.getConfigurationIdFromTaskDataId("123:irrelevantconfigurationid#42"),
+				.getTrackerIdFromTaskDataId("123:irrelevantconfigurationid#42"),
 				is(TuleapTaskIdentityUtil.IRRELEVANT_ID));
-		assertThat(TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId("123:#42"),
+		assertThat(TuleapTaskIdentityUtil.getTrackerIdFromTaskDataId("123:#42"),
 				is(TuleapTaskIdentityUtil.IRRELEVANT_ID));
-		assertThat(TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId("123#42"),
+		assertThat(TuleapTaskIdentityUtil.getTrackerIdFromTaskDataId("123#42"),
 				is(TuleapTaskIdentityUtil.IRRELEVANT_ID));
-		assertThat(TuleapTaskIdentityUtil.getConfigurationIdFromTaskDataId("123:N/A#42"),
+		assertThat(TuleapTaskIdentityUtil.getTrackerIdFromTaskDataId("123:N/A#42"),
 				is(TuleapTaskIdentityUtil.IRRELEVANT_ID));
 	}
 

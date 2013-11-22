@@ -437,7 +437,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		TuleapProject project = configuration.getProject(TuleapTaskIdentityUtil
 				.getProjectIdFromTaskDataId(taskData.getTaskId()));
 		TuleapTracker tracker = project.getTracker(TuleapTaskIdentityUtil
-				.getConfigurationIdFromTaskDataId(taskData.getTaskId()));
+				.getTrackerIdFromTaskDataId(taskData.getTaskId()));
 
 		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, tracker);
 		int status = mapper.getStatus();
