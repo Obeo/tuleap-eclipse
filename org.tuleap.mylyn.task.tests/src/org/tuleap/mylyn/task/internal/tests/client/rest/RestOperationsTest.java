@@ -10,18 +10,24 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.tests.client.rest;
 
+import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 
 import java.util.Iterator;
 import java.util.Map;
 
+import org.eclipse.core.runtime.AssertionFailedException;
+import org.eclipse.core.runtime.CoreException;
 import org.junit.Before;
 import org.junit.Test;
+import org.restlet.data.Method;
+import org.tuleap.mylyn.task.internal.core.client.rest.IAuthenticator;
 import org.tuleap.mylyn.task.internal.core.client.rest.ITuleapHeaders;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestOperation;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestOperationIterable;
 import org.tuleap.mylyn.task.internal.core.client.rest.ServerResponse;
+import org.tuleap.mylyn.task.internal.core.model.TuleapToken;
 import org.tuleap.mylyn.task.internal.tests.TestLogger;
 
 import static org.junit.Assert.assertEquals;
@@ -37,9 +43,13 @@ public class RestOperationsTest {
 
 	private MockRestConnector connector;
 
+	private ServerResponse response401;
+
+	private TestLogger logger;
+
 	@Test
 	public void testBasicBehavior() {
-		RestOperation op = RestOperation.get("some/url", connector, new TestLogger());
+		RestOperation op = RestOperation.get("some/url", connector, logger);
 		assertEquals("GET", op.getMethodName());
 		assertEquals("some/url", op.getUrl());
 		assertEquals("some/url", op.getUrlWithQueryParameters());
@@ -74,7 +84,7 @@ public class RestOperationsTest {
 	 */
 	@Test
 	public void testExecutionOfGet() {
-		RestOperation op = RestOperation.get("some/url", connector, new TestLogger());
+		RestOperation op = RestOperation.get("some/url", connector, logger);
 		Map<String, String> responseHeaders = Maps.newLinkedHashMap();
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, "body", responseHeaders);
 		connector.setResponse(response);
@@ -84,7 +94,7 @@ public class RestOperationsTest {
 
 	@Test
 	public void testIteratingOnGetWithJsonObject() {
-		RestOperation op = RestOperation.get("some/url", connector, new TestLogger());
+		RestOperation op = RestOperation.get("some/url", connector, logger);
 		Map<String, String> responseHeaders = Maps.newLinkedHashMap();
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, "{'a':'1'}", responseHeaders);
 		connector.setResponse(response);
@@ -95,7 +105,7 @@ public class RestOperationsTest {
 
 	@Test
 	public void testIteratingOnGetWithArrayWithoutPagination() {
-		RestOperation op = RestOperation.get("some/url", connector, new TestLogger());
+		RestOperation op = RestOperation.get("some/url", connector, logger);
 		Map<String, String> responseHeaders = Maps.newLinkedHashMap();
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, "[{'a':'1'},{'a':'2'}]",
 				responseHeaders);
@@ -110,7 +120,7 @@ public class RestOperationsTest {
 	public void testIteratingOnGetWithArrayWithPagination() {
 		MockPaginatingRestConnector paginatingConnector = new MockPaginatingRestConnector();
 
-		RestOperation op = RestOperation.get("some/url", paginatingConnector, new TestLogger());
+		RestOperation op = RestOperation.get("some/url", paginatingConnector, logger);
 		Map<String, String> responseHeaders = Maps.newLinkedHashMap();
 
 		responseHeaders.put(ITuleapHeaders.HEADER_X_PAGINATION_SIZE, "3");
@@ -141,11 +151,296 @@ public class RestOperationsTest {
 	}
 
 	/**
+	 * Checks that invoking run() on {@link RestOperation}s attempt to login automatically when they receive a
+	 * 401 UNAUTHORIZED response.
+	 */
+	@Test
+	public void testRunAutomaticLoginMechanism() {
+		MockListRestConnector listConnector = new MockListRestConnector();
+		ServerResponse response200 = new ServerResponse(200, "", Maps.<String, String> newHashMap());
+		final TuleapToken token = new TuleapToken();
+		token.setToken("token");
+		token.setUserId("user_id");
+		IAuthenticator authenticator = new IAuthenticator() {
+			public void login() throws CoreException {
+				// Stub
+			}
+
+			public TuleapToken getToken() {
+				return token;
+			}
+		};
+		listConnector.addServerResponse(response401);
+		listConnector.addServerResponse(response200);
+		RestOperation op = new RestOperation("/some/url", listConnector, Method.GET, logger);
+		op.withAuthenticator(authenticator);
+		ServerResponse response = op.run();
+		assertTrue(response.isOk());
+		assertEquals(2, listConnector.getRequestsSent().size());
+		assertEquals("GET", listConnector.getRequestsSent().get(0).method);
+		assertEquals("GET", listConnector.getRequestsSent().get(1).method);
+	}
+
+	/**
+	 * Checks that invoking run() on {@link RestOperation}s without an authenticator does not do anything
+	 * special when receiving a 401 UNAUTHORIZED response.
+	 */
+	@Test
+	public void testRunAutomaticLoginMechanismFailsWithoutAuthenticator() {
+		MockListRestConnector listConnector = new MockListRestConnector();
+		ServerResponse response200 = new ServerResponse(200, "", Maps.<String, String> newHashMap());
+		final TuleapToken token = new TuleapToken();
+		token.setToken("token");
+		token.setUserId("user_id");
+		listConnector.addServerResponse(response401);
+		listConnector.addServerResponse(response200);
+		RestOperation op = new RestOperation("/some/url", listConnector, Method.GET, logger);
+		// op.withAuthenticator(null);
+		ServerResponse response = op.run();
+		assertFalse(response.isOk());
+		assertEquals(1, listConnector.getRequestsSent().size());
+		assertEquals("GET", listConnector.getRequestsSent().get(0).method);
+	}
+
+	/**
+	 * Checks that invoking run() on {@link RestOperation}s with an authenticator on an unauthorized resource
+	 * attempts to re-login only once.
+	 */
+	@Test
+	public void testRunAutomaticLoginMechanismOnlyOnce() {
+		MockListRestConnector listConnector = new MockListRestConnector();
+		ServerResponse response200 = new ServerResponse(200, "", Maps.<String, String> newHashMap());
+		final TuleapToken token = new TuleapToken();
+		token.setToken("token");
+		token.setUserId("user_id");
+		IAuthenticator authenticator = new IAuthenticator() {
+			public void login() throws CoreException {
+				// Stub
+			}
+
+			public TuleapToken getToken() {
+				return token;
+			}
+		};
+		listConnector.addServerResponse(response401);
+		listConnector.addServerResponse(response401);
+		listConnector.addServerResponse(response200);
+		RestOperation op = new RestOperation("/some/url", listConnector, Method.GET, logger);
+		op.withAuthenticator(authenticator);
+		ServerResponse response = op.run();
+		assertFalse(response.isOk());
+		assertEquals(2, listConnector.getRequestsSent().size());
+		assertEquals("GET", listConnector.getRequestsSent().get(0).method);
+		assertEquals("GET", listConnector.getRequestsSent().get(0).method);
+	}
+
+	/**
+	 * Checks that invoking checkedRun() on {@link RestOperation}s attempt to login automatically when they
+	 * receive a 401 UNAUTHORIZED response.
+	 * 
+	 * @throws CoreException
+	 *             in the test
+	 */
+	@Test
+	public void testCheckedRunAutomaticLoginMechanism() throws CoreException {
+		MockListRestConnector listConnector = new MockListRestConnector();
+		ServerResponse response200 = new ServerResponse(200, "", Maps.<String, String> newHashMap());
+		final TuleapToken token = new TuleapToken();
+		token.setToken("token");
+		token.setUserId("user_id");
+		IAuthenticator authenticator = new IAuthenticator() {
+			public void login() throws CoreException {
+				// Stub
+			}
+
+			public TuleapToken getToken() {
+				return token;
+			}
+		};
+		listConnector.addServerResponse(response401);
+		listConnector.addServerResponse(response200);
+		RestOperation op = new RestOperation("/some/url", listConnector, Method.GET, logger);
+		op.withAuthenticator(authenticator);
+		ServerResponse response = op.checkedRun();
+		assertTrue(response.isOk());
+		assertEquals(2, listConnector.getRequestsSent().size());
+		assertEquals("GET", listConnector.getRequestsSent().get(0).method);
+		assertEquals("GET", listConnector.getRequestsSent().get(1).method);
+	}
+
+	/**
+	 * Checks that invoking checkedRun() on {@link RestOperation}s without an authenticator throws a
+	 * CoreException 401 UNAUTHORIZED response.
+	 * 
+	 * @throws CoreException
+	 *             in the test
+	 */
+	@Test(expected = CoreException.class)
+	public void testCheckedRunAutomaticLoginMechanismFailsWithoutAuthenticator() throws CoreException {
+		MockListRestConnector listConnector = new MockListRestConnector();
+		ServerResponse response200 = new ServerResponse(200, "", Maps.<String, String> newHashMap());
+		final TuleapToken token = new TuleapToken();
+		token.setToken("token");
+		token.setUserId("user_id");
+		listConnector.addServerResponse(response401);
+		listConnector.addServerResponse(response200);
+		RestOperation op = new RestOperation("/some/url", listConnector, Method.GET, logger);
+		// op.withAuthenticator(null);
+		op.checkedRun();
+	}
+
+	/**
+	 * Checks that invoking checkedRun() on {@link RestOperation}s with an authenticator on an unauthorized
+	 * resource attempts to re-login only once and throws a CoreException if this attempt fails.
+	 * 
+	 * @throws CoreException
+	 *             in the test
+	 */
+	@Test(expected = CoreException.class)
+	public void testCheckedRunAutomaticLoginMechanismOnlyOnce() throws CoreException {
+		MockListRestConnector listConnector = new MockListRestConnector();
+		ServerResponse response200 = new ServerResponse(200, "", Maps.<String, String> newHashMap());
+		final TuleapToken token = new TuleapToken();
+		token.setToken("token");
+		token.setUserId("user_id");
+		IAuthenticator authenticator = new IAuthenticator() {
+			public void login() throws CoreException {
+				// Stub
+			}
+
+			public TuleapToken getToken() {
+				return token;
+			}
+		};
+		listConnector.addServerResponse(response401);
+		listConnector.addServerResponse(response401);
+		listConnector.addServerResponse(response200);
+		RestOperation op = new RestOperation("/some/url", listConnector, Method.GET, logger);
+		op.withAuthenticator(authenticator);
+		op.checkedRun();
+	}
+
+	@Test(expected = AssertionFailedException.class)
+	public void testConstructorWithNullUrl() {
+		new RestOperation(null, connector, Method.GET, logger);
+	}
+
+	@Test(expected = AssertionFailedException.class)
+	public void testConstructorWithNullConnector() {
+		new RestOperation("url", null, Method.GET, logger);
+	}
+
+	@Test(expected = AssertionFailedException.class)
+	public void testConstructorWithNullMethod() {
+		new RestOperation("url", connector, null, logger);
+	}
+
+	@Test(expected = AssertionFailedException.class)
+	public void testConstructorWithNullLogger() {
+		new RestOperation("url", connector, Method.GET, null);
+	}
+
+	@Test
+	public void testToString() {
+		RestOperation op = new RestOperation("/the/fullr/url", connector, Method.GET, logger);
+		assertEquals("GET /the/fullr/url", op.toString());
+	}
+
+	@Test
+	public void testGet() {
+		RestOperation op = RestOperation.get("full/url", connector, logger);
+		assertEquals("GET", op.getMethodName());
+		assertEquals("full/url", op.getUrl());
+	}
+
+	@Test
+	public void testPut() {
+		RestOperation op = RestOperation.put("full/url", connector, logger);
+		assertEquals("PUT", op.getMethodName());
+		assertEquals("full/url", op.getUrl());
+	}
+
+	@Test
+	public void testPost() {
+		RestOperation op = RestOperation.post("full/url", connector, logger);
+		assertEquals("POST", op.getMethodName());
+		assertEquals("full/url", op.getUrl());
+	}
+
+	@Test
+	public void testDelete() {
+		RestOperation op = RestOperation.delete("full/url", connector, logger);
+		assertEquals("DELETE", op.getMethodName());
+		assertEquals("full/url", op.getUrl());
+	}
+
+	@Test
+	public void testOptions() {
+		RestOperation op = RestOperation.options("full/url", connector, logger);
+		assertEquals("OPTIONS", op.getMethodName());
+		assertEquals("full/url", op.getUrl());
+	}
+
+	@Test
+	public void testWithQueryParameter() {
+		RestOperation op = new RestOperation("/url", connector, Method.GET, logger);
+		op.withQueryParameter("fields", "all");
+		assertEquals("/url", op.getUrl());
+		assertEquals("/url?fields=all", op.getUrlWithQueryParameters());
+	}
+
+	@Test
+	public void testWithQueryParameters() {
+		RestOperation op = new RestOperation("/url", connector, Method.GET, logger);
+		// LinkedhashMultimap because the order of insertion is important for the test
+		LinkedHashMultimap<String, String> params = LinkedHashMultimap.create();
+		params.put("x", "a");
+		params.put("x", "b");
+		params.put("y", "a");
+		op.withQueryParameters(params);
+		assertEquals("/url", op.getUrl());
+		assertEquals("/url?x=a&x=b&y=a", op.getUrlWithQueryParameters());
+	}
+
+	@Test
+	public void testWithoutQueryParameter() {
+		RestOperation op = new RestOperation("/url", connector, Method.GET, logger);
+		// LinkedhashMultimap because the order of insertion is important for the test
+		LinkedHashMultimap<String, String> params = LinkedHashMultimap.create();
+		params.put("x", "a");
+		params.put("x", "b");
+		params.put("y", "a");
+		op.withQueryParameters(params);
+		assertEquals("/url", op.getUrl());
+		assertEquals("/url?x=a&x=b&y=a", op.getUrlWithQueryParameters());
+		op.withoutQueryParameter();
+		assertEquals("/url", op.getUrlWithQueryParameters());
+	}
+
+	@Test
+	public void testWithoutQueryParameters() {
+		RestOperation op = new RestOperation("/url", connector, Method.GET, logger);
+		// LinkedhashMultimap because the order of insertion is important for the test
+		LinkedHashMultimap<String, String> params = LinkedHashMultimap.create();
+		params.put("x", "a");
+		params.put("x", "b");
+		params.put("y", "a");
+		op.withQueryParameters(params);
+		assertEquals("/url", op.getUrl());
+		assertEquals("/url?x=a&x=b&y=a", op.getUrlWithQueryParameters());
+		op.withoutQueryParameters("x");
+		assertEquals("/url?y=a", op.getUrlWithQueryParameters());
+	}
+
+	/**
 	 * Set up the tests.
 	 */
 	@Before
 	public void setUp() {
 		connector = new MockRestConnector();
+		logger = new TestLogger();
+		response401 = new ServerResponse(401, "{\"error\":{\"code\":401,\"message\":\"unauthorized\"}}", Maps
+				.<String, String> newHashMap());
 	}
 
 }
