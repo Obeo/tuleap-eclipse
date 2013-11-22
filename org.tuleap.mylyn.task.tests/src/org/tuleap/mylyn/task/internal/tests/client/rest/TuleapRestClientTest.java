@@ -13,6 +13,7 @@ package org.tuleap.mylyn.task.internal.tests.client.rest;
 import com.google.common.collect.Maps;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -285,17 +286,31 @@ public class TuleapRestClientTest {
 	}
 
 	/**
-	 * Test that the backlogItem update is well done.
+	 * Test that a milestone backlog update is well done.
 	 * 
 	 * @throws CoreException
 	 */
 	@Test
-	@Ignore("Need to see whether it's necessary to update a BI, artifact should be enough")
-	public void testUpdateBacklogItem() throws CoreException {
+	public void testUpdateMilestoneBacklog() throws CoreException {
 
-		// the backlogItem
-		TuleapBacklogItem item = new TuleapBacklogItem(231,
-				new TuleapReference(200, "p/200"), "item", null, null, null, null); //$NON-NLS-1$
+		TuleapBacklogItem item0 = new TuleapBacklogItem(230,
+				new TuleapReference(200, "p/200"), "item230", null, null, null, null); //$NON-NLS-1$
+		item0.setInitialEffort(Float.valueOf(201));
+		TuleapBacklogItem item1 = new TuleapBacklogItem(231,
+				new TuleapReference(200, "p/200"), "item231", null, null, null, null); //$NON-NLS-1$
+		item1.setInitialEffort(Float.valueOf(201));
+		TuleapBacklogItem item2 = new TuleapBacklogItem(232,
+				new TuleapReference(200, "p/200"), "item232", null, null, null, null); //$NON-NLS-1$
+		item2.setInitialEffort(Float.valueOf(201));
+		TuleapBacklogItem item3 = new TuleapBacklogItem(233,
+				new TuleapReference(200, "p/200"), "item233", null, null, null, null); //$NON-NLS-1$
+		item3.setInitialEffort(Float.valueOf(201));
+
+		List<TuleapBacklogItem> backlog = new ArrayList<TuleapBacklogItem>();
+		backlog.add(item0);
+		backlog.add(item1);
+		backlog.add(item2);
+		backlog.add(item3);
 
 		Map<String, String> respHeaders = Maps.newHashMap();
 		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
@@ -304,21 +319,71 @@ public class TuleapRestClientTest {
 				"The backlogItem response body", respHeaders); //$NON-NLS-1$
 
 		connector.setResponse(response);
-		client.updateBacklogItem(item, new NullProgressMonitor());
+		client.updateMilestoneBacklog(50, backlog, new NullProgressMonitor());
 
 		// Let's check the requests that have been sent.
 		List<ServerRequest> requestsSent = connector.getRequestsSent();
 		assertEquals(2, requestsSent.size());
 
 		ServerRequest request0 = requestsSent.get(0);
-		assertEquals("https://test/url/api/v12.3/backlog_items/231", request0.url); //$NON-NLS-1$
+		assertEquals("https://test/url/api/v12.3/milestones/50/backlog", request0.url); //$NON-NLS-1$
 		assertEquals("OPTIONS", request0.method); //$NON-NLS-1$
 
 		ServerRequest request1 = requestsSent.get(1);
-		assertEquals("https://test/url/api/v12.3/backlog_items/231", request1.url); //$NON-NLS-1$
+		assertEquals("https://test/url/api/v12.3/milestones/50/backlog", request1.url); //$NON-NLS-1$
 		assertEquals("PUT", request1.method); //$NON-NLS-1$
-		assertEquals(
-				"{\"values\":[{\"field_id\":1000,\"value\":\"300, 301, 302\"},{\"field_id\":2000,\"bind_value_ids\":[1,2,3]},{}],\"id\":231,\"label\":\"item\",\"configuration_id\":1000}", //$NON-NLS-1$
+		assertEquals("[{\"id\":230},{\"id\":231},{\"id\":232},{\"id\":233}]", //$NON-NLS-1$
+				request1.body);
+	}
+
+	/**
+	 * Test that a milestone content update is well done.
+	 * 
+	 * @throws CoreException
+	 */
+	@Test
+	public void testUpdateMilestoneContent() throws CoreException {
+
+		TuleapBacklogItem item0 = new TuleapBacklogItem(230,
+				new TuleapReference(200, "p/200"), "item230", null, null, null, null); //$NON-NLS-1$
+		item0.setInitialEffort(Float.valueOf(201));
+		TuleapBacklogItem item1 = new TuleapBacklogItem(231,
+				new TuleapReference(200, "p/200"), "item231", null, null, null, null); //$NON-NLS-1$
+		item1.setInitialEffort(Float.valueOf(201));
+		TuleapBacklogItem item2 = new TuleapBacklogItem(232,
+				new TuleapReference(200, "p/200"), "item232", null, null, null, null); //$NON-NLS-1$
+		item2.setInitialEffort(Float.valueOf(201));
+		TuleapBacklogItem item3 = new TuleapBacklogItem(233,
+				new TuleapReference(200, "p/200"), "item233", null, null, null, null); //$NON-NLS-1$
+		item3.setInitialEffort(Float.valueOf(201));
+
+		List<TuleapBacklogItem> content = new ArrayList<TuleapBacklogItem>();
+		content.add(item0);
+		content.add(item1);
+		content.add(item2);
+		content.add(item3);
+
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
+		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK,
+				"The backlogItem response body", respHeaders); //$NON-NLS-1$
+
+		connector.setResponse(response);
+		client.updateMilestoneContent(50, content, new NullProgressMonitor());
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(2, requestsSent.size());
+
+		ServerRequest request0 = requestsSent.get(0);
+		assertEquals("https://test/url/api/v12.3/milestones/50/content", request0.url); //$NON-NLS-1$
+		assertEquals("OPTIONS", request0.method); //$NON-NLS-1$
+
+		ServerRequest request1 = requestsSent.get(1);
+		assertEquals("https://test/url/api/v12.3/milestones/50/content", request1.url); //$NON-NLS-1$
+		assertEquals("PUT", request1.method); //$NON-NLS-1$
+		assertEquals("[{\"id\":230},{\"id\":231},{\"id\":232},{\"id\":233}]", //$NON-NLS-1$
 				request1.body);
 	}
 

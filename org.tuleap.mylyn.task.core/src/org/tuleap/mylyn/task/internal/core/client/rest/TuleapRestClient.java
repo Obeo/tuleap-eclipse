@@ -47,7 +47,7 @@ import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapSwimlane;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
-import org.tuleap.mylyn.task.internal.core.serializer.TuleapBacklogItemSerializer;
+import org.tuleap.mylyn.task.internal.core.serializer.TuleapBacklogItemsSerializer;
 import org.tuleap.mylyn.task.internal.core.serializer.TuleapCardSerializer;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
@@ -63,6 +63,7 @@ import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
  * </p>
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
+ * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
 public class TuleapRestClient implements IAuthenticator {
 
@@ -722,63 +723,70 @@ public class TuleapRestClient implements IAuthenticator {
 	}
 
 	/**
-	 * Updates the milestone BacklogItems on the server.
-	 * 
-	 * @param tuleapBacklogItem
-	 *            The backlogItemto update.
-	 * @param monitor
-	 *            The progress monitor.
-	 * @throws CoreException
-	 *             In case of error during the update of the artifact.
-	 */
-
-	public void updateBacklogItem(TuleapBacklogItem tuleapBacklogItem, IProgressMonitor monitor)
-			throws CoreException {
-		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.updatingBacklogItem, Integer.valueOf(tuleapBacklogItem
-							.getId())));
-		}
-		RestResource restBacklogItem = restResourceFactory.backlogItem(tuleapBacklogItem.getId())
-				.withAuthenticator(this);
-
-		// from POJO to JSON
-		JsonElement backlogItem = new TuleapBacklogItemSerializer().serialize(tuleapBacklogItem, null, null);
-
-		String changesToPut = backlogItem.toString();
-
-		// Send the PUT request
-		RestOperation operation = restBacklogItem.put().withBody(changesToPut);
-		operation.checkedRun();
-	}
-
-	/**
-	 * Updates the milestone BacklogItems on the server.
+	 * Updates the backlog of a given milestone.
 	 * 
 	 * @param milestoneId
-	 *            the id of the milestone containing the backlog items
+	 *            The milestone id
 	 * @param backlogItems
-	 *            The backlog items to update.
+	 *            The backlogItems list to update.
 	 * @param monitor
-	 *            The progress monitor.
+	 *            The monitor to use
 	 * @throws CoreException
-	 *             In case of error during the update of the artifact.
+	 *             If anything goes wrong.
 	 */
-
-	public void updateMilestoneBacklogItems(int milestoneId, List<TuleapBacklogItem> backlogItems,
+	public void updateMilestoneBacklog(int milestoneId, List<TuleapBacklogItem> backlogItems,
 			IProgressMonitor monitor) throws CoreException {
 		if (monitor != null) {
 			monitor.subTask(TuleapMylynTasksMessages.getString(
 					TuleapMylynTasksMessagesKeys.updatingBacklogItems, Integer.valueOf(milestoneId)));
 		}
-		RestResource restMilestonesBacklogItems = restResourceFactory.milestoneBacklog(milestoneId)
-				.withAuthenticator(this);
+
+		RestResource backlogResource = restResourceFactory.milestoneBacklog(milestoneId).withAuthenticator(
+				this);
 
 		// from POJO to JSON
-		String changesToPut = backlogItems.toString();
+		JsonElement backlogItemsArray = new TuleapBacklogItemsSerializer()
+				.serialize(backlogItems, null, null);
+		String changesToPut = backlogItemsArray.toString();
 
 		// Send the PUT request
-		RestOperation operation = restMilestonesBacklogItems.put().withBody(changesToPut);
+
+		RestOperation operation = backlogResource.put().withBody(changesToPut);
+
+		operation.checkedRun();
+	}
+
+	/**
+	 * Updates the content of a given milestone.
+	 * 
+	 * @param milestoneId
+	 *            The milestone id
+	 * @param backlogItems
+	 *            The backlogItems list to update.
+	 * @param monitor
+	 *            The monitor to use
+	 * @throws CoreException
+	 *             If anything goes wrong.
+	 */
+	public void updateMilestoneContent(int milestoneId, List<TuleapBacklogItem> backlogItems,
+			IProgressMonitor monitor) throws CoreException {
+		if (monitor != null) {
+			monitor.subTask(TuleapMylynTasksMessages.getString(
+					TuleapMylynTasksMessagesKeys.updatingBacklogItems, Integer.valueOf(milestoneId)));
+		}
+
+		RestResource backlogResource = restResourceFactory.milestoneContent(milestoneId).withAuthenticator(
+				this);
+
+		// from POJO to JSON
+		JsonElement backlogItemsArray = new TuleapBacklogItemsSerializer()
+				.serialize(backlogItems, null, null);
+		String changesToPut = backlogItemsArray.toString();
+
+		// Send the PUT request
+
+		RestOperation operation = backlogResource.put().withBody(changesToPut);
+
 		operation.checkedRun();
 	}
 
