@@ -44,18 +44,18 @@ public class RestOperation {
 	/**
 	 * Header key for tuleap user id.
 	 */
-	public static final String X_AUTH_USER_ID = "X-Auth-UserId"; //$NON-NLS-1$
+	private static final String X_AUTH_USER_ID = "X-Auth-UserId"; //$NON-NLS-1$
 
 	/**
 	 * Header key for tuleap authentication token.
 	 */
-	public static final String X_AUTH_TOKEN = "X-Auth-Token"; //$NON-NLS-1$
+	private static final String X_AUTH_TOKEN = "X-Auth-Token"; //$NON-NLS-1$
 
 	/**
 	 * String to send in the body when no data needs to be in the request body. {@code null} provokes an
 	 * exception in Restlet.
 	 */
-	public static final String EMPTY_BODY = ""; //$NON-NLS-1$
+	private static final String EMPTY_BODY = ""; //$NON-NLS-1$
 
 	/**
 	 * The full URL.
