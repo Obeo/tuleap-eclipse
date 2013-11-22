@@ -74,6 +74,155 @@ public class RestResourceTest {
 		}
 	}
 
+	@Test
+	public void testRestResourceWithUrlWithoutTrailingSlash() {
+		RestResource r = new RestResource("/server", "v12.5", "my/url", RestResource.GET, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+				connector, new TestLogger());
+		assertEquals("/my/url", r.getUrl());
+		assertEquals("/server/api/v12.5/my/url", r.getFullUrl());
+
+	}
+
+	@Test
+	public void testDeleteAllowed() throws CoreException {
+		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.DELETE, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+				connector, new TestLogger());
+		Map<String, String> headers = Maps.newTreeMap();
+		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,DELETE"); //$NON-NLS-1$
+		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,DELETE"); //$NON-NLS-1$
+		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
+		RestOperation delete = r.delete();
+		assertEquals("DELETE", delete.getMethodName());
+		assertEquals("/server/api/v12.5/my/url", delete.getUrl());
+	}
+
+	@Test(expected = UnsupportedOperationException.class)
+	public void testDeleteNotAllowedLocal() throws CoreException {
+		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.GET, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+				connector, new TestLogger());
+		Map<String, String> headers = Maps.newTreeMap();
+		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,DELETE"); //$NON-NLS-1$
+		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,DELETE"); //$NON-NLS-1$
+		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
+		r.delete();
+	}
+
+	@Test(expected = CoreException.class)
+	public void testDeleteNotAllowedDistant() throws CoreException {
+		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.DELETE, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+				connector, new TestLogger());
+		Map<String, String> headers = Maps.newTreeMap();
+		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
+		r.delete();
+	}
+
+	@Test
+	public void testPostAllowed() throws CoreException {
+		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.POST, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+				connector, new TestLogger());
+		Map<String, String> headers = Maps.newTreeMap();
+		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,POST"); //$NON-NLS-1$
+		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,POST"); //$NON-NLS-1$
+		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
+		RestOperation post = r.post();
+		assertEquals("POST", post.getMethodName());
+		assertEquals("/server/api/v12.5/my/url", post.getUrl());
+	}
+
+	@Test(expected = UnsupportedOperationException.class)
+	public void testPostNotAllowedLocal() throws CoreException {
+		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.GET, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+				connector, new TestLogger());
+		Map<String, String> headers = Maps.newTreeMap();
+		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,POST"); //$NON-NLS-1$
+		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,POST"); //$NON-NLS-1$
+		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
+		r.post();
+	}
+
+	@Test(expected = CoreException.class)
+	public void testPostNotAllowedDistant() throws CoreException {
+		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.POST, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+				connector, new TestLogger());
+		Map<String, String> headers = Maps.newTreeMap();
+		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
+		r.post();
+	}
+
+	@Test
+	public void testPutAllowed() throws CoreException {
+		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.PUT, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+				connector, new TestLogger());
+		Map<String, String> headers = Maps.newTreeMap();
+		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
+		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
+		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
+		RestOperation put = r.put();
+		assertEquals("PUT", put.getMethodName());
+		assertEquals("/server/api/v12.5/my/url", put.getUrl());
+	}
+
+	@Test(expected = UnsupportedOperationException.class)
+	public void testPutNotAllowedLocal() throws CoreException {
+		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.GET, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+				connector, new TestLogger());
+		Map<String, String> headers = Maps.newTreeMap();
+		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
+		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
+		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
+		r.put();
+	}
+
+	@Test(expected = CoreException.class)
+	public void testPutNotAllowedDistant() throws CoreException {
+		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.PUT, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+				connector, new TestLogger());
+		Map<String, String> headers = Maps.newTreeMap();
+		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
+		r.put();
+	}
+
+	@Test
+	public void testGetAllowed() throws CoreException {
+		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.GET, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+				connector, new TestLogger());
+		Map<String, String> headers = Maps.newTreeMap();
+		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
+		RestOperation get = r.get();
+		assertEquals("GET", get.getMethodName());
+		assertEquals("/server/api/v12.5/my/url", get.getUrl());
+	}
+
+	@Test(expected = UnsupportedOperationException.class)
+	public void tesGetNotAllowedLocal() throws CoreException {
+		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.PUT, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+				connector, new TestLogger());
+		Map<String, String> headers = Maps.newTreeMap();
+		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
+		r.get();
+	}
+
+	@Test(expected = CoreException.class)
+	public void testGetNotAllowedDistant() throws CoreException {
+		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.GET, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+				connector, new TestLogger());
+		Map<String, String> headers = Maps.newTreeMap();
+		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
+		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
+		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
+		r.get();
+	}
+
 	/**
 	 * Set up the tests.
 	 */
