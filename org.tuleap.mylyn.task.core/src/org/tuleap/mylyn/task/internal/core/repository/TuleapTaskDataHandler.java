@@ -25,6 +25,7 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.tuleap.mylyn.task.agile.core.data.AgileTaskKindUtil;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
@@ -413,6 +414,10 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(taskId);
 		MilestoneTaskDataConverter taskDataConverter = new MilestoneTaskDataConverter(taskRepository,
 				connector);
+
+		// Set the task kind to the relevant value
+		AgileTaskKindUtil.setAgileTaskKind(taskData, AgileTaskKindUtil.TASK_KIND_TOP_PLANNING);
+
 		List<TuleapBacklogItem> backlog = restClient.getProjectBacklog(projectId, monitor);
 		taskDataConverter.populateBacklog(taskData, backlog, monitor);
 
