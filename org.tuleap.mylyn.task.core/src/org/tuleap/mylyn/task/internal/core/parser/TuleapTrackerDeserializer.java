@@ -438,7 +438,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 		for (JsonElement bindingElt : bindings) {
 			JsonObject binding = bindingElt.getAsJsonObject();
 			int ugroupId = binding.get(USER_GROUP_ID).getAsInt();
-			TuleapGroup group = project.getGroup(ugroupId);
+			TuleapGroup group = project.getUserGroup(ugroupId);
 			if (group != null) {
 				for (TuleapPerson person : group.getMembers()) {
 					TuleapSelectBoxItem item = new TuleapSelectBoxItem(person.getId());

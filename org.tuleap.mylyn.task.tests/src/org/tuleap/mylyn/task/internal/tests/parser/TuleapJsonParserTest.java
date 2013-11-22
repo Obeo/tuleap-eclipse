@@ -11,7 +11,6 @@
 package org.tuleap.mylyn.task.internal.tests.parser;
 
 import java.text.ParseException;
-import java.util.List;
 
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.model.TuleapErrorMessage;
@@ -43,72 +42,27 @@ public class TuleapJsonParserTest {
 	private TuleapJsonParser parser = new TuleapJsonParser();
 
 	/**
-	 * Tests the parsing of backlog items.
-	 * 
-	 * @throws ParseException
-	 *             if the test is badly configured
-	 */
-	@Test
-	public void testParseBacklogItems() throws ParseException {
-		String json = ParserUtil.loadFile("/milestones/backlog_items_rel201.json");
-		List<TuleapBacklogItem> backlogItems = parser.parseBacklogItems(json);
-		assertEquals(2, backlogItems.size());
-
-		TuleapBacklogItem item = backlogItems.get(0);
-		TuleapBacklogItemDeserializerTest.checkEpic300(item);
-
-		item = backlogItems.get(1);
-		TuleapBacklogItemDeserializerTest.checkEpic301(item);
-	}
-
-	/**
-	 * Checks the parsing of milestones.
-	 * 
-	 * @throws ParseException
-	 *             If the parsing of a date goes wrong.
-	 */
-	@Test
-	public void testParseMilestones() throws ParseException {
-		String json = ParserUtil.loadFile("/milestones/releases.json");
-		List<TuleapMilestone> milestones = parser.parseMilestones(json);
-		assertEquals(2, milestones.size());
-
-		new TuleapMilestoneDeserializerTests().checkRelease200(milestones.get(0));
-		new TuleapMilestoneDeserializerTests().checkRelease201(milestones.get(1));
-	}
-
-	/**
 	 * Tests the parsing of epic #301.
 	 */
 	@Test
 	public void testDeserializePlanning400() {
-		String epic = ParserUtil.loadFile("/plannings/planning400(releases).json");
-		TuleapPlanning planning = parser.parsePlanning(epic);
+		String planning400 = ParserUtil.loadFile("/plannings/planning400(releases).json");
+		TuleapPlanning planning = parser.parsePlanning(planning400);
 		checkPlanning400(planning);
 	}
 
-	/**
-	 * Tests the deserialization of a list of plannings.
-	 */
 	@Test
-	public void testDeserializePlanningList() {
-		String list = ParserUtil.loadFile("/plannings/prj3_plannings.json");
-		List<TuleapPlanning> planningList = parser.parsePlanningList(list);
-		assertEquals(2, planningList.size());
-		checkPlanning400(planningList.get(0));
-		checkPlanning401(planningList.get(1));
+	public void testDeserializeMilestone200() throws ParseException {
+		String release200 = ParserUtil.loadFile("/milestones/release200.json");
+		TuleapMilestone milestone = parser.parseMilestone(release200);
+		new TuleapMilestoneDeserializerTests().checkRelease200(milestone);
 	}
 
-	/**
-	 * Tests the deserialization of a list of plannings that actually is not a JSON array but directly an
-	 * object.
-	 */
 	@Test
-	public void testDeserializePlanningListWhenListIsOnlyAnObject() {
-		String epic = ParserUtil.loadFile("/plannings/planning400(releases).json");
-		List<TuleapPlanning> planningList = parser.parsePlanningList(epic);
-		assertEquals(1, planningList.size());
-		checkPlanning400(planningList.get(0));
+	public void testDeserializeBacklogItem() throws ParseException {
+		String epic300 = ParserUtil.loadFile("/backlog_items/epic300.json");
+		TuleapBacklogItem item = parser.parseBacklogItem(epic300);
+		TuleapBacklogItemDeserializerTest.checkEpic300(item);
 	}
 
 	@Test

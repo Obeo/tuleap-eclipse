@@ -168,13 +168,8 @@ public class TuleapRestClient implements IAuthenticator {
 					.getString(TuleapMylynTasksMessagesKeys.retrievingProjectsList));
 		}
 		RestOperation operation = restProjects.get();
-		ServerResponse projectsServerResponse = operation.checkedRun();
-
-		String projectsGetResponseBody = projectsServerResponse.getBody();
-		List<TuleapProject> projects = this.jsonParser.parseProjects(projectsGetResponseBody);
-
-		// For each project that has the tracker service
-		for (TuleapProject project : projects) {
+		for (JsonElement element : operation.iterable()) {
+			TuleapProject project = jsonParser.parseProject(element);
 			tuleapServer.addProject(project);
 
 			loadPlanningsInto(project);
@@ -240,9 +235,8 @@ public class TuleapRestClient implements IAuthenticator {
 		RestResource plannings = restResourceFactory.projectPlannings(project.getIdentifier())
 				.withAuthenticator(this);
 		RestOperation operation = plannings.get();
-		ServerResponse response = operation.checkedRun();
-		List<TuleapPlanning> planningList = jsonParser.parsePlanningList(response.getBody());
-		for (TuleapPlanning planning : planningList) {
+		for (JsonElement element : operation.iterable()) {
+			TuleapPlanning planning = jsonParser.parsePlanning(element);
 			project.addPlanning(planning);
 		}
 	}
@@ -562,9 +556,8 @@ public class TuleapRestClient implements IAuthenticator {
 		RestResource backlogResource = restResourceFactory.milestoneBacklog(milestoneId).withAuthenticator(
 				this);
 		RestOperation operation = backlogResource.get();
-		RestOperationIterable jsonElements = new RestOperationIterable(operation);
 		List<TuleapBacklogItem> backlogItems = Lists.newArrayList();
-		for (JsonElement e : jsonElements) {
+		for (JsonElement e : operation.iterable()) {
 			backlogItems.add(jsonParser.parseBacklogItem(e));
 		}
 
@@ -592,9 +585,8 @@ public class TuleapRestClient implements IAuthenticator {
 		RestResource backlogResource = restResourceFactory.milestoneContent(milestoneId).withAuthenticator(
 				this);
 		RestOperation operation = backlogResource.get();
-		RestOperationIterable jsonElements = new RestOperationIterable(operation);
 		List<TuleapBacklogItem> backlogItems = Lists.newArrayList();
-		for (JsonElement e : jsonElements) {
+		for (JsonElement e : operation.iterable()) {
 			backlogItems.add(jsonParser.parseBacklogItem(e));
 		}
 
@@ -621,9 +613,8 @@ public class TuleapRestClient implements IAuthenticator {
 		RestResource subMilestonesResource = restResourceFactory.milestoneSubmilestones(milestoneId)
 				.withAuthenticator(this);
 		RestOperation operation = subMilestonesResource.get();
-		RestOperationIterable jsonElements = new RestOperationIterable(operation);
 		List<TuleapMilestone> milestones = Lists.newArrayList();
-		for (JsonElement e : jsonElements) {
+		for (JsonElement e : operation.iterable()) {
 			milestones.add(jsonParser.parseMilestone(e));
 		}
 		return milestones;
@@ -644,9 +635,8 @@ public class TuleapRestClient implements IAuthenticator {
 			throws CoreException {
 		RestResource r = restResourceFactory.projectMilestones(projectId).withAuthenticator(this);
 		RestOperation operation = r.get();
-		RestOperationIterable jsonElements = new RestOperationIterable(operation);
 		List<TuleapMilestone> milestones = Lists.newArrayList();
-		for (JsonElement e : jsonElements) {
+		for (JsonElement e : operation.iterable()) {
 			milestones.add(jsonParser.parseMilestone(e));
 		}
 		return milestones;
@@ -667,9 +657,8 @@ public class TuleapRestClient implements IAuthenticator {
 			throws CoreException {
 		RestResource r = restResourceFactory.projectBacklog(projectId).withAuthenticator(this);
 		RestOperation operation = r.get();
-		RestOperationIterable jsonElements = new RestOperationIterable(operation);
 		List<TuleapBacklogItem> backlogItems = Lists.newArrayList();
-		for (JsonElement e : jsonElements) {
+		for (JsonElement e : operation.iterable()) {
 			backlogItems.add(jsonParser.parseBacklogItem(e));
 		}
 		return backlogItems;
@@ -691,8 +680,8 @@ public class TuleapRestClient implements IAuthenticator {
 			monitor.subTask(TuleapMylynTasksMessages.getString(
 					TuleapMylynTasksMessagesKeys.retrievingCardwall, Integer.valueOf(milestoneId)));
 		}
-		RestResource restCardwall = restResourceFactory.milestoneCardwall(milestoneId).withAuthenticator(
-				this);
+		RestResource restCardwall = restResourceFactory.milestoneCardwall(milestoneId)
+				.withAuthenticator(this);
 		ServerResponse cardwallResponse = restCardwall.get().checkedRun();
 		TuleapCardwall cardwall = jsonParser.parseCardwall(cardwallResponse.getBody());
 		return cardwall;

@@ -150,16 +150,16 @@ public class TuleapProjectConfigurationTests {
 		TuleapProject project = new TuleapProject("Test Project", 42);
 		server.addProject(project);
 
-		assertNull(project.getGroup(0));
-		assertNull(project.getGroup(1));
+		assertNull(project.getUserGroup(0));
+		assertNull(project.getUserGroup(1));
 		TuleapGroup group0 = new TuleapGroup(0, "Project Admins");
 		project.addGroup(group0);
-		assertNotNull(project.getGroup(0));
-		assertNull(project.getGroup(1));
+		assertNotNull(project.getUserGroup(0));
+		assertNull(project.getUserGroup(1));
 		TuleapGroup group1 = new TuleapGroup(1, "Project Members");
 		project.addGroup(group1);
-		assertNotNull(project.getGroup(0));
-		assertNotNull(project.getGroup(01));
+		assertNotNull(project.getUserGroup(0));
+		assertNotNull(project.getUserGroup(01));
 
 		TuleapPerson user0 = new TuleapPerson("zero", "John Zero", 0, "john.zero@some.where");
 		TuleapPerson user1 = new TuleapPerson("one", "John One", 1, "john.one@some.where");
@@ -173,9 +173,9 @@ public class TuleapProjectConfigurationTests {
 		project.addUserToUserGroup(group1, user2);
 		project.addUserToUserGroup(group1, user3);
 
-		TuleapGroup g0 = project.getGroup(0);
+		TuleapGroup g0 = project.getUserGroup(0);
 		assertSame(group0, g0);
-		TuleapGroup g1 = project.getGroup(1);
+		TuleapGroup g1 = project.getUserGroup(1);
 		assertSame(group1, g1);
 
 		assertEquals(2, g0.getMembers().size());
@@ -194,7 +194,7 @@ public class TuleapProjectConfigurationTests {
 		assertSame(user3, server.getUser(3));
 
 		// Check retrieval of all groups
-		Collection<TuleapGroup> groups = project.getAllGroups();
+		Collection<TuleapGroup> groups = project.getAllUserGroups();
 		assertEquals(2, groups.size());
 		assertTrue(groups.contains(group0));
 		assertTrue(groups.contains(group1));

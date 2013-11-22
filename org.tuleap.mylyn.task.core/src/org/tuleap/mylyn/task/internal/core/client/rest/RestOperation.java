@@ -13,6 +13,7 @@ package org.tuleap.mylyn.task.internal.core.client.rest;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
+import com.google.gson.JsonElement;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -193,6 +194,15 @@ public class RestOperation {
 	 */
 	public static RestOperation delete(String fullUrl, IRestConnector connector, ILog logger) {
 		return new RestOperation(fullUrl, connector, Method.DELETE, logger);
+	}
+
+	/**
+	 * Provides an iterable view of this operation. Use this for operation that return JSON arrays.
+	 * 
+	 * @return a new {@link RestOperationIterable} that wraps this operation.
+	 */
+	public Iterable<JsonElement> iterable() {
+		return new RestOperationIterable(this);
 	}
 
 	/**

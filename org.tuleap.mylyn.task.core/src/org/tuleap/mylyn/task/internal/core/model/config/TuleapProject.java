@@ -68,7 +68,7 @@ public class TuleapProject implements Serializable {
 	/**
 	 * User groups indexed by id.
 	 */
-	private final Map<Integer, TuleapGroup> groupsById = Maps.newHashMap();
+	private final Map<Integer, TuleapGroup> userGroupsById = Maps.newHashMap();
 
 	/**
 	 * The constructor.
@@ -247,7 +247,7 @@ public class TuleapProject implements Serializable {
 	 *            User group to register with this project. Must not be {@code null}.
 	 */
 	public void addGroup(TuleapGroup group) {
-		groupsById.put(Integer.valueOf(group.getId()), group);
+		userGroupsById.put(Integer.valueOf(group.getId()), group);
 	}
 
 	/**
@@ -258,8 +258,8 @@ public class TuleapProject implements Serializable {
 	 *            The id of the group being looked for.
 	 * @return The group with the given id if it is registered with this project, {@code null} otherwise.
 	 */
-	public TuleapGroup getGroup(int groupId) {
-		return groupsById.get(Integer.valueOf(groupId));
+	public TuleapGroup getUserGroup(int groupId) {
+		return userGroupsById.get(Integer.valueOf(groupId));
 	}
 
 	/**
@@ -267,8 +267,8 @@ public class TuleapProject implements Serializable {
 	 * 
 	 * @return An unmodifiable view of the user groups registered with this project.
 	 */
-	public Collection<TuleapGroup> getAllGroups() {
-		return Collections.unmodifiableCollection(groupsById.values());
+	public Collection<TuleapGroup> getAllUserGroups() {
+		return Collections.unmodifiableCollection(userGroupsById.values());
 	}
 
 	/**
@@ -283,10 +283,10 @@ public class TuleapProject implements Serializable {
 		Assert.isNotNull(group);
 		Assert.isNotNull(member);
 		TuleapGroup groupToUse;
-		if (groupsById.containsKey(Integer.valueOf(group.getId()))) {
-			groupToUse = groupsById.get(Integer.valueOf(group.getId()));
+		if (userGroupsById.containsKey(Integer.valueOf(group.getId()))) {
+			groupToUse = userGroupsById.get(Integer.valueOf(group.getId()));
 		} else {
-			groupsById.put(Integer.valueOf(group.getId()), group);
+			userGroupsById.put(Integer.valueOf(group.getId()), group);
 			groupToUse = group;
 		}
 		groupToUse.addMember(member);
