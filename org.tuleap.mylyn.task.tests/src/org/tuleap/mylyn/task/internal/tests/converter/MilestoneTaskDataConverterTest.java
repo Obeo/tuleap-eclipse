@@ -696,4 +696,189 @@ public class MilestoneTaskDataConverterTest {
 		}
 
 	}
+
+	/**
+	 * Tests extracting the milestone backlog backlogItems from a taskData.
+	 */
+	@Test
+	public void testExtractBacklog() {
+		Date testDate = new Date();
+
+		TuleapMilestone milestone = new TuleapMilestone(50,
+				new TuleapReference(200, "p/200"), "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
+				"HTML URL", testDate, testDate); //$NON-NLS-1$
+
+		TuleapMilestone submilestone100 = new TuleapMilestone(100,
+				new TuleapReference(200, "p/200"), "The first submilestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
+				"HTML URL", testDate, testDate); //$NON-NLS-1$
+
+		TuleapBacklogItem item0 = new TuleapBacklogItem(230,
+				new TuleapReference(200, "p/200"), "item230", null, null, null, null); //$NON-NLS-1$
+		item0.setInitialEffort(Float.valueOf(201));
+		TuleapBacklogItem item1 = new TuleapBacklogItem(231,
+				new TuleapReference(200, "p/200"), "item231", null, null, null, null); //$NON-NLS-1$
+		item1.setInitialEffort(Float.valueOf(201));
+		TuleapBacklogItem item2 = new TuleapBacklogItem(232,
+				new TuleapReference(200, "p/200"), "item232", null, null, null, null); //$NON-NLS-1$
+		item2.setInitialEffort(Float.valueOf(201));
+		TuleapBacklogItem item3 = new TuleapBacklogItem(233,
+				new TuleapReference(200, "p/200"), "item233", null, null, null, null); //$NON-NLS-1$
+		item3.setInitialEffort(Float.valueOf(201));
+
+		List<TuleapBacklogItem> backlog = new ArrayList<TuleapBacklogItem>();
+		backlog.add(item0);
+		backlog.add(item1);
+
+		List<TuleapBacklogItem> content = new ArrayList<TuleapBacklogItem>();
+		content.add(item2);
+		content.add(item3);
+
+		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(taskRepository, connector);
+		converter.populateTaskData(taskData, milestone, null);
+		converter.populateBacklog(taskData, backlog, null);
+		converter.addSubmilestone(taskData, submilestone100, content, null);
+
+		List<TuleapBacklogItem> backlogBacklogItems = converter.extractBacklog(taskData);
+		assertNotNull(backlogBacklogItems);
+		assertEquals(2, backlogBacklogItems.size());
+
+		TuleapBacklogItem firstBI = backlogBacklogItems.get(0);
+		assertEquals(230, firstBI.getId());
+		assertEquals("item230", firstBI.getLabel());
+		assertEquals(Float.valueOf(201), firstBI.getInitialEffort());
+
+		TuleapBacklogItem secondBI = backlogBacklogItems.get(1);
+		assertEquals(231, secondBI.getId());
+		assertEquals("item231", secondBI.getLabel());
+		assertEquals(Float.valueOf(201), secondBI.getInitialEffort());
+
+	}
+
+	/**
+	 * Tests extracting a submilestone content backlogItems from a taskData.
+	 */
+	@Test
+	public void testExtractContent() {
+		Date testDate = new Date();
+
+		TuleapMilestone milestone = new TuleapMilestone(50,
+				new TuleapReference(200, "p/200"), "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
+				"HTML URL", testDate, testDate); //$NON-NLS-1$
+
+		TuleapMilestone submilestone100 = new TuleapMilestone(100,
+				new TuleapReference(200, "p/200"), "The first submilestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
+				"HTML URL", testDate, testDate); //$NON-NLS-1$
+
+		TuleapBacklogItem item0 = new TuleapBacklogItem(230,
+				new TuleapReference(200, "p/200"), "item230", null, null, null, null); //$NON-NLS-1$
+		item0.setInitialEffort(Float.valueOf(201));
+		TuleapBacklogItem item1 = new TuleapBacklogItem(231,
+				new TuleapReference(200, "p/200"), "item231", null, null, null, null); //$NON-NLS-1$
+		item1.setInitialEffort(Float.valueOf(201));
+		TuleapBacklogItem item2 = new TuleapBacklogItem(232,
+				new TuleapReference(200, "p/200"), "item232", null, null, null, null); //$NON-NLS-1$
+		item2.setInitialEffort(Float.valueOf(201));
+		TuleapBacklogItem item3 = new TuleapBacklogItem(233,
+				new TuleapReference(200, "p/200"), "item233", null, null, null, null); //$NON-NLS-1$
+		item3.setInitialEffort(Float.valueOf(201));
+
+		List<TuleapBacklogItem> backlog = new ArrayList<TuleapBacklogItem>();
+		backlog.add(item0);
+		backlog.add(item1);
+
+		List<TuleapBacklogItem> content = new ArrayList<TuleapBacklogItem>();
+		content.add(item2);
+		content.add(item3);
+
+		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(taskRepository, connector);
+		converter.populateTaskData(taskData, milestone, null);
+		converter.populateBacklog(taskData, backlog, null);
+		converter.addSubmilestone(taskData, submilestone100, content, null);
+
+		List<TuleapBacklogItem> backlogBacklogItems = converter.extractContent(taskData, 100);
+		assertNotNull(backlogBacklogItems);
+		assertEquals(2, backlogBacklogItems.size());
+
+		TuleapBacklogItem firstBI = backlogBacklogItems.get(0);
+		assertEquals(232, firstBI.getId());
+		assertEquals("item232", firstBI.getLabel());
+		assertEquals(Float.valueOf(201), firstBI.getInitialEffort());
+
+		TuleapBacklogItem secondBI = backlogBacklogItems.get(1);
+		assertEquals(233, secondBI.getId());
+		assertEquals("item233", secondBI.getLabel());
+		assertEquals(Float.valueOf(201), secondBI.getInitialEffort());
+
+	}
+
+	/**
+	 * Tests extracting submilestones list from a taskData.
+	 */
+	@Test
+	public void testExtractMilestones() {
+		Date testDate = new Date();
+
+		TuleapMilestone milestone = new TuleapMilestone(50,
+				new TuleapReference(200, "p/200"), "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
+				"HTML URL", testDate, testDate); //$NON-NLS-1$
+
+		TuleapMilestone submilestone100 = new TuleapMilestone(100,
+				new TuleapReference(200, "p/200"), "The first submilestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
+				"HTML URL", testDate, testDate); //$NON-NLS-1$
+		submilestone100.setCapacity(Float.valueOf(55));
+		submilestone100.setStartDate(testDate);
+		submilestone100.setEndDate(testDate);
+
+		TuleapMilestone submilestone150 = new TuleapMilestone(150,
+				new TuleapReference(200, "p/200"), "The second submilestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
+				"HTML URL", testDate, testDate); //$NON-NLS-1$
+		submilestone150.setCapacity(Float.valueOf(56));
+		submilestone150.setStartDate(testDate);
+		submilestone150.setEndDate(testDate);
+
+		TuleapBacklogItem item0 = new TuleapBacklogItem(230,
+				new TuleapReference(200, "p/200"), "item230", null, null, null, null); //$NON-NLS-1$
+		item0.setInitialEffort(Float.valueOf(201));
+		TuleapBacklogItem item1 = new TuleapBacklogItem(231,
+				new TuleapReference(200, "p/200"), "item231", null, null, null, null); //$NON-NLS-1$
+		item1.setInitialEffort(Float.valueOf(201));
+		TuleapBacklogItem item2 = new TuleapBacklogItem(232,
+				new TuleapReference(200, "p/200"), "item232", null, null, null, null); //$NON-NLS-1$
+		item2.setInitialEffort(Float.valueOf(201));
+		TuleapBacklogItem item3 = new TuleapBacklogItem(233,
+				new TuleapReference(200, "p/200"), "item233", null, null, null, null); //$NON-NLS-1$
+		item3.setInitialEffort(Float.valueOf(201));
+
+		List<TuleapBacklogItem> content100 = new ArrayList<TuleapBacklogItem>();
+		content100.add(item0);
+		content100.add(item1);
+
+		List<TuleapBacklogItem> content150 = new ArrayList<TuleapBacklogItem>();
+		content150.add(item2);
+		content150.add(item3);
+
+		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(taskRepository, connector);
+		converter.populateTaskData(taskData, milestone, null);
+		converter.addSubmilestone(taskData, submilestone100, content100, null);
+		converter.addSubmilestone(taskData, submilestone150, content150, null);
+
+		List<TuleapMilestone> milestones = converter.extractMilestones(taskData);
+		assertNotNull(milestones);
+		assertEquals(2, milestones.size());
+
+		TuleapMilestone firstMilestone = milestones.get(0);
+		assertEquals(100, firstMilestone.getId());
+		assertEquals("The first submilestone", firstMilestone.getLabel());
+		assertEquals(Float.valueOf(55), firstMilestone.getCapacity());
+		assertNotNull(firstMilestone.getStartDate());
+		assertNotNull(firstMilestone.getEndDate());
+
+		TuleapMilestone secondMilestone = milestones.get(1);
+		assertEquals(150, secondMilestone.getId());
+		assertEquals("The second submilestone", secondMilestone.getLabel());
+		assertEquals(Float.valueOf(56), secondMilestone.getCapacity());
+		assertNotNull(secondMilestone.getStartDate());
+		assertNotNull(secondMilestone.getEndDate());
+	}
+
 }

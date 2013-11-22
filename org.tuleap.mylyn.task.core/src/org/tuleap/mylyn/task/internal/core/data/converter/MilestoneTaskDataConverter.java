@@ -184,34 +184,98 @@ public class MilestoneTaskDataConverter {
 	}
 
 	/**
-	 * Extracts the list of backlog items from a Milestone {@link TaskData} object.
+	 * Extracts the list of backlog from a Milestone {@link TaskData} object.
 	 * 
 	 * @param taskData
 	 *            The milestone's task data
-	 * @return The list of backlog items to send to the server for update.
+	 * @return The list of backlog backlogitems to send to the server for update.
 	 */
-	public List<TuleapBacklogItem> extractBacklogItems(TaskData taskData) {
+	public List<TuleapBacklogItem> extractBacklog(TaskData taskData) {
 		MilestonePlanningWrapper wrapper = new MilestonePlanningWrapper(taskData.getRoot());
 		List<TuleapBacklogItem> backlogItems = Lists.newArrayList();
 		for (BacklogItemWrapper biWrapper : wrapper.getAllBacklogItems()) {
-			int id = TuleapTaskIdentityUtil.getElementIdFromTaskDataId(biWrapper.getId());
-			int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(biWrapper.getId());
+			String assignedId = biWrapper.getAssignedMilestoneId();
+			if (assignedId == null) {
+				int id = TuleapTaskIdentityUtil.getElementIdFromTaskDataId(biWrapper.getId());
+				int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(biWrapper.getId());
+				TuleapReference projectRef = new TuleapReference();
+				projectRef.setId(projectId);
+				TuleapBacklogItem bi = new TuleapBacklogItem(id, projectRef);
+				bi.setInitialEffort(biWrapper.getInitialEffort());
+				bi.setLabel(biWrapper.getLabel());
+				backlogItems.add(bi);
+			}
+		}
+		return backlogItems;
+	}
+
+	/**
+	 * Extracts the list of a submilestone content from a Milestone {@link TaskData} object.
+	 * 
+	 * @param taskData
+	 *            The milestone's task data.
+	 * @param submilestoneId
+	 *            the submilestone identifier to extract content.
+	 * @return The list of submilestone content backlogitems to send to the server for update.
+	 */
+	public List<TuleapBacklogItem> extractContent(TaskData taskData, int submilestoneId) {
+		MilestonePlanningWrapper wrapper = new MilestonePlanningWrapper(taskData.getRoot());
+		List<TuleapBacklogItem> backlogItems = Lists.newArrayList();
+		int assignedId = -1;
+		for (BacklogItemWrapper biWrapper : wrapper.getAllBacklogItems()) {
+			if (biWrapper.getAssignedMilestoneId() != null) {
+				assignedId = TuleapTaskIdentityUtil.getElementIdFromTaskDataId(biWrapper
+						.getAssignedMilestoneId());
+			}
+			if (assignedId == submilestoneId) {
+				int id = TuleapTaskIdentityUtil.getElementIdFromTaskDataId(biWrapper.getId());
+				int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(biWrapper.getId());
+				// TODO mechanism to store TuleapReference in TaskData?
+				TuleapReference projectRef = new TuleapReference();
+				projectRef.setId(projectId);
+				TuleapBacklogItem bi = new TuleapBacklogItem(id, projectRef);
+				bi.setInitialEffort(biWrapper.getInitialEffort());
+				bi.setLabel(biWrapper.getLabel());
+				backlogItems.add(bi);
+			}
+		}
+		return backlogItems;
+	}
+
+	/**
+	 * Extracts the list of submilestones from a Milestone {@link TaskData} object.
+	 * 
+	 * @param taskData
+	 *            The milestone's task data
+	 * @return The list of milestones to send to the server for update.
+	 */
+	public List<TuleapMilestone> extractMilestones(TaskData taskData) {
+		MilestonePlanningWrapper wrapper = new MilestonePlanningWrapper(taskData.getRoot());
+		List<TuleapMilestone> subMilestones = Lists.newArrayList();
+		for (SubMilestoneWrapper subMilestoneWrapper : wrapper.getSubMilestones()) {
+
+			int id = TuleapTaskIdentityUtil.getElementIdFromTaskDataId(subMilestoneWrapper.getId());
+			int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(subMilestoneWrapper.getId());
 			// TODO mechanism to store TuleapReference in TaskData?
 			TuleapReference projectRef = new TuleapReference();
 			projectRef.setId(projectId);
-			projectRef.setUri("projects/" + projectId); //$NON-NLS-1$
-			TuleapBacklogItem bi = new TuleapBacklogItem(id, projectRef);
-			String assignedId = biWrapper.getAssignedMilestoneId();
-			if (assignedId != null) {
-				TuleapReference assignedMilestone = new TuleapReference();
-				// The assigned milestone id is the internal id, not the tuleap id!
-				int assignedMilestoneId = TuleapTaskIdentityUtil.getElementIdFromTaskDataId(assignedId);
-				assignedMilestone.setId(assignedMilestoneId);
-				assignedMilestone.setUri("milestones/" + assignedMilestoneId); //$NON-NLS-1$
+			TuleapMilestone submilestone = new TuleapMilestone(id, projectRef);
+			submilestone.setLabel(subMilestoneWrapper.getLabel());
+			if (subMilestoneWrapper.getCapacity() != null) {
+				submilestone.setCapacity(subMilestoneWrapper.getCapacity());
 			}
-			bi.setInitialEffort(biWrapper.getInitialEffort());
+
+			if (subMilestoneWrapper.getStartDate() != null) {
+				submilestone.setStartDate(subMilestoneWrapper.getStartDate());
+			}
+			if (subMilestoneWrapper.getEndDate() != null) {
+				submilestone.setEndDate(subMilestoneWrapper.getEndDate());
+			}
+
+			subMilestones.add(submilestone);
+
 		}
-		return backlogItems;
+		return subMilestones;
 	}
 
 	/**

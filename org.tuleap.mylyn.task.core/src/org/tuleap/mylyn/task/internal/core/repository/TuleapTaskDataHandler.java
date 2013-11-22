@@ -154,9 +154,17 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			// String milestoneId = tuleapRestClient.createMilestone(tuleapMilestone, monitor);
 			// response = new RepositoryResponse(ResponseKind.TASK_CREATED, milestoneId);
 		} else {
-			List<TuleapBacklogItem> backlogItems = milestoneTaskDataConverter.extractBacklogItems(taskData);
+			List<TuleapBacklogItem> backlog = milestoneTaskDataConverter.extractBacklog(taskData);
 			int milestoneId = milestoneTaskDataConverter.getMilestoneId(taskData);
-			tuleapRestClient.updateMilestoneBacklogItems(milestoneId, backlogItems, monitor);
+			tuleapRestClient.updateMilestoneBacklog(milestoneId, backlog, monitor);
+
+			List<TuleapMilestone> subMilestones = milestoneTaskDataConverter.extractMilestones(taskData);
+			for (TuleapMilestone subMilestone : subMilestones) {
+				List<TuleapBacklogItem> content = milestoneTaskDataConverter.extractContent(taskData,
+						subMilestone.getId());
+				tuleapRestClient.updateMilestoneContent(subMilestone.getId(), content, monitor);
+			}
+
 			response = new RepositoryResponse(ResponseKind.TASK_UPDATED, taskData.getTaskId());
 		}
 
