@@ -156,7 +156,6 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		} else {
 			List<TuleapBacklogItem> backlog = milestoneTaskDataConverter.extractBacklog(taskData);
 			int milestoneId = milestoneTaskDataConverter.getMilestoneId(taskData);
-			tuleapRestClient.updateMilestoneBacklog(milestoneId, backlog, monitor);
 
 			List<TuleapMilestone> subMilestones = milestoneTaskDataConverter.extractMilestones(taskData);
 			for (TuleapMilestone subMilestone : subMilestones) {
@@ -164,6 +163,9 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 						subMilestone.getId());
 				tuleapRestClient.updateMilestoneContent(subMilestone.getId(), content, monitor);
 			}
+
+			// Now that all sub-milestones are updated, we can re-order the unassigned backlog items.
+			tuleapRestClient.updateMilestoneBacklog(milestoneId, backlog, monitor);
 
 			response = new RepositoryResponse(ResponseKind.TASK_UPDATED, taskData.getTaskId());
 		}
