@@ -100,7 +100,8 @@ public class MilestoneTaskDataConverter {
 	}
 
 	/**
-	 * Populate the given task data with milestone data.
+	 * Populate the given task data with milestone data. Also, marks the task data kind with a value that
+	 * means this task data represents a milestone.
 	 * 
 	 * @param taskData
 	 *            Object to populate.
@@ -110,7 +111,7 @@ public class MilestoneTaskDataConverter {
 	 *            Monitor
 	 */
 	public void populateTaskData(TaskData taskData, TuleapMilestone milestone, IProgressMonitor monitor) {
-		// TODO Is this the right way to mark a TaskData as a milestone?
+		// TODO Add milestone-specific data?
 		AgileTaskKindUtil.setAgileTaskKind(taskData, AgileTaskKindUtil.TASK_KIND_MILESTONE);
 	}
 
