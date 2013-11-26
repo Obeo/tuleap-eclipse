@@ -26,6 +26,7 @@ import org.tuleap.mylyn.task.agile.core.data.planning.MilestonePlanningWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.SubMilestoneWrapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.ArtifactReference;
 import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
@@ -204,6 +205,13 @@ public class MilestoneTaskDataConverter {
 				TuleapBacklogItem bi = new TuleapBacklogItem(id, projectRef);
 				bi.setInitialEffort(biWrapper.getInitialEffort());
 				bi.setLabel(biWrapper.getLabel());
+
+				int parentId = TuleapTaskIdentityUtil.getElementIdFromTaskDataId(biWrapper.getParentId());
+				int trackerId = TuleapTaskIdentityUtil.getTrackerIdFromTaskDataId(biWrapper.getParentId());
+				TuleapReference trackerRef = new TuleapReference();
+				trackerRef.setId(trackerId);
+				ArtifactReference parentref = new ArtifactReference(parentId, null, trackerRef);
+				bi.setParent(parentref);
 				backlogItems.add(bi);
 			}
 		}
@@ -237,6 +245,14 @@ public class MilestoneTaskDataConverter {
 				TuleapBacklogItem bi = new TuleapBacklogItem(id, projectRef);
 				bi.setInitialEffort(biWrapper.getInitialEffort());
 				bi.setLabel(biWrapper.getLabel());
+
+				int parentId = TuleapTaskIdentityUtil.getElementIdFromTaskDataId(biWrapper.getParentId());
+				int trackerId = TuleapTaskIdentityUtil.getTrackerIdFromTaskDataId(biWrapper.getParentId());
+				TuleapReference trackerRef = new TuleapReference();
+				trackerRef.setId(trackerId);
+				ArtifactReference parentref = new ArtifactReference(parentId, null, trackerRef);
+				bi.setParent(parentref);
+
 				backlogItems.add(bi);
 			}
 		}
@@ -320,6 +336,11 @@ public class MilestoneTaskDataConverter {
 			if (backlogItem.getInitialEffort() != null) {
 				backlogItemWrapper.setInitialEffort(backlogItem.getInitialEffort().floatValue());
 			}
+			if (backlogItem.getParent() != null) {
+				backlogItemWrapper.setParent(TuleapTaskIdentityUtil.getTaskDataId(projectId, 0, backlogItem
+						.getParent().getId()), Integer.toString(backlogItem.getParent().getId()));
+			}
+
 		}
 	}
 
@@ -372,6 +393,10 @@ public class MilestoneTaskDataConverter {
 			backlogItemWrapper.setLabel(backlogItem.getLabel());
 			if (backlogItem.getInitialEffort() != null) {
 				backlogItemWrapper.setInitialEffort(backlogItem.getInitialEffort().floatValue());
+			}
+			if (backlogItem.getParent() != null) {
+				backlogItemWrapper.setParent(TuleapTaskIdentityUtil.getTaskDataId(projectId, 0, backlogItem
+						.getParent().getId()), Integer.toString(backlogItem.getParent().getId()));
 			}
 		}
 
