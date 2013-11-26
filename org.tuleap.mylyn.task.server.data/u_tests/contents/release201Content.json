@@ -8,6 +8,14 @@
 			"uri" : "trackers/801"
 		}
 	},
+	"parent" : {
+		"id" : 302,
+		"uri" : "backlog_items/302",
+		"tracker" : {
+			"id" : 801,
+			"uri" : "trackers/801"
+		}
+	},
 	"project" : {
 		"id" : 3,
 		"uri" : "projects/3"
