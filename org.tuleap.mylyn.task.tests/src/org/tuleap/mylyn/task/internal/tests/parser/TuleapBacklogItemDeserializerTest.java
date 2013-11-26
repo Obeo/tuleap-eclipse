@@ -54,6 +54,10 @@ public class TuleapBacklogItemDeserializerTest extends AbstractDeserializerTest<
 		assertEquals("artifacts/301", item.getArtifact().getUri());
 		assertEquals(801, item.getArtifact().getTracker().getId());
 		assertEquals("trackers/801", item.getArtifact().getTracker().getUri());
+		assertEquals(302, item.getParent().getId());
+		assertEquals("backlog_items/302", item.getParent().getUri());
+		assertEquals(801, item.getParent().getTracker().getId());
+		assertEquals("trackers/801", item.getParent().getTracker().getUri());
 		assertEquals(3, item.getProject().getId());
 		assertEquals("projects/3", item.getProject().getUri());
 		assertEquals("Another important Epic", item.getLabel());
@@ -80,6 +84,10 @@ public class TuleapBacklogItemDeserializerTest extends AbstractDeserializerTest<
 		assertEquals("artifacts/300", item.getArtifact().getUri());
 		assertEquals(801, item.getArtifact().getTracker().getId());
 		assertEquals("trackers/801", item.getArtifact().getTracker().getUri());
+		assertEquals(301, item.getParent().getId());
+		assertEquals("backlog_items/301", item.getParent().getUri());
+		assertEquals(801, item.getParent().getTracker().getId());
+		assertEquals("trackers/801", item.getParent().getTracker().getUri());
 		assertEquals(3, item.getProject().getId());
 		assertEquals("projects/3", item.getProject().getUri());
 		assertEquals("An important Epic", item.getLabel());
@@ -120,6 +128,10 @@ public class TuleapBacklogItemDeserializerTest extends AbstractDeserializerTest<
 		assertEquals("artifacts/350", item.getArtifact().getUri());
 		assertEquals(802, item.getArtifact().getTracker().getId());
 		assertEquals("trackers/802", item.getArtifact().getTracker().getUri());
+		assertEquals(351, item.getParent().getId());
+		assertEquals("backlog_items/351", item.getParent().getUri());
+		assertEquals(802, item.getParent().getTracker().getId());
+		assertEquals("trackers/802", item.getParent().getTracker().getUri());
 		assertEquals(3, item.getProject().getId());
 		assertEquals("projects/3", item.getProject().getUri());
 		assertEquals("An important User Story", item.getLabel());

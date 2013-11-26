@@ -34,6 +34,11 @@ public class TuleapBacklogItem extends AbstractTuleapDetailedElement {
 	private ArtifactReference artifact;
 
 	/**
+	 * The parent backlogItem reference.
+	 */
+	private ArtifactReference parent;
+
+	/**
 	 * The initial effort.
 	 */
 	private Float initialEffort;
@@ -153,6 +158,25 @@ public class TuleapBacklogItem extends AbstractTuleapDetailedElement {
 	 */
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	/**
+	 * Get the parent backlogItem reference.
+	 * 
+	 * @return the parent
+	 */
+	public ArtifactReference getParent() {
+		return parent;
+	}
+
+	/**
+	 * Set the parent backlogItem reference.
+	 * 
+	 * @param parent
+	 *            The parent backlogItem reference.
+	 */
+	public void setParent(ArtifactReference parent) {
+		this.parent = parent;
 	}
 
 	/**

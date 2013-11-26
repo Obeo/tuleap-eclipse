@@ -47,6 +47,8 @@ public class TuleapBacklogItemDeserializer extends AbstractDetailedElementDeseri
 		Gson gson = new Gson();
 		backlogItem.setArtifact(gson.fromJson(jsonObject.get(ITuleapConstants.JSON_ARTIFACT),
 				ArtifactReference.class));
+		backlogItem.setParent(gson.fromJson(jsonObject.get(ITuleapConstants.JSON_PARENT),
+				ArtifactReference.class));
 
 		JsonElement elt = jsonObject.get(ITuleapConstants.INITIAL_EFFORT);
 		if (elt != null) {
