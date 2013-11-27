@@ -81,7 +81,6 @@ public class TuleapTasksUIPlugin extends AbstractUIPlugin {
 		if (repositoryConnector instanceof TuleapRepositoryConnector) {
 			TuleapRepositoryConnector tuleapRepositoryConnector = (TuleapRepositoryConnector)repositoryConnector;
 			TuleapClientManager clientManager = tuleapRepositoryConnector.getClientManager();
-			TasksUi.getRepositoryManager().addListener(clientManager);
 			TasksUi.getRepositoryManager().removeListener(clientManager);
 		}
 
@@ -135,8 +134,7 @@ public class TuleapTasksUIPlugin extends AbstractUIPlugin {
 	 */
 	public static void log(Exception e, boolean blocker) {
 		if (e == null) {
-			throw new NullPointerException(TuleapUIMessages
-					.getString(TuleapUiMessagesKeys.logNullException));
+			throw new NullPointerException(TuleapUIMessages.getString(TuleapUiMessagesKeys.logNullException));
 		}
 
 		if (getDefault() == null) {
@@ -172,8 +170,7 @@ public class TuleapTasksUIPlugin extends AbstractUIPlugin {
 		// Eclipse platform displays NullPointer on standard error instead of throwing it.
 		// We'll handle this by throwing it ourselves.
 		if (status == null) {
-			throw new NullPointerException(TuleapUIMessages
-					.getString(TuleapUiMessagesKeys.logNullStatus));
+			throw new NullPointerException(TuleapUIMessages.getString(TuleapUiMessagesKeys.logNullStatus));
 		}
 
 		if (getDefault() != null) {
@@ -209,8 +206,7 @@ public class TuleapTasksUIPlugin extends AbstractUIPlugin {
 			}
 			String errorMessage = message;
 			if (errorMessage == null || "".equals(errorMessage)) { //$NON-NLS-1$
-				errorMessage = TuleapUIMessages
-						.getString(TuleapUiMessagesKeys.unexpectedException);
+				errorMessage = TuleapUIMessages.getString(TuleapUiMessagesKeys.unexpectedException);
 			}
 			log(new Status(severity, PLUGIN_ID, errorMessage));
 		}
