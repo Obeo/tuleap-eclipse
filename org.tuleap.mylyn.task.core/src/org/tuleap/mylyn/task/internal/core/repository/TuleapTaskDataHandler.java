@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.repository;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -26,6 +27,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.agile.core.data.AgileTaskKindUtil;
+import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
@@ -373,22 +375,34 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			taskDataConverter.populateTaskData(taskData, milestone, monitor);
 
 			// Fetch planning
-
-			List<TuleapBacklogItem> backlog = restClient.getMilestoneBacklog(milestoneId, monitor);
-			taskDataConverter.populateBacklog(taskData, backlog, monitor);
+			try {
+				List<TuleapBacklogItem> backlog = restClient.getMilestoneBacklog(milestoneId, monitor);
+				taskDataConverter.populateBacklog(taskData, backlog, monitor);
+			} catch (CoreException e) {
+				TuleapCoreActivator.log(e, true);
+			}
 
 			List<TuleapMilestone> subMilestones = restClient.getSubMilestones(milestoneId, monitor);
 
 			for (TuleapMilestone tuleapMilestone : subMilestones) {
-				List<TuleapBacklogItem> content = restClient.getMilestoneContent(tuleapMilestone.getId(),
-						monitor);
+				List<TuleapBacklogItem> content;
+				try {
+					content = restClient.getMilestoneContent(tuleapMilestone.getId(), monitor);
+				} catch (CoreException e) {
+					TuleapCoreActivator.log(e, true);
+					content = Collections.emptyList();
+				}
 				taskDataConverter.addSubmilestone(taskData, tuleapMilestone, content, monitor);
 			}
 
 			// Fetch cardwall if necessary
 			if (project.isCardwallActive(tracker.getIdentifier())) {
-				TuleapCardwall cardwall = restClient.getCardwall(milestoneId, monitor);
-				taskDataConverter.populateCardwall(taskData, cardwall, monitor);
+				try {
+					TuleapCardwall cardwall = restClient.getCardwall(milestoneId, monitor);
+					taskDataConverter.populateCardwall(taskData, cardwall, monitor);
+				} catch (CoreException e) {
+					TuleapCoreActivator.log(e, true);
+				}
 			}
 
 			return taskData;

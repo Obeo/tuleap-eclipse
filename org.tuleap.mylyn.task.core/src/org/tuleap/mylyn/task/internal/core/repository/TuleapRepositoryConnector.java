@@ -402,7 +402,11 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 				List<TuleapProject> allProjects = tuleapServerSoap.getAllProjects();
 				for (TuleapProject project : allProjects) {
 					// Retrieve plannings via the REST API
-					tuleapRestClient.loadPlanningsInto(project);
+					try {
+						tuleapRestClient.loadPlanningsInto(project);
+					} catch (CoreException e) {
+						TuleapCoreActivator.log(e, true);
+					}
 					tuleapServerSoap.addProject(project);
 				}
 
