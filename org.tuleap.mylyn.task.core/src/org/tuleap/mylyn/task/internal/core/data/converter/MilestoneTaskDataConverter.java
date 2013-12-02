@@ -24,6 +24,7 @@ import org.tuleap.mylyn.task.agile.core.data.cardwall.SwimlaneWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.BacklogItemWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.MilestonePlanningWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.SubMilestoneWrapper;
+import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.ArtifactReference;
@@ -45,37 +46,6 @@ import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class MilestoneTaskDataConverter {
-
-	/**
-	 * The value used to indicate that a task data represents the label to use for points ("Story Points" for
-	 * example).
-	 */
-	public static final String SUFFIX_ASSIGNED_MILESTONE_ID = "assigned_id"; //$NON-NLS-1$
-
-	/**
-	 * Separator used in computed ids.
-	 */
-	public static final char ID_SEPARATOR = '-';
-
-	/**
-	 * Suffix appended to the ids of Task Attributes representing IDs to display to an end-user.
-	 */
-	public static final String SUFFIX_DISPLAY_ID = "display_id"; //$NON-NLS-1$
-
-	/**
-	 * Id of the backlog items list task attribute.
-	 */
-	public static final String BACKLOG = "mta_backlog"; //$NON-NLS-1$
-
-	/**
-	 * Id of the planning task attribute.
-	 */
-	public static final String MILESTONE_PLANNING = "mta_planning"; //$NON-NLS-1$
-
-	/**
-	 * Id of the project identifier task attribute.
-	 */
-	public static final String PROJECT_ID = "mtc_project_id"; //$NON-NLS-1$ 
 
 	/**
 	 * The task repository.
@@ -323,7 +293,8 @@ public class MilestoneTaskDataConverter {
 			if (project != null) {
 				projectId = project.getId();
 			} else {
-				projectId = Integer.parseInt(taskData.getRoot().getAttribute(PROJECT_ID).getValue());
+				projectId = Integer.parseInt(taskData.getRoot().getAttribute(TuleapArtifactMapper.PROJECT_ID)
+						.getValue());
 			}
 			BacklogItemWrapper backlogItemWrapper = milestonePlanning.addBacklogItem(TuleapTaskIdentityUtil
 					.getTaskDataId(projectId, 0, backlogItem.getId()));
@@ -379,7 +350,8 @@ public class MilestoneTaskDataConverter {
 			if (project != null) {
 				projectId = project.getId();
 			} else {
-				projectId = Integer.parseInt(taskData.getRoot().getAttribute(PROJECT_ID).getValue());
+				projectId = Integer.parseInt(taskData.getRoot().getAttribute(TuleapArtifactMapper.PROJECT_ID)
+						.getValue());
 			}
 			BacklogItemWrapper backlogItemWrapper = milestonePlanning.addBacklogItem(TuleapTaskIdentityUtil
 					.getTaskDataId(projectId, 0, backlogItem.getId()));
