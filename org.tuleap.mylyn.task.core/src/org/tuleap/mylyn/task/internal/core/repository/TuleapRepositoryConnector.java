@@ -366,10 +366,10 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			String taskDataId = TuleapTaskIdentityUtil.getProjectPlanningTaskDataId(projectId);
 			TaskAttributeMapper attributeMapper = this.getTaskDataHandler()
 					.getAttributeMapper(taskRepository);
-			TaskData taskData = new TaskData(attributeMapper, this.getConnectorKind(), taskRepository
+			// Create the PROJECT_ID task attribute
+			TaskData taskData = new TaskData(attributeMapper, getConnectorKind(), taskRepository
 					.getRepositoryUrl(), taskDataId);
-			taskDataHandler.fetchProjectPlanningData(taskData, taskRepository, monitor);
-
+			taskData = taskDataHandler.fetchProjectPlanningData(taskData, taskRepository, monitor);
 			try {
 				collector.accept(taskData);
 			} catch (IllegalArgumentException exception) {

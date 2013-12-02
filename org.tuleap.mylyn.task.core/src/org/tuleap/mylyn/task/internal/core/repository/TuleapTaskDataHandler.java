@@ -25,8 +25,9 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.tuleap.mylyn.task.agile.core.data.AgileTaskKindUtil;
+import org.tuleap.mylyn.task.agile.core.data.planning.TopPlanningMapper;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
@@ -428,21 +429,41 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		TuleapRestClient restClient = this.connector.getClientManager().getRestClient(taskRepository);
 		String taskId = taskData.getTaskId();
 		int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(taskId);
+		TopPlanningMapper mapper = new TopPlanningMapper(taskData);
+		mapper.initializeEmptyTaskData();
+		TuleapProject project = connector.getServer(taskRepository.getUrl()).getProject(projectId);
+		if (project != null) {
+			mapper.setTaskKey(project.getName());
+		}
+		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TuleapArtifactMapper.PROJECT_ID);
+		TaskAttributeMetaData metaData = attribute.getMetaData();
+		metaData.setType(TaskAttribute.TYPE_SHORT_TEXT);
+		metaData.setReadOnly(true);
+		attribute.setValue(String.valueOf(projectId));
 		MilestoneTaskDataConverter taskDataConverter = new MilestoneTaskDataConverter(taskRepository,
 				connector);
 
-		// Set the task kind to the relevant value
-		AgileTaskKindUtil.setAgileTaskKind(taskData, AgileTaskKindUtil.TASK_KIND_TOP_PLANNING);
-
-		List<TuleapBacklogItem> backlog = restClient.getProjectBacklog(projectId, monitor);
-		taskDataConverter.populateBacklog(taskData, backlog, monitor);
-
-		List<TuleapMilestone> milestones = restClient.getProjectMilestones(projectId, monitor);
-
+		try {
+			List<TuleapBacklogItem> backlog = restClient.getProjectBacklog(projectId, monitor);
+			taskDataConverter.populateBacklog(taskData, backlog, monitor);
+		} catch (CoreException e) {
+			TuleapCoreActivator.log(e, true);
+		}
+		List<TuleapMilestone> milestones;
+		try {
+			milestones = restClient.getProjectMilestones(projectId, monitor);
+		} catch (CoreException e) {
+			TuleapCoreActivator.log(e, true);
+			milestones = Collections.emptyList();
+		}
 		for (TuleapMilestone tuleapMilestone : milestones) {
-			List<TuleapBacklogItem> content = restClient
-					.getMilestoneContent(tuleapMilestone.getId(), monitor);
-			taskDataConverter.addSubmilestone(taskData, tuleapMilestone, content, monitor);
+			try {
+				List<TuleapBacklogItem> content = restClient.getMilestoneContent(tuleapMilestone.getId(),
+						monitor);
+				taskDataConverter.addSubmilestone(taskData, tuleapMilestone, content, monitor);
+			} catch (CoreException e) {
+				TuleapCoreActivator.log(e, true);
+			}
 		}
 
 		return taskData;

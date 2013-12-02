@@ -27,7 +27,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.tuleap.mylyn.task.agile.core.data.AgileTaskKindUtil;
 import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
@@ -140,10 +139,8 @@ public class TuleapTaskDataHandlerTests {
 	 * 
 	 * @param configurationId
 	 *            The identifier of the configuration
-	 * @param taskKind
-	 *            The kind of the task
 	 */
-	private void testNewlyInitializedElementKind(int configurationId, String taskKind) {
+	private void testNewlyInitializedElementKind(int configurationId) {
 		ITuleapRepositoryConnector repositoryConnector = new ITuleapRepositoryConnector() {
 
 			public TuleapServer getServer(String repositoryUrl) {
@@ -174,7 +171,6 @@ public class TuleapTaskDataHandlerTests {
 					initializationData, new NullProgressMonitor());
 
 			assertThat(isInitialized, is(true));
-			assertThat(AgileTaskKindUtil.getAgileTaskKind(taskData), is(taskKind));
 		} catch (CoreException e) {
 			fail(e.getMessage());
 		}
@@ -204,7 +200,7 @@ public class TuleapTaskDataHandlerTests {
 	 */
 	@Test
 	public void initializeTaskDataArtifact() {
-		testNewlyInitializedElementKind(trackerRef.getId(), AgileTaskKindUtil.TASK_KIND_ARTIFACT);
+		testNewlyInitializedElementKind(trackerRef.getId());
 	}
 
 	/**
@@ -213,7 +209,7 @@ public class TuleapTaskDataHandlerTests {
 	 */
 	@Test
 	public void initializeTaskDataMilestone() {
-		testNewlyInitializedElementKind(milestoneTrackerId, AgileTaskKindUtil.TASK_KIND_MILESTONE);
+		testNewlyInitializedElementKind(milestoneTrackerId);
 	}
 
 	/**
@@ -232,10 +228,8 @@ public class TuleapTaskDataHandlerTests {
 	 * 
 	 * @param taskId
 	 *            The identifier of the task
-	 * @param taskKind
-	 *            The kind of the task data created
 	 */
-	private void testGetTaskData(String taskId, String taskKind) {
+	private void testGetTaskData(String taskId) {
 		final TuleapArtifact tuleapArtifact = new TuleapArtifact(artifactId, projectRef, "", "", "",
 				new Date(), new Date());
 		tuleapArtifact.setTracker(trackerRef);
@@ -302,7 +296,6 @@ public class TuleapTaskDataHandlerTests {
 					new NullProgressMonitor());
 
 			assertThat(taskData, notNullValue());
-			assertThat(AgileTaskKindUtil.getAgileTaskKind(taskData), is(taskKind));
 		} catch (CoreException e) {
 			fail(e.getMessage());
 		}
@@ -315,7 +308,7 @@ public class TuleapTaskDataHandlerTests {
 	@Test
 	public void testGetTaskDataArtifact() {
 		this.testGetTaskData(TuleapTaskIdentityUtil.getTaskDataId(projectRef.getId(), trackerRef.getId(),
-				artifactId), AgileTaskKindUtil.TASK_KIND_ARTIFACT);
+				artifactId));
 	}
 
 	/**
@@ -327,7 +320,7 @@ public class TuleapTaskDataHandlerTests {
 	public void testGetTaskDataMilestone() {
 		// TODO SBE remove the ignore when the creation of the milestone is done
 		this.testGetTaskData(TuleapTaskIdentityUtil.getTaskDataId(projectRef.getId(), milestoneTrackerId,
-				milestoneId), AgileTaskKindUtil.TASK_KIND_MILESTONE);
+				milestoneId));
 	}
 
 	/**
@@ -338,7 +331,7 @@ public class TuleapTaskDataHandlerTests {
 	public void testGetTaskDataBacklogItem() {
 		// TODO [BacklogItems] Check this is appropriate
 		this.testGetTaskData(TuleapTaskIdentityUtil.getTaskDataId(projectRef.getId(), backlogItemTrackerId,
-				backlogItemId), AgileTaskKindUtil.TASK_KIND_ARTIFACT);
+				backlogItemId));
 	}
 
 	/**
