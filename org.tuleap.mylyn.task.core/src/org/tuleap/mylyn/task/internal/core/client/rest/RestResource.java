@@ -17,7 +17,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.restlet.data.Method;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
+import org.tuleap.mylyn.task.internal.core.model.TuleapDebugPart;
+import org.tuleap.mylyn.task.internal.core.model.TuleapErrorMessage;
+import org.tuleap.mylyn.task.internal.core.model.TuleapErrorPart;
+import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
@@ -47,26 +52,6 @@ public class RestResource {
 	 * Flag indicating the DELETE method is supported.
 	 */
 	public static final int DELETE = 1 << 3;
-
-	/**
-	 * Label of the GET HTTP method.
-	 */
-	public static final String GET_LABEL = "GET"; //$NON-NLS-1$
-
-	/**
-	 * Label of the POST HTTP method.
-	 */
-	public static final String POST_LABEL = "POST"; //$NON-NLS-1$
-
-	/**
-	 * Label of the PUT HTTP method.
-	 */
-	public static final String PUT_LABEL = "PUT"; //$NON-NLS-1$
-
-	/**
-	 * Label of the DELETE HTTP method.
-	 */
-	public static final String DELETE_LABEL = "DELETE"; //$NON-NLS-1$
 
 	/**
 	 * The serverUrl of the REST API on the server, for example {@code http://localhost:3001}.
@@ -173,9 +158,10 @@ public class RestResource {
 	public RestOperation delete() throws CoreException {
 		if ((supportedMethods & DELETE) == 0) {
 			throw new UnsupportedOperationException(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, DELETE_LABEL, getUrl()));
+					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, Method.DELETE.getName(),
+					getUrl()));
 		}
-		checkOptionsAllows(DELETE_LABEL);
+		checkOptionsAllows(Method.DELETE);
 		return RestOperation.delete(getFullUrl(), connector, logger).withAuthenticator(authenticator);
 	}
 
@@ -191,9 +177,10 @@ public class RestResource {
 	public RestOperation get() throws CoreException {
 		if ((supportedMethods & GET) == 0) {
 			throw new UnsupportedOperationException(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, GET_LABEL, getUrl()));
+					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, Method.GET.getName(),
+					getUrl()));
 		}
-		checkOptionsAllows(GET_LABEL);
+		checkOptionsAllows(Method.GET);
 		return RestOperation.get(getFullUrl(), connector, logger).withAuthenticator(authenticator);
 	}
 
@@ -218,9 +205,10 @@ public class RestResource {
 	public RestOperation post() throws CoreException {
 		if ((supportedMethods & POST) == 0) {
 			throw new UnsupportedOperationException(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, POST_LABEL, getUrl()));
+					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, Method.POST.getName(),
+					getUrl()));
 		}
-		checkOptionsAllows(POST_LABEL);
+		checkOptionsAllows(Method.POST);
 		return RestOperation.post(getFullUrl(), connector, logger).withAuthenticator(authenticator);
 	}
 
@@ -236,9 +224,10 @@ public class RestResource {
 	public RestOperation put() throws CoreException {
 		if ((supportedMethods & PUT) == 0) {
 			throw new UnsupportedOperationException(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, PUT_LABEL, getUrl()));
+					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, Method.PUT.getName(),
+					getUrl()));
 		}
-		checkOptionsAllows(PUT_LABEL);
+		checkOptionsAllows(Method.PUT);
 		return RestOperation.put(getFullUrl(), connector, logger).withAuthenticator(authenticator);
 	}
 
@@ -264,7 +253,7 @@ public class RestResource {
 	 * @throws CoreException
 	 *             if this resource is not accessible with the given headers, whatever the reason.
 	 */
-	private void checkOptionsAllows(String method) throws CoreException {
+	private void checkOptionsAllows(Method method) throws CoreException {
 		if (optionsResponse == null) {
 			RestOperation options = options();
 			optionsResponse = options.run();
@@ -272,23 +261,36 @@ public class RestResource {
 		// Check the available operations
 		final Map<String, String> respHeaders = optionsResponse.getHeaders();
 		String headerAllows = respHeaders.get(ITuleapHeaders.ALLOW);
-		String headerCorsAllows = respHeaders.get(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS);
+		// String headerCorsAllows = respHeaders.get(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS);
 		if (!optionsResponse.isOk()) {
-			// Server error?
-			// TODO See how to extract the error message since we don't have the jsonParser here.
-			// Throw a specific kind of exception that wraps the body and catch it higher where a json
-			// parser is available?
-			String message = optionsResponse.getBody();
-			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
-					TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.errorReturnedByServer,
-							url, "OPTIONS", message))); //$NON-NLS-1$
+			String body = optionsResponse.getBody();
+			TuleapErrorMessage message = new TuleapJsonParser().getErrorMessage(body);
+			TuleapErrorPart errorPart = message.getError();
+			TuleapDebugPart debugPart = message.getDebug();
+			String msg;
+			if (errorPart == null) {
+				msg = body;
+			} else {
+				if (debugPart != null) {
+					msg = TuleapMylynTasksMessages.getString(
+							TuleapMylynTasksMessagesKeys.errorReturnedByServerWithDebug, getUrl(),
+							Method.OPTIONS.getName(), Integer.valueOf(errorPart.getCode()), errorPart
+									.getMessage(), debugPart.getSource());
+				} else {
+					msg = TuleapMylynTasksMessages.getString(
+							TuleapMylynTasksMessagesKeys.errorReturnedByServer, getUrl(), Method.OPTIONS
+									.getName(), Integer.valueOf(errorPart.getCode()), errorPart.getMessage());
+				}
+			}
+			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, msg));
 		}
-		if (!headerAllows.contains(method)) {
+		if (!headerAllows.contains(method.getName())) {
 			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
 					TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.cannotPerformOperation,
 							getUrl(), method)));
 		}
 		// FIXME uncomment when Tuleap supports CORS attributes in headers
+		// Only if it's useful to add this constraint!
 		// if (!headerCorsAllows.contains(method.toString())) {
 		// throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
 		// TuleapMylynTasksMessages.getString(
