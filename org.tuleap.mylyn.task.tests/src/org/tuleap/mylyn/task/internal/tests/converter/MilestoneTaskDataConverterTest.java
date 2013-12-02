@@ -30,17 +30,28 @@ import org.tuleap.mylyn.task.agile.core.data.planning.MilestonePlanningWrapper;
 import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.data.converter.MilestoneTaskDataConverter;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.data.ArtifactReference;
+import org.tuleap.mylyn.task.internal.core.model.data.AttachmentFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.AttachmentValue;
+import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCard;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCardwall;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapColumn;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapStatus;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapSwimlane;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -59,7 +70,7 @@ public class MilestoneTaskDataConverterTest {
 	/**
 	 * Suffix used to compute the mylyn id of the task atribute that represents the column id.
 	 */
-	public static final String SUFFIX_STATUS_ID = "status_id"; //$NON-NLS-1$
+	public static final String SUFFIX_COLUMN_ID = "column_id"; //$NON-NLS-1$
 
 	/**
 	 * Suffix used for computing the card list task attribute id.
@@ -77,11 +88,6 @@ public class MilestoneTaskDataConverterTest {
 	public static final String SUFFIX_ID = "id"; //$NON-NLS-1$
 
 	/**
-	 * Suffix used for computing the swimlane item task attribute id.
-	 */
-	public static final String SUFFIX_SWIMLANE_ITEM = "item"; //$NON-NLS-1$
-
-	/**
 	 * Separator used in computed ids.
 	 */
 	public static final char ID_SEPARATOR = '-';
@@ -95,6 +101,16 @@ public class MilestoneTaskDataConverterTest {
 	 * Id of the milestone list task attribute.
 	 */
 	public static final String SWIMLANE_LIST = "mta_lanes"; //$NON-NLS-1$
+
+	/**
+	 * Suffix used to compute the mylyn id of the task atribute that represents the status.
+	 */
+	public static final String SUFFIX_STATUS = "status"; //$NON-NLS-1$
+
+	/**
+	 * Suffix used to compute the mylyn id of the task atribute that represents the status.
+	 */
+	public static final String ALLOWED_COLS = "allowed_columns_ids"; //$NON-NLS-1$
 
 	private static final long START_TIME = 30 * 365L * 24L * 3600000L;
 
@@ -210,65 +226,41 @@ public class MilestoneTaskDataConverterTest {
 	 * Tests the swimlanes list.
 	 */
 	@Test
-	@Ignore("TODO when Enalean has managed cardwalls")
 	public void testCardwallSwimlanes() {
-		// Date testDate = new Date();
-		//
-		//		TuleapMilestone milestone = new TuleapMilestone(50, PROJECT_ID, "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$ 
-		//				"HTML URL", testDate, testDate); //$NON-NLS-1$
-		//
-		// TuleapCardwall cardwall = new TuleapCardwall();
-		// milestone.setCardwall(cardwall);
-		//
-		// TuleapSwimlane firstSwimlane = new TuleapSwimlane();
-		// TuleapBacklogItem firstBacklogItem = new TuleapBacklogItem(700, 200);
-		// firstSwimlane.setBacklogItem(firstBacklogItem);
-		// cardwall.addSwimlane(firstSwimlane);
-		//
-		// TuleapSwimlane secondSwimlane = new TuleapSwimlane();
-		// TuleapBacklogItem secondBacklogItem = new TuleapBacklogItem(1000, 200);
-		// secondSwimlane.setBacklogItem(secondBacklogItem);
-		// cardwall.addSwimlane(secondSwimlane);
-		//
-		// MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(taskRepository, connector);
-		// converter.populateTaskData(taskData, milestone, null);
-		//
-		// TaskAttribute root = taskData.getRoot();
-		//
-		// TaskAttribute swimlaneList = root.getAttribute(SWIMLANE_LIST);
-		// assertNotNull(swimlaneList);
-		//
-		// int id = 0;
-		// // The first swimlane
-		// String swimlaneId = SWIMLANE_LIST + ID_SEPARATOR + id++;
-		// TaskAttribute firstSwimlaneTA = swimlaneList.getAttribute(swimlaneId);
-		// assertNotNull(firstSwimlaneTA);
-		//
-		// TaskAttribute firstItemTA = firstSwimlaneTA.getAttribute(swimlaneId + ID_SEPARATOR
-		// + SUFFIX_SWIMLANE_ITEM);
-		//
-		// TaskAttribute idFirstItemTA = firstItemTA.getAttribute(swimlaneId + ID_SEPARATOR
-		// + SUFFIX_SWIMLANE_ITEM + ID_SEPARATOR + SUFFIX_ID);
-		//
-		// assertNotNull(idFirstItemTA);
-		// assertEquals(TaskAttribute.TYPE_INTEGER, idFirstItemTA.getMetaData().getType());
-		//		assertEquals("200:0#700", idFirstItemTA.getValue()); //$NON-NLS-1$
-		//
-		// // The second swimlane
-		// swimlaneId = SWIMLANE_LIST + ID_SEPARATOR + id++;
-		// TaskAttribute secondSwimlaneTA = swimlaneList.getAttribute(swimlaneId);
-		// assertNotNull(secondSwimlaneTA);
-		//
-		// TaskAttribute secondItemTA = secondSwimlaneTA.getAttribute(swimlaneId + ID_SEPARATOR
-		// + SUFFIX_SWIMLANE_ITEM);
-		//
-		// TaskAttribute idSecondItemTA = secondItemTA.getAttribute(swimlaneId + ID_SEPARATOR
-		// + SUFFIX_SWIMLANE_ITEM + ID_SEPARATOR + SUFFIX_ID);
-		//
-		// assertNotNull(idSecondItemTA);
-		// assertEquals(TaskAttribute.TYPE_INTEGER, idSecondItemTA.getMetaData().getType());
-		//		assertEquals("200:0#1000", idSecondItemTA.getValue()); //$NON-NLS-1$
-		fail("Implement");
+		Date testDate = new Date();
+
+		TuleapMilestone milestone = new TuleapMilestone(50,
+				new TuleapReference(200, "p/200"), "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
+				"HTML URL", testDate, testDate); //$NON-NLS-1$
+		TuleapCardwall cardwall = new TuleapCardwall();
+
+		TuleapSwimlane firstSwimlane = new TuleapSwimlane();
+
+		cardwall.addSwimlane(firstSwimlane);
+
+		TuleapSwimlane secondSwimlane = new TuleapSwimlane();
+
+		cardwall.addSwimlane(secondSwimlane);
+
+		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(taskRepository, connector);
+		converter.populateTaskData(taskData, milestone, null);
+		converter.populateCardwall(taskData, cardwall, null);
+
+		TaskAttribute root = taskData.getRoot();
+
+		TaskAttribute swimlaneList = root.getAttribute(SWIMLANE_LIST);
+		assertNotNull(swimlaneList);
+
+		int id = 0;
+		// The first swimlane
+		String swimlaneId = SWIMLANE_LIST + ID_SEPARATOR + id++;
+		TaskAttribute firstSwimlaneTA = swimlaneList.getAttribute(swimlaneId);
+		assertNotNull(firstSwimlaneTA);
+
+		// The second swimlane
+		swimlaneId = SWIMLANE_LIST + ID_SEPARATOR + id++;
+		TaskAttribute secondSwimlaneTA = swimlaneList.getAttribute(swimlaneId);
+		assertNotNull(secondSwimlaneTA);
 
 	}
 
@@ -276,287 +268,357 @@ public class MilestoneTaskDataConverterTest {
 	 * Tests the columns list.
 	 */
 	@Test
-	@Ignore
 	public void testCardwallColumns() {
-		// Date testDate = new Date();
-		//
-		//		TuleapMilestone milestone = new TuleapMilestone(50, PROJECT_ID, "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$ 
-		//				"HTML URL", testDate, testDate); //$NON-NLS-1$
-		//
-		// TuleapCardwall cardwall = new TuleapCardwall();
-		// milestone.setCardwall(cardwall);
-		//		TuleapStatus firstColumnConfig = new TuleapStatus(600, "first column"); //$NON-NLS-1$
-		//
-		//		TuleapStatus secondColumnConfig = new TuleapStatus(800, "second column"); //$NON-NLS-1$
-		//
-		// cardwall.addStatus(firstColumnConfig);
-		// cardwall.addStatus(secondColumnConfig);
-		//
-		// MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(taskRepository, connector);
-		// converter.populateTaskData(taskData, milestone, null);
-		//
-		// TaskAttribute root = taskData.getRoot();
-		//
-		// TaskAttribute columnList = root.getAttribute(COLUMN_LIST);
-		// assertNotNull(columnList);
-		//
-		// int i = 0;
-		// // the first column
-		// String attId = COLUMN_LIST + ID_SEPARATOR + i++;
-		// TaskAttribute firstColumnTA = columnList.getAttribute(attId);
-		//
-		// TaskAttribute firstColumnIdTA = firstColumnTA.getAttribute(attId + ID_SEPARATOR + SUFFIX_ID);
-		//
-		// assertNotNull(firstColumnIdTA);
-		// assertEquals(TaskAttribute.TYPE_INTEGER, firstColumnIdTA.getMetaData().getType());
-		//		assertEquals("600", firstColumnIdTA.getValue()); //$NON-NLS-1$
-		//
-		// TaskAttribute firstColumnLabelTA = firstColumnTA.getAttribute(attId + ID_SEPARATOR + SUFFIX_LABEL);
-		//
-		// assertNotNull(firstColumnLabelTA);
-		// assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, firstColumnLabelTA.getMetaData().getType());
-		//		assertEquals("first column", firstColumnLabelTA.getValue()); //$NON-NLS-1$
-		//
-		// // the second column
-		// attId = COLUMN_LIST + ID_SEPARATOR + i++;
-		// TaskAttribute secondColumnTA = columnList.getAttribute(attId);
-		//
-		// TaskAttribute secondColumnIdTA = secondColumnTA.getAttribute(attId + ID_SEPARATOR + SUFFIX_ID);
-		//
-		// assertNotNull(secondColumnIdTA);
-		// assertEquals(TaskAttribute.TYPE_INTEGER, secondColumnIdTA.getMetaData().getType());
-		//		assertEquals("800", secondColumnIdTA.getValue()); //$NON-NLS-1$
-		//
-		// TaskAttribute secondColumnLabelTA = secondColumnTA.getAttribute(attId + ID_SEPARATOR +
-		// SUFFIX_LABEL);
-		//
-		// assertNotNull(secondColumnLabelTA);
-		// assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, secondColumnLabelTA.getMetaData().getType());
-		//		assertEquals("second column", secondColumnLabelTA.getValue()); //$NON-NLS-1$
-		fail("Implement");
+		Date testDate = new Date();
 
+		TuleapMilestone milestone = new TuleapMilestone(50,
+				new TuleapReference(200, "p/200"), "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
+				"HTML URL", testDate, testDate); //$NON-NLS-1$
+
+		TuleapCardwall cardwall = new TuleapCardwall();
+
+		TuleapColumn firstColumnConfig = new TuleapColumn(600, "first column"); //$NON-NLS-1$
+
+		TuleapColumn secondColumnConfig = new TuleapColumn(800, "second column"); //$NON-NLS-1$
+
+		cardwall.addColumn(firstColumnConfig);
+		cardwall.addColumn(secondColumnConfig);
+
+		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(taskRepository, connector);
+		converter.populateTaskData(taskData, milestone, null);
+		converter.populateCardwall(taskData, cardwall, null);
+
+		TaskAttribute root = taskData.getRoot();
+
+		TaskAttribute columnList = root.getAttribute(COLUMN_LIST);
+		assertNotNull(columnList);
+
+		int i = 0;
+		// the first column
+		String attId = COLUMN_LIST + ID_SEPARATOR + i++;
+		TaskAttribute firstColumnTA = columnList.getAttribute(attId);
+
+		TaskAttribute firstColumnIdTA = firstColumnTA.getAttribute(attId + ID_SEPARATOR + SUFFIX_ID);
+
+		assertNotNull(firstColumnIdTA);
+		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, firstColumnIdTA.getMetaData().getType());
+		assertEquals("600", firstColumnIdTA.getValue()); //$NON-NLS-1$
+
+		TaskAttribute firstColumnLabelTA = firstColumnTA.getAttribute(attId + ID_SEPARATOR + SUFFIX_LABEL);
+
+		assertNotNull(firstColumnLabelTA);
+		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, firstColumnLabelTA.getMetaData().getType());
+		assertEquals("first column", firstColumnLabelTA.getValue()); //$NON-NLS-1$
+
+		// the second column
+		attId = COLUMN_LIST + ID_SEPARATOR + i++;
+		TaskAttribute secondColumnTA = columnList.getAttribute(attId);
+
+		TaskAttribute secondColumnIdTA = secondColumnTA.getAttribute(attId + ID_SEPARATOR + SUFFIX_ID);
+
+		assertNotNull(secondColumnIdTA);
+		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, secondColumnIdTA.getMetaData().getType());
+		assertEquals("800", secondColumnIdTA.getValue()); //$NON-NLS-1$
+
+		TaskAttribute secondColumnLabelTA = secondColumnTA.getAttribute(attId + ID_SEPARATOR + SUFFIX_LABEL);
+
+		assertNotNull(secondColumnLabelTA);
+		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, secondColumnLabelTA.getMetaData().getType());
+		assertEquals("second column", secondColumnLabelTA.getValue()); //$NON-NLS-1$
 	}
 
 	/**
 	 * Tests the cardwall cards with literal field value.
 	 */
 	@Test
-	@Ignore
 	public void testCardwallCardsFieldValue() {
-		// Date testDate = new Date();
-		//
-		//		TuleapMilestone milestone = new TuleapMilestone(50, PROJECT_ID, "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$ 
-		//				"HTML URL", testDate, testDate); //$NON-NLS-1$
-		//
-		// TuleapCardwall cardwall = new TuleapCardwall();
-		// milestone.setCardwall(cardwall);
-		//
-		// TuleapSwimlane firstSwimlane = new TuleapSwimlane();
-		// TuleapBacklogItem firstBacklogItem = new TuleapBacklogItem(500, 200);
-		// firstSwimlane.setBacklogItem(firstBacklogItem);
-		// cardwall.addSwimlane(firstSwimlane);
-		//
-		// TuleapCard firstCard = new TuleapCard(700, 200);
-		// firstCard.setStatus(10000);
-		//		LiteralFieldValue firstLiteralFieldValue = new LiteralFieldValue(1000, "300, 301, 302"); //$NON-NLS-1$
-		// firstCard.addFieldValue(firstLiteralFieldValue);
-		//
-		// firstSwimlane.addCard(firstCard);
-		//
-		// MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(taskRepository, connector);
-		// converter.populateTaskData(taskData, milestone, null);
-		//
-		// TaskAttribute swimlaneList = taskData.getRoot().getAttribute(SWIMLANE_LIST);
-		//
-		// int id = 0;
-		// // The first swimlane
-		// String swimlaneId = SWIMLANE_LIST + ID_SEPARATOR + id++;
-		// TaskAttribute firstSwimlaneTA = swimlaneList.getAttribute(swimlaneId);
-		//
-		// TaskAttribute cardsList = firstSwimlaneTA.getMappedAttribute(swimlaneId + ID_SEPARATOR
-		// + SUFFIX_CARD_LIST);
-		// assertNotNull(cardsList);
-		//
-		// TaskAttribute firstCardTA = cardsList.getAttribute(swimlaneId + ID_SEPARATOR + SUFFIX_CARD_LIST
-		//				+ ID_SEPARATOR + "200:700#0"); //$NON-NLS-1$
-		// assertNotNull(firstCardTA);
-		//
-		// TaskAttribute idFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR + SUFFIX_CARD_LIST
-		//				+ ID_SEPARATOR + "200:700#0" + ID_SEPARATOR + SUFFIX_ID); //$NON-NLS-1$
-		//
-		// assertNotNull(idFirstCardTA);
-		// assertEquals(TaskAttribute.TYPE_INTEGER, idFirstCardTA.getMetaData().getType());
-		//		assertEquals("200:700#0", idFirstCardTA.getValue()); //$NON-NLS-1$
-		//
-		// TaskAttribute statusIdFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
-		//				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
-		// + SUFFIX_STATUS_ID);
-		//
-		// assertNotNull(statusIdFirstCardTA);
-		// assertEquals(TaskAttribute.TYPE_INTEGER, statusIdFirstCardTA.getMetaData().getType());
-		//		assertEquals("10000", statusIdFirstCardTA.getValue()); //$NON-NLS-1$
-		//
-		// TaskAttribute fieldValueFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
-		//				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + FIELD_SEPARATOR + "1000"); //$NON-NLS-1$ //$NON-NLS-2$
-		//
-		// assertNotNull(fieldValueFirstCardTA);
-		//		assertEquals("300, 301, 302", fieldValueFirstCardTA.getValue()); //$NON-NLS-1$
-		fail("Implement");
+		Date testDate = new Date();
+
+		TuleapMilestone milestone = new TuleapMilestone(50,
+				new TuleapReference(200, "p/200"), "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
+				"HTML URL", testDate, testDate); //$NON-NLS-1$
+
+		TuleapCardwall cardwall = new TuleapCardwall();
+
+		TuleapSwimlane firstSwimlane = new TuleapSwimlane();
+		cardwall.addSwimlane(firstSwimlane);
+
+		TuleapCard firstCard = new TuleapCard(new TuleapReference(700, "t/700"), new TuleapReference(200,
+				"p/200"));
+		firstCard.setColumnId(10000);
+		LiteralFieldValue firstLiteralFieldValue = new LiteralFieldValue(1000, "300, 301, 302"); //$NON-NLS-1$
+		firstCard.addFieldValue(firstLiteralFieldValue);
+		int[] columnIds = new int[3];
+		for (int i = 0; i < 3; i++) {
+			columnIds[i] = i + 10;
+		}
+		firstCard.setAllowedColumnIds(columnIds);
+		firstCard.setStatus(TuleapStatus.valueOf("Open"));
+
+		firstSwimlane.addCard(firstCard);
+
+		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(taskRepository, connector);
+		converter.populateTaskData(taskData, milestone, null);
+		converter.populateCardwall(taskData, cardwall, null);
+
+		TaskAttribute swimlaneList = taskData.getRoot().getAttribute(SWIMLANE_LIST);
+
+		int id = 0;
+		// The first swimlane
+		String swimlaneId = SWIMLANE_LIST + ID_SEPARATOR + id++;
+		TaskAttribute firstSwimlaneTA = swimlaneList.getAttribute(swimlaneId);
+
+		TaskAttribute cardsList = firstSwimlaneTA.getMappedAttribute(swimlaneId + ID_SEPARATOR
+				+ SUFFIX_CARD_LIST);
+		assertNotNull(cardsList);
+
+		TaskAttribute firstCardTA = cardsList.getAttribute(swimlaneId + ID_SEPARATOR + SUFFIX_CARD_LIST
+				+ ID_SEPARATOR + "200:700#0"); //$NON-NLS-1$
+		assertNotNull(firstCardTA);
+
+		TaskAttribute idFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR + SUFFIX_CARD_LIST
+				+ ID_SEPARATOR + "200:700#0" + ID_SEPARATOR + SUFFIX_ID); //$NON-NLS-1$
+
+		assertNotNull(idFirstCardTA);
+		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, idFirstCardTA.getMetaData().getType());
+		assertEquals("200:700#0", idFirstCardTA.getValue()); //$NON-NLS-1$
+
+		TaskAttribute statusIdFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
+				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
+				+ SUFFIX_COLUMN_ID);
+
+		assertNotNull(statusIdFirstCardTA);
+		assertEquals(TaskAttribute.TYPE_INTEGER, statusIdFirstCardTA.getMetaData().getType());
+		assertEquals("10000", statusIdFirstCardTA.getValue()); //$NON-NLS-1$
+
+		TaskAttribute fieldValueFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
+				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + FIELD_SEPARATOR + "1000"); //$NON-NLS-1$ //$NON-NLS-2$
+
+		assertNotNull(fieldValueFirstCardTA);
+		assertEquals("300, 301, 302", fieldValueFirstCardTA.getValue()); //$NON-NLS-1$
+
+		TaskAttribute statusFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
+				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
+				+ SUFFIX_STATUS);
+
+		assertNotNull(statusFirstCardTA);
+		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, statusFirstCardTA.getMetaData().getType());
+		assertEquals("Open", statusFirstCardTA.getValue()); //$NON-NLS-1$
+
+		TaskAttribute allowedColumnsFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
+				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
+				+ ALLOWED_COLS);
+
+		assertNotNull(allowedColumnsFirstCardTA);
+		List<String> values = allowedColumnsFirstCardTA.getValues();
+		assertEquals(3, values.size());
+		assertEquals("10", values.get(0)); //$NON-NLS-1$
+		assertEquals("11", values.get(1)); //$NON-NLS-1$
+		assertEquals("12", values.get(2)); //$NON-NLS-1$
 	}
 
 	/**
 	 * Tests the cardwall cards with Bind field values.
 	 */
 	@Test
-	@Ignore
 	public void testCardwallCardsBindFieldValues() {
-		// Date testDate = new Date();
-		//
-		//		TuleapMilestone milestone = new TuleapMilestone(50, PROJECT_ID, "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$ 
-		//				"HTML URL", testDate, testDate); //$NON-NLS-1$
-		//
-		// TuleapCardwall cardwall = new TuleapCardwall();
-		// milestone.setCardwall(cardwall);
-		//
-		// TuleapSwimlane firstSwimlane = new TuleapSwimlane();
-		// TuleapBacklogItem firstBacklogItem = new TuleapBacklogItem(500, 200);
-		// firstSwimlane.setBacklogItem(firstBacklogItem);
-		// cardwall.addSwimlane(firstSwimlane);
-		//
-		// TuleapCard firstCard = new TuleapCard(700, 200);
-		// firstCard.setStatus(10000);
-		//
-		// List<Integer> valueIds = new ArrayList<Integer>();
-		// valueIds.add(new Integer(10));
-		// valueIds.add(new Integer(20));
-		// valueIds.add(new Integer(30));
-		// BoundFieldValue firstBoundFieldValue = new BoundFieldValue(2000, valueIds);
-		//
-		// firstCard.addFieldValue(firstBoundFieldValue);
-		//
-		// firstSwimlane.addCard(firstCard);
-		//
-		// MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(taskRepository, connector);
-		// converter.populateTaskData(taskData, milestone, null);
-		//
-		// TaskAttribute swimlaneList = taskData.getRoot().getAttribute(SWIMLANE_LIST);
-		//
-		// int id = 0;
-		// // The first swimlane
-		// String swimlaneId = SWIMLANE_LIST + ID_SEPARATOR + id++;
-		// TaskAttribute firstSwimlaneTA = swimlaneList.getAttribute(swimlaneId);
-		//
-		// TaskAttribute cardsList = firstSwimlaneTA.getMappedAttribute(swimlaneId + ID_SEPARATOR
-		// + SUFFIX_CARD_LIST);
-		// assertNotNull(cardsList);
-		//
-		// TaskAttribute firstCardTA = cardsList.getAttribute(swimlaneId + ID_SEPARATOR + SUFFIX_CARD_LIST
-		//				+ ID_SEPARATOR + "200:700#0"); //$NON-NLS-1$
-		// assertNotNull(firstCardTA);
-		//
-		// TaskAttribute idFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR + SUFFIX_CARD_LIST
-		//				+ ID_SEPARATOR + "200:700#0" + ID_SEPARATOR + SUFFIX_ID); //$NON-NLS-1$
-		//
-		// assertNotNull(idFirstCardTA);
-		// assertEquals(TaskAttribute.TYPE_INTEGER, idFirstCardTA.getMetaData().getType());
-		//		assertEquals("200:700#0", idFirstCardTA.getValue()); //$NON-NLS-1$
-		//
-		// TaskAttribute statusIdFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
-		//				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
-		// + SUFFIX_STATUS_ID);
-		//
-		// assertNotNull(statusIdFirstCardTA);
-		// assertEquals(TaskAttribute.TYPE_INTEGER, statusIdFirstCardTA.getMetaData().getType());
-		//		assertEquals("10000", statusIdFirstCardTA.getValue()); //$NON-NLS-1$
-		//
-		// TaskAttribute fieldValueFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
-		//				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + FIELD_SEPARATOR + "2000"); //$NON-NLS-1$ //$NON-NLS-2$
-		//
-		// assertNotNull(fieldValueFirstCardTA);
-		// // FIXME manage the type of Bound fields
-		// // assertEquals(TaskAttribute.TYPE_SINGLE_SELECT, fieldValueFirstCardTA.getMetaData().getType());
-		// List<String> values = fieldValueFirstCardTA.getValues();
-		// assertEquals(3, values.size());
-		//		assertEquals("10", values.get(0)); //$NON-NLS-1$
-		//		assertEquals("20", values.get(1)); //$NON-NLS-1$
-		//		assertEquals("30", values.get(2)); //$NON-NLS-1$
-		fail("Implement");
+		Date testDate = new Date();
 
+		TuleapMilestone milestone = new TuleapMilestone(50,
+				new TuleapReference(200, "p/200"), "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
+				"HTML URL", testDate, testDate); //$NON-NLS-1$
+
+		TuleapCardwall cardwall = new TuleapCardwall();
+
+		TuleapSwimlane firstSwimlane = new TuleapSwimlane();
+		cardwall.addSwimlane(firstSwimlane);
+
+		TuleapCard firstCard = new TuleapCard(new TuleapReference(700, "t/700"), new TuleapReference(200,
+				"p/200"));
+		firstCard.setColumnId(10000);
+
+		int[] columnIds = new int[3];
+		for (int i = 0; i < 3; i++) {
+			columnIds[i] = i + 10;
+		}
+		firstCard.setAllowedColumnIds(columnIds);
+		firstCard.setStatus(TuleapStatus.valueOf("Open"));
+
+		firstSwimlane.addCard(firstCard);
+
+		List<Integer> valueIds = new ArrayList<Integer>();
+		valueIds.add(new Integer(10));
+		valueIds.add(new Integer(20));
+		valueIds.add(new Integer(30));
+		BoundFieldValue firstBoundFieldValue = new BoundFieldValue(2000, valueIds);
+
+		firstCard.addFieldValue(firstBoundFieldValue);
+
+		firstSwimlane.addCard(firstCard);
+
+		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(taskRepository, connector);
+		converter.populateTaskData(taskData, milestone, null);
+		converter.populateCardwall(taskData, cardwall, null);
+
+		TaskAttribute swimlaneList = taskData.getRoot().getAttribute(SWIMLANE_LIST);
+
+		int id = 0;
+		// The first swimlane
+		String swimlaneId = SWIMLANE_LIST + ID_SEPARATOR + id++;
+		TaskAttribute firstSwimlaneTA = swimlaneList.getAttribute(swimlaneId);
+
+		TaskAttribute cardsList = firstSwimlaneTA.getMappedAttribute(swimlaneId + ID_SEPARATOR
+				+ SUFFIX_CARD_LIST);
+		assertNotNull(cardsList);
+
+		TaskAttribute firstCardTA = cardsList.getAttribute(swimlaneId + ID_SEPARATOR + SUFFIX_CARD_LIST
+				+ ID_SEPARATOR + "200:700#0"); //$NON-NLS-1$
+		assertNotNull(firstCardTA);
+
+		TaskAttribute idFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR + SUFFIX_CARD_LIST
+				+ ID_SEPARATOR + "200:700#0" + ID_SEPARATOR + SUFFIX_ID); //$NON-NLS-1$
+
+		assertNotNull(idFirstCardTA);
+		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, idFirstCardTA.getMetaData().getType());
+		assertEquals("200:700#0", idFirstCardTA.getValue()); //$NON-NLS-1$
+
+		TaskAttribute statusIdFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
+				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
+				+ SUFFIX_COLUMN_ID);
+
+		assertNotNull(statusIdFirstCardTA);
+		assertEquals(TaskAttribute.TYPE_INTEGER, statusIdFirstCardTA.getMetaData().getType());
+		assertEquals("10000", statusIdFirstCardTA.getValue()); //$NON-NLS-1$
+
+		TaskAttribute fieldValueFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
+				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + FIELD_SEPARATOR + "2000"); //$NON-NLS-1$ //$NON-NLS-2$
+
+		assertNotNull(fieldValueFirstCardTA);
+		// FIXME manage the type of Bound fields
+		// assertEquals(TaskAttribute.TYPE_SINGLE_SELECT, fieldValueFirstCardTA.getMetaData().getType());
+		List<String> values = fieldValueFirstCardTA.getValues();
+		assertEquals(3, values.size());
+		assertEquals("10", values.get(0)); //$NON-NLS-1$
+		assertEquals("20", values.get(1)); //$NON-NLS-1$
+		assertEquals("30", values.get(2)); //$NON-NLS-1$
+
+		TaskAttribute statusFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
+				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
+				+ SUFFIX_STATUS);
+
+		assertNotNull(statusFirstCardTA);
+		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, statusFirstCardTA.getMetaData().getType());
+		assertEquals("Open", statusFirstCardTA.getValue()); //$NON-NLS-1$
+
+		TaskAttribute allowedColumnsFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
+				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
+				+ ALLOWED_COLS);
+
+		assertNotNull(allowedColumnsFirstCardTA);
+		List<String> allowedColumns = allowedColumnsFirstCardTA.getValues();
+		assertEquals(3, allowedColumns.size());
+		assertEquals("10", allowedColumns.get(0)); //$NON-NLS-1$
+		assertEquals("11", allowedColumns.get(1)); //$NON-NLS-1$
+		assertEquals("12", allowedColumns.get(2)); //$NON-NLS-1$
 	}
 
 	/**
 	 * Tests the cardwall cards with file description.
 	 */
 	@Test
-	@Ignore
 	public void testCardwallCardsFileDescription() {
-		// Date testDate = new Date();
-		//
-		//		TuleapMilestone milestone = new TuleapMilestone(50, PROJECT_ID, "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$ 
-		//				"HTML URL", testDate, testDate); //$NON-NLS-1$
-		// TuleapCardwall cardwall = new TuleapCardwall();
-		// milestone.setCardwall(cardwall);
-		//
-		// TuleapSwimlane firstSwimlane = new TuleapSwimlane();
-		// TuleapBacklogItem firstBacklogItem = new TuleapBacklogItem(500, 200);
-		// firstSwimlane.setBacklogItem(firstBacklogItem);
-		// cardwall.addSwimlane(firstSwimlane);
-		//
-		// TuleapCard firstCard = new TuleapCard(700, 200);
-		// firstCard.setStatus(10000);
-		//
-		// List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
-		//		TuleapPerson firstUploadedBy = new TuleapPerson("first username", "first realname", 1, "first email"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		//		attachments.add(new AttachmentValue("100000", "first name", firstUploadedBy, 123456, //$NON-NLS-1$ //$NON-NLS-2$ 
-		//				"first description", "first type")); //$NON-NLS-1$ //$NON-NLS-2$
-		//		TuleapPerson secondUploadedBy = new TuleapPerson("second username", "second realname", 2, //$NON-NLS-1$ //$NON-NLS-2$
-		//				"second email"); //$NON-NLS-1$
-		//		attachments.add(new AttachmentValue("100001", "second name", secondUploadedBy, 789456, //$NON-NLS-1$ //$NON-NLS-2$
-		//				"second description", "second type")); //$NON-NLS-1$ //$NON-NLS-2$
-		// AttachmentFieldValue fileDescriptions = new AttachmentFieldValue(3000, attachments);
-		//
-		// firstCard.addFieldValue(fileDescriptions);
-		//
-		// firstSwimlane.addCard(firstCard);
-		//
-		// MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(taskRepository, connector);
-		// converter.populateTaskData(taskData, milestone, null);
-		//
-		// TaskAttribute swimlaneList = taskData.getRoot().getAttribute(SWIMLANE_LIST);
-		//
-		// int id = 0;
-		// // The first swimlane
-		// String swimlaneId = SWIMLANE_LIST + ID_SEPARATOR + id++;
-		// TaskAttribute firstSwimlaneTA = swimlaneList.getAttribute(swimlaneId);
-		//
-		// TaskAttribute cardsList = firstSwimlaneTA.getMappedAttribute(swimlaneId + ID_SEPARATOR
-		// + SUFFIX_CARD_LIST);
-		// assertNotNull(cardsList);
-		//
-		// TaskAttribute firstCardTA = cardsList.getAttribute(swimlaneId + ID_SEPARATOR + SUFFIX_CARD_LIST
-		//				+ ID_SEPARATOR + "200:700#0"); //$NON-NLS-1$
-		// assertNotNull(firstCardTA);
-		//
-		// TaskAttribute idFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR + SUFFIX_CARD_LIST
-		//				+ ID_SEPARATOR + "200:700#0" + ID_SEPARATOR + SUFFIX_ID); //$NON-NLS-1$
-		//
-		// assertNotNull(idFirstCardTA);
-		// assertEquals(TaskAttribute.TYPE_INTEGER, idFirstCardTA.getMetaData().getType());
-		//		assertEquals("200:700#0", idFirstCardTA.getValue()); //$NON-NLS-1$
-		//
-		// TaskAttribute statusIdFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
-		//				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
-		// + SUFFIX_STATUS_ID);
-		//
-		// assertNotNull(statusIdFirstCardTA);
-		// assertEquals(TaskAttribute.TYPE_INTEGER, statusIdFirstCardTA.getMetaData().getType());
-		//		assertEquals("10000", statusIdFirstCardTA.getValue()); //$NON-NLS-1$
-		//
-		// TaskAttribute fieldValueFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
-		//				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + FIELD_SEPARATOR + "2000"); //$NON-NLS-1$ //$NON-NLS-2$  
-		//
-		// assertNull(fieldValueFirstCardTA);
-		fail("Implement");
+		Date testDate = new Date();
+
+		TuleapMilestone milestone = new TuleapMilestone(50,
+				new TuleapReference(200, "p/200"), "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
+				"HTML URL", testDate, testDate); //$NON-NLS-1$
+		TuleapCardwall cardwall = new TuleapCardwall();
+
+		TuleapSwimlane firstSwimlane = new TuleapSwimlane();
+		cardwall.addSwimlane(firstSwimlane);
+
+		TuleapCard firstCard = new TuleapCard(new TuleapReference(700, "t/700"), new TuleapReference(200,
+				"p/200"));
+		firstCard.setColumnId(10000);
+
+		int[] columnIds = new int[3];
+		for (int i = 0; i < 3; i++) {
+			columnIds[i] = i + 10;
+		}
+		firstCard.setAllowedColumnIds(columnIds);
+		firstCard.setStatus(TuleapStatus.valueOf("Open"));
+
+		List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
+		TuleapPerson firstUploadedBy = new TuleapPerson("first username", "first realname", 1, "first email"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		attachments.add(new AttachmentValue("100000", "first name", firstUploadedBy, 123456, //$NON-NLS-1$ //$NON-NLS-2$ 
+				"first description", "first type")); //$NON-NLS-1$ //$NON-NLS-2$
+		TuleapPerson secondUploadedBy = new TuleapPerson("second username", "second realname", 2, //$NON-NLS-1$ //$NON-NLS-2$
+				"second email"); //$NON-NLS-1$
+		attachments.add(new AttachmentValue("100001", "second name", secondUploadedBy, 789456, //$NON-NLS-1$ //$NON-NLS-2$
+				"second description", "second type")); //$NON-NLS-1$ //$NON-NLS-2$
+		AttachmentFieldValue fileDescriptions = new AttachmentFieldValue(3000, attachments);
+
+		firstCard.addFieldValue(fileDescriptions);
+
+		firstSwimlane.addCard(firstCard);
+
+		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(taskRepository, connector);
+		converter.populateTaskData(taskData, milestone, null);
+		converter.populateCardwall(taskData, cardwall, null);
+
+		TaskAttribute swimlaneList = taskData.getRoot().getAttribute(SWIMLANE_LIST);
+
+		int id = 0;
+		// The first swimlane
+		String swimlaneId = SWIMLANE_LIST + ID_SEPARATOR + id++;
+		TaskAttribute firstSwimlaneTA = swimlaneList.getAttribute(swimlaneId);
+
+		TaskAttribute cardsList = firstSwimlaneTA.getMappedAttribute(swimlaneId + ID_SEPARATOR
+				+ SUFFIX_CARD_LIST);
+		assertNotNull(cardsList);
+
+		TaskAttribute firstCardTA = cardsList.getAttribute(swimlaneId + ID_SEPARATOR + SUFFIX_CARD_LIST
+				+ ID_SEPARATOR + "200:700#0"); //$NON-NLS-1$
+		assertNotNull(firstCardTA);
+
+		TaskAttribute idFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR + SUFFIX_CARD_LIST
+				+ ID_SEPARATOR + "200:700#0" + ID_SEPARATOR + SUFFIX_ID); //$NON-NLS-1$
+
+		assertNotNull(idFirstCardTA);
+		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, idFirstCardTA.getMetaData().getType());
+		assertEquals("200:700#0", idFirstCardTA.getValue()); //$NON-NLS-1$
+
+		TaskAttribute statusIdFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
+				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
+				+ SUFFIX_COLUMN_ID);
+
+		assertNotNull(statusIdFirstCardTA);
+		assertEquals(TaskAttribute.TYPE_INTEGER, statusIdFirstCardTA.getMetaData().getType());
+		assertEquals("10000", statusIdFirstCardTA.getValue()); //$NON-NLS-1$
+
+		TaskAttribute fieldValueFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
+				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + FIELD_SEPARATOR + "2000"); //$NON-NLS-1$ //$NON-NLS-2$  
+
+		assertNull(fieldValueFirstCardTA);
+
+		TaskAttribute statusFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
+				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
+				+ SUFFIX_STATUS);
+
+		assertNotNull(statusFirstCardTA);
+		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, statusFirstCardTA.getMetaData().getType());
+		assertEquals("Open", statusFirstCardTA.getValue()); //$NON-NLS-1$
+
+		TaskAttribute allowedColumnsFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
+				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
+				+ ALLOWED_COLS);
+
+		assertNotNull(allowedColumnsFirstCardTA);
+		List<String> values = allowedColumnsFirstCardTA.getValues();
+		assertEquals(3, values.size());
+		assertEquals("10", values.get(0)); //$NON-NLS-1$
+		assertEquals("11", values.get(1)); //$NON-NLS-1$
+		assertEquals("12", values.get(2)); //$NON-NLS-1$
 	}
 
 	/**

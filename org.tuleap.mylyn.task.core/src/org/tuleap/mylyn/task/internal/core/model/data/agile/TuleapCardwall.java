@@ -31,33 +31,33 @@ public class TuleapCardwall {
 	/**
 	 * Card wall status list.
 	 */
-	private final List<TuleapStatus> status;
+	private final List<TuleapColumn> column;
 
 	/**
 	 * Constructor.
 	 */
 	public TuleapCardwall() {
 		this.swimlanes = Lists.newArrayList();
-		this.status = Lists.newArrayList();
+		this.column = Lists.newArrayList();
 	}
 
 	/**
 	 * Add a status to the card wall.
 	 * 
-	 * @param theStatus
-	 *            The status
+	 * @param theColumn
+	 *            The column
 	 */
-	public void addStatus(TuleapStatus theStatus) {
-		status.add(theStatus);
+	public void addColumn(TuleapColumn theColumn) {
+		column.add(theColumn);
 	}
 
 	/**
-	 * Provides the status list of this card wall.
+	 * Provides the cardwall columns list.
 	 * 
-	 * @return An unmodifiable list view of the status of this card wall.
+	 * @return An unmodifiable list view of the columns of this card wall.
 	 */
-	public List<TuleapStatus> getStatuses() {
-		return ImmutableList.copyOf(status);
+	public List<TuleapColumn> getColumns() {
+		return ImmutableList.copyOf(column);
 	}
 
 	/**

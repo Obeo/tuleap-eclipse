@@ -19,10 +19,9 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
-import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCard;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCardwall;
-import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapStatus;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapColumn;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapSwimlane;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
@@ -43,36 +42,29 @@ public class TuleapCardwallDeserializer implements JsonDeserializer<TuleapCardwa
 			JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
 		JsonObject jsonObject = rootJsonElement.getAsJsonObject();
 
-		JsonArray statusList = jsonObject.get(ITuleapConstants.STATUS_LIST).getAsJsonArray();
+		JsonArray columnsList = jsonObject.get(ITuleapConstants.COLUMNS).getAsJsonArray();
 
 		TuleapCardwall cardwall = new TuleapCardwall();
-		for (JsonElement statusElement : statusList) {
-			int statusId = statusElement.getAsJsonObject().get(ITuleapConstants.ID).getAsInt();
-			String statuslabel = statusElement.getAsJsonObject().get(ITuleapConstants.LABEL).getAsString();
-			TuleapStatus status = new TuleapStatus(statusId, statuslabel);
-			cardwall.addStatus(status);
+		for (JsonElement statusElement : columnsList) {
+			int columnId = statusElement.getAsJsonObject().get(ITuleapConstants.ID).getAsInt();
+			String columnLabel = statusElement.getAsJsonObject().get(ITuleapConstants.LABEL).getAsString();
+			String columnColor = statusElement.getAsJsonObject().get(ITuleapConstants.COLOR).getAsString();
+			TuleapColumn column = new TuleapColumn(columnId, columnLabel);
+			column.setColor(columnColor);
+			cardwall.addColumn(column);
 		}
 
 		JsonArray swimlanesList = jsonObject.get(ITuleapConstants.SWIMLANES).getAsJsonArray();
 
 		for (JsonElement swimlaneElement : swimlanesList) {
 			TuleapSwimlane swimlane = new TuleapSwimlane();
-
-			JsonObject backlogItemObject = swimlaneElement.getAsJsonObject().get(
-					ITuleapConstants.BACKLOG_ITEM).getAsJsonObject();
-			TuleapBacklogItem backlogItem = new TuleapBacklogItemDeserializer().deserialize(
-					backlogItemObject, TuleapBacklogItem.class, null);
-			swimlane.setBacklogItem(backlogItem);
-
 			JsonArray cardsArray = swimlaneElement.getAsJsonObject().get(ITuleapConstants.CARDS)
 					.getAsJsonArray();
-
 			for (JsonElement cardElement : cardsArray) {
 				TuleapCard card = new TuleapCardDeserializer().deserialize(cardElement, TuleapCard.class,
 						null);
 				swimlane.addCard(card);
 			}
-
 			cardwall.addSwimlane(swimlane);
 		}
 

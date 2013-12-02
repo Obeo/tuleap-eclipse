@@ -33,8 +33,8 @@ import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCard;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCardwall;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapColumn;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
-import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapStatus;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapSwimlane;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 
@@ -128,26 +128,15 @@ public class MilestoneTaskDataConverter {
 	 */
 	public void populateCardwall(TaskData taskData, TuleapCardwall cardwall, IProgressMonitor monitor) {
 		CardwallWrapper wrapper = new CardwallWrapper(taskData.getRoot());
-		for (TuleapStatus column : cardwall.getStatuses()) {
+		int index = 0;
+		for (TuleapColumn column : cardwall.getColumns()) {
 			wrapper.addColumn(Integer.toString(column.getId()), column.getLabel());
 		}
 		for (TuleapSwimlane swimlane : cardwall.getSwimlanes()) {
-			TuleapBacklogItem backlogItem = swimlane.getBacklogItem();
-			// FIXME Replace 0 below
-			String swimlaneId = TuleapTaskIdentityUtil.getTaskDataId(backlogItem.getProject().getId(), 0,
-					backlogItem.getId());
-			SwimlaneWrapper swimlaneWrapper = wrapper.addSwimlane(swimlaneId);
-			swimlaneWrapper.getSwimlaneItem().setLabel(backlogItem.getLabel());
-
-			// display IDs
-			String biDisplayId = Integer.toString(backlogItem.getId());
-			swimlaneWrapper.getSwimlaneItem().setDisplayId(biDisplayId);
-			swimlaneWrapper.setDisplayId(biDisplayId);
-
-			Float initialEffort = backlogItem.getInitialEffort();
-			if (initialEffort != null) {
-				swimlaneWrapper.getSwimlaneItem().setInitialEffort(initialEffort.floatValue());
-			}
+			SwimlaneWrapper swimlaneWrapper = wrapper.addSwimlane(String.valueOf(index));
+			swimlaneWrapper.setDisplayId(String.valueOf(String.valueOf(cardwall.getSwimlanes().indexOf(
+					swimlane))));
+			index++;
 			for (TuleapCard card : swimlane.getCards()) {
 				int trackerId = card.getTracker().getId();
 				int cardProjectId = card.getProject().getId();
@@ -169,8 +158,16 @@ public class MilestoneTaskDataConverter {
 	public void populateCard(CardWrapper cardWrapper, TuleapCard card) {
 		cardWrapper.setDisplayId(String.valueOf(card.getId()));
 		cardWrapper.setLabel(card.getLabel());
-		// ID of assigned status must be computed like in the columnWrapper above
-		cardWrapper.setStatusId(Integer.toString(card.getStatusId()));
+		if (card.getColumnId() != null) {
+			cardWrapper.setColumnId(String.valueOf(card.getColumnId()));
+		}
+
+		int[] allowedColumnIds = card.getAllowedColumnIds();
+		for (int columnId : allowedColumnIds) {
+			cardWrapper.addAllowedColumn(String.valueOf(columnId));
+		}
+		cardWrapper.setStatus(card.getStatus().toString());
+
 		for (AbstractFieldValue fieldValue : card.getFieldValues()) {
 			// TODO manage other types of fields
 			String fieldId = Integer.toString(fieldValue.getFieldId());

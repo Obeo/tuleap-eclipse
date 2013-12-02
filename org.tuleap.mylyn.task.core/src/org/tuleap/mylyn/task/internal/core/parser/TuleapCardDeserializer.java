@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.parser;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -17,7 +19,10 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
+import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
+import org.tuleap.mylyn.task.internal.core.model.data.ArtifactReference;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCard;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapStatus;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**
@@ -40,18 +45,38 @@ public class TuleapCardDeserializer extends AbstractTuleapDeserializer<TuleapCar
 
 		JsonObject jsonObject = element.getAsJsonObject();
 
+		Gson gson = new Gson();
+		card.setArtifact(gson.fromJson(jsonObject.get(ITuleapConstants.JSON_ARTIFACT),
+				ArtifactReference.class));
+
 		JsonElement elt = jsonObject.get(ITuleapConstants.COLOR);
 		if (elt != null) {
 			String color = elt.getAsString();
 			card.setColor(color);
 		}
 
-		elt = jsonObject.get(ITuleapConstants.STATUS_ID);
+		elt = jsonObject.get(ITuleapConstants.COLUMN_ID);
+		if (elt != null && !elt.isJsonNull()) {
+			try {
+				Integer column = Integer.valueOf(elt.getAsInt());
+				card.setColumnId(column);
+			} catch (NumberFormatException e) {
+				TuleapCoreActivator.log(e, false);
+			}
+		}
+		elt = jsonObject.get(ITuleapConstants.JSON_STATUS);
 		if (elt != null) {
-			int status = elt.getAsInt();
-			card.setStatus(status);
+			String statusString = elt.getAsString();
+			card.setStatus(TuleapStatus.valueOf(statusString));
 		}
 
+		JsonArray array = jsonObject.get(ITuleapConstants.JSON_ALLOWED_COLUMNS).getAsJsonArray();
+		int[] columnIds = new int[array.size()];
+		for (int i = 0; i < array.size(); i++) {
+			int columnId = array.get(i).getAsInt();
+			columnIds[i] = columnId;
+		}
+		card.setAllowedColumnIds(columnIds);
 		return card;
 	}
 

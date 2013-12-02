@@ -11,37 +11,42 @@
 package org.tuleap.mylyn.task.internal.core.model.data.agile;
 
 /**
- * The cardwall swimlane.
+ * The cardwall column.
  * 
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
-public class TuleapStatus {
+public class TuleapColumn {
 
 	/**
-	 * The id of the status.
+	 * The id of the column.
 	 */
 	private int id;
 
 	/**
-	 * The human-readable label of the status.
+	 * The human-readable label of the column.
 	 */
 	private String label;
+
+	/**
+	 * The column color.
+	 */
+	private String color;
 
 	/**
 	 * The constructor used when we are updating an existing card.
 	 * 
 	 * @param id
-	 *            The identifier of the card
+	 *            The identifier of the column
 	 * @param label
-	 *            The label of the card
+	 *            The label of the column
 	 */
-	public TuleapStatus(int id, String label) {
+	public TuleapColumn(int id, String label) {
 		this.id = id;
 		this.label = label;
 	}
 
 	/**
-	 * id getter.
+	 * Id getter.
 	 * 
 	 * @return the id
 	 */
@@ -57,4 +62,24 @@ public class TuleapStatus {
 	public String getLabel() {
 		return label;
 	}
+
+	/**
+	 * Get the column color.
+	 * 
+	 * @return the column color
+	 */
+	public String getColor() {
+		return this.color;
+	}
+
+	/**
+	 * Set the column color.
+	 * 
+	 * @param theColor
+	 *            The color to set
+	 */
+	public void setColor(String theColor) {
+		this.color = theColor;
+	}
+
 }

@@ -193,14 +193,14 @@ public interface ITuleapConstants {
 	String COLOR = "color"; //$NON-NLS-1$
 
 	/**
-	 * The key used to retrieve the status identifier of the card.
+	 * The key used to retrieve the column identifier of the card.
 	 */
-	String STATUS_ID = "status_id"; //$NON-NLS-1$
+	String COLUMN_ID = "column_id"; //$NON-NLS-1$
 
 	/**
-	 * The key used to retrieve the status list of the cardwall.
+	 * The key used to retrieve the columns of the cardwall.
 	 */
-	String STATUS_LIST = "status_list"; //$NON-NLS-1$
+	String COLUMNS = "columns"; //$NON-NLS-1$
 
 	/**
 	 * The key used to retrieve the swimlanes of the cardwall.
@@ -279,9 +279,14 @@ public interface ITuleapConstants {
 	String JSON_BACKLOG_TRACKERS = "backlog_trackers"; //$NON-NLS-1$
 
 	/**
-	 * The key used for the status of a backlog item ("Open" or "Closed").
+	 * The key used for the status of a card ("Open" or "Closed").
 	 */
 	String JSON_STATUS = "status"; //$NON-NLS-1$
+
+	/**
+	 * The key used for the allowed column ids of a card.
+	 */
+	String JSON_ALLOWED_COLUMNS = "allowed_column_ids"; //$NON-NLS-1$
 
 	/**
 	 * The key used to retrieve assigned milestone reference for a backlog item.

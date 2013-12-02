@@ -10,40 +10,18 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model.data.agile;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-
-import java.util.List;
-
 /**
- * The cardwall swimlane.
+ * A Tuleap element status. Currently, the only statuses that exist are "Open" and "Closed".
  * 
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
-public class TuleapSwimlane {
-
+public enum TuleapStatus {
 	/**
-	 * Swimlane cards.
+	 * Means that the element is closed.
 	 */
-	private List<TuleapCard> cards = Lists.newArrayList();
-
+	Closed,
 	/**
-	 * Add a card to the swimlane.
-	 * 
-	 * @param card
-	 *            The card to add.
+	 * Means that the element is open.
 	 */
-	public void addCard(TuleapCard card) {
-		cards.add(card);
-	}
-
-	/**
-	 * Provides the cards of this swimlane.
-	 * 
-	 * @return An unmodifiable list view of the cards of this swimlane.
-	 */
-	public List<TuleapCard> getCards() {
-		return ImmutableList.copyOf(cards);
-	}
-
+	Open;
 }
