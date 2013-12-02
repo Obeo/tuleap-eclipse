@@ -51,7 +51,7 @@ public class TuleapBacklogItemDeserializer extends AbstractDetailedElementDeseri
 				ArtifactReference.class));
 
 		JsonElement elt = jsonObject.get(ITuleapConstants.INITIAL_EFFORT);
-		if (elt != null) {
+		if (elt != null && !elt.isJsonNull()) {
 			try {
 				Float initialEffort = Float.valueOf(elt.getAsFloat());
 				backlogItem.setInitialEffort(initialEffort);
@@ -61,7 +61,7 @@ public class TuleapBacklogItemDeserializer extends AbstractDetailedElementDeseri
 		}
 
 		elt = jsonObject.get(ITuleapConstants.JSON_STATUS);
-		if (elt != null) {
+		if (elt != null && !elt.isJsonNull()) {
 			String statusString = elt.getAsString();
 			backlogItem.setStatus(Status.fromJsonString(statusString));
 		}
