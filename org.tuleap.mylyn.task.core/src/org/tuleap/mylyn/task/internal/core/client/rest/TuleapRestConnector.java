@@ -62,6 +62,11 @@ public class TuleapRestConnector implements IRestConnector {
 	private final ILog logger;
 
 	/**
+	 * The HTTP client Restlet.
+	 */
+	private final Client c;
+
+	/**
 	 * the constructor.
 	 * 
 	 * @param location
@@ -72,6 +77,7 @@ public class TuleapRestConnector implements IRestConnector {
 	public TuleapRestConnector(AbstractWebLocation location, ILog logger) {
 		this.location = location;
 		this.logger = logger;
+		c = new Client(Protocol.HTTP);
 	}
 
 	/**
@@ -109,7 +115,6 @@ public class TuleapRestConnector implements IRestConnector {
 				Language.ENGLISH_US, CharacterSet.UTF_8);
 		request.setEntity(entity);
 
-		Client c = new Client(Protocol.HTTP);
 		Object object = request.getAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
 		Form form;
 		if (object instanceof Form) {
