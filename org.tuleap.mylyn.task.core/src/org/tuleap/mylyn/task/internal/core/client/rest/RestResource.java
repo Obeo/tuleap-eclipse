@@ -54,6 +54,11 @@ public class RestResource {
 	public static final int DELETE = 1 << 3;
 
 	/**
+	 * Separator used for toString().
+	 */
+	private static final String SEPARATOR = ", "; //$NON-NLS-1$
+
+	/**
 	 * The serverUrl of the REST API on the server, for example {@code http://localhost:3001}.
 	 */
 	private final String serverUrl;
@@ -265,21 +270,28 @@ public class RestResource {
 		if (!optionsResponse.isOk()) {
 			String body = optionsResponse.getBody();
 			TuleapErrorMessage message = new TuleapJsonParser().getErrorMessage(body);
-			TuleapErrorPart errorPart = message.getError();
-			TuleapDebugPart debugPart = message.getDebug();
 			String msg;
-			if (errorPart == null) {
-				msg = body;
+			if (message == null) {
+				msg = TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.errorReturnedByServer,
+						getUrl(), Method.OPTIONS.getName(), Integer.valueOf(optionsResponse.getStatus()),
+						body);
 			} else {
-				if (debugPart != null) {
-					msg = TuleapMylynTasksMessages.getString(
-							TuleapMylynTasksMessagesKeys.errorReturnedByServerWithDebug, getUrl(),
-							Method.OPTIONS.getName(), Integer.valueOf(errorPart.getCode()), errorPart
-									.getMessage(), debugPart.getSource());
+				TuleapErrorPart errorPart = message.getError();
+				TuleapDebugPart debugPart = message.getDebug();
+				if (errorPart == null) {
+					msg = body;
 				} else {
-					msg = TuleapMylynTasksMessages.getString(
-							TuleapMylynTasksMessagesKeys.errorReturnedByServer, getUrl(), Method.OPTIONS
-									.getName(), Integer.valueOf(errorPart.getCode()), errorPart.getMessage());
+					if (debugPart != null) {
+						msg = TuleapMylynTasksMessages.getString(
+								TuleapMylynTasksMessagesKeys.errorReturnedByServerWithDebug, getUrl(),
+								Method.OPTIONS.getName(), Integer.valueOf(errorPart.getCode()), errorPart
+										.getMessage(), debugPart.getSource());
+					} else {
+						msg = TuleapMylynTasksMessages.getString(
+								TuleapMylynTasksMessagesKeys.errorReturnedByServer, getUrl(), Method.OPTIONS
+										.getName(), Integer.valueOf(errorPart.getCode()), errorPart
+										.getMessage());
+					}
 				}
 			}
 			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, msg));
@@ -308,22 +320,28 @@ public class RestResource {
 		StringBuilder b = new StringBuilder();
 		b.append(getFullUrl()).append(" ["); //$NON-NLS-1$
 		boolean needComma = false;
-		if ((supportedMethods & GET) == 0) {
+		if ((supportedMethods & GET) != 0) {
 			b.append("GET"); //$NON-NLS-1$
 			needComma = true;
 		}
-		if ((supportedMethods & PUT) == 0) {
+		if ((supportedMethods & PUT) != 0) {
 			if (needComma) {
-				b.append(", "); //$NON-NLS-1$
+				b.append(SEPARATOR);
 			}
 			b.append("PUT"); //$NON-NLS-1$
 			needComma = true;
 		}
-		if ((supportedMethods & POST) == 0) {
+		if ((supportedMethods & POST) != 0) {
 			if (needComma) {
-				b.append(", "); //$NON-NLS-1$
+				b.append(SEPARATOR);
 			}
 			b.append("POST"); //$NON-NLS-1$
+		}
+		if ((supportedMethods & DELETE) != 0) {
+			if (needComma) {
+				b.append(SEPARATOR);
+			}
+			b.append("DELETE"); //$NON-NLS-1$
 		}
 		b.append("]"); //$NON-NLS-1$
 		return b.toString();
