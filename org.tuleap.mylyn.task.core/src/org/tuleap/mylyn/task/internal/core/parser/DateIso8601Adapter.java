@@ -24,6 +24,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
+import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
+
 /**
  * Date JSON TypeAdapter for dates in ISO8601.
  * 
@@ -79,7 +82,8 @@ public class DateIso8601Adapter implements JsonDeserializer<Date>, JsonSerialize
 				throw new JsonParseException(e);
 			}
 		}
-		throw new JsonParseException("Impossible to parse date for " + json.toString());
+		throw new JsonParseException(TuleapMylynTasksMessages.getString(
+				TuleapMylynTasksMessagesKeys.invalidDate, json.toString()));
 	}
 
 	/**

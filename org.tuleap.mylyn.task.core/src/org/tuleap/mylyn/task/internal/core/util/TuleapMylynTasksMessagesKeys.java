@@ -355,9 +355,9 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	public static String retrievingTopPlanning;
 
 	/**
-	 * The "General Planning" label, used for top planning task keys.
+	 * Error message regarding ISO-8601 dates. 1 argument, the invalid date as a string.
 	 */
-	public static String generalPlanning;
+	public static String invalidDate;
 
 	static {
 		// load message values from bundle file
