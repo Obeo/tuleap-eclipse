@@ -340,6 +340,9 @@ public class MilestoneTaskDataConverter {
 		if (milestone.getCapacity() != null) {
 			subMilestoneWrapper.setCapacity(milestone.getCapacity().floatValue());
 		}
+		if (milestone.getStatusValue() != null) {
+			subMilestoneWrapper.setStatusValue(milestone.getStatusValue());
+		}
 
 		for (TuleapBacklogItem backlogItem : milestoneContent) {
 			int projectId;
