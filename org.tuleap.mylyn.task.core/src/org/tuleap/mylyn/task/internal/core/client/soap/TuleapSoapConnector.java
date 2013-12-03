@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.client.soap;
 
+import com.google.common.collect.ImmutableSet;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
@@ -145,15 +147,24 @@ public class TuleapSoapConnector {
 	private static final String PERMISSION_SUBMIT = "submit"; //$NON-NLS-1$
 
 	/**
-	 * The login message.
-	 */
-	private static final String LOGIN_MESSAGE = TuleapMylynTasksMessages
-			.getString(TuleapMylynTasksMessagesKeys.login);
-
-	/**
 	 * Default session hash.
 	 */
 	private static final String DEFAULT_SESSION_HASH = "dummy"; //$NON-NLS-1$
+
+	/**
+	 * Set of known field types.
+	 */
+	private static final ImmutableSet<String> KNOWN_FIELD_TYPES = ImmutableSet.of(
+			ITuleapTrackerConstants.TYPE_AID, ITuleapTrackerConstants.TYPE_ARTIFACT_LINK,
+			ITuleapTrackerConstants.TYPE_BURNDOWN, ITuleapTrackerConstants.TYPE_CB,
+			ITuleapTrackerConstants.TYPE_COMPUTED, ITuleapTrackerConstants.TYPE_CROSS_REFERENCES,
+			ITuleapTrackerConstants.TYPE_DATE, ITuleapTrackerConstants.TYPE_FILE,
+			ITuleapTrackerConstants.TYPE_FLOAT, ITuleapTrackerConstants.TYPE_INT,
+			ITuleapTrackerConstants.TYPE_LAST_UPDATED_ON, ITuleapTrackerConstants.TYPE_MSB,
+			ITuleapTrackerConstants.TYPE_PERM, ITuleapTrackerConstants.TYPE_SB,
+			ITuleapTrackerConstants.TYPE_STRING, ITuleapTrackerConstants.TYPE_SUBMITTED_BY,
+			ITuleapTrackerConstants.TYPE_SUBMITTED_ON, ITuleapTrackerConstants.TYPE_TBL,
+			ITuleapTrackerConstants.TYPE_TEXT);
 
 	/**
 	 * The location of the tracker.
@@ -571,7 +582,7 @@ public class TuleapSoapConnector {
 			tuleapField = new TuleapFloat(fieldIdentifier);
 		} else if (ITuleapTrackerConstants.TYPE_COMPUTED.equals(type)) {
 			tuleapField = new TuleapComputedValue(fieldIdentifier);
-		} else {
+		} else if (!KNOWN_FIELD_TYPES.contains(type)) {
 			TuleapCoreActivator.log(TuleapMylynTasksMessages.getString(
 					TuleapMylynTasksMessagesKeys.unsupportedTrackerFieldType, type), false);
 		}
