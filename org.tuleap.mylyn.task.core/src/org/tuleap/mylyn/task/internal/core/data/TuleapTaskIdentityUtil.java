@@ -11,8 +11,6 @@
 package org.tuleap.mylyn.task.internal.core.data;
 
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
-import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
-import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
 /**
  * Utility class containing various simple static utility methods.
@@ -79,18 +77,6 @@ public final class TuleapTaskIdentityUtil {
 	 */
 	public static String getProjectPlanningTaskDataId(int projectId) {
 		return getTaskDataId(projectId, IRRELEVANT_ID, projectId);
-	}
-
-	/**
-	 * Returns the task data key to use for a project top-planning, based on the project ID.
-	 * 
-	 * @param projectId
-	 *            ID of the project
-	 * @return The task data id to use.
-	 */
-	public static String getProjectPlanningTaskDataKey(int projectId) {
-		return String.valueOf(projectId) + TRACKER_SEPARATOR + ' '
-				+ TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.generalPlanning);
 	}
 
 	/**
