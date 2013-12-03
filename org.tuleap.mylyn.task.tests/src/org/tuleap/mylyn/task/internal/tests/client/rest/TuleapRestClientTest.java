@@ -38,7 +38,7 @@ import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.tests.TestLogger;
 import org.tuleap.mylyn.task.internal.tests.client.rest.MockRestConnector.ServerRequest;
 import org.tuleap.mylyn.task.internal.tests.parser.ParserUtil;
-import org.tuleap.mylyn.task.internal.tests.parser.TuleapBacklogItemDeserializerTest;
+import org.tuleap.mylyn.task.internal.tests.parser.TuleapJsonParserTest;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapMilestoneDeserializerTests;
 
 import static org.junit.Assert.assertEquals;
@@ -198,7 +198,7 @@ public class TuleapRestClientTest {
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, userStory, respHeaders);
 		connector.setResponse(response);
 		TuleapBacklogItem bi = client.getBacklogItem(350, null);
-		TuleapBacklogItemDeserializerTest.checkUserStory350(bi);
+		TuleapJsonParserTest.checkUserStory350(bi);
 
 		// Let's check the requests that have been sent.
 		List<ServerRequest> requestsSent = connector.getRequestsSent();

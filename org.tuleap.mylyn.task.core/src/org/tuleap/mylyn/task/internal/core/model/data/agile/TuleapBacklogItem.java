@@ -46,7 +46,7 @@ public class TuleapBacklogItem extends AbstractTuleapDetailedElement {
 	/**
 	 * The status of the backlog item.
 	 */
-	private Status status;
+	private TuleapStatus status;
 
 	/**
 	 * Default constructor for deserialization.
@@ -146,7 +146,7 @@ public class TuleapBacklogItem extends AbstractTuleapDetailedElement {
 	 * 
 	 * @return the status
 	 */
-	public Status getStatus() {
+	public TuleapStatus getStatus() {
 		return status;
 	}
 
@@ -156,7 +156,7 @@ public class TuleapBacklogItem extends AbstractTuleapDetailedElement {
 	 * @param status
 	 *            the status to set
 	 */
-	public void setStatus(Status status) {
+	public void setStatus(TuleapStatus status) {
 		this.status = status;
 	}
 
@@ -186,42 +186,6 @@ public class TuleapBacklogItem extends AbstractTuleapDetailedElement {
 	 * @return <code>true</code> if and only if the item's status is {@code CLOSED}.
 	 */
 	public boolean isClosed() {
-		return status == Status.CLOSED;
+		return status == TuleapStatus.Closed;
 	}
-
-	/**
-	 * Backlog item status. Currently, the only statuses that exist are "Open" and "Closed".
-	 * 
-	 * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
-	 */
-	public static enum Status {
-		/**
-		 * Means that the backlog item is closed.
-		 */
-		CLOSED,
-		/**
-		 * Means that the backlog item is open.
-		 */
-		OPEN;
-
-		/**
-		 * Provides the enum value for a given JSON string. Captures the knowledge of which value strings
-		 * Tuleap provides.
-		 * 
-		 * @param jsonValue
-		 *            The JSON value received from Tuleap.
-		 * @return The relevant Status, or <code>null</code> if the given String is unrecognized or null.
-		 */
-		public static Status fromJsonString(String jsonValue) {
-			Status result = null;
-			if ("Closed".equalsIgnoreCase(jsonValue)) { //$NON-NLS-1$
-				result = CLOSED;
-			} else if ("Open".equalsIgnoreCase(jsonValue)) { //$NON-NLS-1$
-				result = OPEN;
-			}
-			return result;
-
-		}
-	}
-
 }
