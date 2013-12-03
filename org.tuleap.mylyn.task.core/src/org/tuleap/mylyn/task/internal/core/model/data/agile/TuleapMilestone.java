@@ -51,7 +51,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement {
 	/**
 	 * The parent milestone.
 	 */
-	private TuleapReference parent;
+	private ArtifactReference parent;
 
 	/**
 	 * The REST URI to get this milestone's sub-milestones.
@@ -59,9 +59,14 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement {
 	private String subMilestonesUri;
 
 	/**
-	 * The REST URI to get this milestone's backlog items.
+	 * The REST URI to get this milestone's backlog.
 	 */
-	private String backlogItemsUri;
+	private String backlogUri;
+
+	/**
+	 * The REST URI to get this milestone's content.
+	 */
+	private String contentUri;
 
 	/**
 	 * The milestone's status label.
@@ -145,7 +150,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement {
 	 * @param parent
 	 *            the parentMilestone to set
 	 */
-	public void setParent(TuleapReference parent) {
+	public void setParent(ArtifactReference parent) {
 		this.parent = parent;
 	}
 
@@ -154,7 +159,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement {
 	 * 
 	 * @return The parent milestone or <code>null</code> if there is no parent for this milestone
 	 */
-	public TuleapReference getParent() {
+	public ArtifactReference getParent() {
 		return this.parent;
 	}
 
@@ -235,22 +240,41 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement {
 	}
 
 	/**
-	 * URI for backlog items.
+	 * URI for backlog.
 	 * 
-	 * @return the backlogItemsUri
+	 * @return the backlogUri
 	 */
-	public String getBacklogItemsUri() {
-		return backlogItemsUri;
+	public String getBacklogUri() {
+		return backlogUri;
 	}
 
 	/**
-	 * URI for backlog items.
+	 * URI for backlog.
 	 * 
-	 * @param backlogItemsUri
-	 *            the backlogItemsUri to set
+	 * @param backlogUri
+	 *            the backlogUri to set
 	 */
-	public void setBacklogItemsUri(String backlogItemsUri) {
-		this.backlogItemsUri = backlogItemsUri;
+	public void setBacklogUri(String backlogUri) {
+		this.backlogUri = backlogUri;
+	}
+
+	/**
+	 * URI for content.
+	 * 
+	 * @return the contentUri
+	 */
+	public String getContentUri() {
+		return contentUri;
+	}
+
+	/**
+	 * URI for content.
+	 * 
+	 * @param contentUri
+	 *            the contentUri to set
+	 */
+	public void setContentUri(String contentUri) {
+		this.contentUri = contentUri;
 	}
 
 	/**

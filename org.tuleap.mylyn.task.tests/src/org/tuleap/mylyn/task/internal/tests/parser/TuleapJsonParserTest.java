@@ -23,12 +23,14 @@ import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 /**
  * Tests of {@link TuleapJsonParser}.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
+ * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
 public class TuleapJsonParserTest {
 
@@ -56,7 +58,7 @@ public class TuleapJsonParserTest {
 	public void testDeserializeMilestone200() throws ParseException {
 		String release200 = ParserUtil.loadFile("/milestones/release200.json");
 		TuleapMilestone milestone = parser.parseMilestone(release200);
-		new TuleapMilestoneDeserializerTests().checkRelease200(milestone);
+		checkRelease200(milestone);
 	}
 
 	@Test
@@ -284,6 +286,98 @@ public class TuleapJsonParserTest {
 
 		assertEquals(5f, item.getInitialEffort(), 0f);
 		assertEquals(TuleapStatus.Open, item.getStatus());
+	}
+
+	/**
+	 * Test the parsing of the data set of the release 200.
+	 * 
+	 * @throws ParseException
+	 */
+	@Test
+	public void testRelease200Parsing() throws ParseException {
+		String release200 = ParserUtil.loadFile("/milestones/release200.json");
+		TuleapMilestone tuleapMilestone = parser.parseMilestone(release200);
+		checkRelease200(tuleapMilestone);
+	}
+
+	/**
+	 * Test the parsing of the data set of the release 300.
+	 * 
+	 * @throws Exception
+	 *             If something goes wrong that shouldn't.
+	 */
+	@Test
+	public void testRelease201Parsing() throws Exception {
+		String release201 = ParserUtil.loadFile("/milestones/release201.json");
+		TuleapMilestone tuleapMilestone = parser.parseMilestone(release201);
+		checkRelease201(tuleapMilestone);
+	}
+
+	/**
+	 * Checks the content of the given milestone corresponds to release 200. Mutualized between several tests.
+	 * 
+	 * @param tuleapMilestone
+	 * @throws ParseException
+	 */
+	public static void checkRelease200(TuleapMilestone tuleapMilestone) throws ParseException {
+		assertEquals(200, tuleapMilestone.getId());
+		assertEquals(200, tuleapMilestone.getArtifact().getId());
+		assertEquals("artifacts/200", tuleapMilestone.getArtifact().getUri());
+		assertEquals(901, tuleapMilestone.getArtifact().getTracker().getId());
+		assertEquals("trackers/901", tuleapMilestone.getArtifact().getTracker().getUri());
+		assertEquals(201, tuleapMilestone.getParent().getId());
+		assertEquals("milestones/201", tuleapMilestone.getParent().getUri());
+		assertEquals(901, tuleapMilestone.getParent().getTracker().getId());
+		assertEquals("trackers/901", tuleapMilestone.getParent().getTracker().getUri());
+		assertEquals(3, tuleapMilestone.getProject().getId());
+		assertEquals("projects/3", tuleapMilestone.getProject().getUri());
+		assertEquals("Release 0.9", tuleapMilestone.getLabel()); //$NON-NLS-1$
+		assertEquals("milestones/200", tuleapMilestone.getUri()); //$NON-NLS-1$
+		assertNull(tuleapMilestone.getHtmlUrl());
+		assertEquals(1, tuleapMilestone.getSubmittedBy());
+		assertEquals(ParserUtil.getUTCDate(2013, 8, 23, 11, 44, 18, 963), tuleapMilestone.getSubmittedOn());
+		assertNull(tuleapMilestone.getLastUpdatedOn());
+		assertEquals(ParserUtil.getUTCDate(2013, 8, 23, 11, 44, 18, 963), tuleapMilestone.getStartDate());
+		assertEquals(ParserUtil.getUTCDate(2013, 9, 23, 11, 44, 18, 963), tuleapMilestone.getEndDate());
+		assertEquals(100, tuleapMilestone.getCapacity().floatValue(), 0);
+		assertEquals("Done", tuleapMilestone.getStatusValue());
+		assertEquals("milestones/200/milestones", tuleapMilestone.getSubMilestonesUri());
+		assertEquals("milestones/200/backlog", tuleapMilestone.getBacklogUri());
+		assertEquals("milestones/200/content", tuleapMilestone.getContentUri());
+	}
+
+	/**
+	 * Checks the content of the given milestone corresponds to release 201. Mutualized between several test
+	 * cases.
+	 * 
+	 * @param tuleapMilestone
+	 * @throws ParseException
+	 */
+	public static void checkRelease201(TuleapMilestone tuleapMilestone) throws ParseException {
+		assertNotNull(tuleapMilestone);
+
+		assertEquals(201, tuleapMilestone.getId());
+		assertEquals(201, tuleapMilestone.getArtifact().getId());
+		assertEquals("artifacts/201", tuleapMilestone.getArtifact().getUri());
+		assertEquals(901, tuleapMilestone.getArtifact().getTracker().getId());
+		assertEquals("trackers/901", tuleapMilestone.getArtifact().getTracker().getUri());
+		assertEquals(202, tuleapMilestone.getParent().getId());
+		assertEquals("milestones/202", tuleapMilestone.getParent().getUri());
+		assertEquals(901, tuleapMilestone.getParent().getTracker().getId());
+		assertEquals("trackers/901", tuleapMilestone.getParent().getTracker().getUri());
+		assertEquals(3, tuleapMilestone.getProject().getId());
+		assertEquals("projects/3", tuleapMilestone.getProject().getUri());
+		assertEquals("Release TU", tuleapMilestone.getLabel()); //$NON-NLS-1$
+		assertNull(tuleapMilestone.getLastUpdatedOn());
+		assertEquals(ParserUtil.getUTCDate(2013, 9, 23, 11, 44, 18, 963), tuleapMilestone.getStartDate());
+		assertEquals(ParserUtil.getUTCDate(2013, 10, 23, 11, 44, 18, 963), tuleapMilestone.getEndDate());
+		assertEquals(75, tuleapMilestone.getCapacity(), 0);
+		assertEquals("milestones/201", tuleapMilestone.getUri()); //$NON-NLS-1$
+		assertNull(tuleapMilestone.getHtmlUrl());
+		assertEquals("Current", tuleapMilestone.getStatusValue());
+		assertEquals("milestones/201/milestones", tuleapMilestone.getSubMilestonesUri());
+		assertEquals("milestones/201/backlog", tuleapMilestone.getBacklogUri());
+		assertEquals("milestones/201/content", tuleapMilestone.getContentUri());
 	}
 
 }

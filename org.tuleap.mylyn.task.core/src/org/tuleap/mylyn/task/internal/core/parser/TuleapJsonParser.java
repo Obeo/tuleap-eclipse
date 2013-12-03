@@ -44,7 +44,6 @@ public class TuleapJsonParser {
 	 */
 	public TuleapJsonParser() {
 		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(TuleapMilestone.class, new TuleapMilestoneDeserializer());
 		gsonBuilder.registerTypeAdapter(TuleapProject.class, new TuleapProjectDeserializer());
 		gsonBuilder.registerTypeAdapter(TuleapArtifact.class, new TuleapArtifactDeserializer());
 		gsonBuilder.registerTypeAdapter(TuleapCardwall.class, new TuleapCardwallDeserializer());

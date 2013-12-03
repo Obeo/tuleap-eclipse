@@ -39,7 +39,6 @@ import org.tuleap.mylyn.task.internal.tests.TestLogger;
 import org.tuleap.mylyn.task.internal.tests.client.rest.MockRestConnector.ServerRequest;
 import org.tuleap.mylyn.task.internal.tests.parser.ParserUtil;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapJsonParserTest;
-import org.tuleap.mylyn.task.internal.tests.parser.TuleapMilestoneDeserializerTests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -75,7 +74,7 @@ public class TuleapRestClientTest {
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonMilestone, respHeaders);
 		connector.setResponse(response);
 		TuleapMilestone milestone = client.getMilestone(200, null);
-		new TuleapMilestoneDeserializerTests().checkRelease200(milestone);
+		TuleapJsonParserTest.checkRelease200(milestone);
 
 		// Let's check the requests that have been sent.
 		List<ServerRequest> requestsSent = connector.getRequestsSent();
