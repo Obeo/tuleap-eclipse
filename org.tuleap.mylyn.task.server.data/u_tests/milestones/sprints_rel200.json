@@ -1,80 +1,103 @@
-[ {
-	"id" : 250,
-	"artifact" : {
-		"id" : 250,
-		"uri" : "artifacts/250",
-		"tracker" : {
-			"id" : 902,
-			"uri" : "trackers/902"
-		}
-	},
-	"project" : {
-		"id" : 3,
-		"uri" : "projects/3"
-	},
-	"label" : "Sprint 1",
-	"uri" : "milestones/300",
-	"html_url" : "milestones?id=300&group_id=3",
-	"submitted_by" : 1,
-	"submitted_on" : "2013-09-23T11:44:18.963Z",
-	"last_updated_on" : "2013-09-24T15:33:18.523Z",
-	"start_date" : "2013-08-23T11:44:18.963Z",
-	"end_date" : "2013-09-23T11:44:18.963Z",
-	"capacity" : 24.5,
-	"status_value" : "Done",
-	"parent" : {
-		"id" : 200,
-		"uri" : "milestones/200"
-	},
-	"backlog_items_uri" : "milestones/250/backlog_items"
-}, {
-	"id" : 251,
-	"artifact" : {
-		"id" : 251,
-		"uri" : "artifacts/251"
-	},
-	"project" : {
-		"id" : 3,
-		"uri" : "projects/3"
-	},
-	"label" : "Sprint 2",
-	"uri" : "milestones/301",
-	"html_url" : "milestones?id=301&group_id=3",
-	"submitted_by" : 1,
-	"submitted_on" : "2013-09-23T11:44:18.963Z",
-	"last_updated_on" : "2013-09-24T15:33:18.523Z",
-	"start_date" : "2013-09-23T11:44:18.963Z",
-	"end_date" : "2013-10-23T11:44:18.963Z",
-	"capacity" : 28.5,
-	"status_value" : "Current",
-	"parent" : {
-		"id" : 200,
-		"uri" : "milestones/200"
-	},
-	"backlog_items_uri" : "milestones/251/backlog_items"
-}, {
-	"id" : 252,
-	"artifact" : {
-		"id" : 252,
-		"uri" : "artifacts/252"
-	},
-	"project" : {
-		"id" : 3,
-		"uri" : "projects/3"
-	},
-	"label" : "Sprint 3",
-	"uri" : "milestones/302",
-	"html_url" : "milestones?id=302&group_id=3",
-	"submitted_by" : 1,
-	"submitted_on" : "2013-09-23T11:44:18.963Z",
-	"last_updated_on" : "2013-09-24T15:33:18.523Z",
-	"start_date" : "2013-10-23T11:44:18.963Z",
-	"end_date" : "2013-11-23T11:44:18.963Z",
-	"capacity" : 26.5,
-	"status_value" : "Planned",
-	"parent" : {
-		"id" : 200,
-		"uri" : "milestones/200"
-	},
-	"backlog_items_uri" : "milestones/252/backlog_items"
-} ]
+[
+    {
+        "id": 250,
+        "artifact": {
+            "id": 250,
+            "uri": "artifacts/250",
+            "tracker": {
+                "id": 902,
+                "uri": "trackers/902"
+            }
+        },
+        "parent": {
+            "id": 251,
+            "uri": "milestones/251",
+            "tracker": {
+                "id": 902,
+                "uri": "trackers/902"
+            }
+        },
+        "project": {
+            "id": 3,
+            "uri": "projects/3"
+        },
+        "label": "Sprint 1",
+        "uri": "milestones/300",
+        "submitted_by": 1,
+        "submitted_on": "2013-09-23T11:44:18.963Z",
+        "start_date": "2013-08-23T11:44:18.963Z",
+        "end_date": "2013-09-23T11:44:18.963Z",
+        "capacity": 24.5,
+        "status_value": "Done",
+        "backlog_uri": "milestones/250/backlog",
+        "content_uri": "milestones/250/content"
+    },
+    {
+        "id": 251,
+        "artifact": {
+            "id": 251,
+            "uri": "artifacts/251",
+            "tracker": {
+                "id": 902,
+                "uri": "trackers/902"
+            }
+        },
+        "parent": {
+            "id": 252,
+            "uri": "milestones/252",
+            "tracker": {
+                "id": 902,
+                "uri": "trackers/902"
+            }
+        },
+        "project": {
+            "id": 3,
+            "uri": "projects/3"
+        },
+        "label": "Sprint 2",
+        "uri": "milestones/301",
+        "html_url": "milestones?id=301&group_id=3",
+        "submitted_by": 1,
+        "submitted_on": "2013-09-23T11:44:18.963Z",
+        "last_updated_on": "2013-09-24T15:33:18.523Z",
+        "start_date": "2013-09-23T11:44:18.963Z",
+        "end_date": "2013-10-23T11:44:18.963Z",
+        "capacity": 28.5,
+        "status_value": "Current",
+        "backlog_uri": "milestones/251/backlog",
+        "content_uri": "milestones/251/content"
+    },
+    {
+        "id": 252,
+        "artifact": {
+            "id": 252,
+            "uri": "artifacts/252",
+            "tracker": {
+                "id": 902,
+                "uri": "trackers/902"
+            }
+        },
+        "parent": {
+            "id": 253,
+            "uri": "milestones/253",
+            "tracker": {
+                "id": 902,
+                "uri": "trackers/902"
+            }
+        },
+        "project": {
+            "id": 3,
+            "uri": "projects/3"
+        },
+        "label": "Sprint 3",
+        "uri": "milestones/302",
+        "submitted_by": 1,
+        "submitted_on": "2013-09-23T11:44:18.963Z",
+        "start_date": "2013-10-23T11:44:18.963Z",
+        "end_date": "2013-11-23T11:44:18.963Z",
+        "capacity": 26.5,
+        "status_value": "Planned",
+        "backlog_uri": "milestones/252/backlog",
+        "content_uri": "milestones/252/content"
+    }
+]
