@@ -712,21 +712,29 @@ public class MilestoneTaskDataConverterTest {
 		TuleapReference trackerRef = new TuleapReference(500, "tracker/500");
 		ArtifactReference item0Parent = new ArtifactReference(231, "item/231", trackerRef);
 		item0.setParent(item0Parent);
+		item0.setType("Epics");
+
 		TuleapBacklogItem item1 = new TuleapBacklogItem(231,
 				new TuleapReference(200, "p/200"), "item231", null, null, null, null); //$NON-NLS-1$
 		item1.setInitialEffort("201");
 		ArtifactReference item1Parent = new ArtifactReference(232, "item/232", trackerRef);
 		item1.setParent(item1Parent);
+		item1.setType("Epics");
+
 		TuleapBacklogItem item2 = new TuleapBacklogItem(232,
 				new TuleapReference(200, "p/200"), "item232", null, null, null, null); //$NON-NLS-1$
 		item2.setInitialEffort("201");
 		ArtifactReference item2Parent = new ArtifactReference(233, "item/233", trackerRef);
 		item2.setParent(item2Parent);
+		item2.setType("Epics");
+
 		TuleapBacklogItem item3 = new TuleapBacklogItem(233,
 				new TuleapReference(200, "p/200"), "item233", null, null, null, null); //$NON-NLS-1$
 		item3.setInitialEffort("201");
 		ArtifactReference item3Parent = new ArtifactReference(234, "item/234", trackerRef);
 		item3.setParent(item3Parent);
+		item3.setType("Epics");
+
 		List<TuleapBacklogItem> backlog = new ArrayList<TuleapBacklogItem>();
 		backlog.add(item0);
 		backlog.add(item1);
@@ -776,6 +784,12 @@ public class MilestoneTaskDataConverterTest {
 			assertNotNull(itemEffort);
 			assertEquals("23" + (i + 1), itemDisplayParent.getValue());
 			assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, itemDisplayParent.getMetaData().getType());
+
+			TaskAttribute itemType = itemAtt.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + i
+					+ ID_SEPARATOR + BacklogItemWrapper.SUFFIX_TYPE);
+			assertNotNull(itemEffort);
+			assertEquals("Epics", itemType.getValue());
+			assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, itemType.getMetaData().getType());
 		}
 
 	}
@@ -801,21 +815,28 @@ public class MilestoneTaskDataConverterTest {
 		TuleapReference trackerRef = new TuleapReference(500, "tracker/500");
 		ArtifactReference item0Parent = new ArtifactReference(231, "item/231", trackerRef);
 		item0.setParent(item0Parent);
+		item0.setType("User stories");
+
 		TuleapBacklogItem item1 = new TuleapBacklogItem(231,
 				new TuleapReference(200, "p/200"), "item231", null, null, null, null); //$NON-NLS-1$
 		item1.setInitialEffort("201");
 		ArtifactReference item1Parent = new ArtifactReference(232, "item/232", trackerRef);
 		item1.setParent(item1Parent);
+		item1.setType("User stories");
+
 		TuleapBacklogItem item2 = new TuleapBacklogItem(232,
 				new TuleapReference(200, "p/200"), "item232", null, null, null, null); //$NON-NLS-1$
 		item2.setInitialEffort("201");
 		ArtifactReference item2Parent = new ArtifactReference(233, "item/233", trackerRef);
 		item2.setParent(item2Parent);
+		item2.setType("User stories");
+
 		TuleapBacklogItem item3 = new TuleapBacklogItem(233,
 				new TuleapReference(200, "p/200"), "item233", null, null, null, null); //$NON-NLS-1$
 		item3.setInitialEffort("201");
 		ArtifactReference item3Parent = new ArtifactReference(234, "item/234", trackerRef);
 		item3.setParent(item3Parent);
+		item3.setType("User stories");
 
 		List<TuleapBacklogItem> backlog = new ArrayList<TuleapBacklogItem>();
 		backlog.add(item0);
@@ -840,6 +861,7 @@ public class MilestoneTaskDataConverterTest {
 		assertEquals("201", firstBI.getInitialEffort());
 		assertEquals(231, firstBI.getParent().getId());
 		assertEquals(null, firstBI.getParent().getUri());
+		assertEquals("User stories", firstBI.getType());
 
 		TuleapBacklogItem secondBI = backlogBacklogItems.get(1);
 		assertEquals(231, secondBI.getId());
@@ -847,6 +869,7 @@ public class MilestoneTaskDataConverterTest {
 		assertEquals("201", secondBI.getInitialEffort());
 		assertEquals(232, secondBI.getParent().getId());
 		assertEquals(null, secondBI.getParent().getUri());
+		assertEquals("User stories", secondBI.getType());
 
 	}
 
@@ -871,16 +894,19 @@ public class MilestoneTaskDataConverterTest {
 		TuleapReference trackerRef = new TuleapReference(500, "tracker/500");
 		ArtifactReference item0Parent = new ArtifactReference(231, "item/231", trackerRef);
 		item0.setParent(item0Parent);
+
 		TuleapBacklogItem item1 = new TuleapBacklogItem(231,
 				new TuleapReference(200, "p/200"), "item231", null, null, null, null); //$NON-NLS-1$
 		item1.setInitialEffort("201");
 		ArtifactReference item1Parent = new ArtifactReference(232, "item/232", trackerRef);
 		item1.setParent(item1Parent);
+
 		TuleapBacklogItem item2 = new TuleapBacklogItem(232,
 				new TuleapReference(200, "p/200"), "item232", null, null, null, null); //$NON-NLS-1$
 		item2.setInitialEffort("201");
 		ArtifactReference item2Parent = new ArtifactReference(233, "item/233", trackerRef);
 		item2.setParent(item2Parent);
+
 		TuleapBacklogItem item3 = new TuleapBacklogItem(233,
 				new TuleapReference(200, "p/200"), "item233", null, null, null, null); //$NON-NLS-1$
 		item3.setInitialEffort("201");
@@ -917,7 +943,6 @@ public class MilestoneTaskDataConverterTest {
 		assertEquals("201", secondBI.getInitialEffort());
 		assertEquals(234, secondBI.getParent().getId());
 		assertEquals(null, secondBI.getParent().getUri());
-
 	}
 
 	/**

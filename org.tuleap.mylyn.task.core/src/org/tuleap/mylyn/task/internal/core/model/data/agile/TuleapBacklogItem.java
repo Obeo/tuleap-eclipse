@@ -44,6 +44,11 @@ public class TuleapBacklogItem extends AbstractTuleapDetailedElement {
 	private String initialEffort;
 
 	/**
+	 * The type.
+	 */
+	private String type;
+
+	/**
 	 * The status of the backlog item.
 	 */
 	private TuleapStatus status;
@@ -120,6 +125,25 @@ public class TuleapBacklogItem extends AbstractTuleapDetailedElement {
 	 */
 	public void setInitialEffort(String initialEffort) {
 		this.initialEffort = initialEffort;
+	}
+
+	/**
+	 * Type getter.
+	 * 
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
+	}
+
+	/**
+	 * Tyoe setter.
+	 * 
+	 * @param type
+	 *            the type to set
+	 */
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	/**

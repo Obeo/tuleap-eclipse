@@ -172,6 +172,7 @@ public class MilestoneTaskDataConverter {
 				TuleapBacklogItem bi = new TuleapBacklogItem(id, projectRef);
 				bi.setInitialEffort(biWrapper.getInitialEffort());
 				bi.setLabel(biWrapper.getLabel());
+				bi.setType(biWrapper.getType());
 
 				TuleapTaskId parentTaskId = TuleapTaskId.forName(biWrapper.getParentId());
 				int parentId = parentTaskId.getArtifactId();
@@ -214,6 +215,7 @@ public class MilestoneTaskDataConverter {
 				TuleapBacklogItem bi = new TuleapBacklogItem(id, projectRef);
 				bi.setInitialEffort(biWrapper.getInitialEffort());
 				bi.setLabel(biWrapper.getLabel());
+				bi.setType(biWrapper.getType());
 
 				TuleapTaskId parentTaskId = TuleapTaskId.forName(biWrapper.getParentId());
 				int parentId = parentTaskId.getArtifactId();
@@ -304,6 +306,7 @@ public class MilestoneTaskDataConverter {
 			backlogItemWrapper.setDisplayId(Integer.toString(backlogItem.getId()));
 
 			backlogItemWrapper.setLabel(backlogItem.getLabel());
+			backlogItemWrapper.setType(backlogItem.getType());
 			if (backlogItem.getInitialEffort() != null) {
 				backlogItemWrapper.setInitialEffort(backlogItem.getInitialEffort());
 			}

@@ -168,6 +168,7 @@ public class TuleapJsonParserTest {
 		assertEquals(ParserUtil.getUTCDate(2013, 8, 24, 15, 33, 18, 523), item.getLastUpdatedOn());
 		assertEquals("40.5", item.getInitialEffort());
 		assertEquals(TuleapStatus.Open, item.getStatus());
+		assertEquals("Epics", item.getType());
 	}
 
 	/**
@@ -241,6 +242,7 @@ public class TuleapJsonParserTest {
 		assertEquals(ParserUtil.getUTCDate(2013, 8, 24, 15, 33, 18, 523), item.getLastUpdatedOn());
 		assertEquals("30", item.getInitialEffort());
 		assertEquals(TuleapStatus.Closed, item.getStatus());
+		assertEquals("Epics", item.getType());
 	}
 
 	/**
@@ -286,6 +288,7 @@ public class TuleapJsonParserTest {
 
 		assertEquals("5", item.getInitialEffort());
 		assertEquals(TuleapStatus.Open, item.getStatus());
+		assertEquals("User stories", item.getType());
 	}
 
 	/**
