@@ -23,6 +23,11 @@ import java.util.List;
 public class TuleapArtifact extends AbstractTuleapConfigurableElement {
 
 	/**
+	 * The serialization version id.
+	 */
+	private static final long serialVersionUID = 1272343379964391267L;
+
+	/**
 	 * The new comment to send to the server.
 	 */
 	private String newComment;
