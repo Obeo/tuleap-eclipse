@@ -227,7 +227,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 		TaskAttributeMetaData metaData = attribute.getMetaData();
 		metaData.setLabel(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.statusLabel));
 		metaData.setType(getMetadataType());
-		metaData.setKind(TaskAttribute.KIND_DEFAULT);
+		// No task kind in order to hide this field from the "attributes" part
 
 		afterTaskAttributeCreation(attribute);
 
