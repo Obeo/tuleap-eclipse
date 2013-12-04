@@ -505,7 +505,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 */
 	public void setValue(String value, int fieldId) {
 		TaskAttribute attribute = getMappedAttributeById(fieldId);
-		if (attribute != null) {
+		if (attribute != null && value != null) {
 			taskData.getAttributeMapper().setValue(attribute, value);
 		}
 	}
