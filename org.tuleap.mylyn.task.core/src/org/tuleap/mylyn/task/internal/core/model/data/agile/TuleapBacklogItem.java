@@ -41,7 +41,7 @@ public class TuleapBacklogItem extends AbstractTuleapDetailedElement {
 	/**
 	 * The initial effort.
 	 */
-	private Float initialEffort;
+	private String initialEffort;
 
 	/**
 	 * The status of the backlog item.
@@ -108,7 +108,7 @@ public class TuleapBacklogItem extends AbstractTuleapDetailedElement {
 	 * 
 	 * @return the initialEffort
 	 */
-	public Float getInitialEffort() {
+	public String getInitialEffort() {
 		return initialEffort;
 	}
 
@@ -118,7 +118,7 @@ public class TuleapBacklogItem extends AbstractTuleapDetailedElement {
 	 * @param initialEffort
 	 *            the initialEffort to set
 	 */
-	public void setInitialEffort(Float initialEffort) {
+	public void setInitialEffort(String initialEffort) {
 		this.initialEffort = initialEffort;
 	}
 

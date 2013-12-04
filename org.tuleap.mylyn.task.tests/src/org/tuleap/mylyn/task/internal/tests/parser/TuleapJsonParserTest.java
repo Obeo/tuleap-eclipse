@@ -166,7 +166,7 @@ public class TuleapJsonParserTest {
 		assertEquals(1, item.getSubmittedBy());
 		assertEquals(ParserUtil.getUTCDate(2013, 8, 23, 11, 44, 18, 963), item.getSubmittedOn());
 		assertEquals(ParserUtil.getUTCDate(2013, 8, 24, 15, 33, 18, 523), item.getLastUpdatedOn());
-		assertEquals(40.5f, item.getInitialEffort(), 0f);
+		assertEquals("40.5", item.getInitialEffort());
 		assertEquals(TuleapStatus.Open, item.getStatus());
 	}
 
@@ -239,7 +239,7 @@ public class TuleapJsonParserTest {
 		assertEquals(1, item.getSubmittedBy());
 		assertEquals(ParserUtil.getUTCDate(2013, 8, 23, 11, 44, 18, 963), item.getSubmittedOn());
 		assertEquals(ParserUtil.getUTCDate(2013, 8, 24, 15, 33, 18, 523), item.getLastUpdatedOn());
-		assertEquals(30f, item.getInitialEffort(), 0f);
+		assertEquals("30", item.getInitialEffort());
 		assertEquals(TuleapStatus.Closed, item.getStatus());
 	}
 
@@ -284,7 +284,7 @@ public class TuleapJsonParserTest {
 		assertEquals(ParserUtil.getUTCDate(2013, 8, 23, 11, 44, 18, 963), item.getSubmittedOn());
 		assertEquals(ParserUtil.getUTCDate(2013, 8, 24, 15, 33, 18, 523), item.getLastUpdatedOn());
 
-		assertEquals(5f, item.getInitialEffort(), 0f);
+		assertEquals("5", item.getInitialEffort());
 		assertEquals(TuleapStatus.Open, item.getStatus());
 	}
 
@@ -339,7 +339,7 @@ public class TuleapJsonParserTest {
 		assertNull(tuleapMilestone.getLastUpdatedOn());
 		assertEquals(ParserUtil.getUTCDate(2013, 8, 23, 11, 44, 18, 963), tuleapMilestone.getStartDate());
 		assertEquals(ParserUtil.getUTCDate(2013, 9, 23, 11, 44, 18, 963), tuleapMilestone.getEndDate());
-		assertEquals(100, tuleapMilestone.getCapacity().floatValue(), 0);
+		assertEquals("100", tuleapMilestone.getCapacity());
 		assertEquals("Done", tuleapMilestone.getStatusValue());
 		assertEquals("milestones/200/milestones", tuleapMilestone.getSubMilestonesUri());
 		assertEquals("milestones/200/backlog", tuleapMilestone.getBacklogUri());
@@ -371,7 +371,7 @@ public class TuleapJsonParserTest {
 		assertNull(tuleapMilestone.getLastUpdatedOn());
 		assertEquals(ParserUtil.getUTCDate(2013, 9, 23, 11, 44, 18, 963), tuleapMilestone.getStartDate());
 		assertEquals(ParserUtil.getUTCDate(2013, 10, 23, 11, 44, 18, 963), tuleapMilestone.getEndDate());
-		assertEquals(75, tuleapMilestone.getCapacity(), 0);
+		assertEquals("75", tuleapMilestone.getCapacity());
 		assertEquals("milestones/201", tuleapMilestone.getUri()); //$NON-NLS-1$
 		assertNull(tuleapMilestone.getHtmlUrl());
 		assertEquals("Current", tuleapMilestone.getStatusValue());

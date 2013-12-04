@@ -221,16 +221,16 @@ public class TuleapRestClientTest {
 
 		TuleapBacklogItem item0 = new TuleapBacklogItem(230,
 				new TuleapReference(200, "p/200"), "item230", null, null, null, null); //$NON-NLS-1$
-		item0.setInitialEffort(Float.valueOf(201));
+		item0.setInitialEffort("201");
 		TuleapBacklogItem item1 = new TuleapBacklogItem(231,
 				new TuleapReference(200, "p/200"), "item231", null, null, null, null); //$NON-NLS-1$
-		item1.setInitialEffort(Float.valueOf(201));
+		item1.setInitialEffort("201");
 		TuleapBacklogItem item2 = new TuleapBacklogItem(232,
 				new TuleapReference(200, "p/200"), "item232", null, null, null, null); //$NON-NLS-1$
-		item2.setInitialEffort(Float.valueOf(201));
+		item2.setInitialEffort("201");
 		TuleapBacklogItem item3 = new TuleapBacklogItem(233,
 				new TuleapReference(200, "p/200"), "item233", null, null, null, null); //$NON-NLS-1$
-		item3.setInitialEffort(Float.valueOf(201));
+		item3.setInitialEffort("201");
 
 		List<TuleapBacklogItem> backlog = new ArrayList<TuleapBacklogItem>();
 		backlog.add(item0);
@@ -272,16 +272,16 @@ public class TuleapRestClientTest {
 
 		TuleapBacklogItem item0 = new TuleapBacklogItem(230,
 				new TuleapReference(200, "p/200"), "item230", null, null, null, null); //$NON-NLS-1$
-		item0.setInitialEffort(Float.valueOf(201));
+		item0.setInitialEffort("201");
 		TuleapBacklogItem item1 = new TuleapBacklogItem(231,
 				new TuleapReference(200, "p/200"), "item231", null, null, null, null); //$NON-NLS-1$
-		item1.setInitialEffort(Float.valueOf(201));
+		item1.setInitialEffort("201");
 		TuleapBacklogItem item2 = new TuleapBacklogItem(232,
 				new TuleapReference(200, "p/200"), "item232", null, null, null, null); //$NON-NLS-1$
-		item2.setInitialEffort(Float.valueOf(201));
+		item2.setInitialEffort("201");
 		TuleapBacklogItem item3 = new TuleapBacklogItem(233,
 				new TuleapReference(200, "p/200"), "item233", null, null, null, null); //$NON-NLS-1$
-		item3.setInitialEffort(Float.valueOf(201));
+		item3.setInitialEffort("201");
 
 		List<TuleapBacklogItem> content = new ArrayList<TuleapBacklogItem>();
 		content.add(item0);

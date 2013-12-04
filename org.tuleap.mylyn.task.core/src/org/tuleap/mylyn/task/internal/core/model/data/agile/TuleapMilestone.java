@@ -46,7 +46,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement {
 	/**
 	 * The milestone's capacity.
 	 */
-	private Float capacity;
+	private String capacity;
 
 	/**
 	 * The parent milestone.
@@ -206,7 +206,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement {
 	 * 
 	 * @return the capacity
 	 */
-	public Float getCapacity() {
+	public String getCapacity() {
 		return capacity;
 	}
 
@@ -216,7 +216,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement {
 	 * @param capacity
 	 *            the capacity to set
 	 */
-	public void setCapacity(Float capacity) {
+	public void setCapacity(String capacity) {
 		this.capacity = capacity;
 	}
 

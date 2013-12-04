@@ -300,7 +300,7 @@ public class MilestoneTaskDataConverter {
 
 			backlogItemWrapper.setLabel(backlogItem.getLabel());
 			if (backlogItem.getInitialEffort() != null) {
-				backlogItemWrapper.setInitialEffort(backlogItem.getInitialEffort().floatValue());
+				backlogItemWrapper.setInitialEffort(backlogItem.getInitialEffort());
 			}
 			if (backlogItem.getParent() != null) {
 				backlogItemWrapper.setParent(TuleapTaskIdentityUtil.getTaskDataId(projectId, 0, backlogItem
@@ -338,7 +338,7 @@ public class MilestoneTaskDataConverter {
 			subMilestoneWrapper.setEndDate(milestone.getEndDate());
 		}
 		if (milestone.getCapacity() != null) {
-			subMilestoneWrapper.setCapacity(milestone.getCapacity().floatValue());
+			subMilestoneWrapper.setCapacity(milestone.getCapacity());
 		}
 		if (milestone.getStatusValue() != null) {
 			subMilestoneWrapper.setStatusValue(milestone.getStatusValue());
@@ -362,7 +362,7 @@ public class MilestoneTaskDataConverter {
 
 			backlogItemWrapper.setLabel(backlogItem.getLabel());
 			if (backlogItem.getInitialEffort() != null) {
-				backlogItemWrapper.setInitialEffort(backlogItem.getInitialEffort().floatValue());
+				backlogItemWrapper.setInitialEffort(backlogItem.getInitialEffort());
 			}
 			if (backlogItem.getParent() != null) {
 				backlogItemWrapper.setParent(TuleapTaskIdentityUtil.getTaskDataId(projectId, 0, backlogItem

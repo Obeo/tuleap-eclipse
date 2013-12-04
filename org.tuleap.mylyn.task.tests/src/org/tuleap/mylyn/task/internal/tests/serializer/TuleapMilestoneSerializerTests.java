@@ -59,13 +59,13 @@ public class TuleapMilestoneSerializerTests {
 		ArtifactReference milestoneParent = new ArtifactReference(901, "m/901", trackerRef);
 
 		milestone.setParent(milestoneParent);
-		milestone.setCapacity(Float.valueOf(100));
+		milestone.setCapacity("100");
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"); //$NON-NLS-1$
 		milestone.setStartDate(dateFormat.parse("2013-09-23T11:44:18.963Z")); //$NON-NLS-1$
 		milestone.setEndDate(dateFormat.parse("2013-09-25T11:44:18.963Z")); //$NON-NLS-1$
 
 		String emptyMilestone = gson.toJsonTree(milestone).toString();
-		String expectedResult = "{\"id\":200,\"parent\":{\"tracker\":{\"id\":500,\"uri\":\"tracker/500\"},\"id\":901,\"uri\":\"m/901\"},\"start_date\":\"2013-09-23T11:44:18.963Z\",\"end_date\":\"2013-09-25T11:44:18.963Z\",\"capacity\":100.0}"; //$NON-NLS-1$
+		String expectedResult = "{\"id\":200,\"parent\":{\"tracker\":{\"id\":500,\"uri\":\"tracker/500\"},\"id\":901,\"uri\":\"m/901\"},\"start_date\":\"2013-09-23T11:44:18.963Z\",\"end_date\":\"2013-09-25T11:44:18.963Z\",\"capacity\":\"100\"}"; //$NON-NLS-1$
 		assertEquals(expectedResult, emptyMilestone);
 	}
 
@@ -79,13 +79,13 @@ public class TuleapMilestoneSerializerTests {
 	public void testSerializeMilestoneEmptyWithoutParentId() throws ParseException {
 		TuleapReference projectRef = new TuleapReference(123, "p/123");
 		TuleapMilestone milestone = new TuleapMilestone(200, projectRef);
-		milestone.setCapacity(Float.valueOf(100));
+		milestone.setCapacity("100");
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"); //$NON-NLS-1$
 		milestone.setStartDate(dateFormat.parse("2013-09-23T11:44:18.963Z")); //$NON-NLS-1$
 		milestone.setEndDate(dateFormat.parse("2013-09-25T11:44:18.963Z")); //$NON-NLS-1$
 
 		String emptyMilestone = gson.toJsonTree(milestone).toString();
-		String expectedResult = "{\"id\":200,\"start_date\":\"2013-09-23T11:44:18.963Z\",\"end_date\":\"2013-09-25T11:44:18.963Z\",\"capacity\":100.0}"; //$NON-NLS-1$
+		String expectedResult = "{\"id\":200,\"start_date\":\"2013-09-23T11:44:18.963Z\",\"end_date\":\"2013-09-25T11:44:18.963Z\",\"capacity\":\"100\"}"; //$NON-NLS-1$
 		assertEquals(expectedResult, emptyMilestone);
 	}
 
