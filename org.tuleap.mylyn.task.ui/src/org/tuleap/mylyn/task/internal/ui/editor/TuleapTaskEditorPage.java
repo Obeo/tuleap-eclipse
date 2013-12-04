@@ -13,10 +13,18 @@ package org.tuleap.mylyn.task.internal.ui.editor;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
+import org.tuleap.mylyn.task.agile.ui.AbstractAgileRepositoryConnectorUI;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
+import org.tuleap.mylyn.task.internal.ui.TuleapTasksUIPlugin;
 
 /**
  * The Tuleap task editor page.
@@ -71,5 +79,79 @@ public class TuleapTaskEditorPage extends AbstractTaskEditorPage {
 				iterator.remove();
 			}
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage#createModel(org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput)
+	 */
+	@Override
+	protected TaskDataModel createModel(TaskEditorInput input) throws CoreException {
+		String connectorKind = input.getTaskRepository().getConnectorKind();
+
+		AbstractAgileRepositoryConnectorUI connector = this.getAgileRepositoryConnectorUI(connectorKind);
+
+		TaskDataModel taskDataModel;
+		if (connector != null) {
+			taskDataModel = connector.getModelRegistry().getRegisteredModel(getEditor());
+			if (taskDataModel == null) {
+				taskDataModel = super.createModel(input);
+				connector.getModelRegistry().registerModel(getEditor(), taskDataModel);
+			}
+		} else {
+			taskDataModel = super.createModel(input);
+		}
+		return taskDataModel;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage#dispose()
+	 */
+	@Override
+	public void dispose() {
+		TaskDataModel taskDataModel = getModel();
+		if (taskDataModel != null) {
+			String connectorKind = taskDataModel.getTaskRepository().getConnectorKind();
+			AbstractAgileRepositoryConnectorUI connector = this.getAgileRepositoryConnectorUI(connectorKind);
+			if (connector != null) {
+				connector.getModelRegistry().deregisterModel(getEditor());
+			}
+		}
+		super.dispose();
+	}
+
+	/**
+	 * Returns the {@link AbstractAgileRepositoryConnectorUI} with the given connector kind or
+	 * <code>null</code> if none can be found.
+	 * 
+	 * @param connectorKind
+	 *            The connector kind
+	 * @return The {@link AbstractAgileRepositoryConnectorUI}.
+	 */
+	private AbstractAgileRepositoryConnectorUI getAgileRepositoryConnectorUI(String connectorKind) {
+		AbstractAgileRepositoryConnectorUI connector = null;
+
+		BundleContext bundleContext = TuleapTasksUIPlugin.getDefault().getBundle().getBundleContext();
+		try {
+			ServiceReference<?>[] serviceReferences = bundleContext.getAllServiceReferences(
+					AbstractAgileRepositoryConnectorUI.class.getName(), null);
+			if (serviceReferences != null) {
+				for (ServiceReference<?> serviceReference : serviceReferences) {
+					Object service = bundleContext.getService(serviceReference);
+					if (service instanceof AbstractAgileRepositoryConnectorUI
+							&& connectorKind.equals(((AbstractAgileRepositoryConnectorUI)service)
+									.getConnectorKind())) {
+						connector = (AbstractAgileRepositoryConnectorUI)service;
+					}
+				}
+			}
+		} catch (InvalidSyntaxException e) {
+			TuleapTasksUIPlugin.log(e, true);
+		}
+
+		return connector;
 	}
 }
