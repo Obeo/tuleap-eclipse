@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
+import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
@@ -140,14 +141,15 @@ public class TuleapTaskAttachmentPage extends TaskAttachmentPage {
 				.getConnectorKind());
 		if (repositoryConnector instanceof TuleapRepositoryConnector) {
 			TuleapRepositoryConnector tuleapRepositoryConnector = (TuleapRepositoryConnector)repositoryConnector;
-			TuleapServer repositoryConfiguration = tuleapRepositoryConnector
-					.getServer(taskRepository.getRepositoryUrl());
+			TuleapServer repositoryConfiguration = tuleapRepositoryConnector.getServer(taskRepository
+					.getRepositoryUrl());
 
 			TaskAttribute attribute = this.getModel().getAttribute();
 			TaskData taskData = attribute.getTaskData();
-			TuleapArtifactMapper tuleapArtifactMapper = new TuleapArtifactMapper(taskData, null);
-			int projectId = tuleapArtifactMapper.getProjectId();
-			int trackerId = tuleapArtifactMapper.getTrackerId();
+			TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, null);
+			TuleapTaskId taskId = mapper.getTaskId();
+			int projectId = taskId.getProjectId();
+			int trackerId = taskId.getTrackerId();
 
 			List<String> attachmentFieldsName = new ArrayList<String>();
 

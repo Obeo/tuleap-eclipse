@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
-import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
+import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
@@ -160,11 +160,11 @@ public class TuleapSoapClient {
 	 * @throws CoreException
 	 *             In case of issue during the retrieval of the artifact
 	 */
-	public TuleapArtifact getArtifact(String taskId, TuleapServer serverConfiguration,
+	public TuleapArtifact getArtifact(TuleapTaskId taskId, TuleapServer serverConfiguration,
 			IProgressMonitor monitor) throws CoreException {
-		int artifactId = TuleapTaskIdentityUtil.getElementIdFromTaskDataId(taskId);
+		int artifactId = taskId.getArtifactId();
 
-		if (artifactId != TuleapTaskIdentityUtil.IRRELEVANT_ID) {
+		if (artifactId != TuleapTaskId.IRRELEVANT_ID) {
 			TuleapArtifact tuleapArtifact;
 			try {
 				CommentedArtifact artifact = soapConnector.getArtifact(artifactId, serverConfiguration,
@@ -198,10 +198,10 @@ public class TuleapSoapClient {
 	 * @throws CoreException
 	 *             In case of issue during the creation of the artifact
 	 */
-	public String createArtifact(TuleapArtifact artifact, IProgressMonitor monitor) throws CoreException {
-		String taskDataId;
+	public TuleapTaskId createArtifact(TuleapArtifact artifact, IProgressMonitor monitor)
+			throws CoreException {
 		try {
-			taskDataId = soapConnector.createArtifact(artifact, monitor);
+			return soapConnector.createArtifact(artifact, monitor);
 		} catch (RemoteException e) {
 			IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
 			throw new CoreException(status);
@@ -212,7 +212,6 @@ public class TuleapSoapClient {
 			IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
 			throw new CoreException(status);
 		}
-		return taskDataId;
 	}
 
 	/**

@@ -18,7 +18,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
+import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
@@ -34,7 +34,6 @@ import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapElementComment;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
-import org.tuleap.mylyn.task.internal.core.repository.TuleapUrlUtil;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Artifact;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactFieldValue;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.FieldValueFileInfo;
@@ -66,12 +65,10 @@ public class TuleapSoapParser {
 		String label = null;
 		String url = null;
 
-		String repositoryUrl = tuleapTracker.getProject().getServer()
-				.getUrl();
+		String repositoryUrl = tuleapTracker.getProject().getServer().getUrl();
 
-		String taskId = TuleapTaskIdentityUtil.getTaskDataId(tuleapTracker.getProject()
-				.getIdentifier(), trackerId, artifactId);
-		String htmlUrl = TuleapUrlUtil.getTaskUrlFromTaskId(repositoryUrl, taskId);
+		TuleapTaskId taskId = TuleapTaskId.forArtifact(projectId, trackerId, artifactId);
+		String htmlUrl = taskId.getTaskUrl(repositoryUrl);
 
 		int submittedOn = artifactToParse.getSubmitted_on();
 		Date creationDate = this.getDateFromTimestamp(submittedOn);
@@ -127,8 +124,7 @@ public class TuleapSoapParser {
 						List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
 
 						FieldValueFileInfo[] fileInfo = artifactFieldValue.getField_value().getFile_info();
-						TuleapServer serverConfiguration = tuleapTracker
-								.getProject().getServer();
+						TuleapServer serverConfiguration = tuleapTracker.getProject().getServer();
 						// Yes, this array can be null.
 						if (fileInfo != null) {
 							for (FieldValueFileInfo fieldValueFileInfo : fileInfo) {

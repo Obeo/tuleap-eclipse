@@ -30,7 +30,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.client.soap.CommentedArtifact;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapConnector;
-import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
+import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.model.config.ITuleapTrackerConstants;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
@@ -160,8 +160,7 @@ public class TuleapSoapConnectorTests {
 				}
 			};
 
-			TuleapServer serverConfiguration = new TuleapServer(
-					"https://tuleap.net");
+			TuleapServer serverConfiguration = new TuleapServer("https://tuleap.net");
 			TuleapPerson person = new TuleapPerson(null, null, submittedBy, email);
 			serverConfiguration.register(person);
 
@@ -219,7 +218,8 @@ public class TuleapSoapConnectorTests {
 
 			int firstFieldId = 22;
 			TrackerField trackerField = new TrackerField(configurationId, firstFieldId, null, null,
-					ITuleapTrackerConstants.TYPE_ARTIFACT_LINK, null, null, new String[] {"submit", "update" });
+					ITuleapTrackerConstants.TYPE_ARTIFACT_LINK, null, null,
+					new String[] {"submit", "update" });
 			trackerFields[0] = trackerField;
 
 			int bindValueId1 = 4745;
@@ -301,10 +301,10 @@ public class TuleapSoapConnectorTests {
 			AbstractFieldValue secondFieldValue = new BoundFieldValue(secondFieldId, boundFieldIds);
 			tuleapArtifact.addFieldValue(secondFieldValue);
 
-			String artifactIdentifier = tuleapSoapConnector.createArtifact(tuleapArtifact,
+			TuleapTaskId artifactIdentifier = tuleapSoapConnector.createArtifact(tuleapArtifact,
 					new NullProgressMonitor());
-			assertThat(artifactIdentifier, is(TuleapTaskIdentityUtil.getTaskDataId(projectId,
-					configurationId, elementId)));
+			assertThat(artifactIdentifier, is(TuleapTaskId.forArtifact(projectId, configurationId,
+					elementId)));
 		} catch (MalformedURLException e) {
 			fail(e.getMessage());
 		} catch (RemoteException e) {

@@ -16,7 +16,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
-import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
+import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
@@ -143,8 +143,8 @@ public class BacklogItemTaskDataConverterTest {
 		};
 
 		this.attributeMapper = new TuleapAttributeMapper(repository, repositoryConnector);
-		this.taskData = new TaskData(attributeMapper, connectorKind, repositoryUrl, TuleapTaskIdentityUtil
-				.getTaskDataId(projectRef.getId(), BACKLOG_ITEM_TYPE_ID1, item200.getId()));
+		this.taskData = new TaskData(attributeMapper, connectorKind, repositoryUrl, TuleapTaskId
+				.forArtifact(projectRef.getId(), BACKLOG_ITEM_TYPE_ID1, item200.getId()).toString());
 
 	}
 

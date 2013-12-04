@@ -11,7 +11,6 @@
 package org.tuleap.mylyn.task.internal.core.repository;
 
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
 
 /**
  * This utility class is used to encapsulate all the manipulations of the HTML URLs of the repository and
@@ -74,41 +73,6 @@ public final class TuleapUrlUtil {
 	}
 
 	/**
-	 * Returns the task id from the task URL.
-	 * 
-	 * @param taskUrl
-	 *            The task url
-	 * @return The task id
-	 */
-	public static String getTaskIdFromTaskUrl(String taskUrl) {
-		int projectId = TuleapTaskIdentityUtil.IRRELEVANT_ID;
-		int trackerId = TuleapTaskIdentityUtil.IRRELEVANT_ID;
-		int elementId = TuleapTaskIdentityUtil.IRRELEVANT_ID;
-
-		int indexOfRepository = taskUrl.indexOf(REPOSITORY_PROJECT_ID_URL_SEPARATOR);
-		int indexOfSeparator = taskUrl.indexOf(PARAMETER_SEPARATOR, indexOfRepository);
-		if (indexOfRepository != -1 && indexOfSeparator != -1) {
-			projectId = Integer.parseInt(taskUrl.substring(indexOfRepository
-					+ REPOSITORY_PROJECT_ID_URL_SEPARATOR.length(), indexOfSeparator));
-		}
-
-		int indexOfTracker = taskUrl.indexOf(REPOSITORY_TRACKER_ID_URL_SEPARATOR);
-		indexOfSeparator = taskUrl.indexOf(PARAMETER_SEPARATOR, indexOfTracker);
-		if (indexOfTracker != -1 && indexOfSeparator != -1) {
-			trackerId = Integer.parseInt(taskUrl.substring(indexOfTracker
-					+ REPOSITORY_TRACKER_ID_URL_SEPARATOR.length(), indexOfSeparator));
-		}
-
-		int indexOfElement = taskUrl.indexOf(REPOSITORY_ELEMENT_ID_URL_SEPARATOR);
-		if (indexOfElement != -1) {
-			elementId = Integer.parseInt(taskUrl.substring(indexOfElement
-					+ REPOSITORY_ELEMENT_ID_URL_SEPARATOR.length()));
-		}
-
-		return TuleapTaskIdentityUtil.getTaskDataId(projectId, trackerId, elementId);
-	}
-
-	/**
 	 * Returns the URL of a tracker.
 	 * 
 	 * @param repositoryUrl
@@ -120,25 +84,6 @@ public final class TuleapUrlUtil {
 	public static String getTrackerUrl(String repositoryUrl, int trackerId) {
 		return repositoryUrl + TULEAP_REPOSITORY_URL_STRUCTURE + PARAMETER_PART_SEPARATOR
 				+ REPOSITORY_TRACKER_ID_URL_SEPARATOR + String.valueOf(trackerId);
-	}
-
-	/**
-	 * Returns the URL of a task from the URL of the repository.
-	 * 
-	 * @param repositoryUrl
-	 *            The URL of the repository
-	 * @param taskId
-	 *            The identifier of the task
-	 * @return The URL of the task
-	 */
-	public static String getTaskUrlFromTaskId(String repositoryUrl, String taskId) {
-		return repositoryUrl + TULEAP_REPOSITORY_URL_STRUCTURE + PARAMETER_PART_SEPARATOR
-				+ REPOSITORY_PROJECT_ID_URL_SEPARATOR
-				+ TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(taskId) + PARAMETER_SEPARATOR
-				+ REPOSITORY_TRACKER_ID_URL_SEPARATOR
-				+ TuleapTaskIdentityUtil.getTrackerIdFromTaskDataId(taskId) + PARAMETER_SEPARATOR
-				+ REPOSITORY_ELEMENT_ID_URL_SEPARATOR
-				+ TuleapTaskIdentityUtil.getElementIdFromTaskDataId(taskId);
 	}
 
 	/**

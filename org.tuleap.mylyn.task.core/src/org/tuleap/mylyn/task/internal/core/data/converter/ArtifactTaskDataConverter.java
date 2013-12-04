@@ -26,7 +26,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
-import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
+import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
@@ -104,8 +104,8 @@ public class ArtifactTaskDataConverter {
 		tuleapArtifactMapper.initializeEmptyTaskData();
 
 		// Task Key
-		String taskKey = TuleapTaskIdentityUtil.getTaskDataKey(this.tracker.getProject().getName(),
-				this.tracker.getLabel(), element.getId());
+		String taskKey = TuleapTaskId.getTaskDataKey(this.tracker.getProject().getName(), this.tracker
+				.getLabel(), element.getId());
 		tuleapArtifactMapper.setTaskKey(taskKey);
 
 		// URL
@@ -283,17 +283,15 @@ public class ArtifactTaskDataConverter {
 		TuleapArtifactMapper tuleapArtifactMapper = new TuleapArtifactMapper(taskData, this.tracker);
 
 		TuleapArtifact tuleapArtifact = null;
-		int trackerId = tuleapArtifactMapper.getTrackerId();
-		int projectId = tuleapArtifactMapper.getProjectId();
+		TuleapTaskId taskId = tuleapArtifactMapper.getTaskId();
 		TuleapReference trackerRef = new TuleapReference();
-		trackerRef.setId(trackerId);
+		trackerRef.setId(taskId.getTrackerId());
 		TuleapReference projectRef = new TuleapReference();
-		projectRef.setId(projectId);
+		projectRef.setId(taskId.getProjectId());
 		if (taskData.isNew()) {
 			tuleapArtifact = new TuleapArtifact(trackerRef, projectRef);
 		} else {
-			int artifactId = tuleapArtifactMapper.getId();
-			tuleapArtifact = new TuleapArtifact(artifactId, trackerRef, projectRef);
+			tuleapArtifact = new TuleapArtifact(taskId.getArtifactId(), trackerRef, projectRef);
 		}
 
 		Set<AbstractFieldValue> fieldValues = tuleapArtifactMapper.getFieldValues();

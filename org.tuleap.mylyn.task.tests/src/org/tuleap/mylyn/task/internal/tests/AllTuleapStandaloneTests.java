@@ -25,7 +25,7 @@ import org.tuleap.mylyn.task.internal.tests.client.soap.TuleapSoapParserTests;
 import org.tuleap.mylyn.task.internal.tests.converter.BacklogItemTaskDataConverterTest;
 import org.tuleap.mylyn.task.internal.tests.converter.MilestoneTaskDataConverterTest;
 import org.tuleap.mylyn.task.internal.tests.data.TuleapConfigurableElementMapperTests;
-import org.tuleap.mylyn.task.internal.tests.data.TuleapTaskIdentityUtilTests;
+import org.tuleap.mylyn.task.internal.tests.data.TuleapTaskIdTests;
 import org.tuleap.mylyn.task.internal.tests.model.TuleapProjectConfigurationTests;
 import org.tuleap.mylyn.task.internal.tests.model.TuleapTrackerConfigurationTests;
 import org.tuleap.mylyn.task.internal.tests.model.TuleapWorkflowTests;
@@ -47,7 +47,7 @@ import org.tuleap.mylyn.task.internal.tests.server.ServerResponseTest;
  * @since 0.7
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({TuleapSoapParserTests.class, TuleapTaskIdentityUtilTests.class,
+@Suite.SuiteClasses({TuleapSoapParserTests.class, TuleapTaskIdTests.class,
 		TuleapProjectConfigurationDeserializerTests.class, TuleapTrackerConfigurationDeserializerTests.class,
 		TuleapTrackerConfigurationTests.class, ServerResponseTest.class, TuleapJsonParserTest.class,
 		TuleapProjectConfigurationTests.class, TuleapCardwallConfigurationDeserializerTests.class,

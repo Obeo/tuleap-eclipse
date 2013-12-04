@@ -34,7 +34,7 @@ import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
-import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
+import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
@@ -85,7 +85,7 @@ public class TuleapRepositoryConnectorTests {
 
 		TuleapRepositoryConnector connector = new TuleapRepositoryConnector();
 		String taskId = connector.getTaskIdFromTaskUrl(taskUrl);
-		assertEquals(TuleapTaskIdentityUtil.getTaskDataId(409, 55, 217), taskId);
+		assertEquals(TuleapTaskId.forArtifact(409, 55, 217).toString(), taskId);
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class TuleapRepositoryConnectorTests {
 	@Test
 	public void testGetTaskUrl() {
 		final String repositoryUrl = "https://tuleap.net"; //$NON-NLS-1$
-		final String taskId = TuleapTaskIdentityUtil.getTaskDataId(409, 31, 821);
+		final String taskId = TuleapTaskId.forArtifact(409, 31, 821).toString();
 
 		TuleapRepositoryConnector connector = new TuleapRepositoryConnector();
 		String taskUrl = connector.getTaskUrl(repositoryUrl, taskId);
@@ -201,8 +201,8 @@ public class TuleapRepositoryConnectorTests {
 				new NullProgressMonitor());
 
 		assertThat(collector.getTaskData().size(), is(1));
-		assertThat(collector.getTaskData().iterator().next().getTaskId(), is(TuleapTaskIdentityUtil
-				.getTaskDataId(projectRef.getId(), trackerRef.getId(), artifactId)));
+		assertThat(collector.getTaskData().iterator().next().getTaskId(), is(TuleapTaskId.forArtifact(
+				projectRef.getId(), trackerRef.getId(), artifactId).toString()));
 	}
 
 	/**
@@ -272,8 +272,8 @@ public class TuleapRepositoryConnectorTests {
 				new NullProgressMonitor());
 
 		assertThat(collector.getTaskData().size(), is(1));
-		assertThat(collector.getTaskData().iterator().next().getTaskId(), is(TuleapTaskIdentityUtil
-				.getTaskDataId(projectRef.getId(), trackerRef.getId(), artifactId)));
+		assertThat(collector.getTaskData().iterator().next().getTaskId(), is(TuleapTaskId.forArtifact(
+				projectRef.getId(), trackerRef.getId(), artifactId).toString()));
 	}
 
 	/**
@@ -368,8 +368,8 @@ public class TuleapRepositoryConnectorTests {
 
 		assertThat(collector.getTaskData().size(), is(1));
 		TaskData taskData = collector.getTaskData().iterator().next();
-		assertThat(collector.getTaskData().iterator().next().getTaskId(), is(TuleapTaskIdentityUtil
-				.getTaskDataId(projectRef.getId(), TuleapTaskIdentityUtil.IRRELEVANT_ID, projectRef.getId())));
+		assertThat(collector.getTaskData().iterator().next().getTaskId(), is(TuleapTaskId.forArtifact(
+				projectRef.getId(), TuleapTaskId.IRRELEVANT_ID, projectRef.getId()).toString()));
 		MilestonePlanningWrapper wrapper = new MilestonePlanningWrapper(taskData.getRoot());
 		assertEquals(2, wrapper.getAllBacklogItems().size());
 		assertEquals(1, wrapper.getSubMilestones().size());
@@ -386,7 +386,7 @@ public class TuleapRepositoryConnectorTests {
 		int projectId = 789;
 		int configurationId = 456;
 		int elementId = 123;
-		String taskId = TuleapTaskIdentityUtil.getTaskDataId(projectId, configurationId, elementId);
+		String taskId = TuleapTaskId.forArtifact(projectId, configurationId, elementId).toString();
 
 		ITask task = new LocalTask(taskId, "");
 

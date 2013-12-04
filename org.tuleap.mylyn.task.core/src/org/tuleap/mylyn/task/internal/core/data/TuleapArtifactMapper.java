@@ -231,26 +231,6 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	}
 
 	/**
-	 * Returns the identifier of the tracker or IRRELEVANT_ID otherwise.
-	 * 
-	 * @return The identifier of the tracker or IRRELEVANT_ID otherwise.
-	 */
-	public int getTrackerId() {
-		int trackerId = TuleapTaskIdentityUtil.IRRELEVANT_ID;
-
-		if (this.taskData.isNew()) {
-			TaskAttribute trackerIdAtt = taskData.getRoot().getMappedAttribute(TRACKER_ID);
-			if (trackerIdAtt != null) {
-				trackerId = taskData.getAttributeMapper().getIntegerValue(trackerIdAtt).intValue();
-			}
-		} else {
-			trackerId = TuleapTaskIdentityUtil.getTrackerIdFromTaskDataId(taskData.getTaskId());
-		}
-
-		return trackerId;
-	}
-
-	/**
 	 * Sets the identifier of the project.
 	 * 
 	 * @param projectId
@@ -262,26 +242,6 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 			projectIdAtt = taskData.getRoot().createMappedAttribute(PROJECT_ID);
 		}
 		taskData.getAttributeMapper().setIntegerValue(projectIdAtt, Integer.valueOf(projectId));
-	}
-
-	/**
-	 * Returns the identifier of the project.
-	 * 
-	 * @return The identifier of the project
-	 */
-	public int getProjectId() {
-		int projectId = TuleapTaskIdentityUtil.IRRELEVANT_ID;
-
-		if (this.taskData.isNew()) {
-			TaskAttribute projectIdAtt = taskData.getRoot().getMappedAttribute(PROJECT_ID);
-			if (projectIdAtt != null) {
-				projectId = taskData.getAttributeMapper().getIntegerValue(projectIdAtt).intValue();
-			}
-		} else {
-			projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(taskData.getTaskId());
-		}
-
-		return projectId;
 	}
 
 	/**
@@ -333,8 +293,21 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * 
 	 * @return The identifier of the artifact
 	 */
-	public int getId() {
-		return TuleapTaskIdentityUtil.getElementIdFromTaskDataId(taskData.getTaskId());
+	public TuleapTaskId getTaskId() {
+		if (this.taskData.isNew()) {
+			int projectId = TuleapTaskId.IRRELEVANT_ID;
+			TaskAttribute projectIdAtt = taskData.getRoot().getMappedAttribute(PROJECT_ID);
+			if (projectIdAtt != null) {
+				projectId = taskData.getAttributeMapper().getIntegerValue(projectIdAtt).intValue();
+			}
+			int trackerId = TuleapTaskId.IRRELEVANT_ID;
+			TaskAttribute trackerIdAtt = taskData.getRoot().getMappedAttribute(TRACKER_ID);
+			if (trackerIdAtt != null) {
+				trackerId = taskData.getAttributeMapper().getIntegerValue(trackerIdAtt).intValue();
+			}
+			return TuleapTaskId.forNewArtifact(projectId, trackerId);
+		}
+		return TuleapTaskId.forName(taskData.getTaskId());
 	}
 
 	/**

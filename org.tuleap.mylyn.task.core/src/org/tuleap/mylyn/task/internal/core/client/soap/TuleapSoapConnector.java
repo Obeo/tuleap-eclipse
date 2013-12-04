@@ -43,7 +43,7 @@ import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapQueryConstants;
-import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
+import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.config.ITuleapTrackerConstants;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapGroup;
@@ -942,11 +942,9 @@ public class TuleapSoapConnector {
 	 * @throws MalformedURLException
 	 *             If the URL is invalid
 	 */
-	public String createArtifact(TuleapArtifact artifact, IProgressMonitor monitor) throws RemoteException,
-			MalformedURLException, ServiceException {
+	public TuleapTaskId createArtifact(TuleapArtifact artifact, IProgressMonitor monitor)
+			throws RemoteException, MalformedURLException, ServiceException {
 		this.login(monitor);
-
-		String taskDataId = null;
 		final int fifty = 50;
 
 		int groupId = -1;
@@ -991,7 +989,8 @@ public class TuleapSoapConnector {
 		int artifactId = this.getTuleapTrackerV5APIPortType().addArtifact(sessionHash, groupId,
 				artifact.getTracker().getId(), valuesList.toArray(new ArtifactFieldValue[valuesList.size()]));
 
-		taskDataId = TuleapTaskIdentityUtil.getTaskDataId(groupId, artifact.getTracker().getId(), artifactId);
+		TuleapTaskId taskDataId = TuleapTaskId.forArtifact(groupId, artifact.getTracker().getId(),
+				artifactId);
 		monitor.worked(fifty);
 
 		this.logout();

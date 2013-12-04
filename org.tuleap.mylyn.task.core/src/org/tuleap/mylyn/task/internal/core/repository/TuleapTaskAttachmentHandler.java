@@ -36,7 +36,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapConnector;
 import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
-import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
+import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
@@ -111,13 +111,10 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 	 */
 	private boolean hasFileUploadField(TaskRepository repository, ITask task) {
 		boolean hasFileUploadField = false;
-
-		int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(task.getTaskId());
-		int trackerId = TuleapTaskIdentityUtil.getTrackerIdFromTaskDataId(task.getTaskId());
-
+		TuleapTaskId taskDataId = TuleapTaskId.forName(task.getTaskId());
 		TuleapServer tuleapServer = this.connector.getServer(repository.getRepositoryUrl());
-		TuleapProject project = tuleapServer.getProject(projectId);
-		TuleapTracker tracker = project.getTracker(trackerId);
+		TuleapProject project = tuleapServer.getProject(taskDataId.getProjectId());
+		TuleapTracker tracker = project.getTracker(taskDataId.getTrackerId());
 
 		if (tracker != null) {
 			hasFileUploadField = tracker.getAttachmentField() != null;
@@ -201,19 +198,17 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 			TaskData taskData = attachmentAttribute.getTaskData();
 			TuleapArtifactMapper tuleapArtifactMapper = new TuleapArtifactMapper(taskData, tracker);
 
-			int trackerId = tuleapArtifactMapper.getTrackerId();
+			int trackerId = tuleapArtifactMapper.getTaskId().getTrackerId();
 
 			List<TuleapProject> allProjects = server.getAllProjects();
 			for (TuleapProject tuleapProject : allProjects) {
 				tracker = tuleapProject.getTracker(trackerId);
 			}
 		} else {
-			int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(task.getTaskId());
-			int trackerId = TuleapTaskIdentityUtil.getTrackerIdFromTaskDataId(task.getTaskId());
-
+			TuleapTaskId taskDataId = TuleapTaskId.forName(task.getTaskId());
 			TuleapServer tuleapServer = this.connector.getServer(repository.getRepositoryUrl());
-			TuleapProject project = tuleapServer.getProject(projectId);
-			tracker = project.getTracker(trackerId);
+			TuleapProject project = tuleapServer.getProject(taskDataId.getProjectId());
+			tracker = project.getTracker(taskDataId.getTrackerId());
 		}
 
 		// Field name and label (for context, let's take the first one available) and description

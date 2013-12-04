@@ -23,6 +23,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
+import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
@@ -150,8 +151,8 @@ public class TuleapConfigurableElementMapperTests {
 		this.projectId = 987;
 
 		this.repository = new TaskRepository(connectorKind, repositoryUrl);
-		this.tuleapTracker = new TuleapTracker(trackerId, repositoryUrl,
-				trackerName, itemName, repositoryDescription, System.currentTimeMillis());
+		this.tuleapTracker = new TuleapTracker(trackerId, repositoryUrl, trackerName, itemName,
+				repositoryDescription, System.currentTimeMillis());
 
 		this.tuleapServer = new TuleapServer(repositoryUrl);
 
@@ -186,8 +187,8 @@ public class TuleapConfigurableElementMapperTests {
 		assertEquals(TaskAttribute.TYPE_DATE, metadata.getType());
 		assertFalse(metadata.isReadOnly());
 
-		assertEquals(projectId, mapper.getProjectId());
-		assertEquals(trackerId, mapper.getTrackerId());
+		TuleapTaskId taskId = TuleapTaskId.forNewArtifact(projectId, trackerId);
+		assertEquals(taskId, mapper.getTaskId());
 
 		// Also check that project id & tracker id task attributes are correctly created since they will be
 		// useful to mylyn

@@ -19,7 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.client.soap.CommentedArtifact;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapParser;
-import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
+import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
@@ -42,7 +42,6 @@ import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapElementComment;
-import org.tuleap.mylyn.task.internal.core.repository.TuleapUrlUtil;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Artifact;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactFieldValue;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.FieldValue;
@@ -89,8 +88,7 @@ public class TuleapSoapParserTests {
 	public void setUp() {
 		this.tuleapServer = new TuleapServer(this.repositoryUrl);
 
-		TuleapProject tuleapProject = new TuleapProject(projectName,
-				projectId);
+		TuleapProject tuleapProject = new TuleapProject(projectName, projectId);
 
 		// The first tracker does not have a single field.
 		TuleapTracker firstTrackerConfiguration = new TuleapTracker(0, null, null, null, null, System
@@ -270,8 +268,8 @@ public class TuleapSoapParserTests {
 		assertThat(tuleapArtifact.getSubmittedOn().toString(), is(creationDate.toString()));
 		assertThat(tuleapArtifact.getLastUpdatedOn().toString(), is(lastUpdateDate.toString()));
 
-		String taskId = TuleapTaskIdentityUtil.getTaskDataId(projectId, trackerId, artifactId);
-		String htmlUrl = TuleapUrlUtil.getTaskUrlFromTaskId(repositoryUrl, taskId);
+		TuleapTaskId taskId = TuleapTaskId.forArtifact(projectId, trackerId, artifactId);
+		String htmlUrl = taskId.getTaskUrl(repositoryUrl);
 		assertThat(tuleapArtifact.getHtmlUrl(), is(htmlUrl));
 
 		assertThat(tuleapArtifact.getUri(), is(nullValue()));

@@ -23,7 +23,7 @@ import org.eclipse.ui.PlatformUI;
 import org.tuleap.mylyn.task.agile.core.IMilestoneMapping;
 import org.tuleap.mylyn.task.agile.ui.AbstractAgileRepositoryConnectorUI;
 import org.tuleap.mylyn.task.agile.ui.editors.ITaskEditorPageFactoryConstants;
-import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
+import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
@@ -70,7 +70,7 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 			TuleapRepositoryConnector tuleapRepositoryConnector = (TuleapRepositoryConnector)connector;
 			TuleapServer server = tuleapRepositoryConnector.getServer(taskRepository.getRepositoryUrl());
 
-			int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(planningTaskData.getTaskId());
+			int projectId = TuleapTaskId.forName(planningTaskData.getTaskId()).getProjectId();
 			TuleapProject project = server.getProject(projectId);
 
 			NewTuleapMilestoneWizard wizard = new NewTuleapMilestoneWizard(project, parentMilestoneId);
@@ -102,9 +102,8 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 	public String[] getConflictingIds(String taskEditorPageFactoryId, ITask task, TaskRepository repository) {
 		if (ITaskEditorPageFactoryConstants.PLANNING_TASK_EDITOR_PAGE_FACTORY_ID
 				.equals(taskEditorPageFactoryId)) {
-			String taskId = task.getTaskId();
-			int trackerId = TuleapTaskIdentityUtil.getTrackerIdFromTaskDataId(taskId);
-			if (trackerId == TuleapTaskIdentityUtil.IRRELEVANT_ID) {
+			TuleapTaskId taskId = TuleapTaskId.forName(task.getTaskId());
+			if (taskId.isTopPlanning()) {
 				// Top planning
 				return new String[] {ITasksUiConstants.ID_PAGE_PLANNING,
 						TuleapTaskEditorPageFactory.TULEAP_TASK_EDITOR_PAGE_FACTORY_ID, };
@@ -122,10 +121,9 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 	@Override
 	public boolean hasCardwall(ITask task, TaskRepository repository) {
 		boolean result = false;
-		String taskId = task.getTaskId();
-		int trackerId = TuleapTaskIdentityUtil.getTrackerIdFromTaskDataId(taskId);
-		if (trackerId == TuleapTaskIdentityUtil.IRRELEVANT_ID) {
-			// No cardwall on top plannings?
+		TuleapTaskId taskId = TuleapTaskId.forName(task.getTaskId());
+		if (taskId.isTopPlanning()) {
+			// TODO Check: No cardwall on top plannings?
 			result = false;
 		} else {
 			String connectorKind = repository.getConnectorKind();
@@ -134,9 +132,9 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 			if (connector instanceof TuleapRepositoryConnector) {
 				TuleapRepositoryConnector tuleapRepositoryConnector = (TuleapRepositoryConnector)connector;
 				TuleapServer server = tuleapRepositoryConnector.getServer(repository.getRepositoryUrl());
-				int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(taskId);
+				int projectId = taskId.getProjectId();
 				TuleapProject project = server.getProject(projectId);
-				result = project.isCardwallActive(trackerId);
+				result = project.isCardwallActive(taskId.getTrackerId());
 			}
 		}
 		return result;
@@ -151,9 +149,8 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 	@Override
 	public boolean hasPlanning(ITask task, TaskRepository repository) {
 		boolean result = false;
-		String taskId = task.getTaskId();
-		int trackerId = TuleapTaskIdentityUtil.getTrackerIdFromTaskDataId(taskId);
-		if (trackerId == TuleapTaskIdentityUtil.IRRELEVANT_ID) {
+		TuleapTaskId taskId = TuleapTaskId.forName(task.getTaskId());
+		if (taskId.isTopPlanning()) {
 			result = true;
 		} else {
 			String connectorKind = repository.getConnectorKind();
@@ -162,9 +159,9 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 			if (connector instanceof TuleapRepositoryConnector) {
 				TuleapRepositoryConnector tuleapRepositoryConnector = (TuleapRepositoryConnector)connector;
 				TuleapServer server = tuleapRepositoryConnector.getServer(repository.getRepositoryUrl());
-				int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(taskId);
+				int projectId = taskId.getProjectId();
 				TuleapProject project = server.getProject(projectId);
-				if (project.isMilestoneTracker(trackerId)) {
+				if (project.isMilestoneTracker(taskId.getTrackerId())) {
 					// TODO Find a way to know in the configuration whether there should be a planning
 					result = true;
 				}
@@ -181,9 +178,8 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 	 */
 	@Override
 	public boolean mustCreateToolbarActions(ITask task, TaskRepository repository) {
-		String taskId = task.getTaskId();
-		int trackerId = TuleapTaskIdentityUtil.getTrackerIdFromTaskDataId(taskId);
-		if (trackerId == TuleapTaskIdentityUtil.IRRELEVANT_ID) {
+		TuleapTaskId taskId = TuleapTaskId.forName(task.getTaskId());
+		if (taskId.isTopPlanning()) {
 			// Top planning has no general tab
 			return true;
 		}

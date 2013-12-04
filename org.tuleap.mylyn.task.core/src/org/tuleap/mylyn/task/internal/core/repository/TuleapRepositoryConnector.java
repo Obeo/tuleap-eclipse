@@ -47,7 +47,7 @@ import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
-import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
+import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.data.converter.ArtifactTaskDataConverter;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
@@ -170,7 +170,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			return null;
 		}
 
-		return TuleapUrlUtil.getTaskIdFromTaskUrl(url);
+		return TuleapTaskId.forTaskUrl(url).toString();
 	}
 
 	/**
@@ -201,7 +201,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 */
 	@Override
 	public String getTaskUrl(String repositoryUrl, String taskId) {
-		return TuleapUrlUtil.getTaskUrlFromTaskId(repositoryUrl, taskId);
+		return TuleapTaskId.forName(taskId).getTaskUrl(repositoryUrl);
 	}
 
 	/**
@@ -213,7 +213,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	@Override
 	public TaskData getTaskData(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
-		return this.taskDataHandler.getTaskData(taskRepository, taskId, monitor);
+		return this.taskDataHandler.getTaskData(taskRepository, TuleapTaskId.forName(taskId), monitor);
 	}
 
 	/**
@@ -318,13 +318,13 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 				taskRepository, this);
 		List<TuleapArtifact> artifacts = soapClient.getArtifactsFromQuery(query, server, tracker, monitor);
 		for (TuleapArtifact artifact : artifacts) {
-			String taskDataId = TuleapTaskIdentityUtil.getTaskDataId(tracker.getProject().getIdentifier(),
+			TuleapTaskId taskDataId = TuleapTaskId.forArtifact(tracker.getProject().getIdentifier(),
 					artifact.getTracker().getId(), artifact.getId());
 
 			TaskAttributeMapper attributeMapper = this.getTaskDataHandler()
 					.getAttributeMapper(taskRepository);
 			TaskData taskData = new TaskData(attributeMapper, this.getConnectorKind(), taskRepository
-					.getRepositoryUrl(), taskDataId);
+					.getRepositoryUrl(), taskDataId.toString());
 			artifactTaskDataConverter.populateTaskData(taskData, artifact, monitor);
 
 			// If the tracker is a milestone tracker, retrieve milestone-specific informations
@@ -363,12 +363,12 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		int projectId = Integer.valueOf(query.getAttribute(ITuleapQueryConstants.QUERY_PROJECT_ID))
 				.intValue();
 		try {
-			String taskDataId = TuleapTaskIdentityUtil.getProjectPlanningTaskDataId(projectId);
+			TuleapTaskId taskDataId = TuleapTaskId.forTopPlanning(projectId);
 			TaskAttributeMapper attributeMapper = this.getTaskDataHandler()
 					.getAttributeMapper(taskRepository);
 			// Create the PROJECT_ID task attribute
 			TaskData taskData = new TaskData(attributeMapper, getConnectorKind(), taskRepository
-					.getRepositoryUrl(), taskDataId);
+					.getRepositoryUrl(), taskDataId.toString());
 			taskData = taskDataHandler.fetchProjectPlanningData(taskData, taskRepository, monitor);
 			try {
 				collector.accept(taskData);
@@ -435,10 +435,9 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		// Update the completion date of the task from the status of the task data
 		TuleapServer server = this.getServer(taskRepository.getRepositoryUrl());
 
-		TuleapProject project = server.getProject(TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(taskData
-				.getTaskId()));
-		TuleapTracker tracker = project.getTracker(TuleapTaskIdentityUtil.getTrackerIdFromTaskDataId(taskData
-				.getTaskId()));
+		TuleapTaskId taskDataId = TuleapTaskId.forName(taskData.getTaskId());
+		TuleapProject project = server.getProject(taskDataId.getProjectId());
+		TuleapTracker tracker = project.getTracker(taskDataId.getTrackerId());
 
 		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, tracker);
 		int status = mapper.getStatus();

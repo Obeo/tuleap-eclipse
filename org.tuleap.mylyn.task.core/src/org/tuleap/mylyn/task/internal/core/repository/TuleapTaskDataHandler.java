@@ -32,7 +32,7 @@ import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
-import org.tuleap.mylyn.task.internal.core.data.TuleapTaskIdentityUtil;
+import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.data.converter.ArtifactTaskDataConverter;
 import org.tuleap.mylyn.task.internal.core.data.converter.MilestoneTaskDataConverter;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
@@ -83,13 +83,12 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, null);
 
-		int projectId = mapper.getProjectId();
-		int trackerId = mapper.getTrackerId();
+		TuleapTaskId taskId = mapper.getTaskId();
 
 		TuleapServer tuleapServer = this.connector.getServer(taskRepository.getRepositoryUrl());
-		TuleapProject project = tuleapServer.getProject(projectId);
+		TuleapProject project = tuleapServer.getProject(taskId.getProjectId());
 
-		TuleapTracker tuleapTracker = project.getTracker(trackerId);
+		TuleapTracker tuleapTracker = project.getTracker(taskId.getTrackerId());
 		tuleapTracker = this.connector.refreshTracker(taskRepository, tuleapTracker, monitor);
 		response = this.postArtifactTaskData(tuleapTracker, taskData, taskRepository, monitor);
 
@@ -121,8 +120,8 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		TuleapArtifact artifact = artifactTaskDataConverter.createTuleapArtifact(taskData);
 		TuleapSoapClient tuleapSoapClient = this.connector.getClientManager().getSoapClient(taskRepository);
 		if (taskData.isNew()) {
-			String artifactId = tuleapSoapClient.createArtifact(artifact, monitor);
-			response = new RepositoryResponse(ResponseKind.TASK_CREATED, artifactId);
+			TuleapTaskId artifactId = tuleapSoapClient.createArtifact(artifact, monitor);
+			response = new RepositoryResponse(ResponseKind.TASK_CREATED, artifactId.toString());
 		} else {
 			tuleapSoapClient.updateArtifact(artifact, monitor);
 			response = new RepositoryResponse(ResponseKind.TASK_UPDATED, taskData.getTaskId());
@@ -281,27 +280,26 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 * @throws CoreException
 	 *             If repository file configuration is not accessible
 	 */
-	public TaskData getTaskData(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
-			throws CoreException {
+	public TaskData getTaskData(TaskRepository taskRepository, TuleapTaskId taskId,
+			IProgressMonitor monitor) throws CoreException {
 		TuleapServer server = this.connector.getServer(taskRepository.getRepositoryUrl());
 
-		int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(taskId);
-		TuleapProject project = server.getProject(projectId);
-
-		int trackerId = TuleapTaskIdentityUtil.getTrackerIdFromTaskDataId(taskId);
+		TuleapProject project = server.getProject(taskId.getProjectId());
+		int trackerId = taskId.getTrackerId();
 
 		TaskData taskData = null;
-		if (trackerId == TuleapTaskIdentityUtil.IRRELEVANT_ID) {
+		if (taskId.isTopPlanning()) {
 			// Top Planning
 			TaskAttributeMapper attributeMapper = this.getAttributeMapper(taskRepository);
 			taskData = new TaskData(attributeMapper, ITuleapConstants.CONNECTOR_KIND, taskRepository
-					.getRepositoryUrl(), taskId);
+					.getRepositoryUrl(), taskId.toString());
 			// Load backlog and milestones into the TaskData
 			fetchProjectPlanningData(taskData, taskRepository, monitor);
 		} else if (trackerId == 0) {
 			// The tracker information is missing
 			taskData = this.getArtifactTaskData(taskId, server, taskRepository, true, monitor);
-			trackerId = TuleapTaskIdentityUtil.getTrackerIdFromTaskDataId(taskData.getTaskId());
+			TuleapTaskId refreshedId = TuleapTaskId.forName(taskData.getTaskId());
+			trackerId = refreshedId.getTrackerId();
 			TuleapTracker tracker = project.getTracker(trackerId);
 			if (project.isMilestoneTracker(tracker.getIdentifier())) {
 				taskData = this.fetchMilestoneData(taskData, project, tracker, taskRepository, monitor);
@@ -335,11 +333,12 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 * @throws CoreException
 	 *             In case of issues during the download of the artifact data
 	 */
-	private TaskData getArtifactTaskData(String taskId, TuleapServer server, TaskRepository taskRepository,
-			boolean refreshTracker, IProgressMonitor monitor) throws CoreException {
+	private TaskData getArtifactTaskData(TuleapTaskId taskId, TuleapServer server,
+			TaskRepository taskRepository, boolean refreshTracker, IProgressMonitor monitor)
+			throws CoreException {
 		TuleapSoapClient tuleapSoapClient = this.connector.getClientManager().getSoapClient(taskRepository);
 		TuleapArtifact tuleapArtifact = tuleapSoapClient.getArtifact(taskId, server, monitor);
-		String refreshedTaskId = taskId;
+		TuleapTaskId refreshedTaskId = taskId;
 		if (tuleapArtifact != null) {
 			TuleapTracker tracker = server.getTracker(tuleapArtifact.getTracker().getId());
 			if (refreshTracker) {
@@ -348,9 +347,8 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				// for the trackerId
 				// If we don't refresh the tracker, we assume the given taskId contains the relevant tracker
 				// information
-				refreshedTaskId = TuleapTaskIdentityUtil.getTaskDataId(TuleapTaskIdentityUtil
-						.getProjectIdFromTaskDataId(taskId), tracker.getIdentifier(), TuleapTaskIdentityUtil
-						.getElementIdFromTaskDataId(taskId));
+				refreshedTaskId = TuleapTaskId.forArtifact(refreshedTaskId.getProjectId(), tracker
+						.getIdentifier(), refreshedTaskId.getArtifactId());
 			}
 
 			ArtifactTaskDataConverter artifactTaskDataConverter = new ArtifactTaskDataConverter(tracker,
@@ -358,7 +356,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			TaskAttributeMapper attributeMapper = this.getAttributeMapper(taskRepository);
 
 			TaskData taskData = new TaskData(attributeMapper, ITuleapConstants.CONNECTOR_KIND, taskRepository
-					.getRepositoryUrl(), refreshedTaskId);
+					.getRepositoryUrl(), refreshedTaskId.toString());
 			artifactTaskDataConverter.populateTaskData(taskData, tuleapArtifact, monitor);
 
 			return taskData;
@@ -387,7 +385,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			TaskRepository taskRepository, IProgressMonitor monitor) throws CoreException {
 		TuleapRestClient restClient = this.connector.getClientManager().getRestClient(taskRepository);
 		String taskId = taskData.getTaskId();
-		int milestoneId = TuleapTaskIdentityUtil.getElementIdFromTaskDataId(taskId);
+		int milestoneId = TuleapTaskId.forName(taskId).getArtifactId();
 		TuleapMilestone milestone = restClient.getMilestone(milestoneId, monitor);
 		if (milestone != null) {
 			MilestoneTaskDataConverter taskDataConverter = new MilestoneTaskDataConverter(taskRepository,
@@ -447,7 +445,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			IProgressMonitor monitor) throws CoreException {
 		TuleapRestClient restClient = this.connector.getClientManager().getRestClient(taskRepository);
 		String taskId = taskData.getTaskId();
-		int projectId = TuleapTaskIdentityUtil.getProjectIdFromTaskDataId(taskId);
+		int projectId = TuleapTaskId.forName(taskId).getProjectId();
 		TopPlanningMapper mapper = new TopPlanningMapper(taskData);
 		mapper.initializeEmptyTaskData();
 		TuleapProject project = connector.getServer(taskRepository.getUrl()).getProject(projectId);
