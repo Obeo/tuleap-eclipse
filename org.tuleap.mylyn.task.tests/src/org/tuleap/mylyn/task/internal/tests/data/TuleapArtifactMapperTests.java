@@ -15,13 +15,15 @@ import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
@@ -57,8 +59,7 @@ import static org.junit.Assert.fail;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-@Ignore
-public class TuleapConfigurableElementMapperTests {
+public class TuleapArtifactMapperTests {
 
 	/**
 	 * The task repository.
@@ -159,11 +160,25 @@ public class TuleapConfigurableElementMapperTests {
 		this.tuleapProject = new TuleapProject(projectName, projectId);
 		this.tuleapProject.addTracker(tuleapTracker);
 		tuleapServer.addProject(tuleapProject);
-		// this.repositoryConnector = new MockedTuleapRepositoryConnector(tuleapServer);
-		fail("Fix the test ");
+		this.repositoryConnector = new ITuleapRepositoryConnector() {
+
+			public TuleapClientManager getClientManager() {
+				return null;
+			}
+
+			public TuleapServer getServer(String url) {
+				return null;
+			}
+
+			public TuleapTracker refreshTracker(TaskRepository taskRepository, TuleapTracker tracker,
+					IProgressMonitor monitor) throws CoreException {
+				return null;
+			}
+
+		};
 
 		this.attributeMapper = new TuleapAttributeMapper(repository, repositoryConnector);
-		this.taskData = new TaskData(attributeMapper, connectorKind, repositoryUrl, "task1"); //$NON-NLS-1$
+		this.taskData = new TaskData(attributeMapper, connectorKind, repositoryUrl, ""); //$NON-NLS-1$
 		this.mapper = new TuleapArtifactMapper(taskData, tuleapTracker);
 	}
 
@@ -498,7 +513,8 @@ public class TuleapConfigurableElementMapperTests {
 		int statusOpen0 = 0;
 		mapper.setStatus(statusOpen0);
 
-		assertEquals(statusOpen0, taskData.getRoot().getAttribute(TaskAttribute.STATUS).getValue());
+		assertEquals(statusOpen0, Integer.parseInt(taskData.getRoot().getAttribute(TaskAttribute.STATUS)
+				.getValue()));
 		assertEquals(statusOpen0, mapper.getStatus());
 		assertNull(mapper.getCompletionDate());
 
@@ -506,7 +522,8 @@ public class TuleapConfigurableElementMapperTests {
 		int statusClosed2 = 2;
 		mapper.setStatus(statusClosed2);
 
-		assertEquals(statusClosed2, taskData.getRoot().getAttribute(TaskAttribute.STATUS).getValue());
+		assertEquals(statusClosed2, Integer.parseInt(taskData.getRoot().getAttribute(TaskAttribute.STATUS)
+				.getValue()));
 		assertEquals(statusClosed2, mapper.getStatus());
 		assertNotNull(mapper.getCompletionDate());
 
@@ -514,7 +531,8 @@ public class TuleapConfigurableElementMapperTests {
 		int statusOpen1 = 1;
 		mapper.setStatus(statusOpen1);
 
-		assertEquals(statusOpen1, taskData.getRoot().getAttribute(TaskAttribute.STATUS).getValue());
+		assertEquals(statusOpen1, Integer.parseInt(taskData.getRoot().getAttribute(TaskAttribute.STATUS)
+				.getValue()));
 		assertEquals(statusOpen1, mapper.getStatus());
 		assertNull(mapper.getCompletionDate());
 	}
@@ -538,7 +556,8 @@ public class TuleapConfigurableElementMapperTests {
 		int statusClosed2 = 2;
 		mapper.setStatus(statusOpen0);
 
-		assertEquals(statusOpen0, taskData.getRoot().getAttribute(TaskAttribute.STATUS).getValue());
+		assertEquals(statusOpen0, Integer.parseInt(taskData.getRoot().getAttribute(TaskAttribute.STATUS)
+				.getValue()));
 		assertEquals(statusOpen0, mapper.getStatus());
 		assertNull(mapper.getCompletionDate());
 		assertEquals(2, taskData.getRoot().getAttribute(TaskAttribute.STATUS).getOptions().size());
@@ -550,7 +569,8 @@ public class TuleapConfigurableElementMapperTests {
 		// go to closed state, completion date must be non-null
 		mapper.setStatus(statusOpen1);
 
-		assertEquals(statusOpen1, taskData.getRoot().getAttribute(TaskAttribute.STATUS).getValue());
+		assertEquals(statusOpen1, Integer.parseInt(taskData.getRoot().getAttribute(TaskAttribute.STATUS)
+				.getValue()));
 		assertEquals(statusOpen1, mapper.getStatus());
 		assertNull(mapper.getCompletionDate());
 		assertEquals(2, taskData.getRoot().getAttribute(TaskAttribute.STATUS).getOptions().size());
@@ -562,7 +582,8 @@ public class TuleapConfigurableElementMapperTests {
 		// go to closed state, completion date must be non-null
 		mapper.setStatus(statusClosed2);
 
-		assertEquals(statusClosed2, taskData.getRoot().getAttribute(TaskAttribute.STATUS).getValue());
+		assertEquals(statusClosed2, Integer.parseInt(taskData.getRoot().getAttribute(TaskAttribute.STATUS)
+				.getValue()));
 		assertEquals(statusClosed2, mapper.getStatus());
 		assertNotNull(mapper.getCompletionDate());
 		assertEquals(3, taskData.getRoot().getAttribute(TaskAttribute.STATUS).getOptions().size());
@@ -575,7 +596,8 @@ public class TuleapConfigurableElementMapperTests {
 		// Back to open, completion date must be null
 		mapper.setStatus(statusOpen1);
 
-		assertEquals(statusOpen1, taskData.getRoot().getAttribute(TaskAttribute.STATUS).getValue());
+		assertEquals(statusOpen1, Integer.parseInt(taskData.getRoot().getAttribute(TaskAttribute.STATUS)
+				.getValue()));
 		assertEquals(statusOpen1, mapper.getStatus());
 		assertNull(mapper.getCompletionDate());
 	}
