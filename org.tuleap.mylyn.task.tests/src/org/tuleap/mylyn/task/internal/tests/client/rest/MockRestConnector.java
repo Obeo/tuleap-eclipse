@@ -34,6 +34,8 @@ public class MockRestConnector implements IRestConnector {
 
 	protected final List<ServerRequest> requestsSent = Lists.newArrayList();
 
+	protected int invocationsCount;
+
 	/**
 	 * The response this object will return.
 	 */
@@ -41,7 +43,17 @@ public class MockRestConnector implements IRestConnector {
 
 	public ServerResponse sendRequest(String method, String url, Map<String, String> headers, String data) {
 		requestsSent.add(new ServerRequest(method, url, headers, data));
+		invocationsCount++;
 		return response;
+	}
+
+	/**
+	 * The number of times sendRequest was called during this object's lifetime.
+	 * 
+	 * @return
+	 */
+	public int getInvocationsCount() {
+		return invocationsCount;
 	}
 
 	/**

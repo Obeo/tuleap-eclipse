@@ -34,6 +34,7 @@ public class MockPaginatingRestConnector extends MockRestConnector {
 		for (String s : strings) {
 			if (s.startsWith("offset=")) { //$NON-NLS-1$
 				String offset = s.substring("offset=".length()).trim(); //$NON-NLS-1$
+				invocationsCount++;
 				return responses.get(offset);
 			}
 		}

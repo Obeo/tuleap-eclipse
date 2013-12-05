@@ -89,6 +89,7 @@ public class RestOperationsTest {
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, "body", responseHeaders);
 		connector.setResponse(response);
 		ServerResponse serverResponse = op.run();
+		assertEquals(1, connector.getInvocationsCount());
 		assertEquals(response, serverResponse);
 	}
 
@@ -99,7 +100,9 @@ public class RestOperationsTest {
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, "{'a':'1'}", responseHeaders);
 		connector.setResponse(response);
 		Iterator<JsonElement> iterator = new RestOperationIterable(op).iterator();
+		assertEquals(1, connector.getInvocationsCount());
 		assertEquals("{\"a\":\"1\"}", iterator.next().toString());
+		assertEquals(1, connector.getInvocationsCount());
 		assertFalse(iterator.hasNext());
 	}
 
@@ -112,7 +115,10 @@ public class RestOperationsTest {
 		connector.setResponse(response);
 		Iterator<JsonElement> iterator = new RestOperationIterable(op).iterator();
 		assertEquals("{\"a\":\"1\"}", iterator.next().toString());
+		assertEquals(1, connector.getInvocationsCount());
 		assertEquals("{\"a\":\"2\"}", iterator.next().toString());
+		assertEquals(1, connector.getInvocationsCount());
+		// No new invocation since 2 answers in the same page
 		assertFalse(iterator.hasNext());
 	}
 
@@ -141,12 +147,16 @@ public class RestOperationsTest {
 		paginatingConnector.putResponse(2, response2);
 
 		Iterator<JsonElement> iterator = new RestOperationIterable(op).iterator();
+		assertEquals(1, paginatingConnector.getInvocationsCount());
 		assertTrue(iterator.hasNext());
 		assertEquals("{\"a\":\"1\"}", iterator.next().toString());
+		assertEquals(1, paginatingConnector.getInvocationsCount());
 		assertTrue(iterator.hasNext());
 		assertEquals("{\"a\":\"2\"}", iterator.next().toString());
+		assertEquals(1, paginatingConnector.getInvocationsCount());
 		assertTrue(iterator.hasNext());
 		assertEquals("{\"a\":\"3\"}", iterator.next().toString());
+		assertEquals(2, paginatingConnector.getInvocationsCount());
 		assertFalse(iterator.hasNext());
 	}
 

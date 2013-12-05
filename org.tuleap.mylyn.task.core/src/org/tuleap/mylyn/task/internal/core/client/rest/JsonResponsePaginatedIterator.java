@@ -151,7 +151,7 @@ public class JsonResponsePaginatedIterator implements Iterator<JsonElement> {
 		if (currentOffset >= nbElements) {
 			throw new NoSuchElementException();
 		}
-		if (currentOffset % nbElementsPerPage == 0 || !iterator.hasNext()) {
+		if (currentOffset > 0 && (currentOffset % nbElementsPerPage == 0 || !iterator.hasNext())) {
 			currentResponse = operation.withHeaders(headers).withBody(body).withQueryParameter(OFFSET,
 					Integer.toString(currentOffset)).withQueryParameter(LIMIT,
 					Integer.toString(nbElementsPerPage)).run();
