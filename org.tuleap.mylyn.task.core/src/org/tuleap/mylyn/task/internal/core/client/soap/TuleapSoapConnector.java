@@ -989,8 +989,8 @@ public class TuleapSoapConnector {
 		int artifactId = this.getTuleapTrackerV5APIPortType().addArtifact(sessionHash, groupId,
 				artifact.getTracker().getId(), valuesList.toArray(new ArtifactFieldValue[valuesList.size()]));
 
-		TuleapTaskId taskDataId = TuleapTaskId.forArtifact(groupId, artifact.getTracker().getId(),
-				artifactId);
+		TuleapTaskId taskDataId = TuleapTaskId
+				.forArtifact(groupId, artifact.getTracker().getId(), artifactId);
 		monitor.worked(fifty);
 
 		this.logout();
@@ -1110,14 +1110,8 @@ public class TuleapSoapConnector {
 						bindValues.add(new TrackerFieldBindValue(
 								ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID, "")); //$NON-NLS-1$
 					} else {
-						// String label = null;
-						// TrackerFieldBindValue[] trackerFieldBindValues = trackerField.getValues();
-						// for (TrackerFieldBindValue trackerFieldBindValue : trackerFieldBindValues) {
-						// if (trackerFieldBindValue.getBind_value_id() == value.intValue()) {
-						// label = trackerFieldBindValue.getBind_value_label();
-						// }
-						// }
-						bindValues.add(new TrackerFieldBindValue(value.intValue(), null));
+						bindValues.add(new TrackerFieldBindValue(value.intValue(), computeBindValueLabel(
+								trackerField, value)));
 					}
 				}
 				FieldValue fieldValue = new FieldValue(
@@ -1143,6 +1137,25 @@ public class TuleapSoapConnector {
 		}
 
 		return artifactFieldValue;
+	}
+
+	/**
+	 * Computes the label of the bind value with the given id.
+	 * 
+	 * @param trackerField
+	 *            The field
+	 * @param bindValueId
+	 *            The bind value id
+	 * @return The label of the bind value with the given id
+	 */
+	private String computeBindValueLabel(TrackerField trackerField, Integer bindValueId) {
+		TrackerFieldBindValue[] trackerFieldBindValues = trackerField.getValues();
+		for (TrackerFieldBindValue trackerFieldBindValue : trackerFieldBindValues) {
+			if (trackerFieldBindValue.getBind_value_id() == bindValueId.intValue()) {
+				return trackerFieldBindValue.getBind_value_label();
+			}
+		}
+		return null;
 	}
 
 	/**
