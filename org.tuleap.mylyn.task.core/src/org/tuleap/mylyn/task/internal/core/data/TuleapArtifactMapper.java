@@ -735,17 +735,6 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 							}
 						}
 
-						for (String strValue : attribute.getOptions().keySet()) {
-							if (!strValue.equals(String
-									.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID))) {
-								try {
-									valueIds.add(Integer.valueOf(strValue));
-								} catch (NumberFormatException e) {
-									// TODO Add log about non integer value
-								}
-							}
-
-						}
 						BoundFieldValue boundFieldValue = new BoundFieldValue(this.tracker.getStatusField()
 								.getIdentifier(), valueIds);
 						result.add(boundFieldValue);
