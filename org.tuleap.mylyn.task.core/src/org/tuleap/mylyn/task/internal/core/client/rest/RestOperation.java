@@ -323,13 +323,14 @@ public class RestOperation {
 			} else {
 				if (debugPart != null) {
 					msg = TuleapMylynTasksMessages.getString(
-							TuleapMylynTasksMessagesKeys.errorReturnedByServerWithDebug, getUrl(),
-							getMethodName(), Integer.valueOf(errorPart.getCode()), errorPart.getMessage(),
-							debugPart.getSource());
+							TuleapMylynTasksMessagesKeys.errorReturnedByServerWithDebug,
+							getUrlWithQueryParameters(), getMethodName(), Integer
+									.valueOf(errorPart.getCode()), errorPart.getMessage(), debugPart
+									.getSource());
 				} else {
 					msg = TuleapMylynTasksMessages.getString(
-							TuleapMylynTasksMessagesKeys.errorReturnedByServer, getUrl(), getMethodName(),
-							Integer.valueOf(errorPart.getCode()), errorPart.getMessage());
+							TuleapMylynTasksMessagesKeys.errorReturnedByServer, getUrlWithQueryParameters(),
+							getMethodName(), Integer.valueOf(errorPart.getCode()), errorPart.getMessage());
 				}
 			}
 			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, msg));
