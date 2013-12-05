@@ -13,7 +13,6 @@ package org.tuleap.mylyn.task.internal.core.data.converter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -230,7 +229,7 @@ public class ArtifactTaskDataConverter {
 			tuleapArtifact = new TuleapArtifact(taskId.getArtifactId(), trackerRef, projectRef);
 		}
 
-		Set<AbstractFieldValue> fieldValues = tuleapArtifactMapper.getFieldValues();
+		List<AbstractFieldValue> fieldValues = tuleapArtifactMapper.getFieldValues();
 		for (AbstractFieldValue abstractFieldValue : fieldValues) {
 			tuleapArtifact.addFieldValue(abstractFieldValue);
 		}

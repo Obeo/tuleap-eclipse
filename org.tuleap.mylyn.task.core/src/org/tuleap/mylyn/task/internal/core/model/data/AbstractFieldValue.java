@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model.data;
 
-
 /**
  * This is the common ancestor of all the four kind of field values that can be found in a Tuleap configurable
  * element:

@@ -40,16 +40,23 @@ import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapString;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapText;
+import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapAttributeMapper;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -167,7 +174,7 @@ public class TuleapArtifactMapperTests {
 			}
 
 			public TuleapServer getServer(String url) {
-				return null;
+				return tuleapServer;
 			}
 
 			public TuleapTracker refreshTracker(TaskRepository taskRepository, TuleapTracker tracker,
@@ -654,6 +661,111 @@ public class TuleapArtifactMapperTests {
 	}
 
 	/**
+	 * Test the creation of the list of field values.
+	 */
+	@Test
+	public void testGetFieldValues() {
+		initializeTrackerGetFieldValues();
+
+		String title = "Title";
+		String semanticContributor = "0";
+		String status = "2";
+		String date = "";
+		String floatValue = "3.14157";
+		String integerValue = "42";
+		List<String> multiSelectBox = Lists.newArrayList("0", "2");
+		String openList = "a, b, c, d";
+		String selectBox = "2";
+		String string = "Hello World";
+		String text = "The cake is a lie";
+
+		// Populate the task data
+		this.taskData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY).setValue(title);
+		this.taskData.getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED).setValue(semanticContributor);
+		this.taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS).setValue(status);
+		this.taskData.getRoot().getMappedAttribute(String.valueOf(3)).setValue(date);
+		this.taskData.getRoot().getMappedAttribute(String.valueOf(4)).setValue(floatValue);
+		this.taskData.getRoot().getMappedAttribute(String.valueOf(5)).setValue(integerValue);
+		this.taskData.getRoot().getMappedAttribute(String.valueOf(6)).setValues(multiSelectBox);
+		this.taskData.getRoot().getMappedAttribute(String.valueOf(7)).setValue(openList);
+		this.taskData.getRoot().getMappedAttribute(String.valueOf(8)).setValue(selectBox);
+		this.taskData.getRoot().getMappedAttribute(String.valueOf(9)).setValue(string);
+		this.taskData.getRoot().getMappedAttribute(String.valueOf(10)).setValue(text);
+
+		// Tests the value of all the fields
+		List<AbstractFieldValue> fieldValues = this.mapper.getFieldValues();
+		assertThat(fieldValues.size(), is(11));
+
+		assertThat(fieldValues.get(0).getFieldId(), is(0));
+		assertThat(fieldValues.get(0), instanceOf(LiteralFieldValue.class));
+		assertThat(((LiteralFieldValue)fieldValues.get(0)).getFieldValue(), is(title));
+
+		assertThat(fieldValues.get(1).getFieldId(), is(1));
+		assertThat(fieldValues.get(1), instanceOf(BoundFieldValue.class));
+		List<Integer> valueIds = Lists.newArrayList(Integer.valueOf(semanticContributor));
+		assertThat(((BoundFieldValue)fieldValues.get(1)).getValueIds(), is(valueIds));
+
+		assertThat(fieldValues.get(2).getFieldId(), is(2));
+		assertThat(fieldValues.get(2), instanceOf(BoundFieldValue.class));
+		valueIds = Lists.newArrayList(Integer.valueOf(status));
+		assertThat(((BoundFieldValue)fieldValues.get(2)).getValueIds(), is(valueIds));
+
+		assertThat(fieldValues.get(3).getFieldId(), is(3));
+		assertThat(fieldValues.get(3), instanceOf(LiteralFieldValue.class));
+		assertThat(((LiteralFieldValue)fieldValues.get(3)).getFieldValue(), is(date));
+
+		assertThat(fieldValues.get(4).getFieldId(), is(4));
+		assertThat(fieldValues.get(4), instanceOf(LiteralFieldValue.class));
+		assertThat(((LiteralFieldValue)fieldValues.get(4)).getFieldValue(), is(floatValue));
+
+		assertThat(fieldValues.get(5).getFieldId(), is(5));
+		assertThat(fieldValues.get(5), instanceOf(LiteralFieldValue.class));
+		assertThat(((LiteralFieldValue)fieldValues.get(5)).getFieldValue(), is(integerValue));
+
+		assertThat(fieldValues.get(6).getFieldId(), is(6));
+		assertThat(fieldValues.get(6), instanceOf(BoundFieldValue.class));
+		valueIds = Lists.newArrayList(Integer.valueOf(0), Integer.valueOf(2));
+		assertThat(((BoundFieldValue)fieldValues.get(6)).getValueIds(), is(valueIds));
+
+		assertThat(fieldValues.get(7).getFieldId(), is(7));
+		assertThat(fieldValues.get(7), instanceOf(LiteralFieldValue.class));
+		assertThat(((LiteralFieldValue)fieldValues.get(7)).getFieldValue(), is(openList));
+
+		assertThat(fieldValues.get(8).getFieldId(), is(8));
+		assertThat(fieldValues.get(8), instanceOf(BoundFieldValue.class));
+		valueIds = Lists.newArrayList(Integer.valueOf(2));
+		assertThat(((BoundFieldValue)fieldValues.get(8)).getValueIds(), is(valueIds));
+
+		assertThat(fieldValues.get(9).getFieldId(), is(9));
+		assertThat(fieldValues.get(9), instanceOf(LiteralFieldValue.class));
+		assertThat(((LiteralFieldValue)fieldValues.get(9)).getFieldValue(), is(string));
+
+		assertThat(fieldValues.get(10).getFieldId(), is(10));
+		assertThat(fieldValues.get(10), instanceOf(LiteralFieldValue.class));
+		assertThat(((LiteralFieldValue)fieldValues.get(10)).getFieldValue(), is(text));
+	}
+
+	/**
+	 * Initialize the tracker for the test of getFieldValues().
+	 */
+	private void initializeTrackerGetFieldValues() {
+		// Initialize the tracker
+		tuleapTracker.addField(this.newSemanticTitle(0));
+		tuleapTracker.addField(this.newSemanticContributorSingle(1));
+		tuleapTracker.addField(this.newSemanticStatusWithWorkflow(2));
+		tuleapTracker.addField(this.newTuleapDate(3));
+		tuleapTracker.addField(this.newTuleapFloat(4));
+		tuleapTracker.addField(this.newTuleapInteger(5));
+		tuleapTracker.addField(this.newTuleapMultiSelectBox(6));
+		tuleapTracker.addField(this.newTuleapOpenList(7));
+		tuleapTracker.addField(this.newTuleapSelectBox(8));
+		tuleapTracker.addField(this.newTuleapString(9));
+		tuleapTracker.addField(this.newTuleapText(10));
+
+		mapper.initializeEmptyTaskData();
+	}
+
+	/**
 	 * Creates a new Tuleap Date Field.
 	 * 
 	 * @param id
@@ -868,7 +980,7 @@ public class TuleapArtifactMapperTests {
 	 * @return The created field
 	 */
 	private TuleapSelectBox newSemanticContributorSingle(int id) {
-		TuleapSelectBox result = new TuleapSelectBox(id);
+		TuleapSelectBox result = this.newTuleapSelectBox(id);
 		setDescriptionAndLabelFromId(result);
 		result.setSemanticContributor(true);
 		return result;
@@ -882,7 +994,7 @@ public class TuleapArtifactMapperTests {
 	 * @return The created field
 	 */
 	private TuleapMultiSelectBox newSemanticContributorMultiple(int id) {
-		TuleapMultiSelectBox result = new TuleapMultiSelectBox(id);
+		TuleapMultiSelectBox result = this.newTuleapMultiSelectBox(id);
 		setDescriptionAndLabelFromId(result);
 		result.setSemanticContributor(true);
 		return result;

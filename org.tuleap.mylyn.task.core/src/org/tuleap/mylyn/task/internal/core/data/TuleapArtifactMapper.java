@@ -18,7 +18,6 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -674,7 +673,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * 
 	 * @return The set of the field values, never null but potentially empty.
 	 */
-	public Set<AbstractFieldValue> getFieldValues() {
+	public List<AbstractFieldValue> getFieldValues() {
 		// FIXME SBE Support full task key in the task dependency fields!!!!!!!
 		/*
 		 * /!\HACKISH/!\ We may have, as the id of the task, an identifier (ie: 917) or a complex identifier
@@ -686,7 +685,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 		// returns all the tuleap field value in order to send them to the server
 		// attachments are not uploaded with the same mechanism so no need to return them here
 		// do not return the fields computed by tuleap or mylyn: creation date, completion date, id, etc
-		Set<AbstractFieldValue> result = new LinkedHashSet<AbstractFieldValue>();
+		List<AbstractFieldValue> result = new ArrayList<AbstractFieldValue>();
 		// For the moment, we return all known values.
 		// Later, an improvement will be to return only those values that have changed.
 		for (TaskAttribute attribute : taskData.getRoot().getAttributes().values()) {
