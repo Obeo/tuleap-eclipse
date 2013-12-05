@@ -10,25 +10,19 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.data.converter;
 
-import com.google.common.collect.Maps;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
-import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.config.field.AbstractTuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapFileUpload;
@@ -64,11 +58,6 @@ public class ArtifactTaskDataConverter {
 	 * The connector to use.
 	 */
 	protected final ITuleapRepositoryConnector connector;
-
-	/**
-	 * Map of refreshed trackers to only refresh them once during the "transaction".
-	 */
-	private final Map<Integer, TuleapTracker> refreshedTrackersById = Maps.newHashMap();
 
 	/**
 	 * Constructor.
@@ -203,59 +192,6 @@ public class ArtifactTaskDataConverter {
 		}
 
 		return taskData;
-	}
-
-	/**
-	 * Populate the configurable fields for the given element.
-	 * 
-	 * @param taskData
-	 *            The task data to use
-	 * @param element
-	 *            The element to populate
-	 * @return The element to populate
-	 */
-	protected TuleapArtifact populateElementConfigurableFields(TaskData taskData, TuleapArtifact element) {
-		TuleapArtifactMapper tuleapArtifactMapper = new TuleapArtifactMapper(taskData, this.tracker);
-		for (AbstractFieldValue fieldValue : tuleapArtifactMapper.getFieldValues()) {
-			element.addFieldValue(fieldValue);
-		}
-		// TODO FIB Add missing information to add to ELEMENT
-		return element;
-	}
-
-	/**
-	 * Refresh the tracker if it has not already been refreshed.
-	 * 
-	 * @param projectId
-	 *            The project Id
-	 * @param trackerId
-	 *            The tracker Id
-	 * @param monitor
-	 *            The progress monitor to use
-	 */
-	protected void refreshTracker(int projectId, int trackerId, IProgressMonitor monitor) {
-		TuleapTracker refreshedConfig;
-		if (refreshedTrackersById.containsKey(Integer.valueOf(trackerId))) {
-			refreshedConfig = refreshedTrackersById.get(Integer.valueOf(trackerId));
-		} else {
-			// Let's refresh the tracker
-			// First, let's get the element's project config, in case the element comes from a
-			// different project, who knows...
-			TuleapProject project;
-			if (tracker != null) {
-				project = tracker.getProject();
-			} else {
-				project = connector.getServer(taskRepository.getUrl()).getProject(projectId);
-			}
-			refreshedConfig = project.getTracker(trackerId);
-			try {
-				refreshedTrackersById.put(Integer.valueOf(trackerId), connector.refreshTracker(
-						taskRepository, refreshedConfig, monitor));
-			} catch (CoreException e) {
-				// TODO Check this is the right way to log
-				TuleapCoreActivator.log(e, false);
-			}
-		}
 	}
 
 	/**
