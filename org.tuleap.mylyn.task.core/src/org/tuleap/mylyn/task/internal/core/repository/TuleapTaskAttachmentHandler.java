@@ -100,7 +100,7 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 	}
 
 	/**
-	 * Indicates if the tracker on which the task is contained has a fiel upload field.
+	 * Indicates if the tracker on which the task is contained has a file upload field.
 	 * 
 	 * @param repository
 	 *            The task repository
@@ -114,12 +114,14 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 		TuleapTaskId taskDataId = TuleapTaskId.forName(task.getTaskId());
 		TuleapServer tuleapServer = this.connector.getServer(repository.getRepositoryUrl());
 		TuleapProject project = tuleapServer.getProject(taskDataId.getProjectId());
-		TuleapTracker tracker = project.getTracker(taskDataId.getTrackerId());
-
+		TuleapTracker tracker = null;
+		if (project != null) {
+			// Can happen for new tasks
+			tracker = project.getTracker(taskDataId.getTrackerId());
+		}
 		if (tracker != null) {
 			hasFileUploadField = tracker.getAttachmentField() != null;
 		}
-
 		return hasFileUploadField;
 	}
 
