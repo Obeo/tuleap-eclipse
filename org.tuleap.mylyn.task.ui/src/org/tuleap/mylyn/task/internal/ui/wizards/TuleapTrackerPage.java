@@ -28,7 +28,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
-import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.ui.TuleapTasksUIPlugin;
 import org.tuleap.mylyn.task.internal.ui.util.ITuleapUIConstants;
@@ -40,6 +39,7 @@ import org.tuleap.mylyn.task.internal.ui.util.TuleapUiMessagesKeys;
  * task will be created.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
+ * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  * @since 0.7
  */
 public class TuleapTrackerPage extends WizardPage {
@@ -50,9 +50,9 @@ public class TuleapTrackerPage extends WizardPage {
 	private static final int HEIGHT_HINT = 250;
 
 	/**
-	 * The project used.
+	 * The trackers used.
 	 */
-	private TuleapProject project;
+	private List<TuleapTracker> trackers;
 
 	/**
 	 * The widget where the available trackers will be displayed.
@@ -67,14 +67,14 @@ public class TuleapTrackerPage extends WizardPage {
 	/**
 	 * The constructor.
 	 * 
-	 * @param project
-	 *            The project used
+	 * @param trackers
+	 *            The trackers to display
 	 */
-	public TuleapTrackerPage(TuleapProject project) {
+	public TuleapTrackerPage(List<TuleapTracker> trackers) {
 		super(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapTrackerPageName));
 		this.setTitle(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapTrackerPageTitle));
 		this.setDescription(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapTrackerPageDescription));
-		this.project = project;
+		this.trackers = trackers;
 	}
 
 	/**
@@ -100,7 +100,6 @@ public class TuleapTrackerPage extends WizardPage {
 		viewer.setLabelProvider(new TuleapTrackerLabelProvider());
 		viewer.setContentProvider(new TuleapTrackerContentProvider());
 
-		List<TuleapTracker> trackers = this.project.getAllTrackers();
 		this.trackerTree.getViewer().setInput(trackers);
 
 		trackerDescriptionLabel = new Label(composite, SWT.NONE);

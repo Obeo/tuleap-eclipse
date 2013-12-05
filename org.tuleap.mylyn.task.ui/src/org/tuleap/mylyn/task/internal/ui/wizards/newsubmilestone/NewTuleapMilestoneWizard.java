@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.ui.wizards.newsubmilestone;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.wizard.Wizard;
 import org.tuleap.mylyn.task.agile.core.IMilestoneMapping;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
@@ -65,7 +68,13 @@ public class NewTuleapMilestoneWizard extends Wizard {
 	 */
 	@Override
 	public void addPages() {
-		this.trackerPage = new TuleapTrackerPage(this.project);
+		List<TuleapTracker> milestoneTrackers = new ArrayList<TuleapTracker>();
+		for (TuleapTracker tracker : project.getAllTrackers()) {
+			if (project.isMilestoneTracker(tracker.getIdentifier())) {
+				milestoneTrackers.add(tracker);
+			}
+		}
+		this.trackerPage = new TuleapTrackerPage(milestoneTrackers);
 		this.addPage(this.trackerPage);
 	}
 

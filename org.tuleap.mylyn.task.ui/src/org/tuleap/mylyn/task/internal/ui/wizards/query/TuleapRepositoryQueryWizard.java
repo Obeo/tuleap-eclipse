@@ -101,7 +101,7 @@ public class TuleapRepositoryQueryWizard extends RepositoryQueryWizard {
 			TuleapProject projectSelected = projectPage.getProjectSelected();
 
 			if (!projectPage.isTopLevelPlanningQuery()) {
-				this.tuleapTrackerPage = new TuleapTrackerPage(projectSelected);
+				this.tuleapTrackerPage = new TuleapTrackerPage(projectSelected.getAllTrackers());
 				this.tuleapTrackerPage.setWizard(this);
 				nextPage = tuleapTrackerPage;
 			}
