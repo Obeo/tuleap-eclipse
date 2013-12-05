@@ -64,4 +64,16 @@ public interface ITuleapHeaders {
 	 * Header key for the property that describes the number of elements in the paginated list.
 	 */
 	String HEADER_X_PAGINATION_SIZE = "X-PAGINATION-SIZE"; //$NON-NLS-1$
+
+	/**
+	 * Header key for the property that describes the authorized pagination limit (the maximum number of
+	 * elements per page that is authorized by the server).
+	 */
+	String HEADER_X_PAGINATION_LIMIT_MAX = "X-PAGINATION-LIMIT-MAX"; //$NON-NLS-1$
+
+	/**
+	 * Default value for pagination limit max when header HEADER_X_PAGINATION_LIMIT_MAX is not present.
+	 */
+	int DEFAULT_PAGINATION_LIMIT_MAX = 50;
+
 }

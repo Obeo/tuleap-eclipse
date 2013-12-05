@@ -223,6 +223,42 @@ public class RestResourceTest {
 		r.get();
 	}
 
+	@Test
+	public void testGetPaginationLimitSet() throws CoreException {
+		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.GET, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+				connector, new TestLogger());
+		Map<String, String> headers = Maps.newTreeMap();
+		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		headers.put(ITuleapHeaders.HEADER_X_PAGINATION_LIMIT_MAX, "30"); //$NON-NLS-1$
+		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
+		RestOperation get = r.get();
+		assertEquals("GET", get.getMethodName());
+		assertEquals("/server/api/v12.5/my/url", get.getUrl());
+		assertEquals("/server/api/v12.5/my/url?limit=30", get.getUrlWithQueryParameters());
+
+		headers.put(ITuleapHeaders.HEADER_X_PAGINATION_LIMIT_MAX, "10"); //$NON-NLS-1$
+		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
+		get = r.get();
+		assertEquals("GET", get.getMethodName());
+		assertEquals("/server/api/v12.5/my/url", get.getUrl());
+		assertEquals("/server/api/v12.5/my/url?limit=10", get.getUrlWithQueryParameters());
+	}
+
+	@Test
+	public void testGetPaginationLimitNotSet() throws CoreException {
+		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.GET, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+				connector, new TestLogger());
+		Map<String, String> headers = Maps.newTreeMap();
+		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
+		RestOperation get = r.get();
+		assertEquals("GET", get.getMethodName());
+		assertEquals("/server/api/v12.5/my/url", get.getUrl());
+		assertEquals("/server/api/v12.5/my/url", get.getUrlWithQueryParameters());
+	}
+
 	/**
 	 * Set up the tests.
 	 */

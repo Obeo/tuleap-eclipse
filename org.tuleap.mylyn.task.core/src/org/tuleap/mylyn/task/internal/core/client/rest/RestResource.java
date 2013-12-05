@@ -54,6 +54,11 @@ public class RestResource {
 	public static final int DELETE = 1 << 3;
 
 	/**
+	 * Query parameter used to transmit the pagination limit.
+	 */
+	public static final String LIMIT = "limit"; //$NON-NLS-1$
+
+	/**
 	 * Separator used for toString().
 	 */
 	private static final String SEPARATOR = ", "; //$NON-NLS-1$
@@ -186,7 +191,19 @@ public class RestResource {
 					getUrl()));
 		}
 		checkOptionsAllows(Method.GET);
-		return RestOperation.get(getFullUrl(), connector, logger).withAuthenticator(authenticator);
+
+		RestOperation operation = RestOperation.get(getFullUrl(), connector, logger).withAuthenticator(
+				authenticator);
+		final Map<String, String> respHeaders = optionsResponse.getHeaders();
+		if (respHeaders.containsKey(ITuleapHeaders.HEADER_X_PAGINATION_LIMIT_MAX)) {
+			String limit = String.valueOf(ITuleapHeaders.DEFAULT_PAGINATION_LIMIT_MAX);
+			if (respHeaders.containsKey(ITuleapHeaders.HEADER_X_PAGINATION_LIMIT_MAX)) {
+				String limitMax = respHeaders.get(ITuleapHeaders.HEADER_X_PAGINATION_LIMIT_MAX);
+				limit = limitMax;
+			}
+			operation.withQueryParameter(LIMIT, limit);
+		}
+		return operation;
 	}
 
 	/**
@@ -301,6 +318,7 @@ public class RestResource {
 					TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.cannotPerformOperation,
 							getUrl(), method)));
 		}
+
 		// FIXME uncomment when Tuleap supports CORS attributes in headers
 		// Only if it's useful to add this constraint!
 		// if (!headerCorsAllows.contains(method.toString())) {
