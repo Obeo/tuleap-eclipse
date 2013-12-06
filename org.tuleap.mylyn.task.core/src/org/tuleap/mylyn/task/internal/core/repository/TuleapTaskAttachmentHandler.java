@@ -145,7 +145,7 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 			String id = attachmentAttributeId.substring(index + "---".length()); //$NON-NLS-1$
 			int attachmentId = Integer.valueOf(id).intValue();
 
-			int artifactId = Integer.valueOf(taskId).intValue();
+			int artifactId = TuleapTaskId.forName(taskId).getArtifactId();
 
 			TaskAttachmentMapper taskAttachment = TaskAttachmentMapper.createFrom(attachmentAttribute);
 			Long length = taskAttachment.getLength();
@@ -241,7 +241,7 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 			}
 		}
 
-		int artifactId = Integer.valueOf(task.getTaskId()).intValue();
+		int artifactId = TuleapTaskId.forName(task.getTaskId()).getArtifactId();
 
 		String filename = source.getName();
 		String filetype = source.getContentType();
