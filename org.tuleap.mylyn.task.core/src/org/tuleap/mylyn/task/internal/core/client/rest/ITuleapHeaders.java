@@ -45,9 +45,9 @@ public interface ITuleapHeaders {
 	String HEADER_X_PAGINATION_LIMIT = "X-PAGINATION-LIMIT"; //$NON-NLS-1$
 
 	/**
-	 * Default value for pagination limit when header X-PAGINATION-LIMIT is not present.
+	 * Default value for pagination limit when header X-PAGINATION-LIMIT-MAX is not present.
 	 */
-	int DEFAULT_PAGINATION_LIMIT = 10;
+	int DEFAULT_PAGINATION_LIMIT = 50;
 
 	/**
 	 * Header key for the property that describes the pagination offset (index of the first element in the
@@ -70,10 +70,5 @@ public interface ITuleapHeaders {
 	 * elements per page that is authorized by the server).
 	 */
 	String HEADER_X_PAGINATION_LIMIT_MAX = "X-PAGINATION-LIMIT-MAX"; //$NON-NLS-1$
-
-	/**
-	 * Default value for pagination limit max when header HEADER_X_PAGINATION_LIMIT_MAX is not present.
-	 */
-	int DEFAULT_PAGINATION_LIMIT_MAX = 50;
 
 }

@@ -195,11 +195,13 @@ public class RestResource {
 		RestOperation operation = RestOperation.get(getFullUrl(), connector, logger).withAuthenticator(
 				authenticator);
 		final Map<String, String> respHeaders = optionsResponse.getHeaders();
-		if (respHeaders.containsKey(ITuleapHeaders.HEADER_X_PAGINATION_LIMIT_MAX)) {
-			String limit = String.valueOf(ITuleapHeaders.DEFAULT_PAGINATION_LIMIT_MAX);
+		if (respHeaders.containsKey(ITuleapHeaders.HEADER_X_PAGINATION_SIZE)) {
+			String limit;
 			if (respHeaders.containsKey(ITuleapHeaders.HEADER_X_PAGINATION_LIMIT_MAX)) {
 				String limitMax = respHeaders.get(ITuleapHeaders.HEADER_X_PAGINATION_LIMIT_MAX);
 				limit = limitMax;
+			} else {
+				limit = String.valueOf(ITuleapHeaders.DEFAULT_PAGINATION_LIMIT);
 			}
 			operation.withQueryParameter(LIMIT, limit);
 		}
