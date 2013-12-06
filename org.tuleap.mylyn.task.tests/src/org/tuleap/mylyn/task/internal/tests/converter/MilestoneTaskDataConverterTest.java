@@ -153,7 +153,7 @@ public class MilestoneTaskDataConverterTest {
 		final TuleapClientManager clientManager = new TuleapClientManager() {
 			@Override
 			public TuleapRestClient getRestClient(TaskRepository pTaskRepository) {
-				return new TuleapRestClient(null, null, null, null, null);
+				return new TuleapRestClient(null, null, null, null);
 			}
 		};
 

@@ -32,7 +32,6 @@ import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapConnector;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
-import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.ui.TuleapTasksUIPlugin;
 import org.tuleap.mylyn.task.internal.ui.util.ITuleapUIConstants;
@@ -197,14 +196,13 @@ public class TuleapRepositorySettingsPage extends AbstractRepositorySettingsPage
 			TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(tuleapSoapConnector, tuleapSoapParser);
 
 			TuleapJsonParser jsonParser = new TuleapJsonParser();
-			TuleapJsonSerializer jsonSerializer = new TuleapJsonSerializer();
 
 			TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(location, logger);
 			RestResourceFactory resourceFactory = new RestResourceFactory(location.getUrl(),
 					ITuleapAPIVersions.BEST_VERSION, tuleapRestConnector, TuleapTasksUIPlugin.getDefault()
 							.getLog());
 			TuleapRestClient tuleapRestClient = new TuleapRestClient(resourceFactory, jsonParser,
-					jsonSerializer, taskRepository, logger);
+					taskRepository, logger);
 
 			this.tuleapValidator = new TuleapValidator(location, tuleapSoapClient, tuleapRestClient,
 					taskRepository);

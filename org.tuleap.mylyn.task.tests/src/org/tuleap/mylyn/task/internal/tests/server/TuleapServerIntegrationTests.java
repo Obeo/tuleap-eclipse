@@ -28,7 +28,6 @@ import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestConnector;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
-import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.tests.AbstractTuleapTests;
 import org.tuleap.mylyn.task.internal.tests.TestLogger;
@@ -55,11 +54,10 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 		TestLogger logger = new TestLogger();
 		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(location, logger);
 		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
-		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
 		RestResourceFactory restResourceFactory = new RestResourceFactory(location.getUrl(), "v3.14",
 				tuleapRestConnector, new TestLogger());
 		TuleapRestClient tuleapServer = new TuleapRestClient(restResourceFactory, tuleapJsonParser,
-				tuleapJsonSerializer, this.repository, logger);
+				this.repository, logger);
 		try {
 			IStatus connectionStatus = tuleapServer.validateConnection(new NullProgressMonitor());
 			assertEquals(IStatus.OK, connectionStatus.getSeverity());
@@ -80,11 +78,10 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 		TestLogger logger = new TestLogger();
 		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(location, logger);
 		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
-		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
 		RestResourceFactory restResourceFactory = new RestResourceFactory(location.getUrl(), "v3.14",
 				tuleapRestConnector, new TestLogger());
 		TuleapRestClient tuleapServer = new TuleapRestClient(restResourceFactory, tuleapJsonParser,
-				tuleapJsonSerializer, this.repository, logger);
+				this.repository, logger);
 		try {
 			tuleapServer.validateConnection(new NullProgressMonitor());
 			fail("A CoreException should have been thrown"); //$NON-NLS-1$
@@ -102,11 +99,10 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 		TestLogger logger = new TestLogger();
 		TuleapRestConnector restConnector = new TuleapRestConnector(location, logger);
 		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
-		TuleapJsonSerializer tuleapJsonSerializer = new TuleapJsonSerializer();
 		RestResourceFactory restResourceFactory = new RestResourceFactory(location.getUrl(), "v3.14",
 				restConnector, new TestLogger());
 		TuleapRestClient tuleapServer = new TuleapRestClient(restResourceFactory, tuleapJsonParser,
-				tuleapJsonSerializer, this.repository, logger);
+				this.repository, logger);
 		try {
 			List<TuleapMilestone> milestoneItems = tuleapServer.getSubMilestones(200, null);
 			assertEquals(3, milestoneItems.size());

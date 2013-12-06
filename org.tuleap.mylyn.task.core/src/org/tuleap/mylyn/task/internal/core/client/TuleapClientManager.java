@@ -28,7 +28,6 @@ import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapConnector;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
-import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
 
 /**
  * The Tuleap client manager will create new clients for a given Mylyn tasks repository or find existing ones.
@@ -113,13 +112,12 @@ public class TuleapClientManager implements IRepositoryListener {
 
 		// Create the REST client
 		TuleapJsonParser jsonParser = new TuleapJsonParser();
-		TuleapJsonSerializer jsonSerializer = new TuleapJsonSerializer();
 		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(webLocation, logger);
 		RestResourceFactory restResourceFactory = new RestResourceFactory(webLocation.getUrl(),
 				ITuleapAPIVersions.BEST_VERSION, tuleapRestConnector, TuleapCoreActivator.getDefault()
 						.getLog());
 		TuleapRestClient tuleapRestClient = new TuleapRestClient(restResourceFactory, jsonParser,
-				jsonSerializer, taskRepository, logger);
+				taskRepository, logger);
 		this.restClientCache.put(taskRepository, tuleapRestClient);
 	}
 

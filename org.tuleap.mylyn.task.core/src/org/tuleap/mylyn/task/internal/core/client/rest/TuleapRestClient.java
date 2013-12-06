@@ -45,7 +45,6 @@ import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCardwall;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapSwimlane;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
-import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonSerializer;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.serializer.TuleapBacklogItemsSerializer;
 import org.tuleap.mylyn.task.internal.core.serializer.TuleapCardSerializer;
@@ -71,11 +70,6 @@ public class TuleapRestClient implements IAuthenticator {
 	 * The JSON parser.
 	 */
 	private final TuleapJsonParser jsonParser;
-
-	/**
-	 * The JSON serializer.
-	 */
-	private final TuleapJsonSerializer jsonSerializer;
 
 	/**
 	 * The task repository.
@@ -104,18 +98,15 @@ public class TuleapRestClient implements IAuthenticator {
 	 *            The RESt resource factory to use
 	 * @param jsonParser
 	 *            The Tuleap JSON parser
-	 * @param jsonSerializer
-	 *            The Tuleap JSON serializer
 	 * @param taskRepository
 	 *            The task repository
 	 * @param logger
 	 *            The logger
 	 */
 	public TuleapRestClient(RestResourceFactory resourceFactory, TuleapJsonParser jsonParser,
-			TuleapJsonSerializer jsonSerializer, TaskRepository taskRepository, ILog logger) {
+			TaskRepository taskRepository, ILog logger) {
 		this.restResourceFactory = resourceFactory;
 		this.jsonParser = jsonParser;
-		this.jsonSerializer = jsonSerializer;
 		this.taskRepository = taskRepository;
 		this.logger = logger;
 	}

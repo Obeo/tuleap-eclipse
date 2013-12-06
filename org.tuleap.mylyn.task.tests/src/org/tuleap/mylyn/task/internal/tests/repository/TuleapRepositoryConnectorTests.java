@@ -298,7 +298,7 @@ public class TuleapRepositoryConnectorTests {
 		final TuleapClientManager tuleapClientManager = new TuleapClientManager() {
 			@Override
 			public TuleapRestClient getRestClient(TaskRepository repository) {
-				return new TuleapRestClient(null, null, null, null, null) {
+				return new TuleapRestClient(null, null, null, null) {
 					@Override
 					public List<TuleapBacklogItem> getProjectBacklog(int projectId, IProgressMonitor monitor)
 							throws CoreException {

@@ -138,7 +138,7 @@ public class TuleapRestClientTest {
 		MockListRestConnector listConnector = new MockListRestConnector();
 		restResourceFactory = new RestResourceFactory(serverUrl, apiVersion, listConnector, new TestLogger());
 		listConnector.setResourceFactory(restResourceFactory);
-		client = new TuleapRestClient(restResourceFactory, jsonParser, null, repository, null);
+		client = new TuleapRestClient(restResourceFactory, jsonParser, repository, null);
 
 		String sprint250 = ParserUtil.loadFile("/milestones/sprint250.json"); //$NON-NLS-1$
 
@@ -391,7 +391,7 @@ public class TuleapRestClientTest {
 		listConnector.addServerResponse(milestoneOptionsResponse);
 		listConnector.addServerResponse(milestoneResponse);
 		// Need to create a new client to use the specific connector.
-		client = new TuleapRestClient(restResourceFactory, jsonParser, null, repository, null);
+		client = new TuleapRestClient(restResourceFactory, jsonParser, repository, null);
 
 		TuleapMilestone milestone = client.getMilestone(200, null);
 		assertNotNull(milestone);
@@ -428,6 +428,6 @@ public class TuleapRestClientTest {
 				"password"), true);
 		connector.setResourceFactory(restResourceFactory);
 		jsonParser = new TuleapJsonParser();
-		client = new TuleapRestClient(restResourceFactory, jsonParser, null, repository, null);
+		client = new TuleapRestClient(restResourceFactory, jsonParser, repository, null);
 	}
 }

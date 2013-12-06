@@ -248,7 +248,7 @@ public class TuleapTaskDataHandlerTests {
 		};
 
 		// Mock rest client
-		final TuleapRestClient tuleapRestClient = new TuleapRestClient(null, null, null, null, null) {
+		final TuleapRestClient tuleapRestClient = new TuleapRestClient(null, null, null, null) {
 			@Override
 			public TuleapMilestone getMilestone(int id, IProgressMonitor monitor) throws CoreException {
 				return tuleapMilestone;
@@ -318,8 +318,7 @@ public class TuleapTaskDataHandlerTests {
 	@Test
 	public void testGetTaskDataMilestone() {
 		// TODO SBE remove the ignore when the creation of the milestone is done
-		this.testGetTaskData(TuleapTaskId
-				.forArtifact(projectRef.getId(), milestoneTrackerId, milestoneId));
+		this.testGetTaskData(TuleapTaskId.forArtifact(projectRef.getId(), milestoneTrackerId, milestoneId));
 	}
 
 	/**
@@ -329,8 +328,8 @@ public class TuleapTaskDataHandlerTests {
 	@Test
 	public void testGetTaskDataBacklogItem() {
 		// TODO [BacklogItems] Check this is appropriate
-		this.testGetTaskData(TuleapTaskId.forArtifact(projectRef.getId(), backlogItemTrackerId,
-				backlogItemId));
+		this.testGetTaskData(TuleapTaskId
+				.forArtifact(projectRef.getId(), backlogItemTrackerId, backlogItemId));
 	}
 
 	/**
@@ -361,7 +360,7 @@ public class TuleapTaskDataHandlerTests {
 		};
 
 		// Mock rest client
-		final TuleapRestClient tuleapRestClient = new TuleapRestClient(null, null, null, null, null) {
+		final TuleapRestClient tuleapRestClient = new TuleapRestClient(null, null, null, null) {
 			// Nothing here for the moment
 		};
 
@@ -419,8 +418,7 @@ public class TuleapTaskDataHandlerTests {
 				projectRef.getId()).getTracker(trackerRef.getId()));
 		mapper.initializeEmptyTaskData();
 
-		TuleapTaskId taskId = TuleapTaskId.forArtifact(projectRef.getId(), trackerRef.getId(),
-				artifactId);
+		TuleapTaskId taskId = TuleapTaskId.forArtifact(projectRef.getId(), trackerRef.getId(), artifactId);
 		this.testPostTaskData(taskData, taskId, ResponseKind.TASK_CREATED);
 	}
 
@@ -438,8 +436,7 @@ public class TuleapTaskDataHandlerTests {
 				projectRef.getId()).getTracker(milestoneTrackerId));
 		mapper.initializeEmptyTaskData();
 
-		TuleapTaskId taskId = TuleapTaskId.forArtifact(projectRef.getId(), milestoneTrackerId,
-				milestoneId);
+		TuleapTaskId taskId = TuleapTaskId.forArtifact(projectRef.getId(), milestoneTrackerId, milestoneId);
 		this.testPostTaskData(taskData, taskId, ResponseKind.TASK_CREATED);
 	}
 
@@ -468,8 +465,7 @@ public class TuleapTaskDataHandlerTests {
 	 */
 	@Test
 	public void testPostUpdateTaskDataArtifact() {
-		TuleapTaskId taskId = TuleapTaskId.forArtifact(projectRef.getId(), trackerRef.getId(),
-				artifactId);
+		TuleapTaskId taskId = TuleapTaskId.forArtifact(projectRef.getId(), trackerRef.getId(), artifactId);
 		TaskData taskData = new TaskData(new TaskAttributeMapper(this.repository),
 				ITuleapConstants.CONNECTOR_KIND, "", taskId.toString());
 
@@ -486,8 +482,7 @@ public class TuleapTaskDataHandlerTests {
 	 */
 	@Test
 	public void testPostUpdateTaskDataMilestone() {
-		TuleapTaskId taskId = TuleapTaskId.forArtifact(projectRef.getId(), milestoneTrackerId,
-				milestoneId);
+		TuleapTaskId taskId = TuleapTaskId.forArtifact(projectRef.getId(), milestoneTrackerId, milestoneId);
 		TaskData taskData = new TaskData(new TaskAttributeMapper(this.repository),
 				ITuleapConstants.CONNECTOR_KIND, "", taskId.toString());
 
