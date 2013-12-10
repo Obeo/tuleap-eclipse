@@ -177,7 +177,8 @@ public final class RestResourceFactory {
 	 * @return A resource that gives access to the {code /projects/:id/backlog} HTTP resource.
 	 */
 	public RestResource projectBacklog(int projectId) {
-		return resource(RestResource.GET, URL.PROJECTS, Integer.toString(projectId), URL.BACKLOG);
+		return resource(RestResource.GET | RestResource.PUT, URL.PROJECTS, Integer.toString(projectId),
+				URL.BACKLOG);
 	}
 
 	/**

@@ -14,6 +14,7 @@ import com.google.common.collect.Lists;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -46,7 +47,6 @@ import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapSwimlane;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
-import org.tuleap.mylyn.task.internal.core.serializer.TuleapBacklogItemsSerializer;
 import org.tuleap.mylyn.task.internal.core.serializer.TuleapCardSerializer;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
@@ -714,22 +714,47 @@ public class TuleapRestClient implements IAuthenticator {
 	public void updateMilestoneBacklog(int milestoneId, List<TuleapBacklogItem> backlogItems,
 			IProgressMonitor monitor) throws CoreException {
 		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.updatingBacklogItems, Integer.valueOf(milestoneId)));
+			monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.updatingBacklog,
+					Integer.valueOf(milestoneId)));
 		}
-
 		RestResource backlogResource = restResourceFactory.milestoneBacklog(milestoneId).withAuthenticator(
 				this);
-
 		// from POJO to JSON
-		JsonElement backlogItemsArray = new TuleapBacklogItemsSerializer()
-				.serialize(backlogItems, null, null);
+		JsonArray backlogItemsArray = new JsonArray();
+		for (TuleapBacklogItem item : backlogItems) {
+			backlogItemsArray.add(new JsonPrimitive(Integer.valueOf(item.getId())));
+		}
 		String changesToPut = backlogItemsArray.toString();
-
-		// Send the PUT request
-
 		RestOperation operation = backlogResource.put().withBody(changesToPut);
+		operation.checkedRun();
+	}
 
+	/**
+	 * Updates the backlog of a given milestone.
+	 * 
+	 * @param projectId
+	 *            The project id
+	 * @param backlogItems
+	 *            The backlogItems list to update.
+	 * @param monitor
+	 *            The monitor to use
+	 * @throws CoreException
+	 *             If anything goes wrong.
+	 */
+	public void updateTopPlanningBacklog(int projectId, List<TuleapBacklogItem> backlogItems,
+			IProgressMonitor monitor) throws CoreException {
+		if (monitor != null) {
+			monitor.subTask(TuleapMylynTasksMessages.getString(
+					TuleapMylynTasksMessagesKeys.updatingProjectBacklog, Integer.valueOf(projectId)));
+		}
+		RestResource backlogResource = restResourceFactory.projectBacklog(projectId).withAuthenticator(this);
+		// from POJO to JSON
+		JsonArray backlogItemsArray = new JsonArray();
+		for (TuleapBacklogItem item : backlogItems) {
+			backlogItemsArray.add(new JsonPrimitive(Integer.valueOf(item.getId())));
+		}
+		String changesToPut = backlogItemsArray.toString();
+		RestOperation operation = backlogResource.put().withBody(changesToPut);
 		operation.checkedRun();
 	}
 
@@ -748,22 +773,18 @@ public class TuleapRestClient implements IAuthenticator {
 	public void updateMilestoneContent(int milestoneId, List<TuleapBacklogItem> backlogItems,
 			IProgressMonitor monitor) throws CoreException {
 		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.updatingBacklogItems, Integer.valueOf(milestoneId)));
+			monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.updatingContent,
+					Integer.valueOf(milestoneId)));
 		}
-
 		RestResource backlogResource = restResourceFactory.milestoneContent(milestoneId).withAuthenticator(
 				this);
-
 		// from POJO to JSON
-		JsonElement backlogItemsArray = new TuleapBacklogItemsSerializer()
-				.serialize(backlogItems, null, null);
+		JsonArray backlogItemsArray = new JsonArray();
+		for (TuleapBacklogItem item : backlogItems) {
+			backlogItemsArray.add(new JsonPrimitive(Integer.valueOf(item.getId())));
+		}
 		String changesToPut = backlogItemsArray.toString();
-
-		// Send the PUT request
-
 		RestOperation operation = backlogResource.put().withBody(changesToPut);
-
 		operation.checkedRun();
 	}
 

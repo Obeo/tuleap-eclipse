@@ -325,9 +325,19 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	public static String updatingBacklogItem;
 
 	/**
-	 * Update backlogItems of a specific milestone.
+	 * Update backlog of a milestone.
 	 */
-	public static String updatingBacklogItems;
+	public static String updatingBacklog;
+
+	/**
+	 * Update content of a milestone.
+	 */
+	public static String updatingContent;
+
+	/**
+	 * Update backlog of project.
+	 */
+	public static String updatingProjectBacklog;
 
 	/**
 	 * Updating a card.
@@ -343,11 +353,6 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	 * Retrieve a backlogItem.
 	 */
 	public static String retrievingBacklogItem;
-
-	/**
-	 * Retrieving topPlanning of a specific project.
-	 */
-	public static String retrievingTopPlannings;
 
 	/**
 	 * Retrieving a topPlanning.

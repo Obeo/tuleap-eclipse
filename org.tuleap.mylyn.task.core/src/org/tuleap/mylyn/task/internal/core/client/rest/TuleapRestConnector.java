@@ -97,7 +97,8 @@ public class TuleapRestConnector implements IRestConnector {
 	 * @see org.tuleap.mylyn.task.internal.core.client.rest.IRestConnector#sendRequest(java.lang.String,
 	 *      java.lang.String, java.util.Map, java.lang.String)
 	 */
-	public ServerResponse sendRequest(String method, String url, Map<String, String> headers, String data) {
+	public synchronized ServerResponse sendRequest(String method, String url, Map<String, String> headers,
+			String data) {
 		Request request = new Request(Method.valueOf(method), url);
 
 		Preference<CharacterSet> preferenceCharset = new Preference<CharacterSet>(CharacterSet.UTF_8);

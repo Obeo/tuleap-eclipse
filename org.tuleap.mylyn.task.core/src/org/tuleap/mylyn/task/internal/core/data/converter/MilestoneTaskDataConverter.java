@@ -108,8 +108,7 @@ public class MilestoneTaskDataConverter {
 			for (TuleapCard card : swimlane.getCards()) {
 				int trackerId = card.getTracker().getId();
 				int cardProjectId = card.getProject().getId();
-				TuleapTaskId cardId = TuleapTaskId
-						.forArtifact(cardProjectId, trackerId, card.getId());
+				TuleapTaskId cardId = TuleapTaskId.forArtifact(cardProjectId, trackerId, card.getId());
 				CardWrapper cardWrapper = swimlaneWrapper.addCard(cardId.toString());
 				populateCard(cardWrapper, card);
 			}
@@ -174,13 +173,16 @@ public class MilestoneTaskDataConverter {
 				bi.setLabel(biWrapper.getLabel());
 				bi.setType(biWrapper.getType());
 
-				TuleapTaskId parentTaskId = TuleapTaskId.forName(biWrapper.getParentId());
-				int parentId = parentTaskId.getArtifactId();
-				int trackerId = parentTaskId.getTrackerId();
-				TuleapReference trackerRef = new TuleapReference();
-				trackerRef.setId(trackerId);
-				ArtifactReference parentref = new ArtifactReference(parentId, null, trackerRef);
-				bi.setParent(parentref);
+				String internalParentId = biWrapper.getParentId();
+				if (internalParentId != null) {
+					TuleapTaskId parentTaskId = TuleapTaskId.forName(internalParentId);
+					int parentId = parentTaskId.getArtifactId();
+					int trackerId = parentTaskId.getTrackerId();
+					TuleapReference trackerRef = new TuleapReference();
+					trackerRef.setId(trackerId);
+					ArtifactReference parentref = new ArtifactReference(parentId, null, trackerRef);
+					bi.setParent(parentref);
+				}
 				backlogItems.add(bi);
 			}
 		}
@@ -217,13 +219,16 @@ public class MilestoneTaskDataConverter {
 				bi.setLabel(biWrapper.getLabel());
 				bi.setType(biWrapper.getType());
 
-				TuleapTaskId parentTaskId = TuleapTaskId.forName(biWrapper.getParentId());
-				int parentId = parentTaskId.getArtifactId();
-				int trackerId = parentTaskId.getTrackerId();
-				TuleapReference trackerRef = new TuleapReference();
-				trackerRef.setId(trackerId);
-				ArtifactReference parentref = new ArtifactReference(parentId, null, trackerRef);
-				bi.setParent(parentref);
+				String internalParentId = biWrapper.getParentId();
+				if (internalParentId != null) {
+					TuleapTaskId parentTaskId = TuleapTaskId.forName(biWrapper.getParentId());
+					int parentId = parentTaskId.getArtifactId();
+					int trackerId = parentTaskId.getTrackerId();
+					TuleapReference trackerRef = new TuleapReference();
+					trackerRef.setId(trackerId);
+					ArtifactReference parentref = new ArtifactReference(parentId, null, trackerRef);
+					bi.setParent(parentref);
+				}
 
 				backlogItems.add(bi);
 			}
@@ -275,8 +280,18 @@ public class MilestoneTaskDataConverter {
 	 * @return The milestone id.
 	 */
 	public int getMilestoneId(TaskData taskData) {
-		MilestonePlanningWrapper wrapper = new MilestonePlanningWrapper(taskData.getRoot());
-		return TuleapTaskId.forName(wrapper.getId()).getArtifactId();
+		return TuleapTaskId.forName(taskData.getTaskId()).getArtifactId();
+	}
+
+	/**
+	 * Retrieves the project id from a milestone {@link TaskData} object.
+	 * 
+	 * @param taskData
+	 *            the task data.
+	 * @return The milestone id.
+	 */
+	public int getProjectId(TaskData taskData) {
+		return TuleapTaskId.forName(taskData.getTaskId()).getProjectId();
 	}
 
 	/**

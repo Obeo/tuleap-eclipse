@@ -13,6 +13,7 @@ package org.tuleap.mylyn.task.internal.tests.repository;
 import com.google.common.collect.Sets;
 
 import java.util.Date;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -361,7 +362,11 @@ public class TuleapTaskDataHandlerTests {
 
 		// Mock rest client
 		final TuleapRestClient tuleapRestClient = new TuleapRestClient(null, null, null, null) {
-			// Nothing here for the moment
+			@Override
+			public void updateMilestoneBacklog(int miId, List<TuleapBacklogItem> backlogItems,
+					IProgressMonitor monitor) throws CoreException {
+				// Nothing to do here
+			}
 		};
 
 		// mock client manager

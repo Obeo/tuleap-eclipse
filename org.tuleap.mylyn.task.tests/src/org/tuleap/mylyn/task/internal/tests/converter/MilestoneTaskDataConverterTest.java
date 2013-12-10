@@ -64,27 +64,17 @@ public class MilestoneTaskDataConverterTest {
 	/**
 	 * Separator to use to compute the mylyn id of a configurable field {@link TaskAttribute}.
 	 */
-	public static final String FIELD_SEPARATOR = "_field-"; //$NON-NLS-1$
+	public static final String FIELD_SEPARATOR = "-f-"; //$NON-NLS-1$
 
 	/**
 	 * Suffix used to compute the mylyn id of the task atribute that represents the column id.
 	 */
-	public static final String SUFFIX_COLUMN_ID = "column_id"; //$NON-NLS-1$
-
-	/**
-	 * Suffix used for computing the card list task attribute id.
-	 */
-	public static final String SUFFIX_CARD_LIST = "cards"; //$NON-NLS-1$
+	public static final String SUFFIX_COLUMN_ID = "col_id"; //$NON-NLS-1$
 
 	/**
 	 * Suffix appended to the ids of Task Attributes representing labels.
 	 */
 	public static final String SUFFIX_LABEL = "lbl"; //$NON-NLS-1$
-
-	/**
-	 * Suffix appended to the ids of Task Attributes representing IDs.
-	 */
-	public static final String SUFFIX_ID = "id"; //$NON-NLS-1$
 
 	/**
 	 * Separator used in computed ids.
@@ -94,12 +84,12 @@ public class MilestoneTaskDataConverterTest {
 	/**
 	 * Id of the milestone list task attribute.
 	 */
-	public static final String COLUMN_LIST = "mta_cols"; //$NON-NLS-1$
+	public static final String COLUMN_LIST = "mta_col-"; //$NON-NLS-1$
 
 	/**
 	 * Id of the milestone list task attribute.
 	 */
-	public static final String SWIMLANE_LIST = "mta_lanes"; //$NON-NLS-1$
+	public static final String SWIMLANE_PREFIX = "mta_swi-"; //$NON-NLS-1$
 
 	/**
 	 * Suffix used to compute the mylyn id of the task atribute that represents the status.
@@ -109,7 +99,7 @@ public class MilestoneTaskDataConverterTest {
 	/**
 	 * Suffix used to compute the mylyn id of the task atribute that represents the status.
 	 */
-	public static final String ALLOWED_COLS = "allowed_columns_ids"; //$NON-NLS-1$
+	public static final String ALLOWED_COLS = "allowed_cols"; //$NON-NLS-1$
 
 	private static final long START_TIME = 30 * 365L * 24L * 3600000L;
 
@@ -247,18 +237,15 @@ public class MilestoneTaskDataConverterTest {
 
 		TaskAttribute root = taskData.getRoot();
 
-		TaskAttribute swimlaneList = root.getAttribute(SWIMLANE_LIST);
-		assertNotNull(swimlaneList);
-
 		int id = 0;
 		// The first swimlane
-		String swimlaneId = SWIMLANE_LIST + ID_SEPARATOR + id++;
-		TaskAttribute firstSwimlaneTA = swimlaneList.getAttribute(swimlaneId);
+		String swimlaneId = SWIMLANE_PREFIX + id++;
+		TaskAttribute firstSwimlaneTA = root.getAttribute(swimlaneId);
 		assertNotNull(firstSwimlaneTA);
 
 		// The second swimlane
-		swimlaneId = SWIMLANE_LIST + ID_SEPARATOR + id++;
-		TaskAttribute secondSwimlaneTA = swimlaneList.getAttribute(swimlaneId);
+		swimlaneId = SWIMLANE_PREFIX + id++;
+		TaskAttribute secondSwimlaneTA = root.getAttribute(swimlaneId);
 		assertNotNull(secondSwimlaneTA);
 
 	}
@@ -289,38 +276,23 @@ public class MilestoneTaskDataConverterTest {
 
 		TaskAttribute root = taskData.getRoot();
 
-		TaskAttribute columnList = root.getAttribute(COLUMN_LIST);
-		assertNotNull(columnList);
-
 		int i = 0;
 		// the first column
-		String attId = COLUMN_LIST + ID_SEPARATOR + i++;
-		TaskAttribute firstColumnTA = columnList.getAttribute(attId);
+		String attId = COLUMN_LIST + 600;
+		TaskAttribute firstColumnTA = root.getAttribute(attId);
+		assertEquals("600", firstColumnTA.getValue()); //$NON-NLS-1$
 
-		TaskAttribute firstColumnIdTA = firstColumnTA.getAttribute(attId + ID_SEPARATOR + SUFFIX_ID);
-
-		assertNotNull(firstColumnIdTA);
-		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, firstColumnIdTA.getMetaData().getType());
-		assertEquals("600", firstColumnIdTA.getValue()); //$NON-NLS-1$
-
-		TaskAttribute firstColumnLabelTA = firstColumnTA.getAttribute(attId + ID_SEPARATOR + SUFFIX_LABEL);
-
+		TaskAttribute firstColumnLabelTA = root.getAttribute(attId + ID_SEPARATOR + SUFFIX_LABEL);
 		assertNotNull(firstColumnLabelTA);
 		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, firstColumnLabelTA.getMetaData().getType());
 		assertEquals("first column", firstColumnLabelTA.getValue()); //$NON-NLS-1$
 
 		// the second column
-		attId = COLUMN_LIST + ID_SEPARATOR + i++;
-		TaskAttribute secondColumnTA = columnList.getAttribute(attId);
+		attId = COLUMN_LIST + 800;
+		TaskAttribute secondColumnTA = root.getAttribute(attId);
+		assertEquals("800", secondColumnTA.getValue()); //$NON-NLS-1$
 
-		TaskAttribute secondColumnIdTA = secondColumnTA.getAttribute(attId + ID_SEPARATOR + SUFFIX_ID);
-
-		assertNotNull(secondColumnIdTA);
-		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, secondColumnIdTA.getMetaData().getType());
-		assertEquals("800", secondColumnIdTA.getValue()); //$NON-NLS-1$
-
-		TaskAttribute secondColumnLabelTA = secondColumnTA.getAttribute(attId + ID_SEPARATOR + SUFFIX_LABEL);
-
+		TaskAttribute secondColumnLabelTA = root.getAttribute(attId + ID_SEPARATOR + SUFFIX_LABEL);
 		assertNotNull(secondColumnLabelTA);
 		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, secondColumnLabelTA.getMetaData().getType());
 		assertEquals("second column", secondColumnLabelTA.getValue()); //$NON-NLS-1$
@@ -360,52 +332,42 @@ public class MilestoneTaskDataConverterTest {
 		converter.populateTaskData(taskData, milestone, null);
 		converter.populateCardwall(taskData, cardwall, null);
 
-		TaskAttribute swimlaneList = taskData.getRoot().getAttribute(SWIMLANE_LIST);
+		TaskAttribute root = taskData.getRoot();
 
 		int id = 0;
 		// The first swimlane
-		String swimlaneId = SWIMLANE_LIST + ID_SEPARATOR + id++;
-		TaskAttribute firstSwimlaneTA = swimlaneList.getAttribute(swimlaneId);
+		String swimlaneId = SWIMLANE_PREFIX + id++;
+		TaskAttribute firstSwimlaneTA = root.getAttribute(swimlaneId);
+		assertNotNull(firstSwimlaneTA);
 
-		TaskAttribute cardsList = firstSwimlaneTA.getMappedAttribute(swimlaneId + ID_SEPARATOR
-				+ SUFFIX_CARD_LIST);
-		assertNotNull(cardsList);
-
-		TaskAttribute firstCardTA = cardsList.getAttribute(swimlaneId + ID_SEPARATOR + SUFFIX_CARD_LIST
-				+ ID_SEPARATOR + "200:700#0"); //$NON-NLS-1$
+		TaskAttribute firstCardTA = root.getAttribute(swimlaneId + ID_SEPARATOR + "200:700#0"); //$NON-NLS-1$
 		assertNotNull(firstCardTA);
+		assertEquals("200:700#0", firstCardTA.getValue()); //$NON-NLS-1$
 
-		TaskAttribute idFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR + SUFFIX_CARD_LIST
-				+ ID_SEPARATOR + "200:700#0" + ID_SEPARATOR + SUFFIX_ID); //$NON-NLS-1$
-
-		assertNotNull(idFirstCardTA);
-		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, idFirstCardTA.getMetaData().getType());
-		assertEquals("200:700#0", idFirstCardTA.getValue()); //$NON-NLS-1$
-
-		TaskAttribute statusIdFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
-				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
+		TaskAttribute statusIdFirstCardTA = root.getAttribute(swimlaneId + ID_SEPARATOR
+				+ "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
 				+ SUFFIX_COLUMN_ID);
 
 		assertNotNull(statusIdFirstCardTA);
 		assertEquals(TaskAttribute.TYPE_INTEGER, statusIdFirstCardTA.getMetaData().getType());
 		assertEquals("10000", statusIdFirstCardTA.getValue()); //$NON-NLS-1$
 
-		TaskAttribute fieldValueFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
-				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + FIELD_SEPARATOR + "1000"); //$NON-NLS-1$ //$NON-NLS-2$
+		TaskAttribute fieldValueFirstCardTA = root.getAttribute(swimlaneId + ID_SEPARATOR
+				+ "200:700#0" + FIELD_SEPARATOR + "1000"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		assertNotNull(fieldValueFirstCardTA);
 		assertEquals("300, 301, 302", fieldValueFirstCardTA.getValue()); //$NON-NLS-1$
 
-		TaskAttribute statusFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
-				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
+		TaskAttribute statusFirstCardTA = root.getAttribute(swimlaneId + ID_SEPARATOR
+				+ "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
 				+ SUFFIX_STATUS);
 
 		assertNotNull(statusFirstCardTA);
 		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, statusFirstCardTA.getMetaData().getType());
 		assertEquals("Open", statusFirstCardTA.getValue()); //$NON-NLS-1$
 
-		TaskAttribute allowedColumnsFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
-				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
+		TaskAttribute allowedColumnsFirstCardTA = root.getAttribute(swimlaneId + ID_SEPARATOR
+				+ "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
 				+ ALLOWED_COLS);
 
 		assertNotNull(allowedColumnsFirstCardTA);
@@ -443,8 +405,6 @@ public class MilestoneTaskDataConverterTest {
 		firstCard.setAllowedColumnIds(columnIds);
 		firstCard.setStatus(TuleapStatus.valueOf("Open"));
 
-		firstSwimlane.addCard(firstCard);
-
 		List<Integer> valueIds = new ArrayList<Integer>();
 		valueIds.add(new Integer(10));
 		valueIds.add(new Integer(20));
@@ -459,38 +419,27 @@ public class MilestoneTaskDataConverterTest {
 		converter.populateTaskData(taskData, milestone, null);
 		converter.populateCardwall(taskData, cardwall, null);
 
-		TaskAttribute swimlaneList = taskData.getRoot().getAttribute(SWIMLANE_LIST);
+		TaskAttribute root = taskData.getRoot();
 
 		int id = 0;
 		// The first swimlane
-		String swimlaneId = SWIMLANE_LIST + ID_SEPARATOR + id++;
-		TaskAttribute firstSwimlaneTA = swimlaneList.getAttribute(swimlaneId);
+		String swimlaneId = SWIMLANE_PREFIX + id++;
+		TaskAttribute firstSwimlaneTA = root.getAttribute(swimlaneId);
 
-		TaskAttribute cardsList = firstSwimlaneTA.getMappedAttribute(swimlaneId + ID_SEPARATOR
-				+ SUFFIX_CARD_LIST);
-		assertNotNull(cardsList);
-
-		TaskAttribute firstCardTA = cardsList.getAttribute(swimlaneId + ID_SEPARATOR + SUFFIX_CARD_LIST
-				+ ID_SEPARATOR + "200:700#0"); //$NON-NLS-1$
+		TaskAttribute firstCardTA = root.getAttribute(swimlaneId + "-200:700#0"); //$NON-NLS-1$
 		assertNotNull(firstCardTA);
+		assertEquals("200:700#0", firstCardTA.getValue()); //$NON-NLS-1$
 
-		TaskAttribute idFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR + SUFFIX_CARD_LIST
-				+ ID_SEPARATOR + "200:700#0" + ID_SEPARATOR + SUFFIX_ID); //$NON-NLS-1$
-
-		assertNotNull(idFirstCardTA);
-		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, idFirstCardTA.getMetaData().getType());
-		assertEquals("200:700#0", idFirstCardTA.getValue()); //$NON-NLS-1$
-
-		TaskAttribute statusIdFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
-				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
+		TaskAttribute statusIdFirstCardTA = root.getAttribute(swimlaneId + ID_SEPARATOR
+				+ "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
 				+ SUFFIX_COLUMN_ID);
 
 		assertNotNull(statusIdFirstCardTA);
 		assertEquals(TaskAttribute.TYPE_INTEGER, statusIdFirstCardTA.getMetaData().getType());
 		assertEquals("10000", statusIdFirstCardTA.getValue()); //$NON-NLS-1$
 
-		TaskAttribute fieldValueFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
-				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + FIELD_SEPARATOR + "2000"); //$NON-NLS-1$ //$NON-NLS-2$
+		TaskAttribute fieldValueFirstCardTA = root.getAttribute(swimlaneId + ID_SEPARATOR
+				+ "200:700#0" + FIELD_SEPARATOR + "2000"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		assertNotNull(fieldValueFirstCardTA);
 		// FIXME manage the type of Bound fields
@@ -501,16 +450,16 @@ public class MilestoneTaskDataConverterTest {
 		assertEquals("20", values.get(1)); //$NON-NLS-1$
 		assertEquals("30", values.get(2)); //$NON-NLS-1$
 
-		TaskAttribute statusFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
-				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
+		TaskAttribute statusFirstCardTA = root.getAttribute(swimlaneId + ID_SEPARATOR
+				+ "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
 				+ SUFFIX_STATUS);
 
 		assertNotNull(statusFirstCardTA);
 		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, statusFirstCardTA.getMetaData().getType());
 		assertEquals("Open", statusFirstCardTA.getValue()); //$NON-NLS-1$
 
-		TaskAttribute allowedColumnsFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
-				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
+		TaskAttribute allowedColumnsFirstCardTA = root.getAttribute(swimlaneId + ID_SEPARATOR
+				+ "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
 				+ ALLOWED_COLS);
 
 		assertNotNull(allowedColumnsFirstCardTA);
@@ -565,51 +514,40 @@ public class MilestoneTaskDataConverterTest {
 		converter.populateTaskData(taskData, milestone, null);
 		converter.populateCardwall(taskData, cardwall, null);
 
-		TaskAttribute swimlaneList = taskData.getRoot().getAttribute(SWIMLANE_LIST);
+		TaskAttribute root = taskData.getRoot();
 
 		int id = 0;
 		// The first swimlane
-		String swimlaneId = SWIMLANE_LIST + ID_SEPARATOR + id++;
-		TaskAttribute firstSwimlaneTA = swimlaneList.getAttribute(swimlaneId);
+		String swimlaneId = SWIMLANE_PREFIX + id++;
+		TaskAttribute firstSwimlaneTA = root.getAttribute(swimlaneId);
 
-		TaskAttribute cardsList = firstSwimlaneTA.getMappedAttribute(swimlaneId + ID_SEPARATOR
-				+ SUFFIX_CARD_LIST);
-		assertNotNull(cardsList);
-
-		TaskAttribute firstCardTA = cardsList.getAttribute(swimlaneId + ID_SEPARATOR + SUFFIX_CARD_LIST
-				+ ID_SEPARATOR + "200:700#0"); //$NON-NLS-1$
+		TaskAttribute firstCardTA = root.getAttribute(swimlaneId + ID_SEPARATOR + "200:700#0"); //$NON-NLS-1$
 		assertNotNull(firstCardTA);
+		assertEquals("200:700#0", firstCardTA.getValue()); //$NON-NLS-1$
 
-		TaskAttribute idFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR + SUFFIX_CARD_LIST
-				+ ID_SEPARATOR + "200:700#0" + ID_SEPARATOR + SUFFIX_ID); //$NON-NLS-1$
-
-		assertNotNull(idFirstCardTA);
-		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, idFirstCardTA.getMetaData().getType());
-		assertEquals("200:700#0", idFirstCardTA.getValue()); //$NON-NLS-1$
-
-		TaskAttribute statusIdFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
-				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
+		TaskAttribute statusIdFirstCardTA = root.getAttribute(swimlaneId + ID_SEPARATOR
+				+ "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
 				+ SUFFIX_COLUMN_ID);
 
 		assertNotNull(statusIdFirstCardTA);
 		assertEquals(TaskAttribute.TYPE_INTEGER, statusIdFirstCardTA.getMetaData().getType());
 		assertEquals("10000", statusIdFirstCardTA.getValue()); //$NON-NLS-1$
 
-		TaskAttribute fieldValueFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
-				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + FIELD_SEPARATOR + "2000"); //$NON-NLS-1$ //$NON-NLS-2$  
+		TaskAttribute fieldValueFirstCardTA = root.getAttribute(swimlaneId + ID_SEPARATOR
+				+ "200:700#0" + FIELD_SEPARATOR + "2000"); //$NON-NLS-1$ //$NON-NLS-2$  
 
 		assertNull(fieldValueFirstCardTA);
 
-		TaskAttribute statusFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
-				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
+		TaskAttribute statusFirstCardTA = root.getAttribute(swimlaneId + ID_SEPARATOR
+				+ "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
 				+ SUFFIX_STATUS);
 
 		assertNotNull(statusFirstCardTA);
 		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, statusFirstCardTA.getMetaData().getType());
 		assertEquals("Open", statusFirstCardTA.getValue()); //$NON-NLS-1$
 
-		TaskAttribute allowedColumnsFirstCardTA = firstCardTA.getAttribute(swimlaneId + ID_SEPARATOR
-				+ SUFFIX_CARD_LIST + ID_SEPARATOR + "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
+		TaskAttribute allowedColumnsFirstCardTA = root.getAttribute(swimlaneId + ID_SEPARATOR
+				+ "200:700#0" + ID_SEPARATOR //$NON-NLS-1$
 				+ ALLOWED_COLS);
 
 		assertNotNull(allowedColumnsFirstCardTA);
@@ -660,37 +598,34 @@ public class MilestoneTaskDataConverterTest {
 		TaskAttribute root = taskData.getRoot();
 
 		TaskAttribute planningAtt = root.getAttribute(MilestonePlanningWrapper.MILESTONE_PLANNING);
+		assertNotNull(planningAtt);
 
-		TaskAttribute backlogAtt = planningAtt.getAttribute(MilestonePlanningWrapper.BACKLOG);
+		TaskAttribute backlogAtt = root.getAttribute(MilestonePlanningWrapper.BACKLOG);
 		assertNotNull(backlogAtt);
 
 		for (int i = 0; i < 4; i++) {
-
-			TaskAttribute itemAtt = backlogAtt.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + i);
+			String internalId = "200:0#" + (230 + i);
+			TaskAttribute itemAtt = root.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + internalId);
 			assertNotNull(itemAtt);
 			assertTrue(itemAtt.getMetaData().isReadOnly());
-			TaskAttribute itemId = itemAtt.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + i
-					+ ID_SEPARATOR + AbstractTaskAttributeWrapper.SUFFIX_ID);
-			assertNotNull(itemId);
-			assertEquals(PROJECT_ID + ":" + BACKLOG_ITEM_TYPE_ID + "#23" + i, itemId.getValue()); //$NON-NLS-1$ //$NON-NLS-2$
-			assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, itemId.getMetaData().getType());
+			assertEquals(internalId, itemAtt.getValue());
 
-			TaskAttribute itemLabel = itemAtt.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + i
+			TaskAttribute itemLabel = root.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + internalId
 					+ ID_SEPARATOR + AbstractTaskAttributeWrapper.SUFFIX_LABEL);
 			assertNotNull(itemLabel);
 			assertEquals("item23" + i, itemLabel.getValue()); //$NON-NLS-1$
 			assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, itemLabel.getMetaData().getType());
 
-			TaskAttribute itemEffort = itemAtt.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + i
+			TaskAttribute itemEffort = root.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + internalId
 					+ ID_SEPARATOR + BacklogItemWrapper.SUFFIX_BACKLOG_ITEM_POINTS);
 			assertNotNull(itemEffort);
 			assertEquals("201", itemEffort.getValue());
 			assertEquals(TaskAttribute.TYPE_SHORT_TEXT, itemEffort.getMetaData().getType());
 
-			TaskAttribute itemAssignedMilestone = itemAtt.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM
-					+ i + ID_SEPARATOR + BacklogItemWrapper.SUFFIX_ASSIGNED_MILESTONE_ID);
+			TaskAttribute itemAssignedMilestone = root.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM
+					+ internalId + ID_SEPARATOR + BacklogItemWrapper.SUFFIX_ASSIGNED_MILESTONE_ID);
 			assertNotNull(itemAssignedMilestone);
-			assertEquals(PROJECT_ID + ":" + BACKLOG_ITEM_TYPE_ID + "#100", itemAssignedMilestone.getValue()); //$NON-NLS-1$ //$NON-NLS-2$
+			assertEquals("200:0#100", itemAssignedMilestone.getValue()); //$NON-NLS-1$ 
 			assertEquals(TaskAttribute.TYPE_INTEGER, itemAssignedMilestone.getMetaData().getType());
 		}
 	}
@@ -748,44 +683,40 @@ public class MilestoneTaskDataConverterTest {
 
 		TaskAttribute planningAtt = root.getAttribute(MilestonePlanningWrapper.MILESTONE_PLANNING);
 
-		TaskAttribute backlogAtt = planningAtt.getAttribute(MilestonePlanningWrapper.BACKLOG);
+		TaskAttribute backlogAtt = root.getAttribute(MilestonePlanningWrapper.BACKLOG);
 		assertNotNull(backlogAtt);
 
 		for (int i = 0; i < 4; i++) {
-			TaskAttribute itemAtt = backlogAtt.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + i);
+			String internalId = "200:0#" + (230 + i);
+			TaskAttribute itemAtt = root.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + internalId);
 			assertNotNull(itemAtt);
 			assertTrue(itemAtt.getMetaData().isReadOnly());
-			TaskAttribute itemId = itemAtt.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + i
-					+ ID_SEPARATOR + AbstractTaskAttributeWrapper.SUFFIX_ID);
-			assertNotNull(itemId);
-			assertEquals(PROJECT_ID + ":" + BACKLOG_ITEM_TYPE_ID + "#23" + i, itemId.getValue()); //$NON-NLS-1$ //$NON-NLS-2$
-			assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, itemId.getMetaData().getType());
 
-			TaskAttribute itemLabel = itemAtt.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + i
+			TaskAttribute itemLabel = root.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + internalId
 					+ ID_SEPARATOR + AbstractTaskAttributeWrapper.SUFFIX_LABEL);
 			assertNotNull(itemLabel);
 			assertEquals("item23" + i, itemLabel.getValue()); //$NON-NLS-1$
 			assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, itemLabel.getMetaData().getType());
 
-			TaskAttribute itemEffort = itemAtt.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + i
+			TaskAttribute itemEffort = root.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + internalId
 					+ ID_SEPARATOR + BacklogItemWrapper.SUFFIX_BACKLOG_ITEM_POINTS);
 			assertNotNull(itemEffort);
 			assertEquals("201", itemEffort.getValue());
 			assertEquals(TaskAttribute.TYPE_SHORT_TEXT, itemEffort.getMetaData().getType());
 
-			TaskAttribute itemParent = itemAtt.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + i
+			TaskAttribute itemParent = root.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + internalId
 					+ ID_SEPARATOR + BacklogItemWrapper.SUFFIX_BI_PARENT_ID);
 			assertNotNull(itemEffort);
 			assertEquals("200:0#23" + (i + 1), itemParent.getValue());
 			assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, itemParent.getMetaData().getType());
 
-			TaskAttribute itemDisplayParent = itemAtt.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + i
-					+ ID_SEPARATOR + BacklogItemWrapper.SUFFIX_BI_PARENT_DISPLAY_ID);
+			TaskAttribute itemDisplayParent = root.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM
+					+ internalId + ID_SEPARATOR + BacklogItemWrapper.SUFFIX_BI_PARENT_DISPLAY_ID);
 			assertNotNull(itemEffort);
 			assertEquals("23" + (i + 1), itemDisplayParent.getValue());
 			assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, itemDisplayParent.getMetaData().getType());
 
-			TaskAttribute itemType = itemAtt.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + i
+			TaskAttribute itemType = root.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + internalId
 					+ ID_SEPARATOR + BacklogItemWrapper.SUFFIX_TYPE);
 			assertNotNull(itemEffort);
 			assertEquals("Epics", itemType.getValue());
@@ -851,11 +782,11 @@ public class MilestoneTaskDataConverterTest {
 		converter.populateBacklog(taskData, backlog, null);
 		converter.addSubmilestone(taskData, submilestone100, content, null);
 
-		List<TuleapBacklogItem> backlogBacklogItems = converter.extractBacklog(taskData);
-		assertNotNull(backlogBacklogItems);
-		assertEquals(2, backlogBacklogItems.size());
+		List<TuleapBacklogItem> extractedBacklog = converter.extractBacklog(taskData);
+		assertNotNull(extractedBacklog);
+		assertEquals(2, extractedBacklog.size());
 
-		TuleapBacklogItem firstBI = backlogBacklogItems.get(0);
+		TuleapBacklogItem firstBI = extractedBacklog.get(0);
 		assertEquals(230, firstBI.getId());
 		assertEquals("item230", firstBI.getLabel());
 		assertEquals("201", firstBI.getInitialEffort());
@@ -863,7 +794,7 @@ public class MilestoneTaskDataConverterTest {
 		assertEquals(null, firstBI.getParent().getUri());
 		assertEquals("User stories", firstBI.getType());
 
-		TuleapBacklogItem secondBI = backlogBacklogItems.get(1);
+		TuleapBacklogItem secondBI = extractedBacklog.get(1);
 		assertEquals(231, secondBI.getId());
 		assertEquals("item231", secondBI.getLabel());
 		assertEquals("201", secondBI.getInitialEffort());

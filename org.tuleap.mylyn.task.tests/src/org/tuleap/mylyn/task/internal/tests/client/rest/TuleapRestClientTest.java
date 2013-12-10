@@ -258,7 +258,7 @@ public class TuleapRestClientTest {
 		ServerRequest request1 = requestsSent.get(1);
 		assertEquals("https://test/url/api/v12.3/milestones/50/backlog", request1.url); //$NON-NLS-1$
 		assertEquals("PUT", request1.method); //$NON-NLS-1$
-		assertEquals("[{\"id\":230},{\"id\":231},{\"id\":232},{\"id\":233}]", //$NON-NLS-1$
+		assertEquals("[230,231,232,233]", //$NON-NLS-1$
 				request1.body);
 	}
 
@@ -309,7 +309,7 @@ public class TuleapRestClientTest {
 		ServerRequest request1 = requestsSent.get(1);
 		assertEquals("https://test/url/api/v12.3/milestones/50/content", request1.url); //$NON-NLS-1$
 		assertEquals("PUT", request1.method); //$NON-NLS-1$
-		assertEquals("[{\"id\":230},{\"id\":231},{\"id\":232},{\"id\":233}]", //$NON-NLS-1$
+		assertEquals("[230,231,232,233]", //$NON-NLS-1$
 				request1.body);
 	}
 
