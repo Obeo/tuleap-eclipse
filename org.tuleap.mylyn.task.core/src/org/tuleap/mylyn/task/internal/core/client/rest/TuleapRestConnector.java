@@ -64,7 +64,7 @@ public class TuleapRestConnector implements IRestConnector {
 	/**
 	 * The HTTP client Restlet.
 	 */
-	private final Client client;
+	private Client client;
 
 	/**
 	 * the constructor.
@@ -77,7 +77,18 @@ public class TuleapRestConnector implements IRestConnector {
 	public TuleapRestConnector(AbstractWebLocation location, ILog logger) {
 		this.location = location;
 		this.logger = logger;
-		client = new Client(Protocol.HTTP);
+	}
+
+	/**
+	 * Provides this connector's Restlet client.
+	 * 
+	 * @return This instance's client, lazily creating it if necessary.
+	 */
+	protected synchronized Client getClient() {
+		if (client == null) {
+			client = new Client(Protocol.HTTPS);
+		}
+		return client;
 	}
 
 	/**
@@ -127,7 +138,7 @@ public class TuleapRestConnector implements IRestConnector {
 			form.add(entry.getKey(), entry.getValue());
 		}
 
-		Response response = client.handle(request);
+		Response response = getClient().handle(request);
 		String responseBody = null;
 		try {
 			if (response.getEntity() != null) {
@@ -235,5 +246,20 @@ public class TuleapRestConnector implements IRestConnector {
 					.getPassword());
 		}
 		return null;
+	}
+
+	/**
+	 * Disposes this connector's resources.
+	 */
+	public synchronized void dispose() {
+		if (client != null) {
+			try {
+				client.stop();
+				// CHECKSTYLE:OFF
+			} catch (Exception e) {
+				// CHECKSTYLE:ON
+			}
+			client = null;
+		}
 	}
 }
