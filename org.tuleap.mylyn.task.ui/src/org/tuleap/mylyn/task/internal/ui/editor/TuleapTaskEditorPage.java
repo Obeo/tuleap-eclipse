@@ -21,10 +21,12 @@ import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
+import org.eclipse.ui.IEditorInput;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.tuleap.mylyn.task.agile.ui.AbstractAgileRepositoryConnectorUI;
+import org.tuleap.mylyn.task.agile.ui.task.SharedTaskDataModel;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.ui.TuleapTasksUIPlugin;
 
@@ -106,21 +108,8 @@ public class TuleapTaskEditorPage extends AbstractTaskEditorPage {
 	 */
 	@Override
 	protected TaskDataModel createModel(TaskEditorInput input) throws CoreException {
-		String connectorKind = input.getTaskRepository().getConnectorKind();
-
-		AbstractAgileRepositoryConnectorUI connector = this.getAgileRepositoryConnectorUI(connectorKind);
-
-		TaskDataModel taskDataModel;
-		if (connector != null) {
-			taskDataModel = connector.getModelRegistry().getRegisteredModel(getEditor());
-			if (taskDataModel == null) {
-				taskDataModel = super.createModel(input);
-				connector.getModelRegistry().registerModel(getEditor(), taskDataModel);
-			}
-		} else {
-			taskDataModel = super.createModel(input);
-		}
-		return taskDataModel;
+		TaskDataModel taskDataModel = super.createModel(input);
+		return SharedTaskDataModel.shareModel(input, getEditor(), taskDataModel);
 	}
 
 	/**
@@ -132,10 +121,14 @@ public class TuleapTaskEditorPage extends AbstractTaskEditorPage {
 	public void dispose() {
 		TaskDataModel taskDataModel = getModel();
 		if (taskDataModel != null) {
-			String connectorKind = taskDataModel.getTaskRepository().getConnectorKind();
-			AbstractAgileRepositoryConnectorUI connector = this.getAgileRepositoryConnectorUI(connectorKind);
-			if (connector != null) {
-				connector.getModelRegistry().deregisterModel(getEditor());
+			IEditorInput input = this.getEditor().getEditorInput();
+			if (input instanceof TaskEditorInput) {
+				String connectorKind = ((TaskEditorInput)input).getTaskRepository().getConnectorKind();
+				AbstractAgileRepositoryConnectorUI connector = this
+						.getAgileRepositoryConnectorUI(connectorKind);
+				if (connector != null) {
+					connector.getModelRegistry().deregisterModel(getEditor());
+				}
 			}
 		}
 		super.dispose();
