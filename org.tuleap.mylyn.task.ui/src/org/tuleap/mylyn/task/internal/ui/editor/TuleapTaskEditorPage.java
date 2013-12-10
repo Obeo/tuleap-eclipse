@@ -14,8 +14,10 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorAttributePart;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
@@ -59,6 +61,22 @@ public class TuleapTaskEditorPage extends AbstractTaskEditorPage {
 
 		// This part will have its dedicated tab
 		this.removePart(descriptors, AbstractTaskEditorPage.ID_PART_PLANNING);
+
+		// Ensure that the attributes part stay expanded all the time.
+		removePart(descriptors, ID_PART_ATTRIBUTES);
+		TaskEditorPartDescriptor attributesPartDescription = new TaskEditorPartDescriptor(ID_PART_ATTRIBUTES) {
+			@Override
+			public AbstractTaskEditorPart createPart() {
+				return new TaskEditorAttributePart() {
+					@Override
+					protected boolean shouldExpandOnCreate() {
+						return true;
+					}
+				};
+			}
+		};
+		attributesPartDescription.setPath(PATH_ATTRIBUTES);
+		descriptors.add(attributesPartDescription);
 
 		return descriptors;
 	}
