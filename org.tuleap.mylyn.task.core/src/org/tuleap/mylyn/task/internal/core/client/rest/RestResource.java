@@ -302,13 +302,13 @@ public class RestResource {
 				} else {
 					if (debugPart != null) {
 						msg = TuleapMylynTasksMessages.getString(
-								TuleapMylynTasksMessagesKeys.errorReturnedByServerWithDebug, getUrl(),
-								Method.OPTIONS.getName(), Integer.valueOf(errorPart.getCode()), errorPart
-										.getMessage(), debugPart.getSource());
+								TuleapMylynTasksMessagesKeys.errorReturnedByServerWithDebug, serverUrl
+										+ getUrl(), Method.OPTIONS.getName(), Integer.valueOf(errorPart
+										.getCode()), errorPart.getMessage(), debugPart.getSource());
 					} else {
 						msg = TuleapMylynTasksMessages.getString(
-								TuleapMylynTasksMessagesKeys.errorReturnedByServer, getUrl(), Method.OPTIONS
-										.getName(), Integer.valueOf(errorPart.getCode()), errorPart
+								TuleapMylynTasksMessagesKeys.errorReturnedByServer, serverUrl + getUrl(),
+								Method.OPTIONS.getName(), Integer.valueOf(errorPart.getCode()), errorPart
 										.getMessage());
 					}
 				}
