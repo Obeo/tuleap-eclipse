@@ -29,8 +29,6 @@ import org.tuleap.mylyn.task.agile.ui.AbstractAgileRepositoryConnectorUI;
 import org.tuleap.mylyn.task.agile.ui.task.IModelRegistry;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.ui.TuleapTasksUIPlugin;
-import org.tuleap.mylyn.task.internal.ui.util.TuleapUIMessages;
-import org.tuleap.mylyn.task.internal.ui.util.TuleapUiMessagesKeys;
 
 /**
  * The Tuleap task editor page.
@@ -123,8 +121,10 @@ public class TuleapTaskEditorPage extends AbstractTaskEditorPage {
 			}
 			return model;
 		}
-		throw new IllegalStateException(TuleapUIMessages
-				.getString(TuleapUiMessagesKeys.agileConnectorRequired));
+		// We must return something, for isntance
+		// new tasks are in "local" task repository, not "tuleap"
+		// So there won't be no agile connector available for new unsubmitted tasks.
+		return super.createModel(input);
 	}
 
 	/**
