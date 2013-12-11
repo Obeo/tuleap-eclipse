@@ -50,7 +50,7 @@ public class MockRestConnector implements IRestConnector {
 	/**
 	 * The number of times sendRequest was called during this object's lifetime.
 	 * 
-	 * @return
+	 * @return The number of invocations made.
 	 */
 	public int getInvocationsCount() {
 		return invocationsCount;

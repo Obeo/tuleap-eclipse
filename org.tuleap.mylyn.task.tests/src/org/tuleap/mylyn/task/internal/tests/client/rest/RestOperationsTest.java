@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.AssertionFailedException;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Before;
 import org.junit.Test;
-import org.restlet.data.Method;
 import org.tuleap.mylyn.task.internal.core.client.rest.IAuthenticator;
 import org.tuleap.mylyn.task.internal.core.client.rest.ITuleapHeaders;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestOperation;
@@ -182,7 +181,7 @@ public class RestOperationsTest {
 		};
 		listConnector.addServerResponse(response401);
 		listConnector.addServerResponse(response200);
-		RestOperation op = new RestOperation("/some/url", listConnector, Method.GET, logger);
+		RestOperation op = RestOperation.get("/some/url", listConnector, logger);
 		op.withAuthenticator(authenticator);
 		ServerResponse response = op.run();
 		assertTrue(response.isOk());
@@ -204,7 +203,7 @@ public class RestOperationsTest {
 		token.setUserId("user_id");
 		listConnector.addServerResponse(response401);
 		listConnector.addServerResponse(response200);
-		RestOperation op = new RestOperation("/some/url", listConnector, Method.GET, logger);
+		RestOperation op = RestOperation.get("/some/url", listConnector, logger);
 		// op.withAuthenticator(null);
 		ServerResponse response = op.run();
 		assertFalse(response.isOk());
@@ -235,7 +234,7 @@ public class RestOperationsTest {
 		listConnector.addServerResponse(response401);
 		listConnector.addServerResponse(response401);
 		listConnector.addServerResponse(response200);
-		RestOperation op = new RestOperation("/some/url", listConnector, Method.GET, logger);
+		RestOperation op = RestOperation.get("/some/url", listConnector, logger);
 		op.withAuthenticator(authenticator);
 		ServerResponse response = op.run();
 		assertFalse(response.isOk());
@@ -269,7 +268,7 @@ public class RestOperationsTest {
 		};
 		listConnector.addServerResponse(response401);
 		listConnector.addServerResponse(response200);
-		RestOperation op = new RestOperation("/some/url", listConnector, Method.GET, logger);
+		RestOperation op = RestOperation.get("/some/url", listConnector, logger);
 		op.withAuthenticator(authenticator);
 		ServerResponse response = op.checkedRun();
 		assertTrue(response.isOk());
@@ -294,7 +293,7 @@ public class RestOperationsTest {
 		token.setUserId("user_id");
 		listConnector.addServerResponse(response401);
 		listConnector.addServerResponse(response200);
-		RestOperation op = new RestOperation("/some/url", listConnector, Method.GET, logger);
+		RestOperation op = RestOperation.get("/some/url", listConnector, logger);
 		// op.withAuthenticator(null);
 		op.checkedRun();
 	}
@@ -325,38 +324,29 @@ public class RestOperationsTest {
 		listConnector.addServerResponse(response401);
 		listConnector.addServerResponse(response401);
 		listConnector.addServerResponse(response200);
-		RestOperation op = new RestOperation("/some/url", listConnector, Method.GET, logger);
+		RestOperation op = RestOperation.get("/some/url", listConnector, logger);
 		op.withAuthenticator(authenticator);
 		op.checkedRun();
 	}
 
-	@SuppressWarnings("unused")
 	@Test(expected = AssertionFailedException.class)
 	public void testConstructorWithNullUrl() {
-		new RestOperation(null, connector, Method.GET, logger);
+		RestOperation.get(null, connector, logger);
 	}
 
-	@SuppressWarnings("unused")
 	@Test(expected = AssertionFailedException.class)
 	public void testConstructorWithNullConnector() {
-		new RestOperation("url", null, Method.GET, logger);
+		RestOperation.get("url", null, logger);
 	}
 
-	@SuppressWarnings("unused")
-	@Test(expected = AssertionFailedException.class)
-	public void testConstructorWithNullMethod() {
-		new RestOperation("url", connector, null, logger);
-	}
-
-	@SuppressWarnings("unused")
 	@Test(expected = AssertionFailedException.class)
 	public void testConstructorWithNullLogger() {
-		new RestOperation("url", connector, Method.GET, null);
+		RestOperation.get("url", connector, null);
 	}
 
 	@Test
 	public void testToString() {
-		RestOperation op = new RestOperation("/the/fullr/url", connector, Method.GET, logger);
+		RestOperation op = RestOperation.get("/the/fullr/url", connector, logger);
 		assertEquals("GET /the/fullr/url", op.toString());
 	}
 
@@ -397,7 +387,7 @@ public class RestOperationsTest {
 
 	@Test
 	public void testWithQueryParameter() {
-		RestOperation op = new RestOperation("/url", connector, Method.GET, logger);
+		RestOperation op = RestOperation.get("/url", connector, logger);
 		op.withQueryParameter("fields", "all");
 		assertEquals("/url", op.getUrl());
 		assertEquals("/url?fields=all", op.getUrlWithQueryParameters());
@@ -405,7 +395,7 @@ public class RestOperationsTest {
 
 	@Test
 	public void testWithQueryParameters() {
-		RestOperation op = new RestOperation("/url", connector, Method.GET, logger);
+		RestOperation op = RestOperation.get("/url", connector, logger);
 		// LinkedhashMultimap because the order of insertion is important for the test
 		LinkedHashMultimap<String, String> params = LinkedHashMultimap.create();
 		params.put("x", "a");
@@ -418,7 +408,7 @@ public class RestOperationsTest {
 
 	@Test
 	public void testWithoutQueryParameter() {
-		RestOperation op = new RestOperation("/url", connector, Method.GET, logger);
+		RestOperation op = RestOperation.get("/url", connector, logger);
 		// LinkedhashMultimap because the order of insertion is important for the test
 		LinkedHashMultimap<String, String> params = LinkedHashMultimap.create();
 		params.put("x", "a");
@@ -433,7 +423,7 @@ public class RestOperationsTest {
 
 	@Test
 	public void testWithoutQueryParameters() {
-		RestOperation op = new RestOperation("/url", connector, Method.GET, logger);
+		RestOperation op = RestOperation.get("/url", connector, logger);
 		// LinkedhashMultimap because the order of insertion is important for the test
 		LinkedHashMultimap<String, String> params = LinkedHashMultimap.create();
 		params.put("x", "a");
