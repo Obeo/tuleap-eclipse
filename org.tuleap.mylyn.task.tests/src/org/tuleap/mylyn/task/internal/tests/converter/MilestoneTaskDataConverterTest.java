@@ -194,24 +194,6 @@ public class MilestoneTaskDataConverterTest {
 	}
 
 	/**
-	 * Tests milestone backlogItem conversion.
-	 */
-	@Test
-	@Ignore("Fix me ASAP")
-	public void testMilestoneBacklogItem() {
-		Date testDate = new Date();
-
-		TuleapMilestone milestone = new TuleapMilestone(50, projectRef, "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$ 
-				"HTML URL", testDate, testDate); //$NON-NLS-1$
-		milestone.setCapacity("123");
-		milestone.setStartDate(new Date(2013));
-		milestone.setStatusValue("Done");
-
-		// FIXME Implement the test
-		fail("Implement the actual test");
-	}
-
-	/**
 	 * Tests the swimlanes list.
 	 */
 	@Test
