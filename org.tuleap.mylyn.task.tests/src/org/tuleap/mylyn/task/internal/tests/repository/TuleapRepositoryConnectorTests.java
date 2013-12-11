@@ -45,6 +45,7 @@ import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapStatus;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapTaskDataCollector;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
@@ -309,6 +310,7 @@ public class TuleapRepositoryConnectorTests {
 									12, "trackers/12")));
 							item.setLabel("Backlog item");
 							item.setProject(projectRef);
+							item.setStatus(TuleapStatus.valueOf("Closed"));
 							return Collections.singletonList(item);
 						}
 						return Collections.emptyList();
@@ -335,6 +337,7 @@ public class TuleapRepositoryConnectorTests {
 									12, "trackers/12")));
 							item.setLabel("Backlog item");
 							item.setProject(projectRef);
+							item.setStatus(TuleapStatus.valueOf("Closed"));
 							return Collections.singletonList(item);
 						}
 						return Collections.emptyList();

@@ -35,6 +35,7 @@ import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCard;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCardwall;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapColumn;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapStatus;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapSwimlane;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 
@@ -43,6 +44,7 @@ import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
+ * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
 public class MilestoneTaskDataConverter {
 
@@ -172,6 +174,7 @@ public class MilestoneTaskDataConverter {
 				bi.setInitialEffort(biWrapper.getInitialEffort());
 				bi.setLabel(biWrapper.getLabel());
 				bi.setType(biWrapper.getType());
+				bi.setStatus(TuleapStatus.valueOf(biWrapper.getStatus()));
 
 				String internalParentId = biWrapper.getParentId();
 				if (internalParentId != null) {
@@ -218,6 +221,7 @@ public class MilestoneTaskDataConverter {
 				bi.setInitialEffort(biWrapper.getInitialEffort());
 				bi.setLabel(biWrapper.getLabel());
 				bi.setType(biWrapper.getType());
+				bi.setStatus(TuleapStatus.valueOf(biWrapper.getStatus()));
 
 				String internalParentId = biWrapper.getParentId();
 				if (internalParentId != null) {
@@ -322,6 +326,10 @@ public class MilestoneTaskDataConverter {
 
 			backlogItemWrapper.setLabel(backlogItem.getLabel());
 			backlogItemWrapper.setType(backlogItem.getType());
+			if (backlogItem.getStatus() != null) {
+				backlogItemWrapper.setStatus(backlogItem.getStatus().toString());
+			}
+
 			if (backlogItem.getInitialEffort() != null) {
 				backlogItemWrapper.setInitialEffort(backlogItem.getInitialEffort());
 			}
@@ -384,8 +392,12 @@ public class MilestoneTaskDataConverter {
 			backlogItemWrapper.setDisplayId(Integer.toString(backlogItem.getId()));
 
 			backlogItemWrapper.setAssignedMilestoneId(internalMilestoneId.toString());
-
+			backlogItemWrapper.setType(backlogItem.getType());
 			backlogItemWrapper.setLabel(backlogItem.getLabel());
+
+			if (backlogItem.getStatus() != null) {
+				backlogItemWrapper.setStatus(backlogItem.getStatus().toString());
+			}
 			if (backlogItem.getInitialEffort() != null) {
 				backlogItemWrapper.setInitialEffort(backlogItem.getInitialEffort());
 			}
