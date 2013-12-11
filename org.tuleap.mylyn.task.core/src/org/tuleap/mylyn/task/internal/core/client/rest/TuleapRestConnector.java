@@ -32,15 +32,16 @@ import org.restlet.Response;
 import org.restlet.data.ChallengeResponse;
 import org.restlet.data.ChallengeScheme;
 import org.restlet.data.CharacterSet;
-import org.restlet.data.Form;
 import org.restlet.data.Language;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 import org.restlet.data.Preference;
 import org.restlet.data.Protocol;
-import org.restlet.engine.http.header.HeaderConstants;
+import org.restlet.engine.header.Header;
+import org.restlet.engine.header.HeaderConstants;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
+import org.restlet.util.Series;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 
 /**
@@ -97,8 +98,7 @@ public class TuleapRestConnector implements IRestConnector {
 	 * @see org.tuleap.mylyn.task.internal.core.client.rest.IRestConnector#sendRequest(java.lang.String,
 	 *      java.lang.String, java.util.Map, java.lang.String)
 	 */
-	public synchronized ServerResponse sendRequest(String method, String url, Map<String, String> headers,
-			String data) {
+	public ServerResponse sendRequest(String method, String url, Map<String, String> headers, String data) {
 		Request request = new Request(Method.valueOf(method), url);
 
 		Preference<CharacterSet> preferenceCharset = new Preference<CharacterSet>(CharacterSet.UTF_8);
@@ -127,39 +127,45 @@ public class TuleapRestConnector implements IRestConnector {
 				Language.ENGLISH_US, CharacterSet.UTF_8);
 		request.setEntity(entity);
 
-		Object object = request.getAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
-		Form form;
-		if (object instanceof Form) {
-			form = (Form)object;
-		} else {
-			form = new Form();
-			request.getAttributes().put(HeaderConstants.ATTRIBUTE_HEADERS, form);
-		}
+		// Object object = request.getAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
+		Series<Header> form = new Series<Header>(Header.class);
+		request.getAttributes().put(HeaderConstants.ATTRIBUTE_HEADERS, form);
+
 		for (Entry<String, String> entry : headers.entrySet()) {
 			form.add(entry.getKey(), entry.getValue());
 		}
 
 		Response response = getClient().handle(request);
 		String responseBody = null;
+		ByteArrayOutputStream byteArrayOutputStream = null;
 		try {
-			if (response.getEntity() != null) {
-				ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-				response.getEntity().write(byteArrayOutputStream);
+			Representation representation = response.getEntity();
+			if (representation != null) {
+				byteArrayOutputStream = new ByteArrayOutputStream();
+				representation.write(byteArrayOutputStream);
 				responseBody = new String(byteArrayOutputStream.toByteArray());
 				byteArrayOutputStream.close();
 			}
 		} catch (IOException e) {
 			// do not propagate
 			this.logger.log(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e));
+		} finally {
+			if (byteArrayOutputStream != null) {
+				try {
+					byteArrayOutputStream.close();
+				} catch (IOException e) {
+					// Nothing to do
+				}
+			}
 		}
 
 		Map<String, String> responseHeader = Maps.<String, String> newHashMap();
 
 		Map<String, Object> attributes = response.getAttributes();
 		Object formObject = attributes.get(HeaderConstants.ATTRIBUTE_HEADERS);
-		if (formObject instanceof Form) {
-			Form responseForm = (Form)formObject;
-			responseHeader = responseForm.getValuesMap();
+		if (formObject instanceof Series) {
+			Series<?> series = (Series<?>)formObject;
+			responseHeader = series.getValuesMap();
 		}
 		ServerResponse serverResponse = new ServerResponse(response.getStatus().getCode(), responseBody,
 				responseHeader);
