@@ -26,9 +26,11 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.tuleap.mylyn.task.agile.ui.AbstractAgileRepositoryConnectorUI;
-import org.tuleap.mylyn.task.agile.ui.task.SharedTaskDataModel;
+import org.tuleap.mylyn.task.agile.ui.task.IModelRegistry;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.ui.TuleapTasksUIPlugin;
+import org.tuleap.mylyn.task.internal.ui.util.TuleapUIMessages;
+import org.tuleap.mylyn.task.internal.ui.util.TuleapUiMessagesKeys;
 
 /**
  * The Tuleap task editor page.
@@ -108,8 +110,21 @@ public class TuleapTaskEditorPage extends AbstractTaskEditorPage {
 	 */
 	@Override
 	protected TaskDataModel createModel(TaskEditorInput input) throws CoreException {
-		TaskDataModel taskDataModel = super.createModel(input);
-		return SharedTaskDataModel.shareModel(input, getEditor(), taskDataModel);
+		String connectorKind = input.getTaskRepository().getConnectorKind();
+
+		AbstractAgileRepositoryConnectorUI connector = this.getAgileRepositoryConnectorUI(connectorKind);
+
+		if (connector != null) {
+			IModelRegistry registry = connector.getModelRegistry();
+			TaskDataModel model = registry.getRegisteredModel(getEditor());
+			if (model == null) {
+				model = super.createModel(input);
+				registry.registerModel(getEditor(), model);
+			}
+			return model;
+		}
+		throw new IllegalStateException(TuleapUIMessages
+				.getString(TuleapUiMessagesKeys.agileConnectorRequired));
 	}
 
 	/**

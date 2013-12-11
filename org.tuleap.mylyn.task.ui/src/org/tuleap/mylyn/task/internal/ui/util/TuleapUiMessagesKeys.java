@@ -223,6 +223,11 @@ public class TuleapUiMessagesKeys extends NLS {
 	 */
 	public static String tuleapQueryProjectPageTopLevelPlanningButtonLabel;
 
+	/**
+	 * Label used for missing agile connector when attempting to create a TaskDataModel.
+	 */
+	public static String agileConnectorRequired;
+
 	static {
 		// load message values from bundle file
 		reloadMessages();
