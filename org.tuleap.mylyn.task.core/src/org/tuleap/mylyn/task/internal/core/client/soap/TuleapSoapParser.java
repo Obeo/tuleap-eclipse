@@ -149,6 +149,8 @@ public class TuleapSoapParser {
 									Long.toString(timestamp));
 						} catch (NumberFormatException e) {
 							TuleapCoreActivator.log(e, false);
+							abstractFieldValue = new LiteralFieldValue(abstractTuleapField.getIdentifier(),
+									null);
 						}
 					} else {
 						// Literal

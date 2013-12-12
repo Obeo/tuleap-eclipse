@@ -351,6 +351,35 @@ public class TuleapSoapParserTests {
 	}
 
 	/**
+	 * Test a literal field value.
+	 * 
+	 * @param artifactId
+	 *            The identifier of the artifact
+	 * @param field
+	 *            The field from the configuration
+	 * @param fieldValue
+	 *            The value expected
+	 * @param tuleapArtifact
+	 *            The tuleap artifact containing the field value
+	 */
+	private void checkDateFieldValue(int artifactId, AbstractTuleapField field, String fieldValue,
+			TuleapArtifact tuleapArtifact) {
+		assertThat(tuleapArtifact, is(notNullValue()));
+		assertThat(tuleapArtifact.getId(), is(artifactId));
+		assertThat(tuleapArtifact.getFieldValues().size(), is(1));
+
+		Collection<AbstractFieldValue> fieldValues = tuleapArtifact.getFieldValues();
+		AbstractFieldValue abstractFieldValue = fieldValues.iterator().next();
+
+		assertThat(abstractFieldValue, is(notNullValue()));
+		assertThat(abstractFieldValue.getFieldId(), is(field.getIdentifier()));
+		assertThat(abstractFieldValue, is(instanceOf(LiteralFieldValue.class)));
+
+		LiteralFieldValue literalFieldValue = (LiteralFieldValue)abstractFieldValue;
+		assertThat(literalFieldValue.getFieldValue(), is(fieldValue + "000"));
+	}
+
+	/**
 	 * This test will try to parse an artifact from a tracker with only a string field. The goal is to ensure
 	 * that the field is properly created in the TuleapArtifact. This test will use the tracker with the
 	 * identifier 1.
@@ -507,7 +536,7 @@ public class TuleapSoapParserTests {
 		Collection<AbstractTuleapField> fields = tuleapTracker.getFields();
 		AbstractTuleapField field = fields.iterator().next();
 
-		String fieldValue = "2013-09-23T11:44:18.963Z"; //$NON-NLS-1$
+		String fieldValue = Long.toString(new Date().getTime() / 1000);
 
 		ArtifactFieldValue[] value = new ArtifactFieldValue[] {this
 				.createLiteralFieldValue(field, fieldValue), };
@@ -517,7 +546,7 @@ public class TuleapSoapParserTests {
 		TuleapSoapParser tuleapSoapParser = new TuleapSoapParser();
 		TuleapArtifact tuleapArtifact = tuleapSoapParser.parseArtifact(tuleapTracker, commentedArtifact);
 
-		this.testLiteralFieldValue(artifactId, field, fieldValue, tuleapArtifact);
+		this.checkDateFieldValue(artifactId, field, fieldValue, tuleapArtifact);
 	}
 
 	/**

@@ -670,7 +670,7 @@ public class TuleapArtifactMapperTests {
 		String title = "Title";
 		String semanticContributor = "0";
 		String status = "2";
-		String date = "";
+		String date = "123456789000";
 		String floatValue = "3.14157";
 		String integerValue = "42";
 		List<String> multiSelectBox = Lists.newArrayList("0", "2");
@@ -712,7 +712,7 @@ public class TuleapArtifactMapperTests {
 
 		assertThat(fieldValues.get(3).getFieldId(), is(3));
 		assertThat(fieldValues.get(3), instanceOf(LiteralFieldValue.class));
-		assertThat(((LiteralFieldValue)fieldValues.get(3)).getFieldValue(), is(date));
+		assertThat(((LiteralFieldValue)fieldValues.get(3)).getFieldValue(), is("123456789"));
 
 		assertThat(fieldValues.get(4).getFieldId(), is(4));
 		assertThat(fieldValues.get(4), instanceOf(LiteralFieldValue.class));

@@ -707,11 +707,12 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 						} else {
 							value = attribute.getValue();
 						}
-						if (value != null) {
-							LiteralFieldValue fieldValue = new LiteralFieldValue(Integer.parseInt(attribute
-									.getId()), value);
-							result.add(fieldValue);
+						if (value == null) {
+							value = ""; //$NON-NLS-1$
 						}
+						LiteralFieldValue fieldValue = new LiteralFieldValue(Integer.parseInt(attribute
+								.getId()), value);
+						result.add(fieldValue);
 					} else {
 						// select box or multi select box (or check box)
 						List<Integer> valueIds = new ArrayList<Integer>();
