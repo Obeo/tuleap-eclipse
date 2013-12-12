@@ -318,6 +318,18 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			if (project.isMilestoneTracker(tracker.getIdentifier())) {
 				taskData = this.fetchMilestoneData(taskData, project, tracker, taskRepository, monitor);
 			}
+		} else if (trackerId == -1 && taskId.getArtifactId() == -1) {
+			// Workaround linked artifacts v1.0
+			// The taskId's projectId is actually the artifact id
+			TuleapTaskId actualTaskId = TuleapTaskId.forArtifact(-1, -1, taskId.getProjectId());
+			taskData = this.getArtifactTaskData(actualTaskId, server, taskRepository, true, monitor);
+			TuleapTaskId refreshedId = TuleapTaskId.forName(taskData.getTaskId());
+			trackerId = refreshedId.getTrackerId();
+			project = server.getProject(refreshedId.getProjectId());
+			TuleapTracker tracker = project.getTracker(trackerId);
+			if (project.isMilestoneTracker(tracker.getIdentifier())) {
+				taskData = this.fetchMilestoneData(taskData, project, tracker, taskRepository, monitor);
+			}
 		} else {
 			taskData = this.getArtifactTaskData(taskId, server, taskRepository, false, monitor);
 			TuleapTracker tracker = project.getTracker(trackerId);
@@ -361,7 +373,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				// for the trackerId
 				// If we don't refresh the tracker, we assume the given taskId contains the relevant tracker
 				// information
-				refreshedTaskId = TuleapTaskId.forArtifact(refreshedTaskId.getProjectId(), tracker
+				refreshedTaskId = TuleapTaskId.forArtifact(tuleapArtifact.getProject().getId(), tracker
 						.getIdentifier(), refreshedTaskId.getArtifactId());
 			}
 
