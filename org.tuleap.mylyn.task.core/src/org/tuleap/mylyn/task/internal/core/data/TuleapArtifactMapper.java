@@ -29,10 +29,12 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.agile.core.data.AbstractTaskMapper;
+import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.config.field.AbstractTuleapSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapDate;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapString;
@@ -694,9 +696,22 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 				if (String.valueOf(abstractTuleapField.getIdentifier()).equals(attribute.getId())
 						&& shouldBeSentToTheServer(abstractTuleapField.getIdentifier())) {
 					if (attribute.getOptions().isEmpty()) {
-						LiteralFieldValue fieldValue = new LiteralFieldValue(Integer.parseInt(attribute
-								.getId()), attribute.getValue());
-						result.add(fieldValue);
+						String value = null;
+						if (abstractTuleapField instanceof TuleapDate) {
+							try {
+								long date = Long.parseLong(attribute.getValue());
+								value = String.valueOf(date / 1000L);
+							} catch (NumberFormatException e) {
+								TuleapCoreActivator.log(e, false);
+							}
+						} else {
+							value = attribute.getValue();
+						}
+						if (value != null) {
+							LiteralFieldValue fieldValue = new LiteralFieldValue(Integer.parseInt(attribute
+									.getId()), value);
+							result.add(fieldValue);
+						}
 					} else {
 						// select box or multi select box (or check box)
 						List<Integer> valueIds = new ArrayList<Integer>();
@@ -719,7 +734,6 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 								.getIdentifier(), attribute.getValue());
 						result.add(afieldValue);
 					}
-
 				} else if (abstractTuleapField instanceof AbstractTuleapSelectBox
 						&& ((AbstractTuleapSelectBox)abstractTuleapField).isSemanticStatus()) {
 

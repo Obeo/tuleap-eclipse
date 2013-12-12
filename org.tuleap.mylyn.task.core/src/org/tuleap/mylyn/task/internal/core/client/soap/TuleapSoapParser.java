@@ -18,11 +18,13 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapDate;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapFileUpload;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapMultiSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBox;
@@ -139,6 +141,15 @@ public class TuleapSoapParser {
 
 						abstractFieldValue = new AttachmentFieldValue(abstractTuleapField.getIdentifier(),
 								attachments);
+					} else if (abstractTuleapField instanceof TuleapDate) {
+						try {
+							int valueInt = Integer.parseInt(artifactFieldValue.getField_value().getValue());
+							long timestamp = getDateFromTimestamp(valueInt).getTime();
+							abstractFieldValue = new LiteralFieldValue(abstractTuleapField.getIdentifier(),
+									Long.toString(timestamp));
+						} catch (NumberFormatException e) {
+							TuleapCoreActivator.log(e, false);
+						}
 					} else {
 						// Literal
 						abstractFieldValue = new LiteralFieldValue(abstractTuleapField.getIdentifier(),
