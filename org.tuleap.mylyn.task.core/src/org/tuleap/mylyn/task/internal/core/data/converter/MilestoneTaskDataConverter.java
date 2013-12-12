@@ -174,7 +174,10 @@ public class MilestoneTaskDataConverter {
 				bi.setInitialEffort(biWrapper.getInitialEffort());
 				bi.setLabel(biWrapper.getLabel());
 				bi.setType(biWrapper.getType());
-				bi.setStatus(TuleapStatus.valueOf(biWrapper.getStatus()));
+				String status = biWrapper.getStatus();
+				if (status != null) {
+					bi.setStatus(TuleapStatus.valueOf(status));
+				}
 
 				String internalParentId = biWrapper.getParentId();
 				if (internalParentId != null) {
@@ -221,7 +224,10 @@ public class MilestoneTaskDataConverter {
 				bi.setInitialEffort(biWrapper.getInitialEffort());
 				bi.setLabel(biWrapper.getLabel());
 				bi.setType(biWrapper.getType());
-				bi.setStatus(TuleapStatus.valueOf(biWrapper.getStatus()));
+				String status = biWrapper.getStatus();
+				if (status != null) {
+					bi.setStatus(TuleapStatus.valueOf(status));
+				}
 
 				String internalParentId = biWrapper.getParentId();
 				if (internalParentId != null) {
