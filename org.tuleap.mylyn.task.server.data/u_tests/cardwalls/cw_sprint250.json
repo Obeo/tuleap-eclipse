@@ -44,7 +44,7 @@
                     "last_updated_on": "2013-09-24T15:33:18.523Z",
                     "uri": "/cards/13500",
                     "html_url": "/cards?id=13500",
-                    "color": "#669944",
+                    "accent_color": "#669944",
                     "label": "Implement the data model",
                     "column_id": 2000,
                     "allowed_column_ids": [
@@ -87,7 +87,7 @@
                     "last_updated_on": "2013-09-24T15:33:18.523Z",
                     "uri": "/cards/13501",
                     "html_url": "/cards?id=13501",
-                    "color": "#669944",
+                    "accent_color": "#669944",
                     "label": "Implement the UI",
                     "column_id": 2002,
                     "allowed_column_ids": [
@@ -130,7 +130,7 @@
                     "last_updated_on": "2013-09-24T15:33:18.523Z",
                     "uri": "/cards/13502",
                     "html_url": "/cards?id=13502",
-                    "color": "#669944",
+                    "accent_color": "#669944",
                     "label": "Implement the service layer",
                     "column_id": null,
                     "allowed_column_ids": [
@@ -177,7 +177,7 @@
                     "last_updated_on": "2013-09-24T15:33:18.523Z",
                     "uri": "/cards/13510",
                     "html_url": "/cards?id=13510",
-                    "color": "#669944",
+                    "accent_color": "#669944",
                     "label": "Implement the data model",
                     "allowed_column_ids": [
                         2000,
@@ -219,7 +219,7 @@
                     "last_updated_on": "2013-09-24T15:33:18.523Z",
                     "uri": "/cards/135011",
                     "html_url": "/cards?id=13511",
-                    "color": "#669944",
+                    "accent_color": "#669944",
                     "label": "Implement the UI",
                     "column_id": 2001,
                     "allowed_column_ids": [
@@ -261,7 +261,7 @@
                     "last_updated_on": "2013-09-24T15:33:18.523Z",
                     "uri": "/cards/13512",
                     "html_url": "/cards?id=13512",
-                    "color": "#669944",
+                    "accent_color": "#669944",
                     "label": "Implement the service layer",
                     "column_id": 2002,
                     "allowed_column_ids": [
@@ -308,7 +308,7 @@
                     "last_updated_on": "2013-09-24T15:33:18.523Z",
                     "uri": "/cards/13520",
                     "html_url": "/cards?id=13520",
-                    "color": "#669944",
+                    "accent_color": "#669944",
                     "label": "Implement the data model",
                     "column_id": 2000,
                     "allowed_column_ids": [
@@ -351,7 +351,7 @@
                     "last_updated_on": "2013-09-24T15:33:18.523Z",
                     "uri": "/cards/13521",
                     "html_url": "/cards?id=13521",
-                    "color": "#669944",
+                    "accent_color": "#669944",
                     "label": "Implement the UI",
                     "column_id": 2001,
                     "allowed_column_ids": [
@@ -394,7 +394,7 @@
                     "last_updated_on": "2013-09-24T15:33:18.523Z",
                     "uri": "/cards/13522",
                     "html_url": "/cards?id=13522",
-                    "color": "#669944",
+                    "accent_color": "#669944",
                     "label": "Implement the service layer",
                     "column_id": 2002,
                     "allowed_column_ids": [

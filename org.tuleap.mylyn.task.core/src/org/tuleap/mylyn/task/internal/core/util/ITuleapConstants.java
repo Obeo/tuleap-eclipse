@@ -188,9 +188,14 @@ public interface ITuleapConstants {
 	String INITIAL_EFFORT = "initial_effort"; //$NON-NLS-1$
 
 	/**
-	 * The key used to retrieve the color of the card.
+	 * The key used to retrieve the color of a cardwall column.
 	 */
 	String COLOR = "color"; //$NON-NLS-1$
+
+	/**
+	 * The key used to retrieve the accent color of a card.
+	 */
+	String ACCENT_COLOR = "accent_color"; //$NON-NLS-1$
 
 	/**
 	 * The key used to retrieve the column identifier of the card.

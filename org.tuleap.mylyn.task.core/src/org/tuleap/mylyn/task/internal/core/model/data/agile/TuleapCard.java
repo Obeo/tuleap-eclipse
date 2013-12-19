@@ -108,7 +108,7 @@ public class TuleapCard extends AbstractTuleapConfigurableElement<String> {
 	 * 
 	 * @return the color
 	 */
-	public String getColor() {
+	public String getAccentColor() {
 		return this.accentColor;
 	}
 
@@ -118,8 +118,27 @@ public class TuleapCard extends AbstractTuleapConfigurableElement<String> {
 	 * @param theColor
 	 *            The color
 	 */
-	public void setColor(String theColor) {
+	public void setAccentColor(String theColor) {
 		this.accentColor = theColor;
+	}
+
+	/**
+	 * Planning ID getter.
+	 * 
+	 * @return the planningId
+	 */
+	public Integer getPlanningId() {
+		return planningId;
+	}
+
+	/**
+	 * Planning ID setter.
+	 * 
+	 * @param planningId
+	 *            the planningId to set
+	 */
+	public void setPlanningId(Integer planningId) {
+		this.planningId = planningId;
 	}
 
 	/**

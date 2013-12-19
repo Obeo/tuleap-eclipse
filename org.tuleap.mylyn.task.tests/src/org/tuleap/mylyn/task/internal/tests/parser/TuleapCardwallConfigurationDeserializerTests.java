@@ -83,7 +83,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 		assertEquals("Implement the data model", firstCard.getLabel());
 		assertEquals("/cards/13500", firstCard.getUri());
 		assertEquals("/cards?id=13500", firstCard.getHtmlUrl());
-		assertEquals("#669944", firstCard.getColor());
+		assertEquals("#669944", firstCard.getAccentColor());
 		assertEquals(Integer.valueOf(2000), firstCard.getColumnId());
 		assertEquals("Closed", firstCard.getStatus().toString());
 		assertEquals(3, firstCard.getProject().getId());
@@ -106,7 +106,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 		assertEquals("Implement the UI", secondCard.getLabel());
 		assertEquals("/cards/13501", secondCard.getUri());
 		assertEquals("/cards?id=13501", secondCard.getHtmlUrl());
-		assertEquals("#669944", secondCard.getColor());
+		assertEquals("#669944", secondCard.getAccentColor());
 		assertEquals(Integer.valueOf(2002), secondCard.getColumnId());
 		assertEquals("Open", secondCard.getStatus().toString());
 		assertEquals(3, secondCard.getProject().getId());
@@ -130,7 +130,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 		assertEquals("Implement the service layer", thirdCard.getLabel());
 		assertEquals("/cards/13502", thirdCard.getUri());
 		assertEquals("/cards?id=13502", thirdCard.getHtmlUrl());
-		assertEquals("#669944", thirdCard.getColor());
+		assertEquals("#669944", thirdCard.getAccentColor());
 		assertEquals(null, thirdCard.getColumnId());
 		assertEquals("Closed", thirdCard.getStatus().toString());
 		assertEquals(3, thirdCard.getProject().getId());
@@ -169,7 +169,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 		assertEquals("Implement the data model", firstCard.getLabel());
 		assertEquals("/cards/13510", firstCard.getUri());
 		assertEquals("/cards?id=13510", firstCard.getHtmlUrl());
-		assertEquals("#669944", firstCard.getColor());
+		assertEquals("#669944", firstCard.getAccentColor());
 		assertEquals(null, firstCard.getColumnId());
 		assertEquals("Open", firstCard.getStatus().toString());
 		assertEquals(3, firstCard.getProject().getId());
@@ -192,7 +192,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 		assertEquals("Implement the UI", secondCard.getLabel());
 		assertEquals("/cards/135011", secondCard.getUri());
 		assertEquals("/cards?id=13511", secondCard.getHtmlUrl());
-		assertEquals("#669944", secondCard.getColor());
+		assertEquals("#669944", secondCard.getAccentColor());
 		assertEquals(Integer.valueOf(2001), secondCard.getColumnId());
 		assertEquals("Closed", secondCard.getStatus().toString());
 		assertEquals(3, secondCard.getProject().getId());
@@ -214,7 +214,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 		assertEquals("Implement the service layer", thirdCard.getLabel());
 		assertEquals("/cards/13512", thirdCard.getUri());
 		assertEquals("/cards?id=13512", thirdCard.getHtmlUrl());
-		assertEquals("#669944", thirdCard.getColor());
+		assertEquals("#669944", thirdCard.getAccentColor());
 		assertEquals(Integer.valueOf(2002), thirdCard.getColumnId());
 		assertEquals("Open", thirdCard.getStatus().toString());
 		assertEquals(3, thirdCard.getProject().getId());
@@ -252,7 +252,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 		assertEquals("Implement the data model", firstCard.getLabel());
 		assertEquals("/cards/13520", firstCard.getUri());
 		assertEquals("/cards?id=13520", firstCard.getHtmlUrl());
-		assertEquals("#669944", firstCard.getColor());
+		assertEquals("#669944", firstCard.getAccentColor());
 		assertEquals(Integer.valueOf(2000), firstCard.getColumnId());
 		assertEquals("Closed", firstCard.getStatus().toString());
 		assertEquals(3, firstCard.getProject().getId());
@@ -275,7 +275,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 		assertEquals("Implement the UI", secondCard.getLabel());
 		assertEquals("/cards/13521", secondCard.getUri());
 		assertEquals("/cards?id=13521", secondCard.getHtmlUrl());
-		assertEquals("#669944", secondCard.getColor());
+		assertEquals("#669944", secondCard.getAccentColor());
 		assertEquals(Integer.valueOf(2001), secondCard.getColumnId());
 		assertEquals("Open", secondCard.getStatus().toString());
 		assertEquals(3, secondCard.getProject().getId());
@@ -298,7 +298,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 		assertEquals("Implement the service layer", thirdCard.getLabel());
 		assertEquals("/cards/13522", thirdCard.getUri());
 		assertEquals("/cards?id=13522", thirdCard.getHtmlUrl());
-		assertEquals("#669944", thirdCard.getColor());
+		assertEquals("#669944", thirdCard.getAccentColor());
 		assertEquals(Integer.valueOf(2002), thirdCard.getColumnId());
 		assertEquals("Closed", thirdCard.getStatus().toString());
 		assertEquals(3, thirdCard.getProject().getId());

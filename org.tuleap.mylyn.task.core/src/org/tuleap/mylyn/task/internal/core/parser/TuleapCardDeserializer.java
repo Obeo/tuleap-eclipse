@@ -49,10 +49,10 @@ public class TuleapCardDeserializer extends AbstractTuleapDeserializer<TuleapCar
 		card.setArtifact(gson.fromJson(jsonObject.get(ITuleapConstants.JSON_ARTIFACT),
 				ArtifactReference.class));
 
-		JsonElement elt = jsonObject.get(ITuleapConstants.COLOR);
+		JsonElement elt = jsonObject.get(ITuleapConstants.ACCENT_COLOR);
 		if (elt != null) {
 			String color = elt.getAsString();
-			card.setColor(color);
+			card.setAccentColor(color);
 		}
 
 		elt = jsonObject.get(ITuleapConstants.COLUMN_ID);
