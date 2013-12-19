@@ -28,7 +28,7 @@ import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  * @param <T>
  */
-public abstract class AbstractProjectElementSerializer<T extends AbstractTuleapProjectElement> implements JsonSerializer<T> {
+public abstract class AbstractProjectElementSerializer<T extends AbstractTuleapProjectElement<?>> implements JsonSerializer<T> {
 
 	/**
 	 * The pattern used to format date following the ISO8601 standard.
@@ -43,7 +43,12 @@ public abstract class AbstractProjectElementSerializer<T extends AbstractTuleapP
 	 */
 	public JsonElement serialize(T element, Type type, JsonSerializationContext jsonSerializationContext) {
 		JsonObject json = new JsonObject();
-		json.add(ITuleapConstants.ID, new JsonPrimitive(Integer.valueOf(element.getId())));
+		Object id = element.getId();
+		if (id instanceof Number) {
+			json.add(ITuleapConstants.ID, new JsonPrimitive((Number)element.getId()));
+		} else {
+			json.add(ITuleapConstants.ID, new JsonPrimitive(element.getId().toString()));
+		}
 		if (element.getLabel() != null) {
 			json.add(ITuleapConstants.LABEL, new JsonPrimitive(element.getLabel()));
 		}

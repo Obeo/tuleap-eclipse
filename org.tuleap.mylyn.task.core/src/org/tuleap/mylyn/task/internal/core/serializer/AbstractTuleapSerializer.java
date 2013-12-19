@@ -32,7 +32,7 @@ import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  * @param <T>
  */
-public abstract class AbstractTuleapSerializer<T extends AbstractTuleapConfigurableElement> extends AbstractProjectElementSerializer<T> {
+public abstract class AbstractTuleapSerializer<T extends AbstractTuleapConfigurableElement<?>> extends AbstractProjectElementSerializer<T> {
 
 	/**
 	 * {@inheritDoc}

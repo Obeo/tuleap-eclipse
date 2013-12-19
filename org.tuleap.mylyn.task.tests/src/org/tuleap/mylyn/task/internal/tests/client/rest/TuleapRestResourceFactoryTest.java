@@ -331,10 +331,10 @@ public class TuleapRestResourceFactoryTest {
 	 */
 	@Test
 	public void testGetCardsById() {
-		RestResource r = factory.card(123);
+		RestResource r = factory.card("2_123");
 		assertNotNull(r);
-		assertEquals("/cards/123", r.getUrl());
-		assertEquals("/server/api/v12.5/cards/123", r.getFullUrl());
+		assertEquals("/cards/2_123", r.getUrl());
+		assertEquals("/server/api/v12.5/cards/2_123", r.getFullUrl());
 	}
 
 	/**

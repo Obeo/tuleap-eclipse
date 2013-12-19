@@ -121,7 +121,7 @@ public class TuleapProject implements Serializable {
 	 *            The planning to add.
 	 */
 	public void addPlanning(TuleapPlanning planning) {
-		planningsById.put(Integer.valueOf(planning.getId()), planning);
+		planningsById.put(planning.getId(), planning);
 	}
 
 	/**

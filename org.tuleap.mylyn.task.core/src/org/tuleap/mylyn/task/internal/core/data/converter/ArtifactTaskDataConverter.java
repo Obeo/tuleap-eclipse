@@ -93,7 +93,7 @@ public class ArtifactTaskDataConverter {
 
 		// Task Key
 		String taskKey = TuleapTaskId.getTaskDataKey(this.tracker.getProject().getName(), this.tracker
-				.getLabel(), element.getId());
+				.getLabel(), element.getId().intValue());
 		tuleapArtifactMapper.setTaskKey(taskKey);
 
 		// URL

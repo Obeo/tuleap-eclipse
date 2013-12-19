@@ -21,7 +21,7 @@ import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
  * 
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
-public class TuleapCard extends AbstractTuleapConfigurableElement {
+public class TuleapCard extends AbstractTuleapConfigurableElement<String> {
 
 	/**
 	 * The serial version UID.
@@ -29,14 +29,19 @@ public class TuleapCard extends AbstractTuleapConfigurableElement {
 	private static final long serialVersionUID = -9085306379796432358L;
 
 	/**
-	 * The card color.
+	 * The card accent color.
 	 */
-	private String color;
+	private String accentColor;
 
 	/**
 	 * The card column identifier.
 	 */
 	private Integer columnId;
+
+	/**
+	 * The card planning identifier.
+	 */
+	private Integer planningId;
 
 	/**
 	 * Reference to the artifact that contains this item's details.
@@ -61,29 +66,18 @@ public class TuleapCard extends AbstractTuleapConfigurableElement {
 	}
 
 	/**
-	 * The constructor used when we are trying to create a new card locally.
-	 * 
-	 * @param trackerRef
-	 *            The tracker
-	 * @param projectRef
-	 *            The project
-	 */
-	public TuleapCard(TuleapReference trackerRef, TuleapReference projectRef) {
-		super(trackerRef, projectRef);
-	}
-
-	/**
 	 * The constructor used when we are updating an existing card.
 	 * 
 	 * @param cardId
 	 *            The identifier of the card
-	 * @param trackerRef
-	 *            The tracker
+	 * @param artifactRef
+	 *            The artifact this card represents
 	 * @param projectRef
 	 *            The project
 	 */
-	public TuleapCard(int cardId, TuleapReference trackerRef, TuleapReference projectRef) {
-		super(cardId, trackerRef, projectRef);
+	public TuleapCard(String cardId, ArtifactReference artifactRef, TuleapReference projectRef) {
+		super(cardId, artifactRef.getTracker(), projectRef);
+		this.artifact = artifactRef;
 	}
 
 	/**
@@ -104,7 +98,7 @@ public class TuleapCard extends AbstractTuleapConfigurableElement {
 	 * @param lastModificationDate
 	 *            The last modification
 	 */
-	public TuleapCard(int cardId, TuleapReference projectRef, String label, String url, String htmlUrl,
+	public TuleapCard(String cardId, TuleapReference projectRef, String label, String url, String htmlUrl,
 			Date creationDate, Date lastModificationDate) {
 		super(cardId, projectRef, label, url, htmlUrl, creationDate, lastModificationDate);
 	}
@@ -115,7 +109,7 @@ public class TuleapCard extends AbstractTuleapConfigurableElement {
 	 * @return the color
 	 */
 	public String getColor() {
-		return this.color;
+		return this.accentColor;
 	}
 
 	/**
@@ -125,7 +119,7 @@ public class TuleapCard extends AbstractTuleapConfigurableElement {
 	 *            The color
 	 */
 	public void setColor(String theColor) {
-		this.color = theColor;
+		this.accentColor = theColor;
 	}
 
 	/**

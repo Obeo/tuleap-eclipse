@@ -28,9 +28,11 @@ import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapString;
  * Configurable element that contains fields (artifact, card). Fields need a tracker to be interpreted
  * meaningfully.
  * 
+ * @param <T>
+ *            The type of the element ID
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public abstract class AbstractTuleapConfigurableElement extends AbstractTuleapDetailedElement {
+public abstract class AbstractTuleapConfigurableElement<T> extends AbstractTuleapDetailedElement<T> {
 
 	/**
 	 * The serial version UID.
@@ -107,7 +109,7 @@ public abstract class AbstractTuleapConfigurableElement extends AbstractTuleapDe
 	 * @param projectRef
 	 *            The project reference
 	 */
-	public AbstractTuleapConfigurableElement(int elementId, TuleapReference trackerRef,
+	public AbstractTuleapConfigurableElement(T elementId, TuleapReference trackerRef,
 			TuleapReference projectRef) {
 		super(elementId, projectRef);
 		this.tracker = trackerRef;
@@ -131,7 +133,7 @@ public abstract class AbstractTuleapConfigurableElement extends AbstractTuleapDe
 	 * @param lastModificationDate
 	 *            last modification date
 	 */
-	public AbstractTuleapConfigurableElement(int id, TuleapReference projectRef, String label, String url,
+	public AbstractTuleapConfigurableElement(T id, TuleapReference projectRef, String label, String url,
 			String htmlUrl, Date creationDate, Date lastModificationDate) {
 		super(id, projectRef, label, url, htmlUrl, creationDate, lastModificationDate);
 	}

@@ -16,11 +16,13 @@ import java.io.Serializable;
  * Ancestor of all tuleap configurable elements that belong to a project and have and ID, a REST URL, and an
  * HTML URL.
  * 
+ * @param <T>
+ *            The type of the element ID
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public abstract class AbstractTuleapProjectElement implements Serializable {
+public abstract class AbstractTuleapProjectElement<T> implements Serializable {
 
 	/**
 	 * The serial version UID.
@@ -30,7 +32,7 @@ public abstract class AbstractTuleapProjectElement implements Serializable {
 	/**
 	 * The id of the element.
 	 */
-	private int id;
+	private T id;
 
 	/**
 	 * The human-readable label of the element.
@@ -74,7 +76,7 @@ public abstract class AbstractTuleapProjectElement implements Serializable {
 	 * @param project
 	 *            The reference to the project
 	 */
-	public AbstractTuleapProjectElement(int id, TuleapReference project) {
+	public AbstractTuleapProjectElement(T id, TuleapReference project) {
 		this(project);
 		this.id = id;
 	}
@@ -92,7 +94,7 @@ public abstract class AbstractTuleapProjectElement implements Serializable {
 	 * @param uri
 	 *            The REST URI of the element
 	 */
-	public AbstractTuleapProjectElement(int id, TuleapReference projectRef, String label, String uri) {
+	public AbstractTuleapProjectElement(T id, TuleapReference projectRef, String label, String uri) {
 		this(id, projectRef);
 		this.label = label;
 		this.uri = uri;
@@ -103,7 +105,7 @@ public abstract class AbstractTuleapProjectElement implements Serializable {
 	 * 
 	 * @return the id
 	 */
-	public int getId() {
+	public T getId() {
 		return id;
 	}
 
@@ -113,7 +115,7 @@ public abstract class AbstractTuleapProjectElement implements Serializable {
 	 * @param id
 	 *            the id to set
 	 */
-	public void setId(int id) {
+	public void setId(T id) {
 		this.id = id;
 	}
 

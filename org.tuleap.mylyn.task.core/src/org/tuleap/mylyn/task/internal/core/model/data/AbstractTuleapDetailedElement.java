@@ -16,9 +16,11 @@ import java.util.Date;
  * Ancestor of all tuleap elements that contain a HTML URL, and the submitted by, submitted on, and last
  * updated on data.
  * 
+ * @param <T>
+ *            The type of the element ID
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public abstract class AbstractTuleapDetailedElement extends AbstractTuleapProjectElement {
+public abstract class AbstractTuleapDetailedElement<T> extends AbstractTuleapProjectElement<T> {
 
 	/**
 	 * Teh serial version UID.
@@ -72,7 +74,7 @@ public abstract class AbstractTuleapDetailedElement extends AbstractTuleapProjec
 	 * @param projectRef
 	 *            The reference to the project
 	 */
-	public AbstractTuleapDetailedElement(int id, TuleapReference projectRef) {
+	public AbstractTuleapDetailedElement(T id, TuleapReference projectRef) {
 		super(id, projectRef);
 	}
 
@@ -95,7 +97,7 @@ public abstract class AbstractTuleapDetailedElement extends AbstractTuleapProjec
 	 * @param lastModificationDate
 	 *            The last modification date of the element
 	 */
-	public AbstractTuleapDetailedElement(int id, TuleapReference projectRef, String label, String uri,
+	public AbstractTuleapDetailedElement(T id, TuleapReference projectRef, String label, String uri,
 			String htmlUrl, Date creationDate, Date lastModificationDate) {
 		super(id, projectRef, label, uri);
 		this.htmlUrl = htmlUrl;

@@ -79,7 +79,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 		List<TuleapCard> cards = firstSwimlane.getCards();
 		TuleapCard firstCard = cards.get(0);
 
-		assertEquals(13500, firstCard.getId());
+		assertEquals("13500", firstCard.getId());
 		assertEquals("Implement the data model", firstCard.getLabel());
 		assertEquals("/cards/13500", firstCard.getUri());
 		assertEquals("/cards?id=13500", firstCard.getHtmlUrl());
@@ -102,7 +102,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 
 		TuleapCard secondCard = cards.get(1);
 
-		assertEquals(13501, secondCard.getId());
+		assertEquals("13501", secondCard.getId());
 		assertEquals("Implement the UI", secondCard.getLabel());
 		assertEquals("/cards/13501", secondCard.getUri());
 		assertEquals("/cards?id=13501", secondCard.getHtmlUrl());
@@ -126,7 +126,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 		// A card with a null "column_id" attribute
 		TuleapCard thirdCard = cards.get(2);
 
-		assertEquals(13502, thirdCard.getId());
+		assertEquals("13502", thirdCard.getId());
 		assertEquals("Implement the service layer", thirdCard.getLabel());
 		assertEquals("/cards/13502", thirdCard.getUri());
 		assertEquals("/cards?id=13502", thirdCard.getHtmlUrl());
@@ -165,7 +165,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 		TuleapCard firstCard = cards.get(0);
 
 		// A card without a "column_id" attribute
-		assertEquals(13510, firstCard.getId());
+		assertEquals("13510", firstCard.getId());
 		assertEquals("Implement the data model", firstCard.getLabel());
 		assertEquals("/cards/13510", firstCard.getUri());
 		assertEquals("/cards?id=13510", firstCard.getHtmlUrl());
@@ -188,7 +188,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 
 		TuleapCard secondCard = cards.get(1);
 
-		assertEquals(13511, secondCard.getId());
+		assertEquals("13511", secondCard.getId());
 		assertEquals("Implement the UI", secondCard.getLabel());
 		assertEquals("/cards/135011", secondCard.getUri());
 		assertEquals("/cards?id=13511", secondCard.getHtmlUrl());
@@ -210,7 +210,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 
 		TuleapCard thirdCard = cards.get(2);
 
-		assertEquals(13512, thirdCard.getId());
+		assertEquals("13512", thirdCard.getId());
 		assertEquals("Implement the service layer", thirdCard.getLabel());
 		assertEquals("/cards/13512", thirdCard.getUri());
 		assertEquals("/cards?id=13512", thirdCard.getHtmlUrl());
@@ -248,7 +248,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 		List<TuleapCard> cards = secondSwimlane.getCards();
 		TuleapCard firstCard = cards.get(0);
 
-		assertEquals(13520, firstCard.getId());
+		assertEquals("13520", firstCard.getId());
 		assertEquals("Implement the data model", firstCard.getLabel());
 		assertEquals("/cards/13520", firstCard.getUri());
 		assertEquals("/cards?id=13520", firstCard.getHtmlUrl());
@@ -271,7 +271,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 
 		TuleapCard secondCard = cards.get(1);
 
-		assertEquals(13521, secondCard.getId());
+		assertEquals("13521", secondCard.getId());
 		assertEquals("Implement the UI", secondCard.getLabel());
 		assertEquals("/cards/13521", secondCard.getUri());
 		assertEquals("/cards?id=13521", secondCard.getHtmlUrl());
@@ -294,7 +294,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 
 		TuleapCard thirdCard = cards.get(2);
 
-		assertEquals(13522, thirdCard.getId());
+		assertEquals("13522", thirdCard.getId());
 		assertEquals("Implement the service layer", thirdCard.getLabel());
 		assertEquals("/cards/13522", thirdCard.getUri());
 		assertEquals("/cards?id=13522", thirdCard.getHtmlUrl());

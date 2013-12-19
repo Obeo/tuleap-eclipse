@@ -168,8 +168,8 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			List<TuleapMilestone> subMilestones = milestoneTaskDataConverter.extractMilestones(taskData);
 			for (TuleapMilestone subMilestone : subMilestones) {
 				List<TuleapBacklogItem> content = milestoneTaskDataConverter.extractContent(taskData,
-						subMilestone.getId());
-				tuleapRestClient.updateMilestoneContent(subMilestone.getId(), content, monitor);
+						subMilestone.getId().intValue());
+				tuleapRestClient.updateMilestoneContent(subMilestone.getId().intValue(), content, monitor);
 			}
 
 			// Now that all sub-milestones are updated, we can re-order the unassigned backlog items.
@@ -213,8 +213,8 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			List<TuleapMilestone> subMilestones = milestoneTaskDataConverter.extractMilestones(taskData);
 			for (TuleapMilestone subMilestone : subMilestones) {
 				List<TuleapBacklogItem> content = milestoneTaskDataConverter.extractContent(taskData,
-						subMilestone.getId());
-				tuleapRestClient.updateMilestoneContent(subMilestone.getId(), content, monitor);
+						subMilestone.getId().intValue());
+				tuleapRestClient.updateMilestoneContent(subMilestone.getId().intValue(), content, monitor);
 			}
 
 			// Now that all sub-milestones are updated, we can re-order the unassigned backlog items.
@@ -431,7 +431,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			for (TuleapMilestone tuleapMilestone : subMilestones) {
 				List<TuleapBacklogItem> content;
 				try {
-					content = restClient.getMilestoneContent(tuleapMilestone.getId(), monitor);
+					content = restClient.getMilestoneContent(tuleapMilestone.getId().intValue(), monitor);
 				} catch (CoreException e) {
 					TuleapCoreActivator.log(e, true);
 					content = Collections.emptyList();
@@ -501,8 +501,8 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		}
 		for (TuleapMilestone tuleapMilestone : milestones) {
 			try {
-				List<TuleapBacklogItem> content = restClient.getMilestoneContent(tuleapMilestone.getId(),
-						monitor);
+				List<TuleapBacklogItem> content = restClient.getMilestoneContent(tuleapMilestone.getId()
+						.intValue(), monitor);
 				taskDataConverter.addSubmilestone(taskData, tuleapMilestone, content, monitor);
 			} catch (CoreException e) {
 				TuleapCoreActivator.log(e, true);

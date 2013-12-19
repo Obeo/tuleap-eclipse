@@ -722,7 +722,7 @@ public class TuleapRestClient implements IAuthenticator {
 		// from POJO to JSON
 		JsonArray backlogItemsArray = new JsonArray();
 		for (TuleapBacklogItem item : backlogItems) {
-			backlogItemsArray.add(new JsonPrimitive(Integer.valueOf(item.getId())));
+			backlogItemsArray.add(new JsonPrimitive(item.getId()));
 		}
 		String changesToPut = backlogItemsArray.toString();
 		RestOperation operation = backlogResource.put().withBody(changesToPut);
@@ -751,7 +751,7 @@ public class TuleapRestClient implements IAuthenticator {
 		// from POJO to JSON
 		JsonArray backlogItemsArray = new JsonArray();
 		for (TuleapBacklogItem item : backlogItems) {
-			backlogItemsArray.add(new JsonPrimitive(Integer.valueOf(item.getId())));
+			backlogItemsArray.add(new JsonPrimitive(item.getId()));
 		}
 		String changesToPut = backlogItemsArray.toString();
 		RestOperation operation = backlogResource.put().withBody(changesToPut);
@@ -781,7 +781,7 @@ public class TuleapRestClient implements IAuthenticator {
 		// from POJO to JSON
 		JsonArray backlogItemsArray = new JsonArray();
 		for (TuleapBacklogItem item : backlogItems) {
-			backlogItemsArray.add(new JsonPrimitive(Integer.valueOf(item.getId())));
+			backlogItemsArray.add(new JsonPrimitive(item.getId()));
 		}
 		String changesToPut = backlogItemsArray.toString();
 		RestOperation operation = backlogResource.put().withBody(changesToPut);

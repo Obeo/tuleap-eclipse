@@ -21,7 +21,7 @@ import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class TuleapMilestone extends AbstractTuleapDetailedElement {
+public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 
 	/**
 	 * The serial version UID.
@@ -99,7 +99,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement {
 	 *            The reference to the project
 	 */
 	public TuleapMilestone(int id, TuleapReference projectRef) {
-		super(id, projectRef);
+		super(Integer.valueOf(id), projectRef);
 	}
 
 	/**
@@ -122,7 +122,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement {
 	 */
 	public TuleapMilestone(int id, TuleapReference projectRef, String label, String url, String htmlUrl,
 			Date creationDate, Date lastModificationDate) {
-		super(id, projectRef, label, url, htmlUrl, creationDate, lastModificationDate);
+		super(Integer.valueOf(id), projectRef, label, url, htmlUrl, creationDate, lastModificationDate);
 	}
 
 	/**

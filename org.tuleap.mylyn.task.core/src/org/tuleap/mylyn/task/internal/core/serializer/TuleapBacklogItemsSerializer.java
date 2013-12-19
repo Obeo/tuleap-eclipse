@@ -47,8 +47,7 @@ public class TuleapBacklogItemsSerializer implements JsonSerializer<List<TuleapB
 
 		for (TuleapBacklogItem backlogItem : backlogItems) {
 			JsonObject backlogItemObject = new JsonObject();
-			backlogItemObject.add(ITuleapConstants.ID,
-					new JsonPrimitive(Integer.valueOf(backlogItem.getId())));
+			backlogItemObject.add(ITuleapConstants.ID, new JsonPrimitive(backlogItem.getId()));
 			backlogItemsArray.add(backlogItemObject);
 		}
 		return backlogItemsArray;

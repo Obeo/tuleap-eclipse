@@ -20,7 +20,7 @@ import java.util.List;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
-public class TuleapArtifact extends AbstractTuleapConfigurableElement {
+public class TuleapArtifact extends AbstractTuleapConfigurableElement<Integer> {
 
 	/**
 	 * The serialization version id.
@@ -67,7 +67,7 @@ public class TuleapArtifact extends AbstractTuleapConfigurableElement {
 	 *            The project
 	 */
 	public TuleapArtifact(int id, TuleapReference trackerRef, TuleapReference projectRef) {
-		super(id, trackerRef, projectRef);
+		super(Integer.valueOf(id), trackerRef, projectRef);
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class TuleapArtifact extends AbstractTuleapConfigurableElement {
 	 */
 	public TuleapArtifact(int id, TuleapReference projectRef, String label, String url, String htmlUrl,
 			Date creationDate, Date lastModificationDate) {
-		super(id, projectRef, label, url, htmlUrl, creationDate, lastModificationDate);
+		super(Integer.valueOf(id), projectRef, label, url, htmlUrl, creationDate, lastModificationDate);
 	}
 
 	/**

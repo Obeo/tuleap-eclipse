@@ -47,7 +47,7 @@ public abstract class AbstractProjectElementDeserializer<T extends AbstractTulea
 
 		T pojo = getPrototype();
 
-		int id = jsonObject.get(ITuleapConstants.ID).getAsInt();
+		String id = jsonObject.get(ITuleapConstants.ID).getAsString();
 		String label = jsonObject.get(ITuleapConstants.LABEL).getAsString();
 		TuleapReference project = new Gson().fromJson(jsonObject.get(ITuleapConstants.JSON_PROJECT),
 				TuleapReference.class);

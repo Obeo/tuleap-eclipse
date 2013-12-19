@@ -318,8 +318,8 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 				taskRepository, this);
 		List<TuleapArtifact> artifacts = soapClient.getArtifactsFromQuery(query, server, tracker, monitor);
 		for (TuleapArtifact artifact : artifacts) {
-			TuleapTaskId taskDataId = TuleapTaskId.forArtifact(tracker.getProject().getIdentifier(),
-					artifact.getTracker().getId(), artifact.getId());
+			TuleapTaskId taskDataId = TuleapTaskId.forArtifact(tracker.getProject().getIdentifier(), artifact
+					.getTracker().getId(), artifact.getId().intValue());
 
 			TaskAttributeMapper attributeMapper = this.getTaskDataHandler()
 					.getAttributeMapper(taskRepository);

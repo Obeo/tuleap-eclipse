@@ -88,7 +88,7 @@ public class TuleapJsonParserTest {
 	 *            The backlog item
 	 */
 	public static void checkPlanning400(TuleapPlanning item) {
-		assertEquals(400, item.getId());
+		assertEquals(400, item.getId().intValue());
 		assertEquals(3, item.getProject().getId());
 		assertEquals("projects/3", item.getProject().getUri());
 		assertEquals("Releases Planning", item.getLabel());
@@ -111,7 +111,7 @@ public class TuleapJsonParserTest {
 	 *            The backlog item
 	 */
 	public static void checkPlanning401(TuleapPlanning item) {
-		assertEquals(401, item.getId());
+		assertEquals(401, item.getId().intValue());
 		assertEquals(3, item.getProject().getId());
 		assertEquals("projects/3", item.getProject().getUri());
 		assertEquals("Sprints Planning", item.getLabel());
@@ -149,7 +149,7 @@ public class TuleapJsonParserTest {
 	 *             if the test is badly configured
 	 */
 	public static void checkEpic301(TuleapBacklogItem item) throws ParseException {
-		assertEquals(301, item.getId());
+		assertEquals(301, item.getId().intValue());
 		assertEquals(301, item.getArtifact().getId());
 		assertEquals("artifacts/301", item.getArtifact().getUri());
 		assertEquals(801, item.getArtifact().getTracker().getId());
@@ -193,7 +193,7 @@ public class TuleapJsonParserTest {
 	 *             if the test is badly configured
 	 */
 	public static void checkEpic304(TuleapBacklogItem item) throws ParseException {
-		assertEquals(304, item.getId());
+		assertEquals(304, item.getId().intValue());
 		assertEquals(304, item.getArtifact().getId());
 		assertEquals("artifacts/304", item.getArtifact().getUri());
 		assertEquals(801, item.getArtifact().getTracker().getId());
@@ -223,7 +223,7 @@ public class TuleapJsonParserTest {
 	 *             if the test is badly configured
 	 */
 	public static void checkEpic300(TuleapBacklogItem item) throws ParseException {
-		assertEquals(300, item.getId());
+		assertEquals(300, item.getId().intValue());
 		assertEquals(300, item.getArtifact().getId());
 		assertEquals("artifacts/300", item.getArtifact().getUri());
 		assertEquals(801, item.getArtifact().getTracker().getId());
@@ -268,7 +268,7 @@ public class TuleapJsonParserTest {
 	 *             if the test is badly configured
 	 */
 	public static void checkUserStory350(TuleapBacklogItem item) throws ParseException {
-		assertEquals(350, item.getId());
+		assertEquals(350, item.getId().intValue());
 		assertEquals(350, item.getArtifact().getId());
 		assertEquals("artifacts/350", item.getArtifact().getUri());
 		assertEquals(802, item.getArtifact().getTracker().getId());
@@ -323,7 +323,7 @@ public class TuleapJsonParserTest {
 	 * @throws ParseException
 	 */
 	public static void checkRelease200(TuleapMilestone tuleapMilestone) throws ParseException {
-		assertEquals(200, tuleapMilestone.getId());
+		assertEquals(200, tuleapMilestone.getId().intValue());
 		assertEquals(200, tuleapMilestone.getArtifact().getId());
 		assertEquals("artifacts/200", tuleapMilestone.getArtifact().getUri());
 		assertEquals(901, tuleapMilestone.getArtifact().getTracker().getId());
@@ -359,7 +359,7 @@ public class TuleapJsonParserTest {
 	public static void checkRelease201(TuleapMilestone tuleapMilestone) throws ParseException {
 		assertNotNull(tuleapMilestone);
 
-		assertEquals(201, tuleapMilestone.getId());
+		assertEquals(201, tuleapMilestone.getId().intValue());
 		assertEquals(201, tuleapMilestone.getArtifact().getId());
 		assertEquals("artifacts/201", tuleapMilestone.getArtifact().getUri());
 		assertEquals(901, tuleapMilestone.getArtifact().getTracker().getId());

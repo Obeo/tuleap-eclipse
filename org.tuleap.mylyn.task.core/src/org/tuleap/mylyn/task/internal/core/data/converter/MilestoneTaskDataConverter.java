@@ -108,10 +108,13 @@ public class MilestoneTaskDataConverter {
 					swimlane))));
 			index++;
 			for (TuleapCard card : swimlane.getCards()) {
-				int trackerId = card.getTracker().getId();
+				CardWrapper cardWrapper = swimlaneWrapper.addCard(card.getId());
+				ArtifactReference artifact = card.getArtifact();
+				int trackerId = artifact.getTracker().getId();
 				int cardProjectId = card.getProject().getId();
-				TuleapTaskId cardId = TuleapTaskId.forArtifact(cardProjectId, trackerId, card.getId());
-				CardWrapper cardWrapper = swimlaneWrapper.addCard(cardId.toString());
+				TuleapTaskId cardArtifactId = TuleapTaskId.forArtifact(cardProjectId, trackerId, artifact
+						.getId());
+				cardWrapper.setArtifactId(cardArtifactId.toString());
 				populateCard(cardWrapper, card);
 			}
 		}
@@ -327,8 +330,8 @@ public class MilestoneTaskDataConverter {
 						.getValue());
 			}
 			BacklogItemWrapper backlogItemWrapper = milestonePlanning.addBacklogItem(TuleapTaskId
-					.forArtifact(projectId, 0, backlogItem.getId()).toString());
-			backlogItemWrapper.setDisplayId(Integer.toString(backlogItem.getId()));
+					.forArtifact(projectId, 0, backlogItem.getId().intValue()).toString());
+			backlogItemWrapper.setDisplayId(Integer.toString(backlogItem.getId().intValue()));
 
 			backlogItemWrapper.setLabel(backlogItem.getLabel());
 			backlogItemWrapper.setType(backlogItem.getType());
@@ -372,11 +375,11 @@ public class MilestoneTaskDataConverter {
 			}
 		}
 		TuleapTaskId internalMilestoneId = TuleapTaskId.forArtifact(milestone.getProject().getId(),
-				trackerId, milestone.getId());
+				trackerId, milestone.getId().intValue());
 
 		SubMilestoneWrapper subMilestoneWrapper = milestonePlanning.addSubMilestone(internalMilestoneId
 				.toString());
-		subMilestoneWrapper.setDisplayId(Integer.toString(milestone.getId()));
+		subMilestoneWrapper.setDisplayId(Integer.toString(milestone.getId().intValue()));
 		subMilestoneWrapper.setLabel(milestone.getLabel());
 		subMilestoneWrapper.setStartDate(milestone.getStartDate());
 		subMilestoneWrapper.setEndDate(milestone.getEndDate());
@@ -394,8 +397,8 @@ public class MilestoneTaskDataConverter {
 						.getValue());
 			}
 			BacklogItemWrapper backlogItemWrapper = milestonePlanning.addBacklogItem(TuleapTaskId
-					.forArtifact(projectId, 0, backlogItem.getId()).toString());
-			backlogItemWrapper.setDisplayId(Integer.toString(backlogItem.getId()));
+					.forArtifact(projectId, 0, backlogItem.getId().intValue()).toString());
+			backlogItemWrapper.setDisplayId(Integer.toString(backlogItem.getId().intValue()));
 
 			backlogItemWrapper.setAssignedMilestoneId(internalMilestoneId.toString());
 			backlogItemWrapper.setType(backlogItem.getType());

@@ -1063,7 +1063,7 @@ public class TuleapSoapConnector {
 			newComment = TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.defaultComment);
 		}
 		this.getTuleapTrackerV5APIPortType().updateArtifact(sessionHash, groupId,
-				artifact.getTracker().getId(), artifact.getId(),
+				artifact.getTracker().getId(), artifact.getId().intValue(),
 				valuesList.toArray(new ArtifactFieldValue[valuesList.size()]), newComment, UTF8);
 
 		monitor.worked(fifty);

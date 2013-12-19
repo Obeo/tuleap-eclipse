@@ -22,7 +22,7 @@ import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class TuleapPlanning extends AbstractTuleapProjectElement implements Serializable {
+public class TuleapPlanning extends AbstractTuleapProjectElement<Integer> implements Serializable {
 
 	/**
 	 * The serial version UID.
@@ -66,7 +66,7 @@ public class TuleapPlanning extends AbstractTuleapProjectElement implements Seri
 	 *            the project
 	 */
 	public TuleapPlanning(int id, TuleapReference projectRef) {
-		super(id, projectRef);
+		super(Integer.valueOf(id), projectRef);
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class TuleapPlanning extends AbstractTuleapProjectElement implements Seri
 	 *            the uri
 	 */
 	public TuleapPlanning(int id, TuleapReference projectRef, String label, String uri) {
-		super(id, projectRef, label, uri);
+		super(Integer.valueOf(id), projectRef, label, uri);
 	}
 
 	/**

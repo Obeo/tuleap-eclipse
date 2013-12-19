@@ -1,362 +1,311 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class-diagram version="1.1.3" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+<class-diagram version="1.1.4" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
   associations="true" dependencies="false" nesting-relationships="true">  
   <class id="1" language="java" name="org.tuleap.mylyn.task.internal.core.model.data.TuleapElementComment" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/data/TuleapElementComment.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="189" width="258" x="813" y="1655"/>    
+    <position height="112" width="205" x="147" y="933"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
   <class id="2" language="java" name="org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/data/BoundFieldValue.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="117" width="205" x="1659" y="1655"/>    
+    <position height="76" width="205" x="882" y="933"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
   <class id="3" language="java" name="org.tuleap.mylyn.task.internal.core.model.data.AttachmentFieldValue" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/data/AttachmentFieldValue.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="99" width="263" x="1111" y="1655"/>    
+    <position height="58" width="205" x="392" y="933"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
   <class id="4" language="java" name="org.tuleap.mylyn.task.internal.core.model.data.AbstractTuleapDetailedElement" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/data/AbstractTuleapDetailedElement.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="351" width="423" x="646" y="410"/>    
+    <position height="-1" width="-1" x="542" y="307"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
   <class id="5" language="java" name="org.tuleap.mylyn.task.internal.core.model.data.AbstractTuleapConfigurableElement" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/data/AbstractTuleapConfigurableElement.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="495" width="446" x="1130" y="801"/>    
+    <position height="184" width="253" x="576" y="449"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
   <class id="6" language="java" name="org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/data/TuleapArtifact.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="225" width="342" x="963" y="1372"/>    
+    <position height="94" width="205" x="331" y="727"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
   <class id="7" language="java" name="org.tuleap.mylyn.task.internal.core.model.data.AttachmentValue" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/data/AttachmentValue.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="297" width="320" x="1111" y="1884"/>    
+    <position height="166" width="205" x="392" y="1085"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
   <class id="8" language="java" name="org.tuleap.mylyn.task.internal.core.model.data.AbstractTuleapProjectElement" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/data/AbstractTuleapProjectElement.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="333" width="337" x="788" y="37"/>    
+    <position height="-1" width="-1" x="543" y="99"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
   <class id="9" language="java" name="org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/data/AbstractFieldValue.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="117" width="205" x="1345" y="1372"/>    
+    <position height="76" width="205" x="576" y="727"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
   <class id="10" language="java" name="org.tuleap.mylyn.task.internal.core.model.data.TuleapAttachmentDescriptor" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/data/TuleapAttachmentDescriptor.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="333" width="410" x="190" y="37"/>    
+    <position height="-1" width="-1" x="172" y="231"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
   <class id="11" language="java" name="org.tuleap.mylyn.task.internal.core.model.data.TuleapReference" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/data/TuleapReference.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="207" width="205" x="718" y="1372"/>    
+    <position height="-1" width="-1" x="817" y="297"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
   <class id="12" language="java" name="org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/data/LiteralFieldValue.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="117" width="205" x="1414" y="1655"/>    
+    <position height="76" width="205" x="637" y="933"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
   <class id="13" language="java" name="org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapSwimlane" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/data/agile/TuleapSwimlane.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="153" width="227" x="1597" y="410"/>    
+    <position height="-1" width="-1" x="1083" y="433"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
   <class id="14" language="java" name="org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/data/agile/TuleapBacklogItem.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="333" width="363" x="315" y="801"/>    
+    <position height="166" width="227" x="42" y="449"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
   <interface id="15" language="java" name="org.tuleap.mylyn.task.internal.core.model.data.agile.IPlanning" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/data/agile/IPlanning.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="117" width="233" x="42" y="801"/>    
+    <position height="58" width="227" x="50" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <class id="16" language="java" name="org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapStatus" 
+  <enumeration id="16" language="java" name="org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapStatus" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/data/agile/TuleapStatus.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="153" width="227" x="1330" y="410"/>    
+    <position height="-1" width="-1" x="170" y="379"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
-  </class>  
+  </enumeration>  
   <class id="17" language="java" name="org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCard" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/data/agile/TuleapCard.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="243" width="329" x="1590" y="1372"/>    
+    <position height="-1" width="-1" x="1083" y="614"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
   <class id="18" language="java" name="org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/data/agile/TuleapMilestone.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="531" width="351" x="718" y="801"/>    
+    <position height="238" width="227" x="309" y="449"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
   <class id="19" language="java" name="org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCardwall" 
     project="org.tuleap.mylyn.task.core" 
     file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/data/agile/TuleapCardwall.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="153" width="227" x="1464" y="37"/>    
+    <position height="-1" width="-1" x="1083" y="254"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <enumeration id="20" language="java" 
-    name="org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem.Status" 
-    project="org.tuleap.mylyn.task.core" 
-    file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/data/agile/TuleapBacklogItem.java" 
-    binary="false" corner="BOTTOM_RIGHT">    
-    <position height="135" width="227" x="315" y="1372"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
-      visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </enumeration>  
-  <generalization id="21">    
-    <end type="SOURCE" refId="3"/>    
-    <end type="TARGET" refId="9"/>  
-  </generalization>  
-  <nesting id="22">    
-    <end type="SOURCE" refId="14"/>    
-    <end type="TARGET" refId="20"/>  
-  </nesting>  
-  <association id="23">    
-    <end type="SOURCE" refId="18" navigable="false">      
-      <attribute id="24" name="parent"/>      
-      <multiplicity id="25" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="11" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="26">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="27" name="comments"/>      
-      <multiplicity id="28" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="29">    
-    <end type="SOURCE" refId="14" navigable="false">      
-      <attribute id="30" name="status"/>      
-      <multiplicity id="31" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="20" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="32">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="33" name="attachments"/>      
-      <multiplicity id="34" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="35">    
-    <end type="SOURCE" refId="13" navigable="false">      
-      <attribute id="36" name="backlogItem"/>      
-      <multiplicity id="37" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="14" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="38">    
+  <association id="20">    
     <end type="SOURCE" refId="19" navigable="false">      
-      <attribute id="39" name="swimlanes"/>      
-      <multiplicity id="40" minimum="0" maximum="2147483647"/>    
+      <attribute id="21" name="swimlanes"/>      
+      <multiplicity id="22" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="13" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="41">    
-    <end type="SOURCE" refId="18"/>    
-    <end type="TARGET" refId="4"/>  
-  </generalization>  
-  <generalization id="42">    
-    <end type="SOURCE" refId="2"/>    
+  <generalization id="23">    
+    <end type="SOURCE" refId="12"/>    
     <end type="TARGET" refId="9"/>  
   </generalization>  
-  <generalization id="43">    
-    <end type="SOURCE" refId="4"/>    
-    <end type="TARGET" refId="8"/>  
-  </generalization>  
-  <generalization id="44">    
-    <end type="SOURCE" refId="17"/>    
-    <end type="TARGET" refId="5"/>  
-  </generalization>  
-  <generalization id="45">    
-    <end type="SOURCE" refId="14"/>    
+  <generalization id="24">    
+    <end type="SOURCE" refId="5"/>    
     <end type="TARGET" refId="4"/>  
   </generalization>  
-  <generalization id="46">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="5"/>  
-  </generalization>  
-  <association id="47">    
-    <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="48" name="tracker"/>      
-      <multiplicity id="49" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="11" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="50">    
-    <bendpoint x="1099" y="410"/>    
-    <bendpoint x="1099" y="801"/>    
-    <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="51" name="project"/>      
-      <multiplicity id="52" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="11" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="53">    
-    <end type="SOURCE" refId="19" navigable="false">      
-      <attribute id="54" name="status"/>      
-      <multiplicity id="55" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="16" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="56">    
-    <bendpoint x="1606" y="801"/>    
+  <association id="25">    
     <end type="SOURCE" refId="13" navigable="false">      
-      <attribute id="57" name="cards"/>      
-      <multiplicity id="58" minimum="0" maximum="2147483647"/>    
+      <attribute id="26" name="cards"/>      
+      <multiplicity id="27" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="17" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="59">    
-    <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="4"/>  
+  <association id="28">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="29" name="attachments"/>      
+      <multiplicity id="30" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="31">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="9"/>  
   </generalization>  
-  <association id="60">    
+  <association id="32">    
     <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="61" name="fieldTypeIdToValue"/>      
-      <multiplicity id="62" minimum="0" maximum="2147483647"/>    
+      <attribute id="33" name="fieldTypeIdToValue"/>      
+      <multiplicity id="34" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="9" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="63">    
-    <end type="SOURCE" refId="12"/>    
+  <association id="35">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="36" name="project"/>      
+      <multiplicity id="37" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="38">    
+    <end type="SOURCE" refId="18"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <generalization id="39">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="8"/>  
+  </generalization>  
+  <generalization id="40">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <association id="41">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="42" name="tracker"/>      
+      <multiplicity id="43" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="44">    
+    <end type="SOURCE" refId="3"/>    
     <end type="TARGET" refId="9"/>  
   </generalization>  
+  <generalization id="45">    
+    <end type="SOURCE" refId="17"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <generalization id="46">    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <association id="47">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="48" name="comments"/>      
+      <multiplicity id="49" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    
-    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+    <operations public="false" package="false" protected="false" private="false" static="true"/>  
   </classifier-display>  
   <association-display labels="true" multiplicity="true"/>
 </class-diagram>
