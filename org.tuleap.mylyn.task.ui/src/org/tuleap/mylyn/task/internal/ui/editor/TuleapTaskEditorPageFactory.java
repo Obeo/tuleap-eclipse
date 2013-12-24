@@ -10,6 +10,11 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.ui.editor;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
@@ -44,6 +49,20 @@ public class TuleapTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 	public boolean canCreatePageFor(TaskEditorInput input) {
 		if (ITuleapConstants.CONNECTOR_KIND.equals(input.getTask().getConnectorKind())
 				|| TasksUiUtil.isOutgoingNewTask(input.getTask(), ITuleapConstants.CONNECTOR_KIND)) {
+			IEclipsePreferences node = InstanceScope.INSTANCE
+					.getNode(ITuleapConstants.TULEAP_PREFERENCE_NODE);
+			if (node != null) {
+				boolean debugIsActive = node.getBoolean(ITuleapConstants.TULEAP_PREFERENCE_DEBUG_MODE, false);
+				if (debugIsActive) {
+					try {
+						TaskData taskData = TasksUi.getTaskDataManager().getTaskData(input.getTask());
+						TuleapTasksUIPlugin.log(taskData.getRoot().toString(), false);
+					} catch (CoreException e) {
+						TuleapTasksUIPlugin.log(e, true);
+					}
+				}
+			}
+
 			return true;
 		}
 		return false;

@@ -228,6 +228,16 @@ public class TuleapUiMessagesKeys extends NLS {
 	 */
 	public static String agileConnectorRequired;
 
+	/**
+	 * The title of the Tuleap preferences page.
+	 */
+	public static String tuleapPreferencesPageTitle;
+
+	/**
+	 * Activate the debug mode of the connector.
+	 */
+	public static String activateDebugModeLabel;
+
 	static {
 		// load message values from bundle file
 		reloadMessages();

@@ -297,4 +297,15 @@ public interface ITuleapConstants {
 	 * The key used to retrieve assigned milestone reference for a backlog item.
 	 */
 	String JSON_ASSIGNED_MILESTONE = "assigned_milestone"; //$NON-NLS-1$
+
+	/**
+	 * The identifier of the Tuleap preference node.
+	 */
+	String TULEAP_PREFERENCE_NODE = "tuleap_preference_node"; //$NON-NLS-1$
+
+	/**
+	 * The identifier of the Tuleap preference for the activation of the debug mode.
+	 */
+	String TULEAP_PREFERENCE_DEBUG_MODE = "tuleap_preference_debug_mode"; //$NON-NLS-1$
+
 }

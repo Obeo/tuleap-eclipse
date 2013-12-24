@@ -22,5 +22,14 @@
             id="org.tuleap.mylyn.task.ui.tuleapTaskEditorPageFactory">
       </pageFactory>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.eclipse.mylyn.tasks.ui.preferences"
+            class="org.tuleap.mylyn.task.internal.ui.preferences.TuleapPreferencePage"
+            id="org.tuleap.mylyn.task.ui.preferencePage"
+            name="%TuleapPreferencePage.Name">
+      </page>
+   </extension>
 
 </plugin>
