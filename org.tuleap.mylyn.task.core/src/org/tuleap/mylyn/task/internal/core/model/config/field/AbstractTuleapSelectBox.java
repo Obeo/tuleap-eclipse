@@ -12,7 +12,6 @@ package org.tuleap.mylyn.task.internal.core.model.config.field;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -301,24 +300,5 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 		if (items.size() > 0) {
 			attribute.putOption(String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID), ""); //$NON-NLS-1$
 		}
-	}
-
-	/**
-	 * Maintained temporarily for unit tests but to remove.
-	 * 
-	 * @return something useless
-	 * @deprecated
-	 */
-	@Override
-	@Deprecated
-	public Map<String, String> getOptions() {
-		Map<String, String> options = new HashMap<String, String>();
-		for (TuleapSelectBoxItem item : items.values()) {
-			options.put(String.valueOf(item.getIdentifier()), item.getLabel());
-		}
-		if (items.size() > 0) {
-			options.put(String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID), ""); //$NON-NLS-1$
-		}
-		return options;
 	}
 }

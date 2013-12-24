@@ -50,7 +50,7 @@ public class TuleapCardDeserializer extends AbstractTuleapDeserializer<TuleapCar
 				ArtifactReference.class));
 
 		JsonElement elt = jsonObject.get(ITuleapConstants.ACCENT_COLOR);
-		if (elt != null) {
+		if (elt != null && !elt.isJsonNull()) {
 			String color = elt.getAsString();
 			card.setAccentColor(color);
 		}
@@ -65,7 +65,7 @@ public class TuleapCardDeserializer extends AbstractTuleapDeserializer<TuleapCar
 			}
 		}
 		elt = jsonObject.get(ITuleapConstants.JSON_STATUS);
-		if (elt != null) {
+		if (elt != null && !elt.isJsonNull()) {
 			String statusString = elt.getAsString();
 			card.setStatus(TuleapStatus.valueOf(statusString));
 		}

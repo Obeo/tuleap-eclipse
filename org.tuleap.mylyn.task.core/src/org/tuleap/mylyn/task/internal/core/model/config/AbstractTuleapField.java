@@ -11,9 +11,7 @@
 package org.tuleap.mylyn.task.internal.core.model.config;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field;
 import org.eclipse.mylyn.tasks.core.data.DefaultTaskSchema;
@@ -41,15 +39,6 @@ public abstract class AbstractTuleapField extends AbstractTuleapFormElement {
 	 */
 	public AbstractTuleapField(int formElementIdentifier) {
 		super(formElementIdentifier);
-	}
-
-	/**
-	 * Returns the options of the Tuleap field.
-	 * 
-	 * @return The options of the Tuleap field.
-	 */
-	public Map<String, String> getOptions() {
-		return Collections.emptyMap();
 	}
 
 	/**

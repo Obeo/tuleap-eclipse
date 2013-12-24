@@ -364,6 +364,31 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	 */
 	public static String invalidDate;
 
+	/**
+	 * Display id template, uses 2 parameters:
+	 * <ol>
+	 * <li>The tracker label</li>
+	 * <li>The card's artifact ID</li>
+	 * </ol>
+	 */
+	public static String cardDisplayId;
+
+	/**
+	 * Message when the tracker of a card cannot be found.
+	 * <ol>
+	 * <li>The tracker ID</li>
+	 * </ol>
+	 */
+	public static String cardTrackerNotAvailable;
+
+	/**
+	 * Message when then tracker config of a card needs to be refreshed.
+	 * <ol>
+	 * <li>The tracker ID</li>
+	 * </ol>
+	 */
+	public static String cardTrackerConfigNeedsUpdate;
+
 	static {
 		// load message values from bundle file
 		reloadMessages();

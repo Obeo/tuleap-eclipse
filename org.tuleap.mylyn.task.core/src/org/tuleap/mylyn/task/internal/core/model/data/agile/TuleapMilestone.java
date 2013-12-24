@@ -69,6 +69,11 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 	private String contentUri;
 
 	/**
+	 * The REST URI to get this milestone's cardwall.
+	 */
+	private String cardwallUri;
+
+	/**
 	 * The milestone's status label.
 	 */
 	private String statusValue;
@@ -275,6 +280,25 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 	 */
 	public void setContentUri(String contentUri) {
 		this.contentUri = contentUri;
+	}
+
+	/**
+	 * URI for cardwall.
+	 * 
+	 * @return the cardwallUri
+	 */
+	public String getCardwallUri() {
+		return cardwallUri;
+	}
+
+	/**
+	 * URI for cardwall.
+	 * 
+	 * @param cardwallUri
+	 *            the contentUri to set
+	 */
+	public void setCardwallUri(String cardwallUri) {
+		this.cardwallUri = cardwallUri;
 	}
 
 	/**

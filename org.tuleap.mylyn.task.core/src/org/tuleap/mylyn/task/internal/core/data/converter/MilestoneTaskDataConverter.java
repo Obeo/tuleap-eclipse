@@ -16,15 +16,23 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.agile.core.data.cardwall.CardWrapper;
 import org.tuleap.mylyn.task.agile.core.data.cardwall.CardwallWrapper;
+import org.tuleap.mylyn.task.agile.core.data.cardwall.ColumnWrapper;
 import org.tuleap.mylyn.task.agile.core.data.cardwall.SwimlaneWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.BacklogItemWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.MilestonePlanningWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.SubMilestoneWrapper;
+import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
+import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.field.AbstractTuleapSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.ArtifactReference;
 import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
@@ -38,6 +46,8 @@ import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapStatus;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapSwimlane;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
+import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
+import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
 /**
  * Class to convert a milestone to task data and task data to milestone.
@@ -93,14 +103,18 @@ public class MilestoneTaskDataConverter {
 	 *            The task data to fill.
 	 * @param cardwall
 	 *            The cardwall pojo.
+	 * @param project
+	 *            The project.
 	 * @param monitor
 	 *            The progress monitor to use
 	 */
-	public void populateCardwall(TaskData taskData, TuleapCardwall cardwall, IProgressMonitor monitor) {
+	public void populateCardwall(TaskData taskData, TuleapCardwall cardwall, TuleapProject project,
+			IProgressMonitor monitor) {
 		CardwallWrapper wrapper = new CardwallWrapper(taskData.getRoot());
 		int index = 0;
 		for (TuleapColumn column : cardwall.getColumns()) {
-			wrapper.addColumn(Integer.toString(column.getId()), column.getLabel());
+			ColumnWrapper colWrapper = wrapper.addColumn(Integer.toString(column.getId()), column.getLabel());
+			colWrapper.setColor(column.getColor());
 		}
 		for (TuleapSwimlane swimlane : cardwall.getSwimlanes()) {
 			SwimlaneWrapper swimlaneWrapper = wrapper.addSwimlane(String.valueOf(index));
@@ -109,13 +123,7 @@ public class MilestoneTaskDataConverter {
 			index++;
 			for (TuleapCard card : swimlane.getCards()) {
 				CardWrapper cardWrapper = swimlaneWrapper.addCard(card.getId());
-				ArtifactReference artifact = card.getArtifact();
-				int trackerId = artifact.getTracker().getId();
-				int cardProjectId = card.getProject().getId();
-				TuleapTaskId cardArtifactId = TuleapTaskId.forArtifact(cardProjectId, trackerId, artifact
-						.getId());
-				cardWrapper.setArtifactId(cardArtifactId.toString());
-				populateCard(cardWrapper, card);
+				populateCard(cardWrapper, card, project);
 			}
 		}
 	}
@@ -127,30 +135,87 @@ public class MilestoneTaskDataConverter {
 	 *            The card wrapper.
 	 * @param card
 	 *            The card POJO.
+	 * @param project
+	 *            The card project.
 	 */
-	public void populateCard(CardWrapper cardWrapper, TuleapCard card) {
-		cardWrapper.setDisplayId(String.valueOf(card.getId()));
+	public void populateCard(CardWrapper cardWrapper, TuleapCard card, TuleapProject project) {
 		cardWrapper.setLabel(card.getLabel());
 		if (card.getColumnId() != null) {
 			cardWrapper.setColumnId(String.valueOf(card.getColumnId()));
 		}
+		cardWrapper.setAccentColor(card.getAccentColor());
 
 		int[] allowedColumnIds = card.getAllowedColumnIds();
 		for (int columnId : allowedColumnIds) {
 			cardWrapper.addAllowedColumn(String.valueOf(columnId));
 		}
 		cardWrapper.setStatus(card.getStatus().toString());
-
-		for (AbstractFieldValue fieldValue : card.getFieldValues()) {
-			// TODO manage other types of fields
-			String fieldId = Integer.toString(fieldValue.getFieldId());
-			if (fieldValue instanceof LiteralFieldValue) {
-				cardWrapper.setFieldValue(fieldId, ((LiteralFieldValue)fieldValue).getFieldValue());
-			} else if (fieldValue instanceof BoundFieldValue) {
-				BoundFieldValue boundFieldValue = (BoundFieldValue)fieldValue;
-				for (Integer boundId : boundFieldValue.getValueIds()) {
-					cardWrapper.addFieldValue(fieldId, String.valueOf(boundId));
+		ArtifactReference artifact = card.getArtifact();
+		int trackerId = artifact.getTracker().getId();
+		int cardProjectId = card.getProject().getId();
+		TuleapTaskId cardArtifactId = TuleapTaskId.forArtifact(cardProjectId, trackerId, artifact.getId());
+		cardWrapper.setArtifactId(cardArtifactId.toString());
+		// The card ID is different from the artifact ID, but we want to display the artifact ID
+		TuleapTracker tracker = project.getTracker(artifact.getTracker().getId());
+		if (tracker != null) {
+			cardWrapper.setDisplayId(TuleapMylynTasksMessages.getString(
+					TuleapMylynTasksMessagesKeys.cardDisplayId, tracker.getLabel(), Integer.toString(artifact
+							.getId())));
+			// TODO Implement an init mechanism like artifact: create all card fields according to config
+			// then populate the values of received fields.
+			for (AbstractFieldValue fieldValue : card.getFieldValues()) {
+				// TODO manage other types of fields
+				int fId = fieldValue.getFieldId();
+				String fieldId = Integer.toString(fId);
+				AbstractTuleapField field = tracker.getFieldById(fId);
+				if (field != null) {
+					TaskAttribute fieldAtt = cardWrapper.addField(fieldId, field.getLabel(), field
+							.getMetadataType());
+					populateCardField(tracker, fieldValue, field, fieldAtt);
+				} else {
+					TuleapCoreActivator.log(TuleapMylynTasksMessages.getString(
+							TuleapMylynTasksMessagesKeys.cardTrackerConfigNeedsUpdate, Integer
+									.toString(trackerId)), true);
 				}
+			}
+		} else {
+			cardWrapper.setDisplayId(Integer.toString(artifact.getId()));
+			TuleapCoreActivator.log(TuleapMylynTasksMessages.getString(
+					TuleapMylynTasksMessagesKeys.cardTrackerNotAvailable, Integer.toString(trackerId)), true);
+		}
+	}
+
+	/**
+	 * Populates a card field.
+	 * 
+	 * @param tracker
+	 *            The tracker
+	 * @param fieldValue
+	 *            The field value
+	 * @param field
+	 *            The field
+	 * @param fieldAtt
+	 *            The field TaskAttribute
+	 */
+	private void populateCardField(TuleapTracker tracker, AbstractFieldValue fieldValue,
+			AbstractTuleapField field, TaskAttribute fieldAtt) {
+		if (fieldValue instanceof LiteralFieldValue) {
+			fieldAtt.setValue(((LiteralFieldValue)fieldValue).getFieldValue());
+		} else if (fieldValue instanceof BoundFieldValue) {
+			BoundFieldValue boundFieldValue = (BoundFieldValue)fieldValue;
+			for (Integer boundId : boundFieldValue.getValueIds()) {
+				fieldAtt.addValue(String.valueOf(boundId));
+			}
+			if (field instanceof AbstractTuleapSelectBox) {
+				AbstractTuleapSelectBox sb = (AbstractTuleapSelectBox)field;
+				// The options map is immutable, we must add options one at a time
+				for (TuleapSelectBoxItem entry : sb.getItems()) {
+					fieldAtt.putOption(Integer.toString(entry.getIdentifier()), entry.getLabel());
+				}
+			} else {
+				TuleapCoreActivator.log(TuleapMylynTasksMessages.getString(
+						TuleapMylynTasksMessagesKeys.cardTrackerConfigNeedsUpdate, Integer.toString(tracker
+								.getIdentifier())), true);
 			}
 		}
 	}

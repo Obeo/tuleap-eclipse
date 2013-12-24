@@ -33,6 +33,9 @@ import org.tuleap.mylyn.task.internal.core.model.config.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBoxItem;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapString;
 import org.tuleap.mylyn.task.internal.core.model.data.ArtifactReference;
 import org.tuleap.mylyn.task.internal.core.model.data.AttachmentFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.AttachmentValue;
@@ -92,9 +95,15 @@ public class MilestoneTaskDataConverterTest {
 	 */
 	private TaskRepository taskRepository;
 
-	private TuleapProject projectConfiguration;
+	private TuleapString field1000;
 
-	private TuleapServer serverConfiguration;
+	private TuleapSelectBox field2000;
+
+	private TuleapTracker tracker700;
+
+	private TuleapProject project;
+
+	private TuleapServer server;
 
 	private TuleapRepositoryConnector connector;
 
@@ -106,10 +115,33 @@ public class MilestoneTaskDataConverterTest {
 		String repositoryUrl = "repository"; //$NON-NLS-1$
 		String connectorKind = "kind"; //$NON-NLS-1$
 		String taskId = "id"; //$NON-NLS-1$
-		serverConfiguration = new TuleapServer(repositoryUrl);
+		server = new TuleapServer(repositoryUrl);
 
-		projectConfiguration = new TuleapProject("The first project", 200); //$NON-NLS-1$
-		serverConfiguration.addProject(projectConfiguration);
+		project = new TuleapProject("The first project", 200); //$NON-NLS-1$
+		server.addProject(project);
+
+		tracker700 = new TuleapTracker(700, "700", "Tracker 700", "", "", System.currentTimeMillis());
+		project.addTracker(tracker700);
+
+		field1000 = new TuleapString(1000);
+		field1000.setLabel("Text");
+		tracker700.addField(field1000);
+
+		field2000 = new TuleapSelectBox(2000);
+		field2000.setLabel("SelectBox");
+		TuleapSelectBoxItem item = new TuleapSelectBoxItem(10);
+		item.setLabel("Label 10");
+		field2000.addItem(item);
+		item = new TuleapSelectBoxItem(20);
+		item.setLabel("Label 20");
+		field2000.addItem(item);
+		item = new TuleapSelectBoxItem(30);
+		item.setLabel("Label 30");
+		field2000.addItem(item);
+		item = new TuleapSelectBoxItem(40);
+		item.setLabel("Label 40");
+		field2000.addItem(item);
+		tracker700.addField(field2000);
 
 		final TuleapClientManager clientManager = new TuleapClientManager() {
 			@Override
@@ -121,7 +153,7 @@ public class MilestoneTaskDataConverterTest {
 		connector = new TuleapRepositoryConnector() {
 			@Override
 			public TuleapServer getServer(String pRepositoryUrl) {
-				return serverConfiguration;
+				return server;
 			}
 
 			@Override
@@ -186,7 +218,7 @@ public class MilestoneTaskDataConverterTest {
 
 		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(taskRepository, connector);
 		converter.populateTaskData(taskData, milestone, null);
-		converter.populateCardwall(taskData, cardwall, null);
+		converter.populateCardwall(taskData, cardwall, project, null);
 
 		TaskAttribute root = taskData.getRoot();
 
@@ -225,7 +257,7 @@ public class MilestoneTaskDataConverterTest {
 
 		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(taskRepository, connector);
 		converter.populateTaskData(taskData, milestone, null);
-		converter.populateCardwall(taskData, cardwall, null);
+		converter.populateCardwall(taskData, cardwall, project, null);
 
 		TaskAttribute root = taskData.getRoot();
 
@@ -283,7 +315,7 @@ public class MilestoneTaskDataConverterTest {
 
 		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(taskRepository, connector);
 		converter.populateTaskData(taskData, milestone, null);
-		converter.populateCardwall(taskData, cardwall, null);
+		converter.populateCardwall(taskData, cardwall, project, null);
 
 		TaskAttribute root = taskData.getRoot();
 
@@ -293,31 +325,31 @@ public class MilestoneTaskDataConverterTest {
 		TaskAttribute firstSwimlaneTA = root.getAttribute(swimlaneId);
 		assertNotNull(firstSwimlaneTA);
 
-		TaskAttribute firstCardTA = root.getAttribute(swimlaneId + "-2_12345"); //$NON-NLS-1$
+		TaskAttribute firstCardTA = root.getAttribute(swimlaneId + "-c-2_12345"); //$NON-NLS-1$
 		assertNotNull(firstCardTA);
 		assertEquals("2_12345", firstCardTA.getValue()); //$NON-NLS-1$
 
-		TaskAttribute att = root.getAttribute(swimlaneId + "-2_12345-art_id");
+		TaskAttribute att = root.getAttribute(swimlaneId + "-c-2_12345-art_id");
 		assertEquals("200:700#12345", att.getValue());
 
-		TaskAttribute statusIdFirstCardTA = root.getAttribute(swimlaneId + "-2_12345-col_id");
+		TaskAttribute statusIdFirstCardTA = root.getAttribute(swimlaneId + "-c-2_12345-col_id");
 
 		assertNotNull(statusIdFirstCardTA);
 		assertEquals(TaskAttribute.TYPE_INTEGER, statusIdFirstCardTA.getMetaData().getType());
 		assertEquals("10000", statusIdFirstCardTA.getValue()); //$NON-NLS-1$
 
-		TaskAttribute fieldValueFirstCardTA = root.getAttribute(swimlaneId + "-2_12345-f-1000"); //$NON-NLS-1$ 
+		TaskAttribute fieldValueFirstCardTA = root.getAttribute(swimlaneId + "-c-2_12345-f-1000"); //$NON-NLS-1$ 
 
 		assertNotNull(fieldValueFirstCardTA);
 		assertEquals("300, 301, 302", fieldValueFirstCardTA.getValue()); //$NON-NLS-1$
 
-		TaskAttribute statusFirstCardTA = root.getAttribute(swimlaneId + "-2_12345-status");
+		TaskAttribute statusFirstCardTA = root.getAttribute(swimlaneId + "-c-2_12345-status");
 
 		assertNotNull(statusFirstCardTA);
 		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, statusFirstCardTA.getMetaData().getType());
 		assertEquals("Open", statusFirstCardTA.getValue()); //$NON-NLS-1$
 
-		TaskAttribute allowedColumnsFirstCardTA = root.getAttribute(swimlaneId + "-2_12345-allowed_cols");
+		TaskAttribute allowedColumnsFirstCardTA = root.getAttribute(swimlaneId + "-c-2_12345-allowed_cols");
 
 		assertNotNull(allowedColumnsFirstCardTA);
 		List<String> values = allowedColumnsFirstCardTA.getValues();
@@ -366,7 +398,7 @@ public class MilestoneTaskDataConverterTest {
 
 		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(taskRepository, connector);
 		converter.populateTaskData(taskData, milestone, null);
-		converter.populateCardwall(taskData, cardwall, null);
+		converter.populateCardwall(taskData, cardwall, project, null);
 
 		TaskAttribute root = taskData.getRoot();
 
@@ -375,12 +407,12 @@ public class MilestoneTaskDataConverterTest {
 		String swimlaneId = SWIMLANE_PREFIX + id++;
 		TaskAttribute firstSwimlaneTA = root.getAttribute(swimlaneId);
 
-		String cardPrefix = swimlaneId + "-2_12345";
+		String cardPrefix = swimlaneId + "-c-2_12345";
 		TaskAttribute firstCardTA = root.getAttribute(cardPrefix);
 		assertNotNull(firstCardTA);
 		assertEquals("2_12345", firstCardTA.getValue()); //$NON-NLS-1$
 
-		TaskAttribute att = root.getAttribute(swimlaneId + "-2_12345-art_id");
+		TaskAttribute att = root.getAttribute(cardPrefix + "-art_id");
 		assertEquals("200:700#12345", att.getValue());
 
 		TaskAttribute statusIdFirstCardTA = root.getAttribute(cardPrefix + "-col_id");
@@ -458,7 +490,7 @@ public class MilestoneTaskDataConverterTest {
 
 		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(taskRepository, connector);
 		converter.populateTaskData(taskData, milestone, null);
-		converter.populateCardwall(taskData, cardwall, null);
+		converter.populateCardwall(taskData, cardwall, project, null);
 
 		TaskAttribute root = taskData.getRoot();
 
@@ -467,12 +499,12 @@ public class MilestoneTaskDataConverterTest {
 		String swimlaneId = SWIMLANE_PREFIX + id++;
 		TaskAttribute firstSwimlaneTA = root.getAttribute(swimlaneId);
 
-		String cardPrefix = swimlaneId + "-2_12345";
+		String cardPrefix = swimlaneId + "-c-2_12345";
 		TaskAttribute firstCardTA = root.getAttribute(cardPrefix);
 		assertNotNull(firstCardTA);
 		assertEquals("2_12345", firstCardTA.getValue()); //$NON-NLS-1$
 
-		TaskAttribute att = root.getAttribute(swimlaneId + "-2_12345-art_id");
+		TaskAttribute att = root.getAttribute(cardPrefix + "-art_id");
 		assertEquals("200:700#12345", att.getValue());
 
 		TaskAttribute statusIdFirstCardTA = root.getAttribute(cardPrefix + "-col_id");

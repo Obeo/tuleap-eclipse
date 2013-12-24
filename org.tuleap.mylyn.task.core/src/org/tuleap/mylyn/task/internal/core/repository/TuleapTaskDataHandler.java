@@ -440,10 +440,10 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			}
 
 			// Fetch cardwall if necessary
-			if (project.isCardwallActive(tracker.getIdentifier())) {
+			if (milestone.getCardwallUri() != null) {
 				try {
 					TuleapCardwall cardwall = restClient.getCardwall(milestoneId, monitor);
-					taskDataConverter.populateCardwall(taskData, cardwall, monitor);
+					taskDataConverter.populateCardwall(taskData, cardwall, project, monitor);
 				} catch (CoreException e) {
 					TuleapCoreActivator.log(e, true);
 				}

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.ui.repository;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -21,6 +22,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.tuleap.mylyn.task.agile.core.IMilestoneMapping;
+import org.tuleap.mylyn.task.agile.core.data.cardwall.CardwallWrapper;
 import org.tuleap.mylyn.task.agile.ui.AbstractAgileRepositoryConnectorUI;
 import org.tuleap.mylyn.task.agile.ui.editors.ITaskEditorPageFactoryConstants;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
@@ -28,6 +30,7 @@ import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
+import org.tuleap.mylyn.task.internal.ui.TuleapTasksUIPlugin;
 import org.tuleap.mylyn.task.internal.ui.editor.TuleapTaskEditorPageFactory;
 import org.tuleap.mylyn.task.internal.ui.wizards.newsubmilestone.NewTuleapMilestoneWizard;
 
@@ -126,16 +129,24 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 			// TODO Check: No cardwall on top plannings?
 			result = false;
 		} else {
-			String connectorKind = repository.getConnectorKind();
-			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-					connectorKind);
-			if (connector instanceof TuleapRepositoryConnector) {
-				TuleapRepositoryConnector tuleapRepositoryConnector = (TuleapRepositoryConnector)connector;
-				TuleapServer server = tuleapRepositoryConnector.getServer(repository.getRepositoryUrl());
-				int projectId = taskId.getProjectId();
-				TuleapProject project = server.getProject(projectId);
-				result = project.isCardwallActive(taskId.getTrackerId());
+			try {
+				TaskData taskData = TasksUi.getTaskDataManager().getTaskData(task);
+				if (taskData.getRoot().getAttribute(CardwallWrapper.CARDWALL) != null) {
+					result = true;
+				}
+			} catch (CoreException e) {
+				TuleapTasksUIPlugin.log(e, false);
 			}
+			// String connectorKind = repository.getConnectorKind();
+			// AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+			// connectorKind);
+			// if (connector instanceof TuleapRepositoryConnector) {
+			// TuleapRepositoryConnector tuleapRepositoryConnector = (TuleapRepositoryConnector)connector;
+			// TuleapServer server = tuleapRepositoryConnector.getServer(repository.getRepositoryUrl());
+			// int projectId = taskId.getProjectId();
+			// TuleapProject project = server.getProject(projectId);
+			// result = project.isCardwallActive(taskId.getTrackerId());
+			// }
 		}
 		return result;
 	}
