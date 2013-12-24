@@ -661,6 +661,21 @@ public class TuleapArtifactMapperTests {
 	}
 
 	/**
+	 * Test the creation of the summary task attribute in the task data.
+	 */
+	@Test
+	public void testSetSummary() {
+		int id = 408;
+		tuleapTracker.addField(newSemanticTitle(id));
+		mapper.initializeEmptyTaskData();
+		String summary = "Hello World";
+		mapper.setSummary(summary);
+
+		String value = taskData.getRoot().getAttribute(TaskAttribute.SUMMARY).getValue();
+		assertThat(value, is(summary));
+	}
+
+	/**
 	 * Test the creation of the list of field values.
 	 */
 	@Test
