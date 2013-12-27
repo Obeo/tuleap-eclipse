@@ -149,7 +149,8 @@ public class MilestoneTaskDataConverter {
 		for (int columnId : allowedColumnIds) {
 			cardWrapper.addAllowedColumn(String.valueOf(columnId));
 		}
-		cardWrapper.setStatus(card.getStatus().toString());
+		TuleapStatus status = card.getStatus();
+		cardWrapper.setComplete(status == TuleapStatus.Closed);
 		ArtifactReference artifact = card.getArtifact();
 		int trackerId = artifact.getTracker().getId();
 		int cardProjectId = card.getProject().getId();

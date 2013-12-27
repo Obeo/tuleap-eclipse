@@ -346,8 +346,8 @@ public class MilestoneTaskDataConverterTest {
 		TaskAttribute statusFirstCardTA = root.getAttribute(swimlaneId + "-c-2_12345-status");
 
 		assertNotNull(statusFirstCardTA);
-		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, statusFirstCardTA.getMetaData().getType());
-		assertEquals("Open", statusFirstCardTA.getValue()); //$NON-NLS-1$
+		assertEquals(TaskAttribute.TYPE_BOOLEAN, statusFirstCardTA.getMetaData().getType());
+		assertEquals("false", statusFirstCardTA.getValue()); //$NON-NLS-1$
 
 		TaskAttribute allowedColumnsFirstCardTA = root.getAttribute(swimlaneId + "-c-2_12345-allowed_cols");
 
@@ -435,8 +435,8 @@ public class MilestoneTaskDataConverterTest {
 		TaskAttribute statusFirstCardTA = root.getAttribute(cardPrefix + "-status"); //$NON-NLS-1$
 
 		assertNotNull(statusFirstCardTA);
-		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, statusFirstCardTA.getMetaData().getType());
-		assertEquals("Open", statusFirstCardTA.getValue()); //$NON-NLS-1$
+		assertEquals(TaskAttribute.TYPE_BOOLEAN, statusFirstCardTA.getMetaData().getType());
+		assertEquals("false", statusFirstCardTA.getValue()); //$NON-NLS-1$
 
 		TaskAttribute allowedColumnsFirstCardTA = root.getAttribute(cardPrefix + "-allowed_cols"); //$NON-NLS-1$
 
@@ -519,8 +519,8 @@ public class MilestoneTaskDataConverterTest {
 		TaskAttribute statusFirstCardTA = root.getAttribute(cardPrefix + "-status");
 
 		assertNotNull(statusFirstCardTA);
-		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, statusFirstCardTA.getMetaData().getType());
-		assertEquals("Open", statusFirstCardTA.getValue()); //$NON-NLS-1$
+		assertEquals(TaskAttribute.TYPE_BOOLEAN, statusFirstCardTA.getMetaData().getType());
+		assertEquals("false", statusFirstCardTA.getValue()); //$NON-NLS-1$
 
 		TaskAttribute allowedColumnsFirstCardTA = root.getAttribute(cardPrefix + "-allowed_cols");
 
