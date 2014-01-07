@@ -30,9 +30,17 @@ import org.tuleap.mylyn.task.internal.core.client.rest.RestResourceFactory;
 import org.tuleap.mylyn.task.internal.core.client.rest.ServerResponse;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.model.TuleapToken;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapPerson;
+import org.tuleap.mylyn.task.internal.core.model.data.ArtifactReference;
+import org.tuleap.mylyn.task.internal.core.model.data.AttachmentFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.AttachmentValue;
+import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCard;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapStatus;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.tests.TestLogger;
@@ -417,6 +425,289 @@ public class TuleapRestClientTest {
 		req = requestsSent.get(4);
 		assertEquals("GET", req.method);
 		assertEquals("https://test/url/api/v12.3/milestones/200", req.url);
+	}
+
+	/**
+	 * Test updating a cardwall with simple card.
+	 * 
+	 * @throws CoreException
+	 */
+	@Test
+	public void testUpdateCardwallWithSimpleCard() throws CoreException {
+		List<TuleapCard> cards = new ArrayList<TuleapCard>();
+		TuleapCard card = new TuleapCard("2_12345", new ArtifactReference(12345, "A/12345",
+				new TuleapReference(700, "t/700")), new TuleapReference(200, "p/200"));
+		card.setColumnId(10000);
+		card.setLabel("Simple label");
+
+		int[] columnIds = new int[3];
+		for (int i = 0; i < 3; i++) {
+			columnIds[i] = i + 10;
+		}
+		card.setAllowedColumnIds(columnIds);
+		card.setStatus(TuleapStatus.valueOf("Open"));
+		cards.add(card);
+
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
+		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK,
+				"The response body", respHeaders); //$NON-NLS-1$
+
+		connector.setResponse(response);
+		client.updateCards(cards, new NullProgressMonitor());
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(2, requestsSent.size());
+
+		ServerRequest request0 = requestsSent.get(0);
+		assertEquals("https://test/url/api/v12.3/cards/2_12345", request0.url); //$NON-NLS-1$
+		assertEquals("OPTIONS", request0.method); //$NON-NLS-1$
+
+		ServerRequest request1 = requestsSent.get(1);
+		assertEquals("https://test/url/api/v12.3/cards/2_12345", request1.url); //$NON-NLS-1$
+		assertEquals("PUT", request1.method); //$NON-NLS-1$
+		assertEquals("{\"label\":\"Simple label\",\"values\":[],\"column_id\":10000}", //$NON-NLS-1$
+				request1.body);
+	}
+
+	/**
+	 * Test updating a cardwall with a card with literal field.
+	 * 
+	 * @throws CoreException
+	 */
+	@Test
+	public void testUpdateCardwallWithLiteralFieldValue() throws CoreException {
+		List<TuleapCard> cards = new ArrayList<TuleapCard>();
+		TuleapCard card = new TuleapCard("2_12345", new ArtifactReference(12345, "A/12345",
+				new TuleapReference(700, "t/700")), new TuleapReference(200, "p/200"));
+		card.setColumnId(10000);
+		card.setLabel("Simple label");
+		LiteralFieldValue firstLiteralFieldValue = new LiteralFieldValue(1000, "300, 301, 302"); //$NON-NLS-1$
+		card.addFieldValue(firstLiteralFieldValue);
+		int[] columnIds = new int[3];
+		for (int i = 0; i < 3; i++) {
+			columnIds[i] = i + 10;
+		}
+		card.setAllowedColumnIds(columnIds);
+		card.setStatus(TuleapStatus.valueOf("Open"));
+		cards.add(card);
+
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
+		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK,
+				"The response body", respHeaders); //$NON-NLS-1$
+
+		connector.setResponse(response);
+		client.updateCards(cards, new NullProgressMonitor());
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(2, requestsSent.size());
+
+		ServerRequest request0 = requestsSent.get(0);
+		assertEquals("https://test/url/api/v12.3/cards/2_12345", request0.url); //$NON-NLS-1$
+		assertEquals("OPTIONS", request0.method); //$NON-NLS-1$
+
+		ServerRequest request1 = requestsSent.get(1);
+		assertEquals("https://test/url/api/v12.3/cards/2_12345", request1.url); //$NON-NLS-1$
+		assertEquals("PUT", request1.method); //$NON-NLS-1$
+		assertEquals(
+				"{\"label\":\"Simple label\",\"values\":[{\"field_id\":1000,\"value\":\"300, 301, 302\"}],\"column_id\":10000}", //$NON-NLS-1$
+				request1.body);
+	}
+
+	/**
+	 * Test updating a cardwall with a card with bound field.
+	 * 
+	 * @throws CoreException
+	 */
+	@Test
+	public void testUpdateCardwallWithBoundFieldValue() throws CoreException {
+		List<TuleapCard> cards = new ArrayList<TuleapCard>();
+
+		TuleapCard card = new TuleapCard("2_12345", new ArtifactReference(12345, "A/12345",
+				new TuleapReference(700, "t/700")), new TuleapReference(200, "p/200"));
+		card.setColumnId(10000);
+		card.setLabel("Simple label");
+
+		int[] columnIds = new int[3];
+		for (int i = 0; i < 3; i++) {
+			columnIds[i] = i + 10;
+		}
+		card.setAllowedColumnIds(columnIds);
+		card.setStatus(TuleapStatus.valueOf("Open"));
+
+		List<Integer> valueIds = new ArrayList<Integer>();
+		valueIds.add(new Integer(10));
+		valueIds.add(new Integer(20));
+		valueIds.add(new Integer(30));
+		BoundFieldValue firstBoundFieldValue = new BoundFieldValue(2000, valueIds);
+
+		card.addFieldValue(firstBoundFieldValue);
+		cards.add(card);
+
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
+		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK,
+				"The response body", respHeaders); //$NON-NLS-1$
+
+		connector.setResponse(response);
+		client.updateCards(cards, new NullProgressMonitor());
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(2, requestsSent.size());
+
+		ServerRequest request0 = requestsSent.get(0);
+		assertEquals("https://test/url/api/v12.3/cards/2_12345", request0.url); //$NON-NLS-1$
+		assertEquals("OPTIONS", request0.method); //$NON-NLS-1$
+
+		ServerRequest request1 = requestsSent.get(1);
+		assertEquals("https://test/url/api/v12.3/cards/2_12345", request1.url); //$NON-NLS-1$
+		assertEquals("PUT", request1.method); //$NON-NLS-1$
+		assertEquals(
+				"{\"label\":\"Simple label\",\"values\":[{\"field_id\":2000,\"bind_value_ids\":[10,20,30]}],\"column_id\":10000}", //$NON-NLS-1$
+				request1.body);
+	}
+
+	/**
+	 * Test updating a cardwall with a card with bound field.
+	 * 
+	 * @throws CoreException
+	 */
+	@Test
+	public void testUpdateCardwallWithFileDescription() throws CoreException {
+		List<TuleapCard> cards = new ArrayList<TuleapCard>();
+
+		TuleapCard card = new TuleapCard("2_12345", new ArtifactReference(12345, "A/12345",
+				new TuleapReference(700, "t/700")), new TuleapReference(200, "p/200"));
+		card.setColumnId(10000);
+		card.setLabel("Simple label");
+
+		int[] columnIds = new int[3];
+		for (int i = 0; i < 3; i++) {
+			columnIds[i] = i + 10;
+		}
+		card.setAllowedColumnIds(columnIds);
+		card.setStatus(TuleapStatus.valueOf("Open"));
+
+		List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
+		TuleapPerson firstUploadedBy = new TuleapPerson("first username", "first realname", 1, "first email"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		attachments.add(new AttachmentValue("100000", "first name", firstUploadedBy, 123456, //$NON-NLS-1$ //$NON-NLS-2$ 
+				"first description", "first type")); //$NON-NLS-1$ //$NON-NLS-2$
+		TuleapPerson secondUploadedBy = new TuleapPerson("second username", "second realname", 2, //$NON-NLS-1$ //$NON-NLS-2$
+				"second email"); //$NON-NLS-1$
+		attachments.add(new AttachmentValue("100001", "second name", secondUploadedBy, 789456, //$NON-NLS-1$ //$NON-NLS-2$
+				"second description", "second type")); //$NON-NLS-1$ //$NON-NLS-2$
+		AttachmentFieldValue fileDescriptions = new AttachmentFieldValue(3000, attachments);
+
+		card.addFieldValue(fileDescriptions);
+
+		cards.add(card);
+
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
+		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK,
+				"The response body", respHeaders); //$NON-NLS-1$
+
+		connector.setResponse(response);
+		client.updateCards(cards, new NullProgressMonitor());
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(2, requestsSent.size());
+
+		ServerRequest request0 = requestsSent.get(0);
+		assertEquals("https://test/url/api/v12.3/cards/2_12345", request0.url); //$NON-NLS-1$
+		assertEquals("OPTIONS", request0.method); //$NON-NLS-1$
+
+		ServerRequest request1 = requestsSent.get(1);
+		assertEquals("https://test/url/api/v12.3/cards/2_12345", request1.url); //$NON-NLS-1$
+		assertEquals("PUT", request1.method); //$NON-NLS-1$
+		assertEquals(
+				"{\"label\":\"Simple label\",\"values\":[{\"field_id\":3000,\"file_descriptions\":[{\"file_id\":100000,\"description\":\"first description\"},{\"file_id\":100001,\"description\":\"second description\"}]}],\"column_id\":10000}", //$NON-NLS-1$
+				request1.body);
+	}
+
+	/**
+	 * Test updating a cardwall with two cards.
+	 * 
+	 * @throws CoreException
+	 */
+	@Test
+	public void testUpdateCardwallWithTwoCards() throws CoreException {
+
+		List<TuleapCard> cards = new ArrayList<TuleapCard>();
+
+		TuleapCard firstCard = new TuleapCard("2_12345", new ArtifactReference(12345, "A/12345",
+				new TuleapReference(700, "t/700")), new TuleapReference(200, "p/200"));
+		firstCard.setColumnId(10000);
+		firstCard.setLabel("Simple label");
+
+		int[] columnIds = new int[3];
+		for (int i = 0; i < 3; i++) {
+			columnIds[i] = i + 10;
+		}
+		firstCard.setAllowedColumnIds(columnIds);
+		firstCard.setStatus(TuleapStatus.valueOf("Open"));
+		cards.add(firstCard);
+
+		TuleapCard secondCard = new TuleapCard("2_12346", new ArtifactReference(12346, "A/12346",
+				new TuleapReference(800, "t/800")), new TuleapReference(300, "p/300"));
+		secondCard.setColumnId(10000);
+		secondCard.setLabel("Simple label");
+
+		secondCard.setAllowedColumnIds(columnIds);
+		secondCard.setStatus(TuleapStatus.valueOf("Closed"));
+
+		List<Integer> valueIds = new ArrayList<Integer>();
+		valueIds.add(new Integer(10));
+		valueIds.add(new Integer(20));
+		valueIds.add(new Integer(30));
+		BoundFieldValue firstBoundFieldValue = new BoundFieldValue(2000, valueIds);
+
+		secondCard.addFieldValue(firstBoundFieldValue);
+		cards.add(secondCard);
+
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
+		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK,
+				"The response body", respHeaders); //$NON-NLS-1$
+
+		connector.setResponse(response);
+		client.updateCards(cards, new NullProgressMonitor());
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(4, requestsSent.size());
+
+		ServerRequest request0 = requestsSent.get(0);
+		assertEquals("https://test/url/api/v12.3/cards/2_12345", request0.url); //$NON-NLS-1$
+		assertEquals("OPTIONS", request0.method); //$NON-NLS-1$
+
+		ServerRequest request1 = requestsSent.get(1);
+		assertEquals("https://test/url/api/v12.3/cards/2_12345", request1.url); //$NON-NLS-1$
+		assertEquals("PUT", request1.method); //$NON-NLS-1$
+		assertEquals("{\"label\":\"Simple label\",\"values\":[],\"column_id\":10000}", //$NON-NLS-1$
+				request1.body);
+
+		ServerRequest request2 = requestsSent.get(2);
+		assertEquals("https://test/url/api/v12.3/cards/2_12346", request2.url); //$NON-NLS-1$
+		assertEquals("OPTIONS", request2.method); //$NON-NLS-1$
+
+		ServerRequest request3 = requestsSent.get(3);
+		assertEquals("https://test/url/api/v12.3/cards/2_12346", request3.url); //$NON-NLS-1$
+		assertEquals("PUT", request3.method); //$NON-NLS-1$
+		assertEquals(
+				"{\"label\":\"Simple label\",\"values\":[{\"field_id\":2000,\"bind_value_ids\":[10,20,30]}],\"column_id\":10000}", //$NON-NLS-1$
+				request3.body);
+
 	}
 
 	@Before

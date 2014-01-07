@@ -40,6 +40,7 @@ import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
+import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCard;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCardwall;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
@@ -174,6 +175,10 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 			// Now that all sub-milestones are updated, we can re-order the unassigned backlog items.
 			tuleapRestClient.updateMilestoneBacklog(milestoneId, backlog, monitor);
+
+			// Update the Cards
+			List<TuleapCard> cards = milestoneTaskDataConverter.extractCards(taskData);
+			tuleapRestClient.updateCards(cards, monitor);
 
 			response = new RepositoryResponse(ResponseKind.TASK_UPDATED, taskData.getTaskId());
 		}

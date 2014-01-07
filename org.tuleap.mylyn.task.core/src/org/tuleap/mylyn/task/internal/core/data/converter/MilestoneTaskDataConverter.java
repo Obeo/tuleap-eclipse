@@ -12,6 +12,7 @@ package org.tuleap.mylyn.task.internal.core.data.converter;
 
 import com.google.common.collect.Lists;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -32,6 +33,7 @@ import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.config.field.AbstractTuleapSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapMultiSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.ArtifactReference;
@@ -146,9 +148,12 @@ public class MilestoneTaskDataConverter {
 		cardWrapper.setAccentColor(card.getAccentColor());
 
 		int[] allowedColumnIds = card.getAllowedColumnIds();
-		for (int columnId : allowedColumnIds) {
-			cardWrapper.addAllowedColumn(String.valueOf(columnId));
+		if (allowedColumnIds != null) {
+			for (int columnId : allowedColumnIds) {
+				cardWrapper.addAllowedColumn(String.valueOf(columnId));
+			}
 		}
+
 		TuleapStatus status = card.getStatus();
 		cardWrapper.setComplete(status == TuleapStatus.Closed);
 		ArtifactReference artifact = card.getArtifact();
@@ -349,6 +354,114 @@ public class MilestoneTaskDataConverter {
 
 		}
 		return subMilestones;
+	}
+
+	/**
+	 * Extract the list of Cardwall cards that have at least one modification.
+	 * 
+	 * @param taskData
+	 *            The task data
+	 * @return The list of cards to send to the server for update.
+	 */
+	public List<TuleapCard> extractCards(TaskData taskData) {
+		CardwallWrapper cardwallWrapper = new CardwallWrapper(taskData.getRoot());
+		List<TuleapCard> cards = new ArrayList<TuleapCard>();
+		for (SwimlaneWrapper swimlaneWrapper : cardwallWrapper.getSwimlanes()) {
+			for (CardWrapper cardWrapper : swimlaneWrapper.getCards()) {
+				TuleapCard card = extractCard(cardWrapper);
+				if (card != null) {
+					cards.add(card);
+				}
+			}
+		}
+		return cards;
+	}
+
+	/**
+	 * Extracts a TuleapCard from a CardWrapper.
+	 * 
+	 * @param cardWrapper
+	 *            The card Wrapper
+	 * @return A {@link TuleapCard} object that contain modifications to send to the server, and can be null
+	 *         if the card has no modification to send to the server.
+	 */
+	private TuleapCard extractCard(CardWrapper cardWrapper) {
+		TuleapTaskId taskId = TuleapTaskId.forName(cardWrapper.getArtifactId());
+
+		int trackerId = taskId.getTrackerId();
+		TuleapReference trackerRef = new TuleapReference();
+		trackerRef.setId(trackerId);
+
+		TuleapTracker tracker = connector.getServer(taskRepository.getUrl()).getTracker(trackerId);
+
+		int artifactId = taskId.getArtifactId();
+		ArtifactReference artifactRef = new ArtifactReference(artifactId, null, trackerRef);
+		artifactRef.setId(artifactId);
+
+		int projectId = taskId.getProjectId();
+		TuleapReference projectRef = new TuleapReference();
+		projectRef.setId(projectId);
+
+		TuleapCard card = null;
+		if (cardWrapper.hasChanged()) {
+			card = new TuleapCard(cardWrapper.getId(), artifactRef, projectRef);
+			// TODO Label should not be updated, it is not editable yet!
+			// For the time being, Tuleap returns an error 400
+			card.setLabel(cardWrapper.getLabel());
+			// if (cardWrapper.hasColumnIdChanged()) {
+			card.setColumnId(Integer.valueOf(cardWrapper.getColumnId()));
+			// }
+			for (TaskAttribute attribute : cardWrapper.getFieldAttributes()) {
+				if (cardWrapper.hasChanged(attribute)) {
+					extractField(cardWrapper, tracker, card, attribute);
+				}
+			}
+		}
+		return card;
+	}
+
+	/**
+	 * Extract a field from a {@link TaskAttribute} for a {@link CardWrapper} into a {@link TuleapCard}
+	 * instance.
+	 * 
+	 * @param cardWrapper
+	 *            the card wrapper
+	 * @param tracker
+	 *            the tracker configuration
+	 * @param card
+	 *            the {@link TuleapCard} instance to populate
+	 * @param attribute
+	 *            The {@link TaskAttribute} to extract
+	 */
+	private void extractField(CardWrapper cardWrapper, TuleapTracker tracker, TuleapCard card,
+			TaskAttribute attribute) {
+		String attributeId = cardWrapper.getFieldId(attribute);
+		int fieldId = Integer.parseInt(attributeId);
+		AbstractTuleapField field = tracker.getFieldById(fieldId);
+		if (field instanceof TuleapMultiSelectBox) {
+			List<Integer> valueIds = new ArrayList<Integer>();
+			for (String strValue : attribute.getValues()) {
+				valueIds.add(Integer.valueOf(strValue));
+			}
+			BoundFieldValue boundFieldValue = new BoundFieldValue(fieldId, valueIds);
+			card.addFieldValue(boundFieldValue);
+		} else if (field instanceof AbstractTuleapSelectBox) {
+			// TODO Check if this works with JSON serialization!
+			// bind_value_ids or bind_value_id?
+			List<Integer> ids = new ArrayList<Integer>();
+			for (String value : attribute.getValues()) {
+				ids.add(Integer.valueOf(value));
+			}
+			BoundFieldValue boundFieldValue = new BoundFieldValue(fieldId, ids);
+			card.addFieldValue(boundFieldValue);
+		} else {
+			String value = null;
+			if (!attribute.getValues().isEmpty()) {
+				value = attribute.getValue();
+			}
+			LiteralFieldValue fieldValue = new LiteralFieldValue(fieldId, value);
+			card.addFieldValue(fieldValue);
+		}
 	}
 
 	/**

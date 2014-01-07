@@ -46,9 +46,8 @@ public abstract class AbstractTuleapSerializer<T extends AbstractTuleapConfigura
 		// TODO is it necessary to send the trackerId?
 
 		JsonArray values = new JsonArray();
-		if (element.getFieldValues().size() > 0) {
-			json.add(ITuleapConstants.VALUES, values);
-		}
+		json.add(ITuleapConstants.VALUES, values);
+
 		for (AbstractFieldValue field : element.getFieldValues()) {
 			JsonObject fieldObject = new JsonObject();
 			fieldObject
@@ -59,16 +58,11 @@ public abstract class AbstractTuleapSerializer<T extends AbstractTuleapConfigura
 						.getFieldValue()));
 			} else if (field instanceof BoundFieldValue) {
 				BoundFieldValue boundFieldValue = (BoundFieldValue)field;
-				if (boundFieldValue.getValueIds().size() == 1) {
-					fieldObject.add(ITuleapConstants.FIELD_BIND_VALUE_ID, new JsonPrimitive(boundFieldValue
-							.getValueIds().get(0)));
-				} else if (boundFieldValue.getValueIds().size() > 1) {
-					JsonElement fieldValues = new JsonArray();
-					for (Integer theValue : boundFieldValue.getValueIds()) {
-						fieldValues.getAsJsonArray().add(new JsonPrimitive(theValue));
-					}
-					fieldObject.add(ITuleapConstants.FIELD_BIND_VALUE_IDS, fieldValues);
+				JsonElement fieldValues = new JsonArray();
+				for (Integer theValue : boundFieldValue.getValueIds()) {
+					fieldValues.getAsJsonArray().add(new JsonPrimitive(theValue));
 				}
+				fieldObject.add(ITuleapConstants.FIELD_BIND_VALUE_IDS, fieldValues);
 			} else if (field instanceof AttachmentFieldValue) {
 				this.manageAttachmentFieldValues(field, fieldObject);
 			}

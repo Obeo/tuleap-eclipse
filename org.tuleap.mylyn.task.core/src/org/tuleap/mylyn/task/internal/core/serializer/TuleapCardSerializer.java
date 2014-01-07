@@ -12,11 +12,13 @@ package org.tuleap.mylyn.task.internal.core.serializer;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 
 import java.lang.reflect.Type;
 
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCard;
+import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**
  * This class is used to serialize the JSON representation of a card.
@@ -35,6 +37,16 @@ public class TuleapCardSerializer extends AbstractTuleapSerializer<TuleapCard> {
 	public JsonElement serialize(TuleapCard tuleapCard, Type type,
 			JsonSerializationContext jsonSerializationContext) {
 		JsonObject elementObject = new JsonObject();
+
+		elementObject = (JsonObject)super.serialize(tuleapCard, TuleapCard.class, jsonSerializationContext);
+
+		elementObject.remove(ITuleapConstants.ID);
+		if (tuleapCard.getLabel() != null) {
+			elementObject.add(ITuleapConstants.LABEL, new JsonPrimitive(tuleapCard.getLabel()));
+		}
+		if (tuleapCard.getColumnId() != null) {
+			elementObject.add(ITuleapConstants.COLUMN_ID, new JsonPrimitive(tuleapCard.getColumnId()));
+		}
 		return elementObject;
 
 	}

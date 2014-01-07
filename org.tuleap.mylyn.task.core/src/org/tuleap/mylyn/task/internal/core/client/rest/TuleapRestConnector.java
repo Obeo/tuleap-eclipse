@@ -177,7 +177,7 @@ public class TuleapRestConnector implements IRestConnector {
 	private void debugRestCall(Request request, Response response, String responseBody) {
 		org.restlet.data.Status responseStatus = response.getStatus();
 		StringBuilder b = new StringBuilder();
-		b.append("Performed REST call:\n").append(request.getMethod()); //$NON-NLS-1$
+		b.append(request.getMethod());
 		b.append(" ").append(request.getResourceRef().toString(true, true)); //$NON-NLS-1$
 		String requestBody = request.getEntityAsText();
 		b.append("\nbody:\n"); //$NON-NLS-1$

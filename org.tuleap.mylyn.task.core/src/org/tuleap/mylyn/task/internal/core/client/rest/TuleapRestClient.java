@@ -44,7 +44,6 @@ import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCard;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCardwall;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
-import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapSwimlane;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.serializer.TuleapCardSerializer;
@@ -679,23 +678,21 @@ public class TuleapRestClient implements IAuthenticator {
 	}
 
 	/**
-	 * Updates a cardwall by sending its local state to the server.
+	 * Updates cards by sending their local state to the server.
 	 * 
-	 * @param cardwall
-	 *            Cardwall to commit.
+	 * @param cards
+	 *            The list of cards to commit.
 	 * @param monitor
 	 *            Progress monitor to use.
 	 * @throws CoreException
 	 *             In case of error during the update of the artifact.
 	 */
-	public void updateCardwall(TuleapCardwall cardwall, IProgressMonitor monitor) throws CoreException {
+	public void updateCards(List<TuleapCard> cards, IProgressMonitor monitor) throws CoreException {
 		if (monitor != null) {
 			monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.updatingCardwall));
 		}
-		for (TuleapSwimlane tuleapSwimlane : cardwall.getSwimlanes()) {
-			for (TuleapCard tuleapCard : tuleapSwimlane.getCards()) {
-				this.updateCard(tuleapCard, monitor);
-			}
+		for (TuleapCard tuleapCard : cards) {
+			this.updateCard(tuleapCard, monitor);
 		}
 	}
 
@@ -802,7 +799,7 @@ public class TuleapRestClient implements IAuthenticator {
 	private void updateCard(TuleapCard tuleapCard, IProgressMonitor monitor) throws CoreException {
 		if (monitor != null) {
 			monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.updatingCard,
-					Integer.valueOf(tuleapCard.getId())));
+					tuleapCard.getId()));
 		}
 		RestResource restCards = restResourceFactory.card(tuleapCard.getId()).withAuthenticator(this);
 

@@ -24,6 +24,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.tuleap.mylyn.task.agile.core.data.AbstractTaskAttributeWrapper;
+import org.tuleap.mylyn.task.agile.core.data.cardwall.CardWrapper;
+import org.tuleap.mylyn.task.agile.core.data.cardwall.CardwallWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.BacklogItemWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.MilestonePlanningWrapper;
 import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
@@ -984,4 +986,332 @@ public class MilestoneTaskDataConverterTest {
 		assertNotNull(secondMilestone.getEndDate());
 	}
 
+	/**
+	 * Tests the cardwall cards with literal field value.
+	 */
+	@Test
+	public void testExtractCardsWithLiteralFieldValue() {
+		Date testDate = new Date();
+
+		TuleapMilestone milestone = new TuleapMilestone(50,
+				new TuleapReference(200, "p/200"), "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
+				"HTML URL", testDate, testDate); //$NON-NLS-1$
+
+		TuleapCardwall cardwall = new TuleapCardwall();
+
+		TuleapSwimlane firstSwimlane = new TuleapSwimlane();
+		cardwall.addSwimlane(firstSwimlane);
+
+		TuleapCard card = new TuleapCard("2_12345", new ArtifactReference(12345, "A/12345",
+				new TuleapReference(700, "t/700")), new TuleapReference(200, "p/200"));
+		card.setLabel("A simple card label");
+		card.setAccentColor("#669944");
+		card.setStatus(TuleapStatus.Closed);
+		card.setColumnId(10000);
+		LiteralFieldValue firstLiteralFieldValue = new LiteralFieldValue(1000, "300, 301, 302"); //$NON-NLS-1$
+		card.addFieldValue(firstLiteralFieldValue);
+		int[] columnIds = new int[3];
+		for (int i = 0; i < 3; i++) {
+			columnIds[i] = i + 10;
+		}
+		card.setAllowedColumnIds(columnIds);
+
+		firstSwimlane.addCard(card);
+
+		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(taskRepository, connector);
+		converter.populateTaskData(taskData, milestone, null);
+		converter.populateCardwall(taskData, cardwall, project, null);
+
+		// Mark the card as changed
+		CardwallWrapper cwWrapper = new CardwallWrapper(taskData.getRoot());
+		CardWrapper cardWrapper = cwWrapper.getSwimlanes().get(0).getCards().get(0);
+		cardWrapper.markColumnIdChanged(true);
+		cardWrapper.mark(cardWrapper.getFieldAttributes().get(0), true);
+
+		List<TuleapCard> cards = converter.extractCards(taskData);
+		assertNotNull(cards);
+		assertEquals(1, cards.size());
+
+		TuleapCard resultedCard = cards.get(0);
+
+		assertEquals("2_12345", resultedCard.getId());
+		assertEquals("A simple card label", resultedCard.getLabel());
+		assertNull(resultedCard.getAccentColor());
+		assertEquals(Integer.valueOf(10000), resultedCard.getColumnId()); // has changed, so must be present
+		assertNull(resultedCard.getStatus());
+		assertEquals(200, resultedCard.getProject().getId());
+		assertNull(resultedCard.getProject().getUri());
+		assertEquals(12345, resultedCard.getArtifact().getId());
+		assertNull(resultedCard.getArtifact().getUri());
+		assertEquals(700, resultedCard.getArtifact().getTracker().getId());
+		assertNull(resultedCard.getArtifact().getTracker().getUri());
+		assertNull(resultedCard.getAllowedColumnIds());
+
+		assertEquals(1, resultedCard.getFieldValues().size());
+		assertEquals("300, 301, 302", ((LiteralFieldValue)resultedCard.getFieldValue(1000)).getFieldValue());
+
+	}
+
+	/**
+	 * Tests the extraction of cards when no card has changed (no card should be returned).
+	 */
+	@Test
+	public void testExtractCardWithNoCardModified() {
+		Date testDate = new Date();
+
+		TuleapMilestone milestone = new TuleapMilestone(50,
+				new TuleapReference(200, "p/200"), "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
+				"HTML URL", testDate, testDate); //$NON-NLS-1$
+
+		TuleapCardwall cardwall = new TuleapCardwall();
+
+		TuleapSwimlane firstSwimlane = new TuleapSwimlane();
+		cardwall.addSwimlane(firstSwimlane);
+
+		TuleapCard card = new TuleapCard("2_12345", new ArtifactReference(12345, "A/12345",
+				new TuleapReference(700, "t/700")), new TuleapReference(200, "p/200"));
+		card.setLabel("A simple card label");
+		card.setAccentColor("#669944");
+		card.setStatus(TuleapStatus.Closed);
+		card.setColumnId(10000);
+
+		List<Integer> valueIds = new ArrayList<Integer>();
+		valueIds.add(new Integer(10));
+		valueIds.add(new Integer(20));
+		valueIds.add(new Integer(30));
+		BoundFieldValue boundFieldValue = new BoundFieldValue(2000, valueIds);
+
+		card.addFieldValue(boundFieldValue);
+
+		int[] columnIds = new int[3];
+		for (int i = 0; i < 3; i++) {
+			columnIds[i] = i + 10;
+		}
+		card.setAllowedColumnIds(columnIds);
+
+		firstSwimlane.addCard(card);
+
+		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(taskRepository, connector);
+		converter.populateTaskData(taskData, milestone, null);
+		converter.populateCardwall(taskData, cardwall, project, null);
+
+		List<TuleapCard> cards = converter.extractCards(taskData);
+		assertEquals(0, cards.size());
+	}
+
+	/**
+	 * Tests the cardwall cards with bound field value.
+	 */
+	@Test
+	public void testExtractCardsWithColumnIdChanged() {
+		Date testDate = new Date();
+
+		TuleapMilestone milestone = new TuleapMilestone(50,
+				new TuleapReference(200, "p/200"), "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
+				"HTML URL", testDate, testDate); //$NON-NLS-1$
+
+		TuleapCardwall cardwall = new TuleapCardwall();
+
+		TuleapSwimlane firstSwimlane = new TuleapSwimlane();
+		cardwall.addSwimlane(firstSwimlane);
+
+		TuleapCard card = new TuleapCard("2_12345", new ArtifactReference(12345, "A/12345",
+				new TuleapReference(700, "t/700")), new TuleapReference(200, "p/200"));
+		card.setLabel("A simple card label");
+		card.setAccentColor("#669944");
+		card.setStatus(TuleapStatus.Closed);
+		card.setColumnId(10000);
+
+		List<Integer> valueIds = new ArrayList<Integer>();
+		valueIds.add(new Integer(10));
+		valueIds.add(new Integer(20));
+		valueIds.add(new Integer(30));
+		BoundFieldValue boundFieldValue = new BoundFieldValue(2000, valueIds);
+
+		card.addFieldValue(boundFieldValue);
+
+		int[] columnIds = new int[3];
+		for (int i = 0; i < 3; i++) {
+			columnIds[i] = i + 10;
+		}
+		card.setAllowedColumnIds(columnIds);
+
+		firstSwimlane.addCard(card);
+
+		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(taskRepository, connector);
+		converter.populateTaskData(taskData, milestone, null);
+		converter.populateCardwall(taskData, cardwall, project, null);
+
+		// Mark the card as changed
+		CardwallWrapper cwWrapper = new CardwallWrapper(taskData.getRoot());
+		cwWrapper.getSwimlanes().get(0).getCards().get(0).markColumnIdChanged(true);
+
+		List<TuleapCard> cards = converter.extractCards(taskData);
+		assertNotNull(cards);
+		assertEquals(1, cards.size());
+
+		TuleapCard resultedCard = cards.get(0);
+
+		assertEquals("2_12345", resultedCard.getId());
+		assertEquals("A simple card label", resultedCard.getLabel());
+		assertNull(resultedCard.getAccentColor());
+		assertEquals(Integer.valueOf(10000), resultedCard.getColumnId()); // has changed, so must be present
+		assertNull(resultedCard.getStatus());
+		assertEquals(200, resultedCard.getProject().getId());
+		assertNull(resultedCard.getProject().getUri());
+		assertEquals(12345, resultedCard.getArtifact().getId());
+		assertNull(resultedCard.getArtifact().getUri());
+		assertEquals(700, resultedCard.getArtifact().getTracker().getId());
+		assertNull(resultedCard.getArtifact().getTracker().getUri());
+		assertNull(resultedCard.getAllowedColumnIds());
+
+		assertEquals(0, resultedCard.getFieldValues().size());
+	}
+
+	/**
+	 * Tests the cardwall cards with bound field value.
+	 */
+	@Test
+	public void testExtractCardsWithColumnIdAndFieldChanged() {
+		Date testDate = new Date();
+
+		TuleapMilestone milestone = new TuleapMilestone(50,
+				new TuleapReference(200, "p/200"), "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
+				"HTML URL", testDate, testDate); //$NON-NLS-1$
+
+		TuleapCardwall cardwall = new TuleapCardwall();
+
+		TuleapSwimlane firstSwimlane = new TuleapSwimlane();
+		cardwall.addSwimlane(firstSwimlane);
+
+		TuleapCard card = new TuleapCard("2_12345", new ArtifactReference(12345, "A/12345",
+				new TuleapReference(700, "t/700")), new TuleapReference(200, "p/200"));
+		card.setLabel("A simple card label");
+		card.setAccentColor("#669944");
+		card.setStatus(TuleapStatus.Closed);
+		card.setColumnId(10000);
+
+		List<Integer> valueIds = new ArrayList<Integer>();
+		valueIds.add(new Integer(10));
+		valueIds.add(new Integer(20));
+		valueIds.add(new Integer(30));
+		BoundFieldValue boundFieldValue = new BoundFieldValue(2000, valueIds);
+
+		card.addFieldValue(boundFieldValue);
+
+		int[] columnIds = new int[3];
+		for (int i = 0; i < 3; i++) {
+			columnIds[i] = i + 10;
+		}
+		card.setAllowedColumnIds(columnIds);
+
+		firstSwimlane.addCard(card);
+
+		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(taskRepository, connector);
+		converter.populateTaskData(taskData, milestone, null);
+		converter.populateCardwall(taskData, cardwall, project, null);
+
+		// Mark the card as changed
+		CardwallWrapper cwWrapper = new CardwallWrapper(taskData.getRoot());
+		CardWrapper cardWrapper = cwWrapper.getSwimlanes().get(0).getCards().get(0);
+		cardWrapper.markColumnIdChanged(true);
+		cardWrapper.mark(cardWrapper.getFieldAttributes().get(0), true);
+
+		List<TuleapCard> cards = converter.extractCards(taskData);
+		assertNotNull(cards);
+		assertEquals(1, cards.size());
+
+		TuleapCard resultedCard = cards.get(0);
+
+		assertEquals("2_12345", resultedCard.getId());
+		assertEquals("A simple card label", resultedCard.getLabel());
+		assertNull(resultedCard.getAccentColor());
+		assertEquals(Integer.valueOf(10000), resultedCard.getColumnId()); // has changed, so must be present
+		assertNull(resultedCard.getStatus());
+		assertEquals(200, resultedCard.getProject().getId());
+		assertNull(resultedCard.getProject().getUri());
+		assertEquals(12345, resultedCard.getArtifact().getId());
+		assertNull(resultedCard.getArtifact().getUri());
+		assertEquals(700, resultedCard.getArtifact().getTracker().getId());
+		assertNull(resultedCard.getArtifact().getTracker().getUri());
+		assertNull(resultedCard.getAllowedColumnIds());
+
+		assertEquals(1, resultedCard.getFieldValues().size());
+		assertEquals("[10, 20, 30]", ((BoundFieldValue)resultedCard.getFieldValue(2000)).getValueIds()
+				.toString());
+	}
+
+	/**
+	 * Tests the cardwall cards with bound field value.
+	 */
+	@Test
+	public void testExtractCardsWithTwoCardsButOnlyOneChanged() {
+		Date testDate = new Date();
+
+		TuleapMilestone milestone = new TuleapMilestone(50,
+				new TuleapReference(200, "p/200"), "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
+				"HTML URL", testDate, testDate); //$NON-NLS-1$
+
+		TuleapCardwall cardwall = new TuleapCardwall();
+
+		TuleapSwimlane firstSwimlane = new TuleapSwimlane();
+		cardwall.addSwimlane(firstSwimlane);
+
+		TuleapCard firstCard = new TuleapCard("2_12345", new ArtifactReference(12345, "A/12345",
+				new TuleapReference(700, "t/700")), new TuleapReference(200, "p/200"));
+		firstCard.setLabel("A simple card label");
+		firstCard.setAccentColor("#669944");
+		firstCard.setStatus(TuleapStatus.Closed);
+		firstCard.setColumnId(10000);
+
+		List<Integer> valueIds = new ArrayList<Integer>();
+		valueIds.add(new Integer(10));
+		valueIds.add(new Integer(20));
+		valueIds.add(new Integer(30));
+		BoundFieldValue boundFieldValue = new BoundFieldValue(2000, valueIds);
+
+		firstCard.addFieldValue(boundFieldValue);
+
+		firstSwimlane.addCard(firstCard);
+
+		TuleapCard secondCard = new TuleapCard("2_12346", new ArtifactReference(12345, "A/12346",
+				new TuleapReference(700, "t/700")), new TuleapReference(200, "p/200"));
+		secondCard.setLabel("A simple card label");
+		secondCard.setAccentColor("#669944");
+		secondCard.setStatus(TuleapStatus.Closed);
+		secondCard.setColumnId(10000);
+		LiteralFieldValue firstLiteralFieldValue = new LiteralFieldValue(1000, "300, 301, 302"); //$NON-NLS-1$
+		secondCard.addFieldValue(firstLiteralFieldValue);
+
+		firstSwimlane.addCard(secondCard);
+
+		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(taskRepository, connector);
+		converter.populateTaskData(taskData, milestone, null);
+		converter.populateCardwall(taskData, cardwall, project, null);
+
+		// Mark the card as changed
+		CardwallWrapper cwWrapper = new CardwallWrapper(taskData.getRoot());
+		cwWrapper.getSwimlanes().get(0).getCards().get(0).markColumnIdChanged(true);
+
+		List<TuleapCard> cards = converter.extractCards(taskData);
+		assertNotNull(cards);
+		assertEquals(1, cards.size());
+
+		TuleapCard firstResultedCard = cards.get(0);
+
+		assertEquals("2_12345", firstResultedCard.getId());
+		assertEquals("A simple card label", firstResultedCard.getLabel());
+		assertNull(firstResultedCard.getAccentColor());
+		assertEquals(Integer.valueOf(10000), firstResultedCard.getColumnId());
+		assertNull(firstResultedCard.getStatus());
+		assertEquals(200, firstResultedCard.getProject().getId());
+		assertNull(firstResultedCard.getProject().getUri());
+		assertEquals(12345, firstResultedCard.getArtifact().getId());
+		assertNull(firstResultedCard.getArtifact().getUri());
+		assertEquals(700, firstResultedCard.getArtifact().getTracker().getId());
+		assertNull(firstResultedCard.getArtifact().getTracker().getUri());
+		assertNull(firstResultedCard.getAllowedColumnIds());
+
+		assertEquals(0, firstResultedCard.getFieldValues().size()); // Not changed, so empty
+	}
 }

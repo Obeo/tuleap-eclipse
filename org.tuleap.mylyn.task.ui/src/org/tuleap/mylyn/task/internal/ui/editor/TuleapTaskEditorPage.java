@@ -14,6 +14,9 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorAttributePart;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
@@ -119,9 +122,17 @@ public class TuleapTaskEditorPage extends AbstractTaskEditorPage {
 				model = super.createModel(input);
 				registry.registerModel(getEditor(), model);
 			}
+			IEclipsePreferences node = InstanceScope.INSTANCE
+					.getNode(ITuleapConstants.TULEAP_PREFERENCE_NODE);
+			if (node != null) {
+				boolean debugIsActive = node.getBoolean(ITuleapConstants.TULEAP_PREFERENCE_DEBUG_MODE, false);
+				if (debugIsActive) {
+					TuleapTasksUIPlugin.log(model.getTaskData().getRoot().toString(), false);
+				}
+			}
 			return model;
 		}
-		// We must return something, for isntance
+		// We must return something, for instance
 		// new tasks are in "local" task repository, not "tuleap"
 		// So there won't be no agile connector available for new unsubmitted tasks.
 		return super.createModel(input);
@@ -179,5 +190,26 @@ public class TuleapTaskEditorPage extends AbstractTaskEditorPage {
 		}
 
 		return connector;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage#doSave(org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	@Override
+	public void doSave(IProgressMonitor monitor) {
+		AbstractAgileRepositoryConnectorUI connector = this.getAgileRepositoryConnectorUI(getConnectorKind());
+		IModelRegistry registry = null;
+		if (connector != null) {
+			registry = connector.getModelRegistry();
+		}
+		if (registry != null) {
+			registry.fireBeforeSave(getEditor());
+		}
+		super.doSave(monitor);
+		if (registry != null) {
+			registry.fireAfterSave(getEditor());
+		}
 	}
 }

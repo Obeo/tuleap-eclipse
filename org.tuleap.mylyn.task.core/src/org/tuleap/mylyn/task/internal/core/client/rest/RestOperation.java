@@ -315,11 +315,15 @@ public class RestOperation {
 	protected void checkServerError(ServerResponse response) throws CoreException {
 		if (!response.isOk()) {
 			TuleapErrorMessage message = new TuleapJsonParser().getErrorMessage(response.getBody());
-			TuleapErrorPart errorPart = message.getError();
-			TuleapDebugPart debugPart = message.getDebug();
+			TuleapErrorPart errorPart = null;
+			TuleapDebugPart debugPart = null;
+			if (message != null) {
+				errorPart = message.getError();
+				debugPart = message.getDebug();
+			}
 			String msg;
 			if (errorPart == null) {
-				msg = response.getBody();
+				msg = response.getStatus() + '/' + response.getBody();
 			} else {
 				if (debugPart != null) {
 					msg = TuleapMylynTasksMessages.getString(
