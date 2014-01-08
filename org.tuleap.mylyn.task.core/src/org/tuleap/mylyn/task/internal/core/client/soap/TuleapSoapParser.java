@@ -36,6 +36,7 @@ import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapElementComment;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
+import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.Artifact;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.ArtifactFieldValue;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.FieldValueFileInfo;
@@ -99,7 +100,7 @@ public class TuleapSoapParser {
 					AbstractFieldValue abstractFieldValue = null;
 					if (abstractTuleapField instanceof TuleapSelectBox) {
 						// Select box?
-						int bindValueId = -1;
+						int bindValueId = ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID;
 
 						TrackerFieldBindValue[] bindValue = artifactFieldValue.getField_value()
 								.getBind_value();
