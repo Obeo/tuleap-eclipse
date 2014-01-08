@@ -12,8 +12,7 @@ package org.tuleap.mylyn.task.internal.core.client.rest;
 
 import com.google.common.collect.Maps;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -21,6 +20,8 @@ import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
@@ -37,12 +38,14 @@ import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 import org.restlet.data.Preference;
 import org.restlet.data.Protocol;
+import org.restlet.data.Warning;
 import org.restlet.engine.header.Header;
 import org.restlet.engine.header.HeaderConstants;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.util.Series;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
+import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**
  * This class will be used to establish the connection with the HTTP based Tuleap server.
@@ -101,6 +104,13 @@ public class TuleapRestConnector implements IRestConnector {
 	public ServerResponse sendRequest(String method, String url, Map<String, String> headers, String data) {
 		Request request = new Request(Method.valueOf(method), url);
 
+		// debug mode
+		boolean debug = false;
+		IEclipsePreferences node = InstanceScope.INSTANCE.getNode(ITuleapConstants.TULEAP_PREFERENCE_NODE);
+		if (node != null) {
+			debug = node.getBoolean(ITuleapConstants.TULEAP_PREFERENCE_DEBUG_MODE, false);
+		}
+
 		Preference<CharacterSet> preferenceCharset = new Preference<CharacterSet>(CharacterSet.UTF_8);
 		request.getClientInfo().getAcceptedCharacterSets().add(preferenceCharset);
 
@@ -136,27 +146,9 @@ public class TuleapRestConnector implements IRestConnector {
 		}
 
 		Response response = getClient().handle(request);
-		String responseBody = null;
-		ByteArrayOutputStream byteArrayOutputStream = null;
-		try {
-			Representation representation = response.getEntity();
-			if (representation != null) {
-				byteArrayOutputStream = new ByteArrayOutputStream();
-				representation.write(byteArrayOutputStream);
-				responseBody = new String(byteArrayOutputStream.toByteArray());
-				byteArrayOutputStream.close();
-			}
-		} catch (IOException e) {
-			// do not propagate
-			this.logger.log(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e));
-		} finally {
-			if (byteArrayOutputStream != null) {
-				try {
-					byteArrayOutputStream.close();
-				} catch (IOException e) {
-					// Nothing to do
-				}
-			}
+		String responseBody = response.getEntityAsText();
+		if (debug) {
+			debugRestCall(request, response, responseBody);
 		}
 
 		Map<String, String> responseHeader = Maps.<String, String> newHashMap();
@@ -170,6 +162,46 @@ public class TuleapRestConnector implements IRestConnector {
 		ServerResponse serverResponse = new ServerResponse(response.getStatus().getCode(), responseBody,
 				responseHeader);
 		return serverResponse;
+	}
+
+	/**
+	 * Logs a debug message of the REST request/response.
+	 * 
+	 * @param request
+	 *            The request sent
+	 * @param response
+	 *            The response received
+	 * @param responseBody
+	 *            The response body
+	 */
+	private void debugRestCall(Request request, Response response, String responseBody) {
+		org.restlet.data.Status responseStatus = response.getStatus();
+		StringBuilder b = new StringBuilder();
+		b.append("Performed REST call:\n").append(request.getMethod()); //$NON-NLS-1$
+		b.append(" ").append(request.getResourceRef().toString(true, true)); //$NON-NLS-1$
+		String requestBody = request.getEntityAsText();
+		b.append("\nbody:\n"); //$NON-NLS-1$
+		if (requestBody != null) {
+			b.append(requestBody.replaceAll("\"password\" *: *\".*\"", "\"password\":\"(hidden in debug)\"")); //$NON-NLS-1$ //$NON-NLS-2$
+		} else {
+			b.append(requestBody);
+		}
+		b.append("\n__________\nresponse:\n"); //$NON-NLS-1$
+		b.append(responseStatus).append("\n"); //$NON-NLS-1$
+		List<Warning> warnings = response.getWarnings();
+		if (warnings != null && !warnings.isEmpty()) {
+			b.append("warnings:\n"); //$NON-NLS-1$
+			for (Warning warning : warnings) {
+				b.append(warning).append("\n"); //$NON-NLS-1$
+			}
+		}
+		b.append("body:\n"); //$NON-NLS-1$
+		b.append(responseBody);
+		int status = IStatus.INFO;
+		if (!responseStatus.isSuccess()) {
+			status = IStatus.ERROR;
+		}
+		this.logger.log(new Status(status, TuleapCoreActivator.PLUGIN_ID, b.toString()));
 	}
 
 	/**
