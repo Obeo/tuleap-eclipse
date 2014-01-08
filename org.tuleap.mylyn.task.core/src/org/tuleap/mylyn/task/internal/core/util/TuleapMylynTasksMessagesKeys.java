@@ -175,11 +175,6 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	public static String retrievingTrackerSemantic;
 
 	/**
-	 * Retrieving the comments.
-	 */
-	public static String retrieveComments;
-
-	/**
 	 * Retrieving the reports.
 	 */
 	public static String retrievingTheReports;
@@ -358,6 +353,14 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	 * Retrieving a topPlanning.
 	 */
 	public static String retrievingTopPlanning;
+
+	/**
+	 * Retrieving an artifact. 1 parameter:
+	 * <ol>
+	 * <li>The artifact id</li>
+	 * </ol>
+	 */
+	public static String retrieveArtifact;
 
 	/**
 	 * Error message regarding ISO-8601 dates. 1 argument, the invalid date as a string.

@@ -756,7 +756,8 @@ public class TuleapSoapConnector {
 		try {
 			this.login(monitor);
 
-			monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.executingQuery));
+			monitor.beginTask(
+					TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.executingQuery), 100);
 
 			String queryTrackerId = query.getAttribute(ITuleapQueryConstants.QUERY_TRACKER_ID);
 			trackerId = Integer.valueOf(queryTrackerId).intValue();
@@ -784,11 +785,18 @@ public class TuleapSoapConnector {
 			try {
 				Artifact[] artifacts = artifactQueryResult.getArtifacts();
 				for (Artifact artifact : artifacts) {
-					// Retrieve comments
-					int artifactId = artifact.getArtifact_id();
-					List<TuleapElementComment> comments = getArtifactCommentsWhileLoggedIn(artifactId,
-							serverConfiguration, monitor);
-					artifactsFound.add(new CommentedArtifact(artifact, comments));
+					if (!monitor.isCanceled()) {
+						// Retrieve comments
+						int artifactId = artifact.getArtifact_id();
+
+						monitor.subTask(TuleapMylynTasksMessages.getString(
+								TuleapMylynTasksMessagesKeys.retrieveArtifact, Integer.valueOf(artifactId)));
+						monitor.worked(10);
+
+						List<TuleapElementComment> comments = getArtifactCommentsWhileLoggedIn(artifactId,
+								serverConfiguration, monitor);
+						artifactsFound.add(new CommentedArtifact(artifact, comments));
+					}
 				}
 			} catch (NumberFormatException e) {
 				TuleapCoreActivator.log(e, true);
@@ -796,6 +804,7 @@ public class TuleapSoapConnector {
 
 			final int fifty = 50;
 			monitor.worked(fifty);
+			monitor.done();
 		} catch (RemoteException e) {
 			TuleapCoreActivator.log(e, true);
 		} catch (MalformedURLException e) {
@@ -825,10 +834,6 @@ public class TuleapSoapConnector {
 	private List<TuleapElementComment> getArtifactCommentsWhileLoggedIn(int artifactId,
 			TuleapServer serverConfiguration, IProgressMonitor monitor) throws RemoteException {
 		List<TuleapElementComment> comments = new ArrayList<TuleapElementComment>();
-		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.retrieveComments,
-					Integer.valueOf(artifactId)));
-		}
 		ArtifactComments[] artifactComments = this.getTuleapTrackerV5APIPortType().getArtifactComments(
 				sessionHash, artifactId);
 		for (ArtifactComments artifactComment : artifactComments) {
@@ -838,6 +843,9 @@ public class TuleapSoapConnector {
 					artifactComment.getSubmitted_on());
 			comments.add(comment);
 		}
+
+		monitor.worked(1);
+
 		return comments;
 	}
 
@@ -917,7 +925,13 @@ public class TuleapSoapConnector {
 			IProgressMonitor monitor) throws MalformedURLException, RemoteException, ServiceException {
 		this.login(monitor);
 
+		monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.retrieveArtifact,
+				Integer.valueOf(artifactId)));
+
 		Artifact artifact = this.getTuleapTrackerV5APIPortType().getArtifact(sessionHash, -1, -1, artifactId);
+
+		final int eighty = 80;
+		monitor.worked(eighty);
 
 		List<TuleapElementComment> comments = getArtifactCommentsWhileLoggedIn(artifactId,
 				serverConfiguration, monitor);
