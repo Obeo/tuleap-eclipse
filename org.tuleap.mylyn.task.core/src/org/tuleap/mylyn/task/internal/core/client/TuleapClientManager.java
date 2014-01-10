@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.client;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +42,7 @@ public class TuleapClientManager implements IRepositoryListener {
 	/**
 	 * The rest connectors to dispose.
 	 */
-	private List<TuleapRestConnector> restConnectors;
+	private List<TuleapRestConnector> restConnectors = new ArrayList<TuleapRestConnector>();
 
 	/**
 	 * The SOAP client cache.
@@ -119,6 +120,9 @@ public class TuleapClientManager implements IRepositoryListener {
 		// Create the REST client
 		TuleapJsonParser jsonParser = new TuleapJsonParser();
 		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(webLocation, logger);
+
+		restConnectors.add(tuleapRestConnector);
+
 		RestResourceFactory restResourceFactory = new RestResourceFactory(webLocation.getUrl(),
 				ITuleapAPIVersions.BEST_VERSION, tuleapRestConnector, TuleapCoreActivator.getDefault()
 						.getLog());
