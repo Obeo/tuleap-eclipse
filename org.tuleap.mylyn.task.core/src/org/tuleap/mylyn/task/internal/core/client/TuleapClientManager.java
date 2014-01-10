@@ -11,6 +11,7 @@
 package org.tuleap.mylyn.task.internal.core.client;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.ILog;
@@ -36,6 +37,11 @@ import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
  * @since 0.7
  */
 public class TuleapClientManager implements IRepositoryListener {
+
+	/**
+	 * The rest connectors to dispose.
+	 */
+	private List<TuleapRestConnector> restConnectors;
 
 	/**
 	 * The SOAP client cache.
@@ -153,5 +159,14 @@ public class TuleapClientManager implements IRepositoryListener {
 		// Force the re-creation of the clients if the repository changes
 		this.repositoryAdded(taskRepository);
 		this.repositoryRemoved(taskRepository);
+	}
+
+	/**
+	 * Dispose the connectors. This operation should only be used when the connector is stopping.
+	 */
+	public void dispose() {
+		for (TuleapRestConnector restConnector : restConnectors) {
+			restConnector.dispose();
+		}
 	}
 }
