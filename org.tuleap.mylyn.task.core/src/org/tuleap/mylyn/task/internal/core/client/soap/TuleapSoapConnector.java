@@ -271,7 +271,8 @@ public class TuleapSoapConnector {
 	 */
 	protected IStatus logout() {
 		IStatus status = Status.OK_STATUS;
-		if (!DEFAULT_SESSION_HASH.equals(sessionHash)) {
+		// if codendiAPIPortType is null, we are not logged in
+		if (!DEFAULT_SESSION_HASH.equals(sessionHash) && codendiAPIPortType != null) {
 			try {
 				codendiAPIPortType.logout(sessionHash);
 			} catch (RemoteException e) {
