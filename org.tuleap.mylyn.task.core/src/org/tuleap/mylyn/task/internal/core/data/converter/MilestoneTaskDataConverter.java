@@ -33,6 +33,7 @@ import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.config.field.AbstractTuleapSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapComputedValue;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapMultiSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
@@ -177,6 +178,12 @@ public class MilestoneTaskDataConverter {
 				if (field != null) {
 					TaskAttribute fieldAtt = cardWrapper.addField(fieldId, field.getLabel(), field
 							.getMetadataType());
+					// TODO Find a way to put this responsibility in the Field classes
+					// Set the field read-only like for tickets
+					// @see AbstractTuleapField.initializeMetaData()
+					if (!field.isUpdatable() && !field.isUpdatable() || field instanceof TuleapComputedValue) {
+						fieldAtt.getMetaData().setReadOnly(true);
+					}
 					populateCardField(tracker, fieldValue, field, fieldAtt);
 				} else {
 					TuleapCoreActivator.log(TuleapMylynTasksMessages.getString(
