@@ -104,7 +104,8 @@ public class TuleapSoapParser {
 
 						TrackerFieldBindValue[] bindValue = artifactFieldValue.getField_value()
 								.getBind_value();
-						if (bindValue.length > 0) {
+						// Yes, this array can be null.
+						if (bindValue != null && bindValue.length > 0) {
 							bindValueId = bindValue[0].getBind_value_id();
 						}
 
