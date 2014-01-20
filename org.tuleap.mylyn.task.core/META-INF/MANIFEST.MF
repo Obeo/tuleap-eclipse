@@ -40,14 +40,3 @@ Export-Package: org.tuleap.mylyn.task.internal.core;x-friends:="org.tuleap.mylyn
  org.tuleap.mylyn.task.internal.core.wsdl.soap.v2;x-friends:="org.tuleap.mylyn.task.tests"
 Bundle-Activator: org.tuleap.mylyn.task.internal.core.TuleapCoreActivator
 Service-Component: OSGI-INF/component.xml
-Bundle-ClassPath: lib/org.restlet.ext.httpclient.jar,
- lib/org.restlet.jar,
- .,
- lib/net.jcip.annotations_1.0/net.jcip.annotations.jar,
- lib/org.apache.commons.codec_1.5/org.apache.commons.codec.jar,
- lib/org.apache.commons.logging_1.1/org.apache.commons.logging.jar,
- lib/org.apache.httpclient_4.1/org.apache.httpclient.jar,
- lib/org.apache.httpcore_4.1/org.apache.httpcore.jar,
- lib/org.apache.httpmime_4.1/org.apache.httpmime.jar,
- lib/org.apache.james.mime4j_0.6/org.apache.james.mime4j.jar,
- lib/org.restlet.ext.ssl.jar

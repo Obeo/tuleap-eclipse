@@ -13,8 +13,8 @@ package org.tuleap.mylyn.task.internal.tests.client.rest;
 import com.google.common.collect.Lists;
 
 import java.util.List;
-import java.util.Map;
 
+import org.apache.commons.httpclient.HttpMethod;
 import org.tuleap.mylyn.task.internal.core.client.rest.ServerResponse;
 
 /**
@@ -39,15 +39,9 @@ public class MockListRestConnector extends MockRestConnector {
 		return this;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.tuleap.mylyn.task.internal.tests.client.rest.MockRestConnector#sendRequest(java.lang.String,
-	 *      java.lang.String, java.util.Map, java.lang.String)
-	 */
 	@Override
-	public ServerResponse sendRequest(String method, String url, Map<String, String> headers, String data) {
-		requestsSent.add(new ServerRequest(method, url, headers, data));
+	public ServerResponse sendRequest(HttpMethod method) {
+		requestsSent.add(getServerRequest(method));
 		if (currentIndex < responses.size()) {
 			return responses.get(currentIndex++);
 		}

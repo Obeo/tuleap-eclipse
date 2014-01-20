@@ -13,9 +13,15 @@ package org.tuleap.mylyn.task.internal.tests.client.rest;
 import com.google.common.collect.Lists;
 
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.httpclient.Header;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
+import org.apache.commons.httpclient.methods.RequestEntity;
+import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.tuleap.mylyn.task.internal.core.client.rest.IRestConnector;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestResourceFactory;
 import org.tuleap.mylyn.task.internal.core.client.rest.ServerResponse;
@@ -41,10 +47,25 @@ public class MockRestConnector implements IRestConnector {
 	 */
 	private ServerResponse response;
 
-	public ServerResponse sendRequest(String method, String url, Map<String, String> headers, String data) {
-		requestsSent.add(new ServerRequest(method, url, headers, data));
+	public ServerResponse sendRequest(HttpMethod method) {
+		requestsSent.add(getServerRequest(method));
 		invocationsCount++;
 		return response;
+	}
+
+	protected ServerRequest getServerRequest(HttpMethod method) {
+		Map<String, String> header = new LinkedHashMap<String, String>();
+		for (Header h : method.getRequestHeaders()) {
+			header.put(h.getName(), h.getValue());
+		}
+		if (method instanceof EntityEnclosingMethod) {
+			RequestEntity entity = ((EntityEnclosingMethod)method).getRequestEntity();
+			if (entity instanceof StringRequestEntity) {
+				return new ServerRequest(method.getName(), method.getPath(), header,
+						((StringRequestEntity)entity).getContent());
+			}
+		}
+		return new ServerRequest(method.getName(), method.getPath(), header);
 	}
 
 	/**
@@ -105,10 +126,23 @@ public class MockRestConnector implements IRestConnector {
 		/** Headers (immutable). */
 		public final Map<String, String> headers;
 
-		/** Body. */
+		/** Body (immutable) */
 		public final String body;
 
 		// CHECKSTYLE: ON
+
+		/**
+		 * @param method
+		 * @param url
+		 * @param headers
+		 */
+		public ServerRequest(String method, String url, Map<String, String> headers) {
+			super();
+			this.method = method;
+			this.url = url;
+			this.headers = Collections.unmodifiableMap(headers);
+			this.body = null;
+		}
 
 		/**
 		 * @param method

@@ -88,11 +88,11 @@ public class TuleapRestClientTest {
 		List<ServerRequest> requestsSent = connector.getRequestsSent();
 		assertEquals(2, requestsSent.size());
 		ServerRequest request = requestsSent.get(0);
-		assertEquals("https://test/url/api/v12.3/milestones/200", request.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/milestones/200", request.url); //$NON-NLS-1$
 		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
 
 		request = requestsSent.get(1);
-		assertEquals("https://test/url/api/v12.3/milestones/200", request.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/milestones/200", request.url); //$NON-NLS-1$
 		assertEquals("GET", request.method); //$NON-NLS-1$
 	}
 
@@ -110,11 +110,11 @@ public class TuleapRestClientTest {
 		List<ServerRequest> requestsSent = connector.getRequestsSent();
 		assertEquals(2, requestsSent.size());
 		ServerRequest request = requestsSent.get(0);
-		assertEquals("https://test/url/api/v12.3/milestones/200/backlog", request.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/milestones/200/backlog", request.url); //$NON-NLS-1$
 		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
 
 		request = requestsSent.get(1);
-		assertEquals("https://test/url/api/v12.3/milestones/200/backlog", request.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/milestones/200/backlog", request.url); //$NON-NLS-1$
 		assertEquals("GET", request.method); //$NON-NLS-1$
 	}
 
@@ -132,11 +132,11 @@ public class TuleapRestClientTest {
 		List<ServerRequest> requestsSent = connector.getRequestsSent();
 		assertEquals(2, requestsSent.size());
 		ServerRequest request = requestsSent.get(0);
-		assertEquals("https://test/url/api/v12.3/milestones/200/content", request.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/milestones/200/content", request.url); //$NON-NLS-1$
 		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
 
 		request = requestsSent.get(1);
-		assertEquals("https://test/url/api/v12.3/milestones/200/content", request.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/milestones/200/content", request.url); //$NON-NLS-1$
 		assertEquals("GET", request.method); //$NON-NLS-1$
 	}
 
@@ -172,19 +172,19 @@ public class TuleapRestClientTest {
 		assertEquals(4, requestsSent.size());
 
 		ServerRequest request = requestsSent.get(0);
-		assertEquals("https://test/url/api/v12.3/milestones/250", request.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/milestones/250", request.url); //$NON-NLS-1$
 		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
 
 		request = requestsSent.get(1);
-		assertEquals("https://test/url/api/v12.3/milestones/250", request.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/milestones/250", request.url); //$NON-NLS-1$
 		assertEquals("GET", request.method); //$NON-NLS-1$
 
 		request = requestsSent.get(2);
-		assertEquals("https://test/url/api/v12.3/milestones/250/cardwall", request.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/milestones/250/cardwall", request.url); //$NON-NLS-1$
 		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
 
 		request = requestsSent.get(3);
-		assertEquals("https://test/url/api/v12.3/milestones/250/cardwall", request.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/milestones/250/cardwall", request.url); //$NON-NLS-1$
 		assertEquals("GET", request.method); //$NON-NLS-1$
 	}
 
@@ -211,11 +211,11 @@ public class TuleapRestClientTest {
 		List<ServerRequest> requestsSent = connector.getRequestsSent();
 		assertEquals(2, requestsSent.size());
 		ServerRequest request0 = requestsSent.get(0);
-		assertEquals("https://test/url/api/v12.3/backlog_items/350", request0.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/backlog_items/350", request0.url); //$NON-NLS-1$
 		assertEquals("OPTIONS", request0.method); //$NON-NLS-1$
 
 		ServerRequest request1 = requestsSent.get(1);
-		assertEquals("https://test/url/api/v12.3/backlog_items/350", request1.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/backlog_items/350", request1.url); //$NON-NLS-1$
 		assertEquals("GET", request1.method); //$NON-NLS-1$
 	}
 
@@ -260,11 +260,11 @@ public class TuleapRestClientTest {
 		assertEquals(2, requestsSent.size());
 
 		ServerRequest request0 = requestsSent.get(0);
-		assertEquals("https://test/url/api/v12.3/milestones/50/backlog", request0.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/milestones/50/backlog", request0.url); //$NON-NLS-1$
 		assertEquals("OPTIONS", request0.method); //$NON-NLS-1$
 
 		ServerRequest request1 = requestsSent.get(1);
-		assertEquals("https://test/url/api/v12.3/milestones/50/backlog", request1.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/milestones/50/backlog", request1.url); //$NON-NLS-1$
 		assertEquals("PUT", request1.method); //$NON-NLS-1$
 		assertEquals("[230,231,232,233]", //$NON-NLS-1$
 				request1.body);
@@ -311,11 +311,11 @@ public class TuleapRestClientTest {
 		assertEquals(2, requestsSent.size());
 
 		ServerRequest request0 = requestsSent.get(0);
-		assertEquals("https://test/url/api/v12.3/milestones/50/content", request0.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/milestones/50/content", request0.url); //$NON-NLS-1$
 		assertEquals("OPTIONS", request0.method); //$NON-NLS-1$
 
 		ServerRequest request1 = requestsSent.get(1);
-		assertEquals("https://test/url/api/v12.3/milestones/50/content", request1.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/milestones/50/content", request1.url); //$NON-NLS-1$
 		assertEquals("PUT", request1.method); //$NON-NLS-1$
 		assertEquals("[230,231,232,233]", //$NON-NLS-1$
 				request1.body);
@@ -344,11 +344,11 @@ public class TuleapRestClientTest {
 		assertEquals(2, requestsSent.size());
 
 		ServerRequest request0 = requestsSent.get(0);
-		assertEquals("https://test/url/api/v12.3/tokens", request0.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/tokens", request0.url); //$NON-NLS-1$
 		assertEquals("OPTIONS", request0.method); //$NON-NLS-1$
 
 		ServerRequest request1 = requestsSent.get(1);
-		assertEquals("https://test/url/api/v12.3/tokens", request1.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/tokens", request1.url); //$NON-NLS-1$
 		assertEquals("POST", request1.method); //$NON-NLS-1$
 		assertEquals("{\"username\":\"admin\",\"password\":\"password\"}", //$NON-NLS-1$
 				request1.body);
@@ -408,23 +408,23 @@ public class TuleapRestClientTest {
 
 		ServerRequest req = requestsSent.get(0);
 		assertEquals("OPTIONS", req.method);
-		assertEquals("https://test/url/api/v12.3/milestones/200", req.url);
+		assertEquals("/api/v12.3/milestones/200", req.url);
 
 		req = requestsSent.get(1);
 		assertEquals("OPTIONS", req.method);
-		assertEquals("https://test/url/api/v12.3/tokens", req.url);
+		assertEquals("/api/v12.3/tokens", req.url);
 
 		req = requestsSent.get(2);
 		assertEquals("POST", req.method);
-		assertEquals("https://test/url/api/v12.3/tokens", req.url);
+		assertEquals("/api/v12.3/tokens", req.url);
 
 		req = requestsSent.get(3);
 		assertEquals("OPTIONS", req.method);
-		assertEquals("https://test/url/api/v12.3/milestones/200", req.url);
+		assertEquals("/api/v12.3/milestones/200", req.url);
 
 		req = requestsSent.get(4);
 		assertEquals("GET", req.method);
-		assertEquals("https://test/url/api/v12.3/milestones/200", req.url);
+		assertEquals("/api/v12.3/milestones/200", req.url);
 	}
 
 	/**
@@ -462,11 +462,11 @@ public class TuleapRestClientTest {
 		assertEquals(2, requestsSent.size());
 
 		ServerRequest request0 = requestsSent.get(0);
-		assertEquals("https://test/url/api/v12.3/cards/2_12345", request0.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/cards/2_12345", request0.url); //$NON-NLS-1$
 		assertEquals("OPTIONS", request0.method); //$NON-NLS-1$
 
 		ServerRequest request1 = requestsSent.get(1);
-		assertEquals("https://test/url/api/v12.3/cards/2_12345", request1.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/cards/2_12345", request1.url); //$NON-NLS-1$
 		assertEquals("PUT", request1.method); //$NON-NLS-1$
 		assertEquals("{\"label\":\"Simple label\",\"values\":[],\"column_id\":10000}", //$NON-NLS-1$
 				request1.body);
@@ -508,11 +508,11 @@ public class TuleapRestClientTest {
 		assertEquals(2, requestsSent.size());
 
 		ServerRequest request0 = requestsSent.get(0);
-		assertEquals("https://test/url/api/v12.3/cards/2_12345", request0.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/cards/2_12345", request0.url); //$NON-NLS-1$
 		assertEquals("OPTIONS", request0.method); //$NON-NLS-1$
 
 		ServerRequest request1 = requestsSent.get(1);
-		assertEquals("https://test/url/api/v12.3/cards/2_12345", request1.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/cards/2_12345", request1.url); //$NON-NLS-1$
 		assertEquals("PUT", request1.method); //$NON-NLS-1$
 		assertEquals(
 				"{\"label\":\"Simple label\",\"values\":[{\"field_id\":1000,\"value\":\"300, 301, 302\"}],\"column_id\":10000}", //$NON-NLS-1$
@@ -563,11 +563,11 @@ public class TuleapRestClientTest {
 		assertEquals(2, requestsSent.size());
 
 		ServerRequest request0 = requestsSent.get(0);
-		assertEquals("https://test/url/api/v12.3/cards/2_12345", request0.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/cards/2_12345", request0.url); //$NON-NLS-1$
 		assertEquals("OPTIONS", request0.method); //$NON-NLS-1$
 
 		ServerRequest request1 = requestsSent.get(1);
-		assertEquals("https://test/url/api/v12.3/cards/2_12345", request1.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/cards/2_12345", request1.url); //$NON-NLS-1$
 		assertEquals("PUT", request1.method); //$NON-NLS-1$
 		assertEquals(
 				"{\"label\":\"Simple label\",\"values\":[{\"field_id\":2000,\"bind_value_ids\":[10,20,30]}],\"column_id\":10000}", //$NON-NLS-1$
@@ -623,11 +623,11 @@ public class TuleapRestClientTest {
 		assertEquals(2, requestsSent.size());
 
 		ServerRequest request0 = requestsSent.get(0);
-		assertEquals("https://test/url/api/v12.3/cards/2_12345", request0.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/cards/2_12345", request0.url); //$NON-NLS-1$
 		assertEquals("OPTIONS", request0.method); //$NON-NLS-1$
 
 		ServerRequest request1 = requestsSent.get(1);
-		assertEquals("https://test/url/api/v12.3/cards/2_12345", request1.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/cards/2_12345", request1.url); //$NON-NLS-1$
 		assertEquals("PUT", request1.method); //$NON-NLS-1$
 		assertEquals(
 				"{\"label\":\"Simple label\",\"values\":[{\"field_id\":3000,\"file_descriptions\":[{\"file_id\":100000,\"description\":\"first description\"},{\"file_id\":100001,\"description\":\"second description\"}]}],\"column_id\":10000}", //$NON-NLS-1$
@@ -688,21 +688,21 @@ public class TuleapRestClientTest {
 		assertEquals(4, requestsSent.size());
 
 		ServerRequest request0 = requestsSent.get(0);
-		assertEquals("https://test/url/api/v12.3/cards/2_12345", request0.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/cards/2_12345", request0.url); //$NON-NLS-1$
 		assertEquals("OPTIONS", request0.method); //$NON-NLS-1$
 
 		ServerRequest request1 = requestsSent.get(1);
-		assertEquals("https://test/url/api/v12.3/cards/2_12345", request1.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/cards/2_12345", request1.url); //$NON-NLS-1$
 		assertEquals("PUT", request1.method); //$NON-NLS-1$
 		assertEquals("{\"label\":\"Simple label\",\"values\":[],\"column_id\":10000}", //$NON-NLS-1$
 				request1.body);
 
 		ServerRequest request2 = requestsSent.get(2);
-		assertEquals("https://test/url/api/v12.3/cards/2_12346", request2.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/cards/2_12346", request2.url); //$NON-NLS-1$
 		assertEquals("OPTIONS", request2.method); //$NON-NLS-1$
 
 		ServerRequest request3 = requestsSent.get(3);
-		assertEquals("https://test/url/api/v12.3/cards/2_12346", request3.url); //$NON-NLS-1$
+		assertEquals("/api/v12.3/cards/2_12346", request3.url); //$NON-NLS-1$
 		assertEquals("PUT", request3.method); //$NON-NLS-1$
 		assertEquals(
 				"{\"label\":\"Simple label\",\"values\":[{\"field_id\":2000,\"bind_value_ids\":[10,20,30]}],\"column_id\":10000}", //$NON-NLS-1$

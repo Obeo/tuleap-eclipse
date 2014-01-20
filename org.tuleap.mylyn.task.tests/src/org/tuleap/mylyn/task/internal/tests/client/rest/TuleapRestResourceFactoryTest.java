@@ -14,6 +14,7 @@ import com.google.common.collect.Maps;
 
 import java.util.Map;
 
+import org.apache.commons.httpclient.HttpMethod;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -48,7 +49,7 @@ public class TuleapRestResourceFactoryTest {
 		RestResource milestone = factory.milestone(123);
 		assertNotNull(milestone);
 		assertEquals("/milestones/123", milestone.getUrl());
-		assertEquals("/server/api/v12.5/milestones/123", milestone.getFullUrl());
+		assertEquals("/api/v12.5/milestones/123", milestone.getFullUrl());
 	}
 
 	/**
@@ -78,8 +79,9 @@ public class TuleapRestResourceFactoryTest {
 
 		RestOperation put = milestone.put();
 		assertNotNull(put);
-		assertEquals("PUT", put.getMethodName());
-		assertEquals("/server/api/v12.5/milestones/123", put.getUrl());
+		HttpMethod method = put.createMethod();
+		assertEquals("PUT", method.getName());
+		assertEquals("/api/v12.5/milestones/123", method.getPath());
 	}
 
 	/**
@@ -90,7 +92,7 @@ public class TuleapRestResourceFactoryTest {
 		RestResource r = factory.milestoneBacklog(123);
 		assertNotNull(r);
 		assertEquals("/milestones/123/backlog", r.getUrl());
-		assertEquals("/server/api/v12.5/milestones/123/backlog", r.getFullUrl());
+		assertEquals("/api/v12.5/milestones/123/backlog", r.getFullUrl());
 	}
 
 	/**
@@ -101,7 +103,7 @@ public class TuleapRestResourceFactoryTest {
 		RestResource r = factory.milestoneContent(123);
 		assertNotNull(r);
 		assertEquals("/milestones/123/content", r.getUrl());
-		assertEquals("/server/api/v12.5/milestones/123/content", r.getFullUrl());
+		assertEquals("/api/v12.5/milestones/123/content", r.getFullUrl());
 	}
 
 	/**
@@ -119,8 +121,9 @@ public class TuleapRestResourceFactoryTest {
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
 		RestOperation get = r.get();
 		assertNotNull(get);
-		assertEquals("GET", get.getMethodName());
-		assertEquals("/server/api/v12.5/milestones/123/backlog", get.getUrl());
+		HttpMethod method = get.createMethod();
+		assertEquals("GET", method.getName());
+		assertEquals("/api/v12.5/milestones/123/backlog", method.getPath());
 	}
 
 	/**
@@ -138,8 +141,9 @@ public class TuleapRestResourceFactoryTest {
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
 		RestOperation get = r.get();
 		assertNotNull(get);
-		assertEquals("GET", get.getMethodName());
-		assertEquals("/server/api/v12.5/milestones/123/content", get.getUrl());
+		HttpMethod method = get.createMethod();
+		assertEquals("GET", method.getName());
+		assertEquals("/api/v12.5/milestones/123/content", method.getPath());
 	}
 
 	/**
@@ -156,8 +160,7 @@ public class TuleapRestResourceFactoryTest {
 		headers.put(ITuleapHeaders.ALLOW, "OPTIONS");
 		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
-		RestOperation get = r.get();
-		assertNotNull(get);
+		r.get();
 	}
 
 	/**
@@ -174,8 +177,7 @@ public class TuleapRestResourceFactoryTest {
 		headers.put(ITuleapHeaders.ALLOW, "OPTIONS");
 		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
-		RestOperation get = r.get();
-		assertNotNull(get);
+		r.get();
 	}
 
 	/**
@@ -193,8 +195,7 @@ public class TuleapRestResourceFactoryTest {
 		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET");
 		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS");
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
-		RestOperation get = r.get();
-		assertNotNull(get);
+		r.get();
 	}
 
 	/**
@@ -212,8 +213,7 @@ public class TuleapRestResourceFactoryTest {
 		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET");
 		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS");
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
-		RestOperation get = r.get();
-		assertNotNull(get);
+		r.get();
 	}
 
 	/**
@@ -257,8 +257,9 @@ public class TuleapRestResourceFactoryTest {
 
 		RestOperation put = r.put();
 		assertNotNull(put);
-		assertEquals("PUT", put.getMethodName());
-		assertEquals("/server/api/v12.5/milestones/123/backlog", put.getUrl());
+		HttpMethod method = put.createMethod();
+		assertEquals("PUT", method.getName());
+		assertEquals("/api/v12.5/milestones/123/backlog", method.getPath());
 	}
 
 	/**
@@ -277,9 +278,9 @@ public class TuleapRestResourceFactoryTest {
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
 
 		RestOperation put = r.put();
-		assertNotNull(put);
-		assertEquals("PUT", put.getMethodName());
-		assertEquals("/server/api/v12.5/milestones/123/content", put.getUrl());
+		HttpMethod method = put.createMethod();
+		assertEquals("PUT", method.getName());
+		assertEquals("/api/v12.5/milestones/123/content", method.getPath());
 	}
 
 	/**
@@ -290,7 +291,7 @@ public class TuleapRestResourceFactoryTest {
 		RestResource r = factory.milestoneCardwall(123);
 		assertNotNull(r);
 		assertEquals("/milestones/123/cardwall", r.getUrl());
-		assertEquals("/server/api/v12.5/milestones/123/cardwall", r.getFullUrl());
+		assertEquals("/api/v12.5/milestones/123/cardwall", r.getFullUrl());
 	}
 
 	/**
@@ -301,7 +302,7 @@ public class TuleapRestResourceFactoryTest {
 		RestResource r = factory.milestoneSubmilestones(123);
 		assertNotNull(r);
 		assertEquals("/milestones/123/milestones", r.getUrl());
-		assertEquals("/server/api/v12.5/milestones/123/milestones", r.getFullUrl());
+		assertEquals("/api/v12.5/milestones/123/milestones", r.getFullUrl());
 	}
 
 	/**
@@ -312,7 +313,7 @@ public class TuleapRestResourceFactoryTest {
 		RestResource r = factory.artifact(123);
 		assertNotNull(r);
 		assertEquals("/artifacts/123", r.getUrl());
-		assertEquals("/server/api/v12.5/artifacts/123", r.getFullUrl());
+		assertEquals("/api/v12.5/artifacts/123", r.getFullUrl());
 	}
 
 	/**
@@ -323,18 +324,18 @@ public class TuleapRestResourceFactoryTest {
 		RestResource r = factory.artifacts();
 		assertNotNull(r);
 		assertEquals("/artifacts", r.getUrl());
-		assertEquals("/server/api/v12.5/artifacts", r.getFullUrl());
+		assertEquals("/api/v12.5/artifacts", r.getFullUrl());
 	}
 
 	/**
-	 * Checks the basic properties of {@link RestResourceFactory#card(int)}.
+	 * Checks the basic properties of {@link RestResourceFactory#card(String)}.
 	 */
 	@Test
 	public void testGetCardsById() {
 		RestResource r = factory.card("2_123");
 		assertNotNull(r);
 		assertEquals("/cards/2_123", r.getUrl());
-		assertEquals("/server/api/v12.5/cards/2_123", r.getFullUrl());
+		assertEquals("/api/v12.5/cards/2_123", r.getFullUrl());
 	}
 
 	/**
@@ -345,7 +346,7 @@ public class TuleapRestResourceFactoryTest {
 		RestResource r = factory.projects();
 		assertNotNull(r);
 		assertEquals("/projects", r.getUrl());
-		assertEquals("/server/api/v12.5/projects", r.getFullUrl());
+		assertEquals("/api/v12.5/projects", r.getFullUrl());
 	}
 
 	/**
@@ -356,7 +357,7 @@ public class TuleapRestResourceFactoryTest {
 		RestResource r = factory.projectsTrackers(321);
 		assertNotNull(r);
 		assertEquals("/projects/321/trackers", r.getUrl());
-		assertEquals("/server/api/v12.5/projects/321/trackers", r.getFullUrl());
+		assertEquals("/api/v12.5/projects/321/trackers", r.getFullUrl());
 	}
 
 	/**
@@ -367,7 +368,7 @@ public class TuleapRestResourceFactoryTest {
 		RestResource r = factory.user();
 		assertNotNull(r);
 		assertEquals("/user", r.getUrl());
-		assertEquals("/server/api/v12.5/user", r.getFullUrl());
+		assertEquals("/api/v12.5/user", r.getFullUrl());
 	}
 
 	/**

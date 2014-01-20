@@ -10,13 +10,13 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.tests.client.rest;
 
-import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.commons.httpclient.HttpMethod;
 import org.eclipse.core.runtime.AssertionFailedException;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Before;
@@ -49,33 +49,46 @@ public class RestOperationsTest {
 	@Test
 	public void testBasicBehavior() {
 		RestOperation op = RestOperation.get("some/url", connector, logger);
-		assertEquals("GET", op.getMethodName());
-		assertEquals("some/url", op.getUrl());
-		assertEquals("some/url", op.getUrlWithQueryParameters());
+		HttpMethod m = op.createMethod();
+		assertEquals("GET", m.getName());
+		assertEquals("some/url", m.getPath());
+		assertEquals("", m.getQueryString());
 
 		op.withQueryParameter("key1", "value1");
-		assertEquals("some/url", op.getUrl());
-		assertEquals("some/url?key1=value1", op.getUrlWithQueryParameters());
+		m = op.createMethod();
+		assertEquals("GET", m.getName());
+		assertEquals("some/url", m.getPath());
+		assertEquals("key1=value1", m.getQueryString());
 
 		op.withQueryParameter("key1", "value1b");
-		assertEquals("some/url", op.getUrl());
-		assertEquals("some/url?key1=value1b", op.getUrlWithQueryParameters());
+		m = op.createMethod();
+		assertEquals("GET", m.getName());
+		assertEquals("some/url", m.getPath());
+		assertEquals("key1=value1b", m.getQueryString());
 
 		op.withQueryParameter("key1", "value1", "value1b");
-		assertEquals("some/url", op.getUrl());
-		assertEquals("some/url?key1=value1&key1=value1b", op.getUrlWithQueryParameters());
+		m = op.createMethod();
+		assertEquals("GET", m.getName());
+		assertEquals("some/url", m.getPath());
+		assertEquals("key1=value1&key1=value1b", m.getQueryString());
 
 		op.withQueryParameter("key2", "value2");
-		assertEquals("some/url", op.getUrl());
-		assertEquals("some/url?key1=value1&key1=value1b&key2=value2", op.getUrlWithQueryParameters());
+		m = op.createMethod();
+		assertEquals("GET", m.getName());
+		assertEquals("some/url", m.getPath());
+		assertEquals("key1=value1&key1=value1b&key2=value2", m.getQueryString());
 
 		op.withoutQueryParameters("key1");
-		assertEquals("some/url", op.getUrl());
-		assertEquals("some/url?key2=value2", op.getUrlWithQueryParameters());
+		m = op.createMethod();
+		assertEquals("GET", m.getName());
+		assertEquals("some/url", m.getPath());
+		assertEquals("key2=value2", m.getQueryString());
 
 		op.withoutQueryParameter();
-		assertEquals("some/url", op.getUrl());
-		assertEquals("some/url", op.getUrlWithQueryParameters());
+		m = op.createMethod();
+		assertEquals("GET", m.getName());
+		assertEquals("some/url", m.getPath());
+		assertEquals("", m.getQueryString());
 	}
 
 	/**
@@ -345,95 +358,33 @@ public class RestOperationsTest {
 	}
 
 	@Test
-	public void testToString() {
-		RestOperation op = RestOperation.get("/the/fullr/url", connector, logger);
-		assertEquals("GET /the/fullr/url", op.toString());
+	public void testGetToString() {
+		RestOperation op = RestOperation.get("/the/full/url", connector, logger);
+		assertEquals("GET /the/full/url", op.toString());
 	}
 
 	@Test
-	public void testGet() {
-		RestOperation op = RestOperation.get("full/url", connector, logger);
-		assertEquals("GET", op.getMethodName());
-		assertEquals("full/url", op.getUrl());
+	public void testPutToString() {
+		RestOperation op = RestOperation.put("/the/full/url", connector, logger);
+		assertEquals("PUT /the/full/url", op.toString());
 	}
 
 	@Test
-	public void testPut() {
-		RestOperation op = RestOperation.put("full/url", connector, logger);
-		assertEquals("PUT", op.getMethodName());
-		assertEquals("full/url", op.getUrl());
+	public void testPostToString() {
+		RestOperation op = RestOperation.post("/the/full/url", connector, logger);
+		assertEquals("POST /the/full/url", op.toString());
 	}
 
 	@Test
-	public void testPost() {
-		RestOperation op = RestOperation.post("full/url", connector, logger);
-		assertEquals("POST", op.getMethodName());
-		assertEquals("full/url", op.getUrl());
+	public void testDeleteToString() {
+		RestOperation op = RestOperation.delete("/the/full/url", connector, logger);
+		assertEquals("DELETE /the/full/url", op.toString());
 	}
 
 	@Test
-	public void testDelete() {
-		RestOperation op = RestOperation.delete("full/url", connector, logger);
-		assertEquals("DELETE", op.getMethodName());
-		assertEquals("full/url", op.getUrl());
-	}
-
-	@Test
-	public void testOptions() {
-		RestOperation op = RestOperation.options("full/url", connector, logger);
-		assertEquals("OPTIONS", op.getMethodName());
-		assertEquals("full/url", op.getUrl());
-	}
-
-	@Test
-	public void testWithQueryParameter() {
-		RestOperation op = RestOperation.get("/url", connector, logger);
-		op.withQueryParameter("fields", "all");
-		assertEquals("/url", op.getUrl());
-		assertEquals("/url?fields=all", op.getUrlWithQueryParameters());
-	}
-
-	@Test
-	public void testWithQueryParameters() {
-		RestOperation op = RestOperation.get("/url", connector, logger);
-		// LinkedhashMultimap because the order of insertion is important for the test
-		LinkedHashMultimap<String, String> params = LinkedHashMultimap.create();
-		params.put("x", "a");
-		params.put("x", "b");
-		params.put("y", "a");
-		op.withQueryParameters(params);
-		assertEquals("/url", op.getUrl());
-		assertEquals("/url?x=a&x=b&y=a", op.getUrlWithQueryParameters());
-	}
-
-	@Test
-	public void testWithoutQueryParameter() {
-		RestOperation op = RestOperation.get("/url", connector, logger);
-		// LinkedhashMultimap because the order of insertion is important for the test
-		LinkedHashMultimap<String, String> params = LinkedHashMultimap.create();
-		params.put("x", "a");
-		params.put("x", "b");
-		params.put("y", "a");
-		op.withQueryParameters(params);
-		assertEquals("/url", op.getUrl());
-		assertEquals("/url?x=a&x=b&y=a", op.getUrlWithQueryParameters());
-		op.withoutQueryParameter();
-		assertEquals("/url", op.getUrlWithQueryParameters());
-	}
-
-	@Test
-	public void testWithoutQueryParameters() {
-		RestOperation op = RestOperation.get("/url", connector, logger);
-		// LinkedhashMultimap because the order of insertion is important for the test
-		LinkedHashMultimap<String, String> params = LinkedHashMultimap.create();
-		params.put("x", "a");
-		params.put("x", "b");
-		params.put("y", "a");
-		op.withQueryParameters(params);
-		assertEquals("/url", op.getUrl());
-		assertEquals("/url?x=a&x=b&y=a", op.getUrlWithQueryParameters());
-		op.withoutQueryParameters("x");
-		assertEquals("/url?y=a", op.getUrlWithQueryParameters());
+	public void testOptionsToString() {
+		RestOperation op = RestOperation.options("/the/full/url", connector, logger);
+		assertEquals("OPTIONS /the/full/url", op.toString());
 	}
 
 	/**

@@ -10,12 +10,18 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.client.rest;
 
-import com.google.common.collect.Maps;
-
-import java.util.List;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
+import org.apache.commons.httpclient.Header;
+import org.apache.commons.httpclient.HostConfiguration;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.HttpMethodBase;
+import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
+import org.apache.commons.httpclient.util.HttpURLConnection;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -23,27 +29,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
-import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
-import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.commons.net.WebUtil;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.Version;
-import org.restlet.Client;
-import org.restlet.Request;
-import org.restlet.Response;
-import org.restlet.data.ChallengeResponse;
-import org.restlet.data.ChallengeScheme;
-import org.restlet.data.CharacterSet;
-import org.restlet.data.Language;
-import org.restlet.data.MediaType;
-import org.restlet.data.Method;
-import org.restlet.data.Preference;
-import org.restlet.data.Protocol;
-import org.restlet.data.Warning;
-import org.restlet.engine.header.Header;
-import org.restlet.engine.header.HeaderConstants;
-import org.restlet.representation.Representation;
-import org.restlet.representation.StringRepresentation;
-import org.restlet.util.Series;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
@@ -56,6 +44,11 @@ import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 public class TuleapRestConnector implements IRestConnector {
 
 	/**
+	 * Status code used to indicate an IO error during REST communication.
+	 */
+	public static final int IO_ERROR_STATUS_CODE = 1001;
+
+	/**
 	 * The serverUrl of the server.
 	 */
 	private final AbstractWebLocation location;
@@ -66,9 +59,14 @@ public class TuleapRestConnector implements IRestConnector {
 	private final ILog logger;
 
 	/**
-	 * The HTTP client Restlet.
+	 * The HTTP client.
 	 */
-	private Client client;
+	private final HttpClient httpClient;
+
+	/**
+	 * The host configuration.
+	 */
+	private HostConfiguration hostConfiguration;
 
 	/**
 	 * the constructor.
@@ -81,29 +79,16 @@ public class TuleapRestConnector implements IRestConnector {
 	public TuleapRestConnector(AbstractWebLocation location, ILog logger) {
 		this.location = location;
 		this.logger = logger;
-	}
-
-	/**
-	 * Provides this connector's Restlet client.
-	 * 
-	 * @return This instance's client, lazily creating it if necessary.
-	 */
-	protected synchronized Client getClient() {
-		if (client == null) {
-			client = new Client(Protocol.HTTPS);
-		}
-		return client;
+		this.httpClient = new HttpClient(WebUtil.getConnectionManager());
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.client.rest.IRestConnector#sendRequest(java.lang.String,
-	 *      java.lang.String, java.util.Map, java.lang.String)
+	 * @see org.tuleap.mylyn.task.internal.core.client.rest.IRestConnector#sendRequest(org.apache.commons.httpclient.HttpMethod,
+	 *      java.lang.String)
 	 */
-	public ServerResponse sendRequest(String method, String url, Map<String, String> headers, String data) {
-		Request request = new Request(Method.valueOf(method), url);
-
+	public ServerResponse sendRequest(HttpMethod method) {
 		// debug mode
 		boolean debug = false;
 		IEclipsePreferences node = InstanceScope.INSTANCE.getNode(ITuleapConstants.TULEAP_PREFERENCE_NODE);
@@ -111,94 +96,71 @@ public class TuleapRestConnector implements IRestConnector {
 			debug = node.getBoolean(ITuleapConstants.TULEAP_PREFERENCE_DEBUG_MODE, false);
 		}
 
-		Preference<CharacterSet> preferenceCharset = new Preference<CharacterSet>(CharacterSet.UTF_8);
-		request.getClientInfo().getAcceptedCharacterSets().add(preferenceCharset);
+		if (hostConfiguration == null) {
+			hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, null);
+		}
 
 		// TODO Support for gzipped responses?
-		// Preference<Encoding> preferenceEncoding = new Preference<Encoding>(Encoding.GZIP);
-		// request.getClientInfo().getAcceptedEncodings().add(preferenceEncoding);
 
-		Preference<MediaType> preferenceMediaType = new Preference<MediaType>(MediaType.APPLICATION_JSON);
-		request.getClientInfo().getAcceptedMediaTypes().add(preferenceMediaType);
+		method.setRequestHeader("Accept", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
+		method.setRequestHeader("Accept-Charset", "UTF-8"); //$NON-NLS-1$ //$NON-NLS-2$
+		method.setRequestHeader("Content-Type", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
 
-		request.getClientInfo().setAgent(this.getUserAgent());
+		// request.getClientInfo().setAgent(this.getUserAgent());
+		WebUtil.configureHttpClient(httpClient, getUserAgent());
 
-		ChallengeResponse challengeResponse = getChallengeResponse();
-		if (challengeResponse != null) {
-			request.setChallengeResponse(challengeResponse);
+		Header[] responseHeaders = null;
+		String responseBody = null;
+		ServerResponse serverResponse = null;
+		try {
+			int code = WebUtil.execute(httpClient, hostConfiguration, method, null);
+			responseBody = method.getResponseBodyAsString();
+			responseHeaders = method.getResponseHeaders();
+			if (debug) {
+				debugRestCall(method, responseBody);
+			}
+			Map<String, String> rHeaders = new LinkedHashMap<String, String>();
+			for (Header h : responseHeaders) {
+				rHeaders.put(h.getName(), h.getValue());
+			}
+			serverResponse = new ServerResponse(code, responseBody, rHeaders);
+		} catch (IOException e) {
+			logger.log(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, "I/O error during " + method
+					+ ": " + e.getMessage()));
+			serverResponse = new ServerResponse(IO_ERROR_STATUS_CODE, "", Collections
+					.<String, String> emptyMap());
+		} finally {
+			// TODO Hack-ish, cast into HttpMethodBase since releaseConnection accepts the abstract class, not
+			// the interface.
+			WebUtil.releaseConnection((HttpMethodBase)method, null);
 		}
 
-		ChallengeResponse proxyChallengeResponse = getProxyChallengeResponse();
-		if (proxyChallengeResponse != null) {
-			request.setProxyChallengeResponse(proxyChallengeResponse);
-		}
-
-		Representation entity = new StringRepresentation(data, MediaType.APPLICATION_JSON,
-				Language.ENGLISH_US, CharacterSet.UTF_8);
-		request.setEntity(entity);
-
-		// Object object = request.getAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
-		Series<Header> form = new Series<Header>(Header.class);
-		request.getAttributes().put(HeaderConstants.ATTRIBUTE_HEADERS, form);
-
-		for (Entry<String, String> entry : headers.entrySet()) {
-			form.add(entry.getKey(), entry.getValue());
-		}
-
-		Response response = getClient().handle(request);
-		String responseBody = response.getEntityAsText();
-		if (debug) {
-			debugRestCall(request, response, responseBody);
-		}
-
-		Map<String, String> responseHeader = Maps.<String, String> newHashMap();
-
-		Map<String, Object> attributes = response.getAttributes();
-		Object formObject = attributes.get(HeaderConstants.ATTRIBUTE_HEADERS);
-		if (formObject instanceof Series) {
-			Series<?> series = (Series<?>)formObject;
-			responseHeader = series.getValuesMap();
-		}
-		ServerResponse serverResponse = new ServerResponse(response.getStatus().getCode(), responseBody,
-				responseHeader);
 		return serverResponse;
 	}
 
 	/**
 	 * Logs a debug message of the REST request/response.
 	 * 
-	 * @param request
-	 *            The request sent
-	 * @param response
-	 *            The response received
-	 * @param responseBody
-	 *            The response body
+	 * @param method
+	 *            The method executed
+	 * @param bodyReceived
+	 *            The response body received
 	 */
-	private void debugRestCall(Request request, Response response, String responseBody) {
-		org.restlet.data.Status responseStatus = response.getStatus();
+	private void debugRestCall(HttpMethod method, String bodyReceived) {
+		int responseStatus = method.getStatusCode();
 		StringBuilder b = new StringBuilder();
-		b.append(request.getMethod());
-		b.append(" ").append(request.getResourceRef().toString(true, true)); //$NON-NLS-1$
-		String requestBody = request.getEntityAsText();
-		b.append("\nbody:\n"); //$NON-NLS-1$
-		if (requestBody != null) {
-			b.append(requestBody.replaceAll("\"password\" *: *\".*\"", "\"password\":\"(hidden in debug)\"")); //$NON-NLS-1$ //$NON-NLS-2$
-		} else {
-			b.append(requestBody);
+		b.append(method.getName());
+		b.append(" ").append(method.getPath()); //$NON-NLS-1$
+		if (method instanceof EntityEnclosingMethod) {
+			b.append("\nbody:\n").append(((EntityEnclosingMethod)method).getRequestEntity().toString().replaceAll(//$NON-NLS-1$
+											"\"password\" *: *\".*\"", "\"password\":\"(hidden in debug)\"")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		b.append("\n__________\nresponse:\n"); //$NON-NLS-1$
-		b.append(responseStatus).append("\n"); //$NON-NLS-1$
-		List<Warning> warnings = response.getWarnings();
-		if (warnings != null && !warnings.isEmpty()) {
-			b.append("warnings:\n"); //$NON-NLS-1$
-			for (Warning warning : warnings) {
-				b.append(warning).append("\n"); //$NON-NLS-1$
-			}
-		}
+		b.append(method.getStatusLine()).append("\n"); //$NON-NLS-1$
 		b.append("body:\n"); //$NON-NLS-1$
-		b.append(responseBody);
+		b.append(bodyReceived);
 		int status = IStatus.INFO;
-		if (!responseStatus.isSuccess()) {
+		if (responseStatus != HttpURLConnection.HTTP_OK) {
 			status = IStatus.ERROR;
 		}
 		this.logger.log(new Status(status, TuleapCoreActivator.PLUGIN_ID, b.toString()));
@@ -257,48 +219,5 @@ public class TuleapRestConnector implements IRestConnector {
 		stringBuilder.append(System.getProperty("java.vendor")); //$NON-NLS-1$
 
 		return stringBuilder.toString();
-	}
-
-	/**
-	 * Computes the challenge response for HTTP_BASIC with the available credentials.
-	 * 
-	 * @return A challenge response to use by Restlet for HTTP_BASIC authentication.
-	 */
-	protected ChallengeResponse getChallengeResponse() {
-		AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.HTTP);
-		if (credentials != null) {
-			return new ChallengeResponse(ChallengeScheme.HTTP_BASIC, credentials.getUserName(), credentials
-					.getPassword());
-		}
-		return null;
-	}
-
-	/**
-	 * Computes the challenge response for a proxy server with the available credentials.
-	 * 
-	 * @return A challenge response to use by Restlet for proxy authentication.
-	 */
-	protected ChallengeResponse getProxyChallengeResponse() {
-		AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.PROXY);
-		if (credentials != null) {
-			return new ChallengeResponse(ChallengeScheme.HTTP_BASIC, credentials.getUserName(), credentials
-					.getPassword());
-		}
-		return null;
-	}
-
-	/**
-	 * Disposes this connector's resources.
-	 */
-	public synchronized void dispose() {
-		if (client != null) {
-			try {
-				client.stop();
-				// CHECKSTYLE:OFF
-			} catch (Exception e) {
-				// CHECKSTYLE:ON
-			}
-			client = null;
-		}
 	}
 }

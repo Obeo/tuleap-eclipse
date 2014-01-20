@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.client.rest;
 
-import java.util.Map;
+import org.apache.commons.httpclient.HttpMethod;
 
 /**
  * A rest connector can emit requests and return server responses.
@@ -23,15 +23,10 @@ public interface IRestConnector {
 	 * Send a request.
 	 * 
 	 * @param method
-	 *            HTTP method to use (OPTIONS, GET, POST, PUT, ...)
-	 * @param url
-	 *            The full URL to communicate with, including query parameters.
-	 * @param headers
-	 *            Headers to send
-	 * @param data
-	 *            Data to send
+	 *            HTTP method to use (OPTIONS, GET, POST, PUT, ...) including URL, query parameters and
+	 *            request headers
 	 * @return The received serve response, as is.
 	 */
-	ServerResponse sendRequest(String method, String url, Map<String, String> headers, String data);
+	ServerResponse sendRequest(HttpMethod method);
 
 }

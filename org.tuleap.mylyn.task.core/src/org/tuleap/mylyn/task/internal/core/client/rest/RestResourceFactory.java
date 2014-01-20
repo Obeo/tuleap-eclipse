@@ -146,8 +146,7 @@ public final class RestResourceFactory {
 	}
 
 	/**
-	 * Provides access to the {code /projects/:id/plannings} HTTP resource to get a project plannings (a
-	 * planning associates a milestone tracker to backlog item trackers).
+	 * Provides access to the {code /projects/:id/plannings} HTTP resource to get a project plannings.
 	 * 
 	 * @param projectId
 	 *            the project id

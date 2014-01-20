@@ -626,7 +626,6 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 * Stops the Tuleap repository connector.
 	 */
 	public void stop() {
-		this.getClientManager().dispose();
 		this.writeRepositoryConfigFile();
 	}
 }

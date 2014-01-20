@@ -164,13 +164,4 @@ public class TuleapClientManager implements IRepositoryListener {
 		this.repositoryAdded(taskRepository);
 		this.repositoryRemoved(taskRepository);
 	}
-
-	/**
-	 * Dispose the connectors. This operation should only be used when the connector is stopping.
-	 */
-	public void dispose() {
-		for (TuleapRestConnector restConnector : restConnectors) {
-			restConnector.dispose();
-		}
-	}
 }

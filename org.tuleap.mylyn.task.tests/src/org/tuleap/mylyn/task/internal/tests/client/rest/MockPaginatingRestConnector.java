@@ -14,10 +14,11 @@ import com.google.common.collect.Maps;
 
 import java.util.Map;
 
+import org.apache.commons.httpclient.HttpMethod;
 import org.tuleap.mylyn.task.internal.core.client.rest.ServerResponse;
 
 /**
- * Mock objectto test pagination mechanism.
+ * Mock object to test pagination mechanism.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
@@ -29,8 +30,9 @@ public class MockPaginatingRestConnector extends MockRestConnector {
 	private Map<String, ServerResponse> responses = Maps.newHashMap();
 
 	@Override
-	public ServerResponse sendRequest(String method, String url, Map<String, String> headers, String data) {
-		String[] strings = url.substring(url.indexOf('?') + 1).split("&"); //$NON-NLS-1$
+	public ServerResponse sendRequest(HttpMethod method) {
+		String queryString = method.getQueryString();
+		String[] strings = queryString.split("&"); //$NON-NLS-1$
 		for (String s : strings) {
 			if (s.startsWith("offset=")) { //$NON-NLS-1$
 				String offset = s.substring("offset=".length()).trim(); //$NON-NLS-1$
@@ -38,7 +40,7 @@ public class MockPaginatingRestConnector extends MockRestConnector {
 				return responses.get(offset);
 			}
 		}
-		return super.sendRequest(method, url, headers, data);
+		return super.sendRequest(method);
 	}
 
 	/**

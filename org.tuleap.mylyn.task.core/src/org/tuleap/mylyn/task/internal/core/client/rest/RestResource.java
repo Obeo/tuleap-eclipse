@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.restlet.data.Method;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.model.TuleapDebugPart;
 import org.tuleap.mylyn.task.internal.core.model.TuleapErrorMessage;
@@ -32,6 +31,31 @@ import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
 public class RestResource {
+
+	/**
+	 * Constant containing the name of the HTTP method DELETE.
+	 */
+	public static final String METHOD_DELETE = "DELETE"; //$NON-NLS-1$
+
+	/**
+	 * Constant containing the name of the HTTP method GET.
+	 */
+	public static final String METHOD_GET = "GET"; //$NON-NLS-1$
+
+	/**
+	 * Constant containing the name of the HTTP method OPTIONS.
+	 */
+	public static final String METHOD_OPTIONS = "OPTIONS"; //$NON-NLS-1$
+
+	/**
+	 * Constant containing the name of the HTTP method POST.
+	 */
+	public static final String METHOD_POST = "POST"; //$NON-NLS-1$
+
+	/**
+	 * Constant containing the name of the HTTP method PUT.
+	 */
+	public static final String METHOD_PUT = "PUT"; //$NON-NLS-1$
 
 	/**
 	 * Flag indicating the GET method is supported.
@@ -64,7 +88,8 @@ public class RestResource {
 	private static final String SEPARATOR = ", "; //$NON-NLS-1$
 
 	/**
-	 * The serverUrl of the REST API on the server, for example {@code http://localhost:3001}.
+	 * The server URL (Protocol, host name and optionally port number), for example
+	 * {@code http://localhost:3001}.
 	 */
 	private final String serverUrl;
 
@@ -144,7 +169,7 @@ public class RestResource {
 	 * @return The full URL to use to send the request.
 	 */
 	public String getFullUrl() {
-		return this.serverUrl + ITuleapAPIVersions.API_PREFIX + this.apiVersion + getUrl();
+		return ITuleapAPIVersions.API_PREFIX + this.apiVersion + getUrl();
 	}
 
 	/**
@@ -153,7 +178,10 @@ public class RestResource {
 	 * @return The URL fragment of this resource.
 	 */
 	public String getUrl() {
-		return url;
+		if (url.startsWith("/")) { //$NON-NLS-1$
+			return url;
+		}
+		return '/' + url;
 	}
 
 	/**
@@ -168,10 +196,9 @@ public class RestResource {
 	public RestOperation delete() throws CoreException {
 		if ((supportedMethods & DELETE) == 0) {
 			throw new UnsupportedOperationException(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, Method.DELETE.getName(),
-					getUrl()));
+					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, METHOD_DELETE, getUrl()));
 		}
-		checkOptionsAllows(Method.DELETE);
+		checkOptionsAllows(METHOD_DELETE);
 		return RestOperation.delete(getFullUrl(), connector, logger).withAuthenticator(authenticator);
 	}
 
@@ -187,10 +214,9 @@ public class RestResource {
 	public RestOperation get() throws CoreException {
 		if ((supportedMethods & GET) == 0) {
 			throw new UnsupportedOperationException(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, Method.GET.getName(),
-					getUrl()));
+					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, METHOD_GET, getUrl()));
 		}
-		checkOptionsAllows(Method.GET);
+		checkOptionsAllows(METHOD_GET);
 
 		RestOperation operation = RestOperation.get(getFullUrl(), connector, logger).withAuthenticator(
 				authenticator);
@@ -229,10 +255,9 @@ public class RestResource {
 	public RestOperation post() throws CoreException {
 		if ((supportedMethods & POST) == 0) {
 			throw new UnsupportedOperationException(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, Method.POST.getName(),
-					getUrl()));
+					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, METHOD_POST, getUrl()));
 		}
-		checkOptionsAllows(Method.POST);
+		checkOptionsAllows(METHOD_POST);
 		return RestOperation.post(getFullUrl(), connector, logger).withAuthenticator(authenticator);
 	}
 
@@ -248,10 +273,9 @@ public class RestResource {
 	public RestOperation put() throws CoreException {
 		if ((supportedMethods & PUT) == 0) {
 			throw new UnsupportedOperationException(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, Method.PUT.getName(),
-					getUrl()));
+					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, METHOD_PUT, getUrl()));
 		}
-		checkOptionsAllows(Method.PUT);
+		checkOptionsAllows(METHOD_PUT);
 		return RestOperation.put(getFullUrl(), connector, logger).withAuthenticator(authenticator);
 	}
 
@@ -277,7 +301,7 @@ public class RestResource {
 	 * @throws CoreException
 	 *             if this resource is not accessible with the given headers, whatever the reason.
 	 */
-	private void checkOptionsAllows(Method method) throws CoreException {
+	private void checkOptionsAllows(String method) throws CoreException {
 		if (optionsResponse == null) {
 			RestOperation options = options();
 			optionsResponse = options.run();
@@ -292,8 +316,7 @@ public class RestResource {
 			String msg;
 			if (message == null) {
 				msg = TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.errorReturnedByServer,
-						getUrl(), Method.OPTIONS.getName(), Integer.valueOf(optionsResponse.getStatus()),
-						body);
+						getUrl(), METHOD_OPTIONS, Integer.valueOf(optionsResponse.getStatus()), body);
 			} else {
 				TuleapErrorPart errorPart = message.getError();
 				TuleapDebugPart debugPart = message.getDebug();
@@ -303,19 +326,18 @@ public class RestResource {
 					if (debugPart != null) {
 						msg = TuleapMylynTasksMessages.getString(
 								TuleapMylynTasksMessagesKeys.errorReturnedByServerWithDebug, serverUrl
-										+ getUrl(), Method.OPTIONS.getName(), Integer.valueOf(errorPart
-										.getCode()), errorPart.getMessage(), debugPart.getSource());
+										+ getUrl(), METHOD_OPTIONS, Integer.valueOf(errorPart.getCode()),
+								errorPart.getMessage(), debugPart.getSource());
 					} else {
 						msg = TuleapMylynTasksMessages.getString(
 								TuleapMylynTasksMessagesKeys.errorReturnedByServer, serverUrl + getUrl(),
-								Method.OPTIONS.getName(), Integer.valueOf(errorPart.getCode()), errorPart
-										.getMessage());
+								METHOD_OPTIONS, Integer.valueOf(errorPart.getCode()), errorPart.getMessage());
 					}
 				}
 			}
 			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, msg));
 		}
-		if (!headerAllows.contains(method.getName())) {
+		if (!headerAllows.contains(method) && !"*".equals(headerAllows)) { //$NON-NLS-1$
 			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
 					TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.cannotPerformOperation,
 							getUrl(), method)));

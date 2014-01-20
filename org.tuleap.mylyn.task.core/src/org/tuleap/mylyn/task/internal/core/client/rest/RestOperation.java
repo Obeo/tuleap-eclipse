@@ -15,17 +15,26 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.gson.JsonElement;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.methods.DeleteMethod;
+import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.OptionsMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.PutMethod;
+import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.restlet.data.Method;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.model.TuleapDebugPart;
 import org.tuleap.mylyn.task.internal.core.model.TuleapErrorMessage;
@@ -35,12 +44,14 @@ import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
+// CHECKSTYLE:OFF
 /**
  * Abstract RESTful operation.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
 public class RestOperation {
+	// CHECKSTYLE:ON
 
 	/**
 	 * Header key for tuleap user id.
@@ -53,8 +64,7 @@ public class RestOperation {
 	private static final String X_AUTH_TOKEN = "X-Auth-Token"; //$NON-NLS-1$
 
 	/**
-	 * String to send in the body when no data needs to be in the request body. {@code null} provokes an
-	 * exception in Restlet.
+	 * String to send in the body when no data needs to be in the request body.
 	 */
 	private static final String EMPTY_BODY = ""; //$NON-NLS-1$
 
@@ -197,55 +207,37 @@ public class RestOperation {
 	}
 
 	/**
-	 * Provides an iterable view of this operation. Use this for operation that return JSON arrays.
+	 * Provides the Method to run.
 	 * 
-	 * @return a new {@link RestOperationIterable} that wraps this operation.
+	 * @return The method to run.
 	 */
-	public Iterable<JsonElement> iterable() {
-		return new RestOperationIterable(this);
-	}
-
-	/**
-	 * The resource's URL.
-	 * 
-	 * @return The resource's URL.
-	 */
-	public String getUrl() {
-		return fullUrl;
-	}
-
-	/**
-	 * Returns the name of the HTTP method to invoke.
-	 * 
-	 * @return The name of the HTTP method to invoke.
-	 */
-	public String getMethodName() {
-		return method.getName();
-	}
-
-	/**
-	 * Computes the full URL to use to send the request, by concatenating the server address, the root API
-	 * prefix, the API version, and the URL fragment of the resource to access.
-	 * 
-	 * @return The full URL to use to send the request.
-	 */
-	public String getUrlWithQueryParameters() {
-		String url = getUrl();
-		if (!requestParameters.isEmpty()) {
-			StringBuilder queryBuilder = new StringBuilder();
-			queryBuilder.append('?');
-			for (Iterator<Entry<String, String>> entries = requestParameters.entries().iterator(); entries
-					.hasNext();) {
-				Entry<String, String> entry = entries.next();
-				queryBuilder.append(entry.getKey()).append('=').append(entry.getValue());
-				// TODO encode for HTTP !!!
-				if (entries.hasNext()) {
-					queryBuilder.append('&');
+	public HttpMethod createMethod() {
+		HttpMethod m = method.create();
+		if (m instanceof EntityEnclosingMethod) {
+			StringRequestEntity entity;
+			try {
+				if (body == null) {
+					entity = new StringRequestEntity(EMPTY_BODY, "application/json", "UTF-8");
+				} else {
+					entity = new StringRequestEntity(body, "application/json", "UTF-8");
 				}
+			} catch (UnsupportedEncodingException e) {
+				logger.log(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, "Invalid encoding"));
+				return null;
 			}
-			url += queryBuilder.toString();
+			((EntityEnclosingMethod)m).setRequestEntity(entity);
 		}
-		return url;
+		m.setPath(fullUrl);
+		for (Entry<String, String> entry : requestHeaders.entrySet()) {
+			m.addRequestHeader(entry.getKey(), entry.getValue());
+		}
+		NameValuePair[] queryParams = new NameValuePair[requestParameters.size()];
+		int i = 0;
+		for (Entry<String, String> entry : requestParameters.entries()) {
+			queryParams[i++] = new NameValuePair(entry.getKey(), entry.getValue());
+		}
+		m.setQueryString(queryParams);
+		return m;
 	}
 
 	/**
@@ -254,12 +246,6 @@ public class RestOperation {
 	 * @return The response received from the server after sending it the relevant request.
 	 */
 	public ServerResponse run() {
-		String data;
-		if (body == null) {
-			data = EMPTY_BODY;
-		} else {
-			data = body;
-		}
 		if (authenticator != null) {
 			TuleapToken token = authenticator.getToken();
 			if (token != null) {
@@ -267,8 +253,8 @@ public class RestOperation {
 				requestHeaders.put(X_AUTH_USER_ID, token.getUserId());
 			}
 		}
-		ServerResponse response = connector.sendRequest(getMethodName(), getUrlWithQueryParameters(),
-				requestHeaders, data);
+		HttpMethod httpMethod = createMethod();
+		ServerResponse response = connector.sendRequest(httpMethod);
 		if (response.getStatus() == ServerResponse.STATUS_UNAUTHORIZED) {
 			// Try to login
 			if (authenticator != null) {
@@ -278,8 +264,8 @@ public class RestOperation {
 					if (token != null) {
 						requestHeaders.put(X_AUTH_TOKEN, token.getToken());
 						requestHeaders.put(X_AUTH_USER_ID, token.getUserId());
-						response = connector.sendRequest(getMethodName(), getUrlWithQueryParameters(),
-								requestHeaders, data);
+						httpMethod = createMethod();
+						response = connector.sendRequest(httpMethod);
 					}
 				} catch (CoreException e) {
 					logger.log(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
@@ -305,6 +291,15 @@ public class RestOperation {
 	}
 
 	/**
+	 * Provides an iterable view of this operation. Use this for operation that return JSON arrays.
+	 * 
+	 * @return a new {@link RestOperationIterable} that wraps this operation.
+	 */
+	public Iterable<JsonElement> iterable() {
+		return new RestOperationIterable(this);
+	}
+
+	/**
 	 * Throws a CoreException that encapsulates useful info about a server error.
 	 * 
 	 * @param response
@@ -327,14 +322,13 @@ public class RestOperation {
 			} else {
 				if (debugPart != null) {
 					msg = TuleapMylynTasksMessages.getString(
-							TuleapMylynTasksMessagesKeys.errorReturnedByServerWithDebug,
-							getUrlWithQueryParameters(), getMethodName(), Integer
-									.valueOf(errorPart.getCode()), errorPart.getMessage(), debugPart
-									.getSource());
+							TuleapMylynTasksMessagesKeys.errorReturnedByServerWithDebug, fullUrl, method
+									.name(), Integer.valueOf(errorPart.getCode()), errorPart.getMessage(),
+							debugPart.getSource());
 				} else {
 					msg = TuleapMylynTasksMessages.getString(
-							TuleapMylynTasksMessagesKeys.errorReturnedByServer, getUrlWithQueryParameters(),
-							getMethodName(), Integer.valueOf(errorPart.getCode()), errorPart.getMessage());
+							TuleapMylynTasksMessagesKeys.errorReturnedByServer, fullUrl, method.name(),
+							Integer.valueOf(errorPart.getCode()), errorPart.getMessage());
 				}
 			}
 			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, msg));
@@ -449,7 +443,81 @@ public class RestOperation {
 	@Override
 	public String toString() {
 		StringBuilder b = new StringBuilder();
-		b.append(method.getName()).append(' ').append(fullUrl);
+		b.append(method.name()).append(' ').append(fullUrl);
 		return b.toString();
+	}
+
+	/**
+	 * HTTP Method.
+	 * 
+	 * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
+	 */
+	public enum Method {
+		/**
+		 * DELETE.
+		 */
+		DELETE {
+			@Override
+			protected HttpMethod create() {
+				return new DeleteMethod();
+			}
+		},
+
+		/**
+		 * GET.
+		 */
+		GET {
+			@Override
+			protected HttpMethod create() {
+				return new GetMethod();
+			}
+		},
+
+		/**
+		 * OPTIONS.
+		 */
+		OPTIONS {
+			@Override
+			protected HttpMethod create() {
+				return new OptionsMethod();
+			}
+		},
+
+		/**
+		 * PATCH.
+		 */
+		PATCH {
+			@Override
+			protected HttpMethod create() {
+				throw new NotImplementedException();
+			}
+		},
+
+		/**
+		 * POST.
+		 */
+		POST {
+			@Override
+			protected HttpMethod create() {
+				return new PostMethod();
+			}
+		},
+
+		/**
+		 * PUT.
+		 */
+		PUT {
+			@Override
+			protected HttpMethod create() {
+				return new PutMethod();
+			}
+		};
+
+		/**
+		 * Instantiates the relevant method to use to run the HTTP communication.
+		 * 
+		 * @return A new instance of {@link HttpMethod} of the relevant type.
+		 */
+		protected abstract HttpMethod create();
 	}
 }
