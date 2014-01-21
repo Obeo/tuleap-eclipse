@@ -12,8 +12,6 @@ package org.tuleap.mylyn.task.internal.tests.server;
 
 import com.google.gson.Gson;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -27,8 +25,6 @@ import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestResourceFactory;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestConnector;
-import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
-import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapGsonProvider;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.tests.AbstractTuleapTests;
@@ -88,33 +84,6 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 		} catch (CoreException e) {
 			assertEquals(IStatus.ERROR, e.getStatus().getSeverity());
 			assertEquals("Error 401: Unauthorized", e.getMessage()); //$NON-NLS-1$ 
-		}
-	}
-
-	/**
-	 * Test of backlog items retrieval.
-	 */
-	@Test
-	public void testGetMilestones() {
-		TestLogger logger = new TestLogger();
-		TuleapRestConnector restConnector = new TuleapRestConnector(location, logger);
-		RestResourceFactory restResourceFactory = new RestResourceFactory("v3.14", restConnector, gson,
-				new TestLogger());
-		TuleapRestClient tuleapServer = new TuleapRestClient(restResourceFactory, gson, this.repository);
-		try {
-			List<TuleapMilestone> milestoneItems = tuleapServer.getSubMilestones(200, null);
-			assertEquals(3, milestoneItems.size());
-
-			List<TuleapBacklogItem> backlogItems = tuleapServer.getMilestoneBacklog(200, null);
-			assertEquals(0, backlogItems.size());
-
-			milestoneItems = tuleapServer.getSubMilestones(201, null);
-			assertEquals(0, milestoneItems.size());
-
-			backlogItems = tuleapServer.getMilestoneBacklog(201, null);
-			assertEquals(2, backlogItems.size());
-		} catch (CoreException e) {
-			fail(e.getMessage());
 		}
 	}
 

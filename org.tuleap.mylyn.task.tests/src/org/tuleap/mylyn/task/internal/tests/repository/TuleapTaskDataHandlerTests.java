@@ -12,9 +12,7 @@ package org.tuleap.mylyn.task.internal.tests.repository;
 
 import com.google.common.collect.Sets;
 
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -40,8 +38,6 @@ import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifactWithComment;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
-import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
-import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapTaskDataHandler;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapTaskMapping;
@@ -225,44 +221,12 @@ public class TuleapTaskDataHandlerTests {
 		final TuleapArtifact tuleapArtifact = new TuleapArtifact(artifactId, projectRef, "", "", "",
 				new Date(), new Date());
 		tuleapArtifact.setTracker(trackerRef);
-		final TuleapMilestone tuleapMilestone = new TuleapMilestone(milestoneId, projectRef, "", "", "",
-				new Date(), new Date());
-		final TuleapBacklogItem tuleapBacklogItem = new TuleapBacklogItem(backlogItemId, projectRef, "", "",
-				"", new Date(), new Date());
 
 		// Mock rest client
 		final TuleapRestClient tuleapRestClient = new TuleapRestClient(null, null, null) {
 			@Override
-			public TuleapMilestone getMilestone(int id, IProgressMonitor monitor) throws CoreException {
-				return tuleapMilestone;
-			}
-
-			@Override
-			public TuleapBacklogItem getBacklogItem(int id, IProgressMonitor monitor) {
-				return tuleapBacklogItem;
-			}
-
-			@Override
 			public TuleapArtifact getArtifact(int id, IProgressMonitor monitor) throws CoreException {
 				return tuleapArtifact;
-			}
-
-			@Override
-			public List<TuleapBacklogItem> getMilestoneBacklog(int miId, IProgressMonitor monitor)
-					throws CoreException {
-				return Collections.emptyList();
-			}
-
-			@Override
-			public List<TuleapBacklogItem> getMilestoneContent(int miId, IProgressMonitor monitor)
-					throws CoreException {
-				return Collections.emptyList();
-			}
-
-			@Override
-			public List<TuleapMilestone> getSubMilestones(int miId, IProgressMonitor monitor)
-					throws CoreException {
-				return Collections.emptyList();
 			}
 		};
 
@@ -349,12 +313,6 @@ public class TuleapTaskDataHandlerTests {
 	private void testPostTaskData(TaskData taskData, final TuleapTaskId taskId, ResponseKind responseKind) {
 		// Mock rest client
 		final TuleapRestClient tuleapRestClient = new TuleapRestClient(null, null, null) {
-			@Override
-			public void updateMilestoneBacklog(int miId, List<TuleapBacklogItem> backlogItems,
-					IProgressMonitor monitor) throws CoreException {
-				// Nothing to do here
-			}
-
 			@Override
 			public TuleapTaskId createArtifact(TuleapArtifact artifact, IProgressMonitor monitor)
 					throws CoreException {

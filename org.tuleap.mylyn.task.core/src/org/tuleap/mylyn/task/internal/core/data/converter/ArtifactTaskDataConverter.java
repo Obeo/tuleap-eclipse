@@ -181,10 +181,10 @@ public class ArtifactTaskDataConverter {
 	}
 
 	/**
-	 * Fills the task data related to the given milestone POJO.
+	 * Fills a given {@link TaskData} with a given artifact data.
 	 * 
 	 * @param taskData
-	 *            the task data to fill/update with the given milestone.
+	 *            the task data to fill/update with the given artifact.
 	 * @param tuleapArtifact
 	 *            The artifact to use to populate the task data
 	 * @param monitor

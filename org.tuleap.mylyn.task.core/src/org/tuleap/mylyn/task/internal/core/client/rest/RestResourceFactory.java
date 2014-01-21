@@ -153,28 +153,6 @@ public final class RestResourceFactory {
 	}
 
 	/**
-	 * Provides access to the {code /milestones/:id} HTTP resource.
-	 * 
-	 * @param milestoneId
-	 *            Id of the milestone.
-	 * @return A resource that gives access to the {code /milestones/:id} HTTP resource.
-	 */
-	public RestResource milestone(int milestoneId) {
-		return resource(GET | PUT, URL.MILESTONES, Integer.toString(milestoneId));
-	}
-
-	/**
-	 * Provides access to the {code /backlog_items/:id} HTTP resource.
-	 * 
-	 * @param backlogItemId
-	 *            Id of the backlogItem.
-	 * @return A resource that gives access to the {code /backlog_items/:id} HTTP resource.
-	 */
-	public RestResource backlogItem(int backlogItemId) {
-		return resource(GET | PUT, URL.BACKLOG_ITEMS, Integer.toString(backlogItemId));
-	}
-
-	/**
 	 * Provides access to the {code /projects/:projectId/trackers} HTTP resource.
 	 * 
 	 * @param projectId
@@ -197,18 +175,6 @@ public final class RestResourceFactory {
 	}
 
 	/**
-	 * Provides access to the {code /projects/:id/milestones} HTTP resource to get a project top-level
-	 * milestones.
-	 * 
-	 * @param projectId
-	 *            the project id
-	 * @return A resource that gives access to the {code /projects/:id/milestones} HTTP resource.
-	 */
-	public RestResource projectMilestones(int projectId) {
-		return resource(GET, URL.PROJECTS, Integer.toString(projectId), URL.MILESTONES);
-	}
-
-	/**
 	 * Provides access to the {code /projects/:id/user_groups} HTTP resource to get a project user groups.
 	 * 
 	 * @param projectId
@@ -228,72 +194,6 @@ public final class RestResourceFactory {
 	 */
 	public RestResource userGroupUsers(int userGroupId) {
 		return resource(GET, URL.USER_GROUPS, Integer.toString(userGroupId), URL.USERS);
-	}
-
-	/**
-	 * Provides access to the {code /projects/:id/backlog} HTTP resource to get a project backlog.
-	 * 
-	 * @param projectId
-	 *            the project id
-	 * @return A resource that gives access to the {code /projects/:id/backlog} HTTP resource.
-	 */
-	public RestResource projectBacklog(int projectId) {
-		return resource(GET | PUT, URL.PROJECTS, Integer.toString(projectId), URL.BACKLOG);
-	}
-
-	/**
-	 * Provides access to the {code /milestones/:id/milestones} HTTP resource.
-	 * 
-	 * @param milestoneId
-	 *            the milestone id
-	 * @return A resource that gives access to the {code /milestones/:id/milestones} HTTP resource.
-	 */
-	public RestResource milestoneSubmilestones(int milestoneId) {
-		return resource(GET | PUT, URL.MILESTONES, Integer.toString(milestoneId), URL.MILESTONES);
-	}
-
-	/**
-	 * Provides access to the {code /milestones/:id/backlog} HTTP resource.
-	 * 
-	 * @param milestoneId
-	 *            the milestone id
-	 * @return A resource that gives access to the {code /milestones/:id/backlog} HTTP resource.
-	 */
-	public RestResource milestoneBacklog(int milestoneId) {
-		return resource(GET | PUT, URL.MILESTONES, Integer.toString(milestoneId), URL.BACKLOG);
-	}
-
-	/**
-	 * Provides access to the {code /milestones/:id/content} HTTP resource.
-	 * 
-	 * @param milestoneId
-	 *            the milestone id
-	 * @return A resource that gives access to the {code /milestones/:id/content} HTTP resource.
-	 */
-	public RestResource milestoneContent(int milestoneId) {
-		return resource(GET | PUT, URL.MILESTONES, Integer.toString(milestoneId), URL.CONTENT);
-	}
-
-	/**
-	 * Provides access to the {code /milestones/:id/cardwall} HTTP resource.
-	 * 
-	 * @param milestoneId
-	 *            the milestone id
-	 * @return A resource that gives access to the {code /milestones/:id/cardwall} HTTP resource.
-	 */
-	public RestResource milestoneCardwall(int milestoneId) {
-		return resource(GET, URL.MILESTONES, Integer.toString(milestoneId), URL.CARDWALL);
-	}
-
-	/**
-	 * Provides access to the {code /cards/:id} HTTP resource.
-	 * 
-	 * @param cardId
-	 *            the card id
-	 * @return A resource that gives access to the {code /cards/:id} HTTP resource.
-	 */
-	public RestResource card(String cardId) {
-		return resource(GET | PUT, URL.CARDS, cardId);
 	}
 
 	/**

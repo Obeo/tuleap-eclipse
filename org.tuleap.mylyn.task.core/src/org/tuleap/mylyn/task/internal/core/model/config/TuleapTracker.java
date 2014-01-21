@@ -52,7 +52,7 @@ public class TuleapTracker implements Serializable {
 	private Map<Integer, TuleapTracker> childrenTrackers = new LinkedHashMap<Integer, TuleapTracker>();
 
 	/**
-	 * The identifier of the configured object (tracker, backlogItem type, milestone type, card type).
+	 * The identifier of the tracker.
 	 */
 	private int identifier;
 

@@ -23,12 +23,14 @@ import java.util.Set;
 
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field;
+import org.eclipse.mylyn.tasks.core.data.DefaultTaskSchema;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.tuleap.mylyn.task.agile.core.data.AbstractTaskMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
@@ -52,7 +54,7 @@ import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public class TuleapArtifactMapper extends AbstractTaskMapper {
+public class TuleapArtifactMapper extends TaskMapper {
 
 	/**
 	 * The identifier of the project name task attribute.
@@ -63,16 +65,6 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * The identifier of the tracker id task attribute.
 	 */
 	public static final String TRACKER_ID = "mtc_tracker_id"; //$NON-NLS-1$
-
-	/**
-	 * The identifier of the parent id task attribute.
-	 */
-	public static final String PARENT_ID = "mtc_parent_id"; //$NON-NLS-1$
-
-	/**
-	 * The identifier of the displayed parent id task attribute.
-	 */
-	public static final String PARENT_DISPLAY_ID = "mtc_parent_display_id"; //$NON-NLS-1$
 
 	/**
 	 * The invalid status id.
@@ -124,7 +116,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 		createTaskURLAttribute();
 
 		// Default attributes
-		TaskAttribute root = taskData.getRoot();
+		TaskAttribute root = getTaskData().getRoot();
 		Collection<AbstractTuleapField> fields = tracker.getFields();
 		for (AbstractTuleapField abstractTuleapField : fields) {
 			if (abstractTuleapField.needsTaskAttributeForInitialization()) {
@@ -140,7 +132,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * Creates the read-only task attribute representing the task key.
 	 */
 	private void createTaskKeyAttribute() {
-		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.TASK_KEY);
+		TaskAttribute attribute = getTaskData().getRoot().createMappedAttribute(TaskAttribute.TASK_KEY);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
 		metaData.setType(TaskAttribute.TYPE_SHORT_TEXT);
 		metaData.setReadOnly(true);
@@ -150,7 +142,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * Creates the read-only task attribute representing the task url.
 	 */
 	private void createTaskURLAttribute() {
-		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.TASK_URL);
+		TaskAttribute attribute = getTaskData().getRoot().createMappedAttribute(TaskAttribute.TASK_URL);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
 		metaData.setType(TaskAttribute.TYPE_SHORT_TEXT);
 		metaData.setReadOnly(true);
@@ -160,7 +152,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * Creates the task attribute representing the creation date.
 	 */
 	private void createCreationDateTaskAttribute() {
-		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.DATE_CREATION);
+		TaskAttribute attribute = getTaskData().getRoot().createMappedAttribute(TaskAttribute.DATE_CREATION);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
 		metaData.setLabel(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.creationDateLabel));
 		metaData.setType(TaskAttribute.TYPE_DATE);
@@ -170,7 +162,8 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * Creates the task attribute representing the last update date.
 	 */
 	private void createLastUpdateDateTaskAttribute() {
-		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.DATE_MODIFICATION);
+		TaskAttribute attribute = getTaskData().getRoot().createMappedAttribute(
+				TaskAttribute.DATE_MODIFICATION);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
 		metaData.setLabel(TuleapMylynTasksMessages
 				.getString(TuleapMylynTasksMessagesKeys.lastModificationDateLabel));
@@ -181,7 +174,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * Creates the task attribute representing the author of the task.
 	 */
 	private void createSubmittedByTaskAttribute() {
-		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.USER_REPORTER);
+		TaskAttribute attribute = getTaskData().getRoot().createMappedAttribute(TaskAttribute.USER_REPORTER);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
 		metaData.setType(TaskAttribute.TYPE_PERSON);
 		metaData.setReadOnly(true);
@@ -191,7 +184,8 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * Creates the task attribute representing the completion date.
 	 */
 	private void createCompletionDateTaskAttribute() {
-		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.DATE_COMPLETION);
+		TaskAttribute attribute = getTaskData().getRoot()
+				.createMappedAttribute(TaskAttribute.DATE_COMPLETION);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
 		metaData.setLabel(TuleapMylynTasksMessages
 				.getString(TuleapMylynTasksMessagesKeys.completionDateLabel));
@@ -204,7 +198,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * @return the newly created task attribute
 	 */
 	private TaskAttribute createNewCommentTaskAttribute() {
-		TaskAttribute attribute = taskData.getRoot().createAttribute(TaskAttribute.COMMENT_NEW);
+		TaskAttribute attribute = getTaskData().getRoot().createAttribute(TaskAttribute.COMMENT_NEW);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
 		metaData.setLabel(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.newCommentLabel));
 		metaData.setType(TaskAttribute.TYPE_LONG_RICH_TEXT);
@@ -215,7 +209,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * Creates the task attribute representing the task kind.
 	 */
 	private void createTaskKindTaskAttribute() {
-		TaskAttribute attribute = taskData.getRoot().createAttribute(TaskAttribute.TASK_KIND);
+		TaskAttribute attribute = getTaskData().getRoot().createAttribute(TaskAttribute.TASK_KIND);
 		String name = tracker.getLabel();
 		if (name != null) {
 			attribute.setValue(name);
@@ -233,11 +227,11 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 */
 	private void setTrackerId(int trackerId) {
 		// should not appear in the attribute part so no task attribute type!
-		TaskAttribute trackerIdAtt = taskData.getRoot().getMappedAttribute(TRACKER_ID);
+		TaskAttribute trackerIdAtt = getTaskData().getRoot().getMappedAttribute(TRACKER_ID);
 		if (trackerIdAtt == null) {
-			trackerIdAtt = taskData.getRoot().createMappedAttribute(TRACKER_ID);
+			trackerIdAtt = getTaskData().getRoot().createMappedAttribute(TRACKER_ID);
 		}
-		taskData.getAttributeMapper().setIntegerValue(trackerIdAtt, Integer.valueOf(trackerId));
+		getTaskData().getAttributeMapper().setIntegerValue(trackerIdAtt, Integer.valueOf(trackerId));
 	}
 
 	/**
@@ -247,11 +241,11 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 *            The identifier of the project
 	 */
 	private void setProjectId(int projectId) {
-		TaskAttribute projectIdAtt = taskData.getRoot().getMappedAttribute(PROJECT_ID);
+		TaskAttribute projectIdAtt = getTaskData().getRoot().getMappedAttribute(PROJECT_ID);
 		if (projectIdAtt == null) {
-			projectIdAtt = taskData.getRoot().createMappedAttribute(PROJECT_ID);
+			projectIdAtt = getTaskData().getRoot().createMappedAttribute(PROJECT_ID);
 		}
-		taskData.getAttributeMapper().setIntegerValue(projectIdAtt, Integer.valueOf(projectId));
+		getTaskData().getAttributeMapper().setIntegerValue(projectIdAtt, Integer.valueOf(projectId));
 	}
 
 	/**
@@ -293,6 +287,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * @param taskKey
 	 *            The task key
 	 */
+	@Override
 	public void setTaskKey(String taskKey) {
 		TaskAttribute taskKeyAtt = getMappedAttribute(TaskAttribute.TASK_KEY);
 		taskKeyAtt.setValue(taskKey);
@@ -304,20 +299,20 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * @return The identifier of the artifact
 	 */
 	public TuleapTaskId getTaskId() {
-		if (this.taskData.isNew()) {
+		if (this.getTaskData().isNew()) {
 			int projectId = TuleapTaskId.IRRELEVANT_ID;
-			TaskAttribute projectIdAtt = taskData.getRoot().getMappedAttribute(PROJECT_ID);
+			TaskAttribute projectIdAtt = getTaskData().getRoot().getMappedAttribute(PROJECT_ID);
 			if (projectIdAtt != null) {
-				projectId = taskData.getAttributeMapper().getIntegerValue(projectIdAtt).intValue();
+				projectId = getTaskData().getAttributeMapper().getIntegerValue(projectIdAtt).intValue();
 			}
 			int trackerId = TuleapTaskId.IRRELEVANT_ID;
-			TaskAttribute trackerIdAtt = taskData.getRoot().getMappedAttribute(TRACKER_ID);
+			TaskAttribute trackerIdAtt = getTaskData().getRoot().getMappedAttribute(TRACKER_ID);
 			if (trackerIdAtt != null) {
-				trackerId = taskData.getAttributeMapper().getIntegerValue(trackerIdAtt).intValue();
+				trackerId = getTaskData().getAttributeMapper().getIntegerValue(trackerIdAtt).intValue();
 			}
 			return TuleapTaskId.forNewArtifact(projectId, trackerId);
 		}
-		return TuleapTaskId.forName(taskData.getTaskId());
+		return TuleapTaskId.forName(getTaskData().getTaskId());
 	}
 
 	/**
@@ -325,6 +320,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * 
 	 * @return The task key or null if it cannot be found.
 	 */
+	@Override
 	public String getTaskKey() {
 		TaskAttribute taskKey = getMappedAttribute(TaskAttribute.TASK_KEY);
 		return taskKey.getValue();
@@ -336,10 +332,11 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * @param url
 	 *            the url of the task
 	 */
+	@Override
 	public void setTaskUrl(String url) {
 		if (url != null) {
 			TaskAttribute attribute = getWriteableAttribute(TaskAttribute.TASK_URL, TaskAttribute.TYPE_URL);
-			taskData.getAttributeMapper().setValue(attribute, url);
+			getTaskData().getAttributeMapper().setValue(attribute, url);
 		}
 	}
 
@@ -348,10 +345,11 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * 
 	 * @return The wrapped task's URL
 	 */
+	@Override
 	public String getTaskUrl() {
 		TaskAttribute attribute = getMappedAttribute(TaskAttribute.TASK_URL);
 		if (attribute != null) {
-			return taskData.getAttributeMapper().getValue(attribute);
+			return getTaskData().getAttributeMapper().getValue(attribute);
 		}
 		return ""; //$NON-NLS-1$
 	}
@@ -362,10 +360,11 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * @param value
 	 *            The value of the summary
 	 */
+	@Override
 	public void setSummary(String value) {
-		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY);
+		TaskAttribute attribute = getTaskData().getRoot().getMappedAttribute(TaskAttribute.SUMMARY);
 		if (attribute != null && value != null) {
-			taskData.getAttributeMapper().setValue(attribute, value);
+			getTaskData().getAttributeMapper().setValue(attribute, value);
 		}
 	}
 
@@ -374,10 +373,11 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * 
 	 * @return The completion date if it exists or null.
 	 */
+	@Override
 	public Date getCompletionDate() {
 		TaskAttribute completionDateAttribute = getMappedAttribute(TaskAttribute.DATE_COMPLETION);
 		if (completionDateAttribute != null) {
-			return taskData.getAttributeMapper().getDateValue(completionDateAttribute);
+			return getTaskData().getAttributeMapper().getDateValue(completionDateAttribute);
 		}
 		return null;
 	}
@@ -388,10 +388,11 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * @param completionDate
 	 *            The completion date
 	 */
+	@Override
 	public void setCompletionDate(Date completionDate) {
 		TaskAttribute completionDateAttribute = getMappedAttribute(TaskAttribute.DATE_COMPLETION);
 		if (completionDateAttribute != null) {
-			taskData.getAttributeMapper().setDateValue(completionDateAttribute, completionDate);
+			getTaskData().getAttributeMapper().setDateValue(completionDateAttribute, completionDate);
 		}
 	}
 
@@ -400,10 +401,11 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * 
 	 * @return The latest modification date if it exists or null.
 	 */
+	@Override
 	public Date getModificationDate() {
 		TaskAttribute modificationDateAttribute = getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
 		if (modificationDateAttribute != null) {
-			return taskData.getAttributeMapper().getDateValue(modificationDateAttribute);
+			return getTaskData().getAttributeMapper().getDateValue(modificationDateAttribute);
 		}
 		return null;
 	}
@@ -414,10 +416,11 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * @param completionDate
 	 *            The latest modification date
 	 */
+	@Override
 	public void setModificationDate(Date completionDate) {
 		TaskAttribute modificationDateAttribute = getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
 		if (modificationDateAttribute != null) {
-			taskData.getAttributeMapper().setDateValue(modificationDateAttribute, completionDate);
+			getTaskData().getAttributeMapper().setDateValue(modificationDateAttribute, completionDate);
 		}
 	}
 
@@ -426,10 +429,11 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * 
 	 * @return The creation date if it exists or null.
 	 */
+	@Override
 	public Date getCreationDate() {
 		TaskAttribute creationDateAttribute = getMappedAttribute(TaskAttribute.DATE_CREATION);
 		if (creationDateAttribute != null) {
-			return taskData.getAttributeMapper().getDateValue(creationDateAttribute);
+			return getTaskData().getAttributeMapper().getDateValue(creationDateAttribute);
 		}
 		return null;
 	}
@@ -440,10 +444,11 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * @param creationDate
 	 *            The creation date
 	 */
+	@Override
 	public void setCreationDate(Date creationDate) {
 		TaskAttribute creationDateAttribute = getMappedAttribute(TaskAttribute.DATE_CREATION);
 		if (creationDateAttribute != null) {
-			taskData.getAttributeMapper().setDateValue(creationDateAttribute, creationDate);
+			getTaskData().getAttributeMapper().setDateValue(creationDateAttribute, creationDate);
 		}
 	}
 
@@ -476,7 +481,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	public void setInitialEffort(int initialEffort, int fieldId) {
 		TaskAttribute attribute = getMappedAttributeById(fieldId);
 		if (attribute != null) {
-			taskData.getAttributeMapper().setIntegerValue(attribute, Integer.valueOf(initialEffort));
+			getTaskData().getAttributeMapper().setIntegerValue(attribute, Integer.valueOf(initialEffort));
 		}
 	}
 
@@ -488,7 +493,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 */
 	public void addComment(TuleapElementComment tuleapArtifactComment) {
 		int count = getNumberOfCommentAttributes();
-		TaskAttribute attribute = taskData.getRoot().createAttribute(
+		TaskAttribute attribute = getTaskData().getRoot().createAttribute(
 				TaskAttribute.PREFIX_COMMENT + String.valueOf(count));
 		attribute.getMetaData().defaults().setReadOnly(true).setType(TaskAttribute.TYPE_COMMENT);
 		attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID,
@@ -521,7 +526,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 *            The attachment
 	 */
 	public void addAttachment(String tuleapFieldName, AttachmentValue tuleapAttachment) {
-		TaskAttribute attribute = taskData.getRoot().createAttribute(
+		TaskAttribute attribute = getTaskData().getRoot().createAttribute(
 				TaskAttribute.PREFIX_ATTACHMENT + tuleapFieldName + "---" //$NON-NLS-1$
 						+ tuleapAttachment.getAttachmentId());
 		attribute.getMetaData().defaults().setType(TaskAttribute.TYPE_ATTACHMENT);
@@ -530,7 +535,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 
 		TuleapUser person = tuleapAttachment.getPerson();
 		if (person != null) {
-			IRepositoryPerson repositoryPerson = taskData.getAttributeMapper().getTaskRepository()
+			IRepositoryPerson repositoryPerson = getTaskData().getAttributeMapper().getTaskRepository()
 					.createPerson(person.getEmail());
 			repositoryPerson.setName(person.getUserName());
 			taskAttachment.setAuthor(repositoryPerson);
@@ -548,7 +553,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * @return the number of comment task attributes present in the task data.
 	 */
 	private int getNumberOfCommentAttributes() {
-		Set<String> keys = taskData.getRoot().getAttributes().keySet();
+		Set<String> keys = getTaskData().getRoot().getAttributes().keySet();
 		int count = 0;
 		for (String key : keys) {
 			if (key.startsWith(TaskAttribute.PREFIX_COMMENT)) {
@@ -626,7 +631,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 		List<AbstractFieldValue> result = new ArrayList<AbstractFieldValue>();
 		// For the moment, we return all known values.
 		// Later, an improvement will be to return only those values that have changed.
-		for (TaskAttribute attribute : taskData.getRoot().getAttributes().values()) {
+		for (TaskAttribute attribute : getTaskData().getRoot().getAttributes().values()) {
 			Collection<AbstractTuleapField> fields = this.tracker.getFields();
 			for (AbstractTuleapField field : fields) {
 				int fieldId = field.getIdentifier();
@@ -705,7 +710,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * @return The mapped attribute with the given id or {@code null} if it doesn't exist.
 	 */
 	private TaskAttribute getMappedAttributeById(int fieldId) {
-		return taskData.getRoot().getMappedAttribute(String.valueOf(fieldId));
+		return getTaskData().getRoot().getMappedAttribute(String.valueOf(fieldId));
 	}
 
 	/**
@@ -714,7 +719,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * @return The status task attribute.
 	 */
 	private TaskAttribute getStatusTaskAttribute() {
-		return taskData.getRoot().getAttribute(TaskAttribute.STATUS);
+		return getTaskData().getRoot().getAttribute(TaskAttribute.STATUS);
 	}
 
 	/**
@@ -722,11 +727,15 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * 
 	 * @return the status of the task.
 	 */
-	public int getStatus() {
-		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
-		if (attribute != null && attribute.getValue() != null) {
+	public int getStatusAsInt() {
+		String status = null;
+		TaskAttribute attribute = getTaskData().getRoot().getMappedAttribute(TaskAttribute.STATUS);
+		if (attribute != null) {
+			status = getTaskData().getAttributeMapper().getValue(attribute);
+		}
+		if (status != null) {
 			try {
-				return Integer.parseInt(attribute.getValue());
+				return Integer.parseInt(status);
 			} catch (NumberFormatException e) {
 				// do not log
 			}
@@ -735,79 +744,69 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	}
 
 	/**
-	 * Provides access to the parent id if it exists.
+	 * Returns the existing mapped attribute with the given id, or {@code null} if an attribute with this id
+	 * doesn't exist.
 	 * 
-	 * @return The parent id if it exists or null.
+	 * @param attributeKey
+	 *            The task attribute id
+	 * @return The existing mapped attribute, or null if it doesn't exist (or is not mapped)
 	 */
-	public String getParentId() {
-		TaskAttribute attribute = getMappedAttribute(PARENT_ID);
-		if (attribute != null) {
-			return taskData.getAttributeMapper().getValue(attribute);
-		}
-		return null;
+	protected TaskAttribute getMappedAttribute(String attributeKey) {
+		return getTaskData().getRoot().getMappedAttribute(attributeKey);
 	}
 
 	/**
-	 * Sets the parent Id in the relevant task attribute.
+	 * Returns the existing mapped attribute with the given id, or {@code null} if an attribute with this id
+	 * doesn't exist.
 	 * 
-	 * @param parentId
-	 *            The parent Id
+	 * @param attributeKey
+	 *            The task attribute id
+	 * @return The existing mapped attribute, or null if it doesn't exist (or is not mapped)
 	 */
-	public void setParentId(String parentId) {
-		if (parentId == null) {
-			return;
-		}
-		TaskAttribute att = taskData.getRoot().getMappedAttribute(PARENT_ID);
-		String oldValue = null;
-		if (att == null) {
-			att = taskData.getRoot().createMappedAttribute(PARENT_ID);
-			att.getMetaData().setType(TaskAttribute.TYPE_SHORT_RICH_TEXT);
-			att.getMetaData().setReadOnly(true);
+	protected TaskAttribute getMappedAttribute(int attributeKey) {
+		return getTaskData().getRoot().getMappedAttribute(String.valueOf(attributeKey));
+	}
+
+	/**
+	 * Creates the attribute with the given key and the given type under the root of the task data.
+	 * 
+	 * @param attributeKey
+	 *            The key of the attribute
+	 * @param type
+	 *            The type of the attribute
+	 * @return The attribute with the given key and the given type under the root of the task data
+	 */
+	protected TaskAttribute createAttribute(String attributeKey, String type) {
+		TaskAttribute attribute;
+		Field field = DefaultTaskSchema.getField(attributeKey);
+		if (field != null) {
+			attribute = field.createAttribute(getTaskData().getRoot());
 		} else {
-			oldValue = att.getValue();
+			attribute = getTaskData().getRoot().createMappedAttribute(attributeKey);
+			if (type != null) {
+				attribute.getMetaData().defaults().setType(type);
+			}
 		}
-		if (oldValue == null || !oldValue.equals(parentId)) {
-			att.setValue(parentId);
-		}
+		return attribute;
 	}
 
 	/**
-	 * Provides access to the parent display id if it exists.
+	 * Returns the writeable attribute with the given key and the given type.
+	 * <p>
+	 * If an attribute with the given key does not exists, a new one will be created.
+	 * </p>
 	 * 
-	 * @return The parent display id if it exists or null.
+	 * @param attributeKey
+	 *            The key of the attribute
+	 * @param type
+	 *            The type of the attribute
+	 * @return The writeable attribute with the given key and the given type
 	 */
-	public String getParentDisplayId() {
-		TaskAttribute attribute = getMappedAttribute(PARENT_DISPLAY_ID);
-		if (attribute != null) {
-			return taskData.getAttributeMapper().getValue(attribute);
+	protected TaskAttribute getWriteableAttribute(String attributeKey, String type) {
+		TaskAttribute attribute = getTaskData().getRoot().getMappedAttribute(attributeKey);
+		if (attribute == null) {
+			attribute = createAttribute(attributeKey, type);
 		}
-		return null;
-	}
-
-	/**
-	 * Sets the parent display Id in the relevant task attribute.
-	 * 
-	 * @param parentDisplayId
-	 *            The parent display Id
-	 */
-	public void setParentDisplayId(String parentDisplayId) {
-		if (parentDisplayId == null) {
-			return;
-		}
-		TaskAttribute att = taskData.getRoot().getMappedAttribute(PARENT_DISPLAY_ID);
-		String oldValue = null;
-		if (att == null) {
-			att = taskData.getRoot().createMappedAttribute(PARENT_DISPLAY_ID);
-			att.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
-			att.getMetaData().setType(TaskAttribute.TYPE_SHORT_RICH_TEXT);
-			att.getMetaData().setLabel(
-					TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.parentLabel));
-			att.getMetaData().setReadOnly(true);
-		} else {
-			oldValue = att.getValue();
-		}
-		if (oldValue == null || !oldValue.equals(parentDisplayId)) {
-			att.setValue(parentDisplayId);
-		}
+		return attribute;
 	}
 }

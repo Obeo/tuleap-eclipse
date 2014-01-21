@@ -24,22 +24,17 @@ import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifactWithComment;
-import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCard;
-import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCardwall;
-import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.serializer.ArtifactLinkFieldValueAdapter;
 import org.tuleap.mylyn.task.internal.core.serializer.AttachmentFieldValueSerializer;
 import org.tuleap.mylyn.task.internal.core.serializer.BoundFieldValueSerializer;
 import org.tuleap.mylyn.task.internal.core.serializer.LiteralFieldValueSerializer;
 import org.tuleap.mylyn.task.internal.core.serializer.TuleapArtifactSerializer;
 import org.tuleap.mylyn.task.internal.core.serializer.TuleapArtifactWithCommentSerializer;
-import org.tuleap.mylyn.task.internal.core.serializer.TuleapCardSerializer;
-import org.tuleap.mylyn.task.internal.core.serializer.TuleapMilestoneSerializer;
 
 /**
  * Utility class to configure the Gson instance(s) used by the connector for Tuleap.
  * 
- * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
+ * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
 public final class TuleapGsonProvider {
 
@@ -68,10 +63,6 @@ public final class TuleapGsonProvider {
 	private static GsonBuilder defaultBuilder() {
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(TuleapArtifact.class, new TuleapArtifactDeserializer());
-		gsonBuilder.registerTypeAdapter(TuleapCardwall.class, new TuleapCardwallDeserializer());
-		gsonBuilder.registerTypeAdapter(TuleapCard.class, new TuleapCardDeserializer());
-		gsonBuilder.registerTypeAdapter(TuleapCard.class, new TuleapCardSerializer());
-		gsonBuilder.registerTypeAdapter(TuleapMilestone.class, new TuleapMilestoneSerializer());
 		gsonBuilder.registerTypeAdapter(TuleapTracker.class, new TuleapTrackerDeserializer());
 		gsonBuilder.registerTypeAdapter(TuleapWorkflowTransition.class,
 				new TuleapWorkflowTransitionDeserializer());

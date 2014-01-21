@@ -17,7 +17,6 @@ Require-Bundle: javax.xml.rpc;bundle-version="1.1.0",
  javax.activation,
  javax.mail,
  javax.wsdl,
- org.tuleap.mylyn.task.agile.core;bundle-version="1.0.0",
  com.google.gson;bundle-version="2.1.0",
  com.google.guava;bundle-version="[11.0.0,12.0.0)"
 Export-Package: org.tuleap.mylyn.task.internal.core;x-friends:="org.tuleap.mylyn.task.tests",
@@ -30,7 +29,6 @@ Export-Package: org.tuleap.mylyn.task.internal.core;x-friends:="org.tuleap.mylyn
  org.tuleap.mylyn.task.internal.core.model.config;x-friends:="org.tuleap.mylyn.task.ui,org.tuleap.mylyn.task.tests",
  org.tuleap.mylyn.task.internal.core.model.config.field;x-friends:="org.tuleap.mylyn.task.ui,org.tuleap.mylyn.task.tests",
  org.tuleap.mylyn.task.internal.core.model.data;x-friends:="org.tuleap.mylyn.task.ui,org.tuleap.mylyn.task.tests",
- org.tuleap.mylyn.task.internal.core.model.data.agile;x-friends:="org.tuleap.mylyn.task.ui,org.tuleap.mylyn.task.tests",
  org.tuleap.mylyn.task.internal.core.parser;x-friends:="org.tuleap.mylyn.task.ui,org.tuleap.mylyn.task.tests",
  org.tuleap.mylyn.task.internal.core.repository;x-friends:="org.tuleap.mylyn.task.ui,org.tuleap.mylyn.task.tests",
  org.tuleap.mylyn.task.internal.core.serializer;x-internal:=true,
@@ -39,4 +37,3 @@ Export-Package: org.tuleap.mylyn.task.internal.core;x-friends:="org.tuleap.mylyn
  org.tuleap.mylyn.task.internal.core.wsdl.soap.v1;x-friends:="org.tuleap.mylyn.task.tests",
  org.tuleap.mylyn.task.internal.core.wsdl.soap.v2;x-friends:="org.tuleap.mylyn.task.tests"
 Bundle-Activator: org.tuleap.mylyn.task.internal.core.TuleapCoreActivator
-Service-Component: OSGI-INF/component.xml

@@ -173,80 +173,25 @@ public interface ITuleapConstants {
 	String TYPE = "type"; //$NON-NLS-1$
 
 	/**
-	 * The key used to retrieve the start date of the milestone.
+	 * The key used to retrieve a start date.
 	 */
 	String START_DATE = "start_date"; //$NON-NLS-1$
 
 	/**
-	 * The key used to retrieve the duration of the milestone.
+	 * The key used to retrieve a duration.
 	 */
 	String END_DATE = "end_date"; //$NON-NLS-1$
 
 	/**
-	 * The key used to retrieve the capacity of the milestone.
-	 */
-	String CAPACITY = "capacity"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the initial effort of the backlogItem.
-	 */
-	String INITIAL_EFFORT = "initial_effort"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the color of a cardwall column.
-	 */
-	String COLOR = "color"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the accent color of a card.
-	 */
-	String ACCENT_COLOR = "accent_color"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the column identifier of the card.
-	 */
-	String COLUMN_ID = "column_id"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the columns of the cardwall.
-	 */
-	String COLUMNS = "columns"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the swimlanes of the cardwall.
-	 */
-	String SWIMLANES = "swimlanes"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the backlogItem of the swimlane.
-	 */
-	String BACKLOG_ITEM = "backlog_item"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the cards of the swimlane.
-	 */
-	String CARDS = "cards"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve the comment of the milestone.
+	 * The key used to retrieve a comment.
 	 */
 	String COMMENT = "comment"; //$NON-NLS-1$
 
 	/**
-	 * The key used to retrieve the comment body of the milestone.
+	 * The key used to retrieve a body.
 	 */
 
 	String BODY = "body"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the title of milestones in a top-planning for instance.
-	 */
-	String JSON_MILESTONES_TITLE = "milestones_title"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the title of backlog items in a top-planning for instance.
-	 */
-	String JSON_BACKLOG_ITEMS_TITLE = "backlog_items_title"; //$NON-NLS-1$
 
 	/**
 	 * The key used for the project ID of an element possessed by a project.
@@ -264,44 +209,14 @@ public interface ITuleapConstants {
 	String JSON_ARTIFACT = "artifact"; //$NON-NLS-1$
 
 	/**
-	 * The key used for the status label of a milestone.
-	 */
-	String JSON_STATUS_VALUE = "status_value"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the sub-milestones URI of a milestone.
-	 */
-	String JSON_SUB_MILESTONES_URI = "sub_milestones_uri"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the backlog items URI of a milestone.
-	 */
-	String JSON_BACKLOG_ITEMS_URI = "backlog_items_uri"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the parent of a milestone.
+	 * The key used for a parent.
 	 */
 	String JSON_PARENT = "parent"; //$NON-NLS-1$
 
 	/**
-	 * The key used for the list of backlog item trackers in a planning.
-	 */
-	String JSON_BACKLOG_TRACKERS = "backlog_trackers"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the status of a card ("Open" or "Closed").
+	 * The key used for a Tuleap status ("Open" or "Closed").
 	 */
 	String JSON_STATUS = "status"; //$NON-NLS-1$
-
-	/**
-	 * The key used for the allowed column ids of a card.
-	 */
-	String JSON_ALLOWED_COLUMNS = "allowed_column_ids"; //$NON-NLS-1$
-
-	/**
-	 * The key used to retrieve assigned milestone reference for a backlog item.
-	 */
-	String JSON_ASSIGNED_MILESTONE = "assigned_milestone"; //$NON-NLS-1$
 
 	/**
 	 * The identifier of the Tuleap preference node.

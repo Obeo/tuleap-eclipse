@@ -784,7 +784,7 @@ public class TuleapSoapConnector {
 						int artifactId = artifact.getArtifact_id();
 
 						monitor.subTask(TuleapMylynTasksMessages.getString(
-								TuleapMylynTasksMessagesKeys.retrieveArtifact, Integer.valueOf(artifactId)));
+								TuleapMylynTasksMessagesKeys.retrievingArtifact, Integer.valueOf(artifactId)));
 						monitor.worked(10);
 
 						List<TuleapElementComment> comments = getArtifactCommentsWhileLoggedIn(artifactId,
@@ -919,7 +919,7 @@ public class TuleapSoapConnector {
 			IProgressMonitor monitor) throws MalformedURLException, RemoteException, ServiceException {
 		this.login(monitor);
 
-		monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.retrieveArtifact,
+		monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.retrievingArtifact,
 				Integer.valueOf(artifactId)));
 
 		Artifact artifact = this.getTuleapTrackerV5APIPortType().getArtifact(sessionHash, -1, -1, artifactId);

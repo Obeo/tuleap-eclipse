@@ -75,7 +75,7 @@ public abstract class AbstractTuleapConfigurableElement<T> extends AbstractTulea
 	private Map<Integer, AbstractTuleapField> fields = new LinkedHashMap<Integer, AbstractTuleapField>();
 
 	/**
-	 * The milestone's configurable values.
+	 * The configurable values.
 	 */
 	private Map<Integer, AbstractFieldValue> fieldTypeIdToValue = Maps.newHashMap();
 

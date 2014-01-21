@@ -537,7 +537,7 @@ public class TuleapArtifactMapperTests {
 
 		assertEquals(statusOpen0, Integer.parseInt(taskData.getRoot().getAttribute(TaskAttribute.STATUS)
 				.getValue()));
-		assertEquals(statusOpen0, mapper.getStatus());
+		assertEquals(statusOpen0, mapper.getStatusAsInt());
 		assertNull(mapper.getCompletionDate());
 
 		// go to closed state, completion date must be non-null
@@ -546,7 +546,7 @@ public class TuleapArtifactMapperTests {
 
 		assertEquals(statusClosed2, Integer.parseInt(taskData.getRoot().getAttribute(TaskAttribute.STATUS)
 				.getValue()));
-		assertEquals(statusClosed2, mapper.getStatus());
+		assertEquals(statusClosed2, mapper.getStatusAsInt());
 		assertNotNull(mapper.getCompletionDate());
 
 		// Back to open, completion date must be null
@@ -555,7 +555,7 @@ public class TuleapArtifactMapperTests {
 
 		assertEquals(statusOpen1, Integer.parseInt(taskData.getRoot().getAttribute(TaskAttribute.STATUS)
 				.getValue()));
-		assertEquals(statusOpen1, mapper.getStatus());
+		assertEquals(statusOpen1, mapper.getStatusAsInt());
 		assertNull(mapper.getCompletionDate());
 	}
 
@@ -580,7 +580,7 @@ public class TuleapArtifactMapperTests {
 
 		assertEquals(statusOpen0, Integer.parseInt(taskData.getRoot().getAttribute(TaskAttribute.STATUS)
 				.getValue()));
-		assertEquals(statusOpen0, mapper.getStatus());
+		assertEquals(statusOpen0, mapper.getStatusAsInt());
 		assertNull(mapper.getCompletionDate());
 		assertEquals(2, taskData.getRoot().getAttribute(TaskAttribute.STATUS).getOptions().size());
 		assertNotNull(taskData.getRoot().getAttribute(TaskAttribute.STATUS).getOption(
@@ -593,7 +593,7 @@ public class TuleapArtifactMapperTests {
 
 		assertEquals(statusOpen1, Integer.parseInt(taskData.getRoot().getAttribute(TaskAttribute.STATUS)
 				.getValue()));
-		assertEquals(statusOpen1, mapper.getStatus());
+		assertEquals(statusOpen1, mapper.getStatusAsInt());
 		assertNull(mapper.getCompletionDate());
 		assertEquals(2, taskData.getRoot().getAttribute(TaskAttribute.STATUS).getOptions().size());
 		assertNotNull(taskData.getRoot().getAttribute(TaskAttribute.STATUS).getOption(
@@ -606,7 +606,7 @@ public class TuleapArtifactMapperTests {
 
 		assertEquals(statusClosed2, Integer.parseInt(taskData.getRoot().getAttribute(TaskAttribute.STATUS)
 				.getValue()));
-		assertEquals(statusClosed2, mapper.getStatus());
+		assertEquals(statusClosed2, mapper.getStatusAsInt());
 		assertNotNull(mapper.getCompletionDate());
 		assertEquals(3, taskData.getRoot().getAttribute(TaskAttribute.STATUS).getOptions().size());
 		assertNotNull(taskData.getRoot().getAttribute(TaskAttribute.STATUS).getOption(
@@ -620,7 +620,7 @@ public class TuleapArtifactMapperTests {
 
 		assertEquals(statusOpen1, Integer.parseInt(taskData.getRoot().getAttribute(TaskAttribute.STATUS)
 				.getValue()));
-		assertEquals(statusOpen1, mapper.getStatus());
+		assertEquals(statusOpen1, mapper.getStatusAsInt());
 		assertNull(mapper.getCompletionDate());
 	}
 
@@ -688,56 +688,6 @@ public class TuleapArtifactMapperTests {
 
 		String value = taskData.getRoot().getAttribute(TaskAttribute.SUMMARY).getValue();
 		assertThat(value, is(summary));
-	}
-
-	/**
-	 * Test the creation of the parent Id task attribute in the task data.
-	 */
-	@Test
-	public void testSetParentId() {
-		mapper.initializeEmptyTaskData();
-		String parentId = "150";
-		mapper.setParentId(parentId);
-
-		String value = taskData.getRoot().getAttribute(PARENT_ID).getValue();
-		assertThat(value, is(parentId));
-	}
-
-	/**
-	 * Test getting the parent Id task attribute in the task data.
-	 */
-	@Test
-	public void testGetParentId() {
-		mapper.initializeEmptyTaskData();
-		String parentId = "150";
-		mapper.setParentId(parentId);
-		String value = mapper.getParentId();
-		assertThat(value, is(parentId));
-	}
-
-	/**
-	 * Test the creation of the parent display Id task attribute in the task data.
-	 */
-	@Test
-	public void testSetParentDisplayId() {
-		mapper.initializeEmptyTaskData();
-		String parentDisplayId = "150";
-		mapper.setParentDisplayId(parentDisplayId);
-
-		String value = taskData.getRoot().getAttribute(PARENT_DISPLAY_ID).getValue();
-		assertThat(value, is(parentDisplayId));
-	}
-
-	/**
-	 * Test getting the parent display Id task attribute in the task data.
-	 */
-	@Test
-	public void testGetParentDisplayId() {
-		mapper.initializeEmptyTaskData();
-		String parentDisplayId = "150";
-		mapper.setParentDisplayId(parentDisplayId);
-		String value = mapper.getParentDisplayId();
-		assertThat(value, is(parentDisplayId));
 	}
 
 	/**

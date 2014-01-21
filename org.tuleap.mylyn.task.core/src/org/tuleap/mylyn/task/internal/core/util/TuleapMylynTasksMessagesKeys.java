@@ -309,24 +309,9 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	public static String retrievingProjectsList;
 
 	/**
-	 * Retrieve a milestone.
+	 * Retrieve a tracker.
 	 */
-	public static String retrievingMilestone;
-
-	/**
-	 * Retrieve backlogItems of a specific milestone.
-	 */
-	public static String retrievingBacklogItems;
-
-	/**
-	 * Retrieve submilestones of a specific milestone.
-	 */
-	public static String retrievingSubMilestones;
-
-	/**
-	 * Retrieve cardwall of a specific milestone.
-	 */
-	public static String retrievingCardwall;
+	public static String retrievingTracker;
 
 	/**
 	 * Retrieve an artifact.
@@ -344,87 +329,9 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	public static String updatingArtifact;
 
 	/**
-	 * Updating a backlogItem.
-	 */
-	public static String updatingBacklogItem;
-
-	/**
-	 * Update backlog of a milestone.
-	 */
-	public static String updatingBacklog;
-
-	/**
-	 * Update content of a milestone.
-	 */
-	public static String updatingContent;
-
-	/**
-	 * Update milestone submilestones.
-	 */
-	public static String updatingSubmilestones;
-
-	/**
-	 * Update backlog of project.
-	 */
-	public static String updatingProjectBacklog;
-
-	/**
-	 * Updating a card.
-	 */
-	public static String updatingCard;
-
-	/**
-	 * Create a milestone.
-	 */
-	public static String creatingMilestone;
-
-	/**
-	 * Retrieve a backlogItem.
-	 */
-	public static String retrievingBacklogItem;
-
-	/**
-	 * Retrieving a topPlanning.
-	 */
-	public static String retrievingTopPlanning;
-
-	/**
-	 * Retrieving an artifact. 1 parameter:
-	 * <ol>
-	 * <li>The artifact id</li>
-	 * </ol>
-	 */
-	public static String retrieveArtifact;
-
-	/**
 	 * Error message regarding ISO-8601 dates. 1 argument, the invalid date as a string.
 	 */
 	public static String invalidDate;
-
-	/**
-	 * Display id template, uses 2 parameters:
-	 * <ol>
-	 * <li>The tracker label</li>
-	 * <li>The card's artifact ID</li>
-	 * </ol>
-	 */
-	public static String cardDisplayId;
-
-	/**
-	 * Message when the tracker of a card cannot be found.
-	 * <ol>
-	 * <li>The tracker ID</li>
-	 * </ol>
-	 */
-	public static String cardTrackerNotAvailable;
-
-	/**
-	 * Message when then tracker config of a card needs to be refreshed.
-	 * <ol>
-	 * <li>The tracker ID</li>
-	 * </ol>
-	 */
-	public static String cardTrackerConfigNeedsUpdate;
 
 	/**
 	 * Message for errors during a HTTP request, uses 2 parameters:
@@ -439,18 +346,6 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	 * Label used for a select box entry that represents "unselected".
 	 */
 	public static String selectBoxNone;
-
-	/**
-	 * Message for invalid state when attempting to submit the creation of a milestone, which should never
-	 * happen.
-	 */
-	public static String attemptToSubmitAgileDataOnNewTask;
-
-	/**
-	 * Message for invalid state when attempting to submit the creation of a top-planning, which should never
-	 * happen.
-	 */
-	public static String attemptToCreateNewTopPlanning;
 
 	/**
 	 * Message indicating that problems have occurred during submission. 1 parameter:

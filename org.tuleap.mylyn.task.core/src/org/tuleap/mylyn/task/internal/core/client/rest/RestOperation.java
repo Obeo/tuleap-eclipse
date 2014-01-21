@@ -486,6 +486,7 @@ public class RestOperation {
 		/**
 		 * DELETE.
 		 */
+
 		DELETE {
 			@Override
 			protected HttpMethod create() {

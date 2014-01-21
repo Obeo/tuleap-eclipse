@@ -66,11 +66,6 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 	private Button customQueryButton;
 
 	/**
-	 * The button used to select to create a top level planning query.
-	 */
-	private Button topLevelPlanningButton;
-
-	/**
 	 * The constructor.
 	 * 
 	 * @param taskRepository
@@ -183,20 +178,6 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 				getWizard().getContainer().updateButtons();
 			}
 		});
-
-		topLevelPlanningButton = new Button(composite, SWT.RADIO);
-		topLevelPlanningButton.setText(TuleapUIMessages
-				.getString(TuleapUiMessagesKeys.tuleapQueryProjectPageTopLevelPlanningButtonLabel));
-		topLevelPlanningButton.addSelectionListener(new SelectionListener() {
-
-			public void widgetSelected(SelectionEvent e) {
-				getWizard().getContainer().updateButtons();
-			}
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-				getWizard().getContainer().updateButtons();
-			}
-		});
 	}
 
 	/**
@@ -215,8 +196,7 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 	 * @return the server configuration.
 	 */
 	private TuleapServer getServerConfiguration() {
-		return ((ITuleapRepositoryConnector)getConnector()).getServer(getTaskRepository()
-				.getRepositoryUrl());
+		return ((ITuleapRepositoryConnector)getConnector()).getServer(getTaskRepository().getRepositoryUrl());
 	}
 
 	/**
@@ -239,10 +219,6 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 		query.setSummary(this.getQueryTitle());
 		query.setAttribute(ITuleapQueryConstants.QUERY_PROJECT_ID, String.valueOf(getProjectSelected()
 				.getIdentifier()));
-		if (this.isTopLevelPlanningQuery()) {
-			query.setAttribute(ITuleapQueryConstants.QUERY_KIND,
-					ITuleapQueryConstants.QUERY_KIND_TOP_LEVEL_PLANNING);
-		}
 	}
 
 	/**
@@ -265,17 +241,6 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 				this.projectsTree.getViewer().setSelection(selection);
 			}
 		}
-	}
-
-	/**
-	 * Returns <code>true</code> if the user wants to create a top level planning query, <code>false</code>
-	 * otherwise.
-	 * 
-	 * @return <code>true</code> if the user wants to create a top level planning query, <code>false</code>
-	 *         otherwise
-	 */
-	public boolean isTopLevelPlanningQuery() {
-		return topLevelPlanningButton.getSelection();
 	}
 
 	/**

@@ -99,12 +99,9 @@ public class TuleapRepositoryQueryWizard extends RepositoryQueryWizard {
 		if (page instanceof TuleapQueryProjectPage) {
 			TuleapQueryProjectPage projectPage = (TuleapQueryProjectPage)page;
 			TuleapProject projectSelected = projectPage.getProjectSelected();
-
-			if (!projectPage.isTopLevelPlanningQuery()) {
-				this.tuleapTrackerPage = new TuleapTrackerPage(projectSelected.getAllTrackers());
-				this.tuleapTrackerPage.setWizard(this);
-				nextPage = tuleapTrackerPage;
-			}
+			this.tuleapTrackerPage = new TuleapTrackerPage(projectSelected.getAllTrackers());
+			this.tuleapTrackerPage.setWizard(this);
+			nextPage = tuleapTrackerPage;
 		} else if (page instanceof TuleapTrackerPage) {
 			TuleapTrackerPage trackerPage = (TuleapTrackerPage)page;
 
@@ -128,21 +125,6 @@ public class TuleapRepositoryQueryWizard extends RepositoryQueryWizard {
 			return nextPage;
 		}
 		return super.getNextPage(page);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard#canFinish()
-	 */
-	@Override
-	public boolean canFinish() {
-		IWizardPage currentPage = this.getContainer().getCurrentPage();
-		if (currentPage instanceof TuleapQueryProjectPage) {
-			return currentPage.isPageComplete()
-					&& ((TuleapQueryProjectPage)currentPage).isTopLevelPlanningQuery();
-		}
-		return super.canFinish();
 	}
 
 	/**

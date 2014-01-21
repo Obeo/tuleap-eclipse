@@ -284,8 +284,6 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		} else if (ITuleapQueryConstants.QUERY_KIND_CUSTOM.equals(queryKind)) {
 			performStandardQuery(taskRepository, query, collector, monitor);
 
-		} else if (ITuleapQueryConstants.QUERY_KIND_TOP_LEVEL_PLANNING.equals(queryKind)) {
-			performProjectPlanningQuery(taskRepository, query, collector, monitor);
 		}
 		return Status.OK_STATUS;
 	}
@@ -326,16 +324,6 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			TaskData taskData = new TaskData(attributeMapper, this.getConnectorKind(), taskRepository
 					.getRepositoryUrl(), taskDataId.toString());
 			artifactTaskDataConverter.populateTaskData(taskData, artifact, monitor);
-
-			// If the tracker is a milestone tracker, retrieve milestone-specific informations
-			if (tracker.getProject().isMilestoneTracker(tracker.getIdentifier())) {
-				try {
-					taskDataHandler.fetchMilestoneData(taskData, tracker.getProject(), tracker,
-							taskRepository, monitor);
-				} catch (CoreException e) {
-					TuleapCoreActivator.log(e, true);
-				}
-			}
 
 			try {
 				collector.accept(taskData);
@@ -391,16 +379,6 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 				TaskData taskData = new TaskData(attributeMapper, this.getConnectorKind(), taskRepository
 						.getRepositoryUrl(), taskDataId.toString());
 				artifactTaskDataConverter.populateTaskData(taskData, artifact, monitor);
-
-				// If the tracker is a milestone tracker, retrieve milestone-specific informations
-				if (tracker.getProject().isMilestoneTracker(tracker.getIdentifier())) {
-					try {
-						taskDataHandler.fetchMilestoneData(taskData, tracker.getProject(), tracker,
-								taskRepository, monitor);
-					} catch (CoreException e) {
-						TuleapCoreActivator.log(e, true);
-					}
-				}
 				try {
 					collector.accept(taskData);
 				} catch (IllegalArgumentException exception) {
@@ -408,41 +386,6 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 					// org.eclipse.mylyn.internal.tasks.core.TaskList.getValidElement(IRepositoryElement)
 				}
 			}
-		}
-	}
-
-	/**
-	 * Perform a query of type "Top-level planning".
-	 * 
-	 * @param taskRepository
-	 *            The task repository
-	 * @param query
-	 *            The query
-	 * @param collector
-	 *            The data collector
-	 * @param monitor
-	 *            The progress monitor
-	 */
-	private void performProjectPlanningQuery(TaskRepository taskRepository, IRepositoryQuery query,
-			TaskDataCollector collector, IProgressMonitor monitor) {
-		int projectId = Integer.valueOf(query.getAttribute(ITuleapQueryConstants.QUERY_PROJECT_ID))
-				.intValue();
-		try {
-			TuleapTaskId taskDataId = TuleapTaskId.forTopPlanning(projectId);
-			TaskAttributeMapper attributeMapper = this.getTaskDataHandler()
-					.getAttributeMapper(taskRepository);
-			// Create the PROJECT_ID task attribute
-			TaskData taskData = new TaskData(attributeMapper, getConnectorKind(), taskRepository
-					.getRepositoryUrl(), taskDataId.toString());
-			taskData = taskDataHandler.fetchProjectPlanningData(taskData, taskRepository, monitor);
-			try {
-				collector.accept(taskData);
-			} catch (IllegalArgumentException exception) {
-				// Do not log, the query has been deleted while it was executed, see:
-				// org.eclipse.mylyn.internal.tasks.core.TaskList.getValidElement(IRepositoryElement)
-			}
-		} catch (CoreException e) {
-			TuleapCoreActivator.log(e, true);
 		}
 	}
 
@@ -489,7 +432,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		TuleapTracker tracker = project.getTracker(taskDataId.getTrackerId());
 
 		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, tracker);
-		int status = mapper.getStatus();
+		int status = mapper.getStatusAsInt();
 		if (status != TuleapArtifactMapper.INVALID_STATUS_ID) {
 			if (isTaskCompleted(status, tracker)) {
 				if (task.getCompletionDate() == null) {
