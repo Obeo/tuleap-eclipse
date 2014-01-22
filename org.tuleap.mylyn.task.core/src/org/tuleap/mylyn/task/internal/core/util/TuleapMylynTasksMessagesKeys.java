@@ -392,6 +392,15 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	 */
 	public static String cardTrackerConfigNeedsUpdate;
 
+	/**
+	 * Message for errors during a HTTP request, uses 2 parameters:
+	 * <ol>
+	 * <li>The method</li>
+	 * <li>The error message</li>
+	 * </ol>
+	 */
+	public static String ioError;
+
 	static {
 		// load message values from bundle file
 		reloadMessages();

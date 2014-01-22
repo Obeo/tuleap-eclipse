@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,6 +34,8 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.Version;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
+import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
+import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
 /**
  * This class will be used to establish the connection with the HTTP based Tuleap server.
@@ -85,8 +87,7 @@ public class TuleapRestConnector implements IRestConnector {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.client.rest.IRestConnector#sendRequest(org.apache.commons.httpclient.HttpMethod,
-	 *      java.lang.String)
+	 * @see org.tuleap.mylyn.task.internal.core.client.rest.IRestConnector#sendRequest(org.apache.commons.httpclient.HttpMethod)
 	 */
 	public ServerResponse sendRequest(HttpMethod method) {
 		// debug mode
@@ -100,13 +101,10 @@ public class TuleapRestConnector implements IRestConnector {
 			hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, null);
 		}
 
-		// TODO Support for gzipped responses?
-
 		method.setRequestHeader("Accept", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
 		method.setRequestHeader("Accept-Charset", "UTF-8"); //$NON-NLS-1$ //$NON-NLS-2$
 		method.setRequestHeader("Content-Type", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
 
-		// request.getClientInfo().setAgent(this.getUserAgent());
 		WebUtil.configureHttpClient(httpClient, getUserAgent());
 
 		Header[] responseHeaders = null;
@@ -125,14 +123,16 @@ public class TuleapRestConnector implements IRestConnector {
 			}
 			serverResponse = new ServerResponse(code, responseBody, rHeaders);
 		} catch (IOException e) {
-			logger.log(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, "I/O error during " + method
-					+ ": " + e.getMessage()));
-			serverResponse = new ServerResponse(IO_ERROR_STATUS_CODE, "", Collections
+			logger.log(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, TuleapMylynTasksMessages
+					.getString(TuleapMylynTasksMessagesKeys.ioError, method, e.getMessage())));
+			serverResponse = new ServerResponse(IO_ERROR_STATUS_CODE, "", Collections //$NON-NLS-1$
 					.<String, String> emptyMap());
 		} finally {
-			// TODO Hack-ish, cast into HttpMethodBase since releaseConnection accepts the abstract class, not
-			// the interface.
-			WebUtil.releaseConnection((HttpMethodBase)method, null);
+			if (method instanceof HttpMethodBase) {
+				// TODO Hack-ish, cast into HttpMethodBase since releaseConnection accepts the abstract class,
+				// not the interface.
+				WebUtil.releaseConnection((HttpMethodBase)method, null);
+			}
 		}
 
 		return serverResponse;
