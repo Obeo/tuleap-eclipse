@@ -145,10 +145,17 @@ public class TuleapSoapParser {
 								attachments);
 					} else if (abstractTuleapField instanceof TuleapDate) {
 						try {
-							int valueInt = Integer.parseInt(artifactFieldValue.getField_value().getValue());
-							long timestamp = getDateFromTimestamp(valueInt).getTime();
-							abstractFieldValue = new LiteralFieldValue(abstractTuleapField.getIdentifier(),
-									Long.toString(timestamp));
+							if (!"".equals(artifactFieldValue.getField_value().getValue())) { //$NON-NLS-1$
+								int valueInt = Integer.parseInt(artifactFieldValue.getField_value()
+										.getValue());
+								long timestamp = getDateFromTimestamp(valueInt).getTime();
+								abstractFieldValue = new LiteralFieldValue(abstractTuleapField
+										.getIdentifier(), Long.toString(timestamp));
+							} else {
+								abstractFieldValue = new LiteralFieldValue(abstractTuleapField
+										.getIdentifier(), null);
+							}
+
 						} catch (NumberFormatException e) {
 							TuleapCoreActivator.log(e, false);
 							abstractFieldValue = new LiteralFieldValue(abstractTuleapField.getIdentifier(),
