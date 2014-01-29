@@ -35,6 +35,7 @@ import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.config.field.AbstractTuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapComputedValue;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapMultiSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.ArtifactReference;
@@ -49,6 +50,7 @@ import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapStatus;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapSwimlane;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
+import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
@@ -224,6 +226,11 @@ public class MilestoneTaskDataConverter {
 				// The options map is immutable, we must add options one at a time
 				for (TuleapSelectBoxItem entry : sb.getItems()) {
 					fieldAtt.putOption(Integer.toString(entry.getIdentifier()), entry.getLabel());
+				}
+				// Add an option to represent "unselected" in single-select
+				if (field instanceof TuleapSelectBox) {
+					fieldAtt.putOption(Integer.toString(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID),
+							TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.selectBoxNone));
 				}
 			} else {
 				TuleapCoreActivator.log(TuleapMylynTasksMessages.getString(

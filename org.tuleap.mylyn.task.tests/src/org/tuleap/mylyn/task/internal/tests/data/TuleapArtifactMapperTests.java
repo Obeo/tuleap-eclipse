@@ -397,7 +397,8 @@ public class TuleapArtifactMapperTests {
 		assertEquals(lbl, att.getOption("2")); //$NON-NLS-1$
 		lbl = getLabelFromId(3);
 		assertEquals(lbl, att.getOption("3")); //$NON-NLS-1$
-		assertEquals("", att.getOption(String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID))); //$NON-NLS-1$ 
+		assertEquals(
+				"None", att.getOption(String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID))); //$NON-NLS-1$ 
 	}
 
 	/**

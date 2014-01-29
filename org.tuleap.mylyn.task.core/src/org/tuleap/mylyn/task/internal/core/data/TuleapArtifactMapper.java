@@ -659,7 +659,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 			if (valueId == ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID) {
 				attribute.clearValues();
 			} else {
-				attribute.setValue(String.valueOf(valueId));
+				attribute.setValues(Collections.singletonList(String.valueOf(valueId)));
 			}
 		}
 		// Take the workflow of the select box into account if it exists

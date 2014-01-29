@@ -246,7 +246,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 		// people section etc
 		TaskAttribute attribute = parent.createAttribute(TaskAttribute.USER_ASSIGNED);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
-		metaData.setLabel(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.assignedToLabel)); // ;
+		metaData.setLabel(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.assignedToLabel));
 		metaData.setType(getMetadataType());
 		metaData.setKind(TaskAttribute.KIND_PEOPLE);
 
@@ -298,7 +298,8 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 			attribute.putOption(String.valueOf(item.getIdentifier()), item.getLabel());
 		}
 		if (items.size() > 0) {
-			attribute.putOption(String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID), ""); //$NON-NLS-1$
+			attribute.putOption(String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID),
+					TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.selectBoxNone));
 		}
 	}
 }

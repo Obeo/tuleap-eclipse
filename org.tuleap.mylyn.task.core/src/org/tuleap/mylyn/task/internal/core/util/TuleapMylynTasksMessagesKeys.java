@@ -401,6 +401,11 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	 */
 	public static String ioError;
 
+	/**
+	 * Label used for a select box entry that represents "unselected".
+	 */
+	public static String selectBoxNone;
+
 	static {
 		// load message values from bundle file
 		reloadMessages();
