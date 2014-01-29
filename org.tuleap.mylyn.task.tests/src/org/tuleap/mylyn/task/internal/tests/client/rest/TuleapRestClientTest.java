@@ -710,6 +710,52 @@ public class TuleapRestClientTest {
 
 	}
 
+	/**
+	 * Test that a milestone content update is well done.
+	 * 
+	 * @throws CoreException
+	 */
+	@Test
+	public void testUpdateMilestoneSubmilestones() throws CoreException {
+
+		TuleapReference projectRef = new TuleapReference(123, "p/123");
+		TuleapMilestone milestone = new TuleapMilestone(200, projectRef);
+
+		TuleapMilestone submilestone1 = new TuleapMilestone(201, projectRef);
+		TuleapMilestone submilestone2 = new TuleapMilestone(202, projectRef);
+		TuleapMilestone submilestone3 = new TuleapMilestone(203, projectRef);
+		TuleapMilestone submilestone4 = new TuleapMilestone(204, projectRef);
+
+		List<TuleapMilestone> submilestones = new ArrayList<TuleapMilestone>();
+		submilestones.add(submilestone1);
+		submilestones.add(submilestone2);
+		submilestones.add(submilestone3);
+		submilestones.add(submilestone4);
+
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
+		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK,
+				"The milestone response body", respHeaders); //$NON-NLS-1$
+
+		connector.setResponse(response);
+		client.updateMilestoneSubmilestones(milestone.getId(), submilestones, null);
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(2, requestsSent.size());
+
+		ServerRequest request0 = requestsSent.get(0);
+		assertEquals("/api/v12.3/milestones/200/milestones", request0.url); //$NON-NLS-1$
+		assertEquals("OPTIONS", request0.method); //$NON-NLS-1$
+
+		ServerRequest request1 = requestsSent.get(1);
+		assertEquals("/api/v12.3/milestones/200/milestones", request1.url); //$NON-NLS-1$
+		assertEquals("PUT", request1.method); //$NON-NLS-1$
+		assertEquals("[201,202,203,204]", //$NON-NLS-1$
+				request1.body);
+	}
+
 	@Before
 	public void setUp() {
 		connector = new MockRestConnector();

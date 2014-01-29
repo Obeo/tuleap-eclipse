@@ -69,6 +69,16 @@ import static org.junit.Assert.fail;
 public class TuleapArtifactMapperTests {
 
 	/**
+	 * The identifier of the parent id task attribute.
+	 */
+	public static final String PARENT_ID = "mtc_parent_id"; //$NON-NLS-1$
+
+	/**
+	 * The identifier of the displayed parent id task attribute.
+	 */
+	public static final String PARENT_DISPLAY_ID = "mtc_parent_display_id"; //$NON-NLS-1$
+
+	/**
 	 * The task repository.
 	 */
 	private TaskRepository repository;
@@ -674,6 +684,56 @@ public class TuleapArtifactMapperTests {
 
 		String value = taskData.getRoot().getAttribute(TaskAttribute.SUMMARY).getValue();
 		assertThat(value, is(summary));
+	}
+
+	/**
+	 * Test the creation of the parent Id task attribute in the task data.
+	 */
+	@Test
+	public void testSetParentId() {
+		mapper.initializeEmptyTaskData();
+		String parentId = "150";
+		mapper.setParentId(parentId);
+
+		String value = taskData.getRoot().getAttribute(PARENT_ID).getValue();
+		assertThat(value, is(parentId));
+	}
+
+	/**
+	 * Test getting the parent Id task attribute in the task data.
+	 */
+	@Test
+	public void testGetParentId() {
+		mapper.initializeEmptyTaskData();
+		String parentId = "150";
+		mapper.setParentId(parentId);
+		String value = mapper.getParentId();
+		assertThat(value, is(parentId));
+	}
+
+	/**
+	 * Test the creation of the parent display Id task attribute in the task data.
+	 */
+	@Test
+	public void testSetParentDisplayId() {
+		mapper.initializeEmptyTaskData();
+		String parentDisplayId = "150";
+		mapper.setParentDisplayId(parentDisplayId);
+
+		String value = taskData.getRoot().getAttribute(PARENT_DISPLAY_ID).getValue();
+		assertThat(value, is(parentDisplayId));
+	}
+
+	/**
+	 * Test getting the parent display Id task attribute in the task data.
+	 */
+	@Test
+	public void testGetParentDisplayId() {
+		mapper.initializeEmptyTaskData();
+		String parentDisplayId = "150";
+		mapper.setParentDisplayId(parentDisplayId);
+		String value = mapper.getParentDisplayId();
+		assertThat(value, is(parentDisplayId));
 	}
 
 	/**

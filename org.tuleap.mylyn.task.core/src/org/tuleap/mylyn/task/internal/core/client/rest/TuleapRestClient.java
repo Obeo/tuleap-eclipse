@@ -786,6 +786,36 @@ public class TuleapRestClient implements IAuthenticator {
 	}
 
 	/**
+	 * Updates the submilestones list of a given milestone.
+	 * 
+	 * @param milestoneId
+	 *            The milestone id
+	 * @param submilestones
+	 *            The submilestones list to update.
+	 * @param monitor
+	 *            The monitor to use
+	 * @throws CoreException
+	 *             If anything goes wrong.
+	 */
+	public void updateMilestoneSubmilestones(int milestoneId, List<TuleapMilestone> submilestones,
+			IProgressMonitor monitor) throws CoreException {
+		if (monitor != null) {
+			monitor.subTask(TuleapMylynTasksMessages.getString(
+					TuleapMylynTasksMessagesKeys.updatingSubmilestones, Integer.valueOf(milestoneId)));
+		}
+		RestResource backlogResource = restResourceFactory.milestoneSubmilestones(milestoneId)
+				.withAuthenticator(this);
+		// from POJO to JSON
+		JsonArray backlogItemsArray = new JsonArray();
+		for (TuleapMilestone milestone : submilestones) {
+			backlogItemsArray.add(new JsonPrimitive(milestone.getId()));
+		}
+		String changesToPut = backlogItemsArray.toString();
+		RestOperation operation = backlogResource.put().withBody(changesToPut);
+		operation.checkedRun();
+	}
+
+	/**
 	 * Updates the milestone card on the server.
 	 * 
 	 * @param tuleapCard

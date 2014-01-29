@@ -24,6 +24,11 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	// CHECKSTYLE:OFF (Javadoc is __still__ required!)
 
 	/**
+	 * The label of the tracker.
+	 */
+	public static String trackerLabel;
+
+	/**
 	 * The label of the repository connector used in the wizard where the user select the kind of repository
 	 * to create.
 	 */
@@ -98,6 +103,11 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	 * The default new title.
 	 */
 	public static String defaultNewTitle;
+
+	/**
+	 * The label used to indicate milestone parent id.
+	 */
+	public static String parentLabel;
 
 	/**
 	 * Error message for issues with the creation of the temporary file used to download attachments.
@@ -328,6 +338,11 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	 * Update content of a milestone.
 	 */
 	public static String updatingContent;
+
+	/**
+	 * Update milestone submilestones.
+	 */
+	public static String updatingSubmilestones;
 
 	/**
 	 * Update backlog of project.

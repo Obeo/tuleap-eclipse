@@ -39,6 +39,7 @@ import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCard;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCardwall;
@@ -51,6 +52,7 @@ import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
  * This class is in charge of the publication and retrieval of the tasks data to and from the repository.
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
+ * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  * @since 0.7
  */
 public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
@@ -126,11 +128,15 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		if (taskData.isNew()) {
 			TuleapTaskId artifactId = tuleapSoapClient.createArtifact(artifact, monitor);
 			response = new RepositoryResponse(ResponseKind.TASK_CREATED, artifactId.toString());
+			if (tracker.getProject().isMilestoneTracker(tracker.getIdentifier())) {
+				addMilestoneTaskDataToParent(taskData, artifactId, taskRepository, monitor);
+			}
 		} else {
 			tuleapSoapClient.updateArtifact(artifact, monitor);
 			response = new RepositoryResponse(ResponseKind.TASK_UPDATED, taskData.getTaskId());
 			if (tracker.getProject().isMilestoneTracker(tracker.getIdentifier())) {
 				postMilestoneTaskData(taskData, taskRepository, monitor);
+
 			}
 		}
 
@@ -184,6 +190,49 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		}
 
 		return response;
+	}
+
+	/**
+	 * Add the given task data representing a Tuleap milestone to its parent.
+	 * 
+	 * @param taskData
+	 *            The task data of the milestone
+	 * @param taskId
+	 *            the taskId
+	 * @param taskRepository
+	 *            The task repository
+	 * @param monitor
+	 *            The progress monitor
+	 * @throws CoreException
+	 *             In case of issues during the communication with the server
+	 */
+	private void addMilestoneTaskDataToParent(TaskData taskData, TuleapTaskId taskId,
+			TaskRepository taskRepository, IProgressMonitor monitor) throws CoreException {
+
+		TuleapServer server = this.connector.getServer(taskRepository.getRepositoryUrl());
+		TuleapTracker tracker = server.getTracker(taskId.getTrackerId());
+		TuleapArtifactMapper tuleapArtifactMapper = new TuleapArtifactMapper(taskData, tracker);
+		String parentMilestoneId = tuleapArtifactMapper.getParentId();
+
+		if (parentMilestoneId != null) {
+			TuleapRestClient tuleapRestClient = this.connector.getClientManager().getRestClient(
+					taskRepository);
+			TuleapTaskId tuleapTaskId = TuleapTaskId.forName(parentMilestoneId);
+			if (!tuleapTaskId.isTopPlanning()) {
+				int parentMilestoneSimpleId = tuleapTaskId.getArtifactId();
+				List<TuleapMilestone> subMilestones = tuleapRestClient.getSubMilestones(TuleapTaskId.forName(
+						parentMilestoneId).getArtifactId(), monitor);
+
+				int id = taskId.getArtifactId();
+				int projectId = taskId.getProjectId();
+				TuleapReference projectRef = new TuleapReference();
+				projectRef.setId(projectId);
+				TuleapMilestone milestone = new TuleapMilestone(id, projectRef);
+				subMilestones.add(milestone);
+				tuleapRestClient
+						.updateMilestoneSubmilestones(parentMilestoneSimpleId, subMilestones, monitor);
+			}
+		}
 	}
 
 	/**
@@ -252,9 +301,9 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			if (initializationData instanceof TuleapTaskMapping) {
 				TuleapTaskMapping tuleapTaskMapping = (TuleapTaskMapping)initializationData;
 				TuleapTracker tracker = tuleapTaskMapping.getTracker();
-
+				TuleapArtifactMapper tuleapArtifactMapper = null;
 				if (tracker != null) {
-					TuleapArtifactMapper tuleapArtifactMapper = new TuleapArtifactMapper(taskData, tracker);
+					tuleapArtifactMapper = new TuleapArtifactMapper(taskData, tracker);
 					tuleapArtifactMapper.initializeEmptyTaskData();
 					Date now = new Date();
 					tuleapArtifactMapper.setCreationDate(now);
@@ -264,16 +313,51 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 					isInitialized = true;
 				}
-
 				if (initializationData instanceof TuleapMilestoneMapping) {
 					TuleapMilestoneMapping milestoneMapping = (TuleapMilestoneMapping)initializationData;
 					String parentMilestoneId = milestoneMapping.getParentMilestoneId();
-					// TODO SBE Set the identifier of the parent milestone in the task data and
-					// synchronize it later...
+					synchronizeMilestoneParentAttributes(tuleapArtifactMapper, parentMilestoneId, server);
 				}
 			}
 		}
 		return isInitialized;
+	}
+
+	/**
+	 * Add the milestone parent information to its task attribute.
+	 * 
+	 * @param tuleapArtifactMapper
+	 *            The artifact mapper
+	 * @param parentMilestoneId
+	 *            The parent milestone Id
+	 * @param server
+	 *            The tuleap server
+	 */
+	private void synchronizeMilestoneParentAttributes(TuleapArtifactMapper tuleapArtifactMapper,
+			String parentMilestoneId, TuleapServer server) {
+		if (tuleapArtifactMapper != null && !TuleapTaskId.forName(parentMilestoneId).isTopPlanning()) {
+			tuleapArtifactMapper.setParentId(parentMilestoneId);
+			tuleapArtifactMapper.setParentDisplayId(getMessageTracker(parentMilestoneId, server));
+		}
+	}
+
+	/**
+	 * Create the message indicating a milestone parent id.
+	 * 
+	 * @param taskId
+	 *            The task Id
+	 * @param server
+	 *            The server
+	 * @return The message
+	 */
+	private String getMessageTracker(String taskId, TuleapServer server) {
+
+		int trackerId = TuleapTaskId.forName(taskId).getTrackerId();
+		int artifactId = TuleapTaskId.forName(taskId).getArtifactId();
+		TuleapTracker tracker = server.getTracker(trackerId);
+
+		return TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.trackerLabel, tracker
+				.getItemName(), Integer.valueOf(artifactId));
 	}
 
 	/**

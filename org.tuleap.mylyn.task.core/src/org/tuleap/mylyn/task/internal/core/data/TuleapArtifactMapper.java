@@ -66,6 +66,16 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	public static final String TRACKER_ID = "mtc_tracker_id"; //$NON-NLS-1$
 
 	/**
+	 * The identifier of the parent id task attribute.
+	 */
+	public static final String PARENT_ID = "mtc_parent_id"; //$NON-NLS-1$
+
+	/**
+	 * The identifier of the displayed parent id task attribute.
+	 */
+	public static final String PARENT_DISPLAY_ID = "mtc_parent_display_id"; //$NON-NLS-1$
+
+	/**
 	 * The invalid status id.
 	 */
 	public static final int INVALID_STATUS_ID = -1;
@@ -822,5 +832,82 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 			}
 		}
 		return INVALID_STATUS_ID;
+	}
+
+	/**
+	 * Provides access to the parent id if it exists.
+	 * 
+	 * @return The parent id if it exists or null.
+	 */
+	public String getParentId() {
+		TaskAttribute attribute = getMappedAttribute(PARENT_ID);
+		if (attribute != null) {
+			return taskData.getAttributeMapper().getValue(attribute);
+		}
+		return null;
+	}
+
+	/**
+	 * Sets the parent Id in the relevant task attribute.
+	 * 
+	 * @param parentId
+	 *            The parent Id
+	 */
+	public void setParentId(String parentId) {
+		if (parentId == null) {
+			return;
+		}
+		TaskAttribute att = taskData.getRoot().getMappedAttribute(PARENT_ID);
+		String oldValue = null;
+		if (att == null) {
+			att = taskData.getRoot().createMappedAttribute(PARENT_ID);
+			att.getMetaData().setType(TaskAttribute.TYPE_SHORT_RICH_TEXT);
+			att.getMetaData().setReadOnly(true);
+		} else {
+			oldValue = att.getValue();
+		}
+		if (oldValue == null || !oldValue.equals(parentId)) {
+			att.setValue(parentId);
+		}
+	}
+
+	/**
+	 * Provides access to the parent display id if it exists.
+	 * 
+	 * @return The parent display id if it exists or null.
+	 */
+	public String getParentDisplayId() {
+		TaskAttribute attribute = getMappedAttribute(PARENT_DISPLAY_ID);
+		if (attribute != null) {
+			return taskData.getAttributeMapper().getValue(attribute);
+		}
+		return null;
+	}
+
+	/**
+	 * Sets the parent display Id in the relevant task attribute.
+	 * 
+	 * @param parentDisplayId
+	 *            The parent display Id
+	 */
+	public void setParentDisplayId(String parentDisplayId) {
+		if (parentDisplayId == null) {
+			return;
+		}
+		TaskAttribute att = taskData.getRoot().getMappedAttribute(PARENT_DISPLAY_ID);
+		String oldValue = null;
+		if (att == null) {
+			att = taskData.getRoot().createMappedAttribute(PARENT_DISPLAY_ID);
+			att.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
+			att.getMetaData().setType(TaskAttribute.TYPE_SHORT_RICH_TEXT);
+			att.getMetaData().setLabel(
+					TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.parentLabel));
+			att.getMetaData().setReadOnly(true);
+		} else {
+			oldValue = att.getValue();
+		}
+		if (oldValue == null || !oldValue.equals(parentDisplayId)) {
+			att.setValue(parentDisplayId);
+		}
 	}
 }
