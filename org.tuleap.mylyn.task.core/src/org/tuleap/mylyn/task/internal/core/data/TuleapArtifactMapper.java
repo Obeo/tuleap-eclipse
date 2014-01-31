@@ -708,12 +708,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 					if (attribute.getOptions().isEmpty()) {
 						String value = null;
 						if (abstractTuleapField instanceof TuleapDate) {
-							try {
-								long date = Long.parseLong(attribute.getValue());
-								value = String.valueOf(date / 1000L);
-							} catch (NumberFormatException e) {
-								TuleapCoreActivator.log(e, false);
-							}
+							value = parseDate(attribute);
 						} else {
 							value = attribute.getValue();
 						}
@@ -784,6 +779,30 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * Parse a string to get date.
+	 * 
+	 * @param attribute
+	 *            The task Attribute
+	 * @return the date
+	 */
+	private String parseDate(TaskAttribute attribute) {
+		String value = null;
+		try {
+			String attributeValue = attribute.getValue();
+			if (!attributeValue.isEmpty()) {
+				long date = Long.parseLong(attributeValue);
+				value = String.valueOf(date / 1000L);
+			}
+		} catch (NumberFormatException e) {
+			String messageToLog = TuleapMylynTasksMessages.getString(
+					TuleapMylynTasksMessagesKeys.dateParsingLogMessage, value, attribute.getMetaData()
+							.getLabel());
+			TuleapCoreActivator.log(messageToLog, false);
+		}
+		return value;
 	}
 
 	/**

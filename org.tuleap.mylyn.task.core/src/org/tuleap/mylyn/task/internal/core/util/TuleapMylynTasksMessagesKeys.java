@@ -24,6 +24,11 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	// CHECKSTYLE:OFF (Javadoc is __still__ required!)
 
 	/**
+	 * The message to log when parsing date encounter a problem.
+	 */
+	public static String dateParsingLogMessage;
+
+	/**
 	 * The label of the tracker.
 	 */
 	public static String trackerLabel;
