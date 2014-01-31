@@ -721,13 +721,18 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 					} else {
 						// select box or multi select box (or check box)
 						List<Integer> valueIds = new ArrayList<Integer>();
-						for (String strValue : attribute.getValues()) {
-							try {
-								valueIds.add(Integer.valueOf(strValue));
-							} catch (NumberFormatException e) {
-								// TODO Add log about non integer value
+						if (!attribute.getValues().isEmpty()) {
+							for (String strValue : attribute.getValues()) {
+								try {
+									valueIds.add(Integer.valueOf(strValue));
+								} catch (NumberFormatException e) {
+									TuleapCoreActivator.log(e, false);
+								}
 							}
+						} else {
+							valueIds.add(Integer.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID));
 						}
+
 						BoundFieldValue boundFieldValue = new BoundFieldValue(Integer.parseInt(attribute
 								.getId()), valueIds);
 						result.add(boundFieldValue);
@@ -746,12 +751,16 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 					if (attribute.getId().equals(TaskAttribute.STATUS)) {
 						// select box or multi select box (or check box)
 						List<Integer> valueIds = new ArrayList<Integer>();
-						for (String strValue : attribute.getValues()) {
-							try {
-								valueIds.add(Integer.valueOf(strValue));
-							} catch (NumberFormatException e) {
-								// TODO Add log about non integer value
+						if (!attribute.getValues().isEmpty()) {
+							for (String strValue : attribute.getValues()) {
+								try {
+									valueIds.add(Integer.valueOf(strValue));
+								} catch (NumberFormatException e) {
+									TuleapCoreActivator.log(e, false);
+								}
 							}
+						} else {
+							valueIds.add(Integer.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID));
 						}
 
 						BoundFieldValue boundFieldValue = new BoundFieldValue(this.tracker.getStatusField()
@@ -764,13 +773,18 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 					if (attribute.getId().equals(TaskAttribute.USER_ASSIGNED)) {
 						// select box or multi select box (or check box)
 						List<Integer> valueIds = new ArrayList<Integer>();
-						for (String strValue : attribute.getValues()) {
-							try {
-								valueIds.add(Integer.valueOf(strValue));
-							} catch (NumberFormatException e) {
-								// TODO Add log about non integer value
+						if (!attribute.getValues().isEmpty()) {
+							for (String strValue : attribute.getValues()) {
+								try {
+									valueIds.add(Integer.valueOf(strValue));
+								} catch (NumberFormatException e) {
+									TuleapCoreActivator.log(e, false);
+								}
 							}
+						} else {
+							valueIds.add(Integer.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID));
 						}
+
 						BoundFieldValue boundFieldValue = new BoundFieldValue(this.tracker
 								.getContributorField().getIdentifier(), valueIds);
 						result.add(boundFieldValue);
