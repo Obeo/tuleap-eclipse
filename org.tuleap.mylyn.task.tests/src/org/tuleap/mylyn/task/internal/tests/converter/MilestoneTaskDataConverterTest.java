@@ -28,8 +28,10 @@ import org.tuleap.mylyn.task.agile.core.data.cardwall.CardWrapper;
 import org.tuleap.mylyn.task.agile.core.data.cardwall.CardwallWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.BacklogItemWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.MilestonePlanningWrapper;
+import org.tuleap.mylyn.task.agile.core.data.planning.SubMilestoneWrapper;
 import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
+import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.data.converter.MilestoneTaskDataConverter;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
@@ -267,7 +269,6 @@ public class MilestoneTaskDataConverterTest {
 		// the first column
 		String attId = COLUMN_LIST + 600;
 		TaskAttribute firstColumnTA = root.getAttribute(attId);
-		assertEquals("600", firstColumnTA.getValue()); //$NON-NLS-1$
 
 		TaskAttribute firstColumnLabelTA = root.getAttribute(attId + "-lbl");
 		assertNotNull(firstColumnLabelTA);
@@ -277,7 +278,6 @@ public class MilestoneTaskDataConverterTest {
 		// the second column
 		attId = COLUMN_LIST + 800;
 		TaskAttribute secondColumnTA = root.getAttribute(attId);
-		assertEquals("800", secondColumnTA.getValue()); //$NON-NLS-1$
 
 		TaskAttribute secondColumnLabelTA = root.getAttribute(attId + "-lbl");
 		assertNotNull(secondColumnLabelTA);
@@ -329,7 +329,6 @@ public class MilestoneTaskDataConverterTest {
 
 		TaskAttribute firstCardTA = root.getAttribute(swimlaneId + "-c-2_12345"); //$NON-NLS-1$
 		assertNotNull(firstCardTA);
-		assertEquals("2_12345", firstCardTA.getValue()); //$NON-NLS-1$
 
 		TaskAttribute att = root.getAttribute(swimlaneId + "-c-2_12345-art_id");
 		assertEquals("200:700#12345", att.getValue());
@@ -412,7 +411,6 @@ public class MilestoneTaskDataConverterTest {
 		String cardPrefix = swimlaneId + "-c-2_12345";
 		TaskAttribute firstCardTA = root.getAttribute(cardPrefix);
 		assertNotNull(firstCardTA);
-		assertEquals("2_12345", firstCardTA.getValue()); //$NON-NLS-1$
 
 		TaskAttribute att = root.getAttribute(cardPrefix + "-art_id");
 		assertEquals("200:700#12345", att.getValue());
@@ -504,10 +502,8 @@ public class MilestoneTaskDataConverterTest {
 		String cardPrefix = swimlaneId + "-c-2_12345";
 		TaskAttribute firstCardTA = root.getAttribute(cardPrefix);
 		assertNotNull(firstCardTA);
-		assertEquals("2_12345", firstCardTA.getValue()); //$NON-NLS-1$
 
 		TaskAttribute att = root.getAttribute(cardPrefix + "-art_id");
-		assertEquals("200:700#12345", att.getValue());
 
 		TaskAttribute statusIdFirstCardTA = root.getAttribute(cardPrefix + "-col_id");
 
@@ -596,7 +592,6 @@ public class MilestoneTaskDataConverterTest {
 			TaskAttribute itemAtt = root.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + internalId);
 			assertNotNull(itemAtt);
 			assertTrue(itemAtt.getMetaData().isReadOnly());
-			assertEquals(internalId, itemAtt.getValue());
 
 			TaskAttribute itemLabel = root.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + internalId
 					+ ID_SEPARATOR + AbstractTaskAttributeWrapper.SUFFIX_LABEL);
@@ -609,12 +604,6 @@ public class MilestoneTaskDataConverterTest {
 			assertNotNull(itemEffort);
 			assertEquals("201", itemEffort.getValue());
 			assertEquals(TaskAttribute.TYPE_SHORT_TEXT, itemEffort.getMetaData().getType());
-
-			TaskAttribute itemAssignedMilestone = root.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM
-					+ internalId + ID_SEPARATOR + BacklogItemWrapper.SUFFIX_ASSIGNED_MILESTONE_ID);
-			assertNotNull(itemAssignedMilestone);
-			assertEquals("200:0#100", itemAssignedMilestone.getValue()); //$NON-NLS-1$ 
-			assertEquals(TaskAttribute.TYPE_INTEGER, itemAssignedMilestone.getMetaData().getType());
 
 			TaskAttribute itemStatus = root.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + internalId
 					+ ID_SEPARATOR + BacklogItemWrapper.SUFFIX_STATUS);
@@ -831,74 +820,50 @@ public class MilestoneTaskDataConverterTest {
 	@Test
 	public void testExtractContent() {
 		Date testDate = new Date();
+		MilestonePlanningWrapper wrapper = new MilestonePlanningWrapper(taskData.getRoot());
+		TuleapTaskId subMilestone0Id = TuleapTaskId.forArtifact(100, 123, 200);
+		SubMilestoneWrapper submilestone0 = wrapper.addSubMilestone(subMilestone0Id.toString());
+		submilestone0.setCapacity("12");
+		submilestone0.setDisplayId("200");
+		submilestone0.setStartDate(testDate);
+		submilestone0.setEndDate(testDate);
+		submilestone0.setStatusValue("Planned");
 
-		TuleapMilestone milestone = new TuleapMilestone(50,
-				new TuleapReference(200, "p/200"), "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
-				"HTML URL", testDate, testDate); //$NON-NLS-1$
+		TuleapTaskId bi0Id = TuleapTaskId.forArtifact(100, 321, 500);
+		BacklogItemWrapper bi0 = submilestone0.addBacklogItem(bi0Id.toString());
+		bi0.setDisplayId("500");
+		bi0.setInitialEffort("2.5");
+		bi0.setLabel("BI 0");
+		bi0.setParent(TuleapTaskId.forArtifact(100, 322, 400).toString(), "400");
+		bi0.setStatus("Open");
+		bi0.setType("type");
 
-		TuleapMilestone submilestone100 = new TuleapMilestone(100,
-				new TuleapReference(200, "p/200"), "The first submilestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
-				"HTML URL", testDate, testDate); //$NON-NLS-1$
-
-		TuleapBacklogItem item0 = new TuleapBacklogItem(230,
-				new TuleapReference(200, "p/200"), "item230", null, null, null, null); //$NON-NLS-1$
-		item0.setInitialEffort("201");
-		TuleapReference trackerRef = new TuleapReference(500, "tracker/500");
-		ArtifactReference item0Parent = new ArtifactReference(231, "item/231", trackerRef);
-		item0.setParent(item0Parent);
-		item0.setStatus(TuleapStatus.valueOf("Closed"));
-
-		TuleapBacklogItem item1 = new TuleapBacklogItem(231,
-				new TuleapReference(200, "p/200"), "item231", null, null, null, null); //$NON-NLS-1$
-		item1.setInitialEffort("201");
-		ArtifactReference item1Parent = new ArtifactReference(232, "item/232", trackerRef);
-		item1.setParent(item1Parent);
-		item1.setStatus(TuleapStatus.valueOf("Closed"));
-
-		TuleapBacklogItem item2 = new TuleapBacklogItem(232,
-				new TuleapReference(200, "p/200"), "item232", null, null, null, null); //$NON-NLS-1$
-		item2.setInitialEffort("201");
-		ArtifactReference item2Parent = new ArtifactReference(233, "item/233", trackerRef);
-		item2.setParent(item2Parent);
-		item2.setStatus(TuleapStatus.valueOf("Closed"));
-
-		TuleapBacklogItem item3 = new TuleapBacklogItem(233,
-				new TuleapReference(200, "p/200"), "item233", null, null, null, null); //$NON-NLS-1$
-		item3.setInitialEffort("201");
-		ArtifactReference item3Parent = new ArtifactReference(234, "item/234", trackerRef);
-		item3.setParent(item3Parent);
-		item3.setStatus(TuleapStatus.valueOf("Closed"));
-
-		List<TuleapBacklogItem> backlog = new ArrayList<TuleapBacklogItem>();
-		backlog.add(item0);
-		backlog.add(item1);
-
-		List<TuleapBacklogItem> content = new ArrayList<TuleapBacklogItem>();
-		content.add(item2);
-		content.add(item3);
+		TuleapTaskId bi1Id = TuleapTaskId.forArtifact(100, 321, 501);
+		BacklogItemWrapper bi1 = submilestone0.addBacklogItem(bi1Id.toString());
+		bi1.setDisplayId("501");
+		bi1.setInitialEffort("5");
+		bi1.setLabel("BI 1");
+		bi1.setParent(TuleapTaskId.forArtifact(100, 322, 400).toString(), "400");
+		bi1.setStatus("Closed");
+		bi1.setType("other");
 
 		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(taskRepository, connector);
-		converter.populateTaskData(taskData, milestone, null);
-		converter.populateBacklog(taskData, backlog, null);
-		converter.addSubmilestone(taskData, submilestone100, content, null);
-
-		List<TuleapBacklogItem> backlogBacklogItems = converter.extractContent(taskData, 100);
+		List<TuleapBacklogItem> backlogBacklogItems = converter.extractContent(taskData, subMilestone0Id);
 		assertNotNull(backlogBacklogItems);
 		assertEquals(2, backlogBacklogItems.size());
 
 		TuleapBacklogItem firstBI = backlogBacklogItems.get(0);
-		assertEquals(232, firstBI.getId().intValue());
-		assertEquals("item232", firstBI.getLabel());
-		assertEquals("201", firstBI.getInitialEffort());
-		assertEquals(233, firstBI.getParent().getId());
-		assertEquals(null, firstBI.getParent().getUri());
-		assertEquals(TuleapStatus.valueOf("Closed"), firstBI.getStatus());
+		assertEquals(500, firstBI.getId().intValue());
+		assertEquals("BI 0", firstBI.getLabel());
+		assertEquals("2.5", firstBI.getInitialEffort());
+		assertEquals(400, firstBI.getParent().getId());
+		assertEquals(TuleapStatus.valueOf("Open"), firstBI.getStatus());
 
 		TuleapBacklogItem secondBI = backlogBacklogItems.get(1);
-		assertEquals(233, secondBI.getId().intValue());
-		assertEquals("item233", secondBI.getLabel());
-		assertEquals("201", secondBI.getInitialEffort());
-		assertEquals(234, secondBI.getParent().getId());
+		assertEquals(501, secondBI.getId().intValue());
+		assertEquals("BI 1", secondBI.getLabel());
+		assertEquals("5", secondBI.getInitialEffort());
+		assertEquals(400, secondBI.getParent().getId());
 		assertEquals(null, secondBI.getParent().getUri());
 		assertEquals(TuleapStatus.valueOf("Closed"), secondBI.getStatus());
 	}
@@ -1028,7 +993,7 @@ public class MilestoneTaskDataConverterTest {
 		cardWrapper.mark(cardWrapper.getColumnIdTaskAttribute(), true);
 		cardWrapper.mark(cardWrapper.getFieldAttributes().get(0), true);
 
-		List<TuleapCard> cards = converter.extractCards(taskData);
+		List<TuleapCard> cards = converter.extractModifiedCards(taskData);
 		assertNotNull(cards);
 		assertEquals(1, cards.size());
 
@@ -1095,7 +1060,7 @@ public class MilestoneTaskDataConverterTest {
 		converter.populateTaskData(taskData, milestone, null);
 		converter.populateCardwall(taskData, cardwall, project, null);
 
-		List<TuleapCard> cards = converter.extractCards(taskData);
+		List<TuleapCard> cards = converter.extractModifiedCards(taskData);
 		assertEquals(0, cards.size());
 	}
 
@@ -1146,7 +1111,7 @@ public class MilestoneTaskDataConverterTest {
 		CardwallWrapper cwWrapper = new CardwallWrapper(taskData.getRoot());
 		cwWrapper.mark(cwWrapper.getSwimlanes().get(0).getCards().get(0).getColumnIdTaskAttribute(), true);
 
-		List<TuleapCard> cards = converter.extractCards(taskData);
+		List<TuleapCard> cards = converter.extractModifiedCards(taskData);
 		assertNotNull(cards);
 		assertEquals(1, cards.size());
 
@@ -1217,7 +1182,7 @@ public class MilestoneTaskDataConverterTest {
 		cardWrapper.mark(cardWrapper.getColumnIdTaskAttribute(), true);
 		cardWrapper.mark(cardWrapper.getFieldAttributes().get(0), true);
 
-		List<TuleapCard> cards = converter.extractCards(taskData);
+		List<TuleapCard> cards = converter.extractModifiedCards(taskData);
 		assertNotNull(cards);
 		assertEquals(1, cards.size());
 
@@ -1293,7 +1258,7 @@ public class MilestoneTaskDataConverterTest {
 		CardwallWrapper cwWrapper = new CardwallWrapper(taskData.getRoot());
 		cwWrapper.mark(cwWrapper.getSwimlanes().get(0).getCards().get(0).getColumnIdTaskAttribute(), true);
 
-		List<TuleapCard> cards = converter.extractCards(taskData);
+		List<TuleapCard> cards = converter.extractModifiedCards(taskData);
 		assertNotNull(cards);
 		assertEquals(1, cards.size());
 

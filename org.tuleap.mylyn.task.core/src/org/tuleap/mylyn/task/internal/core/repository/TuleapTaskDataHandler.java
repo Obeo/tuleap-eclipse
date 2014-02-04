@@ -174,16 +174,23 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 			List<TuleapMilestone> subMilestones = milestoneTaskDataConverter.extractMilestones(taskData);
 			for (TuleapMilestone subMilestone : subMilestones) {
-				List<TuleapBacklogItem> content = milestoneTaskDataConverter.extractContent(taskData,
-						subMilestone.getId().intValue());
-				tuleapRestClient.updateMilestoneContent(subMilestone.getId().intValue(), content, monitor);
+				TuleapTaskId subMilestoneTaskId = TuleapTaskId.forArtifact(subMilestone.getProject().getId(),
+						subMilestone.getArtifact().getTracker().getId(), subMilestone.getArtifact().getId());
+				if (milestoneTaskDataConverter.mustUpdate(taskData, subMilestoneTaskId)) {
+					List<TuleapBacklogItem> content = milestoneTaskDataConverter.extractContent(taskData,
+							subMilestoneTaskId);
+					tuleapRestClient
+							.updateMilestoneContent(subMilestone.getId().intValue(), content, monitor);
+				}
 			}
 
 			// Now that all sub-milestones are updated, we can re-order the unassigned backlog items.
-			tuleapRestClient.updateMilestoneBacklog(milestoneId, backlog, monitor);
+			if (milestoneTaskDataConverter.mustUpdateBacklog(taskData)) {
+				tuleapRestClient.updateMilestoneBacklog(milestoneId, backlog, monitor);
+			}
 
 			// Update the Cards
-			List<TuleapCard> cards = milestoneTaskDataConverter.extractCards(taskData);
+			List<TuleapCard> cards = milestoneTaskDataConverter.extractModifiedCards(taskData);
 			tuleapRestClient.updateCards(cards, monitor);
 
 			response = new RepositoryResponse(ResponseKind.TASK_UPDATED, taskData.getTaskId());
@@ -266,8 +273,10 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 			List<TuleapMilestone> subMilestones = milestoneTaskDataConverter.extractMilestones(taskData);
 			for (TuleapMilestone subMilestone : subMilestones) {
+				TuleapTaskId subMilestoneTaskId = TuleapTaskId.forArtifact(subMilestone.getProject().getId(),
+						subMilestone.getArtifact().getTracker().getId(), subMilestone.getArtifact().getId());
 				List<TuleapBacklogItem> content = milestoneTaskDataConverter.extractContent(taskData,
-						subMilestone.getId().intValue());
+						subMilestoneTaskId);
 				tuleapRestClient.updateMilestoneContent(subMilestone.getId().intValue(), content, monitor);
 			}
 
