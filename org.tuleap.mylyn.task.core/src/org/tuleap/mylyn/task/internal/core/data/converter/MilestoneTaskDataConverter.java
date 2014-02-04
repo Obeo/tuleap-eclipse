@@ -423,7 +423,10 @@ public class MilestoneTaskDataConverter {
 			// For the time being, Tuleap returns an error 400
 			card.setLabel(cardWrapper.getLabel());
 			// if (cardWrapper.hasColumnIdChanged()) {
-			card.setColumnId(Integer.valueOf(cardWrapper.getColumnId()));
+			String columnId = cardWrapper.getColumnId();
+			if (columnId != null) {
+				card.setColumnId(Integer.valueOf(columnId));
+			}
 			// }
 			for (TaskAttribute attribute : cardWrapper.getFieldAttributes()) {
 				if (cardWrapper.hasChanged(attribute)) {
