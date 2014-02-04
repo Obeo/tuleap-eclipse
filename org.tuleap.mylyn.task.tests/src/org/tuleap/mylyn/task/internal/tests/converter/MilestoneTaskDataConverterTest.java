@@ -1025,7 +1025,7 @@ public class MilestoneTaskDataConverterTest {
 		// Mark the card as changed
 		CardwallWrapper cwWrapper = new CardwallWrapper(taskData.getRoot());
 		CardWrapper cardWrapper = cwWrapper.getSwimlanes().get(0).getCards().get(0);
-		cardWrapper.markColumnIdChanged(true);
+		cardWrapper.mark(cardWrapper.getColumnIdTaskAttribute(), true);
 		cardWrapper.mark(cardWrapper.getFieldAttributes().get(0), true);
 
 		List<TuleapCard> cards = converter.extractCards(taskData);
@@ -1144,7 +1144,7 @@ public class MilestoneTaskDataConverterTest {
 
 		// Mark the card as changed
 		CardwallWrapper cwWrapper = new CardwallWrapper(taskData.getRoot());
-		cwWrapper.getSwimlanes().get(0).getCards().get(0).markColumnIdChanged(true);
+		cwWrapper.mark(cwWrapper.getSwimlanes().get(0).getCards().get(0).getColumnIdTaskAttribute(), true);
 
 		List<TuleapCard> cards = converter.extractCards(taskData);
 		assertNotNull(cards);
@@ -1214,7 +1214,7 @@ public class MilestoneTaskDataConverterTest {
 		// Mark the card as changed
 		CardwallWrapper cwWrapper = new CardwallWrapper(taskData.getRoot());
 		CardWrapper cardWrapper = cwWrapper.getSwimlanes().get(0).getCards().get(0);
-		cardWrapper.markColumnIdChanged(true);
+		cardWrapper.mark(cardWrapper.getColumnIdTaskAttribute(), true);
 		cardWrapper.mark(cardWrapper.getFieldAttributes().get(0), true);
 
 		List<TuleapCard> cards = converter.extractCards(taskData);
@@ -1291,7 +1291,7 @@ public class MilestoneTaskDataConverterTest {
 
 		// Mark the card as changed
 		CardwallWrapper cwWrapper = new CardwallWrapper(taskData.getRoot());
-		cwWrapper.getSwimlanes().get(0).getCards().get(0).markColumnIdChanged(true);
+		cwWrapper.mark(cwWrapper.getSwimlanes().get(0).getCards().get(0).getColumnIdTaskAttribute(), true);
 
 		List<TuleapCard> cards = converter.extractCards(taskData);
 		assertNotNull(cards);
