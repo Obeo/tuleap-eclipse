@@ -11,6 +11,7 @@
 package org.tuleap.mylyn.task.internal.core.serializer;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
@@ -43,9 +44,14 @@ public class TuleapCardSerializer extends AbstractTuleapSerializer<TuleapCard> {
 		elementObject.remove(ITuleapConstants.ID);
 		if (tuleapCard.getLabel() != null) {
 			elementObject.add(ITuleapConstants.LABEL, new JsonPrimitive(tuleapCard.getLabel()));
+		} else {
+			// This will probably be problematic because that label probably cannot be null
+			elementObject.add(ITuleapConstants.LABEL, JsonNull.INSTANCE);
 		}
 		if (tuleapCard.getColumnId() != null) {
 			elementObject.add(ITuleapConstants.COLUMN_ID, new JsonPrimitive(tuleapCard.getColumnId()));
+		} else {
+			elementObject.add(ITuleapConstants.COLUMN_ID, JsonNull.INSTANCE);
 		}
 		return elementObject;
 
