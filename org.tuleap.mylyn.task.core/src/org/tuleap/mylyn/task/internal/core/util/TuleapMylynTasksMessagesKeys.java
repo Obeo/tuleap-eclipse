@@ -22,6 +22,10 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	private static final String BUNDLE_NAME = "org.tuleap.mylyn.task.internal.core.util.tuleap_mylyn_tasks_messages"; //$NON-NLS-1$
 
 	// CHECKSTYLE:OFF (Javadoc is __still__ required!)
+	/**
+	 * The message to log when parsing card status encounter a problem.
+	 */
+	public static String gettingStatusValueLogMessage;
 
 	/**
 	 * The message to log when parsing date encounter a problem.
