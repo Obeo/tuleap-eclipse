@@ -12,6 +12,7 @@ package org.tuleap.mylyn.task.internal.tests.repository;
 
 import com.google.common.collect.Lists;
 
+import java.net.Proxy;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -19,6 +20,9 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -64,6 +68,18 @@ import static org.junit.Assert.assertEquals;
  * @since 0.7
  */
 public class TuleapRepositoryConnectorTests {
+
+	private AbstractWebLocation location = new AbstractWebLocation("") {
+		@Override
+		public Proxy getProxyForHost(String host, String proxyType) {
+			return null;
+		}
+
+		@Override
+		public AuthenticationCredentials getCredentials(AuthenticationType type) {
+			return null;
+		}
+	};
 
 	/**
 	 * Test the retrieval of the repository url from a given task url.
@@ -159,7 +175,7 @@ public class TuleapRepositoryConnectorTests {
 		final TuleapClientManager tuleapClientManager = new TuleapClientManager() {
 			@Override
 			public TuleapSoapClient getSoapClient(TaskRepository taskRepository) {
-				return new TuleapSoapClient(null, null) {
+				return new TuleapSoapClient(location, null) {
 					@Override
 					public List<TuleapArtifact> getArtifactsFromQuery(IRepositoryQuery query,
 							TuleapServer serverConfiguration, TuleapTracker tuleapTracker,
@@ -230,7 +246,7 @@ public class TuleapRepositoryConnectorTests {
 		final TuleapClientManager tuleapClientManager = new TuleapClientManager() {
 			@Override
 			public TuleapSoapClient getSoapClient(TaskRepository taskRepository) {
-				return new TuleapSoapClient(null, null) {
+				return new TuleapSoapClient(location, null) {
 					@Override
 					public List<TuleapArtifact> getArtifactsFromQuery(IRepositoryQuery query,
 							TuleapServer serverConfiguration, TuleapTracker tuleapTracker,

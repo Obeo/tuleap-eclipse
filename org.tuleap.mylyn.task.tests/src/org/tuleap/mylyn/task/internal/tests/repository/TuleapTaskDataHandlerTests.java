@@ -12,12 +12,16 @@ package org.tuleap.mylyn.task.internal.tests.repository;
 
 import com.google.common.collect.Sets;
 
+import java.net.Proxy;
 import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
@@ -104,6 +108,18 @@ public class TuleapTaskDataHandlerTests {
 	 * The identifier of the backlog item.
 	 */
 	private int backlogItemId;
+
+	private AbstractWebLocation location = new AbstractWebLocation("") {
+		@Override
+		public Proxy getProxyForHost(String host, String proxyType) {
+			return null;
+		}
+
+		@Override
+		public AuthenticationCredentials getCredentials(AuthenticationType type) {
+			return null;
+		}
+	};
 
 	/**
 	 * Prepare the Tuleap server configuration and the mock connector.
@@ -240,7 +256,7 @@ public class TuleapTaskDataHandlerTests {
 				"", new Date(), new Date());
 
 		// Mock soap client
-		final TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(null, null) {
+		final TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(location, null) {
 			@Override
 			public TuleapArtifact getArtifact(TuleapTaskId id, TuleapServer serverConfiguration,
 					IProgressMonitor monitor) throws CoreException {
@@ -346,7 +362,7 @@ public class TuleapTaskDataHandlerTests {
 	 */
 	private void testPostTaskData(TaskData taskData, TuleapTaskId taskId, ResponseKind responseKind) {
 		// Mock soap client
-		final TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(null, null) {
+		final TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(location, null) {
 			@Override
 			public TuleapTaskId createArtifact(TuleapArtifact artifact, IProgressMonitor monitor)
 					throws CoreException {

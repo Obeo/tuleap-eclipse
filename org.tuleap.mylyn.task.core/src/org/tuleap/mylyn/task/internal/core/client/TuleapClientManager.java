@@ -114,7 +114,7 @@ public class TuleapClientManager implements IRepositoryListener {
 		TuleapSoapParser tuleapSoapParser = new TuleapSoapParser();
 		TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(webLocation);
 
-		TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(tuleapSoapConnector, tuleapSoapParser);
+		TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(webLocation, tuleapSoapParser);
 		this.soapClientCache.put(taskRepository, tuleapSoapClient);
 
 		// Create the REST client

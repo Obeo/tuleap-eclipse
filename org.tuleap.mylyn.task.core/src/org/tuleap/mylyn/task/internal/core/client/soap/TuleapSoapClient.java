@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.client.soap;
 
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
+import java.net.Proxy;
+import java.net.SocketAddress;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,10 +21,12 @@ import java.util.List;
 
 import javax.xml.rpc.ServiceException;
 
+import org.apache.axis.AxisProperties;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
@@ -42,9 +47,9 @@ import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
 public class TuleapSoapClient {
 
 	/**
-	 * The SOAP connector.
+	 * The repository location.
 	 */
-	private final TuleapSoapConnector soapConnector;
+	private final AbstractWebLocation webLocation;
 
 	/**
 	 * The SOAP parser.
@@ -54,14 +59,46 @@ public class TuleapSoapClient {
 	/**
 	 * The constructor.
 	 * 
-	 * @param tuleapSoapConnector
-	 *            The Tuleap SOAP connector
+	 * @param webLocation
+	 *            The repository location
 	 * @param tuleapSoapParser
-	 *            The Tuleap SOAP parser
+	 *            The SOAP parser
 	 */
-	public TuleapSoapClient(TuleapSoapConnector tuleapSoapConnector, TuleapSoapParser tuleapSoapParser) {
-		this.soapConnector = tuleapSoapConnector;
+	public TuleapSoapClient(AbstractWebLocation webLocation, TuleapSoapParser tuleapSoapParser) {
+		this.webLocation = webLocation;
 		this.tuleapSoapParser = tuleapSoapParser;
+		ensureProxySettingsRegistration();
+	}
+
+	/**
+	 * Creates and return a new connector. This is necessary because the {@link TuleapSoapConnector} class is
+	 * not thread-safe.
+	 * 
+	 * @return A new instance of {@link TuleapSoapConnector}.
+	 */
+	private TuleapSoapConnector newConnector() {
+		return new TuleapSoapConnector(webLocation);
+	}
+
+	/**
+	 * Ensures that the settings of the proxy are correctly registered in the Axis properties.
+	 */
+	private void ensureProxySettingsRegistration() {
+		String url = webLocation.getUrl();
+		Proxy proxy = webLocation.getProxyForHost(url, "HTTP"); //$NON-NLS-1$
+		if (proxy == null) {
+			proxy = webLocation.getProxyForHost(url, "HTTPS"); //$NON-NLS-1$
+		}
+		if (proxy != null) {
+			SocketAddress address = proxy.address();
+			if (address instanceof InetSocketAddress) {
+				InetSocketAddress inetSocketAddress = (InetSocketAddress)address;
+				int port = inetSocketAddress.getPort();
+				String hostName = inetSocketAddress.getHostName();
+				AxisProperties.setProperty("http.proxyHost", hostName); //$NON-NLS-1$
+				AxisProperties.setProperty("http.proxyPort", Integer.valueOf(port).toString()); //$NON-NLS-1$
+			}
+		}
 	}
 
 	/**
@@ -76,7 +113,7 @@ public class TuleapSoapClient {
 	 */
 	public IStatus validateConnection(IProgressMonitor monitor) throws CoreException {
 		try {
-			IStatus status = soapConnector.validateConnection(monitor);
+			IStatus status = newConnector().validateConnection(monitor);
 			return status;
 		} catch (MalformedURLException e) {
 			IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
@@ -100,7 +137,7 @@ public class TuleapSoapClient {
 	 *             In case of error during the retrieval of the configuration
 	 */
 	public TuleapServer getTuleapServerConfiguration(IProgressMonitor monitor) throws CoreException {
-		return soapConnector.getTuleapServerConfiguration(monitor);
+		return newConnector().getTuleapServerConfiguration(monitor);
 	}
 
 	/**
@@ -116,7 +153,7 @@ public class TuleapSoapClient {
 	 */
 	public TuleapTracker getTuleapTrackerConfiguration(TuleapProject project, int trackerId,
 			IProgressMonitor monitor) {
-		return this.soapConnector.getTuleapTrackerConfiguration(project.getIdentifier(), trackerId, monitor);
+		return newConnector().getTuleapTrackerConfiguration(project.getIdentifier(), trackerId, monitor);
 	}
 
 	/**
@@ -136,7 +173,7 @@ public class TuleapSoapClient {
 			TuleapServer serverConfiguration, TuleapTracker tuleapTracker, IProgressMonitor monitor) {
 		List<TuleapArtifact> artifacts = new ArrayList<TuleapArtifact>();
 
-		List<CommentedArtifact> artifactsToConvert = soapConnector.performQuery(query, serverConfiguration,
+		List<CommentedArtifact> artifactsToConvert = newConnector().performQuery(query, serverConfiguration,
 				TaskDataCollector.MAX_HITS, monitor);
 		for (CommentedArtifact artifactToParse : artifactsToConvert) {
 			TuleapArtifact tuleapArtifact = this.tuleapSoapParser.parseArtifact(tuleapTracker,
@@ -167,7 +204,7 @@ public class TuleapSoapClient {
 		if (artifactId != TuleapTaskId.IRRELEVANT_ID) {
 			TuleapArtifact tuleapArtifact;
 			try {
-				CommentedArtifact artifact = soapConnector.getArtifact(artifactId, serverConfiguration,
+				CommentedArtifact artifact = newConnector().getArtifact(artifactId, serverConfiguration,
 						monitor);
 
 				tuleapArtifact = this.tuleapSoapParser.parseArtifact(serverConfiguration.getTracker(artifact
@@ -201,7 +238,7 @@ public class TuleapSoapClient {
 	public TuleapTaskId createArtifact(TuleapArtifact artifact, IProgressMonitor monitor)
 			throws CoreException {
 		try {
-			return soapConnector.createArtifact(artifact, monitor);
+			return newConnector().createArtifact(artifact, monitor);
 		} catch (RemoteException e) {
 			IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
 			throw new CoreException(status);
@@ -226,7 +263,7 @@ public class TuleapSoapClient {
 	 */
 	public void updateArtifact(TuleapArtifact artifact, IProgressMonitor monitor) throws CoreException {
 		try {
-			soapConnector.updateArtifact(artifact, monitor);
+			newConnector().updateArtifact(artifact, monitor);
 		} catch (MalformedURLException e) {
 			IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
 			throw new CoreException(status);
@@ -249,6 +286,6 @@ public class TuleapSoapClient {
 	 * @return The list of the reports of the tracker
 	 */
 	public Collection<? extends TuleapTrackerReport> getReports(int trackerId, IProgressMonitor monitor) {
-		return soapConnector.getReports(trackerId, monitor);
+		return newConnector().getReports(trackerId, monitor);
 	}
 }

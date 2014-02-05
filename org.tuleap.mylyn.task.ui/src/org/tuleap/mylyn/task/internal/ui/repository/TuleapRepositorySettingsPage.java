@@ -29,7 +29,6 @@ import org.tuleap.mylyn.task.internal.core.client.rest.RestResourceFactory;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestConnector;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
-import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapConnector;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
@@ -191,9 +190,8 @@ public class TuleapRepositorySettingsPage extends AbstractRepositorySettingsPage
 
 			ILog logger = Platform.getLog(Platform.getBundle(TuleapTasksUIPlugin.PLUGIN_ID));
 			TuleapSoapParser tuleapSoapParser = new TuleapSoapParser();
-			TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(location);
 
-			TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(tuleapSoapConnector, tuleapSoapParser);
+			TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(location, tuleapSoapParser);
 
 			TuleapJsonParser jsonParser = new TuleapJsonParser();
 
