@@ -310,8 +310,8 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 					tuleapArtifactMapper.setModificationDate(now);
 					tuleapArtifactMapper.setSummary(TuleapMylynTasksMessages.getString(
 							TuleapMylynTasksMessagesKeys.defaultNewTitle, tracker.getItemName()));
-
 					isInitialized = true;
+					taskData.getRoot().removeAttribute(TaskAttribute.COMMENT_NEW);
 				}
 				if (initializationData instanceof TuleapMilestoneMapping) {
 					TuleapMilestoneMapping milestoneMapping = (TuleapMilestoneMapping)initializationData;

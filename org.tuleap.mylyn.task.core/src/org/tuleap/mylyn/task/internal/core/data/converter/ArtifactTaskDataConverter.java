@@ -235,9 +235,12 @@ public class ArtifactTaskDataConverter {
 		}
 
 		// New comment
-		TaskAttribute newCommentTaskAttribute = taskData.getRoot().getAttribute(TaskAttribute.COMMENT_NEW);
-		tuleapArtifact.setNewComment(newCommentTaskAttribute.getValue());
-
+		String newComment = ""; //$NON-NLS-1$
+		TaskAttribute newCommentAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW);
+		if (newCommentAttribute != null) {
+			newComment = newCommentAttribute.getValue();
+		}
+		tuleapArtifact.setNewComment(newComment);
 		return tuleapArtifact;
 	}
 
