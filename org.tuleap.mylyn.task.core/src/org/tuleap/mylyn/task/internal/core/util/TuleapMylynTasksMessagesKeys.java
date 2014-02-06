@@ -329,11 +329,6 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	public static String retrievingCardwall;
 
 	/**
-	 * Updating the cardwall.
-	 */
-	public static String updatingCardwall;
-
-	/**
 	 * Updating a backlogItem.
 	 */
 	public static String updatingBacklogItem;

@@ -678,25 +678,6 @@ public class TuleapRestClient implements IAuthenticator {
 	}
 
 	/**
-	 * Updates cards by sending their local state to the server.
-	 * 
-	 * @param cards
-	 *            The list of cards to commit.
-	 * @param monitor
-	 *            Progress monitor to use.
-	 * @throws CoreException
-	 *             In case of error during the update of the artifact.
-	 */
-	public void updateCards(List<TuleapCard> cards, IProgressMonitor monitor) throws CoreException {
-		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.updatingCardwall));
-		}
-		for (TuleapCard tuleapCard : cards) {
-			this.updateCard(tuleapCard, monitor);
-		}
-	}
-
-	/**
 	 * Updates the backlog of a given milestone.
 	 * 
 	 * @param milestoneId
@@ -826,7 +807,7 @@ public class TuleapRestClient implements IAuthenticator {
 	 *             In case of error during the update of the artifact.
 	 */
 
-	private void updateCard(TuleapCard tuleapCard, IProgressMonitor monitor) throws CoreException {
+	public void updateCard(TuleapCard tuleapCard, IProgressMonitor monitor) throws CoreException {
 		if (monitor != null) {
 			monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.updatingCard,
 					tuleapCard.getId()));

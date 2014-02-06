@@ -434,7 +434,6 @@ public class TuleapRestClientTest {
 	 */
 	@Test
 	public void testUpdateCardwallWithSimpleCard() throws CoreException {
-		List<TuleapCard> cards = new ArrayList<TuleapCard>();
 		TuleapCard card = new TuleapCard("2_12345", new ArtifactReference(12345, "A/12345",
 				new TuleapReference(700, "t/700")), new TuleapReference(200, "p/200"));
 		card.setColumnId(10000);
@@ -446,7 +445,6 @@ public class TuleapRestClientTest {
 		}
 		card.setAllowedColumnIds(columnIds);
 		card.setStatus(TuleapStatus.valueOf("Open"));
-		cards.add(card);
 
 		Map<String, String> respHeaders = Maps.newHashMap();
 		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
@@ -455,7 +453,7 @@ public class TuleapRestClientTest {
 				"The response body", respHeaders); //$NON-NLS-1$
 
 		connector.setResponse(response);
-		client.updateCards(cards, new NullProgressMonitor());
+		client.updateCard(card, new NullProgressMonitor());
 
 		// Let's check the requests that have been sent.
 		List<ServerRequest> requestsSent = connector.getRequestsSent();
@@ -479,7 +477,6 @@ public class TuleapRestClientTest {
 	 */
 	@Test
 	public void testUpdateCardwallWithLiteralFieldValue() throws CoreException {
-		List<TuleapCard> cards = new ArrayList<TuleapCard>();
 		TuleapCard card = new TuleapCard("2_12345", new ArtifactReference(12345, "A/12345",
 				new TuleapReference(700, "t/700")), new TuleapReference(200, "p/200"));
 		card.setColumnId(10000);
@@ -492,7 +489,6 @@ public class TuleapRestClientTest {
 		}
 		card.setAllowedColumnIds(columnIds);
 		card.setStatus(TuleapStatus.valueOf("Open"));
-		cards.add(card);
 
 		Map<String, String> respHeaders = Maps.newHashMap();
 		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
@@ -501,7 +497,7 @@ public class TuleapRestClientTest {
 				"The response body", respHeaders); //$NON-NLS-1$
 
 		connector.setResponse(response);
-		client.updateCards(cards, new NullProgressMonitor());
+		client.updateCard(card, new NullProgressMonitor());
 
 		// Let's check the requests that have been sent.
 		List<ServerRequest> requestsSent = connector.getRequestsSent();
@@ -526,8 +522,6 @@ public class TuleapRestClientTest {
 	 */
 	@Test
 	public void testUpdateCardwallWithBoundFieldValue() throws CoreException {
-		List<TuleapCard> cards = new ArrayList<TuleapCard>();
-
 		TuleapCard card = new TuleapCard("2_12345", new ArtifactReference(12345, "A/12345",
 				new TuleapReference(700, "t/700")), new TuleapReference(200, "p/200"));
 		card.setColumnId(10000);
@@ -547,7 +541,6 @@ public class TuleapRestClientTest {
 		BoundFieldValue firstBoundFieldValue = new BoundFieldValue(2000, valueIds);
 
 		card.addFieldValue(firstBoundFieldValue);
-		cards.add(card);
 
 		Map<String, String> respHeaders = Maps.newHashMap();
 		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
@@ -556,7 +549,7 @@ public class TuleapRestClientTest {
 				"The response body", respHeaders); //$NON-NLS-1$
 
 		connector.setResponse(response);
-		client.updateCards(cards, new NullProgressMonitor());
+		client.updateCard(card, new NullProgressMonitor());
 
 		// Let's check the requests that have been sent.
 		List<ServerRequest> requestsSent = connector.getRequestsSent();
@@ -581,8 +574,6 @@ public class TuleapRestClientTest {
 	 */
 	@Test
 	public void testUpdateCardwallWithFileDescription() throws CoreException {
-		List<TuleapCard> cards = new ArrayList<TuleapCard>();
-
 		TuleapCard card = new TuleapCard("2_12345", new ArtifactReference(12345, "A/12345",
 				new TuleapReference(700, "t/700")), new TuleapReference(200, "p/200"));
 		card.setColumnId(10000);
@@ -607,8 +598,6 @@ public class TuleapRestClientTest {
 
 		card.addFieldValue(fileDescriptions);
 
-		cards.add(card);
-
 		Map<String, String> respHeaders = Maps.newHashMap();
 		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
 		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
@@ -616,7 +605,7 @@ public class TuleapRestClientTest {
 				"The response body", respHeaders); //$NON-NLS-1$
 
 		connector.setResponse(response);
-		client.updateCards(cards, new NullProgressMonitor());
+		client.updateCard(card, new NullProgressMonitor());
 
 		// Let's check the requests that have been sent.
 		List<ServerRequest> requestsSent = connector.getRequestsSent();
@@ -632,82 +621,6 @@ public class TuleapRestClientTest {
 		assertEquals(
 				"{\"label\":\"Simple label\",\"values\":[{\"field_id\":3000,\"file_descriptions\":[{\"file_id\":100000,\"description\":\"first description\"},{\"file_id\":100001,\"description\":\"second description\"}]}],\"column_id\":10000}", //$NON-NLS-1$
 				request1.body);
-	}
-
-	/**
-	 * Test updating a cardwall with two cards.
-	 * 
-	 * @throws CoreException
-	 */
-	@Test
-	public void testUpdateCardwallWithTwoCards() throws CoreException {
-
-		List<TuleapCard> cards = new ArrayList<TuleapCard>();
-
-		TuleapCard firstCard = new TuleapCard("2_12345", new ArtifactReference(12345, "A/12345",
-				new TuleapReference(700, "t/700")), new TuleapReference(200, "p/200"));
-		firstCard.setColumnId(10000);
-		firstCard.setLabel("Simple label");
-
-		int[] columnIds = new int[3];
-		for (int i = 0; i < 3; i++) {
-			columnIds[i] = i + 10;
-		}
-		firstCard.setAllowedColumnIds(columnIds);
-		firstCard.setStatus(TuleapStatus.valueOf("Open"));
-		cards.add(firstCard);
-
-		TuleapCard secondCard = new TuleapCard("2_12346", new ArtifactReference(12346, "A/12346",
-				new TuleapReference(800, "t/800")), new TuleapReference(300, "p/300"));
-		secondCard.setColumnId(10000);
-		secondCard.setLabel("Simple label");
-
-		secondCard.setAllowedColumnIds(columnIds);
-		secondCard.setStatus(TuleapStatus.valueOf("Closed"));
-
-		List<Integer> valueIds = new ArrayList<Integer>();
-		valueIds.add(new Integer(10));
-		valueIds.add(new Integer(20));
-		valueIds.add(new Integer(30));
-		BoundFieldValue firstBoundFieldValue = new BoundFieldValue(2000, valueIds);
-
-		secondCard.addFieldValue(firstBoundFieldValue);
-		cards.add(secondCard);
-
-		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
-		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
-		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK,
-				"The response body", respHeaders); //$NON-NLS-1$
-
-		connector.setResponse(response);
-		client.updateCards(cards, new NullProgressMonitor());
-
-		// Let's check the requests that have been sent.
-		List<ServerRequest> requestsSent = connector.getRequestsSent();
-		assertEquals(4, requestsSent.size());
-
-		ServerRequest request0 = requestsSent.get(0);
-		assertEquals("/api/v12.3/cards/2_12345", request0.url); //$NON-NLS-1$
-		assertEquals("OPTIONS", request0.method); //$NON-NLS-1$
-
-		ServerRequest request1 = requestsSent.get(1);
-		assertEquals("/api/v12.3/cards/2_12345", request1.url); //$NON-NLS-1$
-		assertEquals("PUT", request1.method); //$NON-NLS-1$
-		assertEquals("{\"label\":\"Simple label\",\"values\":[],\"column_id\":10000}", //$NON-NLS-1$
-				request1.body);
-
-		ServerRequest request2 = requestsSent.get(2);
-		assertEquals("/api/v12.3/cards/2_12346", request2.url); //$NON-NLS-1$
-		assertEquals("OPTIONS", request2.method); //$NON-NLS-1$
-
-		ServerRequest request3 = requestsSent.get(3);
-		assertEquals("/api/v12.3/cards/2_12346", request3.url); //$NON-NLS-1$
-		assertEquals("PUT", request3.method); //$NON-NLS-1$
-		assertEquals(
-				"{\"label\":\"Simple label\",\"values\":[{\"field_id\":2000,\"bind_value_ids\":[10,20,30]}],\"column_id\":10000}", //$NON-NLS-1$
-				request3.body);
-
 	}
 
 	/**

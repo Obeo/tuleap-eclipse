@@ -202,7 +202,13 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 		// Update the Cards
 		List<TuleapCard> cards = milestoneTaskDataConverter.extractModifiedCards(taskData);
-		tuleapRestClient.updateCards(cards, monitor);
+		for (TuleapCard tuleapCard : cards) {
+			try {
+				tuleapRestClient.updateCard(tuleapCard, monitor);
+			} catch (CoreException e) {
+				exceptions.add(e);
+			}
+		}
 
 		checkSubmission(exceptions);
 
