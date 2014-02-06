@@ -332,14 +332,16 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	}
 
 	/**
-	 * Sets the url of the wrapped task.
+	 * Sets the url of the wrapped task. Nothing happens if the given URL is null.
 	 * 
 	 * @param url
 	 *            the url of the task
 	 */
 	public void setTaskUrl(String url) {
-		TaskAttribute attribute = getWriteableAttribute(TaskAttribute.TASK_URL, TaskAttribute.TYPE_URL);
-		taskData.getAttributeMapper().setValue(attribute, url);
+		if (url != null) {
+			TaskAttribute attribute = getWriteableAttribute(TaskAttribute.TASK_URL, TaskAttribute.TYPE_URL);
+			taskData.getAttributeMapper().setValue(attribute, url);
+		}
 	}
 
 	/**
@@ -363,7 +365,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 */
 	public void setSummary(String value) {
 		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY);
-		if (attribute != null) {
+		if (attribute != null && value != null) {
 			taskData.getAttributeMapper().setValue(attribute, value);
 		}
 	}
