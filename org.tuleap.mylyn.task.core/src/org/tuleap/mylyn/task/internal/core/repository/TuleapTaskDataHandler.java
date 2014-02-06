@@ -10,11 +10,14 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.repository;
 
+import com.google.common.collect.Lists;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -164,37 +167,46 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				taskRepository, connector);
 
 		TuleapRestClient tuleapRestClient = this.connector.getClientManager().getRestClient(taskRepository);
-		if (taskData.isNew()) {
-			// TODO See with Enalean how this could be possible. An artifact is needed to create a milestone?
-			// String milestoneId = tuleapRestClient.createMilestone(tuleapMilestone, monitor);
-			// response = new RepositoryResponse(ResponseKind.TASK_CREATED, milestoneId);
-		} else {
-			List<TuleapBacklogItem> backlog = milestoneTaskDataConverter.extractBacklog(taskData);
-			int milestoneId = milestoneTaskDataConverter.getMilestoneId(taskData);
 
-			List<TuleapMilestone> subMilestones = milestoneTaskDataConverter.extractMilestones(taskData);
-			for (TuleapMilestone subMilestone : subMilestones) {
-				TuleapTaskId subMilestoneTaskId = TuleapTaskId.forArtifact(subMilestone.getProject().getId(),
-						subMilestone.getArtifact().getTracker().getId(), subMilestone.getArtifact().getId());
-				if (milestoneTaskDataConverter.mustUpdate(taskData, subMilestoneTaskId)) {
-					List<TuleapBacklogItem> content = milestoneTaskDataConverter.extractContent(taskData,
-							subMilestoneTaskId);
+		Assert.isTrue(!taskData.isNew(), TuleapMylynTasksMessages
+				.getString(TuleapMylynTasksMessagesKeys.attemptToCreateNewTopPlanning));
+
+		List<TuleapBacklogItem> backlog = milestoneTaskDataConverter.extractBacklog(taskData);
+		int milestoneId = milestoneTaskDataConverter.getMilestoneId(taskData);
+
+		List<TuleapMilestone> subMilestones = milestoneTaskDataConverter.extractMilestones(taskData);
+		List<CoreException> exceptions = Lists.newArrayList();
+		for (TuleapMilestone subMilestone : subMilestones) {
+			TuleapTaskId subMilestoneTaskId = TuleapTaskId.forArtifact(subMilestone.getProject().getId(),
+					subMilestone.getArtifact().getTracker().getId(), subMilestone.getArtifact().getId());
+			if (milestoneTaskDataConverter.mustUpdate(taskData, subMilestoneTaskId)) {
+				List<TuleapBacklogItem> content = milestoneTaskDataConverter.extractContent(taskData,
+						subMilestoneTaskId);
+				try {
 					tuleapRestClient
 							.updateMilestoneContent(subMilestone.getId().intValue(), content, monitor);
+				} catch (CoreException e) {
+					exceptions.add(e);
 				}
 			}
-
-			// Now that all sub-milestones are updated, we can re-order the unassigned backlog items.
-			if (milestoneTaskDataConverter.mustUpdateBacklog(taskData)) {
-				tuleapRestClient.updateMilestoneBacklog(milestoneId, backlog, monitor);
-			}
-
-			// Update the Cards
-			List<TuleapCard> cards = milestoneTaskDataConverter.extractModifiedCards(taskData);
-			tuleapRestClient.updateCards(cards, monitor);
-
-			response = new RepositoryResponse(ResponseKind.TASK_UPDATED, taskData.getTaskId());
 		}
+
+		// Now that all sub-milestones are updated, we can re-order the unassigned backlog items.
+		if (milestoneTaskDataConverter.mustUpdateBacklog(taskData)) {
+			try {
+				tuleapRestClient.updateMilestoneBacklog(milestoneId, backlog, monitor);
+			} catch (CoreException e) {
+				exceptions.add(e);
+			}
+		}
+
+		// Update the Cards
+		List<TuleapCard> cards = milestoneTaskDataConverter.extractModifiedCards(taskData);
+		tuleapRestClient.updateCards(cards, monitor);
+
+		checkSubmission(exceptions);
+
+		response = new RepositoryResponse(ResponseKind.TASK_UPDATED, taskData.getTaskId());
 
 		return response;
 	}
@@ -263,30 +275,63 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				taskRepository, connector);
 
 		TuleapRestClient tuleapRestClient = this.connector.getClientManager().getRestClient(taskRepository);
-		if (taskData.isNew()) {
-			// TODO See with Enalean how this could be possible. An artifact is needed to create a milestone?
-			// String milestoneId = tuleapRestClient.createMilestone(tuleapMilestone, monitor);
-			// response = new RepositoryResponse(ResponseKind.TASK_CREATED, milestoneId);
-		} else {
-			List<TuleapBacklogItem> backlog = milestoneTaskDataConverter.extractBacklog(taskData);
-			int projectId = milestoneTaskDataConverter.getProjectId(taskData);
+		Assert.isTrue(!taskData.isNew(), TuleapMylynTasksMessages
+				.getString(TuleapMylynTasksMessagesKeys.attemptToCreateNewTopPlanning));
+		// The taskData
+		List<TuleapBacklogItem> backlog = milestoneTaskDataConverter.extractBacklog(taskData);
+		int projectId = milestoneTaskDataConverter.getProjectId(taskData);
 
-			List<TuleapMilestone> subMilestones = milestoneTaskDataConverter.extractMilestones(taskData);
-			for (TuleapMilestone subMilestone : subMilestones) {
-				TuleapTaskId subMilestoneTaskId = TuleapTaskId.forArtifact(subMilestone.getProject().getId(),
-						subMilestone.getArtifact().getTracker().getId(), subMilestone.getArtifact().getId());
+		List<TuleapMilestone> subMilestones = milestoneTaskDataConverter.extractMilestones(taskData);
+		List<CoreException> exceptions = Lists.newArrayList();
+		for (TuleapMilestone subMilestone : subMilestones) {
+			TuleapTaskId subMilestoneTaskId = TuleapTaskId.forArtifact(subMilestone.getProject().getId(),
+					subMilestone.getArtifact().getTracker().getId(), subMilestone.getArtifact().getId());
+			if (milestoneTaskDataConverter.mustUpdate(taskData, subMilestoneTaskId)) {
 				List<TuleapBacklogItem> content = milestoneTaskDataConverter.extractContent(taskData,
 						subMilestoneTaskId);
-				tuleapRestClient.updateMilestoneContent(subMilestone.getId().intValue(), content, monitor);
+				try {
+					tuleapRestClient
+							.updateMilestoneContent(subMilestone.getId().intValue(), content, monitor);
+				} catch (CoreException e) {
+					exceptions.add(e);
+				}
 			}
-
-			// Now that all sub-milestones are updated, we can re-order the unassigned backlog items.
-			tuleapRestClient.updateTopPlanningBacklog(projectId, backlog, monitor);
-
-			response = new RepositoryResponse(ResponseKind.TASK_UPDATED, taskData.getTaskId());
 		}
 
+		// Now that all sub-milestones are updated, we can re-order the unassigned backlog items.
+		if (milestoneTaskDataConverter.mustUpdateBacklog(taskData)) {
+			try {
+				tuleapRestClient.updateTopPlanningBacklog(projectId, backlog, monitor);
+			} catch (CoreException e) {
+				exceptions.add(e);
+			}
+		}
+
+		checkSubmission(exceptions);
+
+		response = new RepositoryResponse(ResponseKind.TASK_UPDATED, taskData.getTaskId());
+
 		return response;
+	}
+
+	/**
+	 * Checks that the given list is empty. If not, logs the contained exceptions and throws an exception to
+	 * attempt to guide the user.
+	 * 
+	 * @param exceptions
+	 *            The list of exceptions.
+	 * @throws TuleapSubmitException
+	 *             If the given list is not empty.
+	 */
+	private void checkSubmission(List<CoreException> exceptions) throws TuleapSubmitException {
+		if (!exceptions.isEmpty()) {
+			for (CoreException e : exceptions) {
+				TuleapCoreActivator.log(e, false);
+			}
+			throw new TuleapSubmitException(TuleapMylynTasksMessages.getString(
+					TuleapMylynTasksMessagesKeys.problemsOccurredDuringSubmit, Integer.valueOf(exceptions
+							.size())));
+		}
 	}
 
 	/**

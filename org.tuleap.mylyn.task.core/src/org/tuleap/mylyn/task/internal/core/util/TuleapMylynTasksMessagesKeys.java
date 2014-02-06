@@ -430,6 +430,26 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	 */
 	public static String selectBoxNone;
 
+	/**
+	 * Message for invalid state when attempting to submit the creation of a milestone, which should never
+	 * happen.
+	 */
+	public static String attemptToSubmitAgileDataOnNewTask;
+
+	/**
+	 * Message for invalid state when attempting to submit the creation of a top-planning, which should never
+	 * happen.
+	 */
+	public static String attemptToCreateNewTopPlanning;
+
+	/**
+	 * Message indicating that problems have occurred during submission. 1 parameter:
+	 * <ol>
+	 * <li>The number of problems (integer)</li>
+	 * </ol>
+	 */
+	public static String problemsOccurredDuringSubmit;
+
 	static {
 		// load message values from bundle file
 		reloadMessages();
