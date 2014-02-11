@@ -18,6 +18,7 @@ import org.tuleap.mylyn.task.internal.core.client.rest.RestResource.URL;
  * Builder class that instantiates the accessible JSON services.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
+ * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
 public final class RestResourceFactory {
 
@@ -166,6 +167,28 @@ public final class RestResourceFactory {
 	 */
 	public RestResource projectMilestones(int projectId) {
 		return resource(RestResource.GET, URL.PROJECTS, Integer.toString(projectId), URL.MILESTONES);
+	}
+
+	/**
+	 * Provides access to the {code /projects/:id/user_groups} HTTP resource to get a project user groups.
+	 * 
+	 * @param projectId
+	 *            the project id
+	 * @return A resource that gives access to the {code /projects/:id/user_groups} HTTP resource.
+	 */
+	public RestResource projectUserGroups(int projectId) {
+		return resource(RestResource.GET, URL.PROJECTS, Integer.toString(projectId), URL.USER_GROUPS);
+	}
+
+	/**
+	 * Provides access to the {code /user_groups/:id/users} HTTP resource to get a user group users.
+	 * 
+	 * @param userGroupId
+	 *            the project id
+	 * @return A resource that gives access to the {code /user_groups/:id/users} HTTP resource.
+	 */
+	public RestResource userGroupUsers(int userGroupId) {
+		return resource(RestResource.GET, URL.USER_GROUPS, Integer.toString(userGroupId), URL.USERS);
 	}
 
 	/**

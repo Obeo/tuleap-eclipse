@@ -492,5 +492,10 @@ public class RestResource {
 		 * "users".
 		 */
 		String USERS = "users"; //$NON-NLS-1$
+
+		/**
+		 * "user_groups".
+		 */
+		String USER_GROUPS = "user_groups"; //$NON-NLS-1$
 	}
 }

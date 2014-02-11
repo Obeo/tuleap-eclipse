@@ -44,7 +44,7 @@ public class TuleapServer implements Serializable {
 	/**
 	 * Users indexed by id.
 	 */
-	private final Map<Integer, TuleapPerson> personsById = Maps.newHashMap();
+	private final Map<Integer, TuleapUser> personsById = Maps.newHashMap();
 
 	/**
 	 * This map contains the ID of the projects of the Tuleap instance and their matching configuration.
@@ -161,7 +161,7 @@ public class TuleapServer implements Serializable {
 	 *            the user id.
 	 * @return The person registered for this id, or null if none is found.
 	 */
-	public TuleapPerson getUser(int id) {
+	public TuleapUser getUser(int id) {
 		return personsById.get(Integer.valueOf(id));
 	}
 
@@ -182,7 +182,7 @@ public class TuleapServer implements Serializable {
 	 * @param person
 	 *            The user.
 	 */
-	public void register(TuleapPerson person) {
+	public void register(TuleapUser person) {
 		if (person != null) {
 			personsById.put(Integer.valueOf(person.getId()), person);
 		}

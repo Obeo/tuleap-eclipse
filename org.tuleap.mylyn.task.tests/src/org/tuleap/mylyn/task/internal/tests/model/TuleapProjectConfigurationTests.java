@@ -14,12 +14,12 @@ import java.util.Collection;
 import java.util.Date;
 
 import org.junit.Test;
-import org.tuleap.mylyn.task.internal.core.model.config.TuleapGroup;
-import org.tuleap.mylyn.task.internal.core.model.config.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPlanning;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapUser;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapUserGroup;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 
 import static org.junit.Assert.assertEquals;
@@ -152,19 +152,19 @@ public class TuleapProjectConfigurationTests {
 
 		assertNull(project.getUserGroup(0));
 		assertNull(project.getUserGroup(1));
-		TuleapGroup group0 = new TuleapGroup(0, "Project Admins");
+		TuleapUserGroup group0 = new TuleapUserGroup(0, "Project Admins");
 		project.addGroup(group0);
 		assertNotNull(project.getUserGroup(0));
 		assertNull(project.getUserGroup(1));
-		TuleapGroup group1 = new TuleapGroup(1, "Project Members");
+		TuleapUserGroup group1 = new TuleapUserGroup(1, "Project Members");
 		project.addGroup(group1);
 		assertNotNull(project.getUserGroup(0));
 		assertNotNull(project.getUserGroup(01));
 
-		TuleapPerson user0 = new TuleapPerson("zero", "John Zero", 0, "john.zero@some.where");
-		TuleapPerson user1 = new TuleapPerson("one", "John One", 1, "john.one@some.where");
-		TuleapPerson user2 = new TuleapPerson("two", "John Two", 2, "john.two@some.where");
-		TuleapPerson user3 = new TuleapPerson("three", "John Three", 3, "john.three@some.where");
+		TuleapUser user0 = new TuleapUser("zero", "John Zero", 0, "john.zero@some.where", null);
+		TuleapUser user1 = new TuleapUser("one", "John One", 1, "john.one@some.where", null);
+		TuleapUser user2 = new TuleapUser("two", "John Two", 2, "john.two@some.where", null);
+		TuleapUser user3 = new TuleapUser("three", "John Three", 3, "john.three@some.where", null);
 		project.addUserToUserGroup(group0, user0);
 		project.addUserToUserGroup(group0, user1);
 
@@ -173,9 +173,9 @@ public class TuleapProjectConfigurationTests {
 		project.addUserToUserGroup(group1, user2);
 		project.addUserToUserGroup(group1, user3);
 
-		TuleapGroup g0 = project.getUserGroup(0);
+		TuleapUserGroup g0 = project.getUserGroup(0);
 		assertSame(group0, g0);
-		TuleapGroup g1 = project.getUserGroup(1);
+		TuleapUserGroup g1 = project.getUserGroup(1);
 		assertSame(group1, g1);
 
 		assertEquals(2, g0.getMembers().size());
@@ -194,7 +194,7 @@ public class TuleapProjectConfigurationTests {
 		assertSame(user3, server.getUser(3));
 
 		// Check retrieval of all groups
-		Collection<TuleapGroup> groups = project.getAllUserGroups();
+		Collection<TuleapUserGroup> groups = project.getAllUserGroups();
 		assertEquals(2, groups.size());
 		assertTrue(groups.contains(group0));
 		assertTrue(groups.contains(group1));

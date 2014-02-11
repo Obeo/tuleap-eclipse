@@ -20,6 +20,8 @@ import java.util.Date;
 import org.tuleap.mylyn.task.internal.core.model.TuleapErrorMessage;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPlanning;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapUser;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapUserGroup;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCard;
@@ -31,6 +33,7 @@ import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
+ * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
 public class TuleapJsonParser {
 
@@ -139,6 +142,28 @@ public class TuleapJsonParser {
 	 */
 	public TuleapCardwall parseCardwall(String json) {
 		return gson.fromJson(json, TuleapCardwall.class);
+	}
+
+	/**
+	 * Parses a JSON element representing a user into a POJO.
+	 * 
+	 * @param element
+	 *            The JSON element representing a user
+	 * @return a POJO populated with the data from the JSON String.
+	 */
+	public TuleapUser parseUser(String element) {
+		return gson.fromJson(element, TuleapUser.class);
+	}
+
+	/**
+	 * Parses a JSON element representing a User group into a POJO.
+	 * 
+	 * @param element
+	 *            The JSON element representing a user group
+	 * @return a POJO populated with the data from the JSON String.
+	 */
+	public TuleapUserGroup parseUserGroup(String element) {
+		return gson.fromJson(element, TuleapUserGroup.class);
 	}
 
 	/**

@@ -38,6 +38,8 @@ import org.tuleap.mylyn.task.internal.core.model.config.TuleapPlanning;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTrackerReport;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapUser;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapUserGroup;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapAttachmentDescriptor;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
@@ -677,6 +679,49 @@ public class TuleapRestClient implements IAuthenticator {
 		return cardwall;
 	}
 
+	/**
+	 * Retrieve a project's user groups.
+	 * 
+	 * @param projectId
+	 *            ID of the project
+	 * @param monitor
+	 *            Progress monitor to use
+	 * @return A list, never null but possibly empty, containing the project's user groups.
+	 * @throws CoreException
+	 *             If the server returns a status code different from 200 OK.
+	 */
+	public List<TuleapUserGroup> getProjectUserGroups(int projectId, IProgressMonitor monitor)
+			throws CoreException {
+		RestResource r = restResourceFactory.projectUserGroups(projectId).withAuthenticator(this);
+		RestOperation operation = r.get();
+		List<TuleapUserGroup> userGroups = Lists.newArrayList();
+		for (JsonElement e : operation.iterable()) {
+			userGroups.add(jsonParser.parseUserGroup(e.toString()));
+		}
+		return userGroups;
+	}
+
+	/**
+	 * Retrieve a user group users.
+	 * 
+	 * @param userGroupId
+	 *            ID of the user group
+	 * @param monitor
+	 *            Progress monitor to use
+	 * @return A list, never null but possibly empty, containing the user groups's users.
+	 * @throws CoreException
+	 *             If the server returns a status code different from 200 OK.
+	 */
+	public List<TuleapUser> getUserGroupUsers(int userGroupId, IProgressMonitor monitor) throws CoreException {
+		RestResource r = restResourceFactory.userGroupUsers(userGroupId).withAuthenticator(this);
+		RestOperation operation = r.get();
+		List<TuleapUser> users = Lists.newArrayList();
+		for (JsonElement e : operation.iterable()) {
+			users.add(jsonParser.parseUser(e.toString()));
+		}
+		return users;
+	}
+	
 	/**
 	 * Updates the backlog of a given milestone.
 	 * 

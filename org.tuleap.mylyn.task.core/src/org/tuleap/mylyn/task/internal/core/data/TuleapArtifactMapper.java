@@ -31,8 +31,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.agile.core.data.AbstractTaskMapper;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
-import org.tuleap.mylyn.task.internal.core.model.config.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapUser;
 import org.tuleap.mylyn.task.internal.core.model.config.field.AbstractTuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapDate;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBox;
@@ -570,7 +570,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 		Date creationDate = calendar.getTime();
 		taskComment.setCreationDate(creationDate);
 		taskComment.setText(tuleapArtifactComment.getBody());
-		TuleapPerson submitter = tuleapArtifactComment.getSubmitter();
+		TuleapUser submitter = tuleapArtifactComment.getSubmitter();
 		if (submitter != null) {
 			TaskRepository taskRepository = attribute.getTaskData().getAttributeMapper().getTaskRepository();
 			IRepositoryPerson repositoryPerson = taskRepository.createPerson(submitter.getEmail());
@@ -596,7 +596,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 		TaskAttachmentMapper taskAttachment = TaskAttachmentMapper.createFrom(attribute);
 		taskAttachment.setAttachmentId(tuleapAttachment.getAttachmentId());
 
-		TuleapPerson person = tuleapAttachment.getPerson();
+		TuleapUser person = tuleapAttachment.getPerson();
 		if (person != null) {
 			IRepositoryPerson repositoryPerson = taskData.getAttributeMapper().getTaskRepository()
 					.createPerson(person.getEmail());

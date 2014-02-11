@@ -33,8 +33,8 @@ import org.tuleap.mylyn.task.internal.core.client.soap.CommentedArtifact;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapConnector;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.model.config.ITuleapTrackerConstants;
-import org.tuleap.mylyn.task.internal.core.model.config.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapUser;
 import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
@@ -162,7 +162,7 @@ public class TuleapSoapConnectorTests {
 			};
 
 			TuleapServer serverConfiguration = new TuleapServer("https://tuleap.net");
-			TuleapPerson person = new TuleapPerson(null, null, submittedBy, email);
+			TuleapUser person = new TuleapUser(null, null, submittedBy, email, null);
 			serverConfiguration.register(person);
 
 			CommentedArtifact commentedArtifact = tuleapSoapConnector.getArtifact(elementId,

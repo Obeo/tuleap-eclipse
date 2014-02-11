@@ -68,7 +68,7 @@ public class TuleapProject implements Serializable {
 	/**
 	 * User groups indexed by id.
 	 */
-	private final Map<Integer, TuleapGroup> userGroupsById = Maps.newHashMap();
+	private final Map<Integer, TuleapUserGroup> userGroupsById = Maps.newHashMap();
 
 	/**
 	 * The constructor.
@@ -246,7 +246,7 @@ public class TuleapProject implements Serializable {
 	 * @param group
 	 *            User group to register with this project. Must not be {@code null}.
 	 */
-	public void addGroup(TuleapGroup group) {
+	public void addGroup(TuleapUserGroup group) {
 		userGroupsById.put(Integer.valueOf(group.getId()), group);
 	}
 
@@ -258,7 +258,7 @@ public class TuleapProject implements Serializable {
 	 *            The id of the group being looked for.
 	 * @return The group with the given id if it is registered with this project, {@code null} otherwise.
 	 */
-	public TuleapGroup getUserGroup(int groupId) {
+	public TuleapUserGroup getUserGroup(int groupId) {
 		return userGroupsById.get(Integer.valueOf(groupId));
 	}
 
@@ -267,7 +267,7 @@ public class TuleapProject implements Serializable {
 	 * 
 	 * @return An unmodifiable view of the user groups registered with this project.
 	 */
-	public Collection<TuleapGroup> getAllUserGroups() {
+	public Collection<TuleapUserGroup> getAllUserGroups() {
 		return Collections.unmodifiableCollection(userGroupsById.values());
 	}
 
@@ -279,10 +279,10 @@ public class TuleapProject implements Serializable {
 	 * @param member
 	 *            The user to add to the group.
 	 */
-	public void addUserToUserGroup(TuleapGroup group, TuleapPerson member) {
+	public void addUserToUserGroup(TuleapUserGroup group, TuleapUser member) {
 		Assert.isNotNull(group);
 		Assert.isNotNull(member);
-		TuleapGroup groupToUse;
+		TuleapUserGroup groupToUse;
 		if (userGroupsById.containsKey(Integer.valueOf(group.getId()))) {
 			groupToUse = userGroupsById.get(Integer.valueOf(group.getId()));
 		} else {

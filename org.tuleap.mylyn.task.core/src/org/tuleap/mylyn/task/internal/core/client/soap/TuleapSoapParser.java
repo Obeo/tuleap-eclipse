@@ -21,9 +21,9 @@ import java.util.List;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
-import org.tuleap.mylyn.task.internal.core.model.config.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapUser;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapDate;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapFileUpload;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapMultiSelectBox;
@@ -133,7 +133,7 @@ public class TuleapSoapParser {
 						if (fileInfo != null) {
 							for (FieldValueFileInfo fieldValueFileInfo : fileInfo) {
 								int submitterId = fieldValueFileInfo.getSubmitted_by();
-								TuleapPerson submitter = serverConfiguration.getUser(submitterId);
+								TuleapUser submitter = serverConfiguration.getUser(submitterId);
 								attachments.add(new AttachmentValue(fieldValueFileInfo.getId(),
 										fieldValueFileInfo.getFilename(), submitter, fieldValueFileInfo
 												.getFilesize(), fieldValueFileInfo.getDescription(),

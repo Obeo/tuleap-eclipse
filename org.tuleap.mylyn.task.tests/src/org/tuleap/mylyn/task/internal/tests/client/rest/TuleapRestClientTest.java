@@ -30,7 +30,7 @@ import org.tuleap.mylyn.task.internal.core.client.rest.RestResourceFactory;
 import org.tuleap.mylyn.task.internal.core.client.rest.ServerResponse;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.model.TuleapToken;
-import org.tuleap.mylyn.task.internal.core.model.config.TuleapPerson;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapUser;
 import org.tuleap.mylyn.task.internal.core.model.data.ArtifactReference;
 import org.tuleap.mylyn.task.internal.core.model.data.AttachmentFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.AttachmentValue;
@@ -217,6 +217,50 @@ public class TuleapRestClientTest {
 		ServerRequest request1 = requestsSent.get(1);
 		assertEquals("/api/v12.3/backlog_items/350", request1.url); //$NON-NLS-1$
 		assertEquals("GET", request1.method); //$NON-NLS-1$
+	}
+
+	@Test
+	public void testRetrieveUserGroups() throws CoreException, ParseException {
+		String jsonMilestone = ParserUtil.loadFile("/groups/groups.json");
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonMilestone, respHeaders);
+		connector.setResponse(response);
+		client.getProjectUserGroups(200, null);
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(2, requestsSent.size());
+		ServerRequest request = requestsSent.get(0);
+		assertEquals("/api/v12.3/projects/200/user_groups", request.url); //$NON-NLS-1$
+		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
+
+		request = requestsSent.get(1);
+		assertEquals("/api/v12.3/projects/200/user_groups", request.url); //$NON-NLS-1$
+		assertEquals("GET", request.method); //$NON-NLS-1$
+	}
+
+	@Test
+	public void testRetrieveUsers() throws CoreException, ParseException {
+		String jsonMilestone = ParserUtil.loadFile("/users/project_admins.json");
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonMilestone, respHeaders);
+		connector.setResponse(response);
+		client.getUserGroupUsers(200, null);
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(2, requestsSent.size());
+		ServerRequest request = requestsSent.get(0);
+		assertEquals("/api/v12.3/user_groups/200/users", request.url); //$NON-NLS-1$
+		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
+
+		request = requestsSent.get(1);
+		assertEquals("/api/v12.3/user_groups/200/users", request.url); //$NON-NLS-1$
+		assertEquals("GET", request.method); //$NON-NLS-1$
 	}
 
 	/**
@@ -587,11 +631,12 @@ public class TuleapRestClientTest {
 		card.setStatus(TuleapStatus.valueOf("Open"));
 
 		List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
-		TuleapPerson firstUploadedBy = new TuleapPerson("first username", "first realname", 1, "first email"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		TuleapUser firstUploadedBy = new TuleapUser(
+				"first username", "first realname", 1, "first email", null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		attachments.add(new AttachmentValue("100000", "first name", firstUploadedBy, 123456, //$NON-NLS-1$ //$NON-NLS-2$ 
 				"first description", "first type")); //$NON-NLS-1$ //$NON-NLS-2$
-		TuleapPerson secondUploadedBy = new TuleapPerson("second username", "second realname", 2, //$NON-NLS-1$ //$NON-NLS-2$
-				"second email"); //$NON-NLS-1$
+		TuleapUser secondUploadedBy = new TuleapUser("second username", "second realname", 2, //$NON-NLS-1$ //$NON-NLS-2$
+				"second email", null); //$NON-NLS-1$
 		attachments.add(new AttachmentValue("100001", "second name", secondUploadedBy, 789456, //$NON-NLS-1$ //$NON-NLS-2$
 				"second description", "second type")); //$NON-NLS-1$ //$NON-NLS-2$
 		AttachmentFieldValue fileDescriptions = new AttachmentFieldValue(3000, attachments);

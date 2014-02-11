@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model.data;
 
-import org.tuleap.mylyn.task.internal.core.model.config.TuleapPerson;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapUser;
 
 /**
  * This class is used to represent an attachment in a {@link AttachmentFieldValue}.
@@ -31,7 +31,7 @@ public class AttachmentValue {
 	/**
 	 * The author.
 	 */
-	private TuleapPerson person;
+	private TuleapUser person;
 
 	/**
 	 * The size.
@@ -64,7 +64,7 @@ public class AttachmentValue {
 	 * @param type
 	 *            The content type
 	 */
-	public AttachmentValue(String attachmentId, String name, TuleapPerson uploadedBy, int filesize,
+	public AttachmentValue(String attachmentId, String name, TuleapUser uploadedBy, int filesize,
 			String desc, String type) {
 		this.attachmentId = attachmentId;
 		this.filename = name;
@@ -88,7 +88,7 @@ public class AttachmentValue {
 	 * 
 	 * @return The identifier of the author
 	 */
-	public TuleapPerson getPerson() {
+	public TuleapUser getPerson() {
 		return person;
 	}
 

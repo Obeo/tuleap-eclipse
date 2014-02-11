@@ -15,6 +15,8 @@ import java.text.ParseException;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.model.TuleapErrorMessage;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPlanning;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapUser;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapUserGroup;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
@@ -66,6 +68,25 @@ public class TuleapJsonParserTest {
 		String epic300 = ParserUtil.loadFile("/backlog_items/epic300.json");
 		TuleapBacklogItem item = parser.parseBacklogItem(epic300);
 		checkEpic300(item);
+	}
+
+	@Test
+	public void testDeserializeUserGroup() throws ParseException {
+		String group = ParserUtil.loadFile("/groups/project_admins.json");
+		TuleapUserGroup userGroup = parser.parseUserGroup(group);
+		assertEquals(1, userGroup.getId());
+		assertEquals("Project Administrators", userGroup.getLabel());
+		assertEquals("/user_groups/1", userGroup.getUri());
+	}
+
+	@Test
+	public void testDeserializeUser() throws ParseException {
+		String user = ParserUtil.loadFile("/users/an_user.json");
+		TuleapUser aUser = parser.parseUser(user);
+		assertEquals(0, aUser.getId());
+		assertEquals("John Doe", aUser.getRealName());
+		assertEquals("doej", aUser.getUserName());
+		assertEquals("john.doe@example.com", aUser.getEmail());
 	}
 
 	@Test

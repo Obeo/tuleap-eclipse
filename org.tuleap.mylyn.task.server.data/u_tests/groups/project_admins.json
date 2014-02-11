@@ -1,4 +1,5 @@
 {
-  "id": 1,
-  "name": "Project Administrators"
-}
+        "id": 1,
+        "uri": "/user_groups/1",
+        "label": "Project Administrators"
+    }

@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model.data;
 
-import org.tuleap.mylyn.task.internal.core.model.config.TuleapPerson;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapUser;
 
 /**
  * Utility class used to store a comment.
@@ -21,7 +21,7 @@ public class TuleapElementComment {
 	/**
 	 * The person who submitted the comment.
 	 */
-	private TuleapPerson submitter;
+	private TuleapUser submitter;
 
 	/**
 	 * The timestamp of the date when the comment was submitted.
@@ -43,7 +43,7 @@ public class TuleapElementComment {
 	 * @param submittedOnTimestamp
 	 *            The timestamp of the date when the comment has been submitted.
 	 */
-	public TuleapElementComment(String commentBody, TuleapPerson submitter, int submittedOnTimestamp) {
+	public TuleapElementComment(String commentBody, TuleapUser submitter, int submittedOnTimestamp) {
 		super();
 		this.body = commentBody;
 		this.submitter = submitter;
@@ -64,7 +64,7 @@ public class TuleapElementComment {
 	 * 
 	 * @return The person who has submitted the comment.
 	 */
-	public TuleapPerson getSubmitter() {
+	public TuleapUser getSubmitter() {
 		return this.submitter;
 	}
 

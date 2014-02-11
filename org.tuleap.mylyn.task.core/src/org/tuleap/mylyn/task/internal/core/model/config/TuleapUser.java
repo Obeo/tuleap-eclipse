@@ -17,22 +17,12 @@ import java.io.Serializable;
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public class TuleapPerson implements Serializable {
+public class TuleapUser implements Serializable {
 
 	/**
 	 * The serial vesion UID.
 	 */
 	private static final long serialVersionUID = 6934279209396555434L;
-
-	/**
-	 * The user name.
-	 */
-	private final String userName;
-
-	/**
-	 * The real name.
-	 */
-	private final String realName;
 
 	/**
 	 * The identifier.
@@ -45,6 +35,23 @@ public class TuleapPerson implements Serializable {
 	private final String email;
 
 	/**
+	 * The real name.
+	 */
+
+	private final String realName;
+
+	/**
+	 * The user name.
+	 */
+
+	private final String username;
+
+	/**
+	 * The ldap_id.
+	 */
+	private final String ldapId;
+
+	/**
 	 * The constructor.
 	 * 
 	 * @param username
@@ -55,12 +62,15 @@ public class TuleapPerson implements Serializable {
 	 *            The identifier
 	 * @param mail
 	 *            The email address
+	 * @param ldapId
+	 *            The ldap identifier
 	 */
-	public TuleapPerson(String username, String realname, int identifier, String mail) {
-		this.userName = username;
-		this.realName = realname;
+	public TuleapUser(String username, String realname, int identifier, String mail, String ldapId) {
 		this.id = identifier;
 		this.email = mail;
+		this.realName = realname;
+		this.username = username;
+		this.ldapId = ldapId;
 	}
 
 	/**
@@ -82,20 +92,29 @@ public class TuleapPerson implements Serializable {
 	}
 
 	/**
+	 * Returns the real name.
+	 * 
+	 * @return The realname
+	 */
+	public String getRealName() {
+		return realName;
+	}
+
+	/**
 	 * Returns the user name.
 	 * 
 	 * @return The user name
 	 */
 	public String getUserName() {
-		return userName;
+		return username;
 	}
 
 	/**
-	 * Returns the real name.
+	 * Returns the ldap id.
 	 * 
-	 * @return The real name
+	 * @return the ldap id
 	 */
-	public String getRealName() {
-		return realName;
+	public String getLdapId() {
+		return ldapId;
 	}
 }

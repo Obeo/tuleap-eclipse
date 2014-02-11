@@ -46,12 +46,12 @@ import org.tuleap.mylyn.task.internal.core.client.ITuleapQueryConstants;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.config.ITuleapTrackerConstants;
-import org.tuleap.mylyn.task.internal.core.model.config.TuleapGroup;
-import org.tuleap.mylyn.task.internal.core.model.config.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTrackerReport;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapUser;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapUserGroup;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapWorkflow;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapWorkflowTransition;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapArtifactLink;
@@ -378,7 +378,7 @@ public class TuleapSoapConnector {
 				Ugroup[] ugroups = this.getCodendiAPIPortType()
 						.getProjectGroupsAndUsers(sessionHash, groupId);
 				for (Ugroup ugroup : ugroups) {
-					TuleapGroup tuleapGroup = new TuleapGroup(ugroup.getUgroup_id(), ugroup.getName());
+					TuleapUserGroup tuleapGroup = new TuleapUserGroup(ugroup.getUgroup_id(), ugroup.getName());
 					UGroupMember[] members = ugroup.getMembers();
 					for (UGroupMember member : members) {
 						int userId = member.getUser_id();
@@ -393,8 +393,8 @@ public class TuleapSoapConnector {
 						} else {
 							userInfo = this.getCodendiAPIPortType().getUserInfo(sessionHash, userId);
 						}
-						projectConfiguration.addUserToUserGroup(tuleapGroup, new TuleapPerson(userInfo
-								.getUsername(), userInfo.getReal_name(), userId, userInfo.getEmail()));
+						projectConfiguration.addUserToUserGroup(tuleapGroup, new TuleapUser(userInfo
+								.getUsername(), userInfo.getReal_name(), userId, userInfo.getEmail(), null));
 					}
 				}
 			}
@@ -839,7 +839,7 @@ public class TuleapSoapConnector {
 				sessionHash, artifactId);
 		for (ArtifactComments artifactComment : artifactComments) {
 			int submitterId = artifactComment.getSubmitted_by();
-			TuleapPerson submitter = serverConfiguration.getUser(submitterId);
+			TuleapUser submitter = serverConfiguration.getUser(submitterId);
 			TuleapElementComment comment = new TuleapElementComment(artifactComment.getBody(), submitter,
 					artifactComment.getSubmitted_on());
 			comments.add(comment);

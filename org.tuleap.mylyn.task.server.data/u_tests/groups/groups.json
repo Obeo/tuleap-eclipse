@@ -1,10 +1,12 @@
 [
-  {
-    "id": 0,
-    "name": "Project Members"
-  },
-  {
-    "id": 1,
-    "name": "Project Administrators"
-  }
+    {
+        "id": 0,
+        "uri": "/user_groups/0",
+        "label": "Project Members"
+    },
+    {
+        "id": 1,
+        "uri": "/user_groups/1",
+        "label": "Project Administrators"
+    }
 ]

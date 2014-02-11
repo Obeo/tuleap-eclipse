@@ -21,10 +21,10 @@ import org.tuleap.mylyn.task.internal.core.client.soap.CommentedArtifact;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapParser;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
-import org.tuleap.mylyn.task.internal.core.model.config.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapUser;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapArtifactLink;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapDate;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapFileUpload;
@@ -238,8 +238,8 @@ public class TuleapSoapParserTests {
 
 		// The first comment
 		String firstCommentBody = "This is the first comment"; //$NON-NLS-1$
-		TuleapPerson firstCommentSubmitter = new TuleapPerson("first-username", "first-realname", 17, //$NON-NLS-1$ //$NON-NLS-2$
-				"first-email"); //$NON-NLS-1$
+		TuleapUser firstCommentSubmitter = new TuleapUser("first-username", "first-realname", 17, //$NON-NLS-1$ //$NON-NLS-2$
+				"first-email", null); //$NON-NLS-1$
 		int firstCommentSubmitDate = Long.valueOf(new Date().getTime() / 1000).intValue();
 
 		TuleapElementComment firstTuleapElementComment = new TuleapElementComment(firstCommentBody,
@@ -248,8 +248,8 @@ public class TuleapSoapParserTests {
 
 		// The second comment
 		String secondCommentBody = "This is the second comment"; //$NON-NLS-1$
-		TuleapPerson secondCommentSubmitter = new TuleapPerson("second-username", "second-realname", 18, //$NON-NLS-1$ //$NON-NLS-2$
-				"second-email"); //$NON-NLS-1$
+		TuleapUser secondCommentSubmitter = new TuleapUser("second-username", "second-realname", 18, //$NON-NLS-1$ //$NON-NLS-2$
+				"second-email", null); //$NON-NLS-1$
 		int secondCommentSubmitDate = Long.valueOf(new Date().getTime() / 1000).intValue();
 
 		TuleapElementComment secondTuleapElementComment = new TuleapElementComment(secondCommentBody,
@@ -840,12 +840,13 @@ public class TuleapSoapParserTests {
 		AbstractTuleapField field = fields.iterator().next();
 
 		List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
-		TuleapPerson firstUploadedBy = new TuleapPerson("first username", "first realname", 1, "first email");
+		TuleapUser firstUploadedBy = new TuleapUser("first username", "first realname", 1, "first email",
+				null);
 		attachments.add(new AttachmentValue("first id", "first name", firstUploadedBy, 123456,
 				"first description", "first type"));
 
-		TuleapPerson secondUploadedBy = new TuleapPerson("second username", "second realname", 2,
-				"second email");
+		TuleapUser secondUploadedBy = new TuleapUser("second username", "second realname", 2, "second email",
+				null);
 		attachments.add(new AttachmentValue("second id", "second name", secondUploadedBy, 789456,
 				"second description", "second type"));
 

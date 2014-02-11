@@ -22,10 +22,10 @@ import java.lang.reflect.Type;
 import org.eclipse.core.runtime.Assert;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.config.ITuleapTrackerConstants;
-import org.tuleap.mylyn.task.internal.core.model.config.TuleapGroup;
-import org.tuleap.mylyn.task.internal.core.model.config.TuleapPerson;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapUser;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapUserGroup;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapWorkflowTransition;
 import org.tuleap.mylyn.task.internal.core.model.config.field.AbstractTuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapArtifactLink;
@@ -438,9 +438,9 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 		for (JsonElement bindingElt : bindings) {
 			JsonObject binding = bindingElt.getAsJsonObject();
 			int ugroupId = binding.get(USER_GROUP_ID).getAsInt();
-			TuleapGroup group = project.getUserGroup(ugroupId);
+			TuleapUserGroup group = project.getUserGroup(ugroupId);
 			if (group != null) {
-				for (TuleapPerson person : group.getMembers()) {
+				for (TuleapUser person : group.getMembers()) {
 					TuleapSelectBoxItem item = new TuleapSelectBoxItem(person.getId());
 					item.setLabel(person.getUserName());
 					selectBoxField.addItem(item);

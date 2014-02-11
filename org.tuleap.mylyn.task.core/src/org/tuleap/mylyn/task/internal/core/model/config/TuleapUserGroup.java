@@ -22,7 +22,7 @@ import java.util.Map;
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class TuleapGroup implements Serializable {
+public class TuleapUserGroup implements Serializable {
 
 	/**
 	 * The serial version UID.
@@ -35,26 +35,31 @@ public class TuleapGroup implements Serializable {
 	private final int id;
 
 	/**
-	 * The group name, human readable.
+	 * The group uri.
 	 */
-	private String name;
+	private String uri;
+
+	/**
+	 * The group label, human readable.
+	 */
+	private String label;
 
 	/**
 	 * Members of this group.
 	 */
-	private final Map<Integer, TuleapPerson> membersById = Maps.newHashMap();
+	private final Map<Integer, TuleapUser> membersById = Maps.newHashMap();
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param id
 	 *            The group identifier
-	 * @param name
-	 *            The group name
+	 * @param label
+	 *            The group label
 	 */
-	public TuleapGroup(int id, String name) {
+	public TuleapUserGroup(int id, String label) {
 		this.id = id;
-		this.name = name;
+		this.label = label;
 	}
 
 	/**
@@ -67,22 +72,41 @@ public class TuleapGroup implements Serializable {
 	}
 
 	/**
-	 * name getter.
+	 * label getter.
 	 * 
-	 * @return the name
+	 * @return the label
 	 */
-	public String getName() {
-		return name;
+	public String getLabel() {
+		return label;
 	}
 
 	/**
-	 * name setter.
+	 * label setter.
 	 * 
-	 * @param name
-	 *            the name to set
+	 * @param label
+	 *            the label to set
 	 */
-	public void setName(String name) {
-		this.name = name;
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	/**
+	 * uri getter.
+	 * 
+	 * @return the uri
+	 */
+	public String getUri() {
+		return uri;
+	}
+
+	/**
+	 * uri setter.
+	 * 
+	 * @param uri
+	 *            the uri to set
+	 */
+	public void setUri(String uri) {
+		this.uri = uri;
 	}
 
 	/**
@@ -91,7 +115,7 @@ public class TuleapGroup implements Serializable {
 	 * @param member
 	 *            the member to add, must be non-null.
 	 */
-	protected void addMember(TuleapPerson member) {
+	protected void addMember(TuleapUser member) {
 		membersById.put(Integer.valueOf(member.getId()), member);
 	}
 
@@ -100,7 +124,7 @@ public class TuleapGroup implements Serializable {
 	 * 
 	 * @return an unmodifiable collection view of the group's members.
 	 */
-	public Collection<TuleapPerson> getMembers() {
+	public Collection<TuleapUser> getMembers() {
 		return Collections.unmodifiableCollection(membersById.values());
 	}
 }
