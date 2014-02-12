@@ -48,7 +48,6 @@ public class TuleapJsonParser {
 	 */
 	public TuleapJsonParser() {
 		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(TuleapProject.class, new TuleapProjectDeserializer());
 		gsonBuilder.registerTypeAdapter(TuleapArtifact.class, new TuleapArtifactDeserializer());
 		gsonBuilder.registerTypeAdapter(TuleapCardwall.class, new TuleapCardwallDeserializer());
 		gsonBuilder.registerTypeAdapter(TuleapCard.class, new TuleapCardDeserializer());
@@ -66,6 +65,17 @@ public class TuleapJsonParser {
 	 */
 	public TuleapProject parseProject(JsonElement element) {
 		return gson.fromJson(element, TuleapProject.class);
+	}
+
+	/**
+	 * Parse a JSON representation of a project and returns the created {@link TuleapProject} instance.
+	 * 
+	 * @param json
+	 *            The JSON representation of the project
+	 * @return The project
+	 */
+	public TuleapProject parseProject(String json) {
+		return gson.fromJson(json, TuleapProject.class);
 	}
 
 	/**

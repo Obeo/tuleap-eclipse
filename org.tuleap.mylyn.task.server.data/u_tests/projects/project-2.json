@@ -1,12 +1,11 @@
 {
-  "id": 2,
-  "name": "Project 2",
-  "unix_name": "project-2",
-  "description": "The project 2",
-  "url": "localhost:3001/api/v3.14/projects/2",
-  "html_url": "localhost:3001/projects/project-2",
-  "services": [
-    "documents"
-  ],
-  "is_member": false
+    "id": 103,
+    "uri": "projects/103",
+    "label": "Project 2",
+    "resources": [
+        {
+            "type": "trackers",
+            "uri": "projects/103/trackers"
+        }
+    ]
 }

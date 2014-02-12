@@ -16,6 +16,7 @@ import java.util.Date;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPlanning;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapResource;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapUser;
@@ -56,14 +57,25 @@ public class TuleapProjectConfigurationTests {
 	}
 
 	@Test
-	public void testServices() {
+	public void testResources() {
 		TuleapProject project = new TuleapProject("Test Project", 42);
+		String resource = "trackers";
+		assertFalse(project.hasResource(resource));
 
-		String service = "trackers";
-		assertFalse(project.hasService(service));
+		TuleapResource[] resources = new TuleapResource[4];
 
-		project.addService(service);
-		assertTrue(project.hasService(service));
+		for (int i = 0; i < 4; i++) {
+			TuleapResource tuleapRessource = new TuleapResource("type" + i, "uri/" + i);
+			resources[i] = tuleapRessource;
+		}
+		project.setProjectResources(resources);
+		assertEquals(4, project.getProjectResources().length);
+
+		for (int i = 0; i < 4; i++) {
+			assertEquals("type" + i, project.getProjectResources()[i].getType());
+			assertEquals("uri/" + i, project.getProjectResources()[i].getUri());
+			assertTrue(project.hasResource("type" + i));
+		}
 	}
 
 	@Test

@@ -1,70 +1,76 @@
 [
-  {
-    "id": 0,
-    "name": "Project 0",
-    "unix_name": "project-0",
-    "description": "The project 0",
-    "url": "localhost:3001/api/v3.14/projects/0",
-    "html_url": "localhost:3001/projects/project-0",
-    "services": [
-      "documents"
-    ],
-    "is_member": false
-  },
-  {
-    "id": 1,
-    "name": "Project 1",
-    "unix_name": "project-1",
-    "description": "The project 1",
-    "url": "localhost:3001/api/v3.14/projects/1",
-    "html_url": "localhost:3001/projects/project-1",
-    "is_member": true
-  },
-  {
-    "id": 2,
-    "name": "Project 2",
-    "unix_name": "project-2",
-    "description": "The project 2",
-    "url": "localhost:3001/api/v3.14/projects/2",
-    "html_url": "localhost:3001/projects/project-2",
-    "services": [
-      "documents"
-    ],
-    "is_member": false
-  },
-  {
-    "id": 3,
-    "name": "Project 3",
-    "unix_name": "project-3",
-    "description": "The project 3",
-    "url": "localhost:3001/api/v3.14/projects/3",
-    "html_url": "localhost:3001/projects/project-3",
-    "services": [
-      "trackers",
-      "agile_dashboard",
-      "documents",
-      "wikis",
-      "forums",
-      "lists",
-      "news",
-      "subversion",
-      "files",
-      "instant_messaging",
-      "continuous_integration",
-      "git"
-    ],
-    "is_member": true
-  },
-  {
-    "id": 4,
-    "name": "Project 4",
-    "unix_name": "project-4",
-    "description": "The project 4",
-    "url": "localhost:3001/api/v3.14/projects/4",
-    "html_url": "localhost:3001/projects/project-4",
-    "services": [
-      "git"
-    ],
-    "is_member": true
-  }
+    {
+        "id": 101,
+        "uri": "projects/101",
+        "label": "Project 0",
+        "resources": [
+            {
+                "type": "trackers",
+                "uri": "projects/101/trackers"
+            },
+            {
+                "type": "backlog",
+                "uri": "projects/101/backlog"
+            },
+            {
+                "type": "milestones",
+                "uri": "projects/101/milestones"
+            },
+            {
+                "type": "plannings",
+                "uri": "projects/101/plannings"
+            }
+        ]
+    },
+    {
+        "id": 102,
+        "uri": "projects/102",
+        "label": "Project 1",
+        "resources": [
+            {
+                "type": "backlog",
+                "uri": "projects/102/backlog"
+            },
+            {
+                "type": "milestones",
+                "uri": "projects/102/milestones"
+            },
+            {
+                "type": "plannings",
+                "uri": "projects/102/plannings"
+            }
+        ]
+    },
+    {
+        "id": 103,
+        "uri": "projects/103",
+        "label": "Project 2",
+        "resources": [
+            {
+                "type": "trackers",
+                "uri": "projects/103/trackers"
+            }
+        ]
+    },
+    {
+        "id": 104,
+        "uri": "projects/104",
+        "label": "Project 3",
+        "resources": [
+            {
+                "type": "trackers",
+                "uri": "projects/104/trackers"
+            },
+            {
+                "type": "plannings",
+                "uri": "projects/104/plannings"
+            }
+        ]
+    },
+    {
+        "id": 105,
+        "uri": "projects/105",
+        "label": "Project 4",
+        "resources": []
+    }
 ]

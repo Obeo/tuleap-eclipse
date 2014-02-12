@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model.config;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import java.io.Serializable;
@@ -38,12 +37,17 @@ public class TuleapProject implements Serializable {
 	/**
 	 * The label of the project.
 	 */
-	private String name;
+	private String label;
 
 	/**
 	 * The identifier of the project.
 	 */
-	private int identifier;
+	private int id;
+
+	/**
+	 * The uri of the project.
+	 */
+	private String uri;
 
 	/**
 	 * The parent server.
@@ -51,9 +55,9 @@ public class TuleapProject implements Serializable {
 	private TuleapServer server;
 
 	/**
-	 * The list of active services for this project.
+	 * References to the project resources.
 	 */
-	private final List<String> services = Lists.newArrayList();
+	private TuleapResource[] resources;
 
 	/**
 	 * Map of trackers indexed by their IDs.
@@ -79,8 +83,8 @@ public class TuleapProject implements Serializable {
 	 *            The identifier of the project
 	 */
 	public TuleapProject(String projectName, int projectIdentifier) {
-		this.name = projectName;
-		this.identifier = projectIdentifier;
+		this.label = projectName;
+		this.id = projectIdentifier;
 	}
 
 	/**
@@ -205,8 +209,27 @@ public class TuleapProject implements Serializable {
 	 * 
 	 * @return The label of the project
 	 */
-	public String getName() {
-		return name;
+	public String getLabel() {
+		return label;
+	}
+
+	/**
+	 * Returns the uri of the project.
+	 * 
+	 * @return The uri of the project
+	 */
+	public String getUri() {
+		return uri;
+	}
+
+	/**
+	 * Project uri setter.
+	 * 
+	 * @param uri
+	 *            The project uri
+	 */
+	public void setUri(String uri) {
+		this.uri = uri;
 	}
 
 	/**
@@ -215,29 +238,7 @@ public class TuleapProject implements Serializable {
 	 * @return The identifier of the project
 	 */
 	public int getIdentifier() {
-		return identifier;
-	}
-
-	/**
-	 * Add the given service.
-	 * 
-	 * @param service
-	 *            The service to add.
-	 */
-	public void addService(String service) {
-		services.add(service);
-	}
-
-	/**
-	 * Indicates whether the given service is active for thie project.
-	 * 
-	 * @param service
-	 *            The service being looked for
-	 * @return {@code true} if and only if the given service is present in the list of services of this
-	 *         project.
-	 */
-	public boolean hasService(String service) {
-		return services.contains(service);
+		return id;
 	}
 
 	/**
@@ -311,4 +312,43 @@ public class TuleapProject implements Serializable {
 	public TuleapServer getServer() {
 		return server;
 	}
+
+	/**
+	 * Project resources getter.
+	 * 
+	 * @return the projectResources, a list that is never <code>null</code> but possibly empty.
+	 */
+	public TuleapResource[] getProjectResources() {
+		return resources;
+	}
+
+	/**
+	 * Project resources setter.
+	 * 
+	 * @param projectResources
+	 *            the projectResources to set
+	 */
+	public void setProjectResources(TuleapResource[] projectResources) {
+		this.resources = projectResources;
+	}
+
+	/**
+	 * Indicates whether the given resource exists on this project.
+	 * 
+	 * @param key
+	 *            The resource type being looked for
+	 * @return {@code true} if and only if the given service is present in the list of services of this
+	 *         project.
+	 */
+	public boolean hasResource(String key) {
+		if (resources != null) {
+			for (TuleapResource resource : resources) {
+				if (resource.getType().equals(key)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 }

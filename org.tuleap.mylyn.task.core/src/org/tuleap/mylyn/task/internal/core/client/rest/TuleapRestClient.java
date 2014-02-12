@@ -745,6 +745,25 @@ public class TuleapRestClient implements IAuthenticator {
 	}
 
 	/**
+	 * Retrieve the projects.
+	 * 
+	 * @param monitor
+	 *            Progress monitor to use
+	 * @return A list, never null but possibly empty, containing the projects.
+	 * @throws CoreException
+	 *             If the server returns a status code different from 200 OK.
+	 */
+	public List<TuleapProject> getProjects(IProgressMonitor monitor) throws CoreException {
+		RestResource r = restResourceFactory.projects().withAuthenticator(this);
+		RestOperation operation = r.get();
+		List<TuleapProject> projects = Lists.newArrayList();
+		for (JsonElement e : operation.iterable()) {
+			projects.add(jsonParser.parseProject(e.toString()));
+		}
+		return projects;
+	}
+
+	/**
 	 * Updates the backlog of a given milestone.
 	 * 
 	 * @param milestoneId

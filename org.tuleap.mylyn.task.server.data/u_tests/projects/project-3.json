@@ -1,23 +1,15 @@
 {
-  "id": 3,
-  "name": "Project 3",
-  "unix_name": "project-3",
-  "description": "The project 3",
-  "url": "localhost:3001/api/v3.14/projects/3",
-  "html_url": "localhost:3001/projects/project-3",
-  "services": [
-    "trackers",
-    "agile_dashboard",
-    "documents",
-    "wikis",
-    "forums",
-    "lists",
-    "news",
-    "subversion",
-    "files",
-    "instant_messaging",
-    "continuous_integration",
-    "git"
-  ],
-  "is_member": true
+    "id": 104,
+    "uri": "projects/104",
+    "label": "Project 3",
+    "resources": [
+        {
+            "type": "trackers",
+            "uri": "projects/104/trackers"
+        },
+        {
+            "type": "plannings",
+            "uri": "projects/104/plannings"
+        }
+    ]
 }

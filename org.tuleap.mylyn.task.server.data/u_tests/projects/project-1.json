@@ -1,9 +1,19 @@
 {
-  "id": 1,
-  "name": "Project 1",
-  "unix_name": "project-1",
-  "description": "The project 1",
-  "url": "localhost:3001/api/v3.14/projects/1",
-  "html_url": "localhost:3001/projects/project-1",
-  "is_member": true
+    "id": 102,
+    "uri": "projects/102",
+    "label": "Project 1",
+    "resources": [
+        {
+            "type": "backlog",
+            "uri": "projects/102/backlog"
+        },
+        {
+            "type": "milestones",
+            "uri": "projects/102/milestones"
+        },
+        {
+            "type": "plannings",
+            "uri": "projects/102/plannings"
+        }
+    ]
 }

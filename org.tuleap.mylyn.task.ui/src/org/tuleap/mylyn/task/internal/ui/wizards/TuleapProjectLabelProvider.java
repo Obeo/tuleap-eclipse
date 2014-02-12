@@ -30,7 +30,7 @@ public class TuleapProjectLabelProvider extends LabelProvider {
 	@Override
 	public String getText(Object element) {
 		if (element instanceof TuleapProject) {
-			return ((TuleapProject)element).getName();
+			return ((TuleapProject)element).getLabel();
 		}
 		return super.getText(element);
 	}

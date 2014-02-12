@@ -625,7 +625,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		mapper.initializeEmptyTaskData();
 		TuleapProject project = connector.getServer(taskRepository.getUrl()).getProject(projectId);
 		if (project != null) {
-			mapper.setTaskKey(project.getName());
+			mapper.setTaskKey(project.getLabel());
 		}
 		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TuleapArtifactMapper.PROJECT_ID);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
