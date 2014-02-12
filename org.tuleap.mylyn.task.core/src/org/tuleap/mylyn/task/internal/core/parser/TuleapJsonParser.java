@@ -20,6 +20,7 @@ import java.util.Date;
 import org.tuleap.mylyn.task.internal.core.model.TuleapErrorMessage;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPlanning;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapTrackerReport;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapUser;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapUserGroup;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
@@ -164,6 +165,17 @@ public class TuleapJsonParser {
 	 */
 	public TuleapUserGroup parseUserGroup(String element) {
 		return gson.fromJson(element, TuleapUserGroup.class);
+	}
+
+	/**
+	 * Parses a JSON element representing a tracker report into a POJO.
+	 * 
+	 * @param element
+	 *            The JSON element representing a tracker report
+	 * @return a POJO populated with the data from the JSON String.
+	 */
+	public TuleapTrackerReport parseTrackerReport(String element) {
+		return gson.fromJson(element, TuleapTrackerReport.class);
 	}
 
 	/**

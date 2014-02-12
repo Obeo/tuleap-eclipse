@@ -15,6 +15,7 @@ import java.text.ParseException;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.model.TuleapErrorMessage;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPlanning;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapTrackerReport;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapUser;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapUserGroup;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
@@ -87,6 +88,16 @@ public class TuleapJsonParserTest {
 		assertEquals("John Doe", aUser.getRealName());
 		assertEquals("doej", aUser.getUserName());
 		assertEquals("john.doe@example.com", aUser.getEmail());
+	}
+
+	@Test
+	public void testDeserializeTrackerReport() throws ParseException {
+		String user = ParserUtil.loadFile("/tracker_reports/tracker_report-2.json");
+		TuleapTrackerReport report = parser.parseTrackerReport(user);
+		assertEquals(2, report.getId());
+		assertEquals("Third report", report.getLabel());
+		assertEquals("localhost:3001/api/v3.14/trackers/0/2", report.getReportUrl());
+		assertEquals("/tracker_reports/2", report.getReportUri());
 	}
 
 	@Test

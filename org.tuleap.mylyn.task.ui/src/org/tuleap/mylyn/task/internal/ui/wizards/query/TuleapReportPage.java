@@ -155,7 +155,7 @@ public class TuleapReportPage extends AbstractRepositoryQueryPage2 {
 			@Override
 			public String getText(Object element) {
 				if (element instanceof TuleapTrackerReport) {
-					return ((TuleapTrackerReport)element).getName();
+					return ((TuleapTrackerReport)element).getLabel();
 				}
 				return super.getText(element);
 			}

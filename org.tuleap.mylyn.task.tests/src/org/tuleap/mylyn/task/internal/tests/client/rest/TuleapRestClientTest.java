@@ -263,6 +263,28 @@ public class TuleapRestClientTest {
 		assertEquals("GET", request.method); //$NON-NLS-1$
 	}
 
+	@Test
+	public void testRetrieveTrackerReports() throws CoreException, ParseException {
+		String jsonMilestone = ParserUtil.loadFile("/tracker_reports/tracker_reports.json");
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonMilestone, respHeaders);
+		connector.setResponse(response);
+		client.getTrackerReports(200, null);
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(2, requestsSent.size());
+		ServerRequest request = requestsSent.get(0);
+		assertEquals("/api/v12.3/trackers/200/tracker_reports", request.url); //$NON-NLS-1$
+		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
+
+		request = requestsSent.get(1);
+		assertEquals("/api/v12.3/trackers/200/tracker_reports", request.url); //$NON-NLS-1$
+		assertEquals("GET", request.method); //$NON-NLS-1$
+	}
+
 	/**
 	 * Test that a milestone backlog update is well done.
 	 * 

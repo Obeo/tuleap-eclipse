@@ -277,6 +277,17 @@ public final class RestResourceFactory {
 	}
 
 	/**
+	 * Provides access to the {code /trackers/:id/tracker_reports} HTTP resource.
+	 * 
+	 * @param trackerId
+	 *            the tracker id
+	 * @return A resource that gives access to the {code /trackers/:id/tracker_reports} HTTP resource.
+	 */
+	public RestResource trackerReports(int trackerId) {
+		return resource(RestResource.GET, URL.TRACKERS, Integer.toString(trackerId), URL.TRACKER_REPORTS);
+	}
+
+	/**
 	 * Build a URL by concatenating the given fragments.
 	 * 
 	 * @param urlFragments

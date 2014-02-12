@@ -721,7 +721,29 @@ public class TuleapRestClient implements IAuthenticator {
 		}
 		return users;
 	}
-	
+
+	/**
+	 * Retrieve a tracker reports.
+	 * 
+	 * @param trackerId
+	 *            ID of the tracker
+	 * @param monitor
+	 *            Progress monitor to use
+	 * @return A list, never null but possibly empty, containing the tracker reports.
+	 * @throws CoreException
+	 *             If the server returns a status code different from 200 OK.
+	 */
+	public List<TuleapTrackerReport> getTrackerReports(int trackerId, IProgressMonitor monitor)
+			throws CoreException {
+		RestResource r = restResourceFactory.trackerReports(trackerId).withAuthenticator(this);
+		RestOperation operation = r.get();
+		List<TuleapTrackerReport> reports = Lists.newArrayList();
+		for (JsonElement e : operation.iterable()) {
+			reports.add(jsonParser.parseTrackerReport(e.toString()));
+		}
+		return reports;
+	}
+
 	/**
 	 * Updates the backlog of a given milestone.
 	 * 

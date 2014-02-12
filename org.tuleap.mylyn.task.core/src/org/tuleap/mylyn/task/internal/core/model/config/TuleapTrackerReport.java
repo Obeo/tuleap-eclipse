@@ -23,22 +23,32 @@ public class TuleapTrackerReport {
 	private int id;
 
 	/**
+	 * The uri of the report.
+	 */
+	private String uri;
+
+	/**
 	 * The name of the report.
 	 */
-	private String name;
+	private String label;
+
+	/**
+	 * The url of the report.
+	 */
+	private String reportUrl;
 
 	/**
 	 * The constructor.
 	 * 
 	 * @param reportId
 	 *            The id of the report.
-	 * @param reportName
-	 *            The name of the report.
+	 * @param reportLabel
+	 *            The label of the report.
 	 */
-	public TuleapTrackerReport(int reportId, String reportName) {
+	public TuleapTrackerReport(int reportId, String reportLabel) {
 		super();
 		this.id = reportId;
-		this.name = reportName;
+		this.label = reportLabel;
 	}
 
 	/**
@@ -55,8 +65,26 @@ public class TuleapTrackerReport {
 	 * 
 	 * @return The name of the report.
 	 */
-	public String getName() {
-		return this.name;
+	public String getLabel() {
+		return this.label;
+	}
+
+	/**
+	 * Returns the url of the report.
+	 * 
+	 * @return The url of the report.
+	 */
+	public String getReportUrl() {
+		return this.reportUrl;
+	}
+
+	/**
+	 * Returns the uri of the report.
+	 * 
+	 * @return The uri of the report.
+	 */
+	public String getReportUri() {
+		return this.uri;
 	}
 
 	/**
@@ -66,7 +94,7 @@ public class TuleapTrackerReport {
 	 */
 	@Override
 	public String toString() {
-		return this.name + " [" + this.id + "]"; //$NON-NLS-1$//$NON-NLS-2$
+		return this.label + " [" + this.id + "]"; //$NON-NLS-1$//$NON-NLS-2$
 	}
 
 }
