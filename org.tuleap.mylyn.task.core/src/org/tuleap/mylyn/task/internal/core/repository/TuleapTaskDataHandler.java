@@ -12,6 +12,7 @@ package org.tuleap.mylyn.task.internal.core.repository;
 
 import com.google.common.collect.Lists;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -635,17 +636,18 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		MilestoneTaskDataConverter taskDataConverter = new MilestoneTaskDataConverter(taskRepository,
 				connector);
 
+		List<CoreException> exceptions = new ArrayList<CoreException>();
 		try {
 			List<TuleapBacklogItem> backlog = restClient.getProjectBacklog(projectId, monitor);
 			taskDataConverter.populateBacklog(taskData, backlog, monitor);
 		} catch (CoreException e) {
-			TuleapCoreActivator.log(e, true);
+			exceptions.add(e);
 		}
 		List<TuleapMilestone> milestones;
 		try {
 			milestones = restClient.getProjectMilestones(projectId, monitor);
 		} catch (CoreException e) {
-			TuleapCoreActivator.log(e, true);
+			exceptions.add(e);
 			milestones = Collections.emptyList();
 		}
 		for (TuleapMilestone tuleapMilestone : milestones) {
@@ -654,11 +656,33 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 						.intValue(), monitor);
 				taskDataConverter.addSubmilestone(taskData, tuleapMilestone, content, monitor);
 			} catch (CoreException e) {
-				TuleapCoreActivator.log(e, true);
+				exceptions.add(e);
 			}
 		}
 
+		checkRetrieval(exceptions);
+
 		return taskData;
+	}
+
+	/**
+	 * Checks that the given list is empty. If not, logs the contained exceptions and throws an exception to
+	 * attempt to guide the user.
+	 * 
+	 * @param exceptions
+	 *            The list of exceptions.
+	 * @throws TuleapRetrieveException
+	 *             If the given list is not empty.
+	 */
+	private void checkRetrieval(List<CoreException> exceptions) throws TuleapRetrieveException {
+		if (!exceptions.isEmpty()) {
+			for (CoreException e : exceptions) {
+				TuleapCoreActivator.log(e, false);
+			}
+			throw new TuleapRetrieveException(TuleapMylynTasksMessages.getString(
+					TuleapMylynTasksMessagesKeys.problemsOccurredDuringRetrieve, Integer.valueOf(exceptions
+							.size())));
+		}
 	}
 
 	/**

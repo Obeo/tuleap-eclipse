@@ -1,0 +1,13 @@
+[
+  { 
+    "type": "tuleap",
+    "url": "https://tuleapappli.obeo.fr/",
+    "version": "6.10",
+    "info": "Local Tuleap instance",
+    "properties":{
+      "default": "1",
+      "projectId": "101",
+      "bugTrackerId": "10"
+    }
+  }
+]

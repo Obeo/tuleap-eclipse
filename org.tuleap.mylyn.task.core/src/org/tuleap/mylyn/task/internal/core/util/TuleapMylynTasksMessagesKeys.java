@@ -445,6 +445,14 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	 */
 	public static String problemsOccurredDuringSubmit;
 
+	/**
+	 * Message indicating that problems have occurred during retrieval of the task. 1 parameter:
+	 * <ol>
+	 * <li>The number of problems (integer)</li>
+	 * </ol>
+	 */
+	public static String problemsOccurredDuringRetrieve;
+
 	static {
 		// load message values from bundle file
 		reloadMessages();
