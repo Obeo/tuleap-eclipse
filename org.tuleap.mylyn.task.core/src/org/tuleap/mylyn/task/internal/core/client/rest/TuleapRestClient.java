@@ -47,7 +47,6 @@ import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCard;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCardwall;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
-import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.serializer.TuleapCardSerializer;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
@@ -290,32 +289,21 @@ public class TuleapRestClient implements IAuthenticator {
 	 * 
 	 * @param artifactId
 	 *            The identifier of the artifact
-	 * @param connector
-	 *            The tuleap repository connector
 	 * @param monitor
 	 *            Used to monitor the progress
 	 * @return The task data of the artifact
 	 * @throws CoreException
 	 *             In case of error during the retrieval of the artifact
 	 */
-	public TuleapArtifact getArtifact(int artifactId, ITuleapRepositoryConnector connector,
-			IProgressMonitor monitor) throws CoreException {
-		// // TODO [SBE] See if the parameter connector should be a class attribute instead of a parameter
-		// // Test the connection
-		// RestResources restResources = tuleapRestConnector.getResourceFactory();
-		// // Send a request with OPTIONS to ensure that we can and have the right to retrieve the artifact
-		// RestArtifacts restArtifacts = restResources.artifacts(artifactId);
-		// restArtifacts.checkGet(Collections.<String, String> emptyMap());
-		// // Retrieve the artifact
-		// ServerResponse response = restArtifacts.get(Collections.<String, String> emptyMap());
-		// if (ITuleapServerStatus.OK != response.getStatus()) {
-		// // Invalid login? server error?
-		// String message = this.jsonParser.getErrorMessage(response.getBody());
-		// throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, message));
-		// }
-		// // Create the task data
-		// String json = response.getBody();
-		return null;
+	public TuleapArtifact getArtifact(int artifactId, IProgressMonitor monitor) throws CoreException {
+		if (monitor != null) {
+			monitor.subTask(TuleapMylynTasksMessages.getString(
+					TuleapMylynTasksMessagesKeys.retrievingArtifact, Integer.valueOf(artifactId)));
+		}
+		RestResource artifactResource = restResourceFactory.artifact(artifactId).withAuthenticator(this);
+		ServerResponse response = artifactResource.get().checkedRun();
+		TuleapArtifact artifact = this.jsonParser.parseArtifact(response.getBody());
+		return artifact;
 	}
 
 	/**

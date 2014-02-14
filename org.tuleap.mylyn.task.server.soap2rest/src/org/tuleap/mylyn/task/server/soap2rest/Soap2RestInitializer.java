@@ -439,7 +439,7 @@ public class Soap2RestInitializer {
 				calendar.setTimeInMillis(Long.valueOf(artifact.getLast_update_date()).longValue() * 1000);
 				date = calendar.getTime();
 
-				stringBuffer.append("  \"last_updated_on\": \"" + artifact + "\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				stringBuffer.append("  \"last_modified_date\": \"" + artifact + "\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
 				ArtifactFieldValue[] values = artifact.getValue();
 				if (values != null && values.length > 0) {

@@ -45,7 +45,7 @@ public abstract class AbstractTuleapDetailedElement<T> extends AbstractTuleapPro
 	/**
 	 * The date of the last modification.
 	 */
-	private Date lastUpdatedOn;
+	private Date lastModifiedDate;
 
 	/**
 	 * Default constructor for deserialization.
@@ -102,7 +102,7 @@ public abstract class AbstractTuleapDetailedElement<T> extends AbstractTuleapPro
 		super(id, projectRef, label, uri);
 		this.htmlUrl = htmlUrl;
 		this.submittedOn = creationDate;
-		this.lastUpdatedOn = lastModificationDate;
+		this.lastModifiedDate = lastModificationDate;
 	}
 
 	/**
@@ -148,8 +148,8 @@ public abstract class AbstractTuleapDetailedElement<T> extends AbstractTuleapPro
 	 * 
 	 * @return the lastUpdatedOn
 	 */
-	public Date getLastUpdatedOn() {
-		return lastUpdatedOn;
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
 	}
 
 	/**
@@ -158,8 +158,8 @@ public abstract class AbstractTuleapDetailedElement<T> extends AbstractTuleapPro
 	 * @param lastUpdatedOn
 	 *            the lastUpdatedOn to set
 	 */
-	public void setLastUpdatedOn(Date lastUpdatedOn) {
-		this.lastUpdatedOn = lastUpdatedOn;
+	public void setLastModifiedDate(Date lastUpdatedOn) {
+		this.lastModifiedDate = lastUpdatedOn;
 	}
 
 	/**

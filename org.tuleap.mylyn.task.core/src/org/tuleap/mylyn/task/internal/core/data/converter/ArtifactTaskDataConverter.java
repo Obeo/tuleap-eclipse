@@ -101,7 +101,7 @@ public class ArtifactTaskDataConverter {
 
 		// Dates
 		tuleapArtifactMapper.setCreationDate(element.getSubmittedOn());
-		tuleapArtifactMapper.setModificationDate(element.getLastUpdatedOn());
+		tuleapArtifactMapper.setModificationDate(element.getLastModifiedDate());
 
 		// Summary
 		TuleapString titleField = this.tracker.getTitleField();

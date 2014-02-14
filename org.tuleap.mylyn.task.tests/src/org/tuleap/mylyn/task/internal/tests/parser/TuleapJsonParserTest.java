@@ -207,7 +207,7 @@ public class TuleapJsonParserTest {
 		assertEquals("backlog_items?id=301&group_id=3", item.getHtmlUrl());
 		assertEquals(1, item.getSubmittedBy());
 		assertEquals(ParserUtil.getUTCDate(2013, 8, 23, 11, 44, 18, 963), item.getSubmittedOn());
-		assertEquals(ParserUtil.getUTCDate(2013, 8, 24, 15, 33, 18, 523), item.getLastUpdatedOn());
+		assertEquals(ParserUtil.getUTCDate(2013, 8, 24, 15, 33, 18, 523), item.getLastModifiedDate());
 		assertEquals("40.5", item.getInitialEffort());
 		assertEquals(TuleapStatus.Open, item.getStatus());
 		assertEquals("Epics", item.getType());
@@ -251,7 +251,7 @@ public class TuleapJsonParserTest {
 		assertEquals("backlog_items?id=301&group_id=3", item.getHtmlUrl());
 		assertEquals(1, item.getSubmittedBy());
 		assertEquals(ParserUtil.getUTCDate(2013, 8, 23, 11, 44, 18, 963), item.getSubmittedOn());
-		assertEquals(ParserUtil.getUTCDate(2013, 8, 24, 15, 33, 18, 523), item.getLastUpdatedOn());
+		assertEquals(ParserUtil.getUTCDate(2013, 8, 24, 15, 33, 18, 523), item.getLastModifiedDate());
 		assertNull(item.getInitialEffort());
 		assertEquals(TuleapStatus.Open, item.getStatus());
 	}
@@ -281,7 +281,7 @@ public class TuleapJsonParserTest {
 		assertEquals("backlog_items?id=300&group_id=3", item.getHtmlUrl());
 		assertEquals(1, item.getSubmittedBy());
 		assertEquals(ParserUtil.getUTCDate(2013, 8, 23, 11, 44, 18, 963), item.getSubmittedOn());
-		assertEquals(ParserUtil.getUTCDate(2013, 8, 24, 15, 33, 18, 523), item.getLastUpdatedOn());
+		assertEquals(ParserUtil.getUTCDate(2013, 8, 24, 15, 33, 18, 523), item.getLastModifiedDate());
 		assertEquals("30", item.getInitialEffort());
 		assertEquals(TuleapStatus.Closed, item.getStatus());
 		assertEquals("Epics", item.getType());
@@ -326,7 +326,7 @@ public class TuleapJsonParserTest {
 		assertEquals("backlog_items?id=350&group_id=3", item.getHtmlUrl());
 		assertEquals(1, item.getSubmittedBy());
 		assertEquals(ParserUtil.getUTCDate(2013, 8, 23, 11, 44, 18, 963), item.getSubmittedOn());
-		assertEquals(ParserUtil.getUTCDate(2013, 8, 24, 15, 33, 18, 523), item.getLastUpdatedOn());
+		assertEquals(ParserUtil.getUTCDate(2013, 8, 24, 15, 33, 18, 523), item.getLastModifiedDate());
 
 		assertEquals("5", item.getInitialEffort());
 		assertEquals(TuleapStatus.Open, item.getStatus());
@@ -381,7 +381,7 @@ public class TuleapJsonParserTest {
 		assertNull(tuleapMilestone.getHtmlUrl());
 		assertEquals(1, tuleapMilestone.getSubmittedBy());
 		assertEquals(ParserUtil.getUTCDate(2013, 8, 23, 11, 44, 18, 963), tuleapMilestone.getSubmittedOn());
-		assertNull(tuleapMilestone.getLastUpdatedOn());
+		assertNull(tuleapMilestone.getLastModifiedDate());
 		assertEquals(ParserUtil.getUTCDate(2013, 8, 23, 11, 44, 18, 963), tuleapMilestone.getStartDate());
 		assertEquals(ParserUtil.getUTCDate(2013, 9, 23, 11, 44, 18, 963), tuleapMilestone.getEndDate());
 		assertEquals("100", tuleapMilestone.getCapacity());
@@ -413,7 +413,7 @@ public class TuleapJsonParserTest {
 		assertEquals(3, tuleapMilestone.getProject().getId());
 		assertEquals("projects/3", tuleapMilestone.getProject().getUri());
 		assertEquals("Release TU", tuleapMilestone.getLabel()); //$NON-NLS-1$
-		assertNull(tuleapMilestone.getLastUpdatedOn());
+		assertNull(tuleapMilestone.getLastModifiedDate());
 		assertEquals(ParserUtil.getUTCDate(2013, 9, 23, 11, 44, 18, 963), tuleapMilestone.getStartDate());
 		assertEquals(ParserUtil.getUTCDate(2013, 10, 23, 11, 44, 18, 963), tuleapMilestone.getEndDate());
 		assertEquals("75", tuleapMilestone.getCapacity());

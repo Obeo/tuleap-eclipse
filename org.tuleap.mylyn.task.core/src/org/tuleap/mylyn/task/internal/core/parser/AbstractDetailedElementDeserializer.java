@@ -25,7 +25,7 @@ import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.model.data.AbstractTuleapDetailedElement;
 
 import static org.tuleap.mylyn.task.internal.core.util.ITuleapConstants.HTML_URL;
-import static org.tuleap.mylyn.task.internal.core.util.ITuleapConstants.LAST_UPDATED_ON;
+import static org.tuleap.mylyn.task.internal.core.util.ITuleapConstants.LAST_MODIFIED_DATE;
 import static org.tuleap.mylyn.task.internal.core.util.ITuleapConstants.SUBMITTED_BY;
 import static org.tuleap.mylyn.task.internal.core.util.ITuleapConstants.SUBMITTED_ON;
 
@@ -94,11 +94,11 @@ public abstract class AbstractDetailedElementDeserializer<T extends AbstractTule
 			int submittedBy = jsonObject.get(SUBMITTED_BY).getAsInt();
 			pojo.setSubmittedBy(submittedBy);
 		}
-		element = jsonObject.get(LAST_UPDATED_ON);
+		element = jsonObject.get(LAST_MODIFIED_DATE);
 		if (element != null && !element.isJsonNull()) {
-			String lastUpdatedOn = jsonObject.get(LAST_UPDATED_ON).getAsString();
+			String lastUpdatedOn = jsonObject.get(LAST_MODIFIED_DATE).getAsString();
 			try {
-				pojo.setLastUpdatedOn(parseISO8601Date(lastUpdatedOn));
+				pojo.setLastModifiedDate(parseISO8601Date(lastUpdatedOn));
 			} catch (ParseException e) {
 				TuleapCoreActivator.log(e, false);
 			}

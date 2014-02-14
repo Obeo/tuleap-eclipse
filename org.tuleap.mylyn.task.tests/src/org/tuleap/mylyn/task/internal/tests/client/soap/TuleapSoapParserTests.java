@@ -266,7 +266,7 @@ public class TuleapSoapParserTests {
 		assertThat(tuleapArtifact.getId(), is(artifactId));
 		assertThat(tuleapArtifact.getTracker().getId(), is(trackerId));
 		assertThat(tuleapArtifact.getSubmittedOn().toString(), is(creationDate.toString()));
-		assertThat(tuleapArtifact.getLastUpdatedOn().toString(), is(lastUpdateDate.toString()));
+		assertThat(tuleapArtifact.getLastModifiedDate().toString(), is(lastUpdateDate.toString()));
 
 		TuleapTaskId taskId = TuleapTaskId.forArtifact(projectId, trackerId, artifactId);
 		String htmlUrl = taskId.getTaskUrl(repositoryUrl);

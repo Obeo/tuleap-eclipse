@@ -145,7 +145,7 @@ public interface ITuleapConstants {
 	/**
 	 * The key used to retrieve the date of last modification.
 	 */
-	String LAST_UPDATED_ON = "last_updated_on"; //$NON-NLS-1$
+	String LAST_MODIFIED_DATE = "last_modified_date"; //$NON-NLS-1$
 
 	/**
 	 * The key used to retrieve the file description.

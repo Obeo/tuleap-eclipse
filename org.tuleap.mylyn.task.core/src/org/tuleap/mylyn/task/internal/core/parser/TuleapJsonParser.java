@@ -189,6 +189,28 @@ public class TuleapJsonParser {
 	}
 
 	/**
+	 * Parse an artifact from a Json representation.
+	 * 
+	 * @param element
+	 *            The JsonElement representing a {@link TuleapArtifact}.
+	 * @return The artifact
+	 */
+	public TuleapArtifact parseArtifact(JsonElement element) {
+		return gson.fromJson(element, TuleapArtifact.class);
+	}
+
+	/**
+	 * Parses a JSON element representing an artifact into a POJO.
+	 * 
+	 * @param element
+	 *            The JSON element representing an artifact
+	 * @return a POJO populated with the data from the JSON String.
+	 */
+	public TuleapArtifact parseArtifact(String element) {
+		return gson.fromJson(element, TuleapArtifact.class);
+	}
+
+	/**
 	 * Parse the JSON representation of an error and returns its message.
 	 * 
 	 * @param jsonResponse
