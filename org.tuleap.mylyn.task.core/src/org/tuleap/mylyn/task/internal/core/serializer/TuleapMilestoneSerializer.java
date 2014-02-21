@@ -38,8 +38,7 @@ public class TuleapMilestoneSerializer extends AbstractProjectElementSerializer<
 	public JsonElement serialize(TuleapMilestone milestone, Type type,
 			JsonSerializationContext jsonSerializationContext) {
 
-		JsonObject milestoneObject = new JsonObject();
-		milestoneObject = (JsonObject)super.serialize(milestone, type, jsonSerializationContext);
+		JsonObject milestoneObject = (JsonObject)super.serialize(milestone, type, jsonSerializationContext);
 		if (milestone.getParent() != null) {
 			milestoneObject.add(ITuleapConstants.JSON_PARENT, new Gson().toJsonTree(milestone.getParent()));
 		}

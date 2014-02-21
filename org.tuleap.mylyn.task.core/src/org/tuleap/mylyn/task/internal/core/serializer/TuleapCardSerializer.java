@@ -37,9 +37,8 @@ public class TuleapCardSerializer extends AbstractTuleapSerializer<TuleapCard> {
 	@Override
 	public JsonElement serialize(TuleapCard tuleapCard, Type type,
 			JsonSerializationContext jsonSerializationContext) {
-		JsonObject elementObject = new JsonObject();
-
-		elementObject = (JsonObject)super.serialize(tuleapCard, TuleapCard.class, jsonSerializationContext);
+		JsonObject elementObject = (JsonObject)super.serialize(tuleapCard, TuleapCard.class,
+				jsonSerializationContext);
 
 		elementObject.remove(ITuleapConstants.ID);
 		if (tuleapCard.getLabel() != null) {
