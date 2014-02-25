@@ -37,6 +37,11 @@ public class TuleapTracker implements Serializable {
 	private static final long serialVersionUID = -8688658274608834147L;
 
 	/**
+	 * References to the tracker resources.
+	 */
+	private TuleapResource[] resources;
+
+	/**
 	 * The tracker's parent.
 	 */
 	private TuleapTracker parentTracker;
@@ -60,6 +65,11 @@ public class TuleapTracker implements Serializable {
 	 * The url of the tracker.
 	 */
 	private String url;
+
+	/**
+	 * The uri of the project.
+	 */
+	private String uri;
 
 	/**
 	 * The label of the Tuleap tracker.
@@ -135,6 +145,25 @@ public class TuleapTracker implements Serializable {
 		this.itemName = itemName;
 		this.description = description;
 		this.lastUpdateDate = lastUpdateDate;
+	}
+
+	/**
+	 * Returns the uri of the tracker.
+	 * 
+	 * @return The uri of the tracker
+	 */
+	public String getUri() {
+		return uri;
+	}
+
+	/**
+	 * Tracker uri setter.
+	 * 
+	 * @param uri
+	 *            The tracker uri
+	 */
+	public void setUri(String uri) {
+		this.uri = uri;
 	}
 
 	/**
@@ -410,5 +439,46 @@ public class TuleapTracker implements Serializable {
 	 */
 	public AbstractTuleapField getFieldById(int id) {
 		return fields.get(Integer.valueOf(id));
+	}
+
+	/**
+	 * Tracker resources getter.
+	 * 
+	 * @return the trackerResources, a list that is never <code>null</code> but possibly empty.
+	 */
+	public TuleapResource[] getTrackerResources() {
+		if (resources == null) {
+			return null;
+		}
+		return resources.clone();
+	}
+
+	/**
+	 * Tracker resources setter.
+	 * 
+	 * @param trackerResources
+	 *            the trackerResources to set
+	 */
+	public void setTrackerResources(TuleapResource[] trackerResources) {
+		this.resources = trackerResources.clone();
+	}
+
+	/**
+	 * Indicates whether the given resource exists on this tracker.
+	 * 
+	 * @param key
+	 *            The resource type being looked for
+	 * @return {@code true} if and only if the given service is present in the list of services of this
+	 *         tracker.
+	 */
+	public boolean hasResource(String key) {
+		if (resources != null) {
+			for (TuleapResource resource : resources) {
+				if (resource.getType().equals(key)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

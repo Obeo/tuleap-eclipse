@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -38,7 +39,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapQueryConstants;
-import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
+import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTrackerReport;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
@@ -194,8 +195,12 @@ public class TuleapReportPage extends AbstractRepositoryQueryPage2 {
 						.getRepositoryConnector(connectorKind);
 				if (repositoryConnector instanceof ITuleapRepositoryConnector) {
 					ITuleapRepositoryConnector connector = (ITuleapRepositoryConnector)repositoryConnector;
-					TuleapSoapClient soapClient = connector.getClientManager().getSoapClient(taskRepository);
-					reports.addAll(soapClient.getReports(trackerId, monitor));
+					TuleapRestClient restClient = connector.getClientManager().getRestClient(taskRepository);
+					try {
+						reports.addAll(restClient.getTrackerReports(trackerId, monitor));
+					} catch (CoreException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		};

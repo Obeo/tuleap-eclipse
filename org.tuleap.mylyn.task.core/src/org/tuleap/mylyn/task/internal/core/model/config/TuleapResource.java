@@ -13,7 +13,7 @@ package org.tuleap.mylyn.task.internal.core.model.config;
 import java.io.Serializable;
 
 /**
- * Used to reference a tuleap project resource. POJO to deserialize a JSON project resource.
+ * Used to reference a tuleap resource. POJO to deserialize a JSON resource.
  * 
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */

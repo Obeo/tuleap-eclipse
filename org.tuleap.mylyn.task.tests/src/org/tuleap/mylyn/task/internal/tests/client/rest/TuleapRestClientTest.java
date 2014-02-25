@@ -307,6 +307,50 @@ public class TuleapRestClientTest {
 		assertEquals("GET", request.method); //$NON-NLS-1$
 	}
 
+	@Test
+	public void testRetrieveProjectTrackers() throws CoreException, ParseException {
+		String jsonTrackers = ParserUtil.loadFile("/trackers/trackers_part_1.json");
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonTrackers, respHeaders);
+		connector.setResponse(response);
+		client.getProjectTrackers(101, null);
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(2, requestsSent.size());
+		ServerRequest request = requestsSent.get(0);
+		assertEquals("/api/v12.3/projects/101/trackers", request.url); //$NON-NLS-1$
+		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
+
+		request = requestsSent.get(1);
+		assertEquals("/api/v12.3/projects/101/trackers", request.url); //$NON-NLS-1$
+		assertEquals("GET", request.method); //$NON-NLS-1$
+	}
+
+	@Test
+	public void testTracker() throws CoreException, ParseException {
+		String jsonTracker = ParserUtil.loadFile("/trackers/tracker-5.json");
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonTracker, respHeaders);
+		connector.setResponse(response);
+		client.getTracker(102, null);
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(2, requestsSent.size());
+		ServerRequest request = requestsSent.get(0);
+		assertEquals("/api/v12.3/trackers/102", request.url); //$NON-NLS-1$
+		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
+
+		request = requestsSent.get(1);
+		assertEquals("/api/v12.3/trackers/102", request.url); //$NON-NLS-1$
+		assertEquals("GET", request.method); //$NON-NLS-1$
+	}
+
 	/**
 	 * Test that a milestone backlog update is well done.
 	 * 

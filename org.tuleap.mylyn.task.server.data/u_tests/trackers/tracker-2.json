@@ -1,99 +1,102 @@
 {
-  "id": 2,
-  "label": "Release",
-  "unix_name": "release",
-  "description": "The description of the releases tracker",
-  "url": "localhost:3001/api/v3.14/trackers/2",
-  "html_url": "localhost:3001/plugins/tracker/?tracker=2",
-  "project_id": 3,
-  "fields": [
-    {
-      "field_id": 0,
-      "short_name": "title",
-      "label": "Title",
-      "type": "string",
-      "permissions": [
-        "read",
-        "create",
-        "update"
-      ]
+    "id": 2,
+    "uri": "trackers/2",
+    "label": "Release",
+    "item_name": "release",
+    "description": "The description of the releases tracker",
+    "html_url": "localhost:3001/plugins/tracker/?tracker=2",
+    "project": {
+        "id": 3,
+        "uri": "projects/3"
     },
-    {
-      "field_id": 1,
-      "short_name": "start-date",
-      "label": "Start Date",
-      "type": "date",
-      "permissions": [
-        "read",
-        "create",
-        "update"
-      ]
+    "fields": [
+        {
+            "field_id": 0,
+            "name": "title",
+            "label": "Title",
+            "type": "string",
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
+        },
+        {
+            "field_id": 1,
+            "name": "start-date",
+            "label": "Start Date",
+            "type": "date",
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
+        },
+        {
+            "field_id": 2,
+            "name": "end-date",
+            "label": "End Date",
+            "type": "date",
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
+        },
+        {
+            "field_id": 3,
+            "name": "duration",
+            "label": "Duration",
+            "type": "computed",
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
+        },
+        {
+            "field_id": 4,
+            "name": "capacity",
+            "label": "Capacity",
+            "type": "int",
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
+        }
+    ],
+    "semantics": {
+        "title": {
+            "field_id": 0
+        },
+        "start_date": {
+            "field_id": 1
+        },
+        "duration": {
+            "field_id": 3
+        },
+        "capacity": {
+            "field_id": 4
+        }
     },
-    {
-      "field_id": 2,
-      "short_name": "end-date",
-      "label": "End Date",
-      "type": "date",
-      "permissions": [
-        "read",
-        "create",
-        "update"
-      ]
-    },
-    {
-      "field_id": 3,
-      "short_name": "duration",
-      "label": "Duration",
-      "type": "computed",
-      "permissions": [
-        "read",
-        "create",
-        "update"
-      ]
-    },
-    {
-      "field_id": 4,
-      "short_name": "capacity",
-      "label": "Capacity",
-      "type": "int",
-      "permissions": [
-        "read",
-        "create",
-        "update"
-      ]
-    }
-  ],
-  "semantic": {
-    "title": {
-      "field_id": 0
-    },
-    "start_date": {
-      "field_id": 1
-    },
-    "duration": {
-      "field_id": 3
-    },
-    "capacity": {
-      "field_id": 4
-    }
-  },
-  "workflow": {
-    "rules": [
-      {
-        "dates": [
-          {
-            "source_field_id": 1,
-            "target_field_id": 2,
-            "comparator": "<"
-          }
+    "workflow": {
+        "rules": [
+            {
+                "dates": [
+                    {
+                        "source_field_id": 1,
+                        "target_field_id": 2,
+                        "comparator": "<"
+                    }
+                ]
+            }
         ]
-      }
+    },
+    "resources": [
+        {
+            "type": "reports",
+            "uri": "trackers/2/tracker_reports"
+        }
     ]
-  },
-  "hierarchy": {
-    "parent_tracker_id": 0,
-    "children_tracker_ids": [
-      3
-    ]
-  }
 }

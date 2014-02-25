@@ -1,61 +1,63 @@
 {
-  "id": 5,
-  "label": "User Stories",
-  "unix_name": "user-stories",
-  "description": "The description of the user stories tracker",
-  "url": "localhost:3001/api/v3.14/trackers/5",
-  "html_url": "localhost:3001/plugins/tracker/?tracker=5",
-  "project_id": 3,
-  "fields": [
-    {
-      "field_id": 0,
-      "short_name": "title",
-      "label": "Title",
-      "type": "string",
-      "permissions": [
-        "read",
-        "create",
-        "update"
-      ]
+    "id": 5,
+    "uri": "trackers/5",
+    "label": "User Stories",
+    "item_name": "user-stories",
+    "description": "The description of the user stories tracker",
+    "html_url": "localhost:3001/plugins/tracker/?tracker=5",
+    "project": {
+        "id": 3,
+        "uri": "projects/3"
     },
-    {
-      "field_id": 1,
-      "short_name": "status",
-      "label": "Status",
-      "type": "sb",
-      "values": [
+    "fields": [
         {
-          "field_value_id": 0,
-          "field_value_label": "OPENED"
+            "field_id": 0,
+            "name": "title",
+            "label": "Title",
+            "type": "string",
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
         },
         {
-          "field_value_id": 1,
-          "field_value_label": "CLOSED"
+            "field_id": 1,
+            "name": "status",
+            "label": "Status",
+            "type": "sb",
+            "values": [
+                {
+                    "id": 0,
+                    "label": "OPENED"
+                },
+                {
+                    "id": 1,
+                    "label": "CLOSED"
+                }
+            ],
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
         }
-      ],
-      "permissions": [
-        "read",
-        "create",
-        "update"
-      ]
-    }
-  ],
-  "semantic": {
-    "title": {
-      "field_id": 0
+    ],
+    "semantics": {
+        "title": {
+            "field_id": 0
+        },
+        "status": {
+            "field_id": 1,
+            "value_ids": [
+                0
+            ]
+        }
     },
-    "status": {
-      "field_id": 1,
-      "open_status_field_values_ids": [
-        0
-      ]
-    }
-  },
-  "hierarchy": {
-    "parent_tracker_id": 3,
-    "children_tracker_ids": [
-      4,
-      1
+    "resources": [
+        {
+            "type": "reports",
+            "uri": "trackers/5/tracker_reports"
+        }
     ]
-  }
 }

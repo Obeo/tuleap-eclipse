@@ -37,6 +37,7 @@ import org.tuleap.mylyn.task.internal.core.model.TuleapToken;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPlanning;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTrackerReport;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapUser;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapUserGroup;
@@ -151,63 +152,12 @@ public class TuleapRestClient implements IAuthenticator {
 					.getString(TuleapMylynTasksMessagesKeys.retrieveTuleapServer), 100);
 		}
 
-		RestResource restProjects = restResourceFactory.projects().withAuthenticator(this);
-
-		// Retrieve the projects and create each project
-		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages
-					.getString(TuleapMylynTasksMessagesKeys.retrievingProjectsList));
-		}
-		RestOperation operation = restProjects.get();
-		for (JsonElement element : operation.iterable()) {
-			TuleapProject project = jsonParser.parseProject(element);
+		for (TuleapProject project : getProjects(monitor)) {
 			tuleapServer.addProject(project);
-
 			loadPlanningsInto(project);
-
-			// TODO SBE Restore this code!
-
-			// if (project.hasService(ITuleapProjectServices.TRACKERS)) {
-			// // Check that we can get the list of trackers for this project
-			// RestProjectsTrackers restTrackers = restResources.projectsTrackers(project
-			// .getIdentifier());
-			//
-			// // Retrieve the trackers and create each tracker
-			// ServerResponse projectTrackersGetServerResponse = restTrackers.get(Collections
-			// .<String, String> emptyMap());
-			// // TODO Pagination on trackers?
-			// if (ITuleapServerStatus.OK == projectTrackersGetServerResponse.getStatus()) {
-			// String projectTrackersGetResponseBody = projectTrackersGetServerResponse.getBody();
-			// List<TuleapTracker> trackers = this.jsonParser
-			// .getTrackers(projectTrackersGetResponseBody);
-			// // Put the trackers in their containing project
-			// for (TuleapTracker tracker : trackers) {
-			// project.addTracker(tracker);
-			// }
-			//
-			// // adding the properties parent/children to trackers
-			// JsonParser trackersParser = new JsonParser();
-			// JsonArray trackersArray = trackersParser.parse(projectTrackersGetResponseBody)
-			// .getAsJsonArray();
-			//
-			// for (int i = 0; i < trackersArray.size(); i++) {
-			// JsonObject tracker = (JsonObject)trackersArray.get(i);
-			//							int trackerId = tracker.get("id").getAsInt(); //$NON-NLS-1$
-			//							JsonObject hierarchy = tracker.get("hierarchy").getAsJsonObject(); //$NON-NLS-1$
-			//							int parentTrackerId = hierarchy.get("parent_tracker_id").getAsInt(); //$NON-NLS-1$
-			//
-			// project.getTracker(trackerId).setParentTracker(
-			// project.getTracker(parentTrackerId));
-			// }
-			//
-			// } else {
-			// // Invalid login? server error?
-			// String message = this.jsonParser.getErrorMessage(projectTrackersGetServerResponse
-			// .getBody());
-			// throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
-			// message));
-			// }
-			// }
+			for (TuleapTracker tracker : getProjectTrackers(project.getIdentifier(), monitor)) {
+				project.addTracker(tracker);
+			}
 		}
 
 		return tuleapServer;
@@ -348,26 +298,6 @@ public class TuleapRestClient implements IAuthenticator {
 		// Send the update of the other artifacts
 		// Try to log out
 		return -1;
-	}
-
-	/**
-	 * Returns all the reports of the tracker with the given tracker identifier.
-	 * 
-	 * @param trackerId
-	 *            The identifier of the tracker
-	 * @param monitor
-	 *            Used to monitor the progress
-	 * @return The list of all the reports of the tracker
-	 * @throws CoreException
-	 *             In case of error during the retrieval of the reports
-	 */
-	public List<TuleapTrackerReport> getReports(int trackerId, IProgressMonitor monitor) throws CoreException {
-		// Test the connection
-		// Try to log in
-		// Send a request with OPTIONS to ensure that we can and have the right to retrieve the reports
-		// Retrieve the reports
-		// Try to log out
-		return null;
 	}
 
 	/**
@@ -752,6 +682,28 @@ public class TuleapRestClient implements IAuthenticator {
 	}
 
 	/**
+	 * Retrieve a project trackers.
+	 * 
+	 * @param projectId
+	 *            The project id
+	 * @param monitor
+	 *            Progress monitor to use
+	 * @return A list, never null but possibly empty, containing the project trackers.
+	 * @throws CoreException
+	 *             If the server returns a status code different from 200 OK.
+	 */
+	public List<TuleapTracker> getProjectTrackers(int projectId, IProgressMonitor monitor)
+			throws CoreException {
+		RestResource r = restResourceFactory.projectsTrackers(projectId).withAuthenticator(this);
+		RestOperation operation = r.get();
+		List<TuleapTracker> trackers = Lists.newArrayList();
+		for (JsonElement e : operation.iterable()) {
+			trackers.add(jsonParser.parseTracker(e));
+		}
+		return trackers;
+	}
+
+	/**
 	 * Updates the backlog of a given milestone.
 	 * 
 	 * @param milestoneId
@@ -921,5 +873,31 @@ public class TuleapRestClient implements IAuthenticator {
 		TuleapBacklogItem backlogItem = this.jsonParser.parseBacklogItem(response.getBody());
 
 		return backlogItem;
+	}
+
+	/**
+	 * Returns the Tuleap tracker with the given identifier from the server.
+	 * 
+	 * @param trackerId
+	 *            The identifier of the tracker
+	 * @param monitor
+	 *            The progress monitor
+	 * @return The Tuleap tracker with the given identifier from the server
+	 * @throws CoreException
+	 *             In case of error during the retrieval of the tracker
+	 */
+	public TuleapTracker getTracker(int trackerId, IProgressMonitor monitor) throws CoreException {
+		if (monitor != null) {
+			monitor.subTask(TuleapMylynTasksMessages.getString(
+					TuleapMylynTasksMessagesKeys.retrievingBacklogItem, Integer.valueOf(trackerId)));
+		}
+		RestResource restTracker = restResourceFactory.tracker(trackerId).withAuthenticator(this);
+
+		RestOperation operation = restTracker.get();
+		ServerResponse response = operation.checkedRun();
+
+		TuleapTracker tracker = this.jsonParser.parseTracker(response.getBody());
+
+		return tracker;
 	}
 }

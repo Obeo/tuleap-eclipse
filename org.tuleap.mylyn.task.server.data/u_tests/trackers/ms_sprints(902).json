@@ -1,82 +1,115 @@
 {
-  "id" : 902,
-  "label" : "Sprints",
-  "description" : "The description of sprints",
-  "url" : "localhost:3001/api/v3.14/trackers/902",
-  "project_id" : 3,
-  "fields" : [
-      {
-        "field_id" : 960,
-        "label" : "Name",
-        "type" : "string",
-        "permissions" : [
-            "read", "create", "update"
-        ]
-      }, {
-        "field_id" : 961,
-        "label" : "Status",
-        "type" : "sb",
-        "values" : [
-            {
-              "field_value_id" : 9610,
-              "field_value_label" : "Planned"
-            }, {
-              "field_value_id" : 9611,
-              "field_value_label" : "Current"
-            }, {
-              "field_value_id" : 9612,
-              "field_value_label" : "Done"
-            }
-        ],
-        "permissions" : [
-            "read", "create", "update"
-        ]
-      }, {
-        "field_id" : 962,
-        "label" : "Linked Artifacts",
-        "type" : "art_link",
-        "permissions" : [
-            "read", "create", "update"
-        ]
-      }, {
-        "field_id" : 963,
-        "label" : "Start date",
-        "type" : "date",
-        "permissions" : [
-            "read", "create", "update"
-        ]
-      }, {
-        "field_id" : 964,
-        "label" : "Duration",
-        "type" : "float",
-        "permissions" : [
-            "read", "create", "update"
-        ]
-      }, {
-        "field_id" : 965,
-        "label" : "Capacity",
-        "type" : "float",
-        "permissions" : [
-            "read", "create", "update"
-        ]
-      }, {
-        "field_id" : 966,
-        "label" : "Remaining Effort",
-        "type" : "float",
-        "permissions" : [
-          "read"
-        ]
-      }
-  ],
-  "semantic" : {
-    "title" : {
-      "field_id" : 960
+    "id": 902,
+    "uri": "trackers/902",
+    "label": "Sprints",
+    "item_name": "sprints",
+    "description": "The description of sprints",
+    "html_url": "localhost:3001/api/v3.14/trackers/902",
+    "project": {
+        "id": 3,
+        "uri": "projects/3"
     },
-    "status" : {
-      "field_id" : 961,
-      "open_status_field_values_ids" : [
-          9610, 9611, 9612
-      ]
-    }
-  }
+    "fields": [
+        {
+            "field_id": 960,
+            "label": "Name",
+            "type": "string",
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
+        },
+        {
+            "field_id": 961,
+            "label": "Status",
+            "type": "sb",
+            "values": [
+                {
+                    "id": 9610,
+                    "label": "Planned"
+                },
+                {
+                    "id": 9611,
+                    "label": "Current"
+                },
+                {
+                    "id": 9612,
+                    "label": "Done"
+                }
+            ],
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
+        },
+        {
+            "field_id": 962,
+            "label": "Linked Artifacts",
+            "type": "art_link",
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
+        },
+        {
+            "field_id": 963,
+            "label": "Start date",
+            "type": "date",
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
+        },
+        {
+            "field_id": 964,
+            "label": "Duration",
+            "type": "float",
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
+        },
+        {
+            "field_id": 965,
+            "label": "Capacity",
+            "type": "float",
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
+        },
+        {
+            "field_id": 966,
+            "label": "Remaining Effort",
+            "type": "float",
+            "permissions": [
+                "read"
+            ]
+        }
+    ],
+    "semantics": {
+        "title": {
+            "field_id": 960
+        },
+        "status": {
+            "field_id": 961,
+            "value_ids": [
+                9610,
+                9611,
+                9612
+            ]
+        }
+    },
+    "resources": [
+        {
+            "type": "reports",
+            "uri": "trackers/902/tracker_reports"
+        }
+    ]
 }

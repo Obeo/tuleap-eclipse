@@ -1,59 +1,84 @@
 {
-  "id" : 801,
-  "label" : "Epics",
-  "description" : "The description of epics",
-  "url" : "localhost:3001/api/v3.14/trackers/801",
-  "project_id" : 3,
-  "fields" : [
-      {
-        "field_id" : 850,
-        "label" : "Status", 
-        "type": "sb",
-        "permissions" : [],
-        "values" : [
-            {
-              "field_value_id" : 8500,
-              "field_value_label" : "To be done"
-            }, {
-              "field_value_id" : 8501,
-              "field_value_label" : "On going"
-            }, {
-              "field_value_id" : 8502,
-              "field_value_label" : "Delivered"
-            }
-        ]
-      }, {
-        "field_id" : 851,
-        "label" : "Remaining Effort",
-        "type" : "computed",
-        "permissions" : [
-          "read"
-        ]
-      }, {
-        "field_id" : 852,
-        "label" : "Summary",
-        "type" : "string",
-        "permissions" : [
-            "read", "create", "update"
-        ]
-      }, {
-        "field_id" : 853,
-        "label" : "Stories",
-        "type" : "string",
-        "permissions" : [
-            "read", "create", "update"
-        ]
-      }
-  ],
-  "semantic" : {
-    "title" : {
-      "field_id" : 852
+    "id": 801,
+    "uri": "trackers/801",
+    "label": "Epics",
+    "item_name": "epics",
+    "description": "The description of epics",
+    "html_url": "localhost:3001/api/v3.14/trackers/801",
+    "project": {
+        "id": 3,
+        "uri": "projects/3"
     },
-    "status" : {
-      "field_id" : 850,
-      "open_status_field_values_ids" : [
-          8500, 8501
-      ]
-    }
-  }
+    "fields": [
+        {
+            "field_id": 850,
+            "label": "Status",
+            "name": "status",
+            "type": "sb",
+            "permissions": [],
+            "values": [
+                {
+                    "id": 8500,
+                    "label": "To be done"
+                },
+                {
+                    "id": 8501,
+                    "label": "On going"
+                },
+                {
+                    "id": 8502,
+                    "label": "Delivered"
+                }
+            ]
+        },
+        {
+            "field_id": 851,
+            "label": "Remaining Effort",
+            "name": "remaining-effort",
+            "type": "computed",
+            "permissions": [
+                "read"
+            ]
+        },
+        {
+            "field_id": 852,
+            "label": "Summary",
+            "name": "summary",
+            "type": "string",
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
+        },
+        {
+            "field_id": 853,
+            "label": "Stories",
+            "name": "stories",
+            "type": "string",
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
+        }
+    ],
+    "semantics": {
+        "title": {
+            "field_id": 852
+        },
+        "status": {
+            "field_id": 850,
+            "value_ids": [
+                8500,
+                8501
+            ]
+        }
+    },
+    "resources": [
+        {
+            "type": "reports",
+            "uri": "trackers/801/tracker_reports"
+        }
+    ]
 }

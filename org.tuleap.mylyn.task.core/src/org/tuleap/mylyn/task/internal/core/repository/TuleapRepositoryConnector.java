@@ -392,25 +392,9 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			throws CoreException {
 		if (taskRepository != null) {
 			TuleapRestClient tuleapRestClient = this.getClientManager().getRestClient(taskRepository);
-			TuleapSoapClient tuleapSoapClient = this.getClientManager().getSoapClient(taskRepository);
 			try {
-				// TODO REST While Tuleap does not handle URI /projects, this cannot work.
-				// TuleapServer tuleapServerRest = tuleapRestClient
-				// .getServer(monitor);
-				TuleapServer tuleapServerSoap = tuleapSoapClient.getTuleapServerConfiguration(monitor);
-
-				List<TuleapProject> allProjects = tuleapServerSoap.getAllProjects();
-				for (TuleapProject project : allProjects) {
-					// Retrieve plannings via the REST API
-					try {
-						tuleapRestClient.loadPlanningsInto(project);
-					} catch (CoreException e) {
-						TuleapCoreActivator.log(e, true);
-					}
-					tuleapServerSoap.addProject(project);
-				}
-
-				this.serversByUrl.put(taskRepository.getRepositoryUrl(), tuleapServerSoap);
+				TuleapServer tuleapServerRest = tuleapRestClient.getServer(monitor);
+				this.serversByUrl.put(taskRepository.getRepositoryUrl(), tuleapServerRest);
 			} catch (CoreException e) {
 				TuleapCoreActivator.log(e, true);
 			}
@@ -528,9 +512,8 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		TuleapProject project = tracker.getProject();
 
 		TuleapTracker refreshedTracker = null;
-		TuleapSoapClient tuleapSoapClient = this.getClientManager().getSoapClient(taskRepository);
-		refreshedTracker = tuleapSoapClient.getTuleapTrackerConfiguration(project, tracker.getIdentifier(),
-				monitor);
+		TuleapRestClient client = this.getClientManager().getRestClient(taskRepository);
+		refreshedTracker = client.getTracker(tracker.getIdentifier(), monitor);
 
 		if (refreshedTracker != null) {
 			TuleapServer tuleapServer = this.serversByUrl.get(taskRepository.getRepositoryUrl());

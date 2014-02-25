@@ -1,134 +1,182 @@
 {
-  "id" : 802,
-  "label" : "User Stories",
-  "description" : "The description of user stories",
-  "url" : "localhost:3001/api/v3.14/trackers/802",
-  "project_id" : 3,
-  "fields" : [
-      {
-        "field_id" : 860,
-        "label" : "As a",
-        "short_name" : "as_a",
-        "type" : "sb",
-        "values" : [
-            {
-              "field_value_id" : 8600,
-              "field_value_label" : "Admin"
-            }, {
-              "field_value_id" : 8601,
-              "field_value_label" : "Product Owner"
-            }, {
-              "field_value_id" : 8602,
-              "field_value_label" : "Scrum Team"
-            }, {
-              "field_value_id" : 8603,
-              "field_value_label" : "System Architect"
-            }, {
-              "field_value_id" : 8604,
-              "field_value_label" : "Tracker creator"
-            }, {
-              "field_value_id" : 8605,
-              "field_value_label" : "Tracker user"
-            }, {
-              "field_value_id" : 8606,
-              "field_value_label" : "User"
-            }
-        ],
-        "permissions" : [
-            "read", "create", "update"
-        ]
-      }, {
-        "field_id" : 861,
-        "label" : "I want to",
-        "type" : "string",
-        "permissions" : [
-            "read", "create", "update"
-        ]
-      }, {
-        "field_id" : 862,
-        "label" : "So that",
-        "type" : "text",
-        "permissions" : [
-            "read", "create", "update"
-        ]
-      }, {
-        "field_id" : 863,
-        "label" : "Acceptance criteria",
-        "type" : "text",
-        "permissions" : [
-            "read", "create", "update"
-        ]
-      }, {
-        "field_id" : 864,
-        "label" : "Tasks",
-        "type" : "art_link",
-        "permissions" : [
-            "read", "create", "update"
-        ]
-      }, {
-        "field_id" : 865,
-        "label" : "Iteration",
-        "type" : "string",
-        "permissions" : [
-            "read", "create", "update"
-        ]
-      }, {
-        "field_id" : 866,
-        "label" : "Story points",
-        "type" : "float",
-        "permissions" : [
-            "read", "create", "update"
-        ]
-      }, {
-        "field_id" : 867,
-        "label" : "Remaining Effort",
-        "type" : "computed",
-        "permissions" : [
-          "read"
-        ]
-      }, {
-        "field_id" : 868,
-        "label" : "Status",
-        "type" : "sb",
-        "values" : [
-            {
-              "field_value_id" : 8610,
-              "field_value_label" : "To be done"
-            }, {
-              "field_value_id" : 8611,
-              "field_value_label" : "On going"
-            }, {
-              "field_value_id" : 8612,
-              "field_value_label" : "Done"
-            }, {
-              "field_value_id" : 8613,
-              "field_value_label" : "Canceled"
-            }
-        ],
-        "permissions" : [
-            "read", "create", "update"
-        ]
-      }, {
-        "field_id" : 869,
-        "label" : "Attachments",
-        "type" : "file",
-        "permissions" : [
-            "read", "create", "update"
-        ]
-      }
-  ],
-  "semantic" : {
-    "title" : {
-      "field_id" : 861
+    "id": 802,
+    "uri": "trackers/802",
+    "label": "User Stories",
+    "item_name": "user-stories",
+    "description": "The description of user stories",
+    "html_url": "localhost:3001/api/v3.14/trackers/802",
+    "project": {
+        "id": 3,
+        "uri": "projects/3"
     },
-    "status" : {
-      "field_id" : 868,
-      "open_status_field_values_ids" : [
-          8610, 8611
-      ]
+    "fields": [
+        {
+            "field_id": 860,
+            "label": "As a",
+            "name": "as_a",
+            "type": "sb",
+            "values": [
+                {
+                    "id": 8600,
+                    "label": "Admin"
+                },
+                {
+                    "id": 8601,
+                    "label": "Product Owner"
+                },
+                {
+                    "id": 8602,
+                    "label": "Scrum Team"
+                },
+                {
+                    "id": 8603,
+                    "label": "System Architect"
+                },
+                {
+                    "id": 8604,
+                    "label": "Tracker creator"
+                },
+                {
+                    "id": 8605,
+                    "label": "Tracker user"
+                },
+                {
+                    "id": 8606,
+                    "label": "User"
+                }
+            ],
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
+        },
+        {
+            "field_id": 861,
+            "label": "I want to",
+            "type": "string",
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
+        },
+        {
+            "field_id": 862,
+            "label": "So that",
+            "type": "text",
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
+        },
+        {
+            "field_id": 863,
+            "label": "Acceptance criteria",
+            "type": "text",
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
+        },
+        {
+            "field_id": 864,
+            "label": "Tasks",
+            "type": "art_link",
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
+        },
+        {
+            "field_id": 865,
+            "label": "Iteration",
+            "type": "string",
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
+        },
+        {
+            "field_id": 866,
+            "label": "Story points",
+            "type": "float",
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
+        },
+        {
+            "field_id": 867,
+            "label": "Remaining Effort",
+            "type": "computed",
+            "permissions": [
+                "read"
+            ]
+        },
+        {
+            "field_id": 868,
+            "label": "Status",
+            "type": "sb",
+            "values": [
+                {
+                    "id": 8610,
+                    "label": "To be done"
+                },
+                {
+                    "id": 8611,
+                    "label": "On going"
+                },
+                {
+                    "id": 8612,
+                    "label": "Done"
+                },
+                {
+                    "id": 8613,
+                    "label": "Canceled"
+                }
+            ],
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
+        },
+        {
+            "field_id": 869,
+            "label": "Attachments",
+            "type": "file",
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
+        }
+    ],
+    "semantics": {
+        "title": {
+            "field_id": 861
+        },
+        "status": {
+            "field_id": 868,
+            "value_ids": [
+                8610,
+                8611
+            ]
+        },
+        "initial_effort": {
+            "field_id": 866
+        }
     },
-    "initial_effort" : {
-      "field_id" : 866
-    }
-  }
+    "resources": [
+        {
+            "type": "reports",
+            "uri": "trackers/802/tracker_reports"
+        }
+    ]
 }

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.parser;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -19,13 +21,10 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
-import org.eclipse.core.runtime.Assert;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.config.ITuleapTrackerConstants;
-import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapResource;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
-import org.tuleap.mylyn.task.internal.core.model.config.TuleapUser;
-import org.tuleap.mylyn.task.internal.core.model.config.TuleapUserGroup;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapWorkflowTransition;
 import org.tuleap.mylyn.task.internal.core.model.config.field.AbstractTuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapArtifactLink;
@@ -55,9 +54,14 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 	private static final String ID = "id"; //$NON-NLS-1$
 
 	/**
+	 * The uri keyword.
+	 */
+	private static final String URI = "uri"; //$NON-NLS-1$
+
+	/**
 	 * The url keyword.
 	 */
-	private static final String URL = "url"; //$NON-NLS-1$
+	private static final String URL = "html_url"; //$NON-NLS-1$
 
 	/**
 	 * The label keyword.
@@ -92,7 +96,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 	/**
 	 * The binding keyword.
 	 */
-	private static final String BINDING = "binding"; //$NON-NLS-1$
+	private static final String BINDINGS = "bindings"; //$NON-NLS-1$
 
 	/**
 	 * The field id keyword.
@@ -102,37 +106,17 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 	/**
 	 * The field value id keyword.
 	 */
-	private static final String FIELD_VALUE_ID = "field_value_id"; //$NON-NLS-1$
+	private static final String FIELD_VALUE_ID = "id"; //$NON-NLS-1$
 
 	/**
 	 * The field value label keyword.
 	 */
-	private static final String FIELD_VALUE_LABEL = "field_value_label"; //$NON-NLS-1$
+	private static final String FIELD_VALUE_LABEL = "label"; //$NON-NLS-1$
 
 	/**
 	 * The bind type keyword.
 	 */
-	private static final String BIND_TYPE = "bind_type"; //$NON-NLS-1$
-
-	/**
-	 * The keyword that represents a "users" binding type.
-	 */
-	private static final String BIND_TYPE_USERS = "users"; //$NON-NLS-1$
-
-	/**
-	 * The bind list keyword.
-	 */
-	private static final String BIND_LIST = "bind_list"; //$NON-NLS-1$
-
-	/**
-	 * The user group id keyword.
-	 */
-	private static final String USER_GROUP_ID = "user_group_id"; //$NON-NLS-1$
-
-	/**
-	 * The user group name keyword.
-	 */
-	private static final String USER_GROUP_NAME = "user_group_name"; //$NON-NLS-1$
+	private static final String BIND_TYPE = "type"; //$NON-NLS-1$
 
 	/**
 	 * The title keyword.
@@ -142,12 +126,12 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 	/**
 	 * The from field value id keyword.
 	 */
-	private static final String FROM_FIELD_VALUE_ID = "from_field_value_id"; //$NON-NLS-1$
+	private static final String FROM_FIELD_VALUE_ID = "from_id"; //$NON-NLS-1$
 
 	/**
 	 * The to field value id keyword.
 	 */
-	private static final String TO_FIELD_VALUE_ID = "to_field_value_id"; //$NON-NLS-1$
+	private static final String TO_FIELD_VALUE_ID = "to_id"; //$NON-NLS-1$
 
 	/**
 	 * The transitions keyword.
@@ -160,9 +144,9 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 	private static final String JSON_CONTRIBUTORS = "contributors"; //$NON-NLS-1$
 
 	/**
-	 * The field open status keyword.
+	 * The open status values field keyword.
 	 */
-	private static final String JSON_OPEN_STATUS_IDS = "open_status_field_values_ids"; //$NON-NLS-1$
+	private static final String JSON_STATUS_IDS = "value_ids"; //$NON-NLS-1$
 
 	/**
 	 * The status keyword.
@@ -175,20 +159,9 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 	private static final String PERMISSION_SUBMIT = "submit"; //$NON-NLS-1$
 
 	/**
-	 * The related project.
+	 * The resources keyword.
 	 */
-	protected final TuleapProject project;
-
-	/**
-	 * Constructor that receives the related project.
-	 * 
-	 * @param project
-	 *            The project.
-	 */
-	public TuleapTrackerDeserializer(TuleapProject project) {
-		Assert.isNotNull(project);
-		this.project = project;
-	}
+	private static final String RESOURCES = "resources"; //$NON-NLS-1$
 
 	/**
 	 * Returns the id of the given object.
@@ -210,6 +183,17 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 	 */
 	protected String getUrl(JsonObject jsonObject) {
 		return jsonObject.get(URL).getAsString();
+	}
+
+	/**
+	 * Returns the uri of the given object.
+	 * 
+	 * @param jsonObject
+	 *            The json object
+	 * @return The uri of the given object
+	 */
+	protected String getUri(JsonObject jsonObject) {
+		return jsonObject.get(URI).getAsString();
 	}
 
 	/**
@@ -235,7 +219,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 	protected TuleapTracker populateConfigurableFields(TuleapTracker tracker, JsonObject jsonObject) {
 		JsonArray milestoneTypeFieldsArray = jsonObject.get(FIELDS).getAsJsonArray();
 
-		JsonElement eltSemantic = jsonObject.get(ITuleapTrackerConstants.SEMANTIC);
+		JsonElement eltSemantic = jsonObject.get(ITuleapTrackerConstants.SEMANTICS);
 		JsonObject fieldSemantic = null;
 		if (eltSemantic != null) {
 			fieldSemantic = eltSemantic.getAsJsonObject();
@@ -301,7 +285,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 				if (valuesElement != null) {
 					fieldValuesArray = valuesElement.getAsJsonArray();
 				}
-				JsonElement bindingElement = field.get(BINDING);
+				JsonElement bindingElement = field.get(BINDINGS);
 				if (bindingElement != null) {
 					fieldBinding = bindingElement.getAsJsonObject();
 				}
@@ -323,6 +307,13 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 		if (fieldSemantic != null) {
 			this.fillTitleSemantic(tracker, fieldSemantic);
 		}
+
+		// Resources
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		Gson gson = gsonBuilder.create();
+		JsonArray resources = jsonObject.get(RESOURCES).getAsJsonArray();
+		TuleapResource[] trackerResources = gson.fromJson(resources, TuleapResource[].class);
+		tracker.setTrackerResources(trackerResources);
 
 		return tracker;
 	}
@@ -397,10 +388,10 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 
 				// the semantic status part
 				JsonObject semanticStatus = fieldSemantic.get(STATUS).getAsJsonObject();
-				for (int z = 0; z < semanticStatus.get(JSON_OPEN_STATUS_IDS).getAsJsonArray().size(); z++) {
+				for (int z = 0; z < semanticStatus.get(JSON_STATUS_IDS).getAsJsonArray().size(); z++) {
 					if (selectBoxField.getIdentifier() == semanticStatus.get(FIELD_ID).getAsInt()
-							&& fieldValueId == semanticStatus.get(JSON_OPEN_STATUS_IDS).getAsJsonArray().get(
-									z).getAsInt()) {
+							&& fieldValueId == semanticStatus.get(JSON_STATUS_IDS).getAsJsonArray().get(z)
+									.getAsInt()) {
 						selectBoxField.getOpenStatus().add(selectBoxItem);
 					}
 				}
@@ -411,9 +402,10 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 		if (fieldBinding != null) {
 			String bindingType = fieldBinding.get(BIND_TYPE).getAsString();
 			selectBoxField.setBinding(bindingType);
-			if (BIND_TYPE_USERS.equals(bindingType)) {
-				fillUsers(selectBoxField, fieldBinding);
-			}
+			// No need of a specific treatment for users bindings, the list of users is provided
+			// if (BIND_TYPE_USERS.equals(bindingType)) {
+			// fillUsers(selectBoxField, fieldBinding);
+			// }
 		}
 
 		// the semantic contributors part
@@ -422,30 +414,6 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 				&& fieldSemantic.get(JSON_CONTRIBUTORS).getAsJsonObject().get(FIELD_ID).getAsInt() == selectBoxField
 						.getIdentifier()) {
 			selectBoxField.setSemanticContributor(true);
-		}
-	}
-
-	/**
-	 * Fills the users that belong to the cound user groups.
-	 * 
-	 * @param selectBoxField
-	 *            The select box in which to put the users.
-	 * @param fieldBinding
-	 *            The JSON object that contains the group bindings.
-	 */
-	private void fillUsers(AbstractTuleapSelectBox selectBoxField, JsonObject fieldBinding) {
-		JsonArray bindings = fieldBinding.get(BIND_LIST).getAsJsonArray();
-		for (JsonElement bindingElt : bindings) {
-			JsonObject binding = bindingElt.getAsJsonObject();
-			int ugroupId = binding.get(USER_GROUP_ID).getAsInt();
-			TuleapUserGroup group = project.getUserGroup(ugroupId);
-			if (group != null) {
-				for (TuleapUser person : group.getMembers()) {
-					TuleapSelectBoxItem item = new TuleapSelectBoxItem(person.getId());
-					item.setLabel(person.getUserName());
-					selectBoxField.addItem(item);
-				}
-			}
 		}
 	}
 
@@ -517,12 +485,14 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 		int identifier = this.getId(jsonObject);
 		String url = this.getUrl(jsonObject);
 		String label = this.getLabel(jsonObject);
+		String uri = jsonObject.get(URI).getAsString();
 		String itemName = null;
 		String description = null;
 		long lastUpdateDate = System.currentTimeMillis();
 
 		TuleapTracker tracker = new TuleapTracker(identifier, url, label, itemName, description,
 				lastUpdateDate);
+		tracker.setUri(uri);
 
 		tracker = this.populateConfigurableFields(tracker, jsonObject);
 

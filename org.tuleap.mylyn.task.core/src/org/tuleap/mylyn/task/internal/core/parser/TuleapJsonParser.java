@@ -20,6 +20,7 @@ import java.util.Date;
 import org.tuleap.mylyn.task.internal.core.model.TuleapErrorMessage;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPlanning;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTrackerReport;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapUser;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapUserGroup;
@@ -51,6 +52,7 @@ public class TuleapJsonParser {
 		gsonBuilder.registerTypeAdapter(TuleapArtifact.class, new TuleapArtifactDeserializer());
 		gsonBuilder.registerTypeAdapter(TuleapCardwall.class, new TuleapCardwallDeserializer());
 		gsonBuilder.registerTypeAdapter(TuleapCard.class, new TuleapCardDeserializer());
+		gsonBuilder.registerTypeAdapter(TuleapTracker.class, new TuleapTrackerDeserializer());
 		gsonBuilder.registerTypeAdapter(Date.class, new DateIso8601Adapter());
 		gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
 		this.gson = gsonBuilder.create();
@@ -219,5 +221,27 @@ public class TuleapJsonParser {
 	 */
 	public TuleapErrorMessage getErrorMessage(String jsonResponse) {
 		return gson.fromJson(jsonResponse, TuleapErrorMessage.class);
+	}
+
+	/**
+	 * Parses a JSON String representing a tracker into a POJO.
+	 * 
+	 * @param json
+	 *            The JSON response representing an t
+	 * @return a POJO populated with the data from the JSON String.
+	 */
+	public TuleapTracker parseTracker(String json) {
+		return gson.fromJson(json, TuleapTracker.class);
+	}
+
+	/**
+	 * Parse a tracker from a Json representation.
+	 * 
+	 * @param element
+	 *            The JsonElement representing a {@link TuleapTracker}.
+	 * @return The tracker
+	 */
+	public TuleapTracker parseTracker(JsonElement element) {
+		return gson.fromJson(element, TuleapTracker.class);
 	}
 }

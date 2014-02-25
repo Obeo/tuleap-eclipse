@@ -256,10 +256,11 @@ public class Soap2RestInitializer {
 			for (Group project : myProjects) {
 				StringBuffer stringBuffer = new StringBuffer();
 				stringBuffer.append("{\n"); //$NON-NLS-1$
-				stringBuffer.append("  \"id\": " + project.getGroup_id() + ",\n"); //$NON-NLS-1$ //$NON-NLS-2$
-				stringBuffer.append("  \"label\": \"" + project.getGroup_name() + "\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
-				stringBuffer.append("  \"unix_name\": \"" + project.getUnix_group_name() + "\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
-				stringBuffer.append("  \"description\": \"" + project.getDescription() + "\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				stringBuffer.append("  \"id\": ").append(project.getGroup_id()).append(",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				stringBuffer.append("  \"label\": \"").append(project.getGroup_name()).append("\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				stringBuffer
+						.append("  \"unix_name\": \"").append(project.getUnix_group_name()).append("\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				stringBuffer.append("  \"description\": \"").append(project.getDescription()).append("\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
 				if (project.getGroup_name().contains("Agile")) { //$NON-NLS-1$
 					stringBuffer.append("  \"services\": \"['tracker', 'agile_dashboard']\",\n"); //$NON-NLS-1$
@@ -301,8 +302,8 @@ public class Soap2RestInitializer {
 			for (Ugroup ugroup : ugroups) {
 				StringBuffer stringBuffer = new StringBuffer();
 				stringBuffer.append("{\n"); //$NON-NLS-1$
-				stringBuffer.append("  \"id\": " + ugroup.getUgroup_id() + ",\n"); //$NON-NLS-1$ //$NON-NLS-2$
-				stringBuffer.append("  \"name\": \"" + ugroup.getName() + "\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				stringBuffer.append("  \"id\": ").append(ugroup.getUgroup_id()).append(",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				stringBuffer.append("  \"name\": \"").append(ugroup.getName()).append("\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
 				stringBuffer.append("}"); //$NON-NLS-1$
 
 				String json = stringBuffer.toString();
@@ -336,12 +337,12 @@ public class Soap2RestInitializer {
 				UserInfo userInfo = codendiAPIPort.getUserInfo(sessionHash, uGroupMember.getUser_id());
 				StringBuffer stringBuffer = new StringBuffer();
 				stringBuffer.append("{\n"); //$NON-NLS-1$
-				stringBuffer.append("  \"id\": " + userInfo.getId() + ",\n"); //$NON-NLS-1$ //$NON-NLS-2$
-				stringBuffer.append("  \"email\": \"" + userInfo.getEmail() + "\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
-				stringBuffer.append("  \"identifier\": \"" + userInfo.getIdentifier() + "\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
-				stringBuffer.append("  \"real_name\": \"" + userInfo.getReal_name() + "\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
-				stringBuffer.append("  \"username\": \"" + userInfo.getUsername() + "\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
-				stringBuffer.append("  \"ldap_id\": \"" + userInfo.getLdap_id() + "\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				stringBuffer.append("  \"id\": ").append(userInfo.getId()).append(",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				stringBuffer.append("  \"email\": \"").append(userInfo.getEmail()).append("\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				stringBuffer.append("  \"identifier\": \"").append(userInfo.getIdentifier()).append("\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				stringBuffer.append("  \"real_name\": \"").append(userInfo.getReal_name()).append("\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				stringBuffer.append("  \"username\": \"").append(userInfo.getUsername()).append("\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				stringBuffer.append("  \"ldap_id\": \"").append(userInfo.getLdap_id()).append("\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
 				stringBuffer.append("}"); //$NON-NLS-1$
 
 				String json = stringBuffer.toString();
@@ -420,26 +421,27 @@ public class Soap2RestInitializer {
 			for (Artifact artifact : artifacts) {
 				StringBuffer stringBuffer = new StringBuffer();
 				stringBuffer.append("{\n"); //$NON-NLS-1$
-				stringBuffer.append("  \"id\": " + artifact.getArtifact_id() + ",\n"); //$NON-NLS-1$ //$NON-NLS-2$
-				stringBuffer.append("  \"kind\": \"" + tracker.getItem_name() + "\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				stringBuffer.append("  \"id\": ").append(artifact.getArtifact_id()).append(",\n"); //$NON-NLS-1$//$NON-NLS-2$
+				stringBuffer.append("  \"kind\": \"").append(tracker.getItem_name()).append("\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
 				stringBuffer
-						.append("  \"url\": \"" + restServerUrl + "/artifacts/" + artifact.getArtifact_id() + "\",\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						.append("  \"url\": \"").append(restServerUrl).append("/artifacts/").append(artifact.getArtifact_id()).append("\",\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				stringBuffer
-						.append("  \"html_url\": \"" + soapServerUrl + "/plugins/tracker/?aid=" + artifact.getArtifact_id() + "\",\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				stringBuffer.append("  \"tracker_id\": " + tracker.getTracker_id() + ",\n"); //$NON-NLS-1$ //$NON-NLS-2$
-				stringBuffer.append("  \"submitted_by\": \"" + artifact.getSubmitted_by() + "\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+						.append("  \"html_url\": \"").append(soapServerUrl).append("/plugins/tracker/?aid=").append(artifact.getArtifact_id()).append("\",\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				stringBuffer.append("  \"tracker_id\": ").append(tracker.getTracker_id()).append(",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				stringBuffer
+						.append("  \"submitted_by\": \"").append(artifact.getSubmitted_by()).append("\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
 				Calendar calendar = Calendar.getInstance();
 				calendar.setTimeInMillis(Long.valueOf(artifact.getSubmitted_on()).longValue() * 1000);
 				Date date = calendar.getTime();
 
-				stringBuffer.append("  \"submitted_on\": \"" + dateFormat.format(date) + "\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				stringBuffer.append("  \"submitted_on\": \"").append(dateFormat.format(date)).append("\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
 				calendar = Calendar.getInstance();
 				calendar.setTimeInMillis(Long.valueOf(artifact.getLast_update_date()).longValue() * 1000);
 				date = calendar.getTime();
 
-				stringBuffer.append("  \"last_modified_date\": \"" + artifact + "\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				stringBuffer.append("  \"last_modified_date\": \"").append(artifact).append("\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
 				ArtifactFieldValue[] values = artifact.getValue();
 				if (values != null && values.length > 0) {
@@ -470,10 +472,12 @@ public class Soap2RestInitializer {
 
 						cptComments++;
 						stringBuffer.append("    {\n"); //$NON-NLS-1$
-						stringBuffer.append("      \"submitted_by\": \"" + artifactComment.getSubmitted_by() //$NON-NLS-1$
-								+ "\"\n"); //$NON-NLS-1$
-						stringBuffer.append("      \"submitted_on\": \"" + dateFormat.format(date) + "\"\n"); //$NON-NLS-1$ //$NON-NLS-2$
-						stringBuffer.append("      \"body\": \"" + artifactComment.getBody() + "\"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+						stringBuffer
+								.append("      \"submitted_by\": \"").append(artifactComment.getSubmitted_by()).append("\"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+						stringBuffer
+								.append("      \"submitted_on\": \"").append(dateFormat.format(date)).append("\"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+						stringBuffer
+								.append("      \"body\": \"").append(artifactComment.getBody()).append("\"\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
 						if (artifactComments.length > cptComments) {
 							stringBuffer.append("    },\n"); //$NON-NLS-1$
@@ -519,38 +523,42 @@ public class Soap2RestInitializer {
 
 		StringBuffer stringBuffer = new StringBuffer();
 		stringBuffer.append("{\n"); //$NON-NLS-1$
-		stringBuffer.append("  \"id\": " + tracker.getTracker_id() + ",\n"); //$NON-NLS-1$ //$NON-NLS-2$
-		stringBuffer.append("  \"name\": \"" + tracker.getItem_name() + "\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
-		stringBuffer.append("  \"unix_name\": \"" + tracker.getItem_name() + "\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
-		stringBuffer.append("  \"description\": \"" + tracker.getDescription() + "\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
-		stringBuffer.append("  \"url\": \"" + restServerUrl + "/" + kind + "/" + tracker.getTracker_id() //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				+ "\",\n"); //$NON-NLS-1$
-		stringBuffer.append("  \"html_url\": \"" + soapServerUrl + "/plugins/tracker/?tracker=" //$NON-NLS-1$ //$NON-NLS-2$
-				+ tracker.getTracker_id() + "\",\n"); //$NON-NLS-1$
-		stringBuffer.append("  \"project_id\": " + tracker.getGroup_id() + ",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		stringBuffer.append("  \"id\": ").append(tracker.getTracker_id()).append(",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		stringBuffer.append("  \"name\": \"").append(tracker.getItem_name()).append("\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		stringBuffer.append("  \"item_name\": \"").append(tracker.getItem_name()).append("\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		stringBuffer.append("  \"description\": \"").append(tracker.getDescription()).append("\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		stringBuffer
+				.append("  \"url\": \"").append(restServerUrl).append("/").append(kind).append("/").append(tracker.getTracker_id()).append("\",\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		stringBuffer
+				.append("  \"html_url\": \"").append(soapServerUrl).append("/plugins/tracker/?tracker=").append(tracker.getTracker_id()).append("\",\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		stringBuffer.append("  \"project_id\": ").append(tracker.getGroup_id()).append(",\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		stringBuffer.append("  \"fields\": [\n"); //$NON-NLS-1$
 
 		// Fields
 		int cpt = 0;
 		for (TrackerField trackerField : trackerFields) {
 			stringBuffer.append("    {\n"); //$NON-NLS-1$
-			stringBuffer.append("      \"field_id\": " + trackerField.getField_id() + ",\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			stringBuffer.append("      \"short_name\": \"" + trackerField.getShort_name() + "\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			stringBuffer.append("      \"label\": \"" + trackerField.getLabel() + "\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			stringBuffer.append("      \"type\": \"" + trackerField.getType() + "\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			stringBuffer.append("      \"field_id\": ").append(trackerField.getField_id()).append(",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			stringBuffer
+					.append("      \"short_name\": \"").append(trackerField.getShort_name()).append("\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			stringBuffer.append("      \"label\": \"").append(trackerField.getLabel()).append("\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			stringBuffer.append("      \"type\": \"").append(trackerField.getType()).append("\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
 			TrackerFieldBindType binding = trackerField.getBinding();
 			if ("users".equals(binding.getBind_type())) { //$NON-NLS-1$
 				UGroup[] bind_list = binding.getBind_list();
 				stringBuffer.append("      \"binding\": {\n"); //$NON-NLS-1$
-				stringBuffer.append("        \"bind_type\": \"" + binding.getBind_type() + "\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				stringBuffer
+						.append("        \"bind_type\": \"").append(binding.getBind_type()).append("\",\n"); //$NON-NLS-1$ //$NON-NLS-2$
 				stringBuffer.append("        \"bind_list\": [\n"); //$NON-NLS-1$
 
 				int cptBinding = 0;
 				for (UGroup uGroup : bind_list) {
 					stringBuffer.append("          {\n"); //$NON-NLS-1$
-					stringBuffer.append("            \"user_group_id\": " + uGroup.getUgroup_id() + ",\n"); //$NON-NLS-1$ //$NON-NLS-2$
-					stringBuffer.append("            \"user_group_name\": \"" + uGroup.getName() + "\"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+					stringBuffer
+							.append("            \"user_group_id\": ").append(uGroup.getUgroup_id()).append(",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+					stringBuffer
+							.append("            \"user_group_name\": \"").append(uGroup.getName()).append("\"\n"); //$NON-NLS-1$ //$NON-NLS-2$
 					cptBinding++;
 					if (bind_list.length > cptBinding) {
 						stringBuffer.append("          },\n"); //$NON-NLS-1$
@@ -570,10 +578,10 @@ public class Soap2RestInitializer {
 					int cptValues = 0;
 					for (TrackerFieldBindValue trackerFieldBindValue : values) {
 						stringBuffer.append("        {\n"); //$NON-NLS-1$ 
-						stringBuffer.append("          \"field_value_id\": " //$NON-NLS-1$
-								+ trackerFieldBindValue.getBind_value_id() + ",\n"); //$NON-NLS-1$
-						stringBuffer.append("          \"field_value_label\": \"" //$NON-NLS-1$
-								+ trackerFieldBindValue.getBind_value_label() + "\"\n"); //$NON-NLS-1$
+						stringBuffer
+								.append("          \"field_value_id\": ").append(trackerFieldBindValue.getBind_value_id()).append(",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+						stringBuffer
+								.append("          \"field_value_label\": \"").append(trackerFieldBindValue.getBind_value_label()).append("\"\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
 						if (values.length > cptValues + 1) {
 							stringBuffer.append("        },\n"); //$NON-NLS-1$ 
@@ -592,9 +600,9 @@ public class Soap2RestInitializer {
 			int cptPerm = 0;
 			for (String permission : permissions) {
 				if (permissions.length > cptPerm + 1) {
-					stringBuffer.append("        \"" + permission + "\",\n"); //$NON-NLS-1$ //$NON-NLS-2$							
+					stringBuffer.append("        \"").append(permission).append("\",\n"); //$NON-NLS-1$ //$NON-NLS-2$							
 				} else {
-					stringBuffer.append("        \"" + permission + "\"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+					stringBuffer.append("        \"").append(permission).append("\"\n"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				cptPerm++;
 			}
@@ -627,7 +635,7 @@ public class Soap2RestInitializer {
 			// Title
 			if (title != null && field.getShort_name().equals(title.getField_name())) {
 				stringBuffer.append("    \"title\": {\n"); //$NON-NLS-1$
-				stringBuffer.append("      \"field_id\": " + field.getField_id() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				stringBuffer.append("      \"field_id\": ").append(field.getField_id()).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
 				if (status != null || contributor != null || initial_effort != null) {
 					stringBuffer.append("    },\n"); //$NON-NLS-1$
 				} else {
@@ -640,7 +648,7 @@ public class Soap2RestInitializer {
 			// Status
 			if (status != null && field.getShort_name().equals(status.getField_name())) {
 				stringBuffer.append("    \"status\": {\n"); //$NON-NLS-1$
-				stringBuffer.append("      \"field_id\": " + field.getField_id() + ",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				stringBuffer.append("      \"field_id\": ").append(field.getField_id()).append(",\n"); //$NON-NLS-1$ //$NON-NLS-2$
 				stringBuffer.append("      \"open_status_field_value_ids\": [\n"); //$NON-NLS-1$
 
 				int[] values = status.getValues();
@@ -648,9 +656,9 @@ public class Soap2RestInitializer {
 				for (int value : values) {
 					cptStatus++;
 					if (values.length > cptStatus) {
-						stringBuffer.append("        " + value + ",\n"); //$NON-NLS-1$ //$NON-NLS-2$
+						stringBuffer.append("        ").append(value).append(",\n"); //$NON-NLS-1$ //$NON-NLS-2$
 					} else {
-						stringBuffer.append("        " + value + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+						stringBuffer.append("        ").append(value).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 				}
 
@@ -667,7 +675,7 @@ public class Soap2RestInitializer {
 			// Contributor
 			if (contributor != null && field.getShort_name().equals(contributor.getField_name())) {
 				stringBuffer.append("    \"contributors\": {\n"); //$NON-NLS-1$
-				stringBuffer.append("      \"field_id\": " + field.getField_id() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				stringBuffer.append("      \"field_id\": ").append(field.getField_id()).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
 				if (initial_effort != null) {
 					stringBuffer.append("    },\n"); //$NON-NLS-1$
 				} else {
@@ -680,7 +688,7 @@ public class Soap2RestInitializer {
 			// Initial Effort
 			if (initial_effort != null && field.getShort_name().equals(initial_effort.getField_name())) {
 				stringBuffer.append("    \"initial_effort\": {\n"); //$NON-NLS-1$
-				stringBuffer.append("      \"field_id\": " + field.getField_id() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				stringBuffer.append("      \"field_id\": ").append(field.getField_id()).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
 				stringBuffer.append("    }\n"); //$NON-NLS-1$
 			}
 		}

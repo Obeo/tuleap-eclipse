@@ -1,324 +1,348 @@
 {
-  "id": 1,
-  "label": "Bugs",
-  "unix_name": "bugs",
-  "description": "The description of the bugs tracker",
-  "url": "localhost:3001/api/v3.14/trackers/1",
-  "html_url": "localhost:3001/plugins/tracker/?tracker=1",
-  "project_id": 3,
-  "fields": [
-    {
-      "field_id": 0,
-      "short_name": "title",
-      "label": "Title",
-      "type": "string",
-      "permissions": [
-        "read",
-        "create",
-        "update"
-      ]
+    "id": 1,
+    "uri": "trackers/1",
+    "label": "Bugs",
+    "item_name": "bugs",
+    "description": "The description of the bugs tracker",
+    "html_url": "localhost: 3001/plugins/tracker/?tracker=1",
+    "project": {
+        "id": 3,
+        "uri": "projects/3"
     },
-    {
-      "field_id": 1,
-      "short_name": "description",
-      "label": "Description",
-      "type": "text",
-      "permissions": [
-        "read",
-        "create",
-        "update"
-      ]
-    },
-    {
-      "field_id": 2,
-      "short_name": "remaining-effort",
-      "label": "Remaining Effort",
-      "type": "computed",
-      "permissions": [
-        "read"
-      ]
-    },
-    {
-      "field_id": 3,
-      "short_name": "initial-effort",
-      "label": "Initial Effort",
-      "type": "int",
-      "permissions": [
-        "read",
-        "create"
-      ]
-    },
-    {
-      "field_id": 4,
-      "short_name": "difficulty",
-      "label": "Difficulty",
-      "type": "float",
-      "permissions": [
-        "read",
-        "create"
-      ]
-    },
-    {
-      "field_id": 5,
-      "short_name": "component",
-      "label": "Component",
-      "type": "sb",
-      "values": [
+    "fields": [
         {
-          "field_value_id": 0,
-          "field_value_label": "Core"
+            "field_id": 0,
+            "name": "title",
+            "label": "Title",
+            "type": "string",
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
         },
         {
-          "field_value_id": 1,
-          "field_value_label": "User Interface"
+            "field_id": 1,
+            "name": "description",
+            "label": "Description",
+            "type": "text",
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
         },
         {
-          "field_value_id": 2,
-          "field_value_label": "Network"
+            "field_id": 2,
+            "name": "remaining-effort",
+            "label": "RemainingEffort",
+            "type": "computed",
+            "permissions": [
+                "read"
+            ]
         },
         {
-          "field_value_id": 3,
-          "field_value_label": "Database"
+            "field_id": 3,
+            "name": "initial-effort",
+            "label": "InitialEffort",
+            "type": "int",
+            "permissions": [
+                "read",
+                "create"
+            ]
+        },
+        {
+            "field_id": 4,
+            "name": "difficulty",
+            "label": "Difficulty",
+            "type": "float",
+            "permissions": [
+                "read",
+                "create"
+            ]
+        },
+        {
+            "field_id": 5,
+            "name": "component",
+            "label": "Component",
+            "type": "sb",
+            "values": [
+                {
+                    "id": 0,
+                    "label": "Core"
+                },
+                {
+                    "id": 1,
+                    "label": "UserInterface"
+                },
+                {
+                    "id": 2,
+                    "label": "Network"
+                },
+                {
+                    "id": 3,
+                    "label": "Database"
+                }
+            ],
+            "permissions": [
+                "read",
+                "create"
+            ]
+        },
+        {
+            "field_id": 6,
+            "name": "tests-to-perform",
+            "label": "Testtoperform",
+            "type": "cb",
+            "values": [
+                {
+                    "id": 0,
+                    "label": "UnitTests"
+                },
+                {
+                    "id": 1,
+                    "label": "IntegrationTests"
+                },
+                {
+                    "id": 2,
+                    "label": "FunctionalTests"
+                },
+                {
+                    "id": 3,
+                    "label": "EndToEndTests"
+                }
+            ],
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
+        },
+        {
+            "field_id": 7,
+            "name": "tags",
+            "label": "Tags",
+            "type": "tbl",
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
+        },
+        {
+            "field_id": 8,
+            "name": "related-artifacts",
+            "label": "RelatedArtifacts",
+            "type": "art_link",
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
+        },
+        {
+            "field_id": 9,
+            "name": "attachments",
+            "label": "Attachments",
+            "type": "file",
+            "permissions": [
+                "read",
+                "update"
+            ]
+        },
+        {
+            "field_id": 10,
+            "name": "assigned-to",
+            "label": "AssignedTo",
+            "type": "msb",
+            "values": [
+                {
+                    "id": 102,
+                    "label": "ldelaigue"
+                },
+                {
+                    "id": 101,
+                    "label": "fbacha"
+                },
+                {
+                    "id": 103,
+                    "label": "sbegaudeau"
+                },
+                {
+                    "id": 104,
+                    "label": "cnotot"
+                }
+            ],
+            "bindings": {
+                "type": "users",
+                "list": [
+                    {
+                        "id": 0,
+                        "label": "ProjectAdmins"
+                    },
+                    {
+                        "id": 1,
+                        "label": "ProjectMembers"
+                    }
+                ]
+            },
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
+        },
+        {
+            "field_id": 11,
+            "name": "status",
+            "label": "Status",
+            "type": "sb",
+            "values": [
+                {
+                    "id": 0,
+                    "label": "NEW"
+                },
+                {
+                    "id": 1,
+                    "label": "ASSIGNED"
+                },
+                {
+                    "id": 2,
+                    "label": "WORKINPROGRESS"
+                },
+                {
+                    "id": 3,
+                    "label": "CLOSED"
+                },
+                {
+                    "id": 4,
+                    "label": "WORKSFORME"
+                },
+                {
+                    "id": 5,
+                    "label": "INVALID"
+                }
+            ],
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
+        },
+        {
+            "field_id": 12,
+            "name": "resolution",
+            "label": "Resolution",
+            "type": "sb",
+            "values": [
+                {
+                    "id": 0,
+                    "label": "FIXED"
+                },
+                {
+                    "id": 1,
+                    "label": "WILLNOTFIX"
+                }
+            ],
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
         }
-      ],
-      "permissions": [
-        "read",
-        "create"
-      ]
-    },
-    {
-      "field_id": 6,
-      "short_name": "tests-to-perform",
-      "label": "Test to perform",
-      "type": "cb",
-      "values": [
-        {
-          "field_value_id": 0,
-          "field_value_label": "Unit Tests"
-        },
-        {
-          "field_value_id": 1,
-          "field_value_label": "Integration Tests"
-        },
-        {
-          "field_value_id": 2,
-          "field_value_label": "Functional Tests"
-        },
-        {
-          "field_value_id": 3,
-          "field_value_label": "End To End Tests"
-        }
-      ],
-      "permissions": [
-        "read",
-        "create",
-        "update"
-      ]
-    },
-    {
-      "field_id": 7,
-      "short_name": "tags",
-      "label": "Tags",
-      "type": "tbl",
-      "permissions": [
-        "read",
-        "create",
-        "update"
-      ]
-    },
-    {
-      "field_id": 8,
-      "short_name": "related-artifacts",
-      "label": "Related Artifacts",
-      "type": "art_link",
-      "permissions": [
-        "read",
-        "create",
-        "update"
-      ]
-    },
-    {
-      "field_id": 9,
-      "short_name": "attachments",
-      "label": "Attachments",
-      "type": "file",
-      "permissions": [
-        "read",
-        "update"
-      ]
-    },
-    {
-      "field_id": 10,
-      "short_name": "assigned-to",
-      "label": "Assigned To",
-      "type": "msb",
-      "binding": {
-        "bind_type": "users",
-        "bind_list": [
-          {
-            "user_group_id": 0,
-            "user_group_name": "Project Admins"
-          },
-          {
-            "user_group_id": 1,
-            "user_group_name": "Project Members"
-          }
-        ]
-      },
-      "permissions": [
-        "read",
-        "create",
-        "update"
-      ]
-    },
-    {
-      "field_id": 11,
-      "short_name": "status",
-      "label": "Status",
-      "type": "sb",
-      "values": [
-        {
-          "field_value_id": 0,
-          "field_value_label": "NEW"
-        },
-        {
-          "field_value_id": 1,
-          "field_value_label": "ASSIGNED"
-        },
-        {
-          "field_value_id": 2,
-          "field_value_label": "WORK IN PROGRESS"
-        },
-        {
-          "field_value_id": 3,
-          "field_value_label": "CLOSED"
-        },
-        {
-          "field_value_id": 4,
-          "field_value_label": "WORKS FOR ME"
-        },
-        {
-          "field_value_id": 5,
-          "field_value_label": "INVALID"
-        }
-      ],
-      "permissions": [
-        "read",
-        "create",
-        "update"
-      ]
-    },
-    {
-      "field_id": 12,
-      "short_name": "resolution",
-      "label": "Resolution",
-      "type": "sb",
-      "values": [
-        {
-          "field_value_id": 0,
-          "field_value_label": "FIXED"
-        },
-        {
-          "field_value_id": 1,
-          "field_value_label": "WILL NOT FIX"
-        }
-      ],
-      "permissions": [
-        "read",
-        "create",
-        "update"
-      ]
-    }
-  ],
-  "semantic": {
-    "title": {
-      "field_id": 0
-    },
-    "status": {
-      "field_id": 11,
-      "open_status_field_values_ids": [
-        0,
-        1,
-        2
-      ]
-    },
-    "contributors": {
-      "field_id": 10
-    },
-    "tooltip": {
-      "field_id": 2
-    },
-    "initial_effort": {
-      "field_id": 3
-    }
-  },
-  "workflow": {
-    "field_id": 11,
-    "is_used": true,
-    "rules": [
-      {
-        "lists": [
-          {
-            "source_field_id": 11,
-            "target_field_id": 12,
-            "source_field_value": 3,
-            "target_field_value": 0
-          },
-          {
-            "source_field_id": 11,
-            "target_field_id": 12,
-            "source_field_value": 4,
-            "target_field_value": 0
-          },
-          {
-            "source_field_id": 11,
-            "target_field_id": 12,
-            "source_field_value": 5,
-            "target_field_value": 1
-          }
-        ]
-      }
     ],
-    "transitions": [
-      {
-        "from_field_value_id": 100,
-        "to_field_value_id": 0
-      },
-      {
-        "from_field_value_id": 0,
-        "to_field_value_id": 1
-      },
-      {
-        "from_field_value_id": 1,
-        "to_field_value_id": 2
-      },
-      {
-        "from_field_value_id": 2,
-        "to_field_value_id": 3
-      },
-      {
-        "from_field_value_id": 2,
-        "to_field_value_id": 4
-      },
-      {
-        "from_field_value_id": 2,
-        "to_field_value_id": 5
-      },
-      {
-        "from_field_value_id": 3,
-        "to_field_value_id": 1
-      },
-      {
-        "from_field_value_id": 4,
-        "to_field_value_id": 1
-      },
-      {
-        "from_field_value_id": 5,
-        "to_field_value_id": 1
-      }
+    "semantics": {
+        "title": {
+            "field_id": 0
+        },
+        "status": {
+            "field_id": 11,
+            "value_ids": [
+                0,
+                1,
+                2
+            ]
+        },
+        "contributors": {
+            "field_id": 10
+        },
+        "tooltip": {
+            "field_id": 2
+        },
+        "initial_effort": {
+            "field_id": 3
+        }
+    },
+    "workflow": {
+        "field_id": 11,
+        "is_used": true,
+        "rules": [
+            {
+                "lists": [
+                    {
+                        "source_field_id": 11,
+                        "target_field_id": 12,
+                        "source_field_value": 3,
+                        "target_field_value": 0
+                    },
+                    {
+                        "source_field_id": 11,
+                        "target_field_id": 12,
+                        "source_field_value": 4,
+                        "target_field_value": 0
+                    },
+                    {
+                        "source_field_id": 11,
+                        "target_field_id": 12,
+                        "source_field_value": 5,
+                        "target_field_value": 1
+                    }
+                ]
+            }
+        ],
+        "transitions": [
+            {
+                "from_id": 100,
+                "to_id": 0
+            },
+            {
+                "from_id": 0,
+                "to_id": 1
+            },
+            {
+                "from_id": 1,
+                "to_id": 2
+            },
+            {
+                "from_id": 2,
+                "to_id": 3
+            },
+            {
+                "from_id": 2,
+                "to_id": 4
+            },
+            {
+                "from_id": 2,
+                "to_id": 5
+            },
+            {
+                "from_id": 3,
+                "to_id": 1
+            },
+            {
+                "from_id": 4,
+                "to_id": 1
+            },
+            {
+                "from_id": 5,
+                "to_id": 1
+            }
+        ]
+    },
+    "resources": [
+        {
+            "type": "reports",
+            "uri": "trackers/1/tracker_reports"
+        }
     ]
-  },
-  "hierarchy": {
-    "parent_tracker_id": 5
-  }
 }

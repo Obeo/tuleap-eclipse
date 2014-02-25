@@ -113,6 +113,17 @@ public final class RestResourceFactory {
 	}
 
 	/**
+	 * Provides access to the {code /trackers/:id} HTTP resource.
+	 * 
+	 * @param trackerId
+	 *            Id of the tracker.
+	 * @return A resource that gives access to the {code /trackers/:id} HTTP resource.
+	 */
+	public RestResource tracker(int trackerId) {
+		return resource(RestResource.GET, URL.TRACKERS, Integer.toString(trackerId));
+	}
+
+	/**
 	 * Provides access to the {code /milestones/:id} HTTP resource.
 	 * 
 	 * @param milestoneId

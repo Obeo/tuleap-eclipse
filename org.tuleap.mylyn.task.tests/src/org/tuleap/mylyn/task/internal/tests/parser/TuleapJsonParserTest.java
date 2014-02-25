@@ -16,16 +16,25 @@ import com.google.gson.JsonParser;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.model.TuleapErrorMessage;
+import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPlanning;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapResource;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTrackerReport;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapUser;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapUserGroup;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapMultiSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBoxItem;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapString;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
@@ -647,4 +656,358 @@ public class TuleapJsonParserTest {
 
 	}
 
+	/**
+	 * Test the parsing of the first tracker.
+	 */
+	@Test
+	public void testTracker0Parsing() {
+		String tracker0 = ParserUtil.loadFile("/trackers/tracker-0.json");
+		TuleapTracker tuleapTracker = parser.parseTracker(tracker0);
+		assertNotNull(tuleapTracker);
+		assertEquals(0, tuleapTracker.getIdentifier());
+		assertEquals("Product", tuleapTracker.getLabel()); //$NON-NLS-1$
+		assertEquals("localhost:3001/plugins/tracker/?tracker=0", tuleapTracker.getUrl()); //$NON-NLS-1$
+		assertEquals("trackers/0", tuleapTracker.getUri()); //$NON-NLS-1$
+
+		Collection<AbstractTuleapField> fields = tuleapTracker.getFields();
+		assertEquals(1, fields.size());
+
+		Iterator<AbstractTuleapField> iterator = fields.iterator();
+
+		AbstractTuleapField firstField = iterator.next();
+
+		assertEquals(0, firstField.getIdentifier());
+		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, firstField.getMetadataType());
+
+		assertEquals("Title", firstField.getLabel()); //$NON-NLS-1$
+
+		assertTrue(firstField.isReadable());
+		assertFalse(firstField.isSubmitable());
+		assertFalse(firstField.isUpdatable());
+
+		assertEquals(1, tuleapTracker.getTrackerResources().length);
+
+		TuleapResource tuleapResource = tuleapTracker.getTrackerResources()[0];
+		assertEquals("reports", tuleapResource.getType()); //$NON-NLS-1$
+		assertEquals("trackers/0/tracker_reports", tuleapResource.getUri()); //$NON-NLS-1$
+	}
+
+	/**
+	 * Test the parsing of the second tracker.
+	 */
+	@Test
+	public void testTracker1Parsing() {
+		String tracker1 = ParserUtil.loadFile("/trackers/tracker-1.json");
+		TuleapTracker tuleapTracker = parser.parseTracker(tracker1);
+		assertNotNull(tuleapTracker);
+		assertEquals(1, tuleapTracker.getIdentifier());
+		assertEquals("Bugs", tuleapTracker.getLabel()); //$NON-NLS-1$
+		assertEquals("localhost: 3001/plugins/tracker/?tracker=1", tuleapTracker.getUrl()); //$NON-NLS-1$
+		assertEquals("trackers/1", tuleapTracker.getUri()); //$NON-NLS-1$
+
+		Collection<AbstractTuleapField> fields = tuleapTracker.getFields();
+		assertEquals(13, fields.size());
+
+		Iterator<AbstractTuleapField> iterator = fields.iterator();
+
+		// testing the semantic title
+		AbstractTuleapField firstField = iterator.next();
+		TuleapString stringField = (TuleapString)firstField;
+		assertTrue(firstField instanceof TuleapString);
+		assertTrue(stringField.isSemanticTitle());
+
+		iterator.next();
+		iterator.next();
+		iterator.next();
+		AbstractTuleapField fourthField = iterator.next();
+
+		// testing the field id
+		assertEquals(4, fourthField.getIdentifier());
+
+		// testing the field type
+		assertEquals(TaskAttribute.TYPE_DOUBLE, fourthField.getMetadataType());
+
+		assertEquals("Difficulty", fourthField.getLabel()); //$NON-NLS-1$
+
+		// testing the field permissions
+		assertTrue(fourthField.isReadable());
+		assertTrue(fourthField.isSubmitable());
+		assertFalse(fourthField.isUpdatable());
+
+		// testing the field values
+		AbstractTuleapField fifthField = iterator.next();
+		assertTrue(fifthField instanceof TuleapSelectBox);
+		TuleapSelectBox selectBoxField = (TuleapSelectBox)fifthField;
+
+		Collection<TuleapSelectBoxItem> items = selectBoxField.getItems();
+		assertEquals(4, items.size());
+
+		Iterator<TuleapSelectBoxItem> itemsIterator = items.iterator();
+		itemsIterator.next();
+		itemsIterator.next();
+
+		// testing the item label
+		TuleapSelectBoxItem selectBoxItem = itemsIterator.next();
+		assertEquals("Network", selectBoxItem.getLabel()); //$NON-NLS-1$
+
+		// testing the field binding
+		iterator.next();
+		iterator.next();
+		iterator.next();
+		iterator.next();
+		AbstractTuleapField tenthField = iterator.next();
+		TuleapMultiSelectBox multiSelectBoxField = (TuleapMultiSelectBox)tenthField;
+		assertTrue(tenthField instanceof TuleapMultiSelectBox);
+		assertEquals("users", multiSelectBoxField.getBinding()); //$NON-NLS-1$
+
+		// testing the semantic contributor
+		assertTrue(multiSelectBoxField.isSemanticContributor());
+
+		AbstractTuleapField eleventhField = iterator.next();
+		assertTrue(eleventhField instanceof TuleapSelectBox);
+		TuleapSelectBox theSelectBoxField = (TuleapSelectBox)eleventhField;
+
+		// testing the semantic status
+		assertTrue(theSelectBoxField.isSemanticStatus());
+
+		// testing the open status
+		assertEquals(3, theSelectBoxField.getOpenStatus().size());
+
+		assertEquals(1, tuleapTracker.getTrackerResources().length);
+
+		TuleapResource tuleapResource = tuleapTracker.getTrackerResources()[0];
+		assertEquals("reports", tuleapResource.getType()); //$NON-NLS-1$
+		assertEquals("trackers/1/tracker_reports", tuleapResource.getUri()); //$NON-NLS-1$
+	}
+
+	/**
+	 * Test the parsing of the third file.
+	 */
+	@Test
+	public void testTracker2Parsing() {
+		String tracker2 = ParserUtil.loadFile("/trackers/tracker-2.json");
+		TuleapTracker tuleapTracker = parser.parseTracker(tracker2);
+		assertNotNull(tuleapTracker);
+		assertEquals(2, tuleapTracker.getIdentifier());
+		assertEquals("Release", tuleapTracker.getLabel()); //$NON-NLS-1$
+		assertEquals("localhost:3001/plugins/tracker/?tracker=2", tuleapTracker.getUrl()); //$NON-NLS-1$
+		assertEquals("trackers/2", tuleapTracker.getUri()); //$NON-NLS-1$
+
+		Collection<AbstractTuleapField> fields = tuleapTracker.getFields();
+		assertEquals(5, fields.size());
+
+		Iterator<AbstractTuleapField> iterator = fields.iterator();
+		iterator.next();
+		iterator.next();
+		AbstractTuleapField secondField = iterator.next();
+
+		assertEquals(2, secondField.getIdentifier());
+		assertEquals(TaskAttribute.TYPE_DATE, secondField.getMetadataType());
+
+		assertEquals("End Date", secondField.getLabel()); //$NON-NLS-1$
+
+		assertTrue(secondField.isReadable());
+		assertTrue(secondField.isSubmitable());
+		assertTrue(secondField.isUpdatable());
+
+		assertEquals(1, tuleapTracker.getTrackerResources().length);
+
+		TuleapResource tuleapResource = tuleapTracker.getTrackerResources()[0];
+		assertEquals("reports", tuleapResource.getType()); //$NON-NLS-1$
+		assertEquals("trackers/2/tracker_reports", tuleapResource.getUri()); //$NON-NLS-1$
+	}
+
+	/**
+	 * Test the parsing of the fourth tracker.
+	 */
+	@Test
+	public void testTracker3Parsing() {
+		String tracker3 = ParserUtil.loadFile("/trackers/tracker-3.json");
+		TuleapTracker tuleapTracker = parser.parseTracker(tracker3);
+		assertNotNull(tuleapTracker);
+		assertEquals(3, tuleapTracker.getIdentifier());
+		assertEquals("Sprint", tuleapTracker.getLabel()); //$NON-NLS-1$
+		assertEquals("localhost:3001/plugins/tracker/?tracker=3", tuleapTracker.getUrl()); //$NON-NLS-1$
+		assertEquals("trackers/3", tuleapTracker.getUri()); //$NON-NLS-1$
+
+		Collection<AbstractTuleapField> fields = tuleapTracker.getFields();
+		assertEquals(5, fields.size());
+
+		Iterator<AbstractTuleapField> iterator = fields.iterator();
+		iterator.next();
+		iterator.next();
+		AbstractTuleapField thirdField = iterator.next();
+
+		assertEquals(2, thirdField.getIdentifier());
+		assertEquals(TaskAttribute.TYPE_SINGLE_SELECT, thirdField.getMetadataType());
+
+		assertEquals("Status", thirdField.getLabel()); //$NON-NLS-1$
+
+		assertTrue(thirdField.isReadable());
+		assertTrue(thirdField.isSubmitable());
+		assertTrue(thirdField.isUpdatable());
+
+		assertEquals(1, tuleapTracker.getTrackerResources().length);
+
+		TuleapResource tuleapResource = tuleapTracker.getTrackerResources()[0];
+		assertEquals("reports", tuleapResource.getType()); //$NON-NLS-1$
+		assertEquals("trackers/3/tracker_reports", tuleapResource.getUri()); //$NON-NLS-1$
+	}
+
+	/**
+	 * Test the parsing of the fifth tracker.
+	 */
+	@Test
+	public void testTracker4Parsing() {
+		String tracker4 = ParserUtil.loadFile("/trackers/tracker-4.json");
+		TuleapTracker tuleapTracker = parser.parseTracker(tracker4);
+		assertNotNull(tuleapTracker);
+		assertEquals(4, tuleapTracker.getIdentifier());
+		assertEquals("Tests", tuleapTracker.getLabel()); //$NON-NLS-1$
+		assertEquals("localhost:3001/plugins/tracker/?tracker=4", tuleapTracker.getUrl()); //$NON-NLS-1$
+		assertEquals("trackers/4", tuleapTracker.getUri()); //$NON-NLS-1$
+
+		Collection<AbstractTuleapField> fields = tuleapTracker.getFields();
+		assertEquals(3, fields.size());
+
+		Iterator<AbstractTuleapField> iterator = fields.iterator();
+		iterator.next();
+		iterator.next();
+		AbstractTuleapField thirdField = iterator.next();
+
+		assertEquals(2, thirdField.getIdentifier());
+		assertEquals(TaskAttribute.TYPE_INTEGER, thirdField.getMetadataType());
+		// We don't keep the "short_name" information since it is useless with REST
+		// assertEquals("initial-effort", thirdField.getName()); //$NON-NLS-1$
+		assertEquals("Initial Effort", thirdField.getLabel()); //$NON-NLS-1$
+
+		assertTrue(thirdField.isReadable());
+		assertTrue(thirdField.isSubmitable());
+		assertTrue(thirdField.isUpdatable());
+
+		assertEquals(1, tuleapTracker.getTrackerResources().length);
+
+		TuleapResource tuleapResource = tuleapTracker.getTrackerResources()[0];
+		assertEquals("reports", tuleapResource.getType()); //$NON-NLS-1$
+		assertEquals("trackers/4/tracker_reports", tuleapResource.getUri()); //$NON-NLS-1$
+	}
+
+	/**
+	 * Test the parsing of the sixth tracker.
+	 */
+	@Test
+	public void testTracker5Parsing() {
+		String tracker5 = ParserUtil.loadFile("/trackers/tracker-5.json");
+		TuleapTracker tuleapTracker = parser.parseTracker(tracker5);
+		assertNotNull(tuleapTracker);
+		assertEquals(5, tuleapTracker.getIdentifier());
+		assertEquals("User Stories", tuleapTracker.getLabel()); //$NON-NLS-1$
+		assertEquals("localhost:3001/plugins/tracker/?tracker=5", tuleapTracker.getUrl()); //$NON-NLS-1$
+		assertEquals("trackers/5", tuleapTracker.getUri()); //$NON-NLS-1$
+
+		Collection<AbstractTuleapField> fields = tuleapTracker.getFields();
+		assertEquals(2, fields.size());
+
+		Iterator<AbstractTuleapField> iterator = fields.iterator();
+		iterator.next();
+		AbstractTuleapField secondField = iterator.next();
+
+		assertEquals(1, secondField.getIdentifier());
+		assertEquals(TaskAttribute.TYPE_SINGLE_SELECT, secondField.getMetadataType());
+		// We don't keep the "short_name" information since it is useless with REST
+		//		assertEquals("status", secondField.getName()); //$NON-NLS-1$
+		assertEquals("Status", secondField.getLabel()); //$NON-NLS-1$
+
+		assertTrue(secondField.isReadable());
+		assertTrue(secondField.isSubmitable());
+		assertTrue(secondField.isUpdatable());
+
+		assertEquals(1, tuleapTracker.getTrackerResources().length);
+
+		TuleapResource tuleapResource = tuleapTracker.getTrackerResources()[0];
+		assertEquals("reports", tuleapResource.getType()); //$NON-NLS-1$
+		assertEquals("trackers/5/tracker_reports", tuleapResource.getUri()); //$NON-NLS-1$
+	}
+
+	/**
+	 * Test the parsing of the first trackers group file.
+	 */
+	@Test
+	public void testFirstTrackersGroupParsing() {
+		String firstTrackersGroup = ParserUtil.loadFile("/trackers/trackers_part_1.json");
+
+		JsonParser jsonParser = new JsonParser();
+		JsonArray asJsonArray = jsonParser.parse(firstTrackersGroup).getAsJsonArray();
+
+		List<TuleapTracker> trackers = new ArrayList<TuleapTracker>();
+		for (int i = 0; i < asJsonArray.size(); i++) {
+			JsonElement jsonElement = asJsonArray.get(i);
+			TuleapTracker tuleapTracker = parser.parseTracker(jsonElement);
+			trackers.add(tuleapTracker);
+		}
+
+		Iterator<TuleapTracker> iterator = trackers.iterator();
+
+		TuleapTracker firstTrackerConfiguration = iterator.next();
+
+		assertEquals(0, firstTrackerConfiguration.getIdentifier());
+		assertEquals("Product", firstTrackerConfiguration.getLabel()); //$NON-NLS-1$
+		assertEquals("localhost:3001/plugins/tracker/?tracker=0", firstTrackerConfiguration.getUrl()); //$NON-NLS-1$
+		assertEquals("trackers/0", firstTrackerConfiguration.getUri()); //$NON-NLS-1$
+
+		TuleapTracker secondTrackerConfiguration = iterator.next();
+
+		assertEquals(1, secondTrackerConfiguration.getIdentifier());
+		assertEquals("Bugs", secondTrackerConfiguration.getLabel()); //$NON-NLS-1$
+		assertEquals("localhost: 3001/plugins/tracker/?tracker=1", secondTrackerConfiguration.getUrl()); //$NON-NLS-1$
+		assertEquals("trackers/1", secondTrackerConfiguration.getUri()); //$NON-NLS-1$
+
+		TuleapTracker thirdTrackerConfiguration = iterator.next();
+
+		assertEquals(2, thirdTrackerConfiguration.getIdentifier());
+		assertEquals("Release", thirdTrackerConfiguration.getLabel()); //$NON-NLS-1$
+		assertEquals("localhost:3001/plugins/tracker/?tracker=2", thirdTrackerConfiguration.getUrl()); //$NON-NLS-1$
+		assertEquals("trackers/2", thirdTrackerConfiguration.getUri()); //$NON-NLS-1$
+
+		TuleapTracker fourthTrackerConfiguration = iterator.next();
+
+		assertEquals(3, fourthTrackerConfiguration.getIdentifier());
+		assertEquals("Sprint", fourthTrackerConfiguration.getLabel()); //$NON-NLS-1$
+		assertEquals("localhost:3001/plugins/tracker/?tracker=3", fourthTrackerConfiguration.getUrl()); //$NON-NLS-1$
+		assertEquals("trackers/3", fourthTrackerConfiguration.getUri()); //$NON-NLS-1$
+
+		TuleapTracker fifthTrackerConfiguration = iterator.next();
+
+		assertEquals(4, fifthTrackerConfiguration.getIdentifier());
+		assertEquals("Tests", fifthTrackerConfiguration.getLabel()); //$NON-NLS-1$
+		assertEquals("localhost:3001/plugins/tracker/?tracker=4", fifthTrackerConfiguration.getUrl()); //$NON-NLS-1$
+		assertEquals("trackers/4", fifthTrackerConfiguration.getUri()); //$NON-NLS-1$
+	}
+
+	/**
+	 * Test the parsing of the first trackers group file.
+	 */
+	@Test
+	public void testSecondTrackersGroupParsing() {
+		String secondTrackersGroup = ParserUtil.loadFile("/trackers/trackers_part_2.json");
+
+		JsonParser jsonParser = new JsonParser();
+		JsonArray asJsonArray = jsonParser.parse(secondTrackersGroup).getAsJsonArray();
+
+		List<TuleapTracker> trackers = new ArrayList<TuleapTracker>();
+		for (int i = 0; i < asJsonArray.size(); i++) {
+			JsonElement jsonElement = asJsonArray.get(i);
+			TuleapTracker tuleapTracker = parser.parseTracker(jsonElement);
+			trackers.add(tuleapTracker);
+		}
+
+		Iterator<TuleapTracker> iterator = trackers.iterator();
+
+		TuleapTracker sixthTrackerConfiguration = iterator.next();
+
+		assertEquals(5, sixthTrackerConfiguration.getIdentifier());
+		assertEquals("User Stories", sixthTrackerConfiguration.getLabel()); //$NON-NLS-1$
+		assertEquals("localhost:3001/plugins/tracker/?tracker=5", sixthTrackerConfiguration.getUrl()); //$NON-NLS-1$
+		assertEquals("trackers/5", sixthTrackerConfiguration.getUri()); //$NON-NLS-1$
+	}
 }
