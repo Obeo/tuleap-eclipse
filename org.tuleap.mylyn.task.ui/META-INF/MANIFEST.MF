@@ -23,6 +23,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.tuleap.mylyn.task.agile.core;bundle-version="1.0.0"
 Export-Package: org.tuleap.mylyn.task.internal.ui;x-friends:="org.tuleap.mylyn.task.ui.tests",
  org.tuleap.mylyn.task.internal.ui.editor;x-friends:="org.tuleap.mylyn.task.ui.tests",
+ org.tuleap.mylyn.task.internal.ui.preferences;x-friends:="org.tuleap.mylyn.task.ui.tests",
  org.tuleap.mylyn.task.internal.ui.repository;x-friends:="org.tuleap.mylyn.task.ui.tests",
  org.tuleap.mylyn.task.internal.ui.util;x-friends:="org.tuleap.mylyn.task.ui.tests",
  org.tuleap.mylyn.task.internal.ui.wizards;x-friends:="org.tuleap.mylyn.task.ui.tests",
