@@ -764,24 +764,16 @@ public class TuleapSoapConnector {
 			trackerId = Integer.valueOf(queryTrackerId).intValue();
 
 			ArtifactQueryResult artifactQueryResult = null;
-			if (ITuleapQueryConstants.QUERY_KIND_REPORT.equals(query
-					.getAttribute(ITuleapQueryConstants.QUERY_KIND))) {
-				// Run the report on the server
-				String queryReportId = query.getAttribute(ITuleapQueryConstants.QUERY_REPORT_ID);
-				int reportId = Integer.valueOf(queryReportId).intValue();
-				artifactQueryResult = this.getTuleapTrackerV5APIPortType().getArtifactsFromReport(
-						sessionHash, reportId, 0, maxHits);
-			} else {
-				List<Criteria> criterias = new ArrayList<Criteria>();
-				if (ITuleapQueryConstants.QUERY_KIND_CUSTOM.equals(query
-						.getAttribute(ITuleapQueryConstants.QUERY_KIND))
-						&& query.getAttribute(ITuleapQueryConstants.QUERY_TRACKER_ID) != null) {
-					// Custom query
-					criterias.addAll(this.getCriterias(query));
-				}
-				artifactQueryResult = this.getTuleapTrackerV5APIPortType().getArtifacts(sessionHash, -1,
-						trackerId, criterias.toArray(new Criteria[criterias.size()]), 0, maxHits);
+
+			List<Criteria> criteria = new ArrayList<Criteria>();
+			if (ITuleapQueryConstants.QUERY_KIND_CUSTOM.equals(query
+					.getAttribute(ITuleapQueryConstants.QUERY_KIND))
+					&& query.getAttribute(ITuleapQueryConstants.QUERY_TRACKER_ID) != null) {
+				// Custom query
+				criteria.addAll(this.getCriterias(query));
 			}
+			artifactQueryResult = this.getTuleapTrackerV5APIPortType().getArtifacts(sessionHash, -1,
+					trackerId, criteria.toArray(new Criteria[criteria.size()]), 0, maxHits);
 
 			try {
 				Artifact[] artifacts = artifactQueryResult.getArtifacts();

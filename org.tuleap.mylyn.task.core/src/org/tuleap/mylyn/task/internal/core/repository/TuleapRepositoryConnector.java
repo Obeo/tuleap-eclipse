@@ -281,9 +281,11 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			TaskDataCollector collector, ISynchronizationSession session, IProgressMonitor monitor) {
 		// Populate the collector with the task data resulting from the query
 		String queryKind = query.getAttribute(ITuleapQueryConstants.QUERY_KIND);
-		if (ITuleapQueryConstants.QUERY_KIND_REPORT.equals(queryKind)
-				|| ITuleapQueryConstants.QUERY_KIND_CUSTOM.equals(queryKind)) {
+		if (ITuleapQueryConstants.QUERY_KIND_REPORT.equals(queryKind)) {
+			performReportQuery(taskRepository, query, collector, monitor);
+		} else if (ITuleapQueryConstants.QUERY_KIND_CUSTOM.equals(queryKind)) {
 			performStandardQuery(taskRepository, query, collector, monitor);
+
 		} else if (ITuleapQueryConstants.QUERY_KIND_TOP_LEVEL_PLANNING.equals(queryKind)) {
 			performProjectPlanningQuery(taskRepository, query, collector, monitor);
 		}
@@ -342,6 +344,71 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			} catch (IllegalArgumentException exception) {
 				// Do not log, the query has been deleted while it was executed, see:
 				// org.eclipse.mylyn.internal.tasks.core.TaskList.getValidElement(IRepositoryElement)
+			}
+		}
+	}
+
+	/**
+	 * Perform a "report" query.
+	 * 
+	 * @param taskRepository
+	 *            The task repository
+	 * @param query
+	 *            The query to execute
+	 * @param collector
+	 *            The task data collector
+	 * @param monitor
+	 *            The progress monitor
+	 */
+	private void performReportQuery(TaskRepository taskRepository, IRepositoryQuery query,
+			TaskDataCollector collector, IProgressMonitor monitor) {
+		TuleapRestClient client = this.getClientManager().getRestClient(taskRepository);
+		int trackerId = Integer.valueOf(query.getAttribute(ITuleapQueryConstants.QUERY_TRACKER_ID))
+				.intValue();
+		TuleapServer server = this.getServer(taskRepository.getRepositoryUrl());
+		TuleapTracker tracker = server.getTracker(trackerId);
+		try {
+			tracker = this.refreshTracker(taskRepository, tracker, monitor);
+		} catch (CoreException e) {
+			TuleapCoreActivator.log(e, true);
+		}
+		ArtifactTaskDataConverter artifactTaskDataConverter = new ArtifactTaskDataConverter(tracker,
+				taskRepository, this);
+		String queryReportId = query.getAttribute(ITuleapQueryConstants.QUERY_REPORT_ID);
+		int reportId = Integer.valueOf(queryReportId).intValue();
+
+		List<TuleapArtifact> artifacts = null;
+		try {
+			artifacts = client.getTrackerReportArtifacts(reportId, monitor);
+		} catch (CoreException exception) {
+			TuleapCoreActivator.log(exception, true);
+		}
+		if (artifacts != null) {
+			for (TuleapArtifact artifact : artifacts) {
+				TuleapTaskId taskDataId = TuleapTaskId.forArtifact(tracker.getProject().getIdentifier(),
+						artifact.getTracker().getId(), artifact.getId().intValue());
+
+				TaskAttributeMapper attributeMapper = this.getTaskDataHandler().getAttributeMapper(
+						taskRepository);
+				TaskData taskData = new TaskData(attributeMapper, this.getConnectorKind(), taskRepository
+						.getRepositoryUrl(), taskDataId.toString());
+				artifactTaskDataConverter.populateTaskData(taskData, artifact, monitor);
+
+				// If the tracker is a milestone tracker, retrieve milestone-specific informations
+				if (tracker.getProject().isMilestoneTracker(tracker.getIdentifier())) {
+					try {
+						taskDataHandler.fetchMilestoneData(taskData, tracker.getProject(), tracker,
+								taskRepository, monitor);
+					} catch (CoreException e) {
+						TuleapCoreActivator.log(e, true);
+					}
+				}
+				try {
+					collector.accept(taskData);
+				} catch (IllegalArgumentException exception) {
+					// Do not log, the query has been deleted while it was executed, see:
+					// org.eclipse.mylyn.internal.tasks.core.TaskList.getValidElement(IRepositoryElement)
+				}
 			}
 		}
 	}

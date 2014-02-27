@@ -35,7 +35,9 @@ import org.junit.Test;
 import org.tuleap.mylyn.task.agile.core.data.planning.MilestonePlanningWrapper;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapQueryConstants;
 import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
+import org.tuleap.mylyn.task.internal.core.client.rest.RestResourceFactory;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
+import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestConnector;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
@@ -50,9 +52,11 @@ import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapStatus;
+import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapTaskDataCollector;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
+import org.tuleap.mylyn.task.internal.tests.TestLogger;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -184,6 +188,19 @@ public class TuleapRepositoryConnectorTests {
 					}
 				};
 			}
+
+			@Override
+			public TuleapRestClient getRestClient(TaskRepository taskRepository) {
+				return new TuleapRestClient(new RestResourceFactory(location.getUrl(), "v3.14",
+						new TuleapRestConnector(location, new TestLogger()), new TestLogger()),
+						new TuleapJsonParser(), taskRepository, new TestLogger()) {
+					@Override
+					public List<TuleapArtifact> getTrackerReportArtifacts(int trackerReportId,
+							IProgressMonitor monitor) {
+						return Lists.newArrayList(tuleapArtifact);
+					}
+				};
+			}
 		};
 
 		TuleapRepositoryConnector tuleapRepositoryConnector = new TuleapRepositoryConnector() {
@@ -213,6 +230,7 @@ public class TuleapRepositoryConnectorTests {
 		IRepositoryQuery query = new RepositoryQuery(ITuleapConstants.CONNECTOR_KIND, "");
 		query.setAttribute(ITuleapQueryConstants.QUERY_KIND, ITuleapQueryConstants.QUERY_KIND_REPORT);
 		query.setAttribute(ITuleapQueryConstants.QUERY_TRACKER_ID, String.valueOf(trackerRef.getId()));
+		query.setAttribute(ITuleapQueryConstants.QUERY_REPORT_ID, "100");
 
 		tuleapRepositoryConnector.performQuery(taskRepository, query, collector, null,
 				new NullProgressMonitor());
