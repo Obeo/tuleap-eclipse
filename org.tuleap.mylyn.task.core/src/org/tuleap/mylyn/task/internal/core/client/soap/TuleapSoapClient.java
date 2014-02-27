@@ -16,7 +16,6 @@ import java.net.Proxy;
 import java.net.SocketAddress;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.xml.rpc.ServiceException;
@@ -31,10 +30,8 @@ import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
-import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
-import org.tuleap.mylyn.task.internal.core.model.config.TuleapTrackerReport;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
 
 /**
@@ -128,35 +125,6 @@ public class TuleapSoapClient {
 	}
 
 	/**
-	 * Returns the configuration of the Tuleap server.
-	 * 
-	 * @param monitor
-	 *            Used to monitor the progress
-	 * @return The configuration of the server
-	 * @throws CoreException
-	 *             In case of error during the retrieval of the configuration
-	 */
-	public TuleapServer getTuleapServerConfiguration(IProgressMonitor monitor) throws CoreException {
-		return newConnector().getTuleapServerConfiguration(monitor);
-	}
-
-	/**
-	 * Returns the configuration of the tracker with the given identifier.
-	 * 
-	 * @param project
-	 *            The configuration of the project
-	 * @param trackerId
-	 *            The identifier of the tracker
-	 * @param monitor
-	 *            The progress monitor
-	 * @return The configuration of the tracker with the given identifier
-	 */
-	public TuleapTracker getTuleapTrackerConfiguration(TuleapProject project, int trackerId,
-			IProgressMonitor monitor) {
-		return newConnector().getTuleapTrackerConfiguration(project.getIdentifier(), trackerId, monitor);
-	}
-
-	/**
 	 * Retrieves the {@link TuleapArtifact} from a query run on the server.
 	 * 
 	 * @param query
@@ -182,46 +150,6 @@ public class TuleapSoapClient {
 		}
 
 		return artifacts;
-	}
-
-	/**
-	 * Retrieves the artifact with the given id.
-	 * 
-	 * @param taskId
-	 *            The identifier of the artifact
-	 * @param serverConfiguration
-	 *            The configuration of the Tuleap server
-	 * @param monitor
-	 *            The progress monitor
-	 * @return The Tuleap Artifact with the data from the server
-	 * @throws CoreException
-	 *             In case of issue during the retrieval of the artifact
-	 */
-	public TuleapArtifact getArtifact(TuleapTaskId taskId, TuleapServer serverConfiguration,
-			IProgressMonitor monitor) throws CoreException {
-		int artifactId = taskId.getArtifactId();
-
-		if (artifactId != TuleapTaskId.IRRELEVANT_ID) {
-			TuleapArtifact tuleapArtifact;
-			try {
-				CommentedArtifact artifact = newConnector().getArtifact(artifactId, serverConfiguration,
-						monitor);
-
-				tuleapArtifact = this.tuleapSoapParser.parseArtifact(serverConfiguration.getTracker(artifact
-						.getArtifact().getTracker_id()), artifact);
-			} catch (MalformedURLException e) {
-				IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
-				throw new CoreException(status);
-			} catch (RemoteException e) {
-				IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
-				throw new CoreException(status);
-			} catch (ServiceException e) {
-				IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
-				throw new CoreException(status);
-			}
-			return tuleapArtifact;
-		}
-		return null;
 	}
 
 	/**
@@ -274,18 +202,5 @@ public class TuleapSoapClient {
 			IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
 			throw new CoreException(status);
 		}
-	}
-
-	/**
-	 * Returns the list of the reports of the tracker.
-	 * 
-	 * @param trackerId
-	 *            The identifier of the tracker
-	 * @param monitor
-	 *            The progress monitor
-	 * @return The list of the reports of the tracker
-	 */
-	public Collection<? extends TuleapTrackerReport> getReports(int trackerId, IProgressMonitor monitor) {
-		return newConnector().getReports(trackerId, monitor);
 	}
 }

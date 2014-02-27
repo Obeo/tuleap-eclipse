@@ -255,15 +255,6 @@ public class TuleapTaskDataHandlerTests {
 		final TuleapBacklogItem tuleapBacklogItem = new TuleapBacklogItem(backlogItemId, projectRef, "", "",
 				"", new Date(), new Date());
 
-		// Mock soap client
-		final TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(location, null) {
-			@Override
-			public TuleapArtifact getArtifact(TuleapTaskId id, TuleapServer serverConfiguration,
-					IProgressMonitor monitor) throws CoreException {
-				return tuleapArtifact;
-			}
-		};
-
 		// Mock rest client
 		final TuleapRestClient tuleapRestClient = new TuleapRestClient(null, null, null, null) {
 			@Override
@@ -275,13 +266,18 @@ public class TuleapTaskDataHandlerTests {
 			public TuleapBacklogItem getBacklogItem(int id, IProgressMonitor monitor) {
 				return tuleapBacklogItem;
 			}
+
+			@Override
+			public TuleapArtifact getArtifact(int id, IProgressMonitor monitor) throws CoreException {
+				return tuleapArtifact;
+			}
 		};
 
 		// mock client manager
 		final TuleapClientManager tuleapClientManager = new TuleapClientManager() {
 			@Override
 			public TuleapSoapClient getSoapClient(TaskRepository taskRepository) {
-				return tuleapSoapClient;
+				return null;
 			}
 
 			@Override
