@@ -11,6 +11,7 @@
 package org.tuleap.mylyn.task.internal.tests.client.rest;
 
 import com.google.common.collect.Maps;
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
 import java.util.Iterator;
@@ -46,9 +47,11 @@ public class RestOperationsTest {
 
 	private TestLogger logger;
 
+	private Gson gson;
+
 	@Test
 	public void testBasicBehavior() {
-		RestOperation op = RestOperation.get("some/url", connector, logger);
+		RestOperation op = RestOperation.get("some/url", connector, gson, logger);
 		HttpMethod m = op.createMethod();
 		assertEquals("GET", m.getName());
 		assertEquals("some/url", m.getPath());
@@ -96,7 +99,7 @@ public class RestOperationsTest {
 	 */
 	@Test
 	public void testExecutionOfGet() {
-		RestOperation op = RestOperation.get("some/url", connector, logger);
+		RestOperation op = RestOperation.get("some/url", connector, gson, logger);
 		Map<String, String> responseHeaders = Maps.newLinkedHashMap();
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, "body", responseHeaders);
 		connector.setResponse(response);
@@ -107,7 +110,7 @@ public class RestOperationsTest {
 
 	@Test
 	public void testIteratingOnGetWithJsonObject() {
-		RestOperation op = RestOperation.get("some/url", connector, logger);
+		RestOperation op = RestOperation.get("some/url", connector, gson, logger);
 		Map<String, String> responseHeaders = Maps.newLinkedHashMap();
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, "{'a':'1'}", responseHeaders);
 		connector.setResponse(response);
@@ -120,7 +123,7 @@ public class RestOperationsTest {
 
 	@Test
 	public void testIteratingOnGetWithArrayWithoutPagination() {
-		RestOperation op = RestOperation.get("some/url", connector, logger);
+		RestOperation op = RestOperation.get("some/url", connector, gson, logger);
 		Map<String, String> responseHeaders = Maps.newLinkedHashMap();
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, "[{'a':'1'},{'a':'2'}]",
 				responseHeaders);
@@ -138,7 +141,7 @@ public class RestOperationsTest {
 	public void testIteratingOnGetWithArrayWithPagination() {
 		MockPaginatingRestConnector paginatingConnector = new MockPaginatingRestConnector();
 
-		RestOperation op = RestOperation.get("some/url", paginatingConnector, logger);
+		RestOperation op = RestOperation.get("some/url", paginatingConnector, gson, logger);
 		Map<String, String> responseHeaders = Maps.newLinkedHashMap();
 
 		responseHeaders.put(ITuleapHeaders.HEADER_X_PAGINATION_SIZE, "3");
@@ -194,7 +197,7 @@ public class RestOperationsTest {
 		};
 		listConnector.addServerResponse(response401);
 		listConnector.addServerResponse(response200);
-		RestOperation op = RestOperation.get("/some/url", listConnector, logger);
+		RestOperation op = RestOperation.get("/some/url", listConnector, gson, logger);
 		op.withAuthenticator(authenticator);
 		ServerResponse response = op.run();
 		assertTrue(response.isOk());
@@ -216,7 +219,7 @@ public class RestOperationsTest {
 		token.setUserId("user_id");
 		listConnector.addServerResponse(response401);
 		listConnector.addServerResponse(response200);
-		RestOperation op = RestOperation.get("/some/url", listConnector, logger);
+		RestOperation op = RestOperation.get("/some/url", listConnector, gson, logger);
 		// op.withAuthenticator(null);
 		ServerResponse response = op.run();
 		assertFalse(response.isOk());
@@ -247,7 +250,7 @@ public class RestOperationsTest {
 		listConnector.addServerResponse(response401);
 		listConnector.addServerResponse(response401);
 		listConnector.addServerResponse(response200);
-		RestOperation op = RestOperation.get("/some/url", listConnector, logger);
+		RestOperation op = RestOperation.get("/some/url", listConnector, gson, logger);
 		op.withAuthenticator(authenticator);
 		ServerResponse response = op.run();
 		assertFalse(response.isOk());
@@ -281,7 +284,7 @@ public class RestOperationsTest {
 		};
 		listConnector.addServerResponse(response401);
 		listConnector.addServerResponse(response200);
-		RestOperation op = RestOperation.get("/some/url", listConnector, logger);
+		RestOperation op = RestOperation.get("/some/url", listConnector, gson, logger);
 		op.withAuthenticator(authenticator);
 		ServerResponse response = op.checkedRun();
 		assertTrue(response.isOk());
@@ -306,7 +309,7 @@ public class RestOperationsTest {
 		token.setUserId("user_id");
 		listConnector.addServerResponse(response401);
 		listConnector.addServerResponse(response200);
-		RestOperation op = RestOperation.get("/some/url", listConnector, logger);
+		RestOperation op = RestOperation.get("/some/url", listConnector, gson, logger);
 		// op.withAuthenticator(null);
 		op.checkedRun();
 	}
@@ -337,53 +340,53 @@ public class RestOperationsTest {
 		listConnector.addServerResponse(response401);
 		listConnector.addServerResponse(response401);
 		listConnector.addServerResponse(response200);
-		RestOperation op = RestOperation.get("/some/url", listConnector, logger);
+		RestOperation op = RestOperation.get("/some/url", listConnector, gson, logger);
 		op.withAuthenticator(authenticator);
 		op.checkedRun();
 	}
 
 	@Test(expected = AssertionFailedException.class)
 	public void testConstructorWithNullUrl() {
-		RestOperation.get(null, connector, logger);
+		RestOperation.get(null, connector, gson, logger);
 	}
 
 	@Test(expected = AssertionFailedException.class)
 	public void testConstructorWithNullConnector() {
-		RestOperation.get("url", null, logger);
+		RestOperation.get("url", null, gson, logger);
 	}
 
 	@Test(expected = AssertionFailedException.class)
 	public void testConstructorWithNullLogger() {
-		RestOperation.get("url", connector, null);
+		RestOperation.get("url", connector, gson, null);
 	}
 
 	@Test
 	public void testGetToString() {
-		RestOperation op = RestOperation.get("/the/full/url", connector, logger);
+		RestOperation op = RestOperation.get("/the/full/url", connector, gson, logger);
 		assertEquals("GET /the/full/url", op.toString());
 	}
 
 	@Test
 	public void testPutToString() {
-		RestOperation op = RestOperation.put("/the/full/url", connector, logger);
+		RestOperation op = RestOperation.put("/the/full/url", connector, gson, logger);
 		assertEquals("PUT /the/full/url", op.toString());
 	}
 
 	@Test
 	public void testPostToString() {
-		RestOperation op = RestOperation.post("/the/full/url", connector, logger);
+		RestOperation op = RestOperation.post("/the/full/url", connector, gson, logger);
 		assertEquals("POST /the/full/url", op.toString());
 	}
 
 	@Test
 	public void testDeleteToString() {
-		RestOperation op = RestOperation.delete("/the/full/url", connector, logger);
+		RestOperation op = RestOperation.delete("/the/full/url", connector, gson, logger);
 		assertEquals("DELETE /the/full/url", op.toString());
 	}
 
 	@Test
 	public void testOptionsToString() {
-		RestOperation op = RestOperation.options("/the/full/url", connector, logger);
+		RestOperation op = RestOperation.options("/the/full/url", connector, gson, logger);
 		assertEquals("OPTIONS /the/full/url", op.toString());
 	}
 
@@ -396,6 +399,7 @@ public class RestOperationsTest {
 		logger = new TestLogger();
 		response401 = new ServerResponse(401, "{\"error\":{\"code\":401,\"message\":\"unauthorized\"}}", Maps
 				.<String, String> newHashMap());
+		gson = new Gson();
 	}
 
 }

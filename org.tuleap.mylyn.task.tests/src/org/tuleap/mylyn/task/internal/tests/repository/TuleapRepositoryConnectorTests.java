@@ -11,6 +11,7 @@
 package org.tuleap.mylyn.task.internal.tests.repository;
 
 import com.google.common.collect.Lists;
+import com.google.gson.Gson;
 
 import java.net.Proxy;
 import java.util.Collections;
@@ -31,6 +32,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
+import org.junit.Before;
 import org.junit.Test;
 import org.tuleap.mylyn.task.agile.core.data.planning.MilestonePlanningWrapper;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapQueryConstants;
@@ -52,7 +54,7 @@ import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapStatus;
-import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
+import org.tuleap.mylyn.task.internal.core.parser.TuleapGsonProvider;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapTaskDataCollector;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
@@ -72,6 +74,8 @@ import static org.junit.Assert.assertEquals;
  * @since 0.7
  */
 public class TuleapRepositoryConnectorTests {
+
+	private Gson gson;
 
 	private AbstractWebLocation location = new AbstractWebLocation("") {
 		@Override
@@ -191,9 +195,8 @@ public class TuleapRepositoryConnectorTests {
 
 			@Override
 			public TuleapRestClient getRestClient(TaskRepository taskRepository) {
-				return new TuleapRestClient(new RestResourceFactory(location.getUrl(), "v3.14",
-						new TuleapRestConnector(location, new TestLogger()), new TestLogger()),
-						new TuleapJsonParser(), taskRepository, new TestLogger()) {
+				return new TuleapRestClient(new RestResourceFactory("v3.14", new TuleapRestConnector(
+						location, new TestLogger()), gson, new TestLogger()), gson, taskRepository) {
 					@Override
 					public List<TuleapArtifact> getTrackerReportArtifacts(int trackerReportId,
 							IProgressMonitor monitor) {
@@ -333,7 +336,7 @@ public class TuleapRepositoryConnectorTests {
 		final TuleapClientManager tuleapClientManager = new TuleapClientManager() {
 			@Override
 			public TuleapRestClient getRestClient(TaskRepository repository) {
-				return new TuleapRestClient(null, null, null, null) {
+				return new TuleapRestClient(null, null, null) {
 					@Override
 					public List<TuleapBacklogItem> getProjectBacklog(int projectId, IProgressMonitor monitor)
 							throws CoreException {
@@ -473,5 +476,10 @@ public class TuleapRepositoryConnectorTests {
 		tuleapRepositoryConnector.updateTaskFromTaskData(taskRepository, task, taskData);
 		assertThat(task.isCompleted(), is(true));
 		assertThat(task.getCompletionDate(), notNullValue());
+	}
+
+	@Before
+	public void setUp() {
+		gson = TuleapGsonProvider.defaultGson();
 	}
 }

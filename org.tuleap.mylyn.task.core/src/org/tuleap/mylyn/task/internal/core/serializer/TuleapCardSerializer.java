@@ -35,10 +35,8 @@ public class TuleapCardSerializer extends AbstractTuleapSerializer<TuleapCard> {
 	 *      com.google.gson.JsonSerializationContext)
 	 */
 	@Override
-	public JsonElement serialize(TuleapCard tuleapCard, Type type,
-			JsonSerializationContext jsonSerializationContext) {
-		JsonObject elementObject = (JsonObject)super.serialize(tuleapCard, TuleapCard.class,
-				jsonSerializationContext);
+	public JsonElement serialize(TuleapCard tuleapCard, Type type, JsonSerializationContext context) {
+		JsonObject elementObject = (JsonObject)super.serialize(tuleapCard, TuleapCard.class, context);
 
 		elementObject.remove(ITuleapConstants.ID);
 		if (tuleapCard.getLabel() != null) {

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.tests.client.rest;
 
+import com.google.gson.Gson;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
@@ -29,15 +31,15 @@ import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
+import org.junit.Before;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
-import org.tuleap.mylyn.task.internal.core.client.rest.ITuleapAPIVersions;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestResourceFactory;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestConnector;
 import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
-import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
+import org.tuleap.mylyn.task.internal.core.parser.TuleapGsonProvider;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.TuleapSoapServiceLocator;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.TuleapTrackerV5APILocatorImpl;
@@ -59,6 +61,8 @@ import org.tuleap.mylyn.task.internal.core.wsdl.soap.v2.TuleapTrackerV5APIPortTy
 public class TuleapSOAPRestCompareTest {
 
 	private static final String CONFIG_FILE = "org/tuleap/mylyn/task/internal/core/wsdl/soap/client-config.wsdd"; //$NON-NLS-1$
+
+	private Gson gson;
 
 	@Test
 	public void testCompareTrackerArtifacts() throws RemoteException, ServiceException, CoreException {
@@ -113,13 +117,11 @@ public class TuleapSOAPRestCompareTest {
 		AbstractWebLocation webLocation = new TaskRepositoryLocationFactory()
 				.createWebLocation(taskRepository);
 		ILog logger = TuleapCoreActivator.getDefault().getLog();
-		TuleapJsonParser jsonParser = new TuleapJsonParser();
 		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(webLocation, logger);
 		//
-		RestResourceFactory restResourceFactory = new RestResourceFactory(webLocation.getUrl(),
-				ITuleapAPIVersions.BEST_VERSION, tuleapRestConnector, logger);
-		TuleapRestClient tuleapRestClient = new TuleapRestClient(restResourceFactory, jsonParser,
-				taskRepository, logger);
+		RestResourceFactory restResourceFactory = new RestResourceFactory(RestResourceFactory.BEST_VERSION,
+				tuleapRestConnector, gson, logger);
+		TuleapRestClient tuleapRestClient = new TuleapRestClient(restResourceFactory, gson, taskRepository);
 		tuleapRestClient.login();
 
 		for (Artifact artifact : downloadedArtifacts) {
@@ -205,5 +207,10 @@ public class TuleapSOAPRestCompareTest {
 			}
 		}
 		return result;
+	}
+
+	@Before
+	public void setUp() {
+		gson = TuleapGsonProvider.defaultGson();
 	}
 }

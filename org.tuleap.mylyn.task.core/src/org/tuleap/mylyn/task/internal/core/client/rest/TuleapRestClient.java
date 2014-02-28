@@ -11,9 +11,7 @@
 package org.tuleap.mylyn.task.internal.core.client.rest;
 
 import com.google.common.collect.Lists;
-import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -24,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -47,7 +44,6 @@ import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCard;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCardwall;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
-import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.serializer.TuleapCardSerializer;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
@@ -70,17 +66,12 @@ public class TuleapRestClient implements IAuthenticator {
 	/**
 	 * The JSON parser.
 	 */
-	private final TuleapJsonParser jsonParser;
+	private final Gson gson;
 
 	/**
 	 * The task repository.
 	 */
 	private final TaskRepository taskRepository;
-
-	/**
-	 * The logger.
-	 */
-	private ILog logger;
 
 	/**
 	 * Factory of RESt resources.
@@ -97,19 +88,15 @@ public class TuleapRestClient implements IAuthenticator {
 	 * 
 	 * @param resourceFactory
 	 *            The RESt resource factory to use
-	 * @param jsonParser
-	 *            The Tuleap JSON parser
+	 * @param gson
+	 *            The JSON parser
 	 * @param taskRepository
 	 *            The task repository
-	 * @param logger
-	 *            The logger
 	 */
-	public TuleapRestClient(RestResourceFactory resourceFactory, TuleapJsonParser jsonParser,
-			TaskRepository taskRepository, ILog logger) {
+	public TuleapRestClient(RestResourceFactory resourceFactory, Gson gson, TaskRepository taskRepository) {
 		this.restResourceFactory = resourceFactory;
-		this.jsonParser = jsonParser;
+		this.gson = gson;
 		this.taskRepository = taskRepository;
-		this.logger = logger;
 	}
 
 	/**
@@ -177,14 +164,10 @@ public class TuleapRestClient implements IAuthenticator {
 				.withAuthenticator(this);
 		RestOperation operation = plannings.get();
 		for (JsonElement element : operation.iterable()) {
-			TuleapPlanning planning = jsonParser.parsePlanning(element);
+			TuleapPlanning planning = gson.fromJson(element, TuleapPlanning.class);
 			project.addPlanning(planning);
 		}
 	}
-
-	// TODO get user groups of a project
-
-	// TODO get users of a group
 
 	/**
 	 * Creates an authorization token on the server and stores it so that it can be used.
@@ -202,9 +185,6 @@ public class TuleapRestClient implements IAuthenticator {
 			// It is on purpose that there is no authenticator here!
 			RestOperation postOperation = restBacklogItem.post().withBody(credentialsToPost);
 			ServerResponse response = postOperation.checkedRun();
-			GsonBuilder builder = new GsonBuilder()
-					.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
-			Gson gson = builder.create();
 			this.token = gson.fromJson(response.getBody(), TuleapToken.class);
 		} else {
 			token = null;
@@ -252,7 +232,7 @@ public class TuleapRestClient implements IAuthenticator {
 		}
 		RestResource artifactResource = restResourceFactory.artifact(artifactId).withAuthenticator(this);
 		ServerResponse response = artifactResource.get().checkedRun();
-		TuleapArtifact artifact = this.jsonParser.parseArtifact(response.getBody());
+		TuleapArtifact artifact = gson.fromJson(response.getBody(), TuleapArtifact.class);
 		return artifact;
 	}
 
@@ -441,7 +421,7 @@ public class TuleapRestClient implements IAuthenticator {
 		}
 		RestResource milestoneResource = restResourceFactory.milestone(milestoneId).withAuthenticator(this);
 		ServerResponse response = milestoneResource.get().checkedRun();
-		TuleapMilestone milestone = this.jsonParser.parseMilestone(response.getBody());
+		TuleapMilestone milestone = gson.fromJson(response.getBody(), TuleapMilestone.class);
 		return milestone;
 	}
 
@@ -468,7 +448,7 @@ public class TuleapRestClient implements IAuthenticator {
 		RestOperation operation = backlogResource.get();
 		List<TuleapBacklogItem> backlogItems = Lists.newArrayList();
 		for (JsonElement e : operation.iterable()) {
-			backlogItems.add(jsonParser.parseBacklogItem(e));
+			backlogItems.add(gson.fromJson(e, TuleapBacklogItem.class));
 		}
 
 		return backlogItems;
@@ -497,7 +477,7 @@ public class TuleapRestClient implements IAuthenticator {
 		RestOperation operation = backlogResource.get();
 		List<TuleapBacklogItem> backlogItems = Lists.newArrayList();
 		for (JsonElement e : operation.iterable()) {
-			backlogItems.add(jsonParser.parseBacklogItem(e));
+			backlogItems.add(gson.fromJson(e, TuleapBacklogItem.class));
 		}
 
 		return backlogItems;
@@ -525,7 +505,7 @@ public class TuleapRestClient implements IAuthenticator {
 		RestOperation operation = subMilestonesResource.get();
 		List<TuleapMilestone> milestones = Lists.newArrayList();
 		for (JsonElement e : operation.iterable()) {
-			milestones.add(jsonParser.parseMilestone(e));
+			milestones.add(gson.fromJson(e, TuleapMilestone.class));
 		}
 		return milestones;
 	}
@@ -547,7 +527,7 @@ public class TuleapRestClient implements IAuthenticator {
 		RestOperation operation = r.get();
 		List<TuleapMilestone> milestones = Lists.newArrayList();
 		for (JsonElement e : operation.iterable()) {
-			milestones.add(jsonParser.parseMilestone(e));
+			milestones.add(gson.fromJson(e, TuleapMilestone.class));
 		}
 		return milestones;
 	}
@@ -569,7 +549,7 @@ public class TuleapRestClient implements IAuthenticator {
 		RestOperation operation = r.get();
 		List<TuleapBacklogItem> backlogItems = Lists.newArrayList();
 		for (JsonElement e : operation.iterable()) {
-			backlogItems.add(jsonParser.parseBacklogItem(e));
+			backlogItems.add(gson.fromJson(e, TuleapBacklogItem.class));
 		}
 		return backlogItems;
 	}
@@ -593,7 +573,7 @@ public class TuleapRestClient implements IAuthenticator {
 		RestResource restCardwall = restResourceFactory.milestoneCardwall(milestoneId)
 				.withAuthenticator(this);
 		ServerResponse cardwallResponse = restCardwall.get().checkedRun();
-		TuleapCardwall cardwall = jsonParser.parseCardwall(cardwallResponse.getBody());
+		TuleapCardwall cardwall = gson.fromJson(cardwallResponse.getBody(), TuleapCardwall.class);
 		return cardwall;
 	}
 
@@ -614,7 +594,7 @@ public class TuleapRestClient implements IAuthenticator {
 		RestOperation operation = r.get();
 		List<TuleapUserGroup> userGroups = Lists.newArrayList();
 		for (JsonElement e : operation.iterable()) {
-			userGroups.add(jsonParser.parseUserGroup(e.toString()));
+			userGroups.add(gson.fromJson(e, TuleapUserGroup.class));
 		}
 		return userGroups;
 	}
@@ -635,7 +615,7 @@ public class TuleapRestClient implements IAuthenticator {
 		RestOperation operation = r.get();
 		List<TuleapUser> users = Lists.newArrayList();
 		for (JsonElement e : operation.iterable()) {
-			users.add(jsonParser.parseUser(e.toString()));
+			users.add(gson.fromJson(e, TuleapUser.class));
 		}
 		return users;
 	}
@@ -657,7 +637,7 @@ public class TuleapRestClient implements IAuthenticator {
 		RestOperation operation = r.get();
 		List<TuleapTrackerReport> reports = Lists.newArrayList();
 		for (JsonElement e : operation.iterable()) {
-			reports.add(jsonParser.parseTrackerReport(e.toString()));
+			reports.add(gson.fromJson(e, TuleapTrackerReport.class));
 		}
 		return reports;
 	}
@@ -676,7 +656,7 @@ public class TuleapRestClient implements IAuthenticator {
 		RestOperation operation = r.get();
 		List<TuleapProject> projects = Lists.newArrayList();
 		for (JsonElement e : operation.iterable()) {
-			projects.add(jsonParser.parseProject(e.toString()));
+			projects.add(gson.fromJson(e, TuleapProject.class));
 		}
 		return projects;
 	}
@@ -698,7 +678,7 @@ public class TuleapRestClient implements IAuthenticator {
 		RestOperation operation = r.get();
 		List<TuleapTracker> trackers = Lists.newArrayList();
 		for (JsonElement e : operation.iterable()) {
-			trackers.add(jsonParser.parseTracker(e));
+			trackers.add(gson.fromJson(e, TuleapTracker.class));
 		}
 		return trackers;
 	}
@@ -717,12 +697,14 @@ public class TuleapRestClient implements IAuthenticator {
 	public List<TuleapArtifact> getTrackerReportArtifacts(int trackerReportId, IProgressMonitor monitor)
 			throws CoreException {
 		RestResource r = restResourceFactory.trackerReportArtifacts(trackerReportId).withAuthenticator(this);
-		RestOperation operation = r.get();
-		List<TuleapArtifact> reports = Lists.newArrayList();
+		// The /tracker_reports/:id/artifacts returns no values by default
+		// So it's necessary to add the parameter ?values=all
+		RestOperation operation = r.get().withQueryParameter("values", "all"); //$NON-NLS-1$//$NON-NLS-2$
+		List<TuleapArtifact> artifacts = Lists.newArrayList();
 		for (JsonElement e : operation.iterable()) {
-			reports.add(jsonParser.parseArtifact(e));
+			artifacts.add(gson.fromJson(e, TuleapArtifact.class));
 		}
-		return reports;
+		return artifacts;
 	}
 
 	/**
@@ -892,7 +874,7 @@ public class TuleapRestClient implements IAuthenticator {
 		RestOperation operation = restBacklogItem.get();
 		ServerResponse response = operation.checkedRun();
 
-		TuleapBacklogItem backlogItem = this.jsonParser.parseBacklogItem(response.getBody());
+		TuleapBacklogItem backlogItem = gson.fromJson(response.getBody(), TuleapBacklogItem.class);
 
 		return backlogItem;
 	}
@@ -914,12 +896,9 @@ public class TuleapRestClient implements IAuthenticator {
 					TuleapMylynTasksMessagesKeys.retrievingBacklogItem, Integer.valueOf(trackerId)));
 		}
 		RestResource restTracker = restResourceFactory.tracker(trackerId).withAuthenticator(this);
-
 		RestOperation operation = restTracker.get();
 		ServerResponse response = operation.checkedRun();
-
-		TuleapTracker tracker = this.jsonParser.parseTracker(response.getBody());
-
+		TuleapTracker tracker = gson.fromJson(response.getBody(), TuleapTracker.class);
 		return tracker;
 	}
 }

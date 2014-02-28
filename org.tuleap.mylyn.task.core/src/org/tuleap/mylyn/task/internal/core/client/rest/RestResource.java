@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.client.rest;
 
+import com.google.gson.Gson;
+
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
@@ -21,7 +23,6 @@ import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.model.TuleapDebugPart;
 import org.tuleap.mylyn.task.internal.core.model.TuleapErrorMessage;
 import org.tuleap.mylyn.task.internal.core.model.TuleapErrorPart;
-import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
@@ -88,17 +89,6 @@ public class RestResource {
 	private static final String SEPARATOR = ", "; //$NON-NLS-1$
 
 	/**
-	 * The server URL (Protocol, host name and optionally port number), for example
-	 * {@code http://localhost:3001}.
-	 */
-	private final String serverUrl;
-
-	/**
-	 * The REST API version to use.
-	 */
-	private final String apiVersion;
-
-	/**
 	 * The connector to use.
 	 */
 	private final IRestConnector connector;
@@ -124,6 +114,11 @@ public class RestResource {
 	private ServerResponse optionsResponse;
 
 	/**
+	 * The {@link Gson} to use.
+	 */
+	private final Gson gson;
+
+	/**
 	 * The authenticator to use.
 	 */
 	private IAuthenticator authenticator;
@@ -131,10 +126,6 @@ public class RestResource {
 	/**
 	 * Constructor.
 	 * 
-	 * @param serverUrl
-	 *            The server URL.
-	 * @param apiVersion
-	 *            The API version.
 	 * @param url
 	 *            The URL, must no be null.
 	 * @param supportedMethods
@@ -142,34 +133,21 @@ public class RestResource {
 	 *            post() operations.
 	 * @param connector
 	 *            The connector to use.
+	 * @param gson
+	 *            the {@link Gson} to use.
 	 * @param logger
 	 *            The logger
 	 */
-	public RestResource(String serverUrl, String apiVersion, String url, int supportedMethods,
-			IRestConnector connector, ILog logger) {
-		this.serverUrl = serverUrl;
-		this.apiVersion = apiVersion;
+	public RestResource(String url, int supportedMethods, IRestConnector connector, Gson gson, ILog logger) {
 		Assert.isNotNull(url);
-		if (!url.startsWith("/")) { //$NON-NLS-1$
-			this.url = '/' + url;
-		} else {
-			this.url = url;
-		}
+		this.url = url;
 		this.supportedMethods = supportedMethods;
 		Assert.isNotNull(connector);
 		this.connector = connector;
+		Assert.isNotNull(gson);
+		this.gson = gson;
 		Assert.isNotNull(logger);
 		this.logger = logger;
-	}
-
-	/**
-	 * Computes the full URL to use to send the request, by concatenating the server address, the root API
-	 * prefix, the API version, and the URL fragment of the resource to access.
-	 * 
-	 * @return The full URL to use to send the request.
-	 */
-	public String getFullUrl() {
-		return ITuleapAPIVersions.API_PREFIX + this.apiVersion + getUrl();
 	}
 
 	/**
@@ -178,10 +156,7 @@ public class RestResource {
 	 * @return The URL fragment of this resource.
 	 */
 	public String getUrl() {
-		if (url.startsWith("/")) { //$NON-NLS-1$
-			return url;
-		}
-		return '/' + url;
+		return url;
 	}
 
 	/**
@@ -196,10 +171,10 @@ public class RestResource {
 	public RestOperation delete() throws CoreException {
 		if ((supportedMethods & DELETE) == 0) {
 			throw new UnsupportedOperationException(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, METHOD_DELETE, getUrl()));
+					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, METHOD_DELETE, url));
 		}
 		checkOptionsAllows(METHOD_DELETE);
-		return RestOperation.delete(getFullUrl(), connector, logger).withAuthenticator(authenticator);
+		return RestOperation.delete(url, connector, gson, logger).withAuthenticator(authenticator);
 	}
 
 	/**
@@ -218,7 +193,7 @@ public class RestResource {
 		}
 		checkOptionsAllows(METHOD_GET);
 
-		RestOperation operation = RestOperation.get(getFullUrl(), connector, logger).withAuthenticator(
+		RestOperation operation = RestOperation.get(url, connector, gson, logger).withAuthenticator(
 				authenticator);
 		final Map<String, String> respHeaders = optionsResponse.getHeaders();
 		if (respHeaders.containsKey(ITuleapHeaders.HEADER_X_PAGINATION_SIZE)) {
@@ -240,7 +215,7 @@ public class RestResource {
 	 * @return A new instance of {@link RestOperation} created with this resource operation factory.
 	 */
 	public RestOperation options() {
-		return RestOperation.options(getFullUrl(), connector, logger).withAuthenticator(authenticator);
+		return RestOperation.options(url, connector, gson, logger).withAuthenticator(authenticator);
 	}
 
 	/**
@@ -258,7 +233,7 @@ public class RestResource {
 					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, METHOD_POST, getUrl()));
 		}
 		checkOptionsAllows(METHOD_POST);
-		return RestOperation.post(getFullUrl(), connector, logger).withAuthenticator(authenticator);
+		return RestOperation.post(url, connector, gson, logger).withAuthenticator(authenticator);
 	}
 
 	/**
@@ -276,7 +251,7 @@ public class RestResource {
 					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, METHOD_PUT, getUrl()));
 		}
 		checkOptionsAllows(METHOD_PUT);
-		return RestOperation.put(getFullUrl(), connector, logger).withAuthenticator(authenticator);
+		return RestOperation.put(url, connector, gson, logger).withAuthenticator(authenticator);
 	}
 
 	/**
@@ -312,7 +287,7 @@ public class RestResource {
 		// String headerCorsAllows = respHeaders.get(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS);
 		if (!optionsResponse.isOk()) {
 			String body = optionsResponse.getBody();
-			TuleapErrorMessage message = new TuleapJsonParser().getErrorMessage(body);
+			TuleapErrorMessage message = gson.fromJson(body, TuleapErrorMessage.class);
 			String msg;
 			if (message == null) {
 				msg = TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.errorReturnedByServer,
@@ -325,13 +300,13 @@ public class RestResource {
 				} else {
 					if (debugPart != null) {
 						msg = TuleapMylynTasksMessages.getString(
-								TuleapMylynTasksMessagesKeys.errorReturnedByServerWithDebug, serverUrl
-										+ getUrl(), METHOD_OPTIONS, Integer.valueOf(errorPart.getCode()),
-								errorPart.getMessage(), debugPart.getSource());
+								TuleapMylynTasksMessagesKeys.errorReturnedByServerWithDebug, url,
+								METHOD_OPTIONS, Integer.valueOf(errorPart.getCode()), errorPart.getMessage(),
+								debugPart.getSource());
 					} else {
 						msg = TuleapMylynTasksMessages.getString(
-								TuleapMylynTasksMessagesKeys.errorReturnedByServer, serverUrl + getUrl(),
-								METHOD_OPTIONS, Integer.valueOf(errorPart.getCode()), errorPart.getMessage());
+								TuleapMylynTasksMessagesKeys.errorReturnedByServer, url, METHOD_OPTIONS,
+								Integer.valueOf(errorPart.getCode()), errorPart.getMessage());
 					}
 				}
 			}
@@ -360,7 +335,7 @@ public class RestResource {
 	@Override
 	public String toString() {
 		StringBuilder b = new StringBuilder();
-		b.append(getFullUrl()).append(" ["); //$NON-NLS-1$
+		b.append(url).append(" ["); //$NON-NLS-1$
 		boolean needComma = false;
 		if ((supportedMethods & GET) != 0) {
 			b.append("GET"); //$NON-NLS-1$

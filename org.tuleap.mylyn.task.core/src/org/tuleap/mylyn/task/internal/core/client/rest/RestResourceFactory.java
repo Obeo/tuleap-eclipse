@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.client.rest;
 
+import com.google.gson.Gson;
+
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.ILog;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestResource.URL;
@@ -21,11 +23,20 @@ import org.tuleap.mylyn.task.internal.core.client.rest.RestResource.URL;
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
 public final class RestResourceFactory {
+	/**
+	 * The prefix of the api url.
+	 */
+	public static final String API_PREFIX = "/api/"; //$NON-NLS-1$
 
 	/**
-	 * The serverUrl of the REST API on the server, for example {@code http://localhost:3001}.
+	 * v1.
 	 */
-	private final String serverUrl;
+	public static final String V1 = "v1"; //$NON-NLS-1$
+
+	/**
+	 * The best version of the API supported by the connector.
+	 */
+	public static final String BEST_VERSION = V1;
 
 	/**
 	 * The version of the API to use.
@@ -43,26 +54,40 @@ public final class RestResourceFactory {
 	private final ILog logger;
 
 	/**
+	 * The {@link Gson} to use.
+	 */
+	private final Gson gson;
+
+	/**
 	 * Constructor.
 	 * 
-	 * @param serverUrl
-	 *            URL of the rest API on the server.
 	 * @param apiVersion
 	 *            the API version to use.
 	 * @param connector
 	 *            The connector to use.
+	 * @param gson
+	 *            The {@link Gson} to use.
 	 * @param logger
 	 *            The logger to use.
 	 */
-	public RestResourceFactory(String serverUrl, String apiVersion, IRestConnector connector, ILog logger) {
-		Assert.isNotNull(serverUrl);
-		this.serverUrl = serverUrl;
+	public RestResourceFactory(String apiVersion, IRestConnector connector, Gson gson, ILog logger) {
 		Assert.isNotNull(apiVersion);
 		this.apiVersion = apiVersion;
 		Assert.isNotNull(connector);
 		this.connector = connector;
+		Assert.isNotNull(gson);
+		this.gson = gson;
 		Assert.isNotNull(logger);
 		this.logger = logger;
+	}
+
+	/**
+	 * Provides access to the {code /api/{version}} HTTP resource.
+	 * 
+	 * @return A resource that gives access to the {code /api/{version}} HTTP resource.
+	 */
+	public RestResource api() {
+		return resource(RestResource.GET, ""); //$NON-NLS-1$
 	}
 
 	/**
@@ -284,7 +309,7 @@ public final class RestResourceFactory {
 	 */
 	public RestResource resource(int supportedMethods, String... urlFragments) {
 		final String url = url(urlFragments);
-		return new RestResource(serverUrl, apiVersion, url, supportedMethods, connector, logger);
+		return new RestResource(url, supportedMethods, connector, gson, logger);
 	}
 
 	/**
@@ -323,6 +348,7 @@ public final class RestResourceFactory {
 		Assert.isNotNull(urlFragments);
 		Assert.isTrue(urlFragments.length > 0);
 		StringBuilder b = new StringBuilder();
+		b.append(API_PREFIX).append(apiVersion);
 		String string = urlFragments[0];
 		if (string.charAt(0) != '/') {
 			b.append('/');

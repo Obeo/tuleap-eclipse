@@ -11,6 +11,7 @@
 package org.tuleap.mylyn.task.internal.tests.client.rest;
 
 import com.google.common.collect.Maps;
+import com.google.gson.Gson;
 
 import java.util.Collections;
 import java.util.Map;
@@ -36,6 +37,8 @@ public class RestResourceTest {
 
 	private MockRestConnector connector;
 
+	private Gson gson;
+
 	/**
 	 * Checks basic {@link RestResource} manipulation.
 	 * 
@@ -43,8 +46,8 @@ public class RestResourceTest {
 	 */
 	@Test
 	public void testRestResourceManipulation() throws CoreException {
-		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.GET | RestResource.PUT, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-				connector, new TestLogger());
+		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.GET | RestResource.PUT, //$NON-NLS-1$
+				connector, gson, new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
 		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET,PUT"); //$NON-NLS-1$
 		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET,PUT"); //$NON-NLS-1$
@@ -71,17 +74,16 @@ public class RestResourceTest {
 
 	@Test
 	public void testRestResourceWithUrlWithoutTrailingSlash() {
-		RestResource r = new RestResource("/server", "v12.5", "my/url", RestResource.GET, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-				connector, new TestLogger());
-		assertEquals("/my/url", r.getUrl());
-		assertEquals("/api/v12.5/my/url", r.getFullUrl());
+		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.GET, //$NON-NLS-1$
+				connector, gson, new TestLogger());
+		assertEquals("/server/api/v12.5/my/url", r.getUrl());
 
 	}
 
 	@Test
 	public void testDeleteAllowed() throws CoreException {
-		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.DELETE, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-				connector, new TestLogger());
+		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.DELETE, //$NON-NLS-1$
+				connector, gson, new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
 		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,DELETE"); //$NON-NLS-1$
 		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,DELETE"); //$NON-NLS-1$
@@ -92,8 +94,8 @@ public class RestResourceTest {
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void testDeleteNotAllowedLocal() throws CoreException {
-		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.GET, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-				connector, new TestLogger());
+		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.GET, //$NON-NLS-1$
+				connector, gson, new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
 		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,DELETE"); //$NON-NLS-1$
 		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,DELETE"); //$NON-NLS-1$
@@ -103,8 +105,8 @@ public class RestResourceTest {
 
 	@Test(expected = CoreException.class)
 	public void testDeleteNotAllowedDistant() throws CoreException {
-		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.DELETE, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-				connector, new TestLogger());
+		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.DELETE, //$NON-NLS-1$
+				connector, gson, new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
 		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
 		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
@@ -114,8 +116,8 @@ public class RestResourceTest {
 
 	@Test
 	public void testPostAllowed() throws CoreException {
-		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.POST, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-				connector, new TestLogger());
+		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.POST, //$NON-NLS-1$
+				connector, gson, new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
 		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,POST"); //$NON-NLS-1$
 		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,POST"); //$NON-NLS-1$
@@ -126,8 +128,8 @@ public class RestResourceTest {
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void testPostNotAllowedLocal() throws CoreException {
-		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.GET, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-				connector, new TestLogger());
+		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.GET, //$NON-NLS-1$
+				connector, gson, new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
 		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,POST"); //$NON-NLS-1$
 		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,POST"); //$NON-NLS-1$
@@ -137,8 +139,8 @@ public class RestResourceTest {
 
 	@Test(expected = CoreException.class)
 	public void testPostNotAllowedDistant() throws CoreException {
-		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.POST, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-				connector, new TestLogger());
+		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.POST, //$NON-NLS-1$
+				connector, gson, new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
 		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
 		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
@@ -148,8 +150,8 @@ public class RestResourceTest {
 
 	@Test
 	public void testPutAllowed() throws CoreException {
-		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.PUT, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-				connector, new TestLogger());
+		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.PUT, //$NON-NLS-1$
+				connector, gson, new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
 		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
 		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
@@ -160,8 +162,8 @@ public class RestResourceTest {
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void testPutNotAllowedLocal() throws CoreException {
-		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.GET, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-				connector, new TestLogger());
+		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.GET, //$NON-NLS-1$
+				connector, gson, new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
 		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
 		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
@@ -171,8 +173,8 @@ public class RestResourceTest {
 
 	@Test(expected = CoreException.class)
 	public void testPutNotAllowedDistant() throws CoreException {
-		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.PUT, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-				connector, new TestLogger());
+		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.PUT, //$NON-NLS-1$
+				connector, gson, new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
 		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
 		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
@@ -182,8 +184,8 @@ public class RestResourceTest {
 
 	@Test
 	public void testGetAllowed() throws CoreException {
-		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.GET, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-				connector, new TestLogger());
+		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.GET, //$NON-NLS-1$
+				connector, gson, new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
 		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
 		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
@@ -194,8 +196,8 @@ public class RestResourceTest {
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void tesGetNotAllowedLocal() throws CoreException {
-		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.PUT, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-				connector, new TestLogger());
+		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.PUT, //$NON-NLS-1$
+				connector, gson, new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
 		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
 		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
@@ -205,8 +207,8 @@ public class RestResourceTest {
 
 	@Test(expected = CoreException.class)
 	public void testGetNotAllowedDistant() throws CoreException {
-		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.GET, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-				connector, new TestLogger());
+		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.GET, //$NON-NLS-1$
+				connector, gson, new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
 		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
 		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
@@ -223,7 +225,7 @@ public class RestResourceTest {
 	 */
 	@Test
 	public void testGetPaginationLimitMaxSetWithoutLimit() throws CoreException {
-		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.GET, connector,
+		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.GET, connector, gson,
 				new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
 		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET");
@@ -234,7 +236,7 @@ public class RestResourceTest {
 		RestOperation get = r.get();
 		HttpMethod method = get.createMethod();
 		assertEquals("GET", method.getName());
-		assertEquals("/api/v12.5/my/url", method.getPath());
+		assertEquals("/server/api/v12.5/my/url", method.getPath());
 		assertEquals("limit=30", method.getQueryString());
 
 		headers.put(ITuleapHeaders.HEADER_X_PAGINATION_LIMIT_MAX, "10");
@@ -242,7 +244,7 @@ public class RestResourceTest {
 		get = r.get();
 		method = get.createMethod();
 		assertEquals("GET", method.getName());
-		assertEquals("/api/v12.5/my/url", method.getPath());
+		assertEquals("/server/api/v12.5/my/url", method.getPath());
 		assertEquals("limit=10", method.getQueryString());
 	}
 
@@ -255,7 +257,7 @@ public class RestResourceTest {
 	 */
 	@Test
 	public void testGetPaginationLimitMaxSetWithLimit() throws CoreException {
-		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.GET, connector,
+		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.GET, connector, gson,
 				new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
 		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET");
@@ -267,7 +269,7 @@ public class RestResourceTest {
 		RestOperation get = r.get();
 		HttpMethod method = get.createMethod();
 		assertEquals("GET", method.getName());
-		assertEquals("/api/v12.5/my/url", method.getPath());
+		assertEquals("/server/api/v12.5/my/url", method.getPath());
 		assertEquals("limit=30", method.getQueryString());
 
 		headers.put(ITuleapHeaders.HEADER_X_PAGINATION_LIMIT_MAX, "10");
@@ -275,7 +277,7 @@ public class RestResourceTest {
 		get = r.get();
 		method = get.createMethod();
 		assertEquals("GET", method.getName());
-		assertEquals("/api/v12.5/my/url", method.getPath());
+		assertEquals("/server/api/v12.5/my/url", method.getPath());
 		assertEquals("limit=10", method.getQueryString());
 	}
 
@@ -288,7 +290,7 @@ public class RestResourceTest {
 	 */
 	@Test
 	public void testGetPaginationLimitMaxNotSetSizeSet() throws CoreException {
-		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.GET, connector,
+		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.GET, connector, gson,
 				new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
 		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET");
@@ -298,7 +300,7 @@ public class RestResourceTest {
 		RestOperation get = r.get();
 		HttpMethod method = get.createMethod();
 		assertEquals("GET", method.getName());
-		assertEquals("/api/v12.5/my/url", method.getPath());
+		assertEquals("/server/api/v12.5/my/url", method.getPath());
 		assertEquals("limit=" + ITuleapHeaders.DEFAULT_PAGINATION_LIMIT, method.getQueryString());
 	}
 
@@ -310,7 +312,7 @@ public class RestResourceTest {
 	 */
 	@Test
 	public void testGetPaginationSizeNotSet() throws CoreException {
-		RestResource r = new RestResource("/server", "v12.5", "/my/url", RestResource.GET, connector,
+		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.GET, connector, gson,
 				new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
 		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET");
@@ -319,7 +321,7 @@ public class RestResourceTest {
 		RestOperation get = r.get();
 		HttpMethod method = get.createMethod();
 		assertEquals("GET", method.getName());
-		assertEquals("/api/v12.5/my/url", method.getPath());
+		assertEquals("/server/api/v12.5/my/url", method.getPath());
 		assertEquals("", method.getQueryString());
 
 		headers.put(ITuleapHeaders.HEADER_X_PAGINATION_LIMIT_MAX, "10");
@@ -327,7 +329,7 @@ public class RestResourceTest {
 		get = r.get();
 		method = get.createMethod();
 		assertEquals("GET", method.getName());
-		assertEquals("/api/v12.5/my/url", method.getPath());
+		assertEquals("/server/api/v12.5/my/url", method.getPath());
 		assertEquals("", method.getQueryString());
 	}
 
@@ -337,5 +339,6 @@ public class RestResourceTest {
 	@Before
 	public void setUp() {
 		connector = new MockRestConnector();
+		gson = new Gson();
 	}
 }

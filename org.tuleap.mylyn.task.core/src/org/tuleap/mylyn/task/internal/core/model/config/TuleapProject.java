@@ -62,17 +62,26 @@ public class TuleapProject implements Serializable {
 	/**
 	 * Map of trackers indexed by their IDs.
 	 */
-	private final Map<Integer, TuleapTracker> trackersById = Maps.newHashMap();
+	private final Map<Integer, TuleapTracker> trackersById;
 
 	/**
 	 * Map of plannings indexed by their IDs.
 	 */
-	private final Map<Integer, TuleapPlanning> planningsById = Maps.newHashMap();
+	private final Map<Integer, TuleapPlanning> planningsById;
 
 	/**
 	 * User groups indexed by id.
 	 */
-	private final Map<Integer, TuleapUserGroup> userGroupsById = Maps.newHashMap();
+	private final Map<Integer, TuleapUserGroup> userGroupsById;
+
+	/**
+	 * The constructor.
+	 */
+	public TuleapProject() {
+		trackersById = Maps.newHashMap();
+		planningsById = Maps.newHashMap();
+		userGroupsById = Maps.newHashMap();
+	}
 
 	/**
 	 * The constructor.
@@ -83,6 +92,7 @@ public class TuleapProject implements Serializable {
 	 *            The identifier of the project
 	 */
 	public TuleapProject(String projectName, int projectIdentifier) {
+		this();
 		this.label = projectName;
 		this.id = projectIdentifier;
 	}

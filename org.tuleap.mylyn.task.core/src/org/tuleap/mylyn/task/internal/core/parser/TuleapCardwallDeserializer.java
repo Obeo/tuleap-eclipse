@@ -39,7 +39,7 @@ public class TuleapCardwallDeserializer implements JsonDeserializer<TuleapCardwa
 	 *      com.google.gson.JsonDeserializationContext)
 	 */
 	public TuleapCardwall deserialize(JsonElement rootJsonElement, Type type,
-			JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+			JsonDeserializationContext context) throws JsonParseException {
 		JsonObject jsonObject = rootJsonElement.getAsJsonObject();
 
 		JsonArray columnsList = jsonObject.get(ITuleapConstants.COLUMNS).getAsJsonArray();
@@ -62,7 +62,7 @@ public class TuleapCardwallDeserializer implements JsonDeserializer<TuleapCardwa
 					.getAsJsonArray();
 			for (JsonElement cardElement : cardsArray) {
 				TuleapCard card = new TuleapCardDeserializer().deserialize(cardElement, TuleapCard.class,
-						null);
+						context);
 				swimlane.addCard(card);
 			}
 			cardwall.addSwimlane(swimlane);

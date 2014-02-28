@@ -33,12 +33,14 @@ import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
  * This class is used to deserialize a JSON representation of a Tuleap object, for objects that have a tracker
  * ID (top-plannings, for instance, have no tracker ID).
  * 
+ * @param <U>
+ *            The type of ID of the element to deserialize.
  * @param <T>
  *            The type of the agile element to deserialize.
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapConfigurableElement> extends AbstractDetailedElementDeserializer<T> {
+public abstract class AbstractTuleapDeserializer<U, T extends AbstractTuleapConfigurableElement<U>> extends AbstractDetailedElementDeserializer<U, T> {
 
 	/**
 	 * {@inheritDoc}
@@ -47,10 +49,10 @@ public abstract class AbstractTuleapDeserializer<T extends AbstractTuleapConfigu
 	 *      com.google.gson.JsonDeserializationContext)
 	 */
 	@Override
-	public T deserialize(JsonElement rootJsonElement, Type type,
-			JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+	public T deserialize(JsonElement rootJsonElement, Type type, JsonDeserializationContext context)
+			throws JsonParseException {
 		JsonObject jsonObject = rootJsonElement.getAsJsonObject();
-		T pojo = super.deserialize(rootJsonElement, type, jsonDeserializationContext);
+		T pojo = super.deserialize(rootJsonElement, type, context);
 		JsonElement jsonTrackerRef = jsonObject.get(ITuleapConstants.JSON_TRACKER);
 		TuleapReference trackerRef = new Gson().fromJson(jsonTrackerRef, TuleapReference.class);
 		pojo.setTracker(trackerRef);

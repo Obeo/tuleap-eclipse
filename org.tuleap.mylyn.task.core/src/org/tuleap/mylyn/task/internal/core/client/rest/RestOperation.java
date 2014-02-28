@@ -13,6 +13,7 @@ package org.tuleap.mylyn.task.internal.core.client.rest;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
 import java.io.UnsupportedEncodingException;
@@ -40,7 +41,6 @@ import org.tuleap.mylyn.task.internal.core.model.TuleapDebugPart;
 import org.tuleap.mylyn.task.internal.core.model.TuleapErrorMessage;
 import org.tuleap.mylyn.task.internal.core.model.TuleapErrorPart;
 import org.tuleap.mylyn.task.internal.core.model.TuleapToken;
-import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
@@ -67,6 +67,16 @@ public class RestOperation {
 	 * String to send in the body when no data needs to be in the request body.
 	 */
 	private static final String EMPTY_BODY = ""; //$NON-NLS-1$
+
+	/**
+	 * JSON content type.
+	 */
+	private static final String CONTENT_TYPE_JSON = "application/json"; //$NON-NLS-1$
+
+	/**
+	 * UTF-8 encoding.
+	 */
+	private static final String ENCODING_UTF8 = "UTF-8"; //$NON-NLS-1$
 
 	/**
 	 * The full URL.
@@ -109,6 +119,11 @@ public class RestOperation {
 	protected final Method method;
 
 	/**
+	 * The {@link Gson} to use.
+	 */
+	private final Gson gson;
+
+	/**
 	 * Constructor.
 	 * 
 	 * @param fullUrl
@@ -117,16 +132,20 @@ public class RestOperation {
 	 *            the connector to use to "task to" the server.
 	 * @param method
 	 *            the HTTP method to use.
+	 * @param gson
+	 *            The {@link Gson} to use.
 	 * @param logger
 	 *            The logger to use.
 	 */
-	public RestOperation(String fullUrl, IRestConnector connector, Method method, ILog logger) {
+	public RestOperation(String fullUrl, IRestConnector connector, Method method, Gson gson, ILog logger) {
 		Assert.isNotNull(fullUrl);
 		this.fullUrl = fullUrl;
 		Assert.isNotNull(connector);
 		this.connector = connector;
 		Assert.isNotNull(method);
 		this.method = method;
+		Assert.isNotNull(gson);
+		this.gson = gson;
 		Assert.isNotNull(logger);
 		this.logger = logger;
 	}
@@ -138,12 +157,14 @@ public class RestOperation {
 	 *            The full URL of the resource to connect to.
 	 * @param connector
 	 *            the connector to use to "task to" the server.
+	 * @param gson
+	 *            The {@link Gson} to use.
 	 * @param logger
 	 *            The logger to use.
 	 * @return a new REST operation for the GET method.
 	 */
-	public static RestOperation get(String fullUrl, IRestConnector connector, ILog logger) {
-		return new RestOperation(fullUrl, connector, Method.GET, logger);
+	public static RestOperation get(String fullUrl, IRestConnector connector, Gson gson, ILog logger) {
+		return new RestOperation(fullUrl, connector, Method.GET, gson, logger);
 	}
 
 	/**
@@ -153,12 +174,14 @@ public class RestOperation {
 	 *            The full URL of the resource to connect to.
 	 * @param connector
 	 *            the connector to use to "task to" the server.
+	 * @param gson
+	 *            The {@link Gson} to use.
 	 * @param logger
 	 *            The logger to use.
 	 * @return a new REST operation for the PUT method.
 	 */
-	public static RestOperation put(String fullUrl, IRestConnector connector, ILog logger) {
-		return new RestOperation(fullUrl, connector, Method.PUT, logger);
+	public static RestOperation put(String fullUrl, IRestConnector connector, Gson gson, ILog logger) {
+		return new RestOperation(fullUrl, connector, Method.PUT, gson, logger);
 	}
 
 	/**
@@ -168,12 +191,14 @@ public class RestOperation {
 	 *            The full URL of the resource to connect to.
 	 * @param connector
 	 *            the connector to use to "task to" the server.
+	 * @param gson
+	 *            The {@link Gson} to use.
 	 * @param logger
 	 *            The logger to use.
 	 * @return a new REST operation for the POST method.
 	 */
-	public static RestOperation post(String fullUrl, IRestConnector connector, ILog logger) {
-		return new RestOperation(fullUrl, connector, Method.POST, logger);
+	public static RestOperation post(String fullUrl, IRestConnector connector, Gson gson, ILog logger) {
+		return new RestOperation(fullUrl, connector, Method.POST, gson, logger);
 	}
 
 	/**
@@ -183,12 +208,14 @@ public class RestOperation {
 	 *            The full URL of the resource to connect to.
 	 * @param connector
 	 *            the connector to use to "task to" the server.
+	 * @param gson
+	 *            The {@link Gson} to use.
 	 * @param logger
 	 *            The logger to use.
 	 * @return a new REST operation for the OPTIONS method.
 	 */
-	public static RestOperation options(String fullUrl, IRestConnector connector, ILog logger) {
-		return new RestOperation(fullUrl, connector, Method.OPTIONS, logger);
+	public static RestOperation options(String fullUrl, IRestConnector connector, Gson gson, ILog logger) {
+		return new RestOperation(fullUrl, connector, Method.OPTIONS, gson, logger);
 	}
 
 	/**
@@ -198,12 +225,14 @@ public class RestOperation {
 	 *            The full URL of the resource to connect to.
 	 * @param connector
 	 *            the connector to use to "task to" the server.
+	 * @param gson
+	 *            The {@link Gson} to use.
 	 * @param logger
 	 *            The logger to use.
 	 * @return a new REST operation for the DELETE method.
 	 */
-	public static RestOperation delete(String fullUrl, IRestConnector connector, ILog logger) {
-		return new RestOperation(fullUrl, connector, Method.DELETE, logger);
+	public static RestOperation delete(String fullUrl, IRestConnector connector, Gson gson, ILog logger) {
+		return new RestOperation(fullUrl, connector, Method.DELETE, gson, logger);
 	}
 
 	/**
@@ -217,12 +246,13 @@ public class RestOperation {
 			StringRequestEntity entity;
 			try {
 				if (body == null) {
-					entity = new StringRequestEntity(EMPTY_BODY, "application/json", "UTF-8");
+					entity = new StringRequestEntity(EMPTY_BODY, CONTENT_TYPE_JSON, ENCODING_UTF8);
 				} else {
-					entity = new StringRequestEntity(body, "application/json", "UTF-8");
+					entity = new StringRequestEntity(body, CONTENT_TYPE_JSON, ENCODING_UTF8);
 				}
 			} catch (UnsupportedEncodingException e) {
-				logger.log(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, "Invalid encoding"));
+				logger.log(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, TuleapMylynTasksMessages
+						.getString(TuleapMylynTasksMessagesKeys.encodingUtf8NotSUpported)));
 				return null;
 			}
 			((EntityEnclosingMethod)m).setRequestEntity(entity);
@@ -309,7 +339,7 @@ public class RestOperation {
 	 */
 	protected void checkServerError(ServerResponse response) throws CoreException {
 		if (!response.isOk()) {
-			TuleapErrorMessage message = new TuleapJsonParser().getErrorMessage(response.getBody());
+			TuleapErrorMessage message = gson.fromJson(response.getBody(), TuleapErrorMessage.class);
 			TuleapErrorPart errorPart = null;
 			TuleapDebugPart debugPart = null;
 			if (message != null) {

@@ -23,7 +23,7 @@ import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public class TuleapArtifactDeserializer extends AbstractTuleapDeserializer<TuleapArtifact> {
+public class TuleapArtifactDeserializer extends AbstractTuleapDeserializer<Integer, TuleapArtifact> {
 
 	/**
 	 * {@inheritDoc}.
@@ -40,11 +40,13 @@ public class TuleapArtifactDeserializer extends AbstractTuleapDeserializer<Tulea
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.parser.AbstractProjectElementDeserializer#getPrototype()
+	 * @see org.tuleap.mylyn.task.internal.core.parser.AbstractProjectElementDeserializer#getPrototype(String)
 	 */
 	@Override
-	protected TuleapArtifact getPrototype() {
-		return new TuleapArtifact();
+	protected TuleapArtifact getPrototype(String jsonId) {
+		TuleapArtifact result = new TuleapArtifact();
+		result.setId(Integer.valueOf(jsonId));
+		return result;
 	}
 
 }

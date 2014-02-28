@@ -1,0 +1,72 @@
+{
+    "id": 9,
+    "uri": "trackers/9",
+    "label": "Bugs",
+    "item_name": "bugs",
+    "description": "The description of the bugs tracker",
+    "html_url": "localhost: 3001/plugins/tracker/?tracker=9",
+    "project": {
+        "id": 3,
+        "uri": "projects/3"
+    },
+    "fields": [
+        {
+            "field_id": 0,
+            "label": "Status",
+            "name": "status_id",
+            "type": "sb",
+            "values": [
+                {
+                    "id": 334,
+                    "label": "New"
+                },
+                {
+                    "id": 337,
+                    "label": "Resolved"
+                },
+                {
+                    "id": 338,
+                    "label": "Closed"
+                }
+            ],
+            "bindings": {
+                "type": "static",
+                "list": []
+            },
+            "permissions": [
+                "read",
+                "update",
+                "create"
+            ]
+        }
+    ],
+    "semantics": {
+        "title": {
+            "field_id": 1
+        },
+        "status": {
+            "field_id": 0,
+            "value_ids": []
+        }
+    },
+    "workflow": {
+        "field_id": 0,
+        "is_used": "1",
+        "rules": {
+            "dates": [],
+            "lists": []
+        },
+        "transitions": [
+            {
+                "from_id": null,
+                "to_id": 0
+            }
+        ]
+    },
+    "resources": [
+        {
+            "type": "reports",
+            "uri": "trackers/9/tracker_reports"
+        }
+    ]
+}

@@ -11,10 +11,8 @@
 package org.tuleap.mylyn.task.internal.ui.repository;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
@@ -24,13 +22,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.tuleap.mylyn.task.internal.core.client.rest.ITuleapAPIVersions;
-import org.tuleap.mylyn.task.internal.core.client.rest.RestResourceFactory;
-import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
-import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestConnector;
-import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
-import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapParser;
-import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
+import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.ui.TuleapTasksUIPlugin;
 import org.tuleap.mylyn.task.internal.ui.util.ITuleapUIConstants;
@@ -187,23 +179,9 @@ public class TuleapRepositorySettingsPage extends AbstractRepositorySettingsPage
 		public TuleapRepositoryValidator(TaskRepository taskRepository) {
 			final AbstractWebLocation location = new TaskRepositoryLocationFactory()
 					.createWebLocation(taskRepository);
-
-			ILog logger = Platform.getLog(Platform.getBundle(TuleapTasksUIPlugin.PLUGIN_ID));
-			TuleapSoapParser tuleapSoapParser = new TuleapSoapParser();
-
-			TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(location, tuleapSoapParser);
-
-			TuleapJsonParser jsonParser = new TuleapJsonParser();
-
-			TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(location, logger);
-			RestResourceFactory resourceFactory = new RestResourceFactory(location.getUrl(),
-					ITuleapAPIVersions.BEST_VERSION, tuleapRestConnector, TuleapTasksUIPlugin.getDefault()
-							.getLog());
-			TuleapRestClient tuleapRestClient = new TuleapRestClient(resourceFactory, jsonParser,
-					taskRepository, logger);
-
-			this.tuleapValidator = new TuleapValidator(location, tuleapSoapClient, tuleapRestClient,
-					taskRepository);
+			TuleapClientManager manager = new TuleapClientManager();
+			this.tuleapValidator = new TuleapValidator(location, manager.getSoapClient(taskRepository),
+					manager.getRestClient(taskRepository), taskRepository);
 		}
 
 		/**

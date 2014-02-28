@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.tests.server;
 
+import com.google.gson.Gson;
+
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -27,7 +29,7 @@ import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestConnector;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
-import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
+import org.tuleap.mylyn.task.internal.core.parser.TuleapGsonProvider;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.tests.AbstractTuleapTests;
 import org.tuleap.mylyn.task.internal.tests.TestLogger;
@@ -46,6 +48,8 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 
 	private AbstractWebLocation location;
 
+	private Gson gson;
+
 	/**
 	 * We will try to connect to the server with valid credentials.
 	 */
@@ -53,11 +57,9 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 	public void testValidAuthentication() {
 		TestLogger logger = new TestLogger();
 		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(location, logger);
-		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
-		RestResourceFactory restResourceFactory = new RestResourceFactory(location.getUrl(), "v3.14",
-				tuleapRestConnector, new TestLogger());
-		TuleapRestClient tuleapServer = new TuleapRestClient(restResourceFactory, tuleapJsonParser,
-				this.repository, logger);
+		RestResourceFactory restResourceFactory = new RestResourceFactory("v3.14", tuleapRestConnector, gson,
+				new TestLogger());
+		TuleapRestClient tuleapServer = new TuleapRestClient(restResourceFactory, gson, this.repository);
 		try {
 			IStatus connectionStatus = tuleapServer.validateConnection(new NullProgressMonitor());
 			assertEquals(IStatus.OK, connectionStatus.getSeverity());
@@ -77,11 +79,9 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 				"admin", "wrong"), false); //$NON-NLS-1$ //$NON-NLS-2$
 		TestLogger logger = new TestLogger();
 		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(location, logger);
-		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
-		RestResourceFactory restResourceFactory = new RestResourceFactory(location.getUrl(), "v3.14",
-				tuleapRestConnector, new TestLogger());
-		TuleapRestClient tuleapServer = new TuleapRestClient(restResourceFactory, tuleapJsonParser,
-				this.repository, logger);
+		RestResourceFactory restResourceFactory = new RestResourceFactory("v3.14", tuleapRestConnector, gson,
+				new TestLogger());
+		TuleapRestClient tuleapServer = new TuleapRestClient(restResourceFactory, gson, this.repository);
 		try {
 			tuleapServer.validateConnection(new NullProgressMonitor());
 			fail("A CoreException should have been thrown"); //$NON-NLS-1$
@@ -98,11 +98,9 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 	public void testGetMilestones() {
 		TestLogger logger = new TestLogger();
 		TuleapRestConnector restConnector = new TuleapRestConnector(location, logger);
-		TuleapJsonParser tuleapJsonParser = new TuleapJsonParser();
-		RestResourceFactory restResourceFactory = new RestResourceFactory(location.getUrl(), "v3.14",
-				restConnector, new TestLogger());
-		TuleapRestClient tuleapServer = new TuleapRestClient(restResourceFactory, tuleapJsonParser,
-				this.repository, logger);
+		RestResourceFactory restResourceFactory = new RestResourceFactory("v3.14", restConnector, gson,
+				new TestLogger());
+		TuleapRestClient tuleapServer = new TuleapRestClient(restResourceFactory, gson, this.repository);
 		try {
 			List<TuleapMilestone> milestoneItems = tuleapServer.getSubMilestones(200, null);
 			assertEquals(3, milestoneItems.size());
@@ -140,5 +138,6 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 		credentials = new AuthenticationCredentials("admin", "password"); //$NON-NLS-1$//$NON-NLS-2$
 		taskRepository.setCredentials(AuthenticationType.HTTP, credentials, true);
 		location = new TaskRepositoryLocationFactory().createWebLocation(taskRepository);
+		gson = TuleapGsonProvider.defaultGson();
 	}
 }

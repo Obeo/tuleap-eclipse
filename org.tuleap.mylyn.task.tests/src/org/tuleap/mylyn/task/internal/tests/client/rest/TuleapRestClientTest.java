@@ -11,6 +11,7 @@
 package org.tuleap.mylyn.task.internal.tests.client.rest;
 
 import com.google.common.collect.Maps;
+import com.google.gson.Gson;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ import org.tuleap.mylyn.task.internal.core.client.rest.RestResourceFactory;
 import org.tuleap.mylyn.task.internal.core.client.rest.ServerResponse;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.model.TuleapToken;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapPlanning;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapUser;
 import org.tuleap.mylyn.task.internal.core.model.data.ArtifactReference;
 import org.tuleap.mylyn.task.internal.core.model.data.AttachmentFieldValue;
@@ -41,15 +43,15 @@ import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCard;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapStatus;
-import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
+import org.tuleap.mylyn.task.internal.core.parser.TuleapGsonProvider;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.tests.TestLogger;
 import org.tuleap.mylyn.task.internal.tests.client.rest.MockRestConnector.ServerRequest;
 import org.tuleap.mylyn.task.internal.tests.parser.ParserUtil;
-import org.tuleap.mylyn.task.internal.tests.parser.TuleapJsonParserTest;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * Tests of {@link TuleapRestClient}.
@@ -65,7 +67,7 @@ public class TuleapRestClientTest {
 
 	private MockRestConnector connector;
 
-	private TuleapJsonParser jsonParser;
+	private Gson gson;
 
 	private TaskRepository repository;
 
@@ -82,7 +84,7 @@ public class TuleapRestClientTest {
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonMilestone, respHeaders);
 		connector.setResponse(response);
 		TuleapMilestone milestone = client.getMilestone(200, null);
-		TuleapJsonParserTest.checkRelease200(milestone);
+		checkRelease200(milestone);
 
 		// Let's check the requests that have been sent.
 		List<ServerRequest> requestsSent = connector.getRequestsSent();
@@ -144,9 +146,9 @@ public class TuleapRestClientTest {
 	@Ignore("Fix me when cardwalls are back in the game")
 	public void testRetrieveMilestoneWithCardwall() throws CoreException, ParseException {
 		MockListRestConnector listConnector = new MockListRestConnector();
-		restResourceFactory = new RestResourceFactory(serverUrl, apiVersion, listConnector, new TestLogger());
+		restResourceFactory = new RestResourceFactory(apiVersion, listConnector, gson, new TestLogger());
 		listConnector.setResourceFactory(restResourceFactory);
-		client = new TuleapRestClient(restResourceFactory, jsonParser, repository, null);
+		client = new TuleapRestClient(restResourceFactory, gson, repository);
 
 		String sprint250 = ParserUtil.loadFile("/milestones/sprint250.json"); //$NON-NLS-1$
 
@@ -205,7 +207,7 @@ public class TuleapRestClientTest {
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, userStory, respHeaders);
 		connector.setResponse(response);
 		TuleapBacklogItem bi = client.getBacklogItem(350, null);
-		TuleapJsonParserTest.checkUserStory350(bi);
+		checkUserStory350(bi);
 
 		// Let's check the requests that have been sent.
 		List<ServerRequest> requestsSent = connector.getRequestsSent();
@@ -523,8 +525,7 @@ public class TuleapRestClientTest {
 	@Test
 	public void testAutomaticLoginWhenNoTokenIsKnown() throws CoreException {
 		MockListRestConnector listConnector = new MockListRestConnector();
-		this.restResourceFactory = new RestResourceFactory(serverUrl, apiVersion, listConnector,
-				new TestLogger());
+		this.restResourceFactory = new RestResourceFactory(apiVersion, listConnector, gson, new TestLogger());
 		this.repository = new TaskRepository(ITuleapConstants.CONNECTOR_KIND, serverUrl);
 		this.repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("admin",
 				"password"), true);
@@ -553,7 +554,7 @@ public class TuleapRestClientTest {
 		listConnector.addServerResponse(milestoneOptionsResponse);
 		listConnector.addServerResponse(milestoneResponse);
 		// Need to create a new client to use the specific connector.
-		client = new TuleapRestClient(restResourceFactory, jsonParser, repository, null);
+		client = new TuleapRestClient(restResourceFactory, gson, repository);
 
 		TuleapMilestone milestone = client.getMilestone(200, null);
 		assertNotNull(milestone);
@@ -827,12 +828,248 @@ public class TuleapRestClientTest {
 	@Before
 	public void setUp() {
 		connector = new MockRestConnector();
-		this.restResourceFactory = new RestResourceFactory(serverUrl, apiVersion, connector, new TestLogger());
+		gson = TuleapGsonProvider.defaultGson();
+		this.restResourceFactory = new RestResourceFactory(apiVersion, connector, gson, new TestLogger());
 		this.repository = new TaskRepository(ITuleapConstants.CONNECTOR_KIND, serverUrl);
 		this.repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("admin",
 				"password"), true);
 		connector.setResourceFactory(restResourceFactory);
-		jsonParser = new TuleapJsonParser();
-		client = new TuleapRestClient(restResourceFactory, jsonParser, repository, null);
+		client = new TuleapRestClient(restResourceFactory, gson, repository);
+	}
+
+	/**
+	 * Checks that the given backlog item corresponds to epic 301.
+	 * 
+	 * @param item
+	 *            The backlog item
+	 */
+	public static void checkPlanning400(TuleapPlanning item) {
+		assertEquals(400, item.getId().intValue());
+		assertEquals(3, item.getProject().getId());
+		assertEquals("projects/3", item.getProject().getUri());
+		assertEquals("Releases Planning", item.getLabel());
+		assertEquals("plannings/400", item.getUri());
+		assertEquals(901, item.getMilestoneTracker().getId());
+		assertEquals("trackers/901", item.getMilestoneTracker().getUri());
+		TuleapReference[] trackers = item.getBacklogTrackers();
+		assertEquals(1, trackers.length);
+		TuleapReference trackerRef = trackers[0];
+		assertEquals(801, trackerRef.getId());
+		assertEquals("trackers/801", trackerRef.getUri());
+		assertEquals("plannings/400/milestones", item.getMilestonesUri());
+		assertNull(item.getCardwallConfigurationUri()); // Will have to change when cardwalls are activated
+	}
+
+	/**
+	 * Checks that the given backlog item corresponds to epic 301.
+	 * 
+	 * @param item
+	 *            The backlog item
+	 */
+	public static void checkPlanning401(TuleapPlanning item) {
+		assertEquals(401, item.getId().intValue());
+		assertEquals(3, item.getProject().getId());
+		assertEquals("projects/3", item.getProject().getUri());
+		assertEquals("Sprints Planning", item.getLabel());
+		assertEquals("plannings/401", item.getUri());
+		assertEquals(902, item.getMilestoneTracker().getId());
+		assertEquals("trackers/902", item.getMilestoneTracker().getUri());
+		TuleapReference[] trackers = item.getBacklogTrackers();
+		assertEquals(1, trackers.length);
+		TuleapReference trackerRef = trackers[0];
+		assertEquals(802, trackerRef.getId());
+		assertEquals("trackers/802", trackerRef.getUri());
+		assertEquals("plannings/401/milestones", item.getMilestonesUri());
+		assertNull(item.getCardwallConfigurationUri()); // Will have to change when cardwalls are activated
+	}
+
+	/**
+	 * Checks that the given backlog item corresponds to epic 301.
+	 * 
+	 * @param item
+	 *            The backlog item
+	 * @throws ParseException
+	 *             if the test is badly configured
+	 */
+	public static void checkEpic301(TuleapBacklogItem item) throws ParseException {
+		assertEquals(301, item.getId().intValue());
+		assertEquals(301, item.getArtifact().getId());
+		assertEquals("artifacts/301", item.getArtifact().getUri());
+		assertEquals(801, item.getArtifact().getTracker().getId());
+		assertEquals("trackers/801", item.getArtifact().getTracker().getUri());
+		assertEquals(302, item.getParent().getId());
+		assertEquals("backlog_items/302", item.getParent().getUri());
+		assertEquals(801, item.getParent().getTracker().getId());
+		assertEquals("trackers/801", item.getParent().getTracker().getUri());
+		assertEquals(3, item.getProject().getId());
+		assertEquals("projects/3", item.getProject().getUri());
+		assertEquals("Another important Epic", item.getLabel());
+		assertEquals("backlog_items/301", item.getUri());
+		assertEquals("backlog_items?id=301&group_id=3", item.getHtmlUrl());
+		assertEquals(1, item.getSubmittedBy());
+		assertEquals(ParserUtil.getUTCDate(2013, 8, 23, 11, 44, 18, 963), item.getSubmittedOn());
+		assertEquals(ParserUtil.getUTCDate(2013, 8, 24, 15, 33, 18, 523), item.getLastModifiedDate());
+		assertEquals("40.5", item.getInitialEffort());
+		assertEquals(TuleapStatus.Open, item.getStatus());
+		assertEquals("Epics", item.getType());
+	}
+
+	/**
+	 * Checks that the given backlog item corresponds to epic 304.
+	 * 
+	 * @param item
+	 *            The backlog item
+	 * @throws ParseException
+	 *             if the test is badly configured
+	 */
+	public static void checkEpic304(TuleapBacklogItem item) throws ParseException {
+		assertEquals(304, item.getId().intValue());
+		assertEquals(304, item.getArtifact().getId());
+		assertEquals("artifacts/304", item.getArtifact().getUri());
+		assertEquals(801, item.getArtifact().getTracker().getId());
+		assertEquals("trackers/801", item.getArtifact().getTracker().getUri());
+		assertEquals(305, item.getParent().getId());
+		assertEquals("backlog_items/305", item.getParent().getUri());
+		assertEquals(801, item.getParent().getTracker().getId());
+		assertEquals("trackers/801", item.getParent().getTracker().getUri());
+		assertEquals(3, item.getProject().getId());
+		assertEquals("projects/3", item.getProject().getUri());
+		assertEquals("Another important Epic", item.getLabel());
+		assertEquals("backlog_items/301", item.getUri());
+		assertEquals("backlog_items?id=301&group_id=3", item.getHtmlUrl());
+		assertEquals(1, item.getSubmittedBy());
+		assertEquals(ParserUtil.getUTCDate(2013, 8, 23, 11, 44, 18, 963), item.getSubmittedOn());
+		assertEquals(ParserUtil.getUTCDate(2013, 8, 24, 15, 33, 18, 523), item.getLastModifiedDate());
+		assertNull(item.getInitialEffort());
+		assertEquals(TuleapStatus.Open, item.getStatus());
+	}
+
+	/**
+	 * Checks that the given backlog item corresponds to epic 300.
+	 * 
+	 * @param item
+	 *            The backlog item The backlog item
+	 * @throws ParseException
+	 *             if the test is badly configured
+	 */
+	public static void checkEpic300(TuleapBacklogItem item) throws ParseException {
+		assertEquals(300, item.getId().intValue());
+		assertEquals(300, item.getArtifact().getId());
+		assertEquals("artifacts/300", item.getArtifact().getUri());
+		assertEquals(801, item.getArtifact().getTracker().getId());
+		assertEquals("trackers/801", item.getArtifact().getTracker().getUri());
+		assertEquals(301, item.getParent().getId());
+		assertEquals("backlog_items/301", item.getParent().getUri());
+		assertEquals(801, item.getParent().getTracker().getId());
+		assertEquals("trackers/801", item.getParent().getTracker().getUri());
+		assertEquals(3, item.getProject().getId());
+		assertEquals("projects/3", item.getProject().getUri());
+		assertEquals("An important Epic", item.getLabel());
+		assertEquals("backlog_items/300", item.getUri());
+		assertEquals("backlog_items?id=300&group_id=3", item.getHtmlUrl());
+		assertEquals(1, item.getSubmittedBy());
+		assertEquals(ParserUtil.getUTCDate(2013, 8, 23, 11, 44, 18, 963), item.getSubmittedOn());
+		assertEquals(ParserUtil.getUTCDate(2013, 8, 24, 15, 33, 18, 523), item.getLastModifiedDate());
+		assertEquals("30", item.getInitialEffort());
+		assertEquals(TuleapStatus.Closed, item.getStatus());
+		assertEquals("Epics", item.getType());
+	}
+
+	/**
+	 * Checks that the given backlog item corresponds to user story 350.
+	 * 
+	 * @param item
+	 *            The backlog item
+	 * @throws ParseException
+	 *             if the test is badly configured
+	 */
+	public static void checkUserStory350(TuleapBacklogItem item) throws ParseException {
+		assertEquals(350, item.getId().intValue());
+		assertEquals(350, item.getArtifact().getId());
+		assertEquals("artifacts/350", item.getArtifact().getUri());
+		assertEquals(802, item.getArtifact().getTracker().getId());
+		assertEquals("trackers/802", item.getArtifact().getTracker().getUri());
+		assertEquals(351, item.getParent().getId());
+		assertEquals("backlog_items/351", item.getParent().getUri());
+		assertEquals(802, item.getParent().getTracker().getId());
+		assertEquals("trackers/802", item.getParent().getTracker().getUri());
+		assertEquals(3, item.getProject().getId());
+		assertEquals("projects/3", item.getProject().getUri());
+		assertEquals("An important User Story", item.getLabel());
+		assertEquals("backlog_items/350", item.getUri());
+		assertEquals("backlog_items?id=350&group_id=3", item.getHtmlUrl());
+		assertEquals(1, item.getSubmittedBy());
+		assertEquals(ParserUtil.getUTCDate(2013, 8, 23, 11, 44, 18, 963), item.getSubmittedOn());
+		assertEquals(ParserUtil.getUTCDate(2013, 8, 24, 15, 33, 18, 523), item.getLastModifiedDate());
+		assertEquals("5", item.getInitialEffort());
+		assertEquals(TuleapStatus.Open, item.getStatus());
+		assertEquals("User stories", item.getType());
+	}
+
+	/**
+	 * Checks the content of the given milestone corresponds to release 200. Mutualized between several tests.
+	 * 
+	 * @param tuleapMilestone
+	 * @throws ParseException
+	 */
+	public static void checkRelease200(TuleapMilestone tuleapMilestone) throws ParseException {
+		assertEquals(200, tuleapMilestone.getId().intValue());
+		assertEquals(200, tuleapMilestone.getArtifact().getId());
+		assertEquals("artifacts/200", tuleapMilestone.getArtifact().getUri());
+		assertEquals(901, tuleapMilestone.getArtifact().getTracker().getId());
+		assertEquals("trackers/901", tuleapMilestone.getArtifact().getTracker().getUri());
+		assertEquals(201, tuleapMilestone.getParent().getId());
+		assertEquals("milestones/201", tuleapMilestone.getParent().getUri());
+		assertEquals(901, tuleapMilestone.getParent().getTracker().getId());
+		assertEquals("trackers/901", tuleapMilestone.getParent().getTracker().getUri());
+		assertEquals(3, tuleapMilestone.getProject().getId());
+		assertEquals("projects/3", tuleapMilestone.getProject().getUri());
+		assertEquals("Release 0.9", tuleapMilestone.getLabel()); //$NON-NLS-1$
+		assertEquals("milestones/200", tuleapMilestone.getUri()); //$NON-NLS-1$
+		assertNull(tuleapMilestone.getHtmlUrl());
+		assertEquals(1, tuleapMilestone.getSubmittedBy());
+		assertEquals(ParserUtil.getUTCDate(2013, 8, 23, 11, 44, 18, 963), tuleapMilestone.getSubmittedOn());
+		assertNull(tuleapMilestone.getLastModifiedDate());
+		assertEquals(ParserUtil.getUTCDate(2013, 8, 23, 11, 44, 18, 963), tuleapMilestone.getStartDate());
+		assertEquals(ParserUtil.getUTCDate(2013, 9, 23, 11, 44, 18, 963), tuleapMilestone.getEndDate());
+		assertEquals("100", tuleapMilestone.getCapacity());
+		assertEquals("Done", tuleapMilestone.getStatusValue());
+		assertEquals("milestones/200/milestones", tuleapMilestone.getSubMilestonesUri());
+		assertEquals("milestones/200/backlog", tuleapMilestone.getBacklogUri());
+		assertEquals("milestones/200/content", tuleapMilestone.getContentUri());
+	}
+
+	/**
+	 * Checks the content of the given milestone corresponds to release 201. Mutualized between several test
+	 * cases.
+	 * 
+	 * @param tuleapMilestone
+	 * @throws ParseException
+	 */
+	public static void checkRelease201(TuleapMilestone tuleapMilestone) throws ParseException {
+		assertNotNull(tuleapMilestone);
+
+		assertEquals(201, tuleapMilestone.getId().intValue());
+		assertEquals(201, tuleapMilestone.getArtifact().getId());
+		assertEquals("artifacts/201", tuleapMilestone.getArtifact().getUri());
+		assertEquals(901, tuleapMilestone.getArtifact().getTracker().getId());
+		assertEquals("trackers/901", tuleapMilestone.getArtifact().getTracker().getUri());
+		assertEquals(202, tuleapMilestone.getParent().getId());
+		assertEquals("milestones/202", tuleapMilestone.getParent().getUri());
+		assertEquals(901, tuleapMilestone.getParent().getTracker().getId());
+		assertEquals("trackers/901", tuleapMilestone.getParent().getTracker().getUri());
+		assertEquals(3, tuleapMilestone.getProject().getId());
+		assertEquals("projects/3", tuleapMilestone.getProject().getUri());
+		assertEquals("Release TU", tuleapMilestone.getLabel()); //$NON-NLS-1$
+		assertNull(tuleapMilestone.getLastModifiedDate());
+		assertEquals(ParserUtil.getUTCDate(2013, 9, 23, 11, 44, 18, 963), tuleapMilestone.getStartDate());
+		assertEquals(ParserUtil.getUTCDate(2013, 10, 23, 11, 44, 18, 963), tuleapMilestone.getEndDate());
+		assertEquals("75", tuleapMilestone.getCapacity());
+		assertEquals("milestones/201", tuleapMilestone.getUri()); //$NON-NLS-1$
+		assertNull(tuleapMilestone.getHtmlUrl());
+		assertEquals("Current", tuleapMilestone.getStatusValue());
+		assertEquals("milestones/201/milestones", tuleapMilestone.getSubMilestonesUri());
+		assertEquals("milestones/201/backlog", tuleapMilestone.getBacklogUri());
+		assertEquals("milestones/201/content", tuleapMilestone.getContentUri());
 	}
 }

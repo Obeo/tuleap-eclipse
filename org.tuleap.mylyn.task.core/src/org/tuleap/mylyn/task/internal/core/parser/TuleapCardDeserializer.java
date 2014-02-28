@@ -32,7 +32,7 @@ import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
  * 
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public class TuleapCardDeserializer extends AbstractTuleapDeserializer<TuleapCard> {
+public class TuleapCardDeserializer extends AbstractTuleapDeserializer<String, TuleapCard> {
 
 	/**
 	 * {@inheritDoc}.
@@ -95,11 +95,13 @@ public class TuleapCardDeserializer extends AbstractTuleapDeserializer<TuleapCar
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.tuleap.mylyn.task.internal.core.parser.AbstractProjectElementDeserializer#getPrototype()
+	 * @see org.tuleap.mylyn.task.internal.core.parser.AbstractProjectElementDeserializer#getPrototype(String)
 	 */
 	@Override
-	protected TuleapCard getPrototype() {
-		return new TuleapCard();
+	protected TuleapCard getPrototype(String jsonId) {
+		TuleapCard card = new TuleapCard();
+		card.setId(jsonId);
+		return card;
 	}
 
 }

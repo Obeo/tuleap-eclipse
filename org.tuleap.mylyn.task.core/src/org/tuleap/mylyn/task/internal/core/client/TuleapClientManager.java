@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.client;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,14 +24,12 @@ import org.eclipse.mylyn.tasks.core.IRepositoryListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
-import org.tuleap.mylyn.task.internal.core.client.rest.ITuleapAPIVersions;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestResourceFactory;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestConnector;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
-import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapConnector;
 import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapParser;
-import org.tuleap.mylyn.task.internal.core.parser.TuleapJsonParser;
+import org.tuleap.mylyn.task.internal.core.parser.TuleapGsonProvider;
 
 /**
  * The Tuleap client manager will create new clients for a given Mylyn tasks repository or find existing ones.
@@ -112,22 +112,19 @@ public class TuleapClientManager implements IRepositoryListener {
 
 		// Create the SOAP client
 		TuleapSoapParser tuleapSoapParser = new TuleapSoapParser();
-		TuleapSoapConnector tuleapSoapConnector = new TuleapSoapConnector(webLocation);
 
 		TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(webLocation, tuleapSoapParser);
 		this.soapClientCache.put(taskRepository, tuleapSoapClient);
 
 		// Create the REST client
-		TuleapJsonParser jsonParser = new TuleapJsonParser();
+		Gson gson = TuleapGsonProvider.defaultGson();
 		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(webLocation, logger);
 
 		restConnectors.add(tuleapRestConnector);
 
-		RestResourceFactory restResourceFactory = new RestResourceFactory(webLocation.getUrl(),
-				ITuleapAPIVersions.BEST_VERSION, tuleapRestConnector, TuleapCoreActivator.getDefault()
-						.getLog());
-		TuleapRestClient tuleapRestClient = new TuleapRestClient(restResourceFactory, jsonParser,
-				taskRepository, logger);
+		RestResourceFactory restResourceFactory = new RestResourceFactory(RestResourceFactory.BEST_VERSION,
+				tuleapRestConnector, gson, TuleapCoreActivator.getDefault().getLog());
+		TuleapRestClient tuleapRestClient = new TuleapRestClient(restResourceFactory, gson, taskRepository);
 		this.restClientCache.put(taskRepository, tuleapRestClient);
 	}
 

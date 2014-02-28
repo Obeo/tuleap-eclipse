@@ -11,12 +11,10 @@
 package org.tuleap.mylyn.task.internal.tests.parser;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
@@ -24,7 +22,7 @@ import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCard;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCardwall;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapColumn;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapSwimlane;
-import org.tuleap.mylyn.task.internal.core.parser.TuleapCardwallDeserializer;
+import org.tuleap.mylyn.task.internal.core.parser.TuleapGsonProvider;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -35,6 +33,8 @@ import static org.junit.Assert.assertNotNull;
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
 public class TuleapCardwallConfigurationDeserializerTests {
+
+	private Gson gson;
 
 	/**
 	 * Test the parsing of the cardwall status.
@@ -324,16 +324,13 @@ public class TuleapCardwallConfigurationDeserializerTests {
 	 * @return The Tuleap BacklogItem Type matching the content of the file
 	 */
 	private TuleapCardwall parse(String fileContent) {
-		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(TuleapCardwall.class, new TuleapCardwallDeserializer());
-
-		JsonParser jsonParser = new JsonParser();
-		JsonObject jsonObject = jsonParser.parse(fileContent).getAsJsonObject();
-
-		Gson gson = gsonBuilder.create();
-		TuleapCardwall tuleapCardwallConfiguration = gson.fromJson(jsonObject, TuleapCardwall.class);
-
+		TuleapCardwall tuleapCardwallConfiguration = gson.fromJson(fileContent, TuleapCardwall.class);
 		return tuleapCardwallConfiguration;
+	}
+
+	@Before
+	public void setUp() {
+		gson = TuleapGsonProvider.defaultGson();
 	}
 
 }

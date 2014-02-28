@@ -31,24 +31,9 @@ public final class TuleapUrlUtil {
 	private static final String PARAMETER_PART_SEPARATOR = "?"; //$NON-NLS-1$
 
 	/**
-	 * Part of the URL separating each parameter.
-	 */
-	private static final String PARAMETER_SEPARATOR = "&"; //$NON-NLS-1$
-
-	/**
-	 * The task separator.
-	 */
-	private static final String REPOSITORY_ELEMENT_ID_URL_SEPARATOR = "aid="; //$NON-NLS-1$
-
-	/**
 	 * The tracker separator.
 	 */
 	private static final String REPOSITORY_TRACKER_ID_URL_SEPARATOR = "tracker="; //$NON-NLS-1$
-
-	/**
-	 * The group id separator.
-	 */
-	private static final String REPOSITORY_PROJECT_ID_URL_SEPARATOR = "group_id="; //$NON-NLS-1$
 
 	/**
 	 * The constructor.

@@ -27,12 +27,14 @@ import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
  * This class is used to deserialize a JSON representation of a Tuleap object, for objects that have a tracker
  * ID (top-plannings, for instance, have no tracker ID).
  * 
+ * @param <U>
+ *            The type of ID of the element to deserialize.
  * @param <T>
  *            The type of the agile element to deserialize.
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public abstract class AbstractProjectElementDeserializer<T extends AbstractTuleapProjectElement> implements JsonDeserializer<T> {
+public abstract class AbstractProjectElementDeserializer<U, T extends AbstractTuleapProjectElement<U>> implements JsonDeserializer<T> {
 
 	/**
 	 * {@inheritDoc}
@@ -45,9 +47,9 @@ public abstract class AbstractProjectElementDeserializer<T extends AbstractTulea
 
 		JsonObject jsonObject = rootJsonElement.getAsJsonObject();
 
-		T pojo = getPrototype();
-
 		String id = jsonObject.get(ITuleapConstants.ID).getAsString();
+		T pojo = getPrototype(id);
+
 		JsonElement jsonElement = jsonObject.get(ITuleapConstants.LABEL);
 		if (jsonElement != null && !jsonElement.isJsonNull()) {
 			pojo.setLabel(jsonElement.getAsString());
@@ -59,7 +61,6 @@ public abstract class AbstractProjectElementDeserializer<T extends AbstractTulea
 			pojo.setUri(element.getAsString());
 		}
 
-		pojo.setId(id);
 		pojo.setProject(project);
 		return pojo;
 	}
@@ -67,8 +68,10 @@ public abstract class AbstractProjectElementDeserializer<T extends AbstractTulea
 	/**
 	 * Instantiates the relevant class of POJO to fill.
 	 * 
+	 * @param jsonId
+	 *            the value of the id found in JSON, as a string.
 	 * @return The POJO.
 	 */
-	protected abstract T getPrototype();
+	protected abstract T getPrototype(String jsonId);
 
 }

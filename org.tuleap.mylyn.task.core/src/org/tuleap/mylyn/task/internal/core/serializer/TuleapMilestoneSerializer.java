@@ -35,10 +35,8 @@ public class TuleapMilestoneSerializer extends AbstractProjectElementSerializer<
 	 *      com.google.gson.JsonSerializationContext)
 	 */
 	@Override
-	public JsonElement serialize(TuleapMilestone milestone, Type type,
-			JsonSerializationContext jsonSerializationContext) {
-
-		JsonObject milestoneObject = (JsonObject)super.serialize(milestone, type, jsonSerializationContext);
+	public JsonElement serialize(TuleapMilestone milestone, Type type, JsonSerializationContext context) {
+		JsonObject milestoneObject = (JsonObject)super.serialize(milestone, type, context);
 		if (milestone.getParent() != null) {
 			milestoneObject.add(ITuleapConstants.JSON_PARENT, new Gson().toJsonTree(milestone.getParent()));
 		}

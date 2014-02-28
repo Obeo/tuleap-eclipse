@@ -1,0 +1,38 @@
+{
+    "id": 7,
+    "uri": "trackers/7",
+    "label": "Product",
+    "item_name": "product",
+    "description": "The description of the products tracker",
+    "html_url": "localhost:3001/plugins/tracker/?tracker=7",
+    "project": {
+        "id": 3,
+        "uri": "projects/3"
+    },
+    "fields": [
+        {
+            "field_id": 0,
+            "name": "title",
+            "label": "Title",
+            "type": "string",
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": [
+                "read"
+            ]
+        }
+    ],
+    "semantics": {
+        "title": {
+            "field_id": 0
+        }
+    },
+    "resources": [
+        {
+            "type": "reports",
+            "uri": "trackers/7/tracker_reports"
+        }
+    ]
+}

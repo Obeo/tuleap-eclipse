@@ -256,7 +256,7 @@ public class TuleapTaskDataHandlerTests {
 				"", new Date(), new Date());
 
 		// Mock rest client
-		final TuleapRestClient tuleapRestClient = new TuleapRestClient(null, null, null, null) {
+		final TuleapRestClient tuleapRestClient = new TuleapRestClient(null, null, null) {
 			@Override
 			public TuleapMilestone getMilestone(int id, IProgressMonitor monitor) throws CoreException {
 				return tuleapMilestone;
@@ -373,7 +373,7 @@ public class TuleapTaskDataHandlerTests {
 		};
 
 		// Mock rest client
-		final TuleapRestClient tuleapRestClient = new TuleapRestClient(null, null, null, null) {
+		final TuleapRestClient tuleapRestClient = new TuleapRestClient(null, null, null) {
 			@Override
 			public void updateMilestoneBacklog(int miId, List<TuleapBacklogItem> backlogItems,
 					IProgressMonitor monitor) throws CoreException {
