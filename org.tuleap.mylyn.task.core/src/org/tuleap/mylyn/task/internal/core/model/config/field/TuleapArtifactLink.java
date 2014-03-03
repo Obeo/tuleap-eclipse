@@ -37,6 +37,25 @@ public class TuleapArtifactLink extends AbstractTuleapField {
 	}
 
 	/**
+	 * Creates and returns a new TaskAttribute using this field. This method is meant to be overridden in the
+	 * subclasses to provide the relevant behavior depending on the type of tuleap field.
+	 * 
+	 * @param parent
+	 *            The parent task attribute in which the new task attribute must be created.
+	 * @return The created task attribute.
+	 */
+	@Override
+	public TaskAttribute createTaskAttribute(TaskAttribute parent) {
+		int id = getIdentifier();
+		TaskAttribute attribute = this.getWriteableAttribute(parent, String.valueOf(id), getMetadataType());
+		if (attribute != null) {
+			initializeMetaData(attribute.getMetaData());
+		}
+
+		return attribute;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField#getMetadataKind()

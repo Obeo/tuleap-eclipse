@@ -20,6 +20,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -34,15 +36,18 @@ import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapUser;
 import org.tuleap.mylyn.task.internal.core.model.config.field.AbstractTuleapSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapArtifactLink;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapDate;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapString;
 import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.ArtifactLinkFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.AttachmentValue;
 import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapElementComment;
+import org.tuleap.mylyn.task.internal.core.parser.DateIso8601Adapter;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
@@ -515,15 +520,14 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * Sets the value of the date field with the given field identifier.
 	 * 
 	 * @param value
-	 *            The timestamp representing the date
+	 *            The date
 	 * @param fieldId
 	 *            The identifier of the field
 	 */
-	public void setDateValue(int value, int fieldId) {
-		// int <-> long
+	public void setDateValue(Date value, int fieldId) {
 		TaskAttribute attribute = getMappedAttributeById(fieldId);
 		if (attribute != null) {
-			taskData.getAttributeMapper().setDateValue(attribute, new Date(1000L * value));
+			taskData.getAttributeMapper().setDateValue(attribute, value);
 		}
 	}
 
@@ -688,14 +692,6 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * @return The set of the field values, never null but potentially empty.
 	 */
 	public List<AbstractFieldValue> getFieldValues() {
-		// FIXME SBE Support full task key in the task dependency fields!!!!!!!
-		/*
-		 * /!\HACKISH/!\ We may have, as the id of the task, an identifier (ie: 917) or a complex identifier
-		 * (ie: MyRepository:MyProject[116] #917 - My Task Name). We will try to parse the value as an
-		 * integer, if it fails, then we know that we have a complex identifier, in that case, we will parse
-		 * the identifier from this complex identifier and use it.
-		 */
-
 		// returns all the tuleap field value in order to send them to the server
 		// attachments are not uploaded with the same mechanism so no need to return them here
 		// do not return the fields computed by tuleap or mylyn: creation date, completion date, id, etc
@@ -705,22 +701,38 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 		for (TaskAttribute attribute : taskData.getRoot().getAttributes().values()) {
 			Collection<AbstractTuleapField> fields = this.tracker.getFields();
 			for (AbstractTuleapField abstractTuleapField : fields) {
-				if (String.valueOf(abstractTuleapField.getIdentifier()).equals(attribute.getId())
-						&& shouldBeSentToTheServer(abstractTuleapField.getIdentifier())) {
-					if (attribute.getOptions().isEmpty()) {
-						String value = null;
-						if (abstractTuleapField instanceof TuleapDate) {
-							value = parseDate(attribute);
-						} else {
-							value = attribute.getValue();
+				int fieldId = abstractTuleapField.getIdentifier();
+				if (String.valueOf(fieldId).equals(attribute.getId()) && shouldBeSentToTheServer(fieldId)) {
+					if (abstractTuleapField instanceof TuleapArtifactLink) {
+						List<String> taskAttValues = attribute.getValues();
+						int[] values = new int[taskAttValues.size()];
+						int i = 0;
+						for (String attValue : taskAttValues) {
+							try {
+								values[i] = Integer.parseInt(attValue);
+							} catch (NumberFormatException e) {
+								// FIXME SBE Support full task key in the task dependency fields!!!!!!!
+								// /!\HACKISH/!\ We may have, as the id of the task, an identifier (ie: 917)
+								// or a complex identifier (ie: MyRepository:MyProject[116] #917 - My Task
+								// Name). We will try to parse the value as an integer, if it fails, then we
+								// know that we have a complex identifier, in that case, we will parse the
+								// identifier from this complex identifier and use it.
+								Pattern pattern = Pattern.compile("#(\\d+)"); //$NON-NLS-1$
+								Matcher matcher = pattern.matcher(attValue);
+								if (matcher.find()) {
+									values[i] = Integer.parseInt(matcher.group(1));
+								}
+							}
+							i++;
 						}
-						if (value == null) {
-							value = ""; //$NON-NLS-1$
-						}
+						ArtifactLinkFieldValue value = new ArtifactLinkFieldValue(fieldId, values);
+						result.add(value);
+					} else if (abstractTuleapField instanceof TuleapDate) {
+						String value = toIso8601Date(attribute);
 						LiteralFieldValue fieldValue = new LiteralFieldValue(Integer.parseInt(attribute
 								.getId()), value);
 						result.add(fieldValue);
-					} else {
+					} else if (abstractTuleapField instanceof AbstractTuleapSelectBox) {
 						// select box or multi select box (or check box)
 						List<Integer> valueIds = new ArrayList<Integer>();
 						if (!attribute.getValues().isEmpty()) {
@@ -738,6 +750,15 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 						BoundFieldValue boundFieldValue = new BoundFieldValue(Integer.parseInt(attribute
 								.getId()), valueIds);
 						result.add(boundFieldValue);
+					} else {
+						String value = null;
+						value = attribute.getValue();
+						if (value == null) {
+							value = ""; //$NON-NLS-1$
+						}
+						LiteralFieldValue fieldValue = new LiteralFieldValue(Integer.parseInt(attribute
+								.getId()), value);
+						result.add(fieldValue);
 					}
 				} else if (abstractTuleapField instanceof TuleapString
 						&& ((TuleapString)abstractTuleapField).isSemanticTitle()) {
@@ -804,21 +825,21 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 *            The task Attribute
 	 * @return the date
 	 */
-	private String parseDate(TaskAttribute attribute) {
-		String value = null;
+	private String toIso8601Date(TaskAttribute attribute) {
+		String result = ""; //$NON-NLS-1$
+		String attributeValue = attribute.getValue();
 		try {
-			String attributeValue = attribute.getValue();
 			if (!attributeValue.isEmpty()) {
 				long date = Long.parseLong(attributeValue);
-				value = String.valueOf(date / 1000L);
+				result = DateIso8601Adapter.toIso8601String(new Date(date));
 			}
 		} catch (NumberFormatException e) {
 			String messageToLog = TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.dateParsingLogMessage, value, attribute.getMetaData()
-							.getLabel());
+					TuleapMylynTasksMessagesKeys.dateParsingLogMessage, attributeValue, attribute
+							.getMetaData().getLabel());
 			TuleapCoreActivator.log(messageToLog, false);
 		}
-		return value;
+		return result;
 	}
 
 	/**

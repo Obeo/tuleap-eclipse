@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.tests.serializer;
 
+import com.google.gson.Gson;
+
 import java.util.Arrays;
 
 import org.junit.Before;
@@ -23,7 +25,7 @@ import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCard;
-import org.tuleap.mylyn.task.internal.core.serializer.TuleapCardSerializer;
+import org.tuleap.mylyn.task.internal.core.parser.TuleapGsonProvider;
 
 import static org.junit.Assert.assertEquals;
 
@@ -32,7 +34,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class TuleapCardSerializerTest {
 
-	private TuleapCardSerializer s;
+	private Gson gson;
 
 	private TuleapReference trackerRef;
 
@@ -42,7 +44,7 @@ public class TuleapCardSerializerTest {
 
 	@Before
 	public void setUp() {
-		s = new TuleapCardSerializer();
+		gson = TuleapGsonProvider.defaultGson();
 		trackerRef = new TuleapReference(100, "t/100");
 		projectRef = new TuleapReference(50, "p/50");
 		artifactRef = new ArtifactReference(123, "a/123", trackerRef);
@@ -53,16 +55,14 @@ public class TuleapCardSerializerTest {
 		TuleapCard card = new TuleapCard("123", artifactRef, projectRef);
 		card.setLabel("label");
 		card.setColumnId(12);
-		assertEquals("{\"label\":\"label\",\"values\":[],\"column_id\":12}", s.serialize(card, null, null)
-				.toString());
+		assertEquals("{\"label\":\"label\",\"values\":[],\"column_id\":12}", gson.toJson(card));
 	}
 
 	@Test
 	public void testWithoutColumnId() {
 		TuleapCard card = new TuleapCard("123", artifactRef, projectRef);
 		card.setLabel("label");
-		assertEquals("{\"label\":\"label\",\"values\":[],\"column_id\":null}", s.serialize(card, null, null)
-				.toString());
+		assertEquals("{\"label\":\"label\",\"values\":[],\"column_id\":null}", gson.toJson(card));
 	}
 
 	@Test
@@ -75,7 +75,7 @@ public class TuleapCardSerializerTest {
 		card.addFieldValue(new LiteralFieldValue(222, "test"));
 		assertEquals(
 				"{\"label\":\"label\",\"values\":[{\"field_id\":222,\"value\":\"test\"}],\"column_id\":12}",
-				s.serialize(card, null, null).toString());
+				gson.toJson(card));
 	}
 
 	@Test
@@ -87,8 +87,8 @@ public class TuleapCardSerializerTest {
 		card.addField(field);
 		card.addFieldValue(new LiteralFieldValue(222, "666"));
 		assertEquals(
-				"{\"label\":\"label\",\"values\":[{\"field_id\":222,\"value\":\"666\"}],\"column_id\":12}", s
-						.serialize(card, null, null).toString());
+				"{\"label\":\"label\",\"values\":[{\"field_id\":222,\"value\":\"666\"}],\"column_id\":12}",
+				gson.toJson(card));
 	}
 
 	@Test
@@ -104,7 +104,7 @@ public class TuleapCardSerializerTest {
 		card.addFieldValue(new BoundFieldValue(222, Arrays.asList(0)));
 		assertEquals(
 				"{\"label\":\"label\",\"values\":[{\"field_id\":222,\"bind_value_ids\":[0]}],\"column_id\":12}",
-				s.serialize(card, null, null).toString());
+				gson.toJson(card));
 	}
 
 	@Test
@@ -120,7 +120,7 @@ public class TuleapCardSerializerTest {
 		card.addFieldValue(new BoundFieldValue(222, Arrays.asList(0, 1)));
 		assertEquals(
 				"{\"label\":\"label\",\"values\":[{\"field_id\":222,\"bind_value_ids\":[0,1]}],\"column_id\":12}",
-				s.serialize(card, null, null).toString());
+				gson.toJson(card));
 	}
 
 }

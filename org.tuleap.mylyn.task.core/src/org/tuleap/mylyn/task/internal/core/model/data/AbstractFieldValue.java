@@ -30,6 +30,13 @@ public abstract class AbstractFieldValue {
 	protected int fieldId;
 
 	/**
+	 * Default constructor for JSON.
+	 */
+	protected AbstractFieldValue() {
+		// Default constructor, for json
+	}
+
+	/**
 	 * The constructor.
 	 * 
 	 * @param fieldId

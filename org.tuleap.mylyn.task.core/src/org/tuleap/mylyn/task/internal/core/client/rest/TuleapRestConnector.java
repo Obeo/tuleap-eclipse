@@ -10,7 +10,9 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.client.rest;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -21,6 +23,7 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
+import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.util.HttpURLConnection;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
@@ -152,8 +155,21 @@ public class TuleapRestConnector implements IRestConnector {
 		b.append(method.getName());
 		b.append(" ").append(method.getPath()); //$NON-NLS-1$
 		if (method instanceof EntityEnclosingMethod) {
-			b.append("\nbody:\n").append(((EntityEnclosingMethod)method).getRequestEntity().toString().replaceAll(//$NON-NLS-1$
-											"\"password\" *: *\".*\"", "\"password\":\"(hidden in debug)\"")); //$NON-NLS-1$ //$NON-NLS-2$
+			RequestEntity requestEntity = ((EntityEnclosingMethod)method).getRequestEntity();
+			String body = ""; //$NON-NLS-1$
+			if (requestEntity.isRepeatable()) {
+				ByteArrayOutputStream os = new ByteArrayOutputStream();
+				try {
+					requestEntity.writeRequest(os);
+					body = os.toString("UTF-8"); //$NON-NLS-1$
+				} catch (UnsupportedEncodingException e) {
+					// Nothing to do
+				} catch (IOException e) {
+					// Nothing to do
+				}
+			}
+			b.append("\nbody:\n").append(body.replaceAll(//$NON-NLS-1$
+					"\"password\" *: *\".*\"", "\"password\":\"(hidden in debug)\"")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		b.append("\n__________\nresponse:\n"); //$NON-NLS-1$
 		b.append(method.getStatusLine()).append("\n"); //$NON-NLS-1$

@@ -113,6 +113,11 @@ public interface ITuleapConstants {
 	String FIELD_VALUE = "value"; //$NON-NLS-1$
 
 	/**
+	 * The key used to retrieve the field value of the POJO.
+	 */
+	String FIELD_LINKS = "links"; //$NON-NLS-1$
+
+	/**
 	 * The key used to retrieve the bind value identifier.
 	 */
 	String FIELD_BIND_VALUE_ID = "bind_value_id"; //$NON-NLS-1$

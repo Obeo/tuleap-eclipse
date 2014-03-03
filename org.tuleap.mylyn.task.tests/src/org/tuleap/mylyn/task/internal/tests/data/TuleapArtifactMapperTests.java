@@ -12,7 +12,9 @@ package org.tuleap.mylyn.task.internal.tests.data;
 
 import com.google.common.collect.Lists;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -43,6 +45,7 @@ import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapText;
 import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
+import org.tuleap.mylyn.task.internal.core.parser.DateIso8601Adapter;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapAttributeMapper;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
@@ -746,7 +749,7 @@ public class TuleapArtifactMapperTests {
 		String title = "Title";
 		String semanticContributor = "0";
 		String status = "2";
-		String date = "123456789000";
+		long date = 123456789000L;
 		String floatValue = "3.14157";
 		String integerValue = "42";
 		List<String> multiSelectBox = Lists.newArrayList("0", "2");
@@ -759,7 +762,7 @@ public class TuleapArtifactMapperTests {
 		this.taskData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY).setValue(title);
 		this.taskData.getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED).setValue(semanticContributor);
 		this.taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS).setValue(status);
-		this.taskData.getRoot().getMappedAttribute(String.valueOf(3)).setValue(date);
+		this.taskData.getRoot().getMappedAttribute(String.valueOf(3)).setValue(Long.toString(date));
 		this.taskData.getRoot().getMappedAttribute(String.valueOf(4)).setValue(floatValue);
 		this.taskData.getRoot().getMappedAttribute(String.valueOf(5)).setValue(integerValue);
 		this.taskData.getRoot().getMappedAttribute(String.valueOf(6)).setValues(multiSelectBox);
@@ -788,7 +791,12 @@ public class TuleapArtifactMapperTests {
 
 		assertThat(fieldValues.get(3).getFieldId(), is(3));
 		assertThat(fieldValues.get(3), instanceOf(LiteralFieldValue.class));
-		assertThat(((LiteralFieldValue)fieldValues.get(3)).getFieldValue(), is("123456789"));
+		try {
+			assertThat(DateIso8601Adapter.parseIso8601Date(((LiteralFieldValue)fieldValues.get(3))
+					.getFieldValue()), is(new Date(date)));
+		} catch (ParseException e) {
+			fail();
+		}
 
 		assertThat(fieldValues.get(4).getFieldId(), is(4));
 		assertThat(fieldValues.get(4), instanceOf(LiteralFieldValue.class));

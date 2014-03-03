@@ -35,6 +35,11 @@ import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 public class DateIso8601Adapter implements JsonDeserializer<Date>, JsonSerializer<Date> {
 
 	/**
+	 * Date format ISO-8601 when using a timezone with a sign and 4 digits separated by a colon.
+	 */
+	private static final String DATE_FORMAT_WITH_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ssZ"; //$NON-NLS-1$
+
+	/**
 	 * Date format ISO-8601 with milliseconds when using a timezone with a sign and 4 digits separated by a
 	 * colon.
 	 */
@@ -44,11 +49,6 @@ public class DateIso8601Adapter implements JsonDeserializer<Date>, JsonSerialize
 	 * Date format ISO-8601 with milliseconds when using the default timezone.
 	 */
 	private static final String DATE_FORMAT_MILLIS_WITH_DEFAULT_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"; //$NON-NLS-1$
-
-	/**
-	 * Date format ISO-8601 when using a timezone with a sign and 4 digits separated by a colon.
-	 */
-	private static final String DATE_FORMAT_WITH_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ssZ"; //$NON-NLS-1$
 
 	/**
 	 * Date format ISO-8601 when using the default timezone.
@@ -62,9 +62,18 @@ public class DateIso8601Adapter implements JsonDeserializer<Date>, JsonSerialize
 	 *      com.google.gson.JsonSerializationContext)
 	 */
 	public JsonElement serialize(Date src, Type typeOfSrc, JsonSerializationContext context) {
-		String date = new SimpleDateFormat(DATE_FORMAT_WITH_TIMEZONE).format(src).replaceFirst(
-				"(\\d\\d)$", ":$1"); //$NON-NLS-1$//$NON-NLS-2$
-		return new JsonPrimitive(date);
+		return new JsonPrimitive(toIso8601String(src));
+	}
+
+	/**
+	 * Turn a date into (one of) its ISO-8601 string representation.
+	 * 
+	 * @param date
+	 *            The date to serialize.
+	 * @return The serialized date. Must not be null.
+	 */
+	public static String toIso8601String(Date date) {
+		return new SimpleDateFormat(DATE_FORMAT_WITH_TIMEZONE).format(date).replaceFirst("(\\d\\d)$", ":$1"); //$NON-NLS-1$//$NON-NLS-2$
 	}
 
 	/**
@@ -95,7 +104,7 @@ public class DateIso8601Adapter implements JsonDeserializer<Date>, JsonSerialize
 	 *             if the given date is not in the right format.
 	 * @return The parsed date.
 	 */
-	private Date parseIso8601Date(String dateIso8601) throws ParseException {
+	public static Date parseIso8601Date(String dateIso8601) throws ParseException {
 		SimpleDateFormat format;
 		if (dateIso8601.endsWith("Z")) { //$NON-NLS-1$
 			if (dateIso8601.indexOf('.') > 0) {

@@ -28,8 +28,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.model.TuleapToken;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPlanning;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
@@ -38,13 +38,14 @@ import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTrackerReport;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapUser;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapUserGroup;
+import org.tuleap.mylyn.task.internal.core.model.data.ArtifactReference;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifactWithComment;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapAttachmentDescriptor;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCard;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCardwall;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
-import org.tuleap.mylyn.task.internal.core.serializer.TuleapCardSerializer;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
@@ -238,45 +239,45 @@ public class TuleapRestClient implements IAuthenticator {
 	/**
 	 * Updates the artifact represented by the given task data with the given task data.
 	 * 
-	 * @param taskData
-	 *            The task data
+	 * @param artifact
+	 *            The artifact to submit
 	 * @param monitor
 	 *            Used to monitor the progress
 	 * @throws CoreException
 	 *             In case of error during the update of the artifact
 	 */
-
-	public void updateArtifact(TaskData taskData, IProgressMonitor monitor) throws CoreException {
-		// Test the connection
-		// Try to log in
-		// Send a request with OPTIONS to ensure that we can and have the right to update the artifact
-		// Compute the change to send
-		// Send the update to the server for the attribute of the task
-		// See if we need to update additional tasks (cardwall, planning, etc)
-		// Send the update of the other artifacts
-		// Try to log out
+	public void updateArtifact(TuleapArtifactWithComment artifact, IProgressMonitor monitor)
+			throws CoreException {
+		if (monitor != null) {
+			monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.updatingArtifact,
+					artifact.getId()));
+		}
+		RestResource artifactResource = restResourceFactory.artifact(artifact.getId().intValue())
+				.withAuthenticator(this);
+		artifactResource.put().withBody(gson.toJson(artifact, TuleapArtifactWithComment.class)).checkedRun();
 	}
 
 	/**
 	 * Creates the artifact on the server.
 	 * 
-	 * @param taskData
-	 *            The task data of the artifact to create
+	 * @param artifact
+	 *            The artifact to create
 	 * @param monitor
 	 *            Used to monitor the progress
 	 * @return The identifier of the artifact created
 	 * @throws CoreException
 	 *             In case of error during the creation of the artifact
 	 */
-	public int createArtifact(TaskData taskData, IProgressMonitor monitor) throws CoreException {
-		// Test the connection
-		// Try to log in
-		// Send a request with OPTIONS to ensure that we can and have the right to create the artifact
-		// Create the artifact
-		// See if we need to update additional tasks (cardwall, planning, etc)
-		// Send the update of the other artifacts
-		// Try to log out
-		return -1;
+	public TuleapTaskId createArtifact(TuleapArtifact artifact, IProgressMonitor monitor)
+			throws CoreException {
+		if (monitor != null) {
+			monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.creatingArtifact));
+		}
+		RestResource artifactResource = restResourceFactory.artifacts().withAuthenticator(this);
+		ServerResponse response = artifactResource.post().withBody(
+				gson.toJson(artifact, TuleapArtifact.class)).checkedRun();
+		ArtifactReference ref = gson.fromJson(response.getBody(), ArtifactReference.class);
+		return TuleapTaskId.forArtifact(artifact.getProject().getId(), ref.getTracker().getId(), ref.getId());
 	}
 
 	/**
@@ -844,7 +845,7 @@ public class TuleapRestClient implements IAuthenticator {
 		RestResource restCards = restResourceFactory.card(tuleapCard.getId()).withAuthenticator(this);
 
 		// from POJO to JSON
-		JsonElement card = new TuleapCardSerializer().serialize(tuleapCard, null, null);
+		JsonElement card = gson.toJsonTree(tuleapCard);
 		String changesToPut = card.toString();
 
 		// Send the PUT request

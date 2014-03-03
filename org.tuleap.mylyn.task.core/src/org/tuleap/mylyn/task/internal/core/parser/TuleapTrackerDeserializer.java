@@ -131,9 +131,9 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 	private static final String TRANSITIONS = "transitions"; //$NON-NLS-1$
 
 	/**
-	 * The contributors keyword.
+	 * The contributor keyword.
 	 */
-	private static final String JSON_CONTRIBUTORS = "contributors"; //$NON-NLS-1$
+	private static final String JSON_CONTRIBUTOR = "contributor"; //$NON-NLS-1$
 
 	/**
 	 * The open status values field keyword.
@@ -443,8 +443,8 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 
 		// the semantic contributors part
 		if (fieldSemantic != null
-				&& fieldSemantic.get(JSON_CONTRIBUTORS) != null
-				&& fieldSemantic.get(JSON_CONTRIBUTORS).getAsJsonObject().get(FIELD_ID).getAsInt() == selectBoxField
+				&& fieldSemantic.get(JSON_CONTRIBUTOR) != null
+				&& fieldSemantic.get(JSON_CONTRIBUTOR).getAsJsonObject().get(FIELD_ID).getAsInt() == selectBoxField
 						.getIdentifier()) {
 			selectBoxField.setSemanticContributor(true);
 		}

@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.serializer;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -38,7 +37,7 @@ public class TuleapMilestoneSerializer extends AbstractProjectElementSerializer<
 	public JsonElement serialize(TuleapMilestone milestone, Type type, JsonSerializationContext context) {
 		JsonObject milestoneObject = (JsonObject)super.serialize(milestone, type, context);
 		if (milestone.getParent() != null) {
-			milestoneObject.add(ITuleapConstants.JSON_PARENT, new Gson().toJsonTree(milestone.getParent()));
+			milestoneObject.add(ITuleapConstants.JSON_PARENT, context.serialize(milestone.getParent()));
 		}
 		if (milestone.getStartDate() != null) {
 			milestoneObject.add(ITuleapConstants.START_DATE, new JsonPrimitive(dateFormat.format(milestone

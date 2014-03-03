@@ -33,6 +33,10 @@ import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.model.TuleapToken;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPlanning;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapUser;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapFileUpload;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapMultiSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapOpenList;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.data.ArtifactReference;
 import org.tuleap.mylyn.task.internal.core.model.data.AttachmentFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.AttachmentValue;
@@ -636,6 +640,9 @@ public class TuleapRestClientTest {
 				new TuleapReference(700, "t/700")), new TuleapReference(200, "p/200"));
 		card.setColumnId(10000);
 		card.setLabel("Simple label");
+
+		TuleapOpenList openList = new TuleapOpenList(1000);
+		card.addField(openList);
 		LiteralFieldValue firstLiteralFieldValue = new LiteralFieldValue(1000, "300, 301, 302"); //$NON-NLS-1$
 		card.addFieldValue(firstLiteralFieldValue);
 		int[] columnIds = new int[3];
@@ -695,6 +702,12 @@ public class TuleapRestClientTest {
 		valueIds.add(new Integer(30));
 		BoundFieldValue firstBoundFieldValue = new BoundFieldValue(2000, valueIds);
 
+		TuleapMultiSelectBox msb = new TuleapMultiSelectBox(2000);
+		msb.addItem(new TuleapSelectBoxItem(10));
+		msb.addItem(new TuleapSelectBoxItem(20));
+		msb.addItem(new TuleapSelectBoxItem(30));
+		msb.addItem(new TuleapSelectBoxItem(40));
+		card.addField(msb);
 		card.addFieldValue(firstBoundFieldValue);
 
 		Map<String, String> respHeaders = Maps.newHashMap();
@@ -741,6 +754,8 @@ public class TuleapRestClientTest {
 		card.setAllowedColumnIds(columnIds);
 		card.setStatus(TuleapStatus.valueOf("Open"));
 
+		TuleapFileUpload uploadField = new TuleapFileUpload(3000);
+		card.addField(uploadField);
 		List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
 		TuleapUser firstUploadedBy = new TuleapUser(
 				"first username", "first realname", 1, "first email", null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

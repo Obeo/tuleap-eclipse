@@ -334,6 +334,16 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	public static String retrievingArtifact;
 
 	/**
+	 * Create an artifact.
+	 */
+	public static String creatingArtifact;
+
+	/**
+	 * Update an artifact.
+	 */
+	public static String updatingArtifact;
+
+	/**
 	 * Updating a backlogItem.
 	 */
 	public static String updatingBacklogItem;

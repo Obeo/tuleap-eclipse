@@ -17,6 +17,7 @@ import com.google.gson.JsonSerializationContext;
 
 import java.lang.reflect.Type;
 
+import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifactWithComment;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
@@ -36,17 +37,25 @@ public class TuleapArtifactWithCommentSerializer extends AbstractTuleapSerialize
 	@Override
 	public JsonElement serialize(TuleapArtifactWithComment commentedArtifact, Type type,
 			JsonSerializationContext context) {
-		JsonObject elementObject = (JsonObject)super.serialize(commentedArtifact, TuleapArtifactWithComment.class,
-				context);
-
+		JsonObject elementObject = (JsonObject)super.serialize(commentedArtifact, type, context);
 		elementObject.remove(ITuleapConstants.ID);
 		if (commentedArtifact.getNewComment() != null) {
 			JsonObject commentObject = new JsonObject();
 			elementObject.add(ITuleapConstants.COMMENT, commentObject);
 			commentObject.add(ITuleapConstants.BODY, new JsonPrimitive(commentedArtifact.getNewComment()));
 			commentObject.add(ITuleapConstants.FORMAT, new JsonPrimitive("text")); //$NON-NLS-1$
-
 		}
 		return elementObject;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.tuleap.mylyn.task.internal.core.serializer.AbstractTuleapSerializer#mustSerialize(org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField)
+	 */
+	@Override
+	protected boolean mustSerialize(AbstractTuleapField field) {
+		// Only fields valid for update are submitted
+		return field != null && field.isUpdatable();
 	}
 }

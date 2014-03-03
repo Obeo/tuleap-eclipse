@@ -34,7 +34,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.agile.core.data.planning.TopPlanningMapper;
 import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
-import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.data.converter.ArtifactTaskDataConverter;
@@ -128,16 +127,18 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		ArtifactTaskDataConverter artifactTaskDataConverter = new ArtifactTaskDataConverter(tracker,
 				taskRepository, connector);
 
-		TuleapArtifact artifact = artifactTaskDataConverter.createTuleapArtifact(taskData);
-		TuleapSoapClient tuleapSoapClient = this.connector.getClientManager().getSoapClient(taskRepository);
+		TuleapRestClient client = this.connector.getClientManager().getRestClient(taskRepository);
 		if (taskData.isNew()) {
-			TuleapTaskId artifactId = tuleapSoapClient.createArtifact(artifact, monitor);
+			TuleapArtifact artifact = artifactTaskDataConverter.createTuleapArtifact(taskData);
+			TuleapTaskId artifactId = client.createArtifact(artifact, monitor);
 			response = new RepositoryResponse(ResponseKind.TASK_CREATED, artifactId.toString());
 			if (tracker.getProject().isMilestoneTracker(tracker.getIdentifier())) {
 				addMilestoneTaskDataToParent(taskData, artifactId, taskRepository, monitor);
 			}
 		} else {
-			tuleapSoapClient.updateArtifact((TuleapArtifactWithComment)artifact, monitor);
+			TuleapArtifactWithComment artifact = artifactTaskDataConverter
+					.createTuleapArtifactWithComment(taskData);
+			client.updateArtifact(artifact, monitor);
 			response = new RepositoryResponse(ResponseKind.TASK_UPDATED, taskData.getTaskId());
 			if (tracker.getProject().isMilestoneTracker(tracker.getIdentifier())) {
 				postMilestoneTaskData(taskData, taskRepository, monitor);

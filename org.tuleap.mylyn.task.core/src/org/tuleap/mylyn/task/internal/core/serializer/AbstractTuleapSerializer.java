@@ -13,17 +13,13 @@ package org.tuleap.mylyn.task.internal.core.serializer;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 
 import java.lang.reflect.Type;
 
+import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.AbstractTuleapConfigurableElement;
-import org.tuleap.mylyn.task.internal.core.model.data.AttachmentFieldValue;
-import org.tuleap.mylyn.task.internal.core.model.data.AttachmentValue;
-import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
-import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**
@@ -41,57 +37,28 @@ public abstract class AbstractTuleapSerializer<T extends AbstractTuleapConfigura
 	 *      com.google.gson.JsonSerializationContext)
 	 */
 	@Override
-	public JsonElement serialize(T element, Type type, JsonSerializationContext jsonSerializationContext) {
-		JsonObject json = super.serialize(element, type, jsonSerializationContext).getAsJsonObject();
-		// TODO is it necessary to send the trackerId?
-
+	public JsonElement serialize(T element, Type type, JsonSerializationContext context) {
+		JsonObject json = super.serialize(element, type, context).getAsJsonObject();
 		JsonArray values = new JsonArray();
 		json.add(ITuleapConstants.VALUES, values);
-
-		for (AbstractFieldValue field : element.getFieldValues()) {
-			JsonObject fieldObject = new JsonObject();
-			fieldObject
-					.add(ITuleapConstants.FIELD_ID, new JsonPrimitive(Integer.valueOf(field.getFieldId())));
-
-			if (field instanceof LiteralFieldValue) {
-				fieldObject.add(ITuleapConstants.FIELD_VALUE, new JsonPrimitive(((LiteralFieldValue)field)
-						.getFieldValue()));
-			} else if (field instanceof BoundFieldValue) {
-				BoundFieldValue boundFieldValue = (BoundFieldValue)field;
-				JsonElement fieldValues = new JsonArray();
-				for (Integer theValue : boundFieldValue.getValueIds()) {
-					fieldValues.getAsJsonArray().add(new JsonPrimitive(theValue));
-				}
-				fieldObject.add(ITuleapConstants.FIELD_BIND_VALUE_IDS, fieldValues);
-			} else if (field instanceof AttachmentFieldValue) {
-				this.manageAttachmentFieldValues(field, fieldObject);
+		for (AbstractTuleapField field : element.getFields()) {
+			if (mustSerialize(field)) {
+				AbstractFieldValue fieldValue = element.getFieldValue(field.getIdentifier());
+				values.add(context.serialize(fieldValue));
 			}
-			values.add(fieldObject);
 		}
 		return json;
 	}
 
 	/**
-	 * Manage attachment field values.
+	 * Override this method in subclasses to configure which field are serialized. By default, all fieds are
+	 * serialized.
 	 * 
 	 * @param field
-	 *            the Abstract Field Value
-	 * @param fieldObject
-	 *            the parent field Object
+	 *            A field present in the object to serialize.
+	 * @return <code>true</code> if and only if the field must be included in the serialization.
 	 */
-	private void manageAttachmentFieldValues(AbstractFieldValue field, JsonObject fieldObject) {
-		AttachmentFieldValue attachmentFieldValue = (AttachmentFieldValue)field;
-		if (attachmentFieldValue.getAttachments().size() > 0) {
-			JsonElement fileDescriptions = new JsonArray();
-			fieldObject.add(ITuleapConstants.FILE_DESCRIPTIONS, fileDescriptions);
-			for (AttachmentValue attachmentValue : attachmentFieldValue.getAttachments()) {
-				JsonObject fileDescriptionObject = new JsonObject();
-				fileDescriptionObject.add(ITuleapConstants.FILE_ID, new JsonPrimitive(Integer
-						.valueOf(attachmentValue.getAttachmentId())));
-				fileDescriptionObject.add(ITuleapConstants.DESCRIPTION, new JsonPrimitive(attachmentValue
-						.getDescription()));
-				fileDescriptions.getAsJsonArray().add(fileDescriptionObject);
-			}
-		}
+	protected boolean mustSerialize(AbstractTuleapField field) {
+		return true;
 	}
 }

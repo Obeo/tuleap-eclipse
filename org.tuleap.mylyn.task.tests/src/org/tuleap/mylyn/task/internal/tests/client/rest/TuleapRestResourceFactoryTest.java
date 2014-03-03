@@ -324,6 +324,28 @@ public class TuleapRestResourceFactoryTest {
 	}
 
 	/**
+	 * Checks that GET is not supported by the operation returned by {@link RestResourceFactory#artifacts()}.
+	 * 
+	 * @throws CoreException
+	 */
+	@Test(expected = UnsupportedOperationException.class)
+	public void testGetArtifactsForbidden() throws CoreException {
+		RestResource r = factory.artifacts();
+		r.get();
+	}
+
+	/**
+	 * Checks that PUT is not supported by the operation returned by {@link RestResourceFactory#artifacts()}.
+	 * 
+	 * @throws CoreException
+	 */
+	@Test(expected = UnsupportedOperationException.class)
+	public void testPutArtifactsForbidden() throws CoreException {
+		RestResource r = factory.artifacts();
+		r.put();
+	}
+
+	/**
 	 * Checks the basic properties of {@link RestResourceFactory#card(String)}.
 	 */
 	@Test

@@ -16,6 +16,10 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.ILog;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestResource.URL;
 
+import static org.tuleap.mylyn.task.internal.core.client.rest.RestResource.GET;
+import static org.tuleap.mylyn.task.internal.core.client.rest.RestResource.POST;
+import static org.tuleap.mylyn.task.internal.core.client.rest.RestResource.PUT;
+
 /**
  * Builder class that instantiates the accessible JSON services.
  * 
@@ -87,7 +91,7 @@ public final class RestResourceFactory {
 	 * @return A resource that gives access to the {code /api/{version}} HTTP resource.
 	 */
 	public RestResource api() {
-		return resource(RestResource.GET, ""); //$NON-NLS-1$
+		return resource(GET, ""); //$NON-NLS-1$
 	}
 
 	/**
@@ -96,7 +100,7 @@ public final class RestResourceFactory {
 	 * @return A resource that gives access to the {code /login} HTTP resource.
 	 */
 	public RestResource user() {
-		return resource(RestResource.GET, URL.USER);
+		return resource(GET, URL.USER);
 	}
 
 	/**
@@ -105,7 +109,7 @@ public final class RestResourceFactory {
 	 * @return A resource that gives access to the {code /tokens} HTTP resource.
 	 */
 	public RestResource tokens() {
-		return resource(RestResource.POST, URL.TOKENS);
+		return resource(POST, URL.TOKENS);
 	}
 
 	/**
@@ -114,7 +118,7 @@ public final class RestResourceFactory {
 	 * @return A resource that gives access to the {code /projects} HTTP resource.
 	 */
 	public RestResource projects() {
-		return resource(RestResource.GET, URL.PROJECTS);
+		return resource(GET, URL.PROJECTS);
 	}
 
 	/**
@@ -123,7 +127,7 @@ public final class RestResourceFactory {
 	 * @return A resource that gives access to the {code /artifacts} HTTP resource.
 	 */
 	public RestResource artifacts() {
-		return resource(RestResource.GET, URL.ARTIFACTS);
+		return resource(POST, URL.ARTIFACTS);
 	}
 
 	/**
@@ -134,7 +138,7 @@ public final class RestResourceFactory {
 	 * @return A resource that gives access to the {code /artifacts/:id} HTTP resource.
 	 */
 	public RestResource artifact(int artifactId) {
-		return resource(RestResource.GET, URL.ARTIFACTS, Integer.toString(artifactId));
+		return resource(GET | PUT, URL.ARTIFACTS, Integer.toString(artifactId));
 	}
 
 	/**
@@ -145,7 +149,7 @@ public final class RestResourceFactory {
 	 * @return A resource that gives access to the {code /trackers/:id} HTTP resource.
 	 */
 	public RestResource tracker(int trackerId) {
-		return resource(RestResource.GET, URL.TRACKERS, Integer.toString(trackerId));
+		return resource(GET, URL.TRACKERS, Integer.toString(trackerId));
 	}
 
 	/**
@@ -156,7 +160,7 @@ public final class RestResourceFactory {
 	 * @return A resource that gives access to the {code /milestones/:id} HTTP resource.
 	 */
 	public RestResource milestone(int milestoneId) {
-		return resource(RestResource.GET | RestResource.PUT, URL.MILESTONES, Integer.toString(milestoneId));
+		return resource(GET | PUT, URL.MILESTONES, Integer.toString(milestoneId));
 	}
 
 	/**
@@ -167,8 +171,7 @@ public final class RestResourceFactory {
 	 * @return A resource that gives access to the {code /backlog_items/:id} HTTP resource.
 	 */
 	public RestResource backlogItem(int backlogItemId) {
-		return resource(RestResource.GET | RestResource.PUT, URL.BACKLOG_ITEMS, Integer
-				.toString(backlogItemId));
+		return resource(GET | PUT, URL.BACKLOG_ITEMS, Integer.toString(backlogItemId));
 	}
 
 	/**
@@ -179,7 +182,7 @@ public final class RestResourceFactory {
 	 * @return A resource that gives access to the {code /projects/:projectId/trackers} HTTP resource.
 	 */
 	public RestResource projectsTrackers(int projectId) {
-		return resource(RestResource.GET, URL.PROJECTS, Integer.toString(projectId), URL.TRACKERS);
+		return resource(GET, URL.PROJECTS, Integer.toString(projectId), URL.TRACKERS);
 	}
 
 	/**
@@ -190,7 +193,7 @@ public final class RestResourceFactory {
 	 * @return A resource that gives access to the {code /projects/:id/plannings} HTTP resource.
 	 */
 	public RestResource projectPlannings(int projectId) {
-		return resource(RestResource.GET, URL.PROJECTS, Integer.toString(projectId), URL.PLANNINGS);
+		return resource(GET, URL.PROJECTS, Integer.toString(projectId), URL.PLANNINGS);
 	}
 
 	/**
@@ -202,7 +205,7 @@ public final class RestResourceFactory {
 	 * @return A resource that gives access to the {code /projects/:id/milestones} HTTP resource.
 	 */
 	public RestResource projectMilestones(int projectId) {
-		return resource(RestResource.GET, URL.PROJECTS, Integer.toString(projectId), URL.MILESTONES);
+		return resource(GET, URL.PROJECTS, Integer.toString(projectId), URL.MILESTONES);
 	}
 
 	/**
@@ -213,7 +216,7 @@ public final class RestResourceFactory {
 	 * @return A resource that gives access to the {code /projects/:id/user_groups} HTTP resource.
 	 */
 	public RestResource projectUserGroups(int projectId) {
-		return resource(RestResource.GET, URL.PROJECTS, Integer.toString(projectId), URL.USER_GROUPS);
+		return resource(GET, URL.PROJECTS, Integer.toString(projectId), URL.USER_GROUPS);
 	}
 
 	/**
@@ -224,7 +227,7 @@ public final class RestResourceFactory {
 	 * @return A resource that gives access to the {code /user_groups/:id/users} HTTP resource.
 	 */
 	public RestResource userGroupUsers(int userGroupId) {
-		return resource(RestResource.GET, URL.USER_GROUPS, Integer.toString(userGroupId), URL.USERS);
+		return resource(GET, URL.USER_GROUPS, Integer.toString(userGroupId), URL.USERS);
 	}
 
 	/**
@@ -235,8 +238,7 @@ public final class RestResourceFactory {
 	 * @return A resource that gives access to the {code /projects/:id/backlog} HTTP resource.
 	 */
 	public RestResource projectBacklog(int projectId) {
-		return resource(RestResource.GET | RestResource.PUT, URL.PROJECTS, Integer.toString(projectId),
-				URL.BACKLOG);
+		return resource(GET | PUT, URL.PROJECTS, Integer.toString(projectId), URL.BACKLOG);
 	}
 
 	/**
@@ -247,8 +249,7 @@ public final class RestResourceFactory {
 	 * @return A resource that gives access to the {code /milestones/:id/milestones} HTTP resource.
 	 */
 	public RestResource milestoneSubmilestones(int milestoneId) {
-		return resource(RestResource.GET | RestResource.PUT, URL.MILESTONES, Integer.toString(milestoneId),
-				URL.MILESTONES);
+		return resource(GET | PUT, URL.MILESTONES, Integer.toString(milestoneId), URL.MILESTONES);
 	}
 
 	/**
@@ -259,8 +260,7 @@ public final class RestResourceFactory {
 	 * @return A resource that gives access to the {code /milestones/:id/backlog} HTTP resource.
 	 */
 	public RestResource milestoneBacklog(int milestoneId) {
-		return resource(RestResource.GET | RestResource.PUT, URL.MILESTONES, Integer.toString(milestoneId),
-				URL.BACKLOG);
+		return resource(GET | PUT, URL.MILESTONES, Integer.toString(milestoneId), URL.BACKLOG);
 	}
 
 	/**
@@ -271,8 +271,7 @@ public final class RestResourceFactory {
 	 * @return A resource that gives access to the {code /milestones/:id/content} HTTP resource.
 	 */
 	public RestResource milestoneContent(int milestoneId) {
-		return resource(RestResource.GET | RestResource.PUT, URL.MILESTONES, Integer.toString(milestoneId),
-				URL.CONTENT);
+		return resource(GET | PUT, URL.MILESTONES, Integer.toString(milestoneId), URL.CONTENT);
 	}
 
 	/**
@@ -283,7 +282,7 @@ public final class RestResourceFactory {
 	 * @return A resource that gives access to the {code /milestones/:id/cardwall} HTTP resource.
 	 */
 	public RestResource milestoneCardwall(int milestoneId) {
-		return resource(RestResource.GET, URL.MILESTONES, Integer.toString(milestoneId), URL.CARDWALL);
+		return resource(GET, URL.MILESTONES, Integer.toString(milestoneId), URL.CARDWALL);
 	}
 
 	/**
@@ -294,7 +293,7 @@ public final class RestResourceFactory {
 	 * @return A resource that gives access to the {code /cards/:id} HTTP resource.
 	 */
 	public RestResource card(String cardId) {
-		return resource(RestResource.GET | RestResource.PUT, URL.CARDS, cardId);
+		return resource(GET | PUT, URL.CARDS, cardId);
 	}
 
 	/**
@@ -320,7 +319,7 @@ public final class RestResourceFactory {
 	 * @return A resource that gives access to the {code /trackers/:id/tracker_reports} HTTP resource.
 	 */
 	public RestResource trackerReports(int trackerId) {
-		return resource(RestResource.GET, URL.TRACKERS, Integer.toString(trackerId), URL.TRACKER_REPORTS);
+		return resource(GET, URL.TRACKERS, Integer.toString(trackerId), URL.TRACKER_REPORTS);
 	}
 
 	/**
@@ -331,8 +330,7 @@ public final class RestResourceFactory {
 	 * @return A resource that gives access to the {code /tracker_reports/:id/artifacts} HTTP resource.
 	 */
 	public RestResource trackerReportArtifacts(int trackerReportId) {
-		return resource(RestResource.GET, URL.TRACKER_REPORTS, Integer.toString(trackerReportId),
-				URL.ARTIFACTS);
+		return resource(GET, URL.TRACKER_REPORTS, Integer.toString(trackerReportId), URL.ARTIFACTS);
 	}
 
 	/**

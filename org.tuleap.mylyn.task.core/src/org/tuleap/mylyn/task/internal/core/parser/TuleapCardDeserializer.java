@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.parser;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
@@ -47,9 +46,8 @@ public class TuleapCardDeserializer extends AbstractTuleapDeserializer<String, T
 
 		JsonObject jsonObject = element.getAsJsonObject();
 
-		Gson gson = new Gson();
-		card.setArtifact(gson.fromJson(jsonObject.get(ITuleapConstants.JSON_ARTIFACT),
-				ArtifactReference.class));
+		card.setArtifact(context.<ArtifactReference> deserialize(jsonObject
+				.get(ITuleapConstants.JSON_ARTIFACT), ArtifactReference.class));
 
 		JsonElement elt = jsonObject.get(ITuleapConstants.ACCENT_COLOR);
 		if (elt != null && !elt.isJsonNull()) {

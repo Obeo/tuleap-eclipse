@@ -11,29 +11,19 @@
 package org.tuleap.mylyn.task.internal.core.client.soap;
 
 import java.net.InetSocketAddress;
-import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.SocketAddress;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.rpc.ServiceException;
-
 import org.apache.axis.AxisProperties;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
-import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
-import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
-import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifactWithComment;
 
 /**
  * The Mylyn Tuleap client is in charge of the connection with the repository and it will realize the request
@@ -100,32 +90,6 @@ public class TuleapSoapClient {
 	}
 
 	/**
-	 * Validate the credentials with the server.
-	 * 
-	 * @param monitor
-	 *            The progress monitor
-	 * @return <code>true</code> if the credentials are valid and if the URL is valid, <code>false</code>
-	 *         otherwise
-	 * @throws CoreException
-	 *             In case of error during the validation of the connection
-	 */
-	public IStatus validateConnection(IProgressMonitor monitor) throws CoreException {
-		try {
-			IStatus status = newConnector().validateConnection(monitor);
-			return status;
-		} catch (MalformedURLException e) {
-			IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
-			throw new CoreException(status);
-		} catch (RemoteException e) {
-			IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
-			throw new CoreException(status);
-		} catch (ServiceException e) {
-			IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
-			throw new CoreException(status);
-		}
-	}
-
-	/**
 	 * Retrieves the {@link TuleapArtifact} from a query run on the server.
 	 * 
 	 * @param query
@@ -151,58 +115,5 @@ public class TuleapSoapClient {
 		}
 
 		return artifacts;
-	}
-
-	/**
-	 * Creates the Tuleap artifact.
-	 * 
-	 * @param artifact
-	 *            The Tuleap artifact
-	 * @param monitor
-	 *            The monitor
-	 * @return The identifier of the artifact
-	 * @throws CoreException
-	 *             In case of issue during the creation of the artifact
-	 */
-	public TuleapTaskId createArtifact(TuleapArtifact artifact, IProgressMonitor monitor)
-			throws CoreException {
-		try {
-			return newConnector().createArtifact(artifact, monitor);
-		} catch (RemoteException e) {
-			IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
-			throw new CoreException(status);
-		} catch (MalformedURLException e) {
-			IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
-			throw new CoreException(status);
-		} catch (ServiceException e) {
-			IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
-			throw new CoreException(status);
-		}
-	}
-
-	/**
-	 * Updates the artifact.
-	 * 
-	 * @param artifact
-	 *            The artifact to update
-	 * @param monitor
-	 *            The progress monitor
-	 * @throws CoreException
-	 *             In case of issue during the update
-	 */
-	public void updateArtifact(TuleapArtifactWithComment artifact, IProgressMonitor monitor)
-			throws CoreException {
-		try {
-			newConnector().updateArtifact(artifact, monitor);
-		} catch (MalformedURLException e) {
-			IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
-			throw new CoreException(status);
-		} catch (RemoteException e) {
-			IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
-			throw new CoreException(status);
-		} catch (ServiceException e) {
-			IStatus status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
-			throw new CoreException(status);
-		}
 	}
 }

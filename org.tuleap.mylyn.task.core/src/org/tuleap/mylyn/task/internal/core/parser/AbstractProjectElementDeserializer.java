@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.parser;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -42,8 +41,8 @@ public abstract class AbstractProjectElementDeserializer<U, T extends AbstractTu
 	 * @see com.google.gson.JsonDeserializer#deserialize(com.google.gson.JsonElement, java.lang.reflect.Type,
 	 *      com.google.gson.JsonDeserializationContext)
 	 */
-	public T deserialize(JsonElement rootJsonElement, Type type,
-			JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+	public T deserialize(JsonElement rootJsonElement, Type type, JsonDeserializationContext context)
+			throws JsonParseException {
 
 		JsonObject jsonObject = rootJsonElement.getAsJsonObject();
 
@@ -54,7 +53,7 @@ public abstract class AbstractProjectElementDeserializer<U, T extends AbstractTu
 		if (jsonElement != null && !jsonElement.isJsonNull()) {
 			pojo.setLabel(jsonElement.getAsString());
 		}
-		TuleapReference project = new Gson().fromJson(jsonObject.get(ITuleapConstants.JSON_PROJECT),
+		TuleapReference project = context.deserialize(jsonObject.get(ITuleapConstants.JSON_PROJECT),
 				TuleapReference.class);
 		JsonElement element = jsonObject.get(ITuleapConstants.URI);
 		if (element != null && !element.isJsonNull()) {

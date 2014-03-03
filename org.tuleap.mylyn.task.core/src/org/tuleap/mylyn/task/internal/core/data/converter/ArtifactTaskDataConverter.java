@@ -10,23 +10,29 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.data.converter;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.config.field.AbstractTuleapSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapDate;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapFileUpload;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapString;
 import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.ArtifactLinkFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.AttachmentFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.AttachmentValue;
 import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
@@ -35,7 +41,10 @@ import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifactWithComment;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapElementComment;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
+import org.tuleap.mylyn.task.internal.core.parser.DateIso8601Adapter;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
+import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
+import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
 /**
  * Utility class used to transform a {@link TuleapArtifact} into a {@link TaskData} and vice versa.
@@ -160,23 +169,35 @@ public class ArtifactTaskDataConverter {
 
 		// Additional fields
 		Collection<AbstractTuleapField> fields = this.tracker.getFields();
-		for (AbstractTuleapField abstractTuleapField : fields) {
-			boolean isTitle = titleField != null
-					&& abstractTuleapField.getIdentifier() == titleField.getIdentifier();
-			boolean isStatus = statusField != null
-					&& abstractTuleapField.getIdentifier() == statusField.getIdentifier();
+		for (AbstractTuleapField field : fields) {
+			boolean isTitle = titleField != null && field.getIdentifier() == titleField.getIdentifier();
+			boolean isStatus = statusField != null && field.getIdentifier() == statusField.getIdentifier();
 			boolean isAttachment = attachmentField != null
-					&& abstractTuleapField.getIdentifier() == attachmentField.getIdentifier();
+					&& field.getIdentifier() == attachmentField.getIdentifier();
 			boolean isContributor = contributorField != null
-					&& abstractTuleapField.getIdentifier() == contributorField.getIdentifier();
+					&& field.getIdentifier() == contributorField.getIdentifier();
 
 			if (!isTitle && !isStatus && !isAttachment && !isContributor) {
-				AbstractFieldValue fieldValue = element.getFieldValue(abstractTuleapField.getIdentifier());
+				AbstractFieldValue fieldValue = element.getFieldValue(field.getIdentifier());
 
 				if (fieldValue instanceof LiteralFieldValue) {
 					LiteralFieldValue literalFieldValue = (LiteralFieldValue)fieldValue;
-					tuleapArtifactMapper.setValue(literalFieldValue.getFieldValue(), literalFieldValue
-							.getFieldId());
+					if (field instanceof TuleapDate) {
+						try {
+							tuleapArtifactMapper.setDateValue(DateIso8601Adapter
+									.parseIso8601Date(literalFieldValue.getFieldValue()), literalFieldValue
+									.getFieldId());
+						} catch (ParseException e) {
+							TuleapCoreActivator.log(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
+									TuleapMylynTasksMessages.getString(
+											TuleapMylynTasksMessagesKeys.dateParsingLogMessage,
+											literalFieldValue.getFieldValue(), Integer
+													.valueOf(literalFieldValue.getFieldId()))));
+						}
+					} else {
+						tuleapArtifactMapper.setValue(literalFieldValue.getFieldValue(), literalFieldValue
+								.getFieldId());
+					}
 				} else if (fieldValue instanceof BoundFieldValue) {
 					BoundFieldValue boundFieldValue = (BoundFieldValue)fieldValue;
 					List<Integer> bindValueIds = boundFieldValue.getValueIds();
@@ -187,6 +208,13 @@ public class ArtifactTaskDataConverter {
 					}
 
 					tuleapArtifactMapper.setValues(values, boundFieldValue.getFieldId());
+				} else if (fieldValue instanceof ArtifactLinkFieldValue) {
+					ArtifactLinkFieldValue alValue = (ArtifactLinkFieldValue)fieldValue;
+					List<String> values = new ArrayList<String>();
+					for (int val : alValue.getFieldValues()) {
+						values.add(Integer.toString(val));
+					}
+					tuleapArtifactMapper.setValues(values, alValue.getFieldId());
 				}
 			}
 		}
@@ -212,29 +240,52 @@ public class ArtifactTaskDataConverter {
 	 * Creates a tuleap artifact POJO from the related task data.
 	 * 
 	 * @param taskData
-	 *            The updated task data.
+	 *            The task data of the task to create, <b>must be new</b>.
 	 * @return The tuleap artifact POJO.
 	 */
-	public TuleapArtifactWithComment createTuleapArtifact(TaskData taskData) {
+	public TuleapArtifact createTuleapArtifact(TaskData taskData) {
+		Assert.isTrue(taskData.isNew());
 		TuleapArtifactMapper tuleapArtifactMapper = new TuleapArtifactMapper(taskData, this.tracker);
-
-		TuleapArtifactWithComment tuleapArtifact = null;
 		TuleapTaskId taskId = tuleapArtifactMapper.getTaskId();
 		TuleapReference trackerRef = new TuleapReference();
 		trackerRef.setId(taskId.getTrackerId());
 		TuleapReference projectRef = new TuleapReference();
 		projectRef.setId(taskId.getProjectId());
-		if (taskData.isNew()) {
-			tuleapArtifact = new TuleapArtifactWithComment(trackerRef, projectRef);
-		} else {
-			tuleapArtifact = new TuleapArtifactWithComment(taskId.getArtifactId(), trackerRef, projectRef);
+		TuleapArtifact tuleapArtifact = new TuleapArtifact(trackerRef, projectRef);
+		for (AbstractTuleapField field : tracker.getFields()) {
+			tuleapArtifact.addField(field);
 		}
-
 		List<AbstractFieldValue> fieldValues = tuleapArtifactMapper.getFieldValues();
 		for (AbstractFieldValue abstractFieldValue : fieldValues) {
 			tuleapArtifact.addFieldValue(abstractFieldValue);
 		}
+		return tuleapArtifact;
+	}
 
+	/**
+	 * Creates a tuleap artifact POJO from the related task data.
+	 * 
+	 * @param taskData
+	 *            The task data of the task to update, <b>must not be new</b>.
+	 * @return The tuleap artifact POJO.
+	 */
+	public TuleapArtifactWithComment createTuleapArtifactWithComment(TaskData taskData) {
+		Assert.isTrue(!taskData.isNew());
+		TuleapArtifactMapper tuleapArtifactMapper = new TuleapArtifactMapper(taskData, this.tracker);
+		TuleapTaskId taskId = tuleapArtifactMapper.getTaskId();
+		TuleapReference trackerRef = new TuleapReference();
+		trackerRef.setId(taskId.getTrackerId());
+		TuleapReference projectRef = new TuleapReference();
+		projectRef.setId(taskId.getProjectId());
+		TuleapArtifactWithComment tuleapArtifact = new TuleapArtifactWithComment(taskId.getArtifactId(),
+				trackerRef, projectRef);
+		for (AbstractTuleapField field : tracker.getFields()) {
+			tuleapArtifact.addField(field);
+		}
+		List<AbstractFieldValue> fieldValues = tuleapArtifactMapper.getFieldValues();
+		for (AbstractFieldValue abstractFieldValue : fieldValues) {
+			tuleapArtifact.addFieldValue(abstractFieldValue);
+		}
 		// New comment
 		String newComment = ""; //$NON-NLS-1$
 		TaskAttribute newCommentAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW);
