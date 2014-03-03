@@ -32,6 +32,7 @@ import org.tuleap.mylyn.task.internal.core.model.data.AttachmentValue;
 import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifactWithComment;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapElementComment;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
@@ -214,19 +215,19 @@ public class ArtifactTaskDataConverter {
 	 *            The updated task data.
 	 * @return The tuleap artifact POJO.
 	 */
-	public TuleapArtifact createTuleapArtifact(TaskData taskData) {
+	public TuleapArtifactWithComment createTuleapArtifact(TaskData taskData) {
 		TuleapArtifactMapper tuleapArtifactMapper = new TuleapArtifactMapper(taskData, this.tracker);
 
-		TuleapArtifact tuleapArtifact = null;
+		TuleapArtifactWithComment tuleapArtifact = null;
 		TuleapTaskId taskId = tuleapArtifactMapper.getTaskId();
 		TuleapReference trackerRef = new TuleapReference();
 		trackerRef.setId(taskId.getTrackerId());
 		TuleapReference projectRef = new TuleapReference();
 		projectRef.setId(taskId.getProjectId());
 		if (taskData.isNew()) {
-			tuleapArtifact = new TuleapArtifact(trackerRef, projectRef);
+			tuleapArtifact = new TuleapArtifactWithComment(trackerRef, projectRef);
 		} else {
-			tuleapArtifact = new TuleapArtifact(taskId.getArtifactId(), trackerRef, projectRef);
+			tuleapArtifact = new TuleapArtifactWithComment(taskId.getArtifactId(), trackerRef, projectRef);
 		}
 
 		List<AbstractFieldValue> fieldValues = tuleapArtifactMapper.getFieldValues();

@@ -39,6 +39,7 @@ import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifactWithComment;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.wsdl.soap.v1.CodendiAPIBindingStub;
@@ -354,8 +355,8 @@ public class TuleapSoapConnectorTests {
 
 		TuleapReference projectRef = new TuleapReference(projectId, null);
 		TuleapReference trackerRef = new TuleapReference(configurationId, null);
-		TuleapArtifact tuleapArtifact = new TuleapArtifact(artifactId, projectRef, null, null, null, null,
-				null);
+		TuleapArtifactWithComment tuleapArtifact = new TuleapArtifactWithComment(artifactId, projectRef,
+				null, null, null, null, null);
 		tuleapArtifact.setTracker(trackerRef);
 		final String firstFieldValue = "such, wow, very";
 		tuleapArtifact.addFieldValue(new LiteralFieldValue(firstFieldId, firstFieldValue));

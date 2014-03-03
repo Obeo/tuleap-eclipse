@@ -308,4 +308,14 @@ public interface ITuleapConstants {
 	 */
 	String TULEAP_PREFERENCE_DEBUG_MODE = "tuleap_preference_debug_mode"; //$NON-NLS-1$
 
+	/**
+	 * The key used for the Tuleap tracker reference.
+	 */
+	String TRACKER = "tracker"; //$NON-NLS-1$
+
+	/**
+	 * The key used for the comment format.
+	 */
+	String FORMAT = "format"; //$NON-NLS-1$
+
 }

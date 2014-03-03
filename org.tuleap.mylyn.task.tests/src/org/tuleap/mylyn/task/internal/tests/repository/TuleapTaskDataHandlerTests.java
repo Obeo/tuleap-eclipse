@@ -42,6 +42,7 @@ import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifactWithComment;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
@@ -366,7 +367,7 @@ public class TuleapTaskDataHandlerTests {
 			}
 
 			@Override
-			public void updateArtifact(TuleapArtifact artifact, IProgressMonitor monitor)
+			public void updateArtifact(TuleapArtifactWithComment artifact, IProgressMonitor monitor)
 					throws CoreException {
 				// do nothing
 			}

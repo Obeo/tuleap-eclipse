@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model.data;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * This class represents a Tuleap artifact obtained from the Tuleap tracker.
@@ -20,22 +18,22 @@ import java.util.List;
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
-public class TuleapArtifact extends AbstractTuleapConfigurableElement<Integer> {
+public class TuleapArtifactWithComment extends TuleapArtifact {
 
 	/**
 	 * The serialization version id.
 	 */
-	private static final long serialVersionUID = 1272343379964391267L;
+	private static final long serialVersionUID = 6324467559744016479L;
 
 	/**
-	 * The comments of the element.
+	 * The new comment to send to the server.
 	 */
-	private List<TuleapElementComment> comments = new ArrayList<TuleapElementComment>();
+	private String newComment;
 
 	/**
 	 * Default constructor for deserialization.
 	 */
-	public TuleapArtifact() {
+	public TuleapArtifactWithComment() {
 		// Default constructor for deserialization
 	}
 
@@ -47,7 +45,7 @@ public class TuleapArtifact extends AbstractTuleapConfigurableElement<Integer> {
 	 * @param projectRef
 	 *            The project
 	 */
-	public TuleapArtifact(TuleapReference trackerRef, TuleapReference projectRef) {
+	public TuleapArtifactWithComment(TuleapReference trackerRef, TuleapReference projectRef) {
 		super(trackerRef, projectRef);
 	}
 
@@ -61,8 +59,8 @@ public class TuleapArtifact extends AbstractTuleapConfigurableElement<Integer> {
 	 * @param projectRef
 	 *            The project
 	 */
-	public TuleapArtifact(int id, TuleapReference trackerRef, TuleapReference projectRef) {
-		super(Integer.valueOf(id), trackerRef, projectRef);
+	public TuleapArtifactWithComment(int id, TuleapReference trackerRef, TuleapReference projectRef) {
+		super(id, trackerRef, projectRef);
 	}
 
 	/**
@@ -83,27 +81,27 @@ public class TuleapArtifact extends AbstractTuleapConfigurableElement<Integer> {
 	 * @param lastModificationDate
 	 *            The last modification date of the artifact
 	 */
-	public TuleapArtifact(int id, TuleapReference projectRef, String label, String url, String htmlUrl,
+	public TuleapArtifactWithComment(int id, TuleapReference projectRef, String label, String url, String htmlUrl,
 			Date creationDate, Date lastModificationDate) {
-		super(Integer.valueOf(id), projectRef, label, url, htmlUrl, creationDate, lastModificationDate);
+		super(id, projectRef, label, url, htmlUrl, creationDate, lastModificationDate);
 	}
 
 	/**
-	 * Adds a comment.
+	 * Sets the new comment.
 	 * 
-	 * @param artifactComment
-	 *            The comment to add.
+	 * @param newComment
+	 *            The new comment
 	 */
-	public void addComment(TuleapElementComment artifactComment) {
-		this.comments.add(artifactComment);
+	public void setNewComment(String newComment) {
+		this.newComment = newComment;
 	}
 
 	/**
-	 * Returns the comments.
+	 * Returns the new comment to send to the server.
 	 * 
-	 * @return the comments
+	 * @return The new comment to send to the server.
 	 */
-	public List<TuleapElementComment> getComments() {
-		return this.comments;
+	public String getNewComment() {
+		return this.newComment;
 	}
 }

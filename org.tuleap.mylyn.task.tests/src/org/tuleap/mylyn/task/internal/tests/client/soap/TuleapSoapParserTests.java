@@ -273,7 +273,6 @@ public class TuleapSoapParserTests {
 		assertThat(tuleapArtifact.getHtmlUrl(), is(htmlUrl));
 
 		assertThat(tuleapArtifact.getUri(), is(nullValue()));
-		assertThat(tuleapArtifact.getNewComment(), is(nullValue()));
 		assertThat(tuleapArtifact.getFieldValues().size(), is(0));
 		assertThat(tuleapArtifact.getLabel(), is(nullValue()));
 

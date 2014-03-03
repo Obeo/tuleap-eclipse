@@ -70,6 +70,7 @@ import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifactWithComment;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapAttachmentDescriptor;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapElementComment;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapUrlUtil;
@@ -1019,7 +1020,7 @@ public class TuleapSoapConnector {
 	 * @throws MalformedURLException
 	 *             If the URL if invalid
 	 */
-	public void updateArtifact(TuleapArtifact artifact, IProgressMonitor monitor)
+	public void updateArtifact(TuleapArtifactWithComment artifact, IProgressMonitor monitor)
 			throws MalformedURLException, RemoteException, ServiceException {
 
 		this.login(monitor);

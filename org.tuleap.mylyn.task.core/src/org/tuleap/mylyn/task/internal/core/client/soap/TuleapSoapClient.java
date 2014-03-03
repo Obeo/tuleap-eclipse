@@ -33,6 +33,7 @@ import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifactWithComment;
 
 /**
  * The Mylyn Tuleap client is in charge of the connection with the repository and it will realize the request
@@ -189,7 +190,8 @@ public class TuleapSoapClient {
 	 * @throws CoreException
 	 *             In case of issue during the update
 	 */
-	public void updateArtifact(TuleapArtifact artifact, IProgressMonitor monitor) throws CoreException {
+	public void updateArtifact(TuleapArtifactWithComment artifact, IProgressMonitor monitor)
+			throws CoreException {
 		try {
 			newConnector().updateArtifact(artifact, monitor);
 		} catch (MalformedURLException e) {

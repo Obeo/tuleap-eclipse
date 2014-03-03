@@ -43,6 +43,7 @@ import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifactWithComment;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCard;
@@ -136,7 +137,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				addMilestoneTaskDataToParent(taskData, artifactId, taskRepository, monitor);
 			}
 		} else {
-			tuleapSoapClient.updateArtifact(artifact, monitor);
+			tuleapSoapClient.updateArtifact((TuleapArtifactWithComment)artifact, monitor);
 			response = new RepositoryResponse(ResponseKind.TASK_UPDATED, taskData.getTaskId());
 			if (tracker.getProject().isMilestoneTracker(tracker.getIdentifier())) {
 				postMilestoneTaskData(taskData, taskRepository, monitor);

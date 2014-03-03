@@ -46,7 +46,7 @@ public abstract class AbstractProjectElementSerializer<T extends AbstractTuleapP
 		Object id = element.getId();
 		if (id instanceof Number) {
 			json.add(ITuleapConstants.ID, new JsonPrimitive((Number)element.getId()));
-		} else {
+		} else if (id != null) {
 			json.add(ITuleapConstants.ID, new JsonPrimitive(element.getId().toString()));
 		}
 		if (element.getLabel() != null) {
