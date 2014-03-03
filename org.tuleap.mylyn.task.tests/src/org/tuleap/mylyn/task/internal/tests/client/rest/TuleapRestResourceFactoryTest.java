@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.tuleap.mylyn.task.internal.core.client.rest.ITuleapHeaders;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestOperation;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestResource;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestResourceFactory;
@@ -75,8 +74,8 @@ public class TuleapRestResourceFactoryTest {
 	public void testGetMilestonesIsPutForbidden() throws CoreException {
 		RestResource milestone = factory.milestone(123);
 		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT");
-		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT");
+		headers.put(RestResource.ALLOW, "OPTIONS,PUT");
+		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT");
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
 
 		RestOperation put = milestone.put();
@@ -116,8 +115,8 @@ public class TuleapRestResourceFactoryTest {
 	public void testGetMilestonesBacklogGet() throws CoreException {
 		RestResource r = factory.milestoneBacklog(123);
 		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET");
-		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
+		headers.put(RestResource.ALLOW, "OPTIONS,GET");
+		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
 		RestOperation get = r.get();
 		assertNotNull(get);
@@ -136,8 +135,8 @@ public class TuleapRestResourceFactoryTest {
 	public void testGetMilestonesContentGet() throws CoreException {
 		RestResource r = factory.milestoneContent(123);
 		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET");
-		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
+		headers.put(RestResource.ALLOW, "OPTIONS,GET");
+		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
 		RestOperation get = r.get();
 		assertNotNull(get);
@@ -157,8 +156,8 @@ public class TuleapRestResourceFactoryTest {
 	public void testGetMilestonesBacklogGetWhenServerDoesNotAllowGet() throws CoreException {
 		RestResource r = factory.milestoneBacklog(123);
 		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(ITuleapHeaders.ALLOW, "OPTIONS");
-		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
+		headers.put(RestResource.ALLOW, "OPTIONS");
+		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
 		r.get();
 	}
@@ -174,8 +173,8 @@ public class TuleapRestResourceFactoryTest {
 	public void testGetMilestonesContentGetWhenServerDoesNotAllowGet() throws CoreException {
 		RestResource r = factory.milestoneContent(123);
 		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(ITuleapHeaders.ALLOW, "OPTIONS");
-		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
+		headers.put(RestResource.ALLOW, "OPTIONS");
+		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
 		r.get();
 	}
@@ -192,8 +191,8 @@ public class TuleapRestResourceFactoryTest {
 	public void testGetMilestonesBacklogGetWhenServerDoesNotAllowCorsGet() throws CoreException {
 		RestResource r = factory.milestoneBacklog(123);
 		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET");
-		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS");
+		headers.put(RestResource.ALLOW, "OPTIONS,GET");
+		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS");
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
 		r.get();
 	}
@@ -210,8 +209,8 @@ public class TuleapRestResourceFactoryTest {
 	public void testGetMilestonesContentGetWhenServerDoesNotAllowCorsGet() throws CoreException {
 		RestResource r = factory.milestoneContent(123);
 		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET");
-		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS");
+		headers.put(RestResource.ALLOW, "OPTIONS,GET");
+		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS");
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
 		r.get();
 	}
@@ -251,8 +250,8 @@ public class TuleapRestResourceFactoryTest {
 		RestResource r = factory.milestoneBacklog(123);
 
 		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT");
-		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT");
+		headers.put(RestResource.ALLOW, "OPTIONS,PUT");
+		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT");
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
 
 		RestOperation put = r.put();
@@ -273,8 +272,8 @@ public class TuleapRestResourceFactoryTest {
 		RestResource r = factory.milestoneContent(123);
 
 		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT");
-		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT");
+		headers.put(RestResource.ALLOW, "OPTIONS,PUT");
+		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT");
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
 
 		RestOperation put = r.put();

@@ -53,7 +53,7 @@ public class RestOperationIterable implements Iterable<JsonElement> {
 			operation.checkServerError(response);
 			Map<String, String> responseHeaders = response.getHeaders();
 			// ONLY X-PAGINATION-SIZE needs be checked, other values are not mandatory
-			if (responseHeaders.containsKey(ITuleapHeaders.HEADER_X_PAGINATION_SIZE)) {
+			if (responseHeaders.containsKey(RestResource.HEADER_X_PAGINATION_SIZE)) {
 				it = new JsonResponsePaginatedIterator(operation, response);
 			} else {
 				it = new JsonResponseIterator(response);

@@ -12,6 +12,7 @@ package org.tuleap.mylyn.task.internal.tests.repository;
 
 import com.google.common.collect.Sets;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -26,7 +27,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
@@ -215,16 +215,6 @@ public class TuleapTaskDataHandlerTests {
 	}
 
 	/**
-	 * Test the creation of an empty task data representing a Tuleap backlog item. We won't test here all the
-	 * options used in the creation of said task data since other unit tests will handle it.
-	 */
-	@Test
-	@Ignore("Remove this test")
-	public void initializeTaskDataBacklogItem() {
-		// testNewlyInitializedElementKind(backlogItemTypeId, AgileTaskKindUtil.TASK_KIND_BACKLOG_ITEM);
-	}
-
-	/**
 	 * Retrieve the artifact with the given task id and check that the task data created has the proper task
 	 * kind.
 	 * 
@@ -255,6 +245,24 @@ public class TuleapTaskDataHandlerTests {
 			@Override
 			public TuleapArtifact getArtifact(int id, IProgressMonitor monitor) throws CoreException {
 				return tuleapArtifact;
+			}
+
+			@Override
+			public List<TuleapBacklogItem> getMilestoneBacklog(int miId, IProgressMonitor monitor)
+					throws CoreException {
+				return Collections.emptyList();
+			}
+
+			@Override
+			public List<TuleapBacklogItem> getMilestoneContent(int miId, IProgressMonitor monitor)
+					throws CoreException {
+				return Collections.emptyList();
+			}
+
+			@Override
+			public List<TuleapMilestone> getSubMilestones(int miId, IProgressMonitor monitor)
+					throws CoreException {
+				return Collections.emptyList();
 			}
 		};
 
@@ -312,10 +320,8 @@ public class TuleapTaskDataHandlerTests {
 	 * Test the retrieval of the task data representing an existing Tuleap milestone. We won't test here all
 	 * the options used during the creation of said task data since other unit tests will handle it.
 	 */
-	@Ignore
 	@Test
 	public void testGetTaskDataMilestone() {
-		// TODO SBE remove the ignore when the creation of the milestone is done
 		this.testGetTaskData(TuleapTaskId.forArtifact(projectRef.getId(), milestoneTrackerId, milestoneId));
 	}
 
@@ -325,7 +331,6 @@ public class TuleapTaskDataHandlerTests {
 	 */
 	@Test
 	public void testGetTaskDataBacklogItem() {
-		// TODO [BacklogItems] Check this is appropriate
 		this.testGetTaskData(TuleapTaskId
 				.forArtifact(projectRef.getId(), backlogItemTrackerId, backlogItemId));
 	}
@@ -341,7 +346,7 @@ public class TuleapTaskDataHandlerTests {
 	 * @param responseKind
 	 *            The kind of the response
 	 */
-	private void testPostTaskData(TaskData taskData, TuleapTaskId taskId, ResponseKind responseKind) {
+	private void testPostTaskData(TaskData taskData, final TuleapTaskId taskId, ResponseKind responseKind) {
 		// Mock rest client
 		final TuleapRestClient tuleapRestClient = new TuleapRestClient(null, null, null) {
 			@Override
@@ -353,7 +358,7 @@ public class TuleapTaskDataHandlerTests {
 			@Override
 			public TuleapTaskId createArtifact(TuleapArtifact artifact, IProgressMonitor monitor)
 					throws CoreException {
-				return TuleapTaskId.forArtifact(projectRef.getId(), trackerRef.getId(), artifactId);
+				return TuleapTaskId.forName(taskId.toString());
 			}
 
 			@Override
@@ -420,7 +425,6 @@ public class TuleapTaskDataHandlerTests {
 	 * Test the submission of the new task data representing an existing Tuleap milestone. We won't test here
 	 * all the options available in the task data since other unit tests will handle it.
 	 */
-	@Ignore
 	@Test
 	public void testPostCreateTaskDataMilestone() {
 		TaskData taskData = new TaskData(new TaskAttributeMapper(this.repository),
@@ -438,7 +442,6 @@ public class TuleapTaskDataHandlerTests {
 	 * Test the submission of the new task data representing an existing Tuleap backlog item. We won't test
 	 * here all the options available in the task data since other unit tests will handle it.
 	 */
-	@Ignore
 	@Test
 	public void testPostCreateTaskDataBacklogItem() {
 		TaskData taskData = new TaskData(new TaskAttributeMapper(this.repository),

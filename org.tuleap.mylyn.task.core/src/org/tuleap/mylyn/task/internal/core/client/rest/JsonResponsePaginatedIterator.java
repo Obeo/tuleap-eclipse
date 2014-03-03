@@ -111,20 +111,20 @@ public class JsonResponsePaginatedIterator implements Iterator<JsonElement> {
 	 */
 	private void extractCounters(ServerResponse response) {
 		Map<String, String> responseHeaders = currentResponse.getHeaders();
-		String xPaginationSize = responseHeaders.get(ITuleapHeaders.HEADER_X_PAGINATION_SIZE);
-		String xPaginationLimit = responseHeaders.get(ITuleapHeaders.HEADER_X_PAGINATION_LIMIT);
-		String xPaginationOffset = responseHeaders.get(ITuleapHeaders.HEADER_X_PAGINATION_OFFSET);
+		String xPaginationSize = responseHeaders.get(RestResource.HEADER_X_PAGINATION_SIZE);
+		String xPaginationLimit = responseHeaders.get(RestResource.HEADER_X_PAGINATION_LIMIT);
+		String xPaginationOffset = responseHeaders.get(RestResource.HEADER_X_PAGINATION_OFFSET);
 		try {
 			nbElements = Integer.parseInt(xPaginationSize);
 			if (xPaginationLimit != null) {
 				nbElementsPerPage = Integer.parseInt(xPaginationLimit);
 			} else {
-				nbElementsPerPage = ITuleapHeaders.DEFAULT_PAGINATION_LIMIT;
+				nbElementsPerPage = RestResource.DEFAULT_PAGINATION_LIMIT;
 			}
 			if (xPaginationOffset != null) {
 				currentOffset = Integer.parseInt(xPaginationOffset);
 			} else {
-				currentOffset = ITuleapHeaders.DEFAULT_PAGINATION_OFFSET;
+				currentOffset = RestResource.DEFAULT_PAGINATION_OFFSET;
 			}
 		} catch (NumberFormatException e) {
 			throw new IllegalArgumentException(TuleapMylynTasksMessages

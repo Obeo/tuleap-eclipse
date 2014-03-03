@@ -32,6 +32,58 @@ import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
 public class RestResource {
+	/**
+	 * Location.
+	 */
+	public static final String LOCATION = "Location"; //$NON-NLS-1$
+
+	/**
+	 * Allow.
+	 */
+	public static final String ALLOW = "Allow"; //$NON-NLS-1$
+
+	/**
+	 * Access-Control-Allow-Methods.
+	 */
+	public static final String ACCESS_CONTROL_ALLOW_METHODS = "Access-Control-Allow-Methods"; //$NON-NLS-1$
+
+	/**
+	 * Authorization.
+	 */
+	public static final String AUTHORIZATION = "Authorization"; //$NON-NLS-1$
+
+	/**
+	 * Header key for the property that describes the pagination limit (the maximum number of elements per
+	 * page).
+	 */
+	public static final String HEADER_X_PAGINATION_LIMIT = "X-PAGINATION-LIMIT"; //$NON-NLS-1$
+
+	/**
+	 * Default value for pagination limit when header X-PAGINATION-LIMIT-MAX is not present.
+	 */
+	public static final int DEFAULT_PAGINATION_LIMIT = 50;
+
+	/**
+	 * Header key for the property that describes the pagination offset (index of the first element in the
+	 * current page in the whole list of elements).
+	 */
+	public static final String HEADER_X_PAGINATION_OFFSET = "X-PAGINATION-OFFSET"; //$NON-NLS-1$
+
+	/**
+	 * Default value for pagination offset when header X-PAGINATION-OFFSET is not present.
+	 */
+	public static final int DEFAULT_PAGINATION_OFFSET = 0;
+
+	/**
+	 * Header key for the property that describes the number of elements in the paginated list.
+	 */
+	public static final String HEADER_X_PAGINATION_SIZE = "X-PAGINATION-SIZE"; //$NON-NLS-1$
+
+	/**
+	 * Header key for the property that describes the authorized pagination limit (the maximum number of
+	 * elements per page that is authorized by the server).
+	 */
+	public static final String HEADER_X_PAGINATION_LIMIT_MAX = "X-PAGINATION-LIMIT-MAX"; //$NON-NLS-1$
 
 	/**
 	 * Constant containing the name of the HTTP method DELETE.
@@ -196,13 +248,13 @@ public class RestResource {
 		RestOperation operation = RestOperation.get(url, connector, gson, logger).withAuthenticator(
 				authenticator);
 		final Map<String, String> respHeaders = optionsResponse.getHeaders();
-		if (respHeaders.containsKey(ITuleapHeaders.HEADER_X_PAGINATION_SIZE)) {
+		if (respHeaders.containsKey(HEADER_X_PAGINATION_SIZE)) {
 			String limit;
-			if (respHeaders.containsKey(ITuleapHeaders.HEADER_X_PAGINATION_LIMIT_MAX)) {
-				String limitMax = respHeaders.get(ITuleapHeaders.HEADER_X_PAGINATION_LIMIT_MAX);
+			if (respHeaders.containsKey(HEADER_X_PAGINATION_LIMIT_MAX)) {
+				String limitMax = respHeaders.get(HEADER_X_PAGINATION_LIMIT_MAX);
 				limit = limitMax;
 			} else {
-				limit = String.valueOf(ITuleapHeaders.DEFAULT_PAGINATION_LIMIT);
+				limit = String.valueOf(DEFAULT_PAGINATION_LIMIT);
 			}
 			operation.withQueryParameter(LIMIT, limit);
 		}
@@ -283,7 +335,7 @@ public class RestResource {
 		}
 		// Check the available operations
 		final Map<String, String> respHeaders = optionsResponse.getHeaders();
-		String headerAllows = respHeaders.get(ITuleapHeaders.ALLOW);
+		String headerAllows = respHeaders.get(ALLOW);
 		// String headerCorsAllows = respHeaders.get(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS);
 		if (!optionsResponse.isOk()) {
 			String body = optionsResponse.getBody();
@@ -317,14 +369,6 @@ public class RestResource {
 					TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.cannotPerformOperation,
 							getUrl(), method)));
 		}
-
-		// FIXME uncomment when Tuleap supports CORS attributes in headers
-		// Only if it's useful to add this constraint!
-		// if (!headerCorsAllows.contains(method.toString())) {
-		// throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
-		// TuleapMylynTasksMessages.getString(
-		// TuleapMylynTasksMessagesKeys.notAuthorizedToPerformOperation, getUrl(), method)));
-		// }
 	}
 
 	/**

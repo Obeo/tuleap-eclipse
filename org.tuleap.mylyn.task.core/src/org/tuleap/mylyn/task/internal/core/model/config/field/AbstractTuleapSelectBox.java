@@ -37,11 +37,6 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 	private static final long serialVersionUID = -1169393740930580675L;
 
 	/**
-	 * The ID of the default static binding.
-	 */
-	private static final String TULEAP_STATIC_BINDING_ID = "static"; //$NON-NLS-1$
-
-	/**
 	 * The select box items.
 	 */
 	protected final Map<String, TuleapSelectBoxItem> items = new LinkedHashMap<String, TuleapSelectBoxItem>();
@@ -171,15 +166,6 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 	 */
 	public String getBinding() {
 		return this.binding;
-	}
-
-	/**
-	 * Returns <code>true</code> if the field is statically binded, <code>false</code> otherwise.
-	 * 
-	 * @return <code>true</code> if the field is statically binded, <code>false</code> otherwise.
-	 */
-	public boolean isStaticallyBinded() {
-		return TULEAP_STATIC_BINDING_ID.equals(this.binding);
 	}
 
 	/**

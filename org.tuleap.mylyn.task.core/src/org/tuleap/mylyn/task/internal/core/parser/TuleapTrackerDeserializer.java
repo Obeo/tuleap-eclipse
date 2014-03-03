@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.parser;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -23,6 +24,7 @@ import java.lang.reflect.Type;
 import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.Assert;
+import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.config.ITuleapTrackerConstants;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapResource;
@@ -41,6 +43,8 @@ import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapString;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapText;
+import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
+import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
 /**
  * This class is used to deserialize the JSON representation of a tracker.
@@ -154,6 +158,21 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 	 * The resources keyword.
 	 */
 	private static final String RESOURCES = "resources"; //$NON-NLS-1$
+
+	/**
+	 * Set of known field types.
+	 */
+	private static final ImmutableSet<String> KNOWN_FIELD_TYPES = ImmutableSet.of(
+			ITuleapTrackerConstants.TYPE_AID, ITuleapTrackerConstants.TYPE_ARTIFACT_LINK,
+			ITuleapTrackerConstants.TYPE_BURNDOWN, ITuleapTrackerConstants.TYPE_CB,
+			ITuleapTrackerConstants.TYPE_COMPUTED, ITuleapTrackerConstants.TYPE_CROSS_REFERENCES,
+			ITuleapTrackerConstants.TYPE_DATE, ITuleapTrackerConstants.TYPE_FILE,
+			ITuleapTrackerConstants.TYPE_FLOAT, ITuleapTrackerConstants.TYPE_INT,
+			ITuleapTrackerConstants.TYPE_LAST_UPDATED_ON, ITuleapTrackerConstants.TYPE_MSB,
+			ITuleapTrackerConstants.TYPE_PERM, ITuleapTrackerConstants.TYPE_SB,
+			ITuleapTrackerConstants.TYPE_STRING, ITuleapTrackerConstants.TYPE_SUBMITTED_BY,
+			ITuleapTrackerConstants.TYPE_SUBMITTED_ON, ITuleapTrackerConstants.TYPE_TBL,
+			ITuleapTrackerConstants.TYPE_TEXT);
 
 	/**
 	 * Returns the id of the given object.
@@ -291,6 +310,9 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 			tuleapField = new TuleapArtifactLink(fieldId);
 		} else if (ITuleapTrackerConstants.TYPE_FILE.equals(fieldType)) {
 			tuleapField = new TuleapFileUpload(fieldId);
+		} else if (!KNOWN_FIELD_TYPES.contains(fieldType)) {
+			TuleapCoreActivator.log(TuleapMylynTasksMessages.getString(
+					TuleapMylynTasksMessagesKeys.unsupportedTrackerFieldType, fieldType), false);
 		}
 		if (tuleapField != null) {
 			// the field label

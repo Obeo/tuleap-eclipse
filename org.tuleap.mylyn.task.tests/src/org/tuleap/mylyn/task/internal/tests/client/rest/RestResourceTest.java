@@ -20,7 +20,6 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Before;
 import org.junit.Test;
-import org.tuleap.mylyn.task.internal.core.client.rest.ITuleapHeaders;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestOperation;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestResource;
 import org.tuleap.mylyn.task.internal.core.client.rest.ServerResponse;
@@ -49,8 +48,8 @@ public class RestResourceTest {
 		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.GET | RestResource.PUT, //$NON-NLS-1$
 				connector, gson, new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET,PUT"); //$NON-NLS-1$
-		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET,PUT"); //$NON-NLS-1$
+		headers.put(RestResource.ALLOW, "OPTIONS,GET,PUT"); //$NON-NLS-1$
+		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET,PUT"); //$NON-NLS-1$
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
 		RestOperation get = r.get();
 		assertNotNull(get);
@@ -85,8 +84,8 @@ public class RestResourceTest {
 		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.DELETE, //$NON-NLS-1$
 				connector, gson, new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,DELETE"); //$NON-NLS-1$
-		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,DELETE"); //$NON-NLS-1$
+		headers.put(RestResource.ALLOW, "OPTIONS,DELETE"); //$NON-NLS-1$
+		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,DELETE"); //$NON-NLS-1$
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
 		RestOperation delete = r.delete();
 		assertNotNull(delete);
@@ -97,8 +96,8 @@ public class RestResourceTest {
 		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.GET, //$NON-NLS-1$
 				connector, gson, new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,DELETE"); //$NON-NLS-1$
-		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,DELETE"); //$NON-NLS-1$
+		headers.put(RestResource.ALLOW, "OPTIONS,DELETE"); //$NON-NLS-1$
+		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,DELETE"); //$NON-NLS-1$
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
 		r.delete();
 	}
@@ -108,8 +107,8 @@ public class RestResourceTest {
 		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.DELETE, //$NON-NLS-1$
 				connector, gson, new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
-		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		headers.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
 		r.delete();
 	}
@@ -119,8 +118,8 @@ public class RestResourceTest {
 		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.POST, //$NON-NLS-1$
 				connector, gson, new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,POST"); //$NON-NLS-1$
-		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,POST"); //$NON-NLS-1$
+		headers.put(RestResource.ALLOW, "OPTIONS,POST"); //$NON-NLS-1$
+		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,POST"); //$NON-NLS-1$
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
 		RestOperation post = r.post();
 		assertNotNull(post);
@@ -131,8 +130,8 @@ public class RestResourceTest {
 		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.GET, //$NON-NLS-1$
 				connector, gson, new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,POST"); //$NON-NLS-1$
-		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,POST"); //$NON-NLS-1$
+		headers.put(RestResource.ALLOW, "OPTIONS,POST"); //$NON-NLS-1$
+		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,POST"); //$NON-NLS-1$
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
 		r.post();
 	}
@@ -142,8 +141,8 @@ public class RestResourceTest {
 		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.POST, //$NON-NLS-1$
 				connector, gson, new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
-		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		headers.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
 		r.post();
 	}
@@ -153,8 +152,8 @@ public class RestResourceTest {
 		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.PUT, //$NON-NLS-1$
 				connector, gson, new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
-		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
+		headers.put(RestResource.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
+		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
 		RestOperation put = r.put();
 		assertNotNull(put);
@@ -165,8 +164,8 @@ public class RestResourceTest {
 		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.GET, //$NON-NLS-1$
 				connector, gson, new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
-		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
+		headers.put(RestResource.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
+		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
 		r.put();
 	}
@@ -176,8 +175,8 @@ public class RestResourceTest {
 		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.PUT, //$NON-NLS-1$
 				connector, gson, new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
-		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		headers.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
 		r.put();
 	}
@@ -187,8 +186,8 @@ public class RestResourceTest {
 		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.GET, //$NON-NLS-1$
 				connector, gson, new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
-		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		headers.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
 		RestOperation get = r.get();
 		assertNotNull(get);
@@ -199,8 +198,8 @@ public class RestResourceTest {
 		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.PUT, //$NON-NLS-1$
 				connector, gson, new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
-		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		headers.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
 		r.get();
 	}
@@ -210,8 +209,8 @@ public class RestResourceTest {
 		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.GET, //$NON-NLS-1$
 				connector, gson, new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
-		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
+		headers.put(RestResource.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
+		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
 		r.get();
 	}
@@ -228,10 +227,10 @@ public class RestResourceTest {
 		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.GET, connector, gson,
 				new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET");
-		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
-		headers.put(ITuleapHeaders.HEADER_X_PAGINATION_SIZE, "3");
-		headers.put(ITuleapHeaders.HEADER_X_PAGINATION_LIMIT_MAX, "30");
+		headers.put(RestResource.ALLOW, "OPTIONS,GET");
+		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
+		headers.put(RestResource.HEADER_X_PAGINATION_SIZE, "3");
+		headers.put(RestResource.HEADER_X_PAGINATION_LIMIT_MAX, "30");
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
 		RestOperation get = r.get();
 		HttpMethod method = get.createMethod();
@@ -239,7 +238,7 @@ public class RestResourceTest {
 		assertEquals("/server/api/v12.5/my/url", method.getPath());
 		assertEquals("limit=30", method.getQueryString());
 
-		headers.put(ITuleapHeaders.HEADER_X_PAGINATION_LIMIT_MAX, "10");
+		headers.put(RestResource.HEADER_X_PAGINATION_LIMIT_MAX, "10");
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
 		get = r.get();
 		method = get.createMethod();
@@ -260,11 +259,11 @@ public class RestResourceTest {
 		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.GET, connector, gson,
 				new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET");
-		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
-		headers.put(ITuleapHeaders.HEADER_X_PAGINATION_SIZE, "3");
-		headers.put(ITuleapHeaders.HEADER_X_PAGINATION_LIMIT_MAX, "30");
-		headers.put(ITuleapHeaders.HEADER_X_PAGINATION_LIMIT, "20");
+		headers.put(RestResource.ALLOW, "OPTIONS,GET");
+		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
+		headers.put(RestResource.HEADER_X_PAGINATION_SIZE, "3");
+		headers.put(RestResource.HEADER_X_PAGINATION_LIMIT_MAX, "30");
+		headers.put(RestResource.HEADER_X_PAGINATION_LIMIT, "20");
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
 		RestOperation get = r.get();
 		HttpMethod method = get.createMethod();
@@ -272,7 +271,7 @@ public class RestResourceTest {
 		assertEquals("/server/api/v12.5/my/url", method.getPath());
 		assertEquals("limit=30", method.getQueryString());
 
-		headers.put(ITuleapHeaders.HEADER_X_PAGINATION_LIMIT_MAX, "10");
+		headers.put(RestResource.HEADER_X_PAGINATION_LIMIT_MAX, "10");
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
 		get = r.get();
 		method = get.createMethod();
@@ -293,15 +292,15 @@ public class RestResourceTest {
 		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.GET, connector, gson,
 				new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET");
-		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
-		headers.put(ITuleapHeaders.HEADER_X_PAGINATION_SIZE, "3");
+		headers.put(RestResource.ALLOW, "OPTIONS,GET");
+		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
+		headers.put(RestResource.HEADER_X_PAGINATION_SIZE, "3");
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
 		RestOperation get = r.get();
 		HttpMethod method = get.createMethod();
 		assertEquals("GET", method.getName());
 		assertEquals("/server/api/v12.5/my/url", method.getPath());
-		assertEquals("limit=" + ITuleapHeaders.DEFAULT_PAGINATION_LIMIT, method.getQueryString());
+		assertEquals("limit=" + RestResource.DEFAULT_PAGINATION_LIMIT, method.getQueryString());
 	}
 
 	/**
@@ -315,8 +314,8 @@ public class RestResourceTest {
 		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.GET, connector, gson,
 				new TestLogger());
 		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(ITuleapHeaders.ALLOW, "OPTIONS,GET");
-		headers.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
+		headers.put(RestResource.ALLOW, "OPTIONS,GET");
+		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
 		RestOperation get = r.get();
 		HttpMethod method = get.createMethod();
@@ -324,7 +323,7 @@ public class RestResourceTest {
 		assertEquals("/server/api/v12.5/my/url", method.getPath());
 		assertEquals("", method.getQueryString());
 
-		headers.put(ITuleapHeaders.HEADER_X_PAGINATION_LIMIT_MAX, "10");
+		headers.put(RestResource.HEADER_X_PAGINATION_LIMIT_MAX, "10");
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
 		get = r.get();
 		method = get.createMethod();

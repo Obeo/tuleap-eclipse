@@ -444,11 +444,11 @@ public class TuleapTracker implements Serializable {
 	/**
 	 * Tracker resources getter.
 	 * 
-	 * @return the trackerResources, a list that is never <code>null</code> but possibly empty.
+	 * @return the trackerResources, an array that is never <code>null</code> but possibly empty.
 	 */
 	public TuleapResource[] getTrackerResources() {
 		if (resources == null) {
-			return null;
+			return new TuleapResource[0];
 		}
 		return resources.clone();
 	}

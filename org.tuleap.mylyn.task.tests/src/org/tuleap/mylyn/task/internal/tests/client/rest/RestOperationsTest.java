@@ -23,9 +23,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.junit.Before;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.client.rest.IAuthenticator;
-import org.tuleap.mylyn.task.internal.core.client.rest.ITuleapHeaders;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestOperation;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestOperationIterable;
+import org.tuleap.mylyn.task.internal.core.client.rest.RestResource;
 import org.tuleap.mylyn.task.internal.core.client.rest.ServerResponse;
 import org.tuleap.mylyn.task.internal.core.model.TuleapToken;
 import org.tuleap.mylyn.task.internal.tests.TestLogger;
@@ -144,16 +144,16 @@ public class RestOperationsTest {
 		RestOperation op = RestOperation.get("some/url", paginatingConnector, gson, logger);
 		Map<String, String> responseHeaders = Maps.newLinkedHashMap();
 
-		responseHeaders.put(ITuleapHeaders.HEADER_X_PAGINATION_SIZE, "3");
-		responseHeaders.put(ITuleapHeaders.HEADER_X_PAGINATION_LIMIT, "2");
-		responseHeaders.put(ITuleapHeaders.HEADER_X_PAGINATION_OFFSET, "0");
+		responseHeaders.put(RestResource.HEADER_X_PAGINATION_SIZE, "3");
+		responseHeaders.put(RestResource.HEADER_X_PAGINATION_LIMIT, "2");
+		responseHeaders.put(RestResource.HEADER_X_PAGINATION_OFFSET, "0");
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, "[{'a':'1'},{'a':'2'}]",
 				responseHeaders);
 		Map<String, String> responseHeaders2 = Maps.newLinkedHashMap();
 
-		responseHeaders2.put(ITuleapHeaders.HEADER_X_PAGINATION_SIZE, "3");
-		responseHeaders2.put(ITuleapHeaders.HEADER_X_PAGINATION_LIMIT, "2");
-		responseHeaders2.put(ITuleapHeaders.HEADER_X_PAGINATION_OFFSET, "2");
+		responseHeaders2.put(RestResource.HEADER_X_PAGINATION_SIZE, "3");
+		responseHeaders2.put(RestResource.HEADER_X_PAGINATION_LIMIT, "2");
+		responseHeaders2.put(RestResource.HEADER_X_PAGINATION_OFFSET, "2");
 		ServerResponse response2 = new ServerResponse(ServerResponse.STATUS_OK, "[{'a':'3'}]",
 				responseHeaders2);
 

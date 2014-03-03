@@ -24,9 +24,8 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.tuleap.mylyn.task.internal.core.client.rest.ITuleapHeaders;
+import org.tuleap.mylyn.task.internal.core.client.rest.RestResource;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestResourceFactory;
 import org.tuleap.mylyn.task.internal.core.client.rest.ServerResponse;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
@@ -83,8 +82,8 @@ public class TuleapRestClientTest {
 	public void testRetrieveMilestoneWithoutCardwall() throws CoreException, ParseException {
 		String jsonMilestone = ParserUtil.loadFile("/milestones/release200.json");
 		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
-		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonMilestone, respHeaders);
 		connector.setResponse(response);
 		TuleapMilestone milestone = client.getMilestone(200, null);
@@ -106,8 +105,8 @@ public class TuleapRestClientTest {
 	public void testRetrieveMilestoneBacklog() throws CoreException, ParseException {
 		String jsonMilestone = ParserUtil.loadFile("/milestones/release200.json");
 		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
-		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonMilestone, respHeaders);
 		connector.setResponse(response);
 		client.getMilestoneBacklog(200, null);
@@ -128,8 +127,8 @@ public class TuleapRestClientTest {
 	public void testRetrieveMilestoneContent() throws CoreException, ParseException {
 		String jsonMilestone = ParserUtil.loadFile("/milestones/release200.json");
 		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
-		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonMilestone, respHeaders);
 		connector.setResponse(response);
 		client.getMilestoneContent(200, null);
@@ -146,54 +145,6 @@ public class TuleapRestClientTest {
 		assertEquals("GET", request.method); //$NON-NLS-1$
 	}
 
-	@Test
-	@Ignore("Fix me when cardwalls are back in the game")
-	public void testRetrieveMilestoneWithCardwall() throws CoreException, ParseException {
-		MockListRestConnector listConnector = new MockListRestConnector();
-		restResourceFactory = new RestResourceFactory(apiVersion, listConnector, gson, new TestLogger());
-		listConnector.setResourceFactory(restResourceFactory);
-		client = new TuleapRestClient(restResourceFactory, gson, repository);
-
-		String sprint250 = ParserUtil.loadFile("/milestones/sprint250.json"); //$NON-NLS-1$
-
-		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
-		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
-		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, sprint250, respHeaders);
-		listConnector.addServerResponse(response).addServerResponse(response);
-
-		String cardwall = ParserUtil.loadFile("/cardwalls/cw_sprint250.json"); //$NON-NLS-1$
-
-		Map<String, String> respHeaders2 = Maps.newHashMap();
-		respHeaders2.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
-		respHeaders2.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
-		ServerResponse response2 = new ServerResponse(ServerResponse.STATUS_OK, cardwall, respHeaders2);
-		listConnector.addServerResponse(response2).addServerResponse(response2);
-
-		TuleapMilestone milestone = client.getMilestone(250, null);
-		assertNotNull(milestone);
-
-		// Let's check the requests that have been sent.
-		List<ServerRequest> requestsSent = listConnector.getRequestsSent();
-		assertEquals(4, requestsSent.size());
-
-		ServerRequest request = requestsSent.get(0);
-		assertEquals("/api/v12.3/milestones/250", request.url); //$NON-NLS-1$
-		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
-
-		request = requestsSent.get(1);
-		assertEquals("/api/v12.3/milestones/250", request.url); //$NON-NLS-1$
-		assertEquals("GET", request.method); //$NON-NLS-1$
-
-		request = requestsSent.get(2);
-		assertEquals("/api/v12.3/milestones/250/cardwall", request.url); //$NON-NLS-1$
-		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
-
-		request = requestsSent.get(3);
-		assertEquals("/api/v12.3/milestones/250/cardwall", request.url); //$NON-NLS-1$
-		assertEquals("GET", request.method); //$NON-NLS-1$
-	}
-
 	/**
 	 * Test the retrieval of a backlog item.
 	 * 
@@ -206,8 +157,8 @@ public class TuleapRestClientTest {
 	public void testRetrieveBacklogItem() throws CoreException, ParseException {
 		String userStory = ParserUtil.loadFile("/backlog_items/userStory350.json"); //$NON-NLS-1$
 		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
-		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, userStory, respHeaders);
 		connector.setResponse(response);
 		TuleapBacklogItem bi = client.getBacklogItem(350, null);
@@ -229,8 +180,8 @@ public class TuleapRestClientTest {
 	public void testRetrieveUserGroups() throws CoreException, ParseException {
 		String jsonMilestone = ParserUtil.loadFile("/groups/groups.json");
 		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
-		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonMilestone, respHeaders);
 		connector.setResponse(response);
 		client.getProjectUserGroups(200, null);
@@ -251,8 +202,8 @@ public class TuleapRestClientTest {
 	public void testRetrieveUsers() throws CoreException, ParseException {
 		String jsonMilestone = ParserUtil.loadFile("/users/project_admins.json");
 		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
-		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonMilestone, respHeaders);
 		connector.setResponse(response);
 		client.getUserGroupUsers(200, null);
@@ -273,8 +224,8 @@ public class TuleapRestClientTest {
 	public void testRetrieveTrackerReports() throws CoreException, ParseException {
 		String jsonMilestone = ParserUtil.loadFile("/tracker_reports/tracker_reports.json");
 		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
-		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonMilestone, respHeaders);
 		connector.setResponse(response);
 		client.getTrackerReports(200, null);
@@ -295,8 +246,8 @@ public class TuleapRestClientTest {
 	public void testRetrieveProjects() throws CoreException, ParseException {
 		String jsonMilestone = ParserUtil.loadFile("/projects/projects.json");
 		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
-		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonMilestone, respHeaders);
 		connector.setResponse(response);
 		client.getProjects(null);
@@ -317,8 +268,8 @@ public class TuleapRestClientTest {
 	public void testRetrieveProjectTrackers() throws CoreException, ParseException {
 		String jsonTrackers = ParserUtil.loadFile("/trackers/trackers_part_1.json");
 		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
-		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonTrackers, respHeaders);
 		connector.setResponse(response);
 		client.getProjectTrackers(101, null);
@@ -339,8 +290,8 @@ public class TuleapRestClientTest {
 	public void testRetrieveTrackerReportArtifacts() throws CoreException, ParseException {
 		String jsonTrackers = ParserUtil.loadFile("/artifacts/artifacts.json");
 		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
-		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonTrackers, respHeaders);
 		connector.setResponse(response);
 		client.getTrackerReportArtifacts(10, null);
@@ -361,8 +312,8 @@ public class TuleapRestClientTest {
 	public void testTracker() throws CoreException, ParseException {
 		String jsonTracker = ParserUtil.loadFile("/trackers/tracker-5.json");
 		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
-		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonTracker, respHeaders);
 		connector.setResponse(response);
 		client.getTracker(102, null);
@@ -407,8 +358,8 @@ public class TuleapRestClientTest {
 		backlog.add(item3);
 
 		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
-		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK,
 				"The backlogItem response body", respHeaders); //$NON-NLS-1$
 
@@ -458,8 +409,8 @@ public class TuleapRestClientTest {
 		content.add(item3);
 
 		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
-		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK,
 				"The backlogItem response body", respHeaders); //$NON-NLS-1$
 
@@ -490,8 +441,8 @@ public class TuleapRestClientTest {
 	public void testlogin() throws CoreException {
 
 		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,POST"); //$NON-NLS-1$
-		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,POST"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,POST"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,POST"); //$NON-NLS-1$
 
 		String token = ParserUtil.loadFile("/tokens/token-0.json");
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, token, respHeaders);
@@ -536,8 +487,8 @@ public class TuleapRestClientTest {
 		listConnector.setResourceFactory(restResourceFactory);
 
 		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,GET,PUT,POST"); //$NON-NLS-1$
-		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET,PUT,POST"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,GET,PUT,POST"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET,PUT,POST"); //$NON-NLS-1$
 
 		ServerResponse response401Unauthorized = new ServerResponse(ServerResponse.STATUS_UNAUTHORIZED, "",
 				respHeaders);
@@ -606,8 +557,8 @@ public class TuleapRestClientTest {
 		card.setStatus(TuleapStatus.valueOf("Open"));
 
 		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
-		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK,
 				"The response body", respHeaders); //$NON-NLS-1$
 
@@ -653,8 +604,8 @@ public class TuleapRestClientTest {
 		card.setStatus(TuleapStatus.valueOf("Open"));
 
 		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
-		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK,
 				"The response body", respHeaders); //$NON-NLS-1$
 
@@ -711,8 +662,8 @@ public class TuleapRestClientTest {
 		card.addFieldValue(firstBoundFieldValue);
 
 		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
-		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK,
 				"The response body", respHeaders); //$NON-NLS-1$
 
@@ -770,8 +721,8 @@ public class TuleapRestClientTest {
 		card.addFieldValue(fileDescriptions);
 
 		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
-		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK,
 				"The response body", respHeaders); //$NON-NLS-1$
 
@@ -817,8 +768,8 @@ public class TuleapRestClientTest {
 		submilestones.add(submilestone4);
 
 		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(ITuleapHeaders.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
-		respHeaders.put(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK,
 				"The milestone response body", respHeaders); //$NON-NLS-1$
 
