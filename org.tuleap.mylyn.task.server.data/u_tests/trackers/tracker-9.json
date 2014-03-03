@@ -59,7 +59,19 @@
         "transitions": [
             {
                 "from_id": null,
-                "to_id": 0
+                "to_id": 334
+            },
+            {
+                "from_id": 334,
+                "to_id": 337
+            },
+            {
+                "from_id": 334,
+                "to_id": 338
+            },
+            {
+                "from_id": 337,
+                "to_id": 338
             }
         ]
     },

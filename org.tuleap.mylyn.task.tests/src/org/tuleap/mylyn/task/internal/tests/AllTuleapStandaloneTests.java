@@ -30,6 +30,7 @@ import org.tuleap.mylyn.task.internal.tests.model.TuleapProjectConfigurationTest
 import org.tuleap.mylyn.task.internal.tests.model.TuleapTrackerConfigurationTests;
 import org.tuleap.mylyn.task.internal.tests.model.TuleapWorkflowTests;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapCardwallConfigurationDeserializerTests;
+import org.tuleap.mylyn.task.internal.tests.parser.TuleapJsonParserTest;
 import org.tuleap.mylyn.task.internal.tests.repository.TuleapRepositoryConnectorTests;
 import org.tuleap.mylyn.task.internal.tests.repository.TuleapTaskDataHandlerTests;
 import org.tuleap.mylyn.task.internal.tests.serializer.TuleapCardSerializerTest;
@@ -48,7 +49,7 @@ import org.tuleap.mylyn.task.internal.tests.server.ServerResponseTest;
 		TuleapTrackerConfigurationTests.class, ServerResponseTest.class,
 		TuleapProjectConfigurationTests.class, TuleapCardwallConfigurationDeserializerTests.class,
 		TuleapMilestoneSerializerTests.class, MilestoneTaskDataConverterTest.class,
-		TuleapSoapConnectorTests.class, TuleapRepositoryConnectorTests.class,
+		TuleapSoapConnectorTests.class, TuleapRepositoryConnectorTests.class, TuleapJsonParserTest.class,
 		TuleapTaskDataHandlerTests.class, TuleapWorkflowTests.class, TuleapArtifactMapperTests.class,
 		TuleapRestResourceFactoryTest.class, RestResourceTest.class, RestOperationsTest.class,
 		TuleapRestClientTest.class, TuleapCardSerializerTest.class, TuleapRestClientLimitTests.class })

@@ -19,6 +19,7 @@ import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
 
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapWorkflowTransition;
+import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
 /**
  * Workflow transition deserializer.
@@ -47,7 +48,8 @@ public class TuleapWorkflowTransitionDeserializer implements JsonDeserializer<Tu
 			JsonDeserializationContext context) throws JsonParseException {
 		JsonObject jsonObject = json.getAsJsonObject();
 		JsonElement fromElement = jsonObject.get(FROM_FIELD_VALUE_ID);
-		int from = -1;
+		// By default, the initial state is unselected
+		int from = ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID;
 		if (fromElement != null && !fromElement.isJsonNull()) {
 			from = fromElement.getAsInt();
 		}

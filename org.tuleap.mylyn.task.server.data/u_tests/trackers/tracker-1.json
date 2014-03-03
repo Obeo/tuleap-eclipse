@@ -302,7 +302,7 @@
         ],
         "transitions": [
             {
-                "from_id": 100,
+                "from_id": null,
                 "to_id": 0
             },
             {

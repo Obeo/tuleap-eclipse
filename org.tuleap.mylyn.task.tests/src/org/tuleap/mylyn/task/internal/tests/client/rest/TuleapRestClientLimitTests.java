@@ -16,6 +16,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -259,7 +260,20 @@ public class TuleapRestClientLimitTests {
 
 		TuleapWorkflow workflow = selectBoxField.getWorkflow();
 		assertNotNull(workflow);
-		assertFalse(workflow.hasTransitions());
+		assertTrue(workflow.hasTransitions());
+		Collection<TuleapSelectBoxItem> accessibleStates = workflow
+				.accessibleStates(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID);
+		assertEquals(1, accessibleStates.size());
+		assertEquals(334, accessibleStates.iterator().next().getIdentifier());
+		accessibleStates = workflow.accessibleStates(334);
+		assertEquals(2, accessibleStates.size());
+		assertTrue(accessibleStates.containsAll(Arrays.asList(selectBoxField.getItem("337"), selectBoxField
+				.getItem("338"))));
+		accessibleStates = workflow.accessibleStates(337);
+		assertEquals(1, accessibleStates.size());
+		assertEquals(338, accessibleStates.iterator().next().getIdentifier());
+		accessibleStates = workflow.accessibleStates(338);
+		assertTrue(accessibleStates.isEmpty());
 
 		assertEquals(1, tracker.getTrackerResources().length);
 
