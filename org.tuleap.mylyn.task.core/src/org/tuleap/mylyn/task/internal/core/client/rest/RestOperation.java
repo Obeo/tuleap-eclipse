@@ -252,7 +252,7 @@ public class RestOperation {
 				}
 			} catch (UnsupportedEncodingException e) {
 				logger.log(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, TuleapMylynTasksMessages
-						.getString(TuleapMylynTasksMessagesKeys.encodingUtf8NotSUpported)));
+						.getString(TuleapMylynTasksMessagesKeys.encodingUtf8NotSupported)));
 				return null;
 			}
 			((EntityEnclosingMethod)m).setRequestEntity(entity);

@@ -461,7 +461,7 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	/**
 	 * Message indicating that UTF-8 is not supported for REST communication.
 	 */
-	public static String encodingUtf8NotSUpported;
+	public static String encodingUtf8NotSupported;
 
 	static {
 		// load message values from bundle file

@@ -112,12 +112,11 @@ public class TuleapRestClient implements IAuthenticator {
 	 *             In case of error during the log in or log out process
 	 */
 	public IStatus validateConnection(IProgressMonitor monitor) throws CoreException {
-		// FIXME when Tuleap has a convenient route
-		// resourceFactory.user().get().checkedRun();
 		if (monitor != null) {
 			monitor.beginTask(TuleapMylynTasksMessages
 					.getString(TuleapMylynTasksMessagesKeys.validateConnection), 10);
 		}
+		login();
 		return Status.OK_STATUS;
 	}
 

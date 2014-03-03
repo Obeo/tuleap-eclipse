@@ -180,8 +180,8 @@ public class TuleapRepositorySettingsPage extends AbstractRepositorySettingsPage
 			final AbstractWebLocation location = new TaskRepositoryLocationFactory()
 					.createWebLocation(taskRepository);
 			TuleapClientManager manager = new TuleapClientManager();
-			this.tuleapValidator = new TuleapValidator(location, manager.getSoapClient(taskRepository),
-					manager.getRestClient(taskRepository), taskRepository);
+			this.tuleapValidator = new TuleapValidator(location, manager.getRestClient(taskRepository),
+					taskRepository);
 		}
 
 		/**

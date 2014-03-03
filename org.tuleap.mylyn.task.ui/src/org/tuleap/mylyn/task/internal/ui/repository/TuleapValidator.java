@@ -19,7 +19,6 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
-import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.ui.TuleapTasksUIPlugin;
 import org.tuleap.mylyn.task.internal.ui.util.TuleapUIMessages;
@@ -40,11 +39,6 @@ public class TuleapValidator {
 	private AbstractWebLocation location;
 
 	/**
-	 * The SOAP client.
-	 */
-	private TuleapSoapClient tuleapSoapClient;
-
-	/**
 	 * The REST client.
 	 */
 	private TuleapRestClient tuleapRestClient;
@@ -57,19 +51,16 @@ public class TuleapValidator {
 	/**
 	 * The constructor.
 	 * 
-	 * @param tuleapRestClient
-	 *            The REST client
-	 * @param tuleapSoapClient
-	 *            The SOAP client
 	 * @param location
 	 *            The location
+	 * @param tuleapRestClient
+	 *            The REST client
 	 * @param repository
 	 *            The Mylyn task repository
 	 */
-	public TuleapValidator(AbstractWebLocation location, TuleapSoapClient tuleapSoapClient,
-			TuleapRestClient tuleapRestClient, TaskRepository repository) {
+	public TuleapValidator(AbstractWebLocation location, TuleapRestClient tuleapRestClient,
+			TaskRepository repository) {
 		this.location = location;
-		this.tuleapSoapClient = tuleapSoapClient;
 		this.tuleapRestClient = tuleapRestClient;
 		this.taskRepository = repository;
 	}
@@ -87,15 +78,10 @@ public class TuleapValidator {
 		IStatus status = new Status(IStatus.ERROR, TuleapTasksUIPlugin.PLUGIN_ID, TuleapUIMessages
 				.getString(TuleapUiMessagesKeys.invalidRepositoryConnector));
 		if (ITuleapConstants.CONNECTOR_KIND.equals(this.taskRepository.getConnectorKind())) {
-			monitor.beginTask(TuleapUIMessages.getString(TuleapUiMessagesKeys.validateConnection),
-					10);
+			monitor.beginTask(TuleapUIMessages.getString(TuleapUiMessagesKeys.validateConnection), 10);
 			AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
 			if (credentials != null) {
-				status = tuleapSoapClient.validateConnection(monitor);
-
-				if (status.isOK()) {
-					status = tuleapRestClient.validateConnection(monitor);
-				}
+				status = tuleapRestClient.validateConnection(monitor);
 			} else {
 				// No credentials -> invalid
 				status = new Status(IStatus.ERROR, TuleapTasksUIPlugin.PLUGIN_ID, TuleapUIMessages
