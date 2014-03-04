@@ -21,8 +21,6 @@ import org.tuleap.mylyn.task.internal.tests.client.rest.RestResourceTest;
 import org.tuleap.mylyn.task.internal.tests.client.rest.TuleapRestClientLimitTests;
 import org.tuleap.mylyn.task.internal.tests.client.rest.TuleapRestClientTest;
 import org.tuleap.mylyn.task.internal.tests.client.rest.TuleapRestResourceFactoryTest;
-import org.tuleap.mylyn.task.internal.tests.client.soap.TuleapSoapConnectorTests;
-import org.tuleap.mylyn.task.internal.tests.client.soap.TuleapSoapParserTests;
 import org.tuleap.mylyn.task.internal.tests.data.TuleapArtifactMapperTests;
 import org.tuleap.mylyn.task.internal.tests.data.TuleapTaskIdTests;
 import org.tuleap.mylyn.task.internal.tests.model.TuleapProjectConfigurationTests;
@@ -42,9 +40,8 @@ import org.tuleap.mylyn.task.internal.tests.server.ServerResponseTest;
  * @since 0.7
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({TuleapSoapParserTests.class, TuleapTaskIdTests.class,
-		TuleapTrackerConfigurationTests.class, ServerResponseTest.class,
-		TuleapProjectConfigurationTests.class, TuleapSoapConnectorTests.class,
+@Suite.SuiteClasses({TuleapTaskIdTests.class, TuleapTrackerConfigurationTests.class,
+		ServerResponseTest.class, TuleapProjectConfigurationTests.class,
 		TuleapRepositoryConnectorTests.class, TuleapJsonParserTest.class, TuleapTaskDataHandlerTests.class,
 		TuleapWorkflowTests.class, TuleapArtifactMapperTests.class, TuleapRestResourceFactoryTest.class,
 		RestResourceTest.class, RestOperationsTest.class, TuleapRestClientTest.class,

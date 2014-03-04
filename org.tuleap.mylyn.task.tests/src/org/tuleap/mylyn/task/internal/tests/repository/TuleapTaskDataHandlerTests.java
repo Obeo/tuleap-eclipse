@@ -28,7 +28,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
-import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPlanning;
@@ -232,11 +231,6 @@ public class TuleapTaskDataHandlerTests {
 
 		// mock client manager
 		final TuleapClientManager tuleapClientManager = new TuleapClientManager() {
-			@Override
-			public TuleapSoapClient getSoapClient(TaskRepository taskRepository) {
-				return null;
-			}
-
 			@Override
 			public TuleapRestClient getRestClient(TaskRepository taskRepository) {
 				return tuleapRestClient;

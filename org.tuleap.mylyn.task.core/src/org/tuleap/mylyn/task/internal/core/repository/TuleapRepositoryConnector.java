@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -44,7 +45,6 @@ import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapQueryConstants;
 import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
-import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.data.converter.ArtifactTaskDataConverter;
@@ -302,36 +302,8 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 */
 	private void performStandardQuery(TaskRepository taskRepository, IRepositoryQuery query,
 			TaskDataCollector collector, IProgressMonitor monitor) {
-		TuleapSoapClient soapClient = this.getClientManager().getSoapClient(taskRepository);
-		int trackerId = Integer.valueOf(query.getAttribute(ITuleapQueryConstants.QUERY_TRACKER_ID))
-				.intValue();
-		TuleapServer server = this.getServer(taskRepository.getRepositoryUrl());
-		TuleapTracker tracker = server.getTracker(trackerId);
-		try {
-			tracker = this.refreshTracker(taskRepository, tracker, monitor);
-		} catch (CoreException e) {
-			TuleapCoreActivator.log(e, true);
-		}
-		ArtifactTaskDataConverter artifactTaskDataConverter = new ArtifactTaskDataConverter(tracker,
-				taskRepository, this);
-		List<TuleapArtifact> artifacts = soapClient.getArtifactsFromQuery(query, server, tracker, monitor);
-		for (TuleapArtifact artifact : artifacts) {
-			TuleapTaskId taskDataId = TuleapTaskId.forArtifact(tracker.getProject().getIdentifier(), artifact
-					.getTracker().getId(), artifact.getId().intValue());
-
-			TaskAttributeMapper attributeMapper = this.getTaskDataHandler()
-					.getAttributeMapper(taskRepository);
-			TaskData taskData = new TaskData(attributeMapper, this.getConnectorKind(), taskRepository
-					.getRepositoryUrl(), taskDataId.toString());
-			artifactTaskDataConverter.populateTaskData(taskData, artifact, monitor);
-
-			try {
-				collector.accept(taskData);
-			} catch (IllegalArgumentException exception) {
-				// Do not log, the query has been deleted while it was executed, see:
-				// org.eclipse.mylyn.internal.tasks.core.TaskList.getValidElement(IRepositoryElement)
-			}
-		}
+		// TODO when Tuleap provides a REST API for this
+		throw new NotImplementedException();
 	}
 
 	/**

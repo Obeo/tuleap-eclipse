@@ -32,13 +32,13 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.tuleap.mylyn.task.internal.core.client.ITuleapQueryConstants;
 import org.tuleap.mylyn.task.internal.core.client.TuleapClientManager;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestResourceFactory;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestConnector;
-import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
@@ -176,18 +176,6 @@ public class TuleapRepositoryConnectorTests {
 
 		final TuleapClientManager tuleapClientManager = new TuleapClientManager() {
 			@Override
-			public TuleapSoapClient getSoapClient(TaskRepository taskRepository) {
-				return new TuleapSoapClient(location, null) {
-					@Override
-					public List<TuleapArtifact> getArtifactsFromQuery(IRepositoryQuery query,
-							TuleapServer serverConfiguration, TuleapTracker tuleapTracker,
-							IProgressMonitor monitor) {
-						return Lists.newArrayList(tuleapArtifact);
-					}
-				};
-			}
-
-			@Override
 			public TuleapRestClient getRestClient(TaskRepository taskRepository) {
 				return new TuleapRestClient(new RestResourceFactory("v3.14", new TuleapRestConnector(
 						location, new TestLogger()), gson, new TestLogger()), gson, taskRepository) {
@@ -240,6 +228,7 @@ public class TuleapRepositoryConnectorTests {
 	/**
 	 * Test the execution of a query to retrieve all the artifacts from a given tracker.
 	 */
+	@Ignore("Restore when there is a REST API for this")
 	@Test
 	public void testPerformQueryCustom() {
 		TuleapReference projectRef = new TuleapReference(979, "projects/979");
@@ -259,17 +248,7 @@ public class TuleapRepositoryConnectorTests {
 		tuleapArtifact.setTracker(trackerRef);
 
 		final TuleapClientManager tuleapClientManager = new TuleapClientManager() {
-			@Override
-			public TuleapSoapClient getSoapClient(TaskRepository taskRepository) {
-				return new TuleapSoapClient(location, null) {
-					@Override
-					public List<TuleapArtifact> getArtifactsFromQuery(IRepositoryQuery query,
-							TuleapServer serverConfiguration, TuleapTracker tuleapTracker,
-							IProgressMonitor monitor) {
-						return Lists.newArrayList(tuleapArtifact);
-					}
-				};
-			}
+			//
 		};
 
 		TuleapRepositoryConnector tuleapRepositoryConnector = new TuleapRepositoryConnector() {

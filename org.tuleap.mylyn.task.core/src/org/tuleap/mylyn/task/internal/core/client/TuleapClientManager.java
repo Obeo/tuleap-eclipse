@@ -27,8 +27,6 @@ import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestResourceFactory;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestConnector;
-import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
-import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapParser;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapGsonProvider;
 
 /**
@@ -45,31 +43,9 @@ public class TuleapClientManager implements IRepositoryListener {
 	private List<TuleapRestConnector> restConnectors = new ArrayList<TuleapRestConnector>();
 
 	/**
-	 * The SOAP client cache.
-	 */
-	private Map<TaskRepository, TuleapSoapClient> soapClientCache = new HashMap<TaskRepository, TuleapSoapClient>();
-
-	/**
 	 * The REST client cache.
 	 */
 	private Map<TaskRepository, TuleapRestClient> restClientCache = new HashMap<TaskRepository, TuleapRestClient>();
-
-	/**
-	 * Returns the SOAP client for the given task repository. The reference to the created client should not
-	 * be kept by those calling this operation since the client can be re-created if the settings of the
-	 * repository are modified.
-	 * 
-	 * @param taskRepository
-	 *            The task repository
-	 * @return The SOAP client for the given task repository
-	 */
-	public TuleapSoapClient getSoapClient(TaskRepository taskRepository) {
-		TuleapSoapClient tuleapSoapClient = this.soapClientCache.get(taskRepository);
-		if (tuleapSoapClient == null && this.restClientCache.get(taskRepository) == null) {
-			this.refreshClients(taskRepository);
-		}
-		return this.soapClientCache.get(taskRepository);
-	}
 
 	/**
 	 * Returns the REST client for the given task repository. The reference to the created client should not
@@ -82,7 +58,7 @@ public class TuleapClientManager implements IRepositoryListener {
 	 */
 	public TuleapRestClient getRestClient(TaskRepository taskRepository) {
 		TuleapRestClient tuleapRestClient = this.restClientCache.get(taskRepository);
-		if (tuleapRestClient == null && this.soapClientCache.get(taskRepository) == null) {
+		if (tuleapRestClient == null) {
 			this.refreshClients(taskRepository);
 		}
 		return this.restClientCache.get(taskRepository);
@@ -110,13 +86,6 @@ public class TuleapClientManager implements IRepositoryListener {
 
 		ILog logger = Platform.getLog(Platform.getBundle(TuleapCoreActivator.PLUGIN_ID));
 
-		// Create the SOAP client
-		TuleapSoapParser tuleapSoapParser = new TuleapSoapParser();
-
-		TuleapSoapClient tuleapSoapClient = new TuleapSoapClient(webLocation, tuleapSoapParser);
-		this.soapClientCache.put(taskRepository, tuleapSoapClient);
-
-		// Create the REST client
 		Gson gson = TuleapGsonProvider.defaultGson();
 		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(webLocation, logger);
 
@@ -136,7 +105,6 @@ public class TuleapClientManager implements IRepositoryListener {
 	public void repositoryRemoved(TaskRepository taskRepository) {
 		// Force the re-creation of the client if the repository changes
 		this.restClientCache.remove(taskRepository);
-		this.soapClientCache.remove(taskRepository);
 	}
 
 	/**
