@@ -389,8 +389,6 @@ public class MilestoneTaskDataConverterTest {
 
 		List<Integer> valueIds = new ArrayList<Integer>();
 		valueIds.add(new Integer(10));
-		valueIds.add(new Integer(20));
-		valueIds.add(new Integer(30));
 		BoundFieldValue firstBoundFieldValue = new BoundFieldValue(2000, valueIds);
 
 		firstCard.addFieldValue(firstBoundFieldValue);
@@ -427,10 +425,8 @@ public class MilestoneTaskDataConverterTest {
 		// FIXME manage the type of Bound fields
 		// assertEquals(TaskAttribute.TYPE_SINGLE_SELECT, fieldValueFirstCardTA.getMetaData().getType());
 		List<String> values = fieldValueFirstCardTA.getValues();
-		assertEquals(3, values.size());
+		assertEquals(1, values.size());
 		assertEquals("10", values.get(0)); //$NON-NLS-1$
-		assertEquals("20", values.get(1)); //$NON-NLS-1$
-		assertEquals("30", values.get(2)); //$NON-NLS-1$
 
 		TaskAttribute statusFirstCardTA = root.getAttribute(cardPrefix + "-status"); //$NON-NLS-1$
 
@@ -1159,8 +1155,6 @@ public class MilestoneTaskDataConverterTest {
 
 		List<Integer> valueIds = new ArrayList<Integer>();
 		valueIds.add(new Integer(10));
-		valueIds.add(new Integer(20));
-		valueIds.add(new Integer(30));
 		BoundFieldValue boundFieldValue = new BoundFieldValue(2000, valueIds);
 
 		card.addFieldValue(boundFieldValue);
@@ -1203,8 +1197,7 @@ public class MilestoneTaskDataConverterTest {
 		assertNull(resultedCard.getAllowedColumnIds());
 
 		assertEquals(1, resultedCard.getFieldValues().size());
-		assertEquals("[10, 20, 30]", ((BoundFieldValue)resultedCard.getFieldValue(2000)).getValueIds()
-				.toString());
+		assertEquals("[10]", ((BoundFieldValue)resultedCard.getFieldValue(2000)).getValueIds().toString());
 	}
 
 	/**

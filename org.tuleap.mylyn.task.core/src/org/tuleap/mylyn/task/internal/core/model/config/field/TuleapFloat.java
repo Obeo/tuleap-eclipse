@@ -10,9 +10,12 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model.config.field;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
+import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
 
 /**
  * The Tuleap float field.
@@ -126,5 +129,17 @@ public class TuleapFloat extends AbstractTuleapField {
 		attributeMetadata.setType(getMetadataType());
 		attributeMetadata.setLabel(getLabel());
 		return attribute;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField#setValue(org.eclipse.mylyn.tasks.core.data.TaskAttribute,
+	 *      org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue)
+	 */
+	@Override
+	public void setValue(TaskAttribute attribute, AbstractFieldValue value) {
+		Assert.isTrue(value instanceof LiteralFieldValue);
+		attribute.setValue(((LiteralFieldValue)value).getFieldValue());
 	}
 }

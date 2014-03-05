@@ -10,8 +10,11 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model.config.field;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
+import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
 
 /**
  * The Tuleap text field.
@@ -112,5 +115,17 @@ public class TuleapText extends AbstractTuleapField {
 	@Override
 	public Object getDefaultValue() {
 		return ""; //$NON-NLS-1$
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField#setValue(org.eclipse.mylyn.tasks.core.data.TaskAttribute,
+	 *      org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue)
+	 */
+	@Override
+	public void setValue(TaskAttribute attribute, AbstractFieldValue value) {
+		Assert.isTrue(value instanceof LiteralFieldValue);
+		attribute.setValue(((LiteralFieldValue)value).getFieldValue());
 	}
 }

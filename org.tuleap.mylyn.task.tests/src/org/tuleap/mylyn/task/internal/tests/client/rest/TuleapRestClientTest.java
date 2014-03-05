@@ -31,14 +31,10 @@ import org.tuleap.mylyn.task.internal.core.client.rest.ServerResponse;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.model.TuleapToken;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPlanning;
-import org.tuleap.mylyn.task.internal.core.model.config.TuleapUser;
-import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapFileUpload;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapMultiSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapOpenList;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.data.ArtifactReference;
-import org.tuleap.mylyn.task.internal.core.model.data.AttachmentFieldValue;
-import org.tuleap.mylyn.task.internal.core.model.data.AttachmentValue;
 import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
@@ -683,65 +679,6 @@ public class TuleapRestClientTest {
 		assertEquals("PUT", request1.method); //$NON-NLS-1$
 		assertEquals(
 				"{\"label\":\"Simple label\",\"values\":[{\"field_id\":2000,\"bind_value_ids\":[10,20,30]}],\"column_id\":10000}", //$NON-NLS-1$
-				request1.body);
-	}
-
-	/**
-	 * Test updating a cardwall with a card with bound field.
-	 * 
-	 * @throws CoreException
-	 */
-	@Test
-	public void testUpdateCardwallWithFileDescription() throws CoreException {
-		TuleapCard card = new TuleapCard("2_12345", new ArtifactReference(12345, "A/12345",
-				new TuleapReference(700, "t/700")), new TuleapReference(200, "p/200"));
-		card.setColumnId(10000);
-		card.setLabel("Simple label");
-
-		int[] columnIds = new int[3];
-		for (int i = 0; i < 3; i++) {
-			columnIds[i] = i + 10;
-		}
-		card.setAllowedColumnIds(columnIds);
-		card.setStatus(TuleapStatus.valueOf("Open"));
-
-		TuleapFileUpload uploadField = new TuleapFileUpload(3000);
-		card.addField(uploadField);
-		List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
-		TuleapUser firstUploadedBy = new TuleapUser(
-				"first username", "first realname", 1, "first email", null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		attachments.add(new AttachmentValue("100000", "first name", firstUploadedBy, 123456, //$NON-NLS-1$ //$NON-NLS-2$ 
-				"first description", "first type")); //$NON-NLS-1$ //$NON-NLS-2$
-		TuleapUser secondUploadedBy = new TuleapUser("second username", "second realname", 2, //$NON-NLS-1$ //$NON-NLS-2$
-				"second email", null); //$NON-NLS-1$
-		attachments.add(new AttachmentValue("100001", "second name", secondUploadedBy, 789456, //$NON-NLS-1$ //$NON-NLS-2$
-				"second description", "second type")); //$NON-NLS-1$ //$NON-NLS-2$
-		AttachmentFieldValue fileDescriptions = new AttachmentFieldValue(3000, attachments);
-
-		card.addFieldValue(fileDescriptions);
-
-		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(RestResource.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
-		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
-		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK,
-				"The response body", respHeaders); //$NON-NLS-1$
-
-		connector.setResponse(response);
-		client.updateCard(card, new NullProgressMonitor());
-
-		// Let's check the requests that have been sent.
-		List<ServerRequest> requestsSent = connector.getRequestsSent();
-		assertEquals(2, requestsSent.size());
-
-		ServerRequest request0 = requestsSent.get(0);
-		assertEquals("/api/v12.3/cards/2_12345", request0.url); //$NON-NLS-1$
-		assertEquals("OPTIONS", request0.method); //$NON-NLS-1$
-
-		ServerRequest request1 = requestsSent.get(1);
-		assertEquals("/api/v12.3/cards/2_12345", request1.url); //$NON-NLS-1$
-		assertEquals("PUT", request1.method); //$NON-NLS-1$
-		assertEquals(
-				"{\"label\":\"Simple label\",\"values\":[{\"field_id\":3000,\"file_descriptions\":[{\"file_id\":100000,\"description\":\"first description\"},{\"file_id\":100001,\"description\":\"second description\"}]}],\"column_id\":10000}", //$NON-NLS-1$
 				request1.body);
 	}
 

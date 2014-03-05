@@ -16,7 +16,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -49,11 +48,10 @@ import org.tuleap.mylyn.task.internal.core.client.soap.TuleapSoapClient;
 import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.data.converter.ArtifactTaskDataConverter;
-import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
-import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBox;
+import org.tuleap.mylyn.task.internal.core.model.config.field.AbstractTuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
@@ -519,16 +517,12 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 */
 	private boolean isTaskCompleted(int currentStatus, TuleapTracker tracker) {
 		if (tracker != null) {
-			Collection<AbstractTuleapField> fields = tracker.getFields();
-			for (AbstractTuleapField abstractTuleapField : fields) {
-				if (abstractTuleapField instanceof TuleapSelectBox
-						&& ((TuleapSelectBox)abstractTuleapField).isSemanticStatus()) {
-					TuleapSelectBox tuleapSelectBox = (TuleapSelectBox)abstractTuleapField;
-					List<TuleapSelectBoxItem> closedStatus = tuleapSelectBox.getClosedStatus();
-					for (TuleapSelectBoxItem tuleapSelectBoxItem : closedStatus) {
-						if (currentStatus == tuleapSelectBoxItem.getIdentifier()) {
-							return true;
-						}
+			AbstractTuleapSelectBox statusField = tracker.getStatusField();
+			if (statusField != null) {
+				List<TuleapSelectBoxItem> closedStatus = statusField.getClosedStatus();
+				for (TuleapSelectBoxItem tuleapSelectBoxItem : closedStatus) {
+					if (currentStatus == tuleapSelectBoxItem.getIdentifier()) {
+						return true;
 					}
 				}
 			}

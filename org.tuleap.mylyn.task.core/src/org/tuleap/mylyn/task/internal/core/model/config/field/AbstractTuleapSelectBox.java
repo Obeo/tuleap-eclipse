@@ -18,7 +18,10 @@ import java.util.Map;
 
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
+import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
+import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
@@ -287,5 +290,24 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 			attribute.putOption(String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID),
 					TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.selectBoxNone));
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField#createFieldValue(org.eclipse.mylyn.tasks.core.data.TaskAttribute,
+	 *      int)
+	 */
+	@Override
+	public AbstractFieldValue createFieldValue(TaskAttribute attribute, int fieldId) {
+		List<Integer> valueIds = new ArrayList<Integer>();
+		for (String strValue : attribute.getValues()) {
+			try {
+				valueIds.add(Integer.valueOf(strValue));
+			} catch (NumberFormatException e) {
+				TuleapCoreActivator.log(e, false);
+			}
+		}
+		return new BoundFieldValue(fieldId, valueIds);
 	}
 }

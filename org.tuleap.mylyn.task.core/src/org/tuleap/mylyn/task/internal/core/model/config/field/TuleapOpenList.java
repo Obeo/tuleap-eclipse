@@ -10,8 +10,16 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model.config.field;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
+import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.OpenListFieldValue;
 
 /**
  * The Tuleap open list field.
@@ -64,5 +72,59 @@ public class TuleapOpenList extends AbstractTuleapField {
 	@Override
 	public Object getDefaultValue() {
 		return ""; //$NON-NLS-1$
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField#createFieldValue(org.eclipse.mylyn.tasks.core.data.TaskAttribute,
+	 *      int)
+	 */
+	@Override
+	public AbstractFieldValue createFieldValue(TaskAttribute attribute, int fieldId) {
+		List<String> values = new ArrayList<String>();
+		for (String value : attribute.getValue().split(",")) { //$NON-NLS-1$
+			if (!value.trim().isEmpty()) {
+				values.add(value.trim());
+			}
+		}
+		return new OpenListFieldValue(fieldId, values);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField#setValue(org.eclipse.mylyn.tasks.core.data.TaskAttribute,
+	 *      org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue)
+	 */
+	@Override
+	public void setValue(TaskAttribute attribute, AbstractFieldValue value) {
+		Assert.isTrue(value instanceof OpenListFieldValue || value instanceof BoundFieldValue);
+		if (value instanceof OpenListFieldValue) {
+			OpenListFieldValue boundFieldValue = (OpenListFieldValue)value;
+			List<String> values = boundFieldValue.getValueIds();
+			StringBuilder b = new StringBuilder();
+			if (!values.isEmpty()) {
+				Iterator<String> it = values.iterator();
+				b.append(it.next());
+				while (it.hasNext()) {
+					b.append(", ").append(it.next()); //$NON-NLS-1$
+				}
+			}
+			attribute.setValue(b.toString());
+		} else {
+			BoundFieldValue boundFieldValue = (BoundFieldValue)value;
+			List<Integer> values = boundFieldValue.getValueIds();
+			attribute.clearValues();
+			StringBuilder b = new StringBuilder();
+			if (!values.isEmpty()) {
+				Iterator<Integer> it = values.iterator();
+				b.append(it.next());
+				while (it.hasNext()) {
+					b.append(", ").append(it.next()); //$NON-NLS-1$
+				}
+			}
+			attribute.setValue(b.toString());
+		}
 	}
 }

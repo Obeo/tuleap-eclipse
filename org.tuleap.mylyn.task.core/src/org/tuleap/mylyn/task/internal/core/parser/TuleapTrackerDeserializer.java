@@ -285,35 +285,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 			JsonObject fieldSemantic, JsonDeserializationContext context) {
 		int fieldId = field.get(FIELD_ID).getAsInt();
 		String fieldType = field.get(TYPE).getAsString();
-		AbstractTuleapField tuleapField = null;
-		if (ITuleapTrackerConstants.TYPE_STRING.equals(fieldType)) {
-			tuleapField = new TuleapString(fieldId);
-		} else if (ITuleapTrackerConstants.TYPE_TEXT.equals(fieldType)) {
-			tuleapField = new TuleapText(fieldId);
-		} else if (ITuleapTrackerConstants.TYPE_COMPUTED.equals(fieldType)) {
-			tuleapField = new TuleapComputedValue(fieldId);
-		} else if (ITuleapTrackerConstants.TYPE_SB.equals(fieldType)) {
-			tuleapField = new TuleapSelectBox(fieldId);
-		} else if (ITuleapTrackerConstants.TYPE_MSB.equals(fieldType)) {
-			tuleapField = new TuleapMultiSelectBox(fieldId);
-		} else if (ITuleapTrackerConstants.TYPE_CB.equals(fieldType)) {
-			tuleapField = new TuleapMultiSelectBox(fieldId);
-		} else if (ITuleapTrackerConstants.TYPE_DATE.equals(fieldType)) {
-			tuleapField = new TuleapDate(fieldId);
-		} else if (ITuleapTrackerConstants.TYPE_INT.equals(fieldType)) {
-			tuleapField = new TuleapInteger(fieldId);
-		} else if (ITuleapTrackerConstants.TYPE_FLOAT.equals(fieldType)) {
-			tuleapField = new TuleapFloat(fieldId);
-		} else if (ITuleapTrackerConstants.TYPE_TBL.equals(fieldType)) {
-			tuleapField = new TuleapOpenList(fieldId);
-		} else if (ITuleapTrackerConstants.TYPE_ARTIFACT_LINK.equals(fieldType)) {
-			tuleapField = new TuleapArtifactLink(fieldId);
-		} else if (ITuleapTrackerConstants.TYPE_FILE.equals(fieldType)) {
-			tuleapField = new TuleapFileUpload(fieldId);
-		} else if (!KNOWN_FIELD_TYPES.contains(fieldType)) {
-			TuleapCoreActivator.log(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.unsupportedTrackerFieldType, fieldType), false);
-		}
+		AbstractTuleapField tuleapField = createField(fieldId, fieldType);
 		if (tuleapField != null) {
 			// the field label
 			tuleapField.setLabel(field.get(LABEL).getAsString());
@@ -350,6 +322,48 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 						fieldSemantic, fieldBinding, jsonObject, context);
 			}
 			manageTitleSemantic(tuleapField, fieldSemantic);
+		}
+		return tuleapField;
+	}
+
+	/**
+	 * Creates the right kind of {@link AbstractTuleapField}.
+	 * 
+	 * @param fieldId
+	 *            The ID of the field to create
+	 * @param fieldType
+	 *            The JSON type of the field to create
+	 * @return A new instance if the given type is known, or <code>null</code> otherwise.
+	 */
+	private AbstractTuleapField createField(int fieldId, String fieldType) {
+		AbstractTuleapField tuleapField = null;
+		if (ITuleapTrackerConstants.TYPE_STRING.equals(fieldType)) {
+			tuleapField = new TuleapString(fieldId);
+		} else if (ITuleapTrackerConstants.TYPE_TEXT.equals(fieldType)) {
+			tuleapField = new TuleapText(fieldId);
+		} else if (ITuleapTrackerConstants.TYPE_COMPUTED.equals(fieldType)) {
+			tuleapField = new TuleapComputedValue(fieldId);
+		} else if (ITuleapTrackerConstants.TYPE_SB.equals(fieldType)) {
+			tuleapField = new TuleapSelectBox(fieldId);
+		} else if (ITuleapTrackerConstants.TYPE_MSB.equals(fieldType)) {
+			tuleapField = new TuleapMultiSelectBox(fieldId);
+		} else if (ITuleapTrackerConstants.TYPE_CB.equals(fieldType)) {
+			tuleapField = new TuleapMultiSelectBox(fieldId);
+		} else if (ITuleapTrackerConstants.TYPE_DATE.equals(fieldType)) {
+			tuleapField = new TuleapDate(fieldId);
+		} else if (ITuleapTrackerConstants.TYPE_INT.equals(fieldType)) {
+			tuleapField = new TuleapInteger(fieldId);
+		} else if (ITuleapTrackerConstants.TYPE_FLOAT.equals(fieldType)) {
+			tuleapField = new TuleapFloat(fieldId);
+		} else if (ITuleapTrackerConstants.TYPE_TBL.equals(fieldType)) {
+			tuleapField = new TuleapOpenList(fieldId);
+		} else if (ITuleapTrackerConstants.TYPE_ARTIFACT_LINK.equals(fieldType)) {
+			tuleapField = new TuleapArtifactLink(fieldId);
+		} else if (ITuleapTrackerConstants.TYPE_FILE.equals(fieldType)) {
+			tuleapField = new TuleapFileUpload(fieldId);
+		} else if (!KNOWN_FIELD_TYPES.contains(fieldType)) {
+			TuleapCoreActivator.log(TuleapMylynTasksMessages.getString(
+					TuleapMylynTasksMessagesKeys.unsupportedTrackerFieldType, fieldType), false);
 		}
 		return tuleapField;
 	}

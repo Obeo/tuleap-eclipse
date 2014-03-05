@@ -32,15 +32,9 @@ import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapProject;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
-import org.tuleap.mylyn.task.internal.core.model.config.field.AbstractTuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapComputedValue;
-import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapMultiSelectBox;
-import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBox;
-import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.ArtifactReference;
-import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
-import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCard;
@@ -50,7 +44,6 @@ import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapMilestone;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapStatus;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapSwimlane;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
-import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
@@ -214,29 +207,15 @@ public class MilestoneTaskDataConverter {
 	 */
 	private void populateCardField(TuleapTracker tracker, AbstractFieldValue fieldValue,
 			AbstractTuleapField field, TaskAttribute fieldAtt) {
-		if (fieldValue instanceof LiteralFieldValue) {
-			fieldAtt.setValue(((LiteralFieldValue)fieldValue).getFieldValue());
-		} else if (fieldValue instanceof BoundFieldValue) {
-			BoundFieldValue boundFieldValue = (BoundFieldValue)fieldValue;
-			for (Integer boundId : boundFieldValue.getValueIds()) {
-				fieldAtt.addValue(String.valueOf(boundId));
-			}
-			if (field instanceof AbstractTuleapSelectBox) {
-				AbstractTuleapSelectBox sb = (AbstractTuleapSelectBox)field;
-				// The options map is immutable, we must add options one at a time
-				for (TuleapSelectBoxItem entry : sb.getItems()) {
-					fieldAtt.putOption(Integer.toString(entry.getIdentifier()), entry.getLabel());
-				}
-				// Add an option to represent "unselected" in single-select
-				if (field instanceof TuleapSelectBox) {
-					fieldAtt.putOption(Integer.toString(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID),
-							TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.selectBoxNone));
-				}
-			} else {
-				TuleapCoreActivator.log(TuleapMylynTasksMessages.getString(
-						TuleapMylynTasksMessagesKeys.cardTrackerConfigNeedsUpdate, Integer.toString(tracker
-								.getIdentifier())), true);
-			}
+		try {
+			field.setValue(fieldAtt, fieldValue);
+			// CHECKSTYLE:OFF
+		} catch (Exception e) {
+			// CHECKSTYLE:ON
+			TuleapCoreActivator.log(e, true);
+			TuleapCoreActivator.log(TuleapMylynTasksMessages.getString(
+					TuleapMylynTasksMessagesKeys.cardTrackerConfigNeedsUpdate, Integer.toString(tracker
+							.getIdentifier())), true);
 		}
 	}
 
@@ -475,30 +454,7 @@ public class MilestoneTaskDataConverter {
 		String attributeId = cardWrapper.getFieldId(attribute);
 		int fieldId = Integer.parseInt(attributeId);
 		AbstractTuleapField field = tracker.getFieldById(fieldId);
-		if (field instanceof TuleapMultiSelectBox) {
-			List<Integer> valueIds = new ArrayList<Integer>();
-			for (String strValue : attribute.getValues()) {
-				valueIds.add(Integer.valueOf(strValue));
-			}
-			BoundFieldValue boundFieldValue = new BoundFieldValue(fieldId, valueIds);
-			card.addFieldValue(boundFieldValue);
-		} else if (field instanceof AbstractTuleapSelectBox) {
-			// TODO Check if this works with JSON serialization!
-			// bind_value_ids or bind_value_id?
-			List<Integer> ids = new ArrayList<Integer>();
-			for (String value : attribute.getValues()) {
-				ids.add(Integer.valueOf(value));
-			}
-			BoundFieldValue boundFieldValue = new BoundFieldValue(fieldId, ids);
-			card.addFieldValue(boundFieldValue);
-		} else {
-			String value = null;
-			if (!attribute.getValues().isEmpty()) {
-				value = attribute.getValue();
-			}
-			LiteralFieldValue fieldValue = new LiteralFieldValue(fieldId, value);
-			card.addFieldValue(fieldValue);
-		}
+		card.addFieldValue(field.createFieldValue(attribute, fieldId));
 	}
 
 	/**

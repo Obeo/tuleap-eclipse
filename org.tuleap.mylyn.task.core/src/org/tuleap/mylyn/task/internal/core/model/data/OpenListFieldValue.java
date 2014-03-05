@@ -10,37 +10,41 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model.data;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
- * This object represents an artifact link field, that contains a list of task IDs.
+ * Utility class used to store the identifiers of the value selected for open lists.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class ArtifactLinkFieldValue extends AbstractFieldValue {
+public class OpenListFieldValue extends AbstractFieldValue {
 
 	/**
-	 * The value of the field.
+	 * The list of value ids.
 	 */
-	private int[] links;
+	private List<String> bindValueIds;
 
 	/**
 	 * The constructor.
 	 * 
 	 * @param fieldId
 	 *            The identifier of the field
-	 * @param links
-	 *            The value of the field
+	 * @param valueIds
+	 *            The list of value ids
 	 */
-	public ArtifactLinkFieldValue(int fieldId, int[] links) {
+	public OpenListFieldValue(int fieldId, List<String> valueIds) {
 		super(fieldId);
-		this.links = links;
+		this.bindValueIds = Collections.unmodifiableList(valueIds);
 	}
 
 	/**
-	 * Returns the value of the field.
+	 * Returns the value ids.
 	 * 
-	 * @return the fieldValue
+	 * @return An unmodifiable view of the value ids
 	 */
-	public int[] getLinks() {
-		return this.links.clone();
+	public List<String> getValueIds() {
+		return this.bindValueIds;
 	}
+
 }

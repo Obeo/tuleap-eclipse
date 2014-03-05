@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model.data;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ public class BoundFieldValue extends AbstractFieldValue {
 	/**
 	 * The list of value ids.
 	 */
-	private List<Integer> valueIds;
+	private List<Integer> bindValueIds;
 
 	/**
 	 * The constructor.
@@ -35,16 +36,15 @@ public class BoundFieldValue extends AbstractFieldValue {
 	 */
 	public BoundFieldValue(int fieldId, List<Integer> valueIds) {
 		super(fieldId);
-		this.valueIds = valueIds;
+		this.bindValueIds = Collections.unmodifiableList(valueIds);
 	}
 
 	/**
 	 * Returns the value ids.
 	 * 
-	 * @return The value ids
+	 * @return An unmodifiable view of the value ids
 	 */
 	public List<Integer> getValueIds() {
-		return this.valueIds;
+		return this.bindValueIds;
 	}
-
 }

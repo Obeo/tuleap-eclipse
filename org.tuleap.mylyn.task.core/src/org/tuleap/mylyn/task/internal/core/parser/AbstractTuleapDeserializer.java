@@ -20,12 +20,14 @@ import com.google.gson.JsonPrimitive;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.tuleap.mylyn.task.internal.core.model.data.AbstractTuleapConfigurableElement;
 import org.tuleap.mylyn.task.internal.core.model.data.ArtifactLinkFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.OpenListFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 
@@ -76,18 +78,34 @@ public abstract class AbstractTuleapDeserializer<U, T extends AbstractTuleapConf
 					}
 				}
 			} else if (jsonField.has(ITuleapConstants.FIELD_BIND_VALUE_ID)) {
+				// sb?
 				JsonElement jsonBindValueId = jsonField.get(ITuleapConstants.FIELD_BIND_VALUE_ID);
 				int bindValueId = jsonBindValueId.getAsInt();
 				pojo.addFieldValue(new BoundFieldValue(fieldId, Lists.newArrayList(Integer
 						.valueOf(bindValueId))));
 			} else if (jsonField.has(ITuleapConstants.FIELD_BIND_VALUE_IDS)) {
+				// sb?, msb, cb, or tbl (open list)
 				JsonElement jsonBindValueIds = jsonField.get(ITuleapConstants.FIELD_BIND_VALUE_IDS);
 				JsonArray jsonIds = jsonBindValueIds.getAsJsonArray();
-				List<Integer> bindValueIds = new ArrayList<Integer>();
-				for (JsonElement idElement : jsonIds) {
-					bindValueIds.add(Integer.valueOf(idElement.getAsInt()));
+				if (jsonIds.size() > 0) {
+					JsonPrimitive firstElement = jsonIds.get(0).getAsJsonPrimitive();
+					if (firstElement.isString()) {
+						// Open list (tbl)
+						List<String> bindValueIds = new ArrayList<String>();
+						for (JsonElement idElement : jsonIds) {
+							bindValueIds.add(idElement.getAsString());
+						}
+						pojo.addFieldValue(new OpenListFieldValue(fieldId, bindValueIds));
+					} else {
+						List<Integer> bindValueIds = new ArrayList<Integer>();
+						for (JsonElement idElement : jsonIds) {
+							bindValueIds.add(Integer.valueOf(idElement.getAsInt()));
+						}
+						pojo.addFieldValue(new BoundFieldValue(fieldId, bindValueIds));
+					}
+				} else {
+					pojo.addFieldValue(new BoundFieldValue(fieldId, Collections.<Integer> emptyList()));
 				}
-				pojo.addFieldValue(new BoundFieldValue(fieldId, bindValueIds));
 			} else if (jsonField.has(ITuleapConstants.FIELD_LINKS)) {
 				// Artifact links
 				pojo.addFieldValue(context.<ArtifactLinkFieldValue> deserialize(jsonField,

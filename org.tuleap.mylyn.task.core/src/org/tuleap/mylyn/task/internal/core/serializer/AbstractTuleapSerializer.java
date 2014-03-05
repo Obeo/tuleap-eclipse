@@ -18,6 +18,7 @@ import com.google.gson.JsonSerializationContext;
 import java.lang.reflect.Type;
 
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
+import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapFileUpload;
 import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.AbstractTuleapConfigurableElement;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
@@ -59,6 +60,6 @@ public abstract class AbstractTuleapSerializer<T extends AbstractTuleapConfigura
 	 * @return <code>true</code> if and only if the field must be included in the serialization.
 	 */
 	protected boolean mustSerialize(AbstractTuleapField field) {
-		return true;
+		return field != null && !(field instanceof TuleapFileUpload);
 	}
 }

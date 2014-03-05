@@ -55,6 +55,6 @@ public class TuleapArtifactSerializer extends AbstractTuleapSerializer<TuleapArt
 	@Override
 	protected boolean mustSerialize(AbstractTuleapField field) {
 		// Only fields valid for creation are submitted
-		return field != null && field.isSubmitable();
+		return super.mustSerialize(field) && field.isSubmitable();
 	}
 }

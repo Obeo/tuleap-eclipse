@@ -45,6 +45,7 @@ import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapText;
 import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.OpenListFieldValue;
 import org.tuleap.mylyn.task.internal.core.parser.DateIso8601Adapter;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.internal.core.repository.TuleapAttributeMapper;
@@ -753,7 +754,7 @@ public class TuleapArtifactMapperTests {
 		String floatValue = "3.14157";
 		String integerValue = "42";
 		List<String> multiSelectBox = Lists.newArrayList("0", "2");
-		String openList = "a, b, c, d";
+		List<String> openList = Lists.newArrayList("a", "b", "c", "d");
 		String selectBox = "2";
 		String string = "Hello World";
 		String text = "The cake is a lie";
@@ -766,7 +767,7 @@ public class TuleapArtifactMapperTests {
 		this.taskData.getRoot().getMappedAttribute(String.valueOf(4)).setValue(floatValue);
 		this.taskData.getRoot().getMappedAttribute(String.valueOf(5)).setValue(integerValue);
 		this.taskData.getRoot().getMappedAttribute(String.valueOf(6)).setValues(multiSelectBox);
-		this.taskData.getRoot().getMappedAttribute(String.valueOf(7)).setValue(openList);
+		this.taskData.getRoot().getMappedAttribute(String.valueOf(7)).setValue("a, b, c, d");
 		this.taskData.getRoot().getMappedAttribute(String.valueOf(8)).setValue(selectBox);
 		this.taskData.getRoot().getMappedAttribute(String.valueOf(9)).setValue(string);
 		this.taskData.getRoot().getMappedAttribute(String.valueOf(10)).setValue(text);
@@ -812,8 +813,8 @@ public class TuleapArtifactMapperTests {
 		assertThat(((BoundFieldValue)fieldValues.get(6)).getValueIds(), is(valueIds));
 
 		assertThat(fieldValues.get(7).getFieldId(), is(7));
-		assertThat(fieldValues.get(7), instanceOf(LiteralFieldValue.class));
-		assertThat(((LiteralFieldValue)fieldValues.get(7)).getFieldValue(), is(openList));
+		assertThat(fieldValues.get(7), instanceOf(OpenListFieldValue.class));
+		assertThat(((OpenListFieldValue)fieldValues.get(7)).getValueIds(), is(openList));
 
 		assertThat(fieldValues.get(8).getFieldId(), is(8));
 		assertThat(fieldValues.get(8), instanceOf(BoundFieldValue.class));

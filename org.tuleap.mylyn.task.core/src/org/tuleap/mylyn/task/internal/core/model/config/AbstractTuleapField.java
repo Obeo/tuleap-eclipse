@@ -17,6 +17,8 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field;
 import org.eclipse.mylyn.tasks.core.data.DefaultTaskSchema;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
+import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
 
 /**
  * Tuleap fields represents date, textfield or combo box.
@@ -96,6 +98,34 @@ public abstract class AbstractTuleapField extends AbstractTuleapFormElement {
 
 		return attribute;
 	}
+
+	/**
+	 * Instantiates the right kind of {@link AbstractFieldValue} for the given {@link TaskAttribute}. The
+	 * default implementation returns a new {@link LiteralFieldValue}.
+	 * 
+	 * @param attribute
+	 *            The {@link TaskAttribute}
+	 * @param fieldId
+	 *            the ID of the field in the tuleap configuration.
+	 * @return A new {@link AbstractFieldValue} of the relevant type.
+	 */
+	public AbstractFieldValue createFieldValue(TaskAttribute attribute, int fieldId) {
+		String value = null;
+		if (!attribute.getValues().isEmpty()) {
+			value = attribute.getValue();
+		}
+		return new LiteralFieldValue(fieldId, value);
+	}
+
+	/**
+	 * Sets the given value into the given {@link TaskAttribute}, in the relevant way.
+	 * 
+	 * @param attribute
+	 *            The task attribute to set
+	 * @param value
+	 *            The value to set
+	 */
+	public abstract void setValue(TaskAttribute attribute, AbstractFieldValue value);
 
 	/**
 	 * Initializes a newly created TaskAttribute's metadata. The default behavior is simply to set the kind to

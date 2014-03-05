@@ -14,9 +14,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapWorkflow;
+import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
@@ -179,5 +182,21 @@ public class TuleapSelectBox extends AbstractTuleapSelectBox {
 	 */
 	public boolean hasWorkflow() {
 		return workflow.hasTransitions();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField#setValue(org.eclipse.mylyn.tasks.core.data.TaskAttribute,
+	 *      org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue)
+	 */
+	@Override
+	public void setValue(TaskAttribute attribute, AbstractFieldValue value) {
+		Assert.isTrue(value instanceof BoundFieldValue);
+		BoundFieldValue boundFieldValue = (BoundFieldValue)value;
+		List<Integer> bindValueIds = boundFieldValue.getValueIds();
+		if (!bindValueIds.isEmpty() && bindValueIds.get(0) != null) {
+			attribute.setValue(bindValueIds.get(0).toString());
+		}
 	}
 }

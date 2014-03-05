@@ -10,7 +10,13 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.model.config.field;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
+import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
 
 /**
  * The Tuleap multi select box.
@@ -44,5 +50,38 @@ public class TuleapMultiSelectBox extends AbstractTuleapSelectBox {
 	@Override
 	public String getMetadataType() {
 		return TaskAttribute.TYPE_MULTI_SELECT;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField#createFieldValue(org.eclipse.mylyn.tasks.core.data.TaskAttribute,
+	 *      int)
+	 */
+	@Override
+	public AbstractFieldValue createFieldValue(TaskAttribute attribute, int fieldId) {
+		List<Integer> valueIds = new ArrayList<Integer>();
+		for (String strValue : attribute.getValues()) {
+			valueIds.add(Integer.valueOf(strValue));
+		}
+		return new BoundFieldValue(fieldId, valueIds);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField#setValue(org.eclipse.mylyn.tasks.core.data.TaskAttribute,
+	 *      org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue)
+	 */
+	@Override
+	public void setValue(TaskAttribute attribute, AbstractFieldValue value) {
+		Assert.isTrue(value instanceof BoundFieldValue);
+		BoundFieldValue boundFieldValue = (BoundFieldValue)value;
+		List<Integer> bindValueIds = boundFieldValue.getValueIds();
+		List<String> values = new ArrayList<String>();
+		for (Integer bindValueId : bindValueIds) {
+			values.add(bindValueId.toString());
+		}
+		attribute.setValues(values);
 	}
 }

@@ -39,10 +39,11 @@ public class TuleapArtifactWithCommentSerializer extends AbstractTuleapSerialize
 			JsonSerializationContext context) {
 		JsonObject elementObject = (JsonObject)super.serialize(commentedArtifact, type, context);
 		elementObject.remove(ITuleapConstants.ID);
-		if (commentedArtifact.getNewComment() != null) {
+		String comment = commentedArtifact.getNewComment();
+		if (comment != null && !comment.isEmpty()) {
 			JsonObject commentObject = new JsonObject();
 			elementObject.add(ITuleapConstants.COMMENT, commentObject);
-			commentObject.add(ITuleapConstants.BODY, new JsonPrimitive(commentedArtifact.getNewComment()));
+			commentObject.add(ITuleapConstants.BODY, new JsonPrimitive(comment));
 			commentObject.add(ITuleapConstants.FORMAT, new JsonPrimitive("text")); //$NON-NLS-1$
 		}
 		return elementObject;
@@ -56,6 +57,6 @@ public class TuleapArtifactWithCommentSerializer extends AbstractTuleapSerialize
 	@Override
 	protected boolean mustSerialize(AbstractTuleapField field) {
 		// Only fields valid for update are submitted
-		return field != null && field.isUpdatable();
+		return super.mustSerialize(field) && field.isUpdatable();
 	}
 }

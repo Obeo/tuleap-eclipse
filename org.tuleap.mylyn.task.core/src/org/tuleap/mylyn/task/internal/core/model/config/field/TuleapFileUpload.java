@@ -12,6 +12,7 @@ package org.tuleap.mylyn.task.internal.core.model.config.field;
 
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
+import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
 
 /**
  * The Tuleap file upload field.
@@ -75,5 +76,16 @@ public class TuleapFileUpload extends AbstractTuleapField {
 	@Override
 	public boolean needsTaskAttributeForInitialization() {
 		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField#setValue(org.eclipse.mylyn.tasks.core.data.TaskAttribute,
+	 *      org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue)
+	 */
+	@Override
+	public void setValue(TaskAttribute attribute, AbstractFieldValue value) {
+		throw new IllegalStateException("Developer error. Calling setvalue on File Uploads is forbidden."); //$NON-NLS-1$
 	}
 }

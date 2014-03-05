@@ -10,29 +10,22 @@
  *******************************************************************************/
 package org.tuleap.mylyn.task.internal.core.data.converter;
 
-import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.data.TuleapArtifactMapper;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.model.config.AbstractTuleapField;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.config.field.AbstractTuleapSelectBox;
-import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapDate;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapFileUpload;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapString;
 import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
-import org.tuleap.mylyn.task.internal.core.model.data.ArtifactLinkFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.AttachmentFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.AttachmentValue;
 import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
@@ -41,10 +34,7 @@ import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifactWithComment;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapElementComment;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
-import org.tuleap.mylyn.task.internal.core.parser.DateIso8601Adapter;
 import org.tuleap.mylyn.task.internal.core.repository.ITuleapRepositoryConnector;
-import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
-import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
 /**
  * Utility class used to transform a {@link TuleapArtifact} into a {@link TaskData} and vice versa.
@@ -179,42 +169,10 @@ public class ArtifactTaskDataConverter {
 
 			if (!isTitle && !isStatus && !isAttachment && !isContributor) {
 				AbstractFieldValue fieldValue = element.getFieldValue(field.getIdentifier());
-
-				if (fieldValue instanceof LiteralFieldValue) {
-					LiteralFieldValue literalFieldValue = (LiteralFieldValue)fieldValue;
-					if (field instanceof TuleapDate) {
-						try {
-							tuleapArtifactMapper.setDateValue(DateIso8601Adapter
-									.parseIso8601Date(literalFieldValue.getFieldValue()), literalFieldValue
-									.getFieldId());
-						} catch (ParseException e) {
-							TuleapCoreActivator.log(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
-									TuleapMylynTasksMessages.getString(
-											TuleapMylynTasksMessagesKeys.dateParsingLogMessage,
-											literalFieldValue.getFieldValue(), Integer
-													.valueOf(literalFieldValue.getFieldId()))));
-						}
-					} else {
-						tuleapArtifactMapper.setValue(literalFieldValue.getFieldValue(), literalFieldValue
-								.getFieldId());
-					}
-				} else if (fieldValue instanceof BoundFieldValue) {
-					BoundFieldValue boundFieldValue = (BoundFieldValue)fieldValue;
-					List<Integer> bindValueIds = boundFieldValue.getValueIds();
-
-					List<String> values = new ArrayList<String>();
-					for (Integer bindValueId : bindValueIds) {
-						values.add(bindValueId.toString());
-					}
-
-					tuleapArtifactMapper.setValues(values, boundFieldValue.getFieldId());
-				} else if (fieldValue instanceof ArtifactLinkFieldValue) {
-					ArtifactLinkFieldValue alValue = (ArtifactLinkFieldValue)fieldValue;
-					List<String> values = new ArrayList<String>();
-					for (int val : alValue.getFieldValues()) {
-						values.add(Integer.toString(val));
-					}
-					tuleapArtifactMapper.setValues(values, alValue.getFieldId());
+				if (fieldValue != null) {
+					TaskAttribute attribute = taskData.getRoot().getAttribute(
+							Integer.toString(field.getIdentifier()));
+					field.setValue(attribute, fieldValue);
 				}
 			}
 		}
