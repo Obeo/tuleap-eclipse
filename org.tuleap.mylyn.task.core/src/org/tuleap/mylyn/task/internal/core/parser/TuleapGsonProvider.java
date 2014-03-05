@@ -24,6 +24,7 @@ import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifactWithComment;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapElementComment;
 import org.tuleap.mylyn.task.internal.core.serializer.ArtifactLinkFieldValueAdapter;
 import org.tuleap.mylyn.task.internal.core.serializer.AttachmentFieldValueSerializer;
 import org.tuleap.mylyn.task.internal.core.serializer.BoundFieldValueSerializer;
@@ -64,6 +65,7 @@ public final class TuleapGsonProvider {
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(TuleapArtifact.class, new TuleapArtifactDeserializer());
 		gsonBuilder.registerTypeAdapter(TuleapTracker.class, new TuleapTrackerDeserializer());
+		gsonBuilder.registerTypeAdapter(TuleapElementComment.class, new TuleapChangesetDeserializer());
 		gsonBuilder.registerTypeAdapter(TuleapWorkflowTransition.class,
 				new TuleapWorkflowTransitionDeserializer());
 		gsonBuilder.registerTypeAdapter(Date.class, new DateIso8601Adapter());

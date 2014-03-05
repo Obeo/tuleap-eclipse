@@ -521,5 +521,10 @@ public class RestResource {
 		 * "tracker_reports".
 		 */
 		String TRACKER_REPORTS = "tracker_reports"; //$NON-NLS-1$
+
+		/**
+		 * "changesets".
+		 */
+		String CHANGESETS = "changesets"; //$NON-NLS-1$
 	}
 }

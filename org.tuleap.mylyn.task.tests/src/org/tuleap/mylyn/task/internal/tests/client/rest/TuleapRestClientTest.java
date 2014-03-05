@@ -29,7 +29,7 @@ import org.tuleap.mylyn.task.internal.core.client.rest.ServerResponse;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.model.TuleapToken;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPlanning;
-import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapGsonProvider;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
@@ -196,6 +196,28 @@ public class TuleapRestClientTest {
 	}
 
 	@Test
+	public void testRetrieveArtifactComments() throws CoreException, ParseException {
+		String jsonTrackers = ParserUtil.loadFile("/changesets/changesets.json");
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonTrackers, respHeaders);
+		connector.setResponse(response);
+		client.getArtifactComments(10, null);
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(2, requestsSent.size());
+		ServerRequest request = requestsSent.get(0);
+		assertEquals("/api/v12.3/artifacts/10/changesets", request.url); //$NON-NLS-1$
+		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
+
+		request = requestsSent.get(1);
+		assertEquals("/api/v12.3/artifacts/10/changesets", request.url); //$NON-NLS-1$
+		assertEquals("GET", request.method); //$NON-NLS-1$
+	}
+
+	@Test
 	public void testTracker() throws CoreException, ParseException {
 		String jsonTracker = ParserUtil.loadFile("/trackers/tracker-5.json");
 		Map<String, String> respHeaders = Maps.newHashMap();
@@ -282,28 +304,27 @@ public class TuleapRestClientTest {
 		ServerResponse tokenOptionsResponse = new ServerResponse(ServerResponse.STATUS_OK, "", respHeaders);
 		ServerResponse tokenResponse = new ServerResponse(ServerResponse.STATUS_OK, tokenJson, respHeaders);
 
-		String artifactJson = ParserUtil.loadFile("/artifacts/artifact-1.json");
-		ServerResponse milestoneOptionsResponse = new ServerResponse(ServerResponse.STATUS_OK, "",
-				respHeaders);
-		ServerResponse milestoneResponse = new ServerResponse(ServerResponse.STATUS_OK, artifactJson,
+		String trackerJson = ParserUtil.loadFile("/trackers/tracker-0.json");
+		ServerResponse trackersOptionsResponse = new ServerResponse(ServerResponse.STATUS_OK, "", respHeaders);
+		ServerResponse trackersResponse = new ServerResponse(ServerResponse.STATUS_OK, trackerJson,
 				respHeaders);
 
 		listConnector.addServerResponse(response401Unauthorized);
 		listConnector.addServerResponse(tokenOptionsResponse);
 		listConnector.addServerResponse(tokenResponse);
-		listConnector.addServerResponse(milestoneOptionsResponse);
-		listConnector.addServerResponse(milestoneResponse);
+		listConnector.addServerResponse(trackersOptionsResponse);
+		listConnector.addServerResponse(trackersResponse);
 		// Need to create a new client to use the specific connector.
 		client = new TuleapRestClient(restResourceFactory, gson, repository);
 
-		TuleapArtifact artifact = client.getArtifact(200, null);
-		assertNotNull(artifact);
+		TuleapTracker tracker = client.getTracker(200, null);
+		assertNotNull(tracker);
 		List<ServerRequest> requestsSent = listConnector.requestsSent;
 		assertEquals(5, requestsSent.size());
 
 		ServerRequest req = requestsSent.get(0);
 		assertEquals("OPTIONS", req.method);
-		assertEquals("/api/v12.3/artifacts/200", req.url);
+		assertEquals("/api/v12.3/trackers/200", req.url);
 
 		req = requestsSent.get(1);
 		assertEquals("OPTIONS", req.method);
@@ -315,11 +336,11 @@ public class TuleapRestClientTest {
 
 		req = requestsSent.get(3);
 		assertEquals("OPTIONS", req.method);
-		assertEquals("/api/v12.3/artifacts/200", req.url);
+		assertEquals("/api/v12.3/trackers/200", req.url);
 
 		req = requestsSent.get(4);
 		assertEquals("GET", req.method);
-		assertEquals("/api/v12.3/artifacts/200", req.url);
+		assertEquals("/api/v12.3/trackers/200", req.url);
 	}
 
 	@Before

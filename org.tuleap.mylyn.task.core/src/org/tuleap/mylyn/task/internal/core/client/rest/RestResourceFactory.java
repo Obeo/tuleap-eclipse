@@ -142,6 +142,17 @@ public final class RestResourceFactory {
 	}
 
 	/**
+	 * Provides access to the {code /artifacts/:id/changesets} HTTP resource.
+	 * 
+	 * @param artifactId
+	 *            Id of the artifact.
+	 * @return A resource that gives access to the {code /artifacts/:id/changesets} HTTP resource.
+	 */
+	public RestResource artifactChangesets(int artifactId) {
+		return resource(GET, URL.ARTIFACTS, Integer.toString(artifactId), URL.CHANGESETS);
+	}
+
+	/**
 	 * Provides access to the {code /trackers/:id} HTTP resource.
 	 * 
 	 * @param trackerId
