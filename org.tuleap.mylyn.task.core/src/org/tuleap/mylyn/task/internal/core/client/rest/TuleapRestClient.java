@@ -42,6 +42,7 @@ import org.tuleap.mylyn.task.internal.core.model.data.ArtifactReference;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifactWithComment;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapAttachmentDescriptor;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapElementComment;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapBacklogItem;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCard;
 import org.tuleap.mylyn.task.internal.core.model.data.agile.TuleapCardwall;
@@ -233,6 +234,9 @@ public class TuleapRestClient implements IAuthenticator {
 		RestResource artifactResource = restResourceFactory.artifact(artifactId).withAuthenticator(this);
 		ServerResponse response = artifactResource.get().checkedRun();
 		TuleapArtifact artifact = gson.fromJson(response.getBody(), TuleapArtifact.class);
+		for (TuleapElementComment comment : this.getArtifactComments(artifactId, monitor)) {
+			artifact.addComment(comment);
+		}
 		return artifact;
 	}
 
@@ -705,6 +709,31 @@ public class TuleapRestClient implements IAuthenticator {
 			artifacts.add(gson.fromJson(e, TuleapArtifact.class));
 		}
 		return artifacts;
+	}
+
+	/**
+	 * Retrieve an artifact comments.
+	 * 
+	 * @param artifactId
+	 *            ID of the artifact
+	 * @param monitor
+	 *            Progress monitor to use
+	 * @return A list, never null but possibly empty, containing the artifact comments.
+	 * @throws CoreException
+	 *             If the server returns a status code different from 200 OK.
+	 */
+	public List<TuleapElementComment> getArtifactComments(int artifactId, IProgressMonitor monitor)
+			throws CoreException {
+		RestResource r = restResourceFactory.artifactChangesets(artifactId).withAuthenticator(this);
+		RestOperation operation = r.get();
+		List<TuleapElementComment> comments = Lists.newArrayList();
+		for (JsonElement e : operation.iterable()) {
+			TuleapElementComment comment = gson.fromJson(e, TuleapElementComment.class);
+			if (comment.getBody() != null && !comment.getBody().isEmpty()) {
+				comments.add(comment);
+			}
+		}
+		return comments;
 	}
 
 	/**

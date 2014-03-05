@@ -37,6 +37,7 @@ import org.tuleap.mylyn.task.internal.core.model.config.TuleapWorkflow;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapString;
+import org.tuleap.mylyn.task.internal.core.model.data.TuleapElementComment;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapReference;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapGsonProvider;
 import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
@@ -46,6 +47,7 @@ import org.tuleap.mylyn.task.internal.tests.parser.ParserUtil;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -317,6 +319,62 @@ public class TuleapRestClientLimitTests {
 		TuleapResource tuleapResource = tracker.getTrackerResources()[0];
 		assertEquals("reports", tuleapResource.getType()); //$NON-NLS-1$
 		assertEquals("trackers/10/tracker_reports", tuleapResource.getUri()); //$NON-NLS-1$
+	}
+
+	/**
+	 * Test parsing a complete changeSet .
+	 */
+	@Test
+	public void testParsingCompleteChangeSetX() {
+		String json = ParserUtil.loadFile("/changesets/changeset-1.json");
+		TuleapElementComment changeSet = gson.fromJson(json, TuleapElementComment.class);
+		assertNotNull(changeSet);
+		assertEquals("First comment body", changeSet.getBody()); //$NON-NLS-1$
+		assertEquals(1393518580, changeSet.getSubmittedOn());
+		assertEquals(101, changeSet.getSubmitter().getId());
+		assertEquals("email@obeo.fr", changeSet.getSubmitter().getEmail()); //$NON-NLS-1$
+	}
+
+	/**
+	 * Test parsing a changeSet with empty body .
+	 */
+	@Test
+	public void testParsingChangeSetWithEmptyBody() {
+		String json = ParserUtil.loadFile("/changesets/changeset-2.json");
+		TuleapElementComment changeSet = gson.fromJson(json, TuleapElementComment.class);
+		assertNotNull(changeSet);
+		assertEquals("", changeSet.getBody()); //$NON-NLS-1$
+		assertEquals(1393518580, changeSet.getSubmittedOn());
+		assertEquals(101, changeSet.getSubmitter().getId());
+		assertEquals("email@obeo.fr", changeSet.getSubmitter().getEmail()); //$NON-NLS-1$
+	}
+
+	/**
+	 * Test parsing a changeSet with body null.
+	 */
+	@Test
+	public void testParsingChangeSetWithBodyNull() {
+		String json = ParserUtil.loadFile("/changesets/changeset-3.json");
+		TuleapElementComment changeSet = gson.fromJson(json, TuleapElementComment.class);
+		assertNotNull(changeSet);
+		assertNull(changeSet.getBody());
+		assertEquals(1393518580, changeSet.getSubmittedOn());
+		assertEquals(101, changeSet.getSubmitter().getId());
+		assertEquals("email@obeo.fr", changeSet.getSubmitter().getEmail()); //$NON-NLS-1$
+	}
+
+	/**
+	 * Test parsing a changeSet with null mail.
+	 */
+	@Test
+	public void testParsingChangeSetWithEmailNull() {
+		String json = ParserUtil.loadFile("/changesets/changeset-4.json");
+		TuleapElementComment changeSet = gson.fromJson(json, TuleapElementComment.class);
+		assertNotNull(changeSet);
+		assertEquals("Fourth comment body", changeSet.getBody()); //$NON-NLS-1$
+		assertEquals(1393518580, changeSet.getSubmittedOn());
+		assertEquals(101, changeSet.getSubmitter().getId());
+		assertNull(changeSet.getSubmitter().getEmail());
 	}
 
 	@Before

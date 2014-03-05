@@ -323,4 +323,14 @@ public interface ITuleapConstants {
 	 */
 	String FORMAT = "format"; //$NON-NLS-1$
 
+	/**
+	 * The key used for the last comment.
+	 */
+	String LAST_COMMENT = "last_comment"; //$NON-NLS-1$
+
+	/**
+	 * The key used for the user email.
+	 */
+	String EMAIL = "email"; //$NON-NLS-1$
+
 }

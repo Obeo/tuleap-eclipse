@@ -1,0 +1,74 @@
+{
+    "id": 480,
+    "submitted_by": 101,
+    "submitted_on": "2014-02-27T17:29:40+01:00",
+    "email": null,
+    "last_comment": {
+        "body": "Fourth comment body",
+        "format": "text"
+    },
+    "values": [
+        {
+            "field_id": 1060,
+            "label": "Status",
+            "bind_value_ids": [
+                958
+            ]
+        },
+        {
+            "field_id": 1061,
+            "label": "Initial Effort Estimate",
+            "value": 55
+        },
+        {
+            "field_id": 1062,
+            "label": "Customer",
+            "bind_value_ids": []
+        },
+        {
+            "field_id": 1064,
+            "label": "Priority",
+            "bind_value_ids": [
+                962
+            ]
+        },
+        {
+            "field_id": 1065,
+            "label": "Assigned to",
+            "bind_value_ids": [
+                104
+            ]
+        },
+        {
+            "field_id": 1068,
+            "label": "Title",
+            "value": "Java Editor"
+        },
+        {
+            "field_id": 1069,
+            "label": "Source",
+            "value": "Offer an editor for java files."
+        },
+        {
+            "field_id": 1070,
+            "label": "Description",
+            "value": ""
+        },
+        {
+            "field_id": 1073,
+            "label": "Subscribers",
+            "bind_value_ids": []
+        },
+        {
+            "field_id": 1082,
+            "label": "Attachments",
+            "file_descriptions": []
+        },
+        {
+            "field_id": 1087,
+            "label": "Permissions on artifact",
+            "granted_groups": []
+        }
+    ],
+    "last_modified_date": "2014-02-27T17:29:40+01:00"
+}
