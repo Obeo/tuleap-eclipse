@@ -41,6 +41,9 @@ public class ArtifactLinkFieldValue extends AbstractFieldValue {
 	 * @return the fieldValue
 	 */
 	public int[] getLinks() {
-		return this.links.clone();
+		if (links != null) {
+			return this.links.clone();
+		}
+		return new int[0];
 	}
 }

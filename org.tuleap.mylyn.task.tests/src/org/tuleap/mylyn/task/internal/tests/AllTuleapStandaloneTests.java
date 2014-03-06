@@ -26,6 +26,7 @@ import org.tuleap.mylyn.task.internal.tests.data.TuleapTaskIdTests;
 import org.tuleap.mylyn.task.internal.tests.model.TuleapProjectConfigurationTests;
 import org.tuleap.mylyn.task.internal.tests.model.TuleapTrackerConfigurationTests;
 import org.tuleap.mylyn.task.internal.tests.model.TuleapWorkflowTests;
+import org.tuleap.mylyn.task.internal.tests.parser.ArtifactLinkAdapterTest;
 import org.tuleap.mylyn.task.internal.tests.parser.TuleapJsonParserTest;
 import org.tuleap.mylyn.task.internal.tests.repository.TuleapRepositoryConnectorTests;
 import org.tuleap.mylyn.task.internal.tests.repository.TuleapTaskDataHandlerTests;
@@ -46,7 +47,7 @@ import org.tuleap.mylyn.task.internal.tests.server.ServerResponseTest;
 		TuleapWorkflowTests.class, TuleapArtifactMapperTests.class, TuleapRestResourceFactoryTest.class,
 		RestResourceTest.class, RestOperationsTest.class, TuleapRestClientTest.class,
 		TuleapRestClientLimitTests.class, TuleapArtifactSerializerTest.class,
-		TuleapArtifactWithCommentSerializerTest.class })
+		TuleapArtifactWithCommentSerializerTest.class, ArtifactLinkAdapterTest.class })
 public final class AllTuleapStandaloneTests {
 
 	/**

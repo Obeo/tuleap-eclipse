@@ -45,7 +45,7 @@ public class ArtifactLinkFieldValueAdapter implements JsonSerializer<ArtifactLin
 		JsonElement linksElem = jsonObject.get(ITuleapConstants.FIELD_LINKS);
 		int fieldId = idElem.getAsInt();
 		int[] values;
-		if (linksElem.isJsonArray()) {
+		if (linksElem != null && linksElem.isJsonArray()) {
 			JsonArray array = linksElem.getAsJsonArray();
 			values = new int[array.size()];
 			int i = 0;
@@ -70,7 +70,9 @@ public class ArtifactLinkFieldValueAdapter implements JsonSerializer<ArtifactLin
 		result.add(ITuleapConstants.FIELD_ID, new JsonPrimitive(Integer.valueOf(src.getFieldId())));
 		JsonArray arr = new JsonArray();
 		for (int value : src.getLinks()) {
-			arr.add(new JsonPrimitive(Integer.valueOf(value)));
+			JsonObject o = new JsonObject();
+			o.add(ITuleapConstants.ID, new JsonPrimitive(Integer.valueOf(value)));
+			arr.add(o);
 		}
 		result.add(ITuleapConstants.FIELD_LINKS, arr);
 		return result;
