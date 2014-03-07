@@ -11,7 +11,6 @@
 package org.tuleap.mylyn.task.internal.core.model.config.field;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
@@ -136,35 +135,16 @@ public class TuleapSelectBox extends AbstractTuleapSelectBox {
 
 		List<String> tuleapStatus = new ArrayList<String>();
 
-		String currentStatus = null;
-		TaskAttribute statusAttribute = parent.getTaskData().getRoot().getMappedAttribute(
-				TaskAttribute.STATUS);
-		if (attribute != null) {
-			currentStatus = parent.getTaskData().getAttributeMapper().getValueLabel(statusAttribute);
-		}
-		if (currentStatus != null && currentStatus.length() > 0) {
-			for (TuleapSelectBoxItem tuleapSelectBoxItem : items.values()) {
-				if (tuleapSelectBoxItem.getLabel().equals(currentStatus)) {
-					// Only support the reachable state from the current status
-					Collection<TuleapSelectBoxItem> accessibleStates = workflow
-							.accessibleStates(tuleapSelectBoxItem.getIdentifier());
-					for (TuleapSelectBoxItem accessibleState : accessibleStates) {
-						tuleapStatus.add(accessibleState.getLabel());
-					}
-				}
-			}
-		} else {
-			for (TuleapSelectBoxItem tuleapSelectBoxItem : items.values()) {
-				tuleapStatus.add(tuleapSelectBoxItem.getLabel());
-			}
+		for (TuleapSelectBoxItem tuleapSelectBoxItem : items.values()) {
+			tuleapStatus.add(tuleapSelectBoxItem.getLabel());
 		}
 
 		TaskAttribute attrResolvedInput = parent.createAttribute(TaskAttribute.PREFIX_OPERATION
 				+ TaskAttribute.STATUS);
 		attrResolvedInput.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
 		attrResolvedInput.getMetaData().setKind(TaskAttribute.KIND_OPERATION);
-		for (String status : tuleapStatus) {
-			attrResolvedInput.putOption(status, status);
+		for (TuleapSelectBoxItem item : items.values()) {
+			attrResolvedInput.putOption(Integer.toString(item.getIdentifier()), item.getLabel());
 		}
 		TaskOperation.applyTo(attrResolvedInput, TaskAttribute.STATUS, TuleapMylynTasksMessages
 				.getString(TuleapMylynTasksMessagesKeys.markAsLabel));
@@ -197,6 +177,7 @@ public class TuleapSelectBox extends AbstractTuleapSelectBox {
 		List<Integer> bindValueIds = boundFieldValue.getValueIds();
 		if (!bindValueIds.isEmpty() && bindValueIds.get(0) != null) {
 			attribute.setValue(bindValueIds.get(0).toString());
+			updateOptionsWithWorkflow(attribute);
 		}
 	}
 }

@@ -173,6 +173,8 @@ public class MilestoneTaskDataConverter {
 				if (field != null) {
 					TaskAttribute fieldAtt = cardWrapper.addField(fieldId, field.getLabel(), field
 							.getMetadataType());
+					// Create options, apply workflow, etc.
+					field.initializeAttribute(fieldAtt);
 					// TODO Find a way to put this responsibility in the Field classes
 					// Set the field read-only like for tickets
 					// @see AbstractTuleapField.initializeMetaData()

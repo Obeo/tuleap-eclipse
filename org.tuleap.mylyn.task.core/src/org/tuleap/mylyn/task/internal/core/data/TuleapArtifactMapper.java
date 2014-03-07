@@ -42,7 +42,6 @@ import org.tuleap.mylyn.task.internal.core.model.data.AttachmentValue;
 import org.tuleap.mylyn.task.internal.core.model.data.BoundFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapElementComment;
-import org.tuleap.mylyn.task.internal.core.util.ITuleapConstants;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
@@ -466,21 +465,6 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	}
 
 	/**
-	 * Sets the initial effort of the task.
-	 * 
-	 * @param initialEffort
-	 *            The initial effort
-	 * @param fieldId
-	 *            The identifier of the field
-	 */
-	public void setInitialEffort(int initialEffort, int fieldId) {
-		TaskAttribute attribute = getMappedAttributeById(fieldId);
-		if (attribute != null) {
-			taskData.getAttributeMapper().setIntegerValue(attribute, Integer.valueOf(initialEffort));
-		}
-	}
-
-	/**
 	 * Adds a comment to the task.
 	 * 
 	 * @param tuleapArtifactComment
@@ -572,10 +556,17 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 		if (field instanceof TuleapSelectBox) {
 			TuleapSelectBox selectBox = (TuleapSelectBox)field;
 			if (selectBox.hasWorkflow()) {
-				String currentOption = attribute.getOption(String.valueOf(statusItemId));
+				String currentOption = null;
+				// We must look into the tracker because the select box only contains initial states at that
+				// time
+				for (TuleapSelectBoxItem item : field.getItems()) {
+					if (item.getIdentifier() == statusItemId) {
+						currentOption = item.getLabel();
+						break;
+					}
+				}
 				attribute.clearOptions();
-				if (currentOption != null
-						&& ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID != statusItemId) {
+				if (currentOption != null) {
 					// currentOption can only be null if the workflow forbids the current modification...
 					attribute.putOption(String.valueOf(statusItemId), currentOption);
 				}
@@ -585,32 +576,6 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 					attribute.putOption(String.valueOf(item.getIdentifier()), item.getLabel());
 				}
 			}
-		}
-	}
-
-	/**
-	 * Sets the value of the select box field with the given field identifier.
-	 * 
-	 * @param valueId
-	 *            The identifier of the selected value
-	 * @param fieldId
-	 *            The identifier of the field
-	 */
-	public void setSelectBoxValue(int valueId, int fieldId) {
-		// ITuleapConstants -> 100 nothing selected
-		TaskAttribute attribute = getMappedAttributeById(fieldId);
-		if (attribute != null) {
-			if (valueId == ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID) {
-				attribute.clearValues();
-			} else {
-				attribute.setValues(Collections.singletonList(String.valueOf(valueId)));
-			}
-		}
-		// Take the workflow of the select box into account if it exists
-		AbstractTuleapField field = tracker.getFieldById(fieldId);
-		if (field instanceof TuleapSelectBox) {
-			TuleapSelectBox selectBox = (TuleapSelectBox)field;
-			selectBox.updateOptionsWithWorkflow(attribute);
 		}
 	}
 
