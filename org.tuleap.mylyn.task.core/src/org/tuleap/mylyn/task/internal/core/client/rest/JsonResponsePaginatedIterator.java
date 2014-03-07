@@ -46,10 +46,9 @@ public class JsonResponsePaginatedIterator implements Iterator<JsonElement> {
 	private int nbElements; // X-PAGINATION-SIZE
 
 	/**
-	 * The number of elements per ServerResponse in the list of elements to iterate over. Corresponds to the
-	 * {@code X-PAGINATION-LIMIT} HTTP header attribute.
+	 * The number of elements to ask for. Corresponds to the {@code X-PAGINATION-LIMIT} HTTP header attribute.
 	 */
-	private int nbElementsPerPage; // X-PAGINATION-LIMIT
+	private int nbElementsPerPageMax; // X-PAGINATION-LIMIT-MAX
 
 	/**
 	 * The index of the next element that will be retrieved by calling next(). Corresponds to the
@@ -112,23 +111,27 @@ public class JsonResponsePaginatedIterator implements Iterator<JsonElement> {
 	private void extractCounters(ServerResponse response) {
 		Map<String, String> responseHeaders = currentResponse.getHeaders();
 		String xPaginationSize = responseHeaders.get(RestResource.HEADER_X_PAGINATION_SIZE);
-		String xPaginationLimit = responseHeaders.get(RestResource.HEADER_X_PAGINATION_LIMIT);
-		String xPaginationOffset = responseHeaders.get(RestResource.HEADER_X_PAGINATION_OFFSET);
+		if (xPaginationSize == null) {
+			throw new IllegalArgumentException(TuleapMylynTasksMessages
+					.getString(TuleapMylynTasksMessagesKeys.invalidPaginationHeader));
+		}
+		String xPaginationLimitMax = responseHeaders.get(RestResource.HEADER_X_PAGINATION_LIMIT_MAX);
 		try {
 			nbElements = Integer.parseInt(xPaginationSize);
-			if (xPaginationLimit != null) {
-				nbElementsPerPage = Integer.parseInt(xPaginationLimit);
-			} else {
-				nbElementsPerPage = RestResource.DEFAULT_PAGINATION_LIMIT;
-			}
-			if (xPaginationOffset != null) {
-				currentOffset = Integer.parseInt(xPaginationOffset);
-			} else {
-				currentOffset = RestResource.DEFAULT_PAGINATION_OFFSET;
-			}
 		} catch (NumberFormatException e) {
 			throw new IllegalArgumentException(TuleapMylynTasksMessages
 					.getString(TuleapMylynTasksMessagesKeys.invalidPaginationHeader), e);
+		}
+		if (xPaginationLimitMax != null) {
+			try {
+				nbElementsPerPageMax = Integer.parseInt(xPaginationLimitMax);
+			} catch (NumberFormatException e) {
+				// Use default value
+				nbElementsPerPageMax = RestResource.DEFAULT_PAGINATION_LIMIT;
+			}
+		} else {
+			// Use default value
+			nbElementsPerPageMax = RestResource.DEFAULT_PAGINATION_LIMIT;
 		}
 		iterator = new JsonParser().parse(currentResponse.getBody()).getAsJsonArray().iterator();
 	}
@@ -151,10 +154,10 @@ public class JsonResponsePaginatedIterator implements Iterator<JsonElement> {
 		if (currentOffset >= nbElements) {
 			throw new NoSuchElementException();
 		}
-		if (currentOffset > 0 && (currentOffset % nbElementsPerPage == 0 || !iterator.hasNext())) {
+		if (!iterator.hasNext()) {
 			currentResponse = operation.withHeaders(headers).withBody(body).withQueryParameter(OFFSET,
 					Integer.toString(currentOffset)).withQueryParameter(LIMIT,
-					Integer.toString(nbElementsPerPage)).run();
+					Integer.toString(nbElementsPerPageMax)).run();
 			extractCounters(currentResponse);
 		}
 		currentOffset++;

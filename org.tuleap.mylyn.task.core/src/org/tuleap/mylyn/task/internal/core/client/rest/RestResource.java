@@ -12,17 +12,9 @@ package org.tuleap.mylyn.task.internal.core.client.rest;
 
 import com.google.gson.Gson;
 
-import java.util.Map;
-
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
-import org.tuleap.mylyn.task.internal.core.model.TuleapDebugPart;
-import org.tuleap.mylyn.task.internal.core.model.TuleapErrorMessage;
-import org.tuleap.mylyn.task.internal.core.model.TuleapErrorPart;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessages;
 import org.tuleap.mylyn.task.internal.core.util.TuleapMylynTasksMessagesKeys;
 
@@ -86,31 +78,6 @@ public class RestResource {
 	public static final String HEADER_X_PAGINATION_LIMIT_MAX = "X-PAGINATION-LIMIT-MAX"; //$NON-NLS-1$
 
 	/**
-	 * Constant containing the name of the HTTP method DELETE.
-	 */
-	public static final String METHOD_DELETE = "DELETE"; //$NON-NLS-1$
-
-	/**
-	 * Constant containing the name of the HTTP method GET.
-	 */
-	public static final String METHOD_GET = "GET"; //$NON-NLS-1$
-
-	/**
-	 * Constant containing the name of the HTTP method OPTIONS.
-	 */
-	public static final String METHOD_OPTIONS = "OPTIONS"; //$NON-NLS-1$
-
-	/**
-	 * Constant containing the name of the HTTP method POST.
-	 */
-	public static final String METHOD_POST = "POST"; //$NON-NLS-1$
-
-	/**
-	 * Constant containing the name of the HTTP method PUT.
-	 */
-	public static final String METHOD_PUT = "PUT"; //$NON-NLS-1$
-
-	/**
 	 * Flag indicating the GET method is supported.
 	 */
 	public static final int GET = 1;
@@ -159,11 +126,6 @@ public class RestResource {
 	 * Flags indicating allowed operations.
 	 */
 	private final int supportedMethods;
-
-	/**
-	 * Cached ServerResponse received after sending an OPTIONS request to this resource's URL.
-	 */
-	private ServerResponse optionsResponse;
 
 	/**
 	 * The {@link Gson} to use.
@@ -223,9 +185,8 @@ public class RestResource {
 	public RestOperation delete() throws CoreException {
 		if ((supportedMethods & DELETE) == 0) {
 			throw new UnsupportedOperationException(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, METHOD_DELETE, url));
+					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, "DELETE", url)); //$NON-NLS-1$
 		}
-		checkOptionsAllows(METHOD_DELETE);
 		return RestOperation.delete(url, connector, gson, logger).withAuthenticator(authenticator);
 	}
 
@@ -241,23 +202,10 @@ public class RestResource {
 	public RestOperation get() throws CoreException {
 		if ((supportedMethods & GET) == 0) {
 			throw new UnsupportedOperationException(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, METHOD_GET, getUrl()));
+					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, "GET", getUrl())); //$NON-NLS-1$
 		}
-		checkOptionsAllows(METHOD_GET);
-
 		RestOperation operation = RestOperation.get(url, connector, gson, logger).withAuthenticator(
 				authenticator);
-		final Map<String, String> respHeaders = optionsResponse.getHeaders();
-		if (respHeaders.containsKey(HEADER_X_PAGINATION_SIZE)) {
-			String limit;
-			if (respHeaders.containsKey(HEADER_X_PAGINATION_LIMIT_MAX)) {
-				String limitMax = respHeaders.get(HEADER_X_PAGINATION_LIMIT_MAX);
-				limit = limitMax;
-			} else {
-				limit = String.valueOf(DEFAULT_PAGINATION_LIMIT);
-			}
-			operation.withQueryParameter(LIMIT, limit);
-		}
 		return operation;
 	}
 
@@ -282,9 +230,8 @@ public class RestResource {
 	public RestOperation post() throws CoreException {
 		if ((supportedMethods & POST) == 0) {
 			throw new UnsupportedOperationException(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, METHOD_POST, getUrl()));
+					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, "POST", getUrl())); //$NON-NLS-1$
 		}
-		checkOptionsAllows(METHOD_POST);
 		return RestOperation.post(url, connector, gson, logger).withAuthenticator(authenticator);
 	}
 
@@ -300,9 +247,8 @@ public class RestResource {
 	public RestOperation put() throws CoreException {
 		if ((supportedMethods & PUT) == 0) {
 			throw new UnsupportedOperationException(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, METHOD_PUT, getUrl()));
+					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, "PUT", getUrl())); //$NON-NLS-1$
 		}
-		checkOptionsAllows(METHOD_PUT);
 		return RestOperation.put(url, connector, gson, logger).withAuthenticator(authenticator);
 	}
 
@@ -316,59 +262,6 @@ public class RestResource {
 	public RestResource withAuthenticator(IAuthenticator anAuthenticator) {
 		this.authenticator = anAuthenticator;
 		return this;
-	}
-
-	/**
-	 * Performs an OPTIONS request and returns an object capable of saying if a given HTTP operation is
-	 * possible. The header should contain the session hash if a session exists in order to get relevant
-	 * accreditations.
-	 * 
-	 * @param method
-	 *            The HTTP method for which we want to check accreditation
-	 * @throws CoreException
-	 *             if this resource is not accessible with the given headers, whatever the reason.
-	 */
-	private void checkOptionsAllows(String method) throws CoreException {
-		if (optionsResponse == null) {
-			RestOperation options = options();
-			optionsResponse = options.run();
-		}
-		// Check the available operations
-		final Map<String, String> respHeaders = optionsResponse.getHeaders();
-		String headerAllows = respHeaders.get(ALLOW);
-		// String headerCorsAllows = respHeaders.get(ITuleapHeaders.ACCESS_CONTROL_ALLOW_METHODS);
-		if (!optionsResponse.isOk()) {
-			String body = optionsResponse.getBody();
-			TuleapErrorMessage message = gson.fromJson(body, TuleapErrorMessage.class);
-			String msg;
-			if (message == null) {
-				msg = TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.errorReturnedByServer,
-						getUrl(), METHOD_OPTIONS, Integer.valueOf(optionsResponse.getStatus()), body);
-			} else {
-				TuleapErrorPart errorPart = message.getError();
-				TuleapDebugPart debugPart = message.getDebug();
-				if (errorPart == null) {
-					msg = body;
-				} else {
-					if (debugPart != null) {
-						msg = TuleapMylynTasksMessages.getString(
-								TuleapMylynTasksMessagesKeys.errorReturnedByServerWithDebug, url,
-								METHOD_OPTIONS, Integer.valueOf(errorPart.getCode()), errorPart.getMessage(),
-								debugPart.getSource());
-					} else {
-						msg = TuleapMylynTasksMessages.getString(
-								TuleapMylynTasksMessagesKeys.errorReturnedByServer, url, METHOD_OPTIONS,
-								Integer.valueOf(errorPart.getCode()), errorPart.getMessage());
-					}
-				}
-			}
-			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, msg));
-		}
-		if (!headerAllows.contains(method) && !"*".equals(headerAllows)) { //$NON-NLS-1$
-			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
-					TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.cannotPerformOperation,
-							getUrl(), method)));
-		}
 	}
 
 	/**

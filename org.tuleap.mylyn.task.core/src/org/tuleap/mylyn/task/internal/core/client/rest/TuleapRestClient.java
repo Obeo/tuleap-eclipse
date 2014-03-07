@@ -29,6 +29,7 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.data.TuleapTaskId;
 import org.tuleap.mylyn.task.internal.core.model.TuleapToken;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPlanning;
@@ -147,10 +148,14 @@ public class TuleapRestClient implements IAuthenticator {
 				project.addTracker(tracker);
 			}
 
-			for (TuleapUserGroup userGroup : getProjectUserGroups(project.getIdentifier(), monitor)) {
-				for (TuleapUser tuleapUser : getUserGroupUsers(userGroup.getId(), monitor)) {
-					tuleapServer.register(tuleapUser);
+			try {
+				for (TuleapUserGroup userGroup : getProjectUserGroups(project.getIdentifier(), monitor)) {
+					for (TuleapUser tuleapUser : getUserGroupUsers(userGroup.getId(), monitor)) {
+						tuleapServer.register(tuleapUser);
+					}
 				}
+			} catch (CoreException e) {
+				TuleapCoreActivator.log(e, false);
 			}
 		}
 		return tuleapServer;
@@ -233,8 +238,8 @@ public class TuleapRestClient implements IAuthenticator {
 	 * @throws CoreException
 	 *             In case of error during the retrieval of the artifact
 	 */
-	public TuleapArtifact getArtifact(int artifactId, TuleapServer server,
-			IProgressMonitor monitor) throws CoreException {
+	public TuleapArtifact getArtifact(int artifactId, TuleapServer server, IProgressMonitor monitor)
+			throws CoreException {
 		if (monitor != null) {
 			monitor.subTask(TuleapMylynTasksMessages.getString(
 					TuleapMylynTasksMessagesKeys.retrievingArtifact, Integer.valueOf(artifactId)));
@@ -242,8 +247,7 @@ public class TuleapRestClient implements IAuthenticator {
 		RestResource artifactResource = restResourceFactory.artifact(artifactId).withAuthenticator(this);
 		ServerResponse response = artifactResource.get().checkedRun();
 		TuleapArtifact artifact = gson.fromJson(response.getBody(), TuleapArtifact.class);
-		for (TuleapElementComment comment : this
-				.getArtifactComments(artifactId, server, monitor)) {
+		for (TuleapElementComment comment : this.getArtifactComments(artifactId, server, monitor)) {
 			artifact.addComment(comment);
 		}
 		return artifact;

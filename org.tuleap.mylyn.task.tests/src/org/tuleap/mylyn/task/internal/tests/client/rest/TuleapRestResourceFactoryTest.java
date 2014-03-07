@@ -148,40 +148,6 @@ public class TuleapRestResourceFactoryTest {
 	/**
 	 * Checks that GET is supported by the operation returned by
 	 * {@link RestResourceFactory#milestoneBacklog(int)} but sends an error if the server does not allow GET
-	 * in the OPTIONS header "allow" property.
-	 * 
-	 * @throws CoreException
-	 */
-	@Test(expected = CoreException.class)
-	public void testGetMilestonesBacklogGetWhenServerDoesNotAllowGet() throws CoreException {
-		RestResource r = factory.milestoneBacklog(123);
-		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(RestResource.ALLOW, "OPTIONS");
-		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
-		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
-		r.get();
-	}
-
-	/**
-	 * Checks that GET is supported by the operation returned by
-	 * {@link RestResourceFactory#milestoneContent(int)} but sends an error if the server does not allow GET
-	 * in the OPTIONS header "allow" property.
-	 * 
-	 * @throws CoreException
-	 */
-	@Test(expected = CoreException.class)
-	public void testGetMilestonesContentGetWhenServerDoesNotAllowGet() throws CoreException {
-		RestResource r = factory.milestoneContent(123);
-		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(RestResource.ALLOW, "OPTIONS");
-		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
-		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
-		r.get();
-	}
-
-	/**
-	 * Checks that GET is supported by the operation returned by
-	 * {@link RestResourceFactory#milestoneBacklog(int)} but sends an error if the server does not allow GET
 	 * in the OPTIONS header "access-control-allow-methods" property.
 	 * 
 	 * @throws CoreException
