@@ -37,6 +37,7 @@ import org.tuleap.mylyn.task.internal.core.TuleapCoreActivator;
 import org.tuleap.mylyn.task.internal.core.client.rest.RestResourceFactory;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestConnector;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.model.data.AbstractFieldValue;
 import org.tuleap.mylyn.task.internal.core.model.data.TuleapArtifact;
 import org.tuleap.mylyn.task.internal.core.parser.TuleapGsonProvider;
@@ -126,7 +127,8 @@ public class TuleapSOAPRestCompareTest {
 
 		for (Artifact artifact : downloadedArtifacts) {
 			int artifactId = artifact.getArtifact_id();
-			TuleapArtifact tuleapArtifact = tuleapRestClient.getArtifact(artifactId, null);
+			TuleapArtifact tuleapArtifact = tuleapRestClient.getArtifact(artifactId, new TuleapServer(
+					repositoryUrl), null);
 
 			System.out.println("--------------------");
 			if (artifact.getLast_update_date() != tuleapArtifact.getLastModifiedDate().getTime() / 1000) {

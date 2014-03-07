@@ -379,7 +379,8 @@ public class TuleapSoapConnector {
 				Ugroup[] ugroups = this.getCodendiAPIPortType()
 						.getProjectGroupsAndUsers(sessionHash, groupId);
 				for (Ugroup ugroup : ugroups) {
-					TuleapUserGroup tuleapGroup = new TuleapUserGroup(ugroup.getUgroup_id(), ugroup.getName());
+					TuleapUserGroup tuleapGroup = new TuleapUserGroup(String.valueOf(ugroup.getUgroup_id()),
+							ugroup.getName());
 					UGroupMember[] members = ugroup.getMembers();
 					for (UGroupMember member : members) {
 						int userId = member.getUser_id();

@@ -243,7 +243,8 @@ public class TuleapTaskDataHandlerTests {
 			}
 
 			@Override
-			public TuleapArtifact getArtifact(int id, IProgressMonitor monitor) throws CoreException {
+			public TuleapArtifact getArtifact(int id, TuleapServer server, IProgressMonitor monitor)
+					throws CoreException {
 				return tuleapArtifact;
 			}
 

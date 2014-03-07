@@ -31,6 +31,7 @@ import org.tuleap.mylyn.task.internal.core.client.rest.ServerResponse;
 import org.tuleap.mylyn.task.internal.core.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.internal.core.model.TuleapToken;
 import org.tuleap.mylyn.task.internal.core.model.config.TuleapPlanning;
+import org.tuleap.mylyn.task.internal.core.model.config.TuleapServer;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapMultiSelectBox;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapOpenList;
 import org.tuleap.mylyn.task.internal.core.model.config.field.TuleapSelectBoxItem;
@@ -202,7 +203,7 @@ public class TuleapRestClientTest {
 		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonMilestone, respHeaders);
 		connector.setResponse(response);
-		client.getUserGroupUsers(200, null);
+		client.getUserGroupUsers("200", null);
 
 		// Let's check the requests that have been sent.
 		List<ServerRequest> requestsSent = connector.getRequestsSent();
@@ -312,7 +313,7 @@ public class TuleapRestClientTest {
 		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonTrackers, respHeaders);
 		connector.setResponse(response);
-		client.getArtifactComments(10, null);
+		client.getArtifactComments(10, new TuleapServer(repository.getUrl()), null);
 
 		// Let's check the requests that have been sent.
 		List<ServerRequest> requestsSent = connector.getRequestsSent();

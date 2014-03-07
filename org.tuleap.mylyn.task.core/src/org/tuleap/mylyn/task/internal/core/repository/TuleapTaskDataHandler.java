@@ -515,7 +515,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			TaskRepository taskRepository, boolean refreshTracker, IProgressMonitor monitor)
 			throws CoreException {
 		TuleapRestClient client = this.connector.getClientManager().getRestClient(taskRepository);
-		TuleapArtifact tuleapArtifact = client.getArtifact(taskId.getArtifactId(), monitor);
+		TuleapArtifact tuleapArtifact = client.getArtifact(taskId.getArtifactId(), server, monitor);
 		TuleapTaskId refreshedTaskId = taskId;
 		if (tuleapArtifact != null) {
 			TuleapTracker tracker = server.getTracker(tuleapArtifact.getTracker().getId());

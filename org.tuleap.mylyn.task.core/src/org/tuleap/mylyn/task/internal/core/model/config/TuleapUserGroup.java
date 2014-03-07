@@ -32,7 +32,7 @@ public class TuleapUserGroup implements Serializable {
 	/**
 	 * The group identifier.
 	 */
-	private final int id;
+	private final String id;
 
 	/**
 	 * The group uri.
@@ -57,7 +57,7 @@ public class TuleapUserGroup implements Serializable {
 	 * @param label
 	 *            The group label
 	 */
-	public TuleapUserGroup(int id, String label) {
+	public TuleapUserGroup(String id, String label) {
 		this.id = id;
 		this.label = label;
 	}
@@ -67,7 +67,7 @@ public class TuleapUserGroup implements Serializable {
 	 * 
 	 * @return the id
 	 */
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 

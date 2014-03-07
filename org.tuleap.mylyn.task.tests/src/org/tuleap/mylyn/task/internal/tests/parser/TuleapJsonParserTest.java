@@ -96,7 +96,7 @@ public class TuleapJsonParserTest {
 	public void testDeserializeUserGroup() throws ParseException {
 		String json = ParserUtil.loadFile("/groups/project_admins.json");
 		TuleapUserGroup userGroup = gson.fromJson(json, TuleapUserGroup.class);
-		assertEquals(1, userGroup.getId());
+		assertEquals("1", userGroup.getId());
 		assertEquals("Project Administrators", userGroup.getLabel());
 		assertEquals("/user_groups/1", userGroup.getUri());
 	}

@@ -146,8 +146,13 @@ public class TuleapRestClient implements IAuthenticator {
 			for (TuleapTracker tracker : getProjectTrackers(project.getIdentifier(), monitor)) {
 				project.addTracker(tracker);
 			}
-		}
 
+			for (TuleapUserGroup userGroup : getProjectUserGroups(project.getIdentifier(), monitor)) {
+				for (TuleapUser tuleapUser : getUserGroupUsers(userGroup.getId(), monitor)) {
+					tuleapServer.register(tuleapUser);
+				}
+			}
+		}
 		return tuleapServer;
 	}
 
@@ -220,13 +225,16 @@ public class TuleapRestClient implements IAuthenticator {
 	 * 
 	 * @param artifactId
 	 *            The identifier of the artifact
+	 * @param server
+	 *            The server configuration
 	 * @param monitor
 	 *            Used to monitor the progress
 	 * @return The task data of the artifact
 	 * @throws CoreException
 	 *             In case of error during the retrieval of the artifact
 	 */
-	public TuleapArtifact getArtifact(int artifactId, IProgressMonitor monitor) throws CoreException {
+	public TuleapArtifact getArtifact(int artifactId, TuleapServer server,
+			IProgressMonitor monitor) throws CoreException {
 		if (monitor != null) {
 			monitor.subTask(TuleapMylynTasksMessages.getString(
 					TuleapMylynTasksMessagesKeys.retrievingArtifact, Integer.valueOf(artifactId)));
@@ -234,7 +242,8 @@ public class TuleapRestClient implements IAuthenticator {
 		RestResource artifactResource = restResourceFactory.artifact(artifactId).withAuthenticator(this);
 		ServerResponse response = artifactResource.get().checkedRun();
 		TuleapArtifact artifact = gson.fromJson(response.getBody(), TuleapArtifact.class);
-		for (TuleapElementComment comment : this.getArtifactComments(artifactId, monitor)) {
+		for (TuleapElementComment comment : this
+				.getArtifactComments(artifactId, server, monitor)) {
 			artifact.addComment(comment);
 		}
 		return artifact;
@@ -614,7 +623,8 @@ public class TuleapRestClient implements IAuthenticator {
 	 * @throws CoreException
 	 *             If the server returns a status code different from 200 OK.
 	 */
-	public List<TuleapUser> getUserGroupUsers(int userGroupId, IProgressMonitor monitor) throws CoreException {
+	public List<TuleapUser> getUserGroupUsers(String userGroupId, IProgressMonitor monitor)
+			throws CoreException {
 		RestResource r = restResourceFactory.userGroupUsers(userGroupId).withAuthenticator(this);
 		RestOperation operation = r.get();
 		List<TuleapUser> users = Lists.newArrayList();
@@ -716,19 +726,24 @@ public class TuleapRestClient implements IAuthenticator {
 	 * 
 	 * @param artifactId
 	 *            ID of the artifact
+	 * @param server
+	 *            The server configuration
 	 * @param monitor
 	 *            Progress monitor to use
 	 * @return A list, never null but possibly empty, containing the artifact comments.
 	 * @throws CoreException
 	 *             If the server returns a status code different from 200 OK.
 	 */
-	public List<TuleapElementComment> getArtifactComments(int artifactId, IProgressMonitor monitor)
-			throws CoreException {
+	public List<TuleapElementComment> getArtifactComments(int artifactId, TuleapServer server,
+			IProgressMonitor monitor) throws CoreException {
 		RestResource r = restResourceFactory.artifactChangesets(artifactId).withAuthenticator(this);
 		RestOperation operation = r.get();
 		List<TuleapElementComment> comments = Lists.newArrayList();
 		for (JsonElement e : operation.iterable()) {
 			TuleapElementComment comment = gson.fromJson(e, TuleapElementComment.class);
+			int submitterId = comment.getSubmitter().getId();
+			TuleapUser submitter = server.getUser(submitterId);
+			comment.setSubmitter(submitter);
 			if (comment.getBody() != null && !comment.getBody().isEmpty()) {
 				comments.add(comment);
 			}
