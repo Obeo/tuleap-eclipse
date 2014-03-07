@@ -37,13 +37,13 @@ public class StubProjectProvider {
 			TuleapServer serverConfiguration = new TuleapServer("http://test/url");
 			projectConfiguration = new TuleapProject("Test", 3);
 			serverConfiguration.addProject(projectConfiguration);
-			TuleapUserGroup group0 = new TuleapUserGroup(0, "Project Admins");
+			TuleapUserGroup group0 = new TuleapUserGroup("0", "Project Admins");
 			projectConfiguration.addUserToUserGroup(group0, new TuleapUser("jd15", "John Doe", 15,
 					"john.doe15@somewhere.com", null));
 			projectConfiguration.addUserToUserGroup(group0, new TuleapUser("jd16", "John Doe II", 16,
 					"john.doe16@somewhere.com", null));
 
-			TuleapUserGroup group1 = new TuleapUserGroup(1, "Project Members");
+			TuleapUserGroup group1 = new TuleapUserGroup("1", "Project Members");
 			projectConfiguration.addUserToUserGroup(group1, new TuleapUser("jd15", "John Doe", 15,
 					"john.doe15@somewhere.com", null));
 			projectConfiguration.addUserToUserGroup(group1, new TuleapUser("jd16", "John Doe II", 16,

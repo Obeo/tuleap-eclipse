@@ -162,16 +162,16 @@ public class TuleapProjectConfigurationTests {
 		TuleapProject project = new TuleapProject("Test Project", 42);
 		server.addProject(project);
 
-		assertNull(project.getUserGroup(0));
-		assertNull(project.getUserGroup(1));
-		TuleapUserGroup group0 = new TuleapUserGroup(0, "Project Admins");
+		assertNull(project.getUserGroup("0"));
+		assertNull(project.getUserGroup("1"));
+		TuleapUserGroup group0 = new TuleapUserGroup("0", "Project Admins");
 		project.addGroup(group0);
-		assertNotNull(project.getUserGroup(0));
-		assertNull(project.getUserGroup(1));
-		TuleapUserGroup group1 = new TuleapUserGroup(1, "Project Members");
+		assertNotNull(project.getUserGroup("0"));
+		assertNull(project.getUserGroup("1"));
+		TuleapUserGroup group1 = new TuleapUserGroup("1", "Project Members");
 		project.addGroup(group1);
-		assertNotNull(project.getUserGroup(0));
-		assertNotNull(project.getUserGroup(01));
+		assertNotNull(project.getUserGroup("0"));
+		assertNotNull(project.getUserGroup("1"));
 
 		TuleapUser user0 = new TuleapUser("zero", "John Zero", 0, "john.zero@some.where", null);
 		TuleapUser user1 = new TuleapUser("one", "John One", 1, "john.one@some.where", null);
@@ -185,9 +185,9 @@ public class TuleapProjectConfigurationTests {
 		project.addUserToUserGroup(group1, user2);
 		project.addUserToUserGroup(group1, user3);
 
-		TuleapUserGroup g0 = project.getUserGroup(0);
+		TuleapUserGroup g0 = project.getUserGroup("0");
 		assertSame(group0, g0);
-		TuleapUserGroup g1 = project.getUserGroup(1);
+		TuleapUserGroup g1 = project.getUserGroup("1");
 		assertSame(group1, g1);
 
 		assertEquals(2, g0.getMembers().size());

@@ -76,4 +76,14 @@ public class TuleapElementComment {
 	public int getSubmittedOn() {
 		return this.submittedOn;
 	}
+
+	/**
+	 * Set the person who has submitted the comment.
+	 * 
+	 * @param tuleapUser
+	 *            the user to set
+	 */
+	public void setSubmitter(TuleapUser tuleapUser) {
+		this.submitter = tuleapUser;
+	}
 }

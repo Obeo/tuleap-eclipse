@@ -224,7 +224,8 @@ public class TuleapTaskDataHandlerTests {
 		// Mock rest client
 		final TuleapRestClient tuleapRestClient = new TuleapRestClient(null, null, null) {
 			@Override
-			public TuleapArtifact getArtifact(int id, IProgressMonitor monitor) throws CoreException {
+			public TuleapArtifact getArtifact(int id, TuleapServer server, IProgressMonitor monitor)
+					throws CoreException {
 				return tuleapArtifact;
 			}
 		};

@@ -72,7 +72,7 @@ public class TuleapProject implements Serializable {
 	/**
 	 * User groups indexed by id.
 	 */
-	private final Map<Integer, TuleapUserGroup> userGroupsById;
+	private final Map<String, TuleapUserGroup> userGroupsById;
 
 	/**
 	 * The constructor.
@@ -258,7 +258,7 @@ public class TuleapProject implements Serializable {
 	 *            User group to register with this project. Must not be {@code null}.
 	 */
 	public void addGroup(TuleapUserGroup group) {
-		userGroupsById.put(Integer.valueOf(group.getId()), group);
+		userGroupsById.put(group.getId(), group);
 	}
 
 	/**
@@ -269,8 +269,8 @@ public class TuleapProject implements Serializable {
 	 *            The id of the group being looked for.
 	 * @return The group with the given id if it is registered with this project, {@code null} otherwise.
 	 */
-	public TuleapUserGroup getUserGroup(int groupId) {
-		return userGroupsById.get(Integer.valueOf(groupId));
+	public TuleapUserGroup getUserGroup(String groupId) {
+		return userGroupsById.get(groupId);
 	}
 
 	/**
@@ -297,7 +297,7 @@ public class TuleapProject implements Serializable {
 		if (userGroupsById.containsKey(Integer.valueOf(group.getId()))) {
 			groupToUse = userGroupsById.get(Integer.valueOf(group.getId()));
 		} else {
-			userGroupsById.put(Integer.valueOf(group.getId()), group);
+			userGroupsById.put(group.getId(), group);
 			groupToUse = group;
 		}
 		groupToUse.addMember(member);

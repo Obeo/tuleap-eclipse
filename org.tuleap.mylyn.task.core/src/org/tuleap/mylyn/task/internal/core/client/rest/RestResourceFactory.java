@@ -203,8 +203,8 @@ public final class RestResourceFactory {
 	 *            the project id
 	 * @return A resource that gives access to the {code /user_groups/:id/users} HTTP resource.
 	 */
-	public RestResource userGroupUsers(int userGroupId) {
-		return resource(GET, URL.USER_GROUPS, Integer.toString(userGroupId), URL.USERS);
+	public RestResource userGroupUsers(String userGroupId) {
+		return resource(GET, URL.USER_GROUPS, userGroupId, URL.USERS);
 	}
 
 	/**
