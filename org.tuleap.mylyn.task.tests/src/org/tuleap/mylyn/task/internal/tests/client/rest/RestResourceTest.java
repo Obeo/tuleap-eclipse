@@ -102,17 +102,6 @@ public class RestResourceTest {
 		r.delete();
 	}
 
-	@Test(expected = CoreException.class)
-	public void testDeleteNotAllowedDistant() throws CoreException {
-		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.DELETE, //$NON-NLS-1$
-				connector, gson, new TestLogger());
-		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
-		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
-		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
-		r.delete();
-	}
-
 	@Test
 	public void testPostAllowed() throws CoreException {
 		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.POST, //$NON-NLS-1$
@@ -132,17 +121,6 @@ public class RestResourceTest {
 		Map<String, String> headers = Maps.newTreeMap();
 		headers.put(RestResource.ALLOW, "OPTIONS,POST"); //$NON-NLS-1$
 		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,POST"); //$NON-NLS-1$
-		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
-		r.post();
-	}
-
-	@Test(expected = CoreException.class)
-	public void testPostNotAllowedDistant() throws CoreException {
-		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.POST, //$NON-NLS-1$
-				connector, gson, new TestLogger());
-		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
-		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
 		r.post();
 	}
@@ -170,17 +148,6 @@ public class RestResourceTest {
 		r.put();
 	}
 
-	@Test(expected = CoreException.class)
-	public void testPutNotAllowedDistant() throws CoreException {
-		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.PUT, //$NON-NLS-1$
-				connector, gson, new TestLogger());
-		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
-		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
-		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
-		r.put();
-	}
-
 	@Test
 	public void testGetAllowed() throws CoreException {
 		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.GET, //$NON-NLS-1$
@@ -202,105 +169,6 @@ public class RestResourceTest {
 		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
 		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
 		r.get();
-	}
-
-	@Test(expected = CoreException.class)
-	public void testGetNotAllowedDistant() throws CoreException {
-		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.GET, //$NON-NLS-1$
-				connector, gson, new TestLogger());
-		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(RestResource.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
-		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
-		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers)); //$NON-NLS-1$
-		r.get();
-	}
-
-	/**
-	 * Test the pagination on GET with HEADER_X_PAGINATION_SIZE set, HEADER_X_PAGINATION_LIMIT_MAX header
-	 * attribute set and HEADER_X_PAGINATION_LIMIT not set .
-	 * 
-	 * @throws CoreException
-	 *             The exception to throw
-	 */
-	@Test
-	public void testGetPaginationLimitMaxSetWithoutLimit() throws CoreException {
-		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.GET, connector, gson,
-				new TestLogger());
-		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(RestResource.ALLOW, "OPTIONS,GET");
-		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
-		headers.put(RestResource.HEADER_X_PAGINATION_SIZE, "3");
-		headers.put(RestResource.HEADER_X_PAGINATION_LIMIT_MAX, "30");
-		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
-		RestOperation get = r.get();
-		HttpMethod method = get.createMethod();
-		assertEquals("GET", method.getName());
-		assertEquals("/server/api/v12.5/my/url", method.getPath());
-		assertEquals("limit=30", method.getQueryString());
-
-		headers.put(RestResource.HEADER_X_PAGINATION_LIMIT_MAX, "10");
-		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
-		get = r.get();
-		method = get.createMethod();
-		assertEquals("GET", method.getName());
-		assertEquals("/server/api/v12.5/my/url", method.getPath());
-		assertEquals("limit=10", method.getQueryString());
-	}
-
-	/**
-	 * Test the pagination on GET with HEADER_X_PAGINATION_SIZE set, HEADER_X_PAGINATION_LIMIT_MAX header
-	 * attribute set and HEADER_X_PAGINATION_LIMIT set.
-	 * 
-	 * @throws CoreException
-	 *             The exception to throw
-	 */
-	@Test
-	public void testGetPaginationLimitMaxSetWithLimit() throws CoreException {
-		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.GET, connector, gson,
-				new TestLogger());
-		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(RestResource.ALLOW, "OPTIONS,GET");
-		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
-		headers.put(RestResource.HEADER_X_PAGINATION_SIZE, "3");
-		headers.put(RestResource.HEADER_X_PAGINATION_LIMIT_MAX, "30");
-		headers.put(RestResource.HEADER_X_PAGINATION_LIMIT, "20");
-		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
-		RestOperation get = r.get();
-		HttpMethod method = get.createMethod();
-		assertEquals("GET", method.getName());
-		assertEquals("/server/api/v12.5/my/url", method.getPath());
-		assertEquals("limit=30", method.getQueryString());
-
-		headers.put(RestResource.HEADER_X_PAGINATION_LIMIT_MAX, "10");
-		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
-		get = r.get();
-		method = get.createMethod();
-		assertEquals("GET", method.getName());
-		assertEquals("/server/api/v12.5/my/url", method.getPath());
-		assertEquals("limit=10", method.getQueryString());
-	}
-
-	/**
-	 * Test the pagination on GEt with HEADER_X_PAGINATION_SIZE set and HEADER_X_PAGINATION_LIMIT_MAX header
-	 * attribute not set.
-	 * 
-	 * @throws CoreException
-	 *             The exception to throw
-	 */
-	@Test
-	public void testGetPaginationLimitMaxNotSetSizeSet() throws CoreException {
-		RestResource r = new RestResource("/server/api/v12.5/my/url", RestResource.GET, connector, gson,
-				new TestLogger());
-		Map<String, String> headers = Maps.newTreeMap();
-		headers.put(RestResource.ALLOW, "OPTIONS,GET");
-		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET");
-		headers.put(RestResource.HEADER_X_PAGINATION_SIZE, "3");
-		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
-		RestOperation get = r.get();
-		HttpMethod method = get.createMethod();
-		assertEquals("GET", method.getName());
-		assertEquals("/server/api/v12.5/my/url", method.getPath());
-		assertEquals("limit=" + RestResource.DEFAULT_PAGINATION_LIMIT, method.getQueryString());
 	}
 
 	/**

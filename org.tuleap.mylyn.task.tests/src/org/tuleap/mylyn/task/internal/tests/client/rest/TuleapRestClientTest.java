@@ -76,12 +76,8 @@ public class TuleapRestClientTest {
 
 		// Let's check the requests that have been sent.
 		List<ServerRequest> requestsSent = connector.getRequestsSent();
-		assertEquals(2, requestsSent.size());
+		assertEquals(1, requestsSent.size());
 		ServerRequest request = requestsSent.get(0);
-		assertEquals("/api/v12.3/projects/200/user_groups", request.url); //$NON-NLS-1$
-		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
-
-		request = requestsSent.get(1);
 		assertEquals("/api/v12.3/projects/200/user_groups", request.url); //$NON-NLS-1$
 		assertEquals("GET", request.method); //$NON-NLS-1$
 	}
@@ -98,12 +94,8 @@ public class TuleapRestClientTest {
 
 		// Let's check the requests that have been sent.
 		List<ServerRequest> requestsSent = connector.getRequestsSent();
-		assertEquals(2, requestsSent.size());
+		assertEquals(1, requestsSent.size());
 		ServerRequest request = requestsSent.get(0);
-		assertEquals("/api/v12.3/user_groups/200/users", request.url); //$NON-NLS-1$
-		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
-
-		request = requestsSent.get(1);
 		assertEquals("/api/v12.3/user_groups/200/users", request.url); //$NON-NLS-1$
 		assertEquals("GET", request.method); //$NON-NLS-1$
 	}
@@ -120,12 +112,8 @@ public class TuleapRestClientTest {
 
 		// Let's check the requests that have been sent.
 		List<ServerRequest> requestsSent = connector.getRequestsSent();
-		assertEquals(2, requestsSent.size());
+		assertEquals(1, requestsSent.size());
 		ServerRequest request = requestsSent.get(0);
-		assertEquals("/api/v12.3/trackers/200/tracker_reports", request.url); //$NON-NLS-1$
-		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
-
-		request = requestsSent.get(1);
 		assertEquals("/api/v12.3/trackers/200/tracker_reports", request.url); //$NON-NLS-1$
 		assertEquals("GET", request.method); //$NON-NLS-1$
 	}
@@ -142,12 +130,8 @@ public class TuleapRestClientTest {
 
 		// Let's check the requests that have been sent.
 		List<ServerRequest> requestsSent = connector.getRequestsSent();
-		assertEquals(2, requestsSent.size());
+		assertEquals(1, requestsSent.size());
 		ServerRequest request = requestsSent.get(0);
-		assertEquals("/api/v12.3/projects", request.url); //$NON-NLS-1$
-		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
-
-		request = requestsSent.get(1);
 		assertEquals("/api/v12.3/projects", request.url); //$NON-NLS-1$
 		assertEquals("GET", request.method); //$NON-NLS-1$
 	}
@@ -164,12 +148,8 @@ public class TuleapRestClientTest {
 
 		// Let's check the requests that have been sent.
 		List<ServerRequest> requestsSent = connector.getRequestsSent();
-		assertEquals(2, requestsSent.size());
+		assertEquals(1, requestsSent.size());
 		ServerRequest request = requestsSent.get(0);
-		assertEquals("/api/v12.3/projects/101/trackers", request.url); //$NON-NLS-1$
-		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
-
-		request = requestsSent.get(1);
 		assertEquals("/api/v12.3/projects/101/trackers", request.url); //$NON-NLS-1$
 		assertEquals("GET", request.method); //$NON-NLS-1$
 	}
@@ -186,12 +166,8 @@ public class TuleapRestClientTest {
 
 		// Let's check the requests that have been sent.
 		List<ServerRequest> requestsSent = connector.getRequestsSent();
-		assertEquals(2, requestsSent.size());
+		assertEquals(1, requestsSent.size());
 		ServerRequest request = requestsSent.get(0);
-		assertEquals("/api/v12.3/tracker_reports/10/artifacts", request.url); //$NON-NLS-1$
-		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
-
-		request = requestsSent.get(1);
 		assertEquals("/api/v12.3/tracker_reports/10/artifacts", request.url); //$NON-NLS-1$
 		assertEquals("GET", request.method); //$NON-NLS-1$
 	}
@@ -208,12 +184,8 @@ public class TuleapRestClientTest {
 
 		// Let's check the requests that have been sent.
 		List<ServerRequest> requestsSent = connector.getRequestsSent();
-		assertEquals(2, requestsSent.size());
+		assertEquals(1, requestsSent.size());
 		ServerRequest request = requestsSent.get(0);
-		assertEquals("/api/v12.3/artifacts/10/changesets", request.url); //$NON-NLS-1$
-		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
-
-		request = requestsSent.get(1);
 		assertEquals("/api/v12.3/artifacts/10/changesets", request.url); //$NON-NLS-1$
 		assertEquals("GET", request.method); //$NON-NLS-1$
 	}
@@ -230,12 +202,8 @@ public class TuleapRestClientTest {
 
 		// Let's check the requests that have been sent.
 		List<ServerRequest> requestsSent = connector.getRequestsSent();
-		assertEquals(2, requestsSent.size());
+		assertEquals(1, requestsSent.size());
 		ServerRequest request = requestsSent.get(0);
-		assertEquals("/api/v12.3/trackers/102", request.url); //$NON-NLS-1$
-		assertEquals("OPTIONS", request.method); //$NON-NLS-1$
-
-		request = requestsSent.get(1);
 		assertEquals("/api/v12.3/trackers/102", request.url); //$NON-NLS-1$
 		assertEquals("GET", request.method); //$NON-NLS-1$
 	}
@@ -260,17 +228,13 @@ public class TuleapRestClientTest {
 
 		// Let's check the requests that have been sent.
 		List<ServerRequest> requestsSent = connector.getRequestsSent();
-		assertEquals(2, requestsSent.size());
+		assertEquals(1, requestsSent.size());
 
-		ServerRequest request0 = requestsSent.get(0);
-		assertEquals("/api/v12.3/tokens", request0.url); //$NON-NLS-1$
-		assertEquals("OPTIONS", request0.method); //$NON-NLS-1$
-
-		ServerRequest request1 = requestsSent.get(1);
-		assertEquals("/api/v12.3/tokens", request1.url); //$NON-NLS-1$
-		assertEquals("POST", request1.method); //$NON-NLS-1$
+		ServerRequest request = requestsSent.get(0);
+		assertEquals("/api/v12.3/tokens", request.url); //$NON-NLS-1$
+		assertEquals("POST", request.method); //$NON-NLS-1$
 		assertEquals("{\"username\":\"admin\",\"password\":\"password\"}", //$NON-NLS-1$
-				request1.body);
+				request.body);
 
 		TuleapToken token2 = client.getToken();
 		assertEquals("Zza25pV0V5eXFhJDJ5JDE1JHpSbU1nMldoRUo1b21QNFQ4eEhDUC4xM0FybW9Ud3FwdmRUejA3R1B2WF",
@@ -302,18 +266,14 @@ public class TuleapRestClientTest {
 				respHeaders);
 
 		String tokenJson = ParserUtil.loadFile("/tokens/token-0.json");
-		ServerResponse tokenOptionsResponse = new ServerResponse(ServerResponse.STATUS_OK, "", respHeaders);
 		ServerResponse tokenResponse = new ServerResponse(ServerResponse.STATUS_OK, tokenJson, respHeaders);
 
 		String trackerJson = ParserUtil.loadFile("/trackers/tracker-0.json");
-		ServerResponse trackersOptionsResponse = new ServerResponse(ServerResponse.STATUS_OK, "", respHeaders);
 		ServerResponse trackersResponse = new ServerResponse(ServerResponse.STATUS_OK, trackerJson,
 				respHeaders);
 
 		listConnector.addServerResponse(response401Unauthorized);
-		listConnector.addServerResponse(tokenOptionsResponse);
 		listConnector.addServerResponse(tokenResponse);
-		listConnector.addServerResponse(trackersOptionsResponse);
 		listConnector.addServerResponse(trackersResponse);
 		// Need to create a new client to use the specific connector.
 		client = new TuleapRestClient(restResourceFactory, gson, repository);
@@ -321,25 +281,17 @@ public class TuleapRestClientTest {
 		TuleapTracker tracker = client.getTracker(200, null);
 		assertNotNull(tracker);
 		List<ServerRequest> requestsSent = listConnector.requestsSent;
-		assertEquals(5, requestsSent.size());
+		assertEquals(3, requestsSent.size());
 
 		ServerRequest req = requestsSent.get(0);
-		assertEquals("OPTIONS", req.method);
+		assertEquals("GET", req.method);
 		assertEquals("/api/v12.3/trackers/200", req.url);
 
 		req = requestsSent.get(1);
-		assertEquals("OPTIONS", req.method);
-		assertEquals("/api/v12.3/tokens", req.url);
-
-		req = requestsSent.get(2);
 		assertEquals("POST", req.method);
 		assertEquals("/api/v12.3/tokens", req.url);
 
-		req = requestsSent.get(3);
-		assertEquals("OPTIONS", req.method);
-		assertEquals("/api/v12.3/trackers/200", req.url);
-
-		req = requestsSent.get(4);
+		req = requestsSent.get(2);
 		assertEquals("GET", req.method);
 		assertEquals("/api/v12.3/trackers/200", req.url);
 	}

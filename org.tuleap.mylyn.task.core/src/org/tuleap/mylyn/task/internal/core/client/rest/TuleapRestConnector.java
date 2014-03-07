@@ -21,7 +21,6 @@ import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.util.HttpURLConnection;
@@ -131,11 +130,7 @@ public class TuleapRestConnector implements IRestConnector {
 			serverResponse = new ServerResponse(IO_ERROR_STATUS_CODE, "", Collections //$NON-NLS-1$
 					.<String, String> emptyMap());
 		} finally {
-			if (method instanceof HttpMethodBase) {
-				// TODO Hack-ish, cast into HttpMethodBase since releaseConnection accepts the abstract class,
-				// not the interface.
-				WebUtil.releaseConnection((HttpMethodBase)method, null);
-			}
+			method.releaseConnection();
 		}
 
 		return serverResponse;
@@ -154,6 +149,10 @@ public class TuleapRestConnector implements IRestConnector {
 		StringBuilder b = new StringBuilder();
 		b.append(method.getName());
 		b.append(" ").append(method.getPath()); //$NON-NLS-1$
+		String qs = method.getQueryString();
+		if (qs != null && !qs.isEmpty()) {
+			b.append('?').append(method.getQueryString());
+		}
 		if (method instanceof EntityEnclosingMethod) {
 			RequestEntity requestEntity = ((EntityEnclosingMethod)method).getRequestEntity();
 			String body = ""; //$NON-NLS-1$
