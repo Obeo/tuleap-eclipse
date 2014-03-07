@@ -92,11 +92,21 @@ public abstract class AbstractTuleapField extends AbstractTuleapFormElement {
 				parent.getTaskData().getAttributeMapper().setValue(attribute, defaultValue.toString());
 			}
 			initializeMetaData(attribute.getMetaData());
-			updateDefaultValue(attribute);
-			afterTaskAttributeCreation(attribute);
+			initializeAttribute(attribute);
 		}
 
 		return attribute;
+	}
+
+	/**
+	 * Initializes the given attribute with relevant default value, and options if need be.
+	 * 
+	 * @param attribute
+	 *            The attribute
+	 */
+	public void initializeAttribute(TaskAttribute attribute) {
+		updateDefaultValue(attribute);
+		afterTaskAttributeCreation(attribute);
 	}
 
 	/**
