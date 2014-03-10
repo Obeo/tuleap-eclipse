@@ -1,0 +1,11 @@
+{
+  "id": 101,
+  "uri": "projects/101",
+  "label": "Project 0",
+  "resources": [
+    {
+      "type": "trackers",
+      "uri": "projects/101/trackers"
+    }
+  ]
+}

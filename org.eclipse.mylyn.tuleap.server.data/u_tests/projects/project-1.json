@@ -1,0 +1,11 @@
+{
+    "id": 102,
+    "uri": "projects/102",
+    "label": "Project 1",
+    "resources": [
+        {
+            "type": "plannings",
+            "uri": "projects/102/plannings"
+        }
+    ]
+}

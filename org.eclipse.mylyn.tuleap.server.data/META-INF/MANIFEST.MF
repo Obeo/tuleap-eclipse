@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Bundle-Name
+Bundle-SymbolicName: org.eclipse.mylyn.tuleap.server.data
+Bundle-Version: 2.0.0.qualifier
+Bundle-Vendor: %Vendor-Name
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-Localization: plugin
