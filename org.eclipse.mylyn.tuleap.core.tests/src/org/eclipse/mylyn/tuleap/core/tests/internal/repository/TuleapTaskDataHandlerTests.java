@@ -91,11 +91,6 @@ public class TuleapTaskDataHandlerTests {
 	private int artifactId = 42;
 
 	/**
-	 * The identifier of the milestone.
-	 */
-	private int milestoneId = 43;
-
-	/**
 	 * The identifier of an item.
 	 */
 	private int itemId;
@@ -269,15 +264,6 @@ public class TuleapTaskDataHandlerTests {
 	}
 
 	/**
-	 * Test the retrieval of the task data representing an existing Tuleap milestone. We won't test here all
-	 * the options used during the creation of said task data since other unit tests will handle it.
-	 */
-	@Test
-	public void testGetTaskDataMilestone() {
-		this.testGetTaskData(TuleapTaskId.forArtifact(projectRef.getId(), secondTrackerId, milestoneId));
-	}
-
-	/**
 	 * Test the retrieval of the task data representing an existing Tuleap item. We won't test here all the
 	 * options used during the creation of said task data since other unit tests will handle it.
 	 */
@@ -367,23 +353,6 @@ public class TuleapTaskDataHandlerTests {
 	}
 
 	/**
-	 * Test the submission of the new task data representing an existing Tuleap milestone. We won't test here
-	 * all the options available in the task data since other unit tests will handle it.
-	 */
-	@Test
-	public void testPostCreateTaskDataMilestone() {
-		TaskData taskData = new TaskData(new TaskAttributeMapper(this.repository),
-				ITuleapConstants.CONNECTOR_KIND, "", "");
-
-		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer.getProject(
-				projectRef.getId()).getTracker(secondTrackerId));
-		mapper.initializeEmptyTaskData();
-
-		TuleapTaskId taskId = TuleapTaskId.forArtifact(projectRef.getId(), secondTrackerId, milestoneId);
-		this.testPostTaskData(taskData, taskId, ResponseKind.TASK_CREATED);
-	}
-
-	/**
 	 * Test the submission of the new task data representing an existing Tuleap item. We won't test here all
 	 * the options available in the task data since other unit tests will handle it.
 	 */
@@ -417,20 +386,4 @@ public class TuleapTaskDataHandlerTests {
 		this.testPostTaskData(taskData, taskId, ResponseKind.TASK_UPDATED);
 	}
 
-	/**
-	 * Test the submission of the existing task data representing an existing Tuleap milestone. We won't test
-	 * here all the options available in the task data since other unit tests will handle it.
-	 */
-	@Test
-	public void testPostUpdateTaskDataMilestone() {
-		TuleapTaskId taskId = TuleapTaskId.forArtifact(projectRef.getId(), secondTrackerId, milestoneId);
-		TaskData taskData = new TaskData(new TaskAttributeMapper(this.repository),
-				ITuleapConstants.CONNECTOR_KIND, "", taskId.toString());
-
-		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer.getProject(
-				projectRef.getId()).getTracker(secondTrackerId));
-		mapper.initializeEmptyTaskData();
-
-		this.testPostTaskData(taskData, taskId, ResponseKind.TASK_UPDATED);
-	}
 }

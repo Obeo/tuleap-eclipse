@@ -3,7 +3,6 @@
   "project_id": 3,
   "kind": "products",
   "url": "localhost:3001/api/v3.14/artifacts/1",
-  "milestone_url": "localhost:3001/api/v3.14/milestones/1",
   "html_url": "localhost:3001/plugins/trackers/?tracker=0?aid=1",
   "tracker_id": 0,
   "submitted_by": 1,

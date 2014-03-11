@@ -55,22 +55,6 @@ public class NewTuleapTaskWizard extends NewTaskWizard implements INewWizard {
 	}
 
 	/**
-	 * The constructor used when we are creating a new submilestone.
-	 * 
-	 * @param taskRepository
-	 *            The Mylyn tasks repository
-	 * @param taskSelection
-	 *            The current task selection
-	 * @param parentMilestoneId
-	 *            The parent milestone id
-	 */
-	public NewTuleapTaskWizard(TaskRepository taskRepository, ITaskMapping taskSelection,
-			String parentMilestoneId) {
-		super(taskRepository, taskSelection);
-		this.setWindowTitle(TuleapUIMessages.getString(TuleapUiMessagesKeys.newTuleapWizardWindowTitle));
-	}
-
-	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard#addPages()

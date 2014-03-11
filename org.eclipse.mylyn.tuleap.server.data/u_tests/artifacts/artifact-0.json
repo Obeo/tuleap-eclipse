@@ -3,7 +3,6 @@
   "project_id": 3,
   "kind": "bugs",
   "url": "localhost:3001/api/v3.14/artifacts/0",
-  "milestone_url": "localhost:3001/api/v3.14/milestones/0",
   "html_url": "localhost:3001/plugins/trackers/?tracker=1?aid=0",
   "tracker_id": 1,
   "submitted_by": 1,

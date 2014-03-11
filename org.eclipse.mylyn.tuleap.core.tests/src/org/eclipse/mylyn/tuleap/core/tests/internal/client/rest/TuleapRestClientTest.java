@@ -63,11 +63,11 @@ public class TuleapRestClientTest {
 
 	@Test
 	public void testRetrieveUserGroups() throws CoreException, ParseException {
-		String jsonMilestone = ParserUtil.loadFile("/groups/groups.json");
+		String jsonGroups = ParserUtil.loadFile("/groups/groups.json");
 		Map<String, String> respHeaders = Maps.newHashMap();
 		respHeaders.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
 		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
-		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonMilestone, respHeaders);
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonGroups, respHeaders);
 		connector.setResponse(response);
 		client.getProjectUserGroups(200, null);
 
@@ -81,11 +81,11 @@ public class TuleapRestClientTest {
 
 	@Test
 	public void testRetrieveUsers() throws CoreException, ParseException {
-		String jsonMilestone = ParserUtil.loadFile("/users/project_admins.json");
+		String jsonAdmins = ParserUtil.loadFile("/users/project_admins.json");
 		Map<String, String> respHeaders = Maps.newHashMap();
 		respHeaders.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
 		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
-		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonMilestone, respHeaders);
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonAdmins, respHeaders);
 		connector.setResponse(response);
 		client.getUserGroupUsers("200", null);
 
@@ -99,11 +99,11 @@ public class TuleapRestClientTest {
 
 	@Test
 	public void testRetrieveTrackerReports() throws CoreException, ParseException {
-		String jsonMilestone = ParserUtil.loadFile("/tracker_reports/tracker_reports.json");
+		String jsonTrackerReports = ParserUtil.loadFile("/tracker_reports/tracker_reports.json");
 		Map<String, String> respHeaders = Maps.newHashMap();
 		respHeaders.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
 		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
-		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonMilestone, respHeaders);
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonTrackerReports, respHeaders);
 		connector.setResponse(response);
 		client.getTrackerReports(200, null);
 
@@ -117,11 +117,11 @@ public class TuleapRestClientTest {
 
 	@Test
 	public void testRetrieveProjects() throws CoreException, ParseException {
-		String jsonMilestone = ParserUtil.loadFile("/projects/projects.json");
+		String jsonProjects = ParserUtil.loadFile("/projects/projects.json");
 		Map<String, String> respHeaders = Maps.newHashMap();
 		respHeaders.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
 		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
-		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonMilestone, respHeaders);
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonProjects, respHeaders);
 		connector.setResponse(response);
 		client.getProjects(null);
 

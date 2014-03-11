@@ -114,7 +114,7 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	public static String defaultNewTitle;
 
 	/**
-	 * The label used to indicate milestone parent id.
+	 * The label used to indicate the parent id.
 	 */
 	public static String parentLabel;
 

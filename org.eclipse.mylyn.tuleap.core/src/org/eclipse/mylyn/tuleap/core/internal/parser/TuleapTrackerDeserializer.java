@@ -238,8 +238,8 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 			fieldSemantic = eltSemantic.getAsJsonObject();
 		}
 		if (jsonFields.isJsonArray()) {
-			JsonArray milestoneTypeFieldsArray = jsonFields.getAsJsonArray();
-			for (JsonElement fieldElt : milestoneTypeFieldsArray) {
+			JsonArray typeFieldsArray = jsonFields.getAsJsonArray();
+			for (JsonElement fieldElt : typeFieldsArray) {
 				JsonObject field = (JsonObject)fieldElt;
 				AbstractTuleapField tuleapField = getField(field, tracker, jsonObject, fieldSemantic, context);
 				if (tuleapField != null) {
