@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>org.eclipse.mylyn.tasks-parent</artifactId>
+    <groupId>org.eclipse.mylyn.tasks</groupId>
+    <version>3.9.0-SNAPSHOT</version>
+  </parent>
+  <groupId>org.eclipse.mylyn.tasks</groupId>
+  <artifactId>org.eclipse.mylyn.tuleap.core.tests</artifactId>
+  <version>2.0.0-SNAPSHOT</version>
+  <packaging>eclipse-test-plugin</packaging>
+  <properties>
+    <test.suite>org.eclispe.mylyn.tuleap.core.tests.internal.AllTuleapTests</test.suite>
+    <tycho.scmUrl>scm:git://git.eclipse.org/gitroot/mylyn/org.eclipse.mylyn.tasks.git;path="org.eclipse.mylyn.tuleap.core.tests"</tycho.scmUrl>
+  </properties>
+  <build>
+    <!-- resources for standalone tests
+    <resources>
+      <resource>
+        <directory>${basedir}</directory>
+        <includes>
+          <include>testdata/**</include>
+        </includes>
+      </resource>
+    </resources> -->
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-surefire-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <configuration>
+          <skip>${test.component.skip}</skip> 
+          <testSuite>${project.artifactId}</testSuite>
+          <testClass>${test.suite}</testClass>
+          <includes>
+          	<include>**/*.java</include>
+          </includes>
+          <useUIHarness>false</useUIHarness>
+          <useUIThread>false</useUIThread>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-source-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+</project>

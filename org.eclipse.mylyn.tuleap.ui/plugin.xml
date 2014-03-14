@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.mylyn.tasks.ui.repositories">
+      <connectorCore
+            class="org.eclipse.mylyn.tuleap.core.internal.repository.TuleapRepositoryConnector"
+            id="tuleap"
+            name="%TuleapRepositoryConnector.Name">
+      </connectorCore>
+      <connectorUi
+            brandingIcon="icons/tools/tuleap-logo_16x16.png"
+            class="org.tuleap.mylyn.task.internal.ui.repository.TuleapConnectorUi"
+            name="%TuleapRepositoryConnectorUi.Name"
+            overlayIcon="icons/tools/tuleap-logo_16x16.png">
+      </connectorUi>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.ui.editors">
+      <pageFactory
+            class="org.tuleap.mylyn.task.internal.ui.editor.TuleapTaskEditorPageFactory"
+            id="org.tuleap.mylyn.task.ui.tuleapTaskEditorPageFactory">
+      </pageFactory>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.eclipse.mylyn.tasks.ui.preferences"
+            class="org.tuleap.mylyn.task.internal.ui.preferences.TuleapPreferencePage"
+            id="org.tuleap.mylyn.task.ui.preferencePage"
+            name="%TuleapPreferencePage.Name">
+      </page>
+   </extension>
+
+</plugin>
