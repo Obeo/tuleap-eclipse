@@ -10,9 +10,23 @@
  *******************************************************************************/
 package org.eclipse.mylyn.tuleap.core.tests.internal.model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 
+import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapProject;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapResource;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapTracker;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapArtifactLink;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapDate;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapFileUpload;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapFloat;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapInteger;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapOpenList;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapSelectBox;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapSelectBoxItem;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapString;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapText;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -74,6 +88,11 @@ public class TuleapTrackerConfigurationTests {
 	private TuleapTracker tracker9;
 
 	/**
+	 * The tenth tracker.
+	 */
+	private TuleapTracker tracker10;
+
+	/**
 	 * The first url.
 	 */
 	private String firstUrl = "localhost:3001/api/v3.14/trackers/1"; //$NON-NLS-1$
@@ -120,9 +139,11 @@ public class TuleapTrackerConfigurationTests {
 
 	/**
 	 * Set up the test.
+	 * 
+	 * @throws ParseException
 	 */
 	@Before
-	public void setUp() {
+	public void setUp() throws ParseException {
 		tracker1 = new TuleapTracker(1, firstUrl, null, null, null, -1);
 		tracker2 = new TuleapTracker(2, secondUrl, null, null, null, -1);
 		tracker3 = new TuleapTracker(3, thirdUrl, null, null, null, -1);
@@ -132,6 +153,10 @@ public class TuleapTrackerConfigurationTests {
 		tracker7 = new TuleapTracker(7, seventhUrl, null, null, null, -1);
 		tracker8 = new TuleapTracker(8, eighthUrl, null, null, null, -1);
 		tracker9 = new TuleapTracker(9, ninthUrl, null, null, null, -1);
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		String date = "11/03/2014";
+		tracker10 = new TuleapTracker(10, "tracker/url", "Tracker", "Item name", "Description", Long
+				.valueOf(simpleDateFormat.parse(date).getTime() / 1000));
 
 	}
 
@@ -251,5 +276,322 @@ public class TuleapTrackerConfigurationTests {
 		tracker4.setParentTracker(tracker1);
 		tracker4.setParentTracker(tracker4);
 		assertEquals(tracker1, tracker4.getParentTracker());
+	}
+
+	@Test
+	public void testResources() {
+
+		String resource = "resource";
+		assertFalse(tracker10.hasResource(resource));
+
+		TuleapResource[] resources = new TuleapResource[4];
+
+		for (int i = 0; i < 4; i++) {
+			TuleapResource tuleapRessource = new TuleapResource("type" + i, "uri/" + i);
+			resources[i] = tuleapRessource;
+		}
+		tracker10.setTrackerResources(resources);
+		assertEquals(4, tracker10.getTrackerResources().length);
+
+		for (int i = 0; i < 4; i++) {
+			assertEquals("type" + i, tracker10.getTrackerResources()[i].getType());
+			assertEquals("uri/" + i, tracker10.getTrackerResources()[i].getUri());
+			assertTrue(tracker10.hasResource("type" + i));
+		}
+	}
+
+	/**
+	 * Test getting and setting tracker attributes .
+	 */
+	@Test
+	public void testSetAndGetTrackerAttributes() {
+		tracker10.setUri("tracker/10");
+		assertEquals("tracker/10", tracker10.getUri());
+		assertEquals(10, tracker10.getIdentifier());
+		assertEquals("Tracker", tracker10.getLabel());
+		assertEquals("Description", tracker10.getDescription());
+		assertEquals("Item name", tracker10.getItemName());
+		assertEquals(1394492400, tracker10.getLastUpdateDate());
+		assertEquals("tracker/url", tracker10.getUrl());
+		assertNull(tracker10.getProject());
+
+		TuleapProject project = new TuleapProject("Test Project", 42);
+		tracker10.setProject(project);
+		assertEquals(project, tracker10.getProject());
+	}
+
+	/**
+	 * Test tracker with title semantic field .
+	 */
+	@Test
+	public void testTrackerWithTitleSementicFields() {
+
+		TuleapString tuleapString = new TuleapString(1);
+		tuleapString.setName("string field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapString);
+
+		TuleapText tuleapText = new TuleapText(2);
+		tuleapText.setName("text field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapText);
+
+		TuleapInteger tuleapInteger = new TuleapInteger(3);
+		tuleapInteger.setName("integer field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapInteger);
+
+		TuleapFloat tuleapFloat = new TuleapFloat(4);
+		tuleapFloat.setName("float field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapFloat);
+
+		TuleapDate tuleapDate = new TuleapDate(5);
+		tuleapDate.setName("date field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapDate);
+
+		assertEquals(5, tracker10.getFields().size());
+
+		assertNull(tracker10.getTitleField());
+		tuleapString.setSemanticTitle(true);
+		tracker10.addField(tuleapString);
+		assertEquals(tuleapString, tracker10.getTitleField());
+	}
+
+	/**
+	 * Test tracker without title semantic field .
+	 */
+	@Test
+	public void testTrackerWitoutTitleSemanticFields() {
+
+		TuleapString tuleapString = new TuleapString(1);
+		tuleapString.setName("string field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapString);
+
+		TuleapText tuleapText = new TuleapText(2);
+		tuleapText.setName("text field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapText);
+
+		TuleapInteger tuleapInteger = new TuleapInteger(3);
+		tuleapInteger.setName("integer field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapInteger);
+
+		TuleapFloat tuleapFloat = new TuleapFloat(4);
+		tuleapFloat.setName("float field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapFloat);
+
+		TuleapDate tuleapDate = new TuleapDate(5);
+		tuleapDate.setName("date field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapDate);
+
+		assertEquals(5, tracker10.getFields().size());
+
+		assertNull(tracker10.getTitleField());
+	}
+
+	/**
+	 * Test tracker with contributor semantic field.
+	 */
+	@Test
+	public void testTrackerWithContributorSemanticFields() {
+
+		TuleapText tuleapText = new TuleapText(2);
+		tuleapText.setName("text field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapText);
+
+		TuleapInteger tuleapInteger = new TuleapInteger(3);
+		tuleapInteger.setName("integer field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapInteger);
+
+		TuleapFloat tuleapFloat = new TuleapFloat(4);
+		tuleapFloat.setName("float field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapFloat);
+
+		TuleapDate tuleapDate = new TuleapDate(5);
+		tuleapDate.setName("date field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapDate);
+
+		TuleapSelectBox tuleapSelectBox = new TuleapSelectBox(8);
+		tuleapSelectBox.setName("tuleap select box field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapSelectBox);
+
+		assertEquals(5, tracker10.getFields().size());
+
+		assertNull(tracker10.getContributorField());
+		tuleapSelectBox.setSemanticContributor(true);
+		tracker10.addField(tuleapSelectBox);
+		assertEquals(tuleapSelectBox, tracker10.getContributorField());
+	}
+
+	/**
+	 * Test tracker without contributor semantic field.
+	 */
+	@Test
+	public void testTrackerWithoutContributorSemanticFields() {
+
+		TuleapText tuleapText = new TuleapText(2);
+		tuleapText.setName("text field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapText);
+
+		TuleapInteger tuleapInteger = new TuleapInteger(3);
+		tuleapInteger.setName("integer field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapInteger);
+
+		TuleapFloat tuleapFloat = new TuleapFloat(4);
+		tuleapFloat.setName("float field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapFloat);
+
+		TuleapDate tuleapDate = new TuleapDate(5);
+		tuleapDate.setName("date field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapDate);
+
+		TuleapSelectBox tuleapSelectBox = new TuleapSelectBox(8);
+		tuleapSelectBox.setName("tuleap select box field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapSelectBox);
+
+		assertEquals(5, tracker10.getFields().size());
+
+		assertNull(tracker10.getContributorField());
+	}
+
+	/**
+	 * Test tracker with status field.
+	 */
+	@Test
+	public void testTrackerWithStatusField() {
+
+		TuleapText tuleapText = new TuleapText(2);
+		tuleapText.setName("text field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapText);
+
+		TuleapInteger tuleapInteger = new TuleapInteger(3);
+		tuleapInteger.setName("integer field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapInteger);
+
+		TuleapFloat tuleapFloat = new TuleapFloat(4);
+		tuleapFloat.setName("float field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapFloat);
+
+		TuleapDate tuleapDate = new TuleapDate(5);
+		tuleapDate.setName("date field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapDate);
+
+		TuleapSelectBox tuleapSelectBox = new TuleapSelectBox(8);
+		tuleapSelectBox.setName("tuleap select box field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapSelectBox);
+
+		assertEquals(5, tracker10.getFields().size());
+
+		assertNull(tracker10.getStatusField());
+		TuleapSelectBoxItem item = new TuleapSelectBoxItem(24);
+		item.setLabel("OPEN");
+		tuleapSelectBox.addItem(item);
+		tuleapSelectBox.getOpenStatus().add(item);
+		tracker10.addField(tuleapSelectBox);
+		assertEquals(tuleapSelectBox, tracker10.getStatusField());
+		assertFalse(tracker10.hasClosedStatusMeaning(24));
+	}
+
+	/**
+	 * Test tracker without status field.
+	 */
+	@Test
+	public void testTrackerWithoutStatusField() {
+
+		TuleapText tuleapText = new TuleapText(2);
+		tuleapText.setName("text field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapText);
+
+		TuleapInteger tuleapInteger = new TuleapInteger(3);
+		tuleapInteger.setName("integer field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapInteger);
+
+		TuleapFloat tuleapFloat = new TuleapFloat(4);
+		tuleapFloat.setName("float field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapFloat);
+
+		TuleapDate tuleapDate = new TuleapDate(5);
+		tuleapDate.setName("date field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapDate);
+
+		TuleapSelectBox tuleapSelectBox = new TuleapSelectBox(8);
+		tuleapSelectBox.setName("tuleap select box field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapSelectBox);
+
+		assertEquals(5, tracker10.getFields().size());
+
+		assertNull(tracker10.getStatusField());
+	}
+
+	/**
+	 * Test tracker with attachment field .
+	 */
+	@Test
+	public void testTrackerWithAttachmentFieldFields() {
+
+		TuleapText tuleapText = new TuleapText(2);
+		tuleapText.setName("text field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapText);
+
+		TuleapInteger tuleapInteger = new TuleapInteger(3);
+		tuleapInteger.setName("integer field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapInteger);
+
+		TuleapFloat tuleapFloat = new TuleapFloat(4);
+		tuleapFloat.setName("float field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapFloat);
+
+		TuleapDate tuleapDate = new TuleapDate(5);
+		tuleapDate.setName("date field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapDate);
+
+		TuleapOpenList tuleapOpenList = new TuleapOpenList(6);
+		tuleapOpenList.setName("open list field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapOpenList);
+
+		TuleapArtifactLink tuleapArtifactLink = new TuleapArtifactLink(7);
+		tuleapArtifactLink.setName("artifact links field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapArtifactLink);
+
+		TuleapFileUpload tuleapFileUpload = new TuleapFileUpload(10);
+		tuleapFileUpload.setName("tuleap file upload field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapFileUpload);
+
+		assertEquals(7, tracker10.getFields().size());
+
+		assertEquals(tuleapFileUpload, tracker10.getAttachmentField());
+
+	}
+
+	/**
+	 * Test tracker without attachment field .
+	 */
+	@Test
+	public void testTrackerWithoutAttachmentFieldFields() {
+
+		TuleapText tuleapText = new TuleapText(2);
+		tuleapText.setName("text field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapText);
+
+		TuleapInteger tuleapInteger = new TuleapInteger(3);
+		tuleapInteger.setName("integer field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapInteger);
+
+		TuleapFloat tuleapFloat = new TuleapFloat(4);
+		tuleapFloat.setName("float field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapFloat);
+
+		TuleapDate tuleapDate = new TuleapDate(5);
+		tuleapDate.setName("date field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapDate);
+
+		TuleapOpenList tuleapOpenList = new TuleapOpenList(6);
+		tuleapOpenList.setName("open list field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapOpenList);
+
+		TuleapArtifactLink tuleapArtifactLink = new TuleapArtifactLink(7);
+		tuleapArtifactLink.setName("artifact links field name"); //$NON-NLS-1$
+		tracker10.addField(tuleapArtifactLink);
+
+		assertEquals(6, tracker10.getFields().size());
+
+		assertNull(tracker10.getAttachmentField());
+
 	}
 }
