@@ -351,6 +351,116 @@ public class TuleapRestResourceFactoryTest {
 	}
 
 	/**
+	 * Checks the basic properties of {@link RestResourceFactory#tokens()}.
+	 */
+	@Test
+	public void testPostToken() {
+		RestResource r = factory.tokens();
+		assertNotNull(r);
+		assertEquals("/api/v12.5/tokens", r.getUrl());
+	}
+
+	/**
+	 * Checks the basic properties of {@link RestResourceFactory#artifactChangesets(int)}.
+	 */
+	@Test
+	public void testGetArtifactChangesets() {
+		RestResource r = factory.artifactChangesets(100);
+		assertNotNull(r);
+		assertEquals("/api/v12.5/artifacts/100/changesets", r.getUrl());
+	}
+
+	/**
+	 * Checks the basic properties of {@link RestResourceFactory#tracker(int)}.
+	 */
+	@Test
+	public void testGetTracker() {
+		RestResource r = factory.tracker(234);
+		assertNotNull(r);
+		assertEquals("/api/v12.5/trackers/234", r.getUrl());
+	}
+
+	/**
+	 * Checks the basic properties of {@link RestResourceFactory#backlogItem(int)}.
+	 */
+	@Test
+	public void testGetBacklogItem() {
+		RestResource r = factory.backlogItem(234);
+		assertNotNull(r);
+		assertEquals("/api/v12.5/backlog_items/234", r.getUrl());
+	}
+
+	/**
+	 * Checks the basic properties of {@link RestResourceFactory#projectPlannings(int)}.
+	 */
+	@Test
+	public void testGetProjectPlannings() {
+		RestResource r = factory.projectPlannings(345);
+		assertNotNull(r);
+		assertEquals("/api/v12.5/projects/345/plannings", r.getUrl());
+	}
+
+	/**
+	 * Checks the basic properties of {@link RestResourceFactory#projectMilestones(int)}.
+	 */
+	@Test
+	public void testGetProjectMilestones() {
+		RestResource r = factory.projectMilestones(265);
+		assertNotNull(r);
+		assertEquals("/api/v12.5/projects/265/milestones", r.getUrl());
+	}
+
+	/**
+	 * Checks the basic properties of {@link RestResourceFactory#projectUserGroups(int)}.
+	 */
+	@Test
+	public void testGetProjectUserGroups() {
+		RestResource r = factory.projectUserGroups(674);
+		assertNotNull(r);
+		assertEquals("/api/v12.5/projects/674/user_groups", r.getUrl());
+	}
+
+	/**
+	 * Checks the basic properties of {@link RestResourceFactory#userGroupUsers(String)}.
+	 */
+	@Test
+	public void testGetUserGroupUsers() {
+		RestResource r = factory.userGroupUsers("356");
+		assertNotNull(r);
+		assertEquals("/api/v12.5/user_groups/356/users", r.getUrl());
+	}
+
+	/**
+	 * Checks the basic properties of {@link RestResourceFactory#projectBacklog(int)}.
+	 */
+	@Test
+	public void testProjectBacklog() {
+		RestResource r = factory.projectBacklog(372);
+		assertNotNull(r);
+		assertEquals("/api/v12.5/projects/372/backlog", r.getUrl());
+	}
+
+	/**
+	 * Checks the basic properties of {@link RestResourceFactory#trackerReports(int)}.
+	 */
+	@Test
+	public void testTrackerReports() {
+		RestResource r = factory.trackerReports(275);
+		assertNotNull(r);
+		assertEquals("/api/v12.5/trackers/275/tracker_reports", r.getUrl());
+	}
+
+	/**
+	 * Checks the basic properties of {@link RestResourceFactory#trackerReportArtifacts(int)}.
+	 */
+	@Test
+	public void testTrackerReportArtifacts() {
+		RestResource r = factory.trackerReportArtifacts(642);
+		assertNotNull(r);
+		assertEquals("/api/v12.5/tracker_reports/642/artifacts", r.getUrl());
+	}
+
+	/**
 	 * Set up the tests.
 	 */
 	@Before
