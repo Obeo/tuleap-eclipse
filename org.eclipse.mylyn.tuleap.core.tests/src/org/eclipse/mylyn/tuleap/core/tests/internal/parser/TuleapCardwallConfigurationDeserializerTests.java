@@ -12,6 +12,7 @@ package org.eclipse.mylyn.tuleap.core.tests.internal.parser;
 
 import com.google.gson.Gson;
 
+import java.text.ParseException;
 import java.util.List;
 
 import org.eclipse.mylyn.tuleap.core.internal.model.data.BoundFieldValue;
@@ -20,6 +21,7 @@ import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapCard;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapCardwall;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapColumn;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapSwimlane;
+import org.eclipse.mylyn.tuleap.core.internal.parser.DateIso8601Adapter;
 import org.eclipse.mylyn.tuleap.core.internal.parser.TuleapGsonProvider;
 import org.junit.Before;
 import org.junit.Test;
@@ -66,9 +68,11 @@ public class TuleapCardwallConfigurationDeserializerTests {
 
 	/**
 	 * Test the parsing of the cards of the first cardwall swimlane.
+	 * 
+	 * @throws ParseException
 	 */
 	@Test
-	public void testFirstCardwallSwimlaneCards() {
+	public void testFirstCardwallSwimlaneCards() throws ParseException {
 		String cwSprint = ParserUtil.loadFile("/cardwalls/cw_sprint250.json"); //$NON-NLS-1$
 		TuleapCardwall cardwall = this.parse(cwSprint);
 
@@ -95,6 +99,8 @@ public class TuleapCardwallConfigurationDeserializerTests {
 		assertEquals(2, firstCard.getAllowedColumnIds().length);
 		assertEquals(2000, firstCard.getAllowedColumnIds()[0]);
 		assertEquals(2001, firstCard.getAllowedColumnIds()[1]);
+		assertEquals(DateIso8601Adapter.parseIso8601Date("2013-09-24T15:33:18.523Z"), firstCard
+				.getLastModifiedDate());
 
 		assertEquals(2, firstCard.getFieldValues().size());
 		assertEquals(15, ((BoundFieldValue)firstCard.getFieldValue(8001)).getValueIds().get(0).intValue());
@@ -118,6 +124,8 @@ public class TuleapCardwallConfigurationDeserializerTests {
 		assertEquals(2, secondCard.getAllowedColumnIds().length);
 		assertEquals(2002, secondCard.getAllowedColumnIds()[0]);
 		assertEquals(2001, secondCard.getAllowedColumnIds()[1]);
+		assertEquals(DateIso8601Adapter.parseIso8601Date("2013-09-24T15:33:18.523Z"), secondCard
+				.getLastModifiedDate());
 
 		assertEquals(2, secondCard.getFieldValues().size());
 		assertEquals(15, ((BoundFieldValue)secondCard.getFieldValue(8001)).getValueIds().get(0).intValue());
@@ -142,6 +150,9 @@ public class TuleapCardwallConfigurationDeserializerTests {
 		assertEquals(2, thirdCard.getAllowedColumnIds().length);
 		assertEquals(2001, thirdCard.getAllowedColumnIds()[0]);
 		assertEquals(2002, thirdCard.getAllowedColumnIds()[1]);
+		assertEquals(DateIso8601Adapter.parseIso8601Date("2013-09-24T15:33:18.523Z"), thirdCard
+				.getLastModifiedDate());
+		assertEquals(1, thirdCard.getSubmittedBy());
 
 		assertEquals(2, thirdCard.getFieldValues().size());
 		assertEquals(16, ((BoundFieldValue)thirdCard.getFieldValue(8001)).getValueIds().get(0).intValue());
@@ -151,9 +162,11 @@ public class TuleapCardwallConfigurationDeserializerTests {
 
 	/**
 	 * Test the parsing of the cards of the second cardwall swimlane.
+	 * 
+	 * @throws ParseException
 	 */
 	@Test
-	public void testSecondCardwallSwimlaneCards() {
+	public void testSecondCardwallSwimlaneCards() throws ParseException {
 		String cwSprint = ParserUtil.loadFile("/cardwalls/cw_sprint250.json"); //$NON-NLS-1$
 		TuleapCardwall cardwall = this.parse(cwSprint);
 
@@ -181,6 +194,8 @@ public class TuleapCardwallConfigurationDeserializerTests {
 		assertEquals(2, firstCard.getAllowedColumnIds().length);
 		assertEquals(2000, firstCard.getAllowedColumnIds()[0]);
 		assertEquals(2002, firstCard.getAllowedColumnIds()[1]);
+		assertEquals(DateIso8601Adapter.parseIso8601Date("2013-09-24T15:33:18.523Z"), firstCard
+				.getLastModifiedDate());
 
 		assertEquals(2, firstCard.getFieldValues().size());
 		assertEquals(15, ((BoundFieldValue)firstCard.getFieldValue(8001)).getValueIds().get(0).intValue());
@@ -203,6 +218,9 @@ public class TuleapCardwallConfigurationDeserializerTests {
 		assertEquals("trackers/801", secondCard.getArtifact().getTracker().getUri());
 		assertEquals(1, secondCard.getAllowedColumnIds().length);
 		assertEquals(2001, secondCard.getAllowedColumnIds()[0]);
+		assertEquals(DateIso8601Adapter.parseIso8601Date("2013-09-24T15:33:18.523Z"), secondCard
+				.getLastModifiedDate());
+		assertEquals(1, secondCard.getSubmittedBy());
 
 		assertEquals(2, secondCard.getFieldValues().size());
 		assertEquals(15, ((BoundFieldValue)secondCard.getFieldValue(8001)).getValueIds().get(0).intValue());
@@ -226,6 +244,9 @@ public class TuleapCardwallConfigurationDeserializerTests {
 		assertEquals(2, thirdCard.getAllowedColumnIds().length);
 		assertEquals(2002, thirdCard.getAllowedColumnIds()[0]);
 		assertEquals(2001, thirdCard.getAllowedColumnIds()[1]);
+		assertEquals(DateIso8601Adapter.parseIso8601Date("2013-09-24T15:33:18.523Z"), thirdCard
+				.getLastModifiedDate());
+		assertEquals(1, thirdCard.getSubmittedBy());
 
 		assertEquals(2, thirdCard.getFieldValues().size());
 		assertEquals(16, ((BoundFieldValue)thirdCard.getFieldValue(8001)).getValueIds().get(0).intValue());
@@ -235,9 +256,11 @@ public class TuleapCardwallConfigurationDeserializerTests {
 
 	/**
 	 * Test the parsing of the cards of the second cardwall swimlane.
+	 * 
+	 * @throws ParseException
 	 */
 	@Test
-	public void testThirdCardwallSwimlaneCards() {
+	public void testThirdCardwallSwimlaneCards() throws ParseException {
 		String cwSprint = ParserUtil.loadFile("/cardwalls/cw_sprint250.json"); //$NON-NLS-1$
 		TuleapCardwall cardwall = this.parse(cwSprint);
 
@@ -264,6 +287,9 @@ public class TuleapCardwallConfigurationDeserializerTests {
 		assertEquals(2, firstCard.getAllowedColumnIds().length);
 		assertEquals(2000, firstCard.getAllowedColumnIds()[0]);
 		assertEquals(2002, firstCard.getAllowedColumnIds()[1]);
+		assertEquals(DateIso8601Adapter.parseIso8601Date("2013-09-24T15:33:18.523Z"), firstCard
+				.getLastModifiedDate());
+		assertEquals(1, firstCard.getSubmittedBy());
 
 		assertEquals(2, firstCard.getFieldValues().size());
 		assertEquals(15, ((BoundFieldValue)firstCard.getFieldValue(8001)).getValueIds().get(0).intValue());
@@ -287,6 +313,9 @@ public class TuleapCardwallConfigurationDeserializerTests {
 		assertEquals(2, secondCard.getAllowedColumnIds().length);
 		assertEquals(2000, secondCard.getAllowedColumnIds()[0]);
 		assertEquals(2001, secondCard.getAllowedColumnIds()[1]);
+		assertEquals(DateIso8601Adapter.parseIso8601Date("2013-09-24T15:33:18.523Z"), secondCard
+				.getLastModifiedDate());
+		assertEquals(1, secondCard.getSubmittedBy());
 
 		assertEquals(2, secondCard.getFieldValues().size());
 		assertEquals(15, ((BoundFieldValue)secondCard.getFieldValue(8001)).getValueIds().get(0).intValue());
@@ -309,6 +338,8 @@ public class TuleapCardwallConfigurationDeserializerTests {
 		assertEquals("trackers/801", thirdCard.getArtifact().getTracker().getUri());
 		assertEquals(1, thirdCard.getAllowedColumnIds().length);
 		assertEquals(2002, thirdCard.getAllowedColumnIds()[0]);
+		assertEquals(DateIso8601Adapter.parseIso8601Date("2013-09-24T15:33:18.523Z"), thirdCard
+				.getLastModifiedDate());
 
 		assertEquals(2, thirdCard.getFieldValues().size());
 		assertEquals(16, ((BoundFieldValue)thirdCard.getFieldValue(8001)).getValueIds().get(0).intValue());

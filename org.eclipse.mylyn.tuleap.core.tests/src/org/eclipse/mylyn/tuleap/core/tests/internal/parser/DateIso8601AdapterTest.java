@@ -78,7 +78,7 @@ public class DateIso8601AdapterTest {
 		c.set(Calendar.MILLISECOND, 0);
 		JsonElement serializedDate = adapter.serialize(c.getTime(), null, null);
 		// 9:14:15 GMT <=> 11:14:15 GMT+2
-		assertEquals("\"2013-12-31T11:14:15+02:00\"", serializedDate.toString());
+		assertEquals("\"2013-12-31T10:14:15+01:00\"", serializedDate.toString());
 	}
 
 	@Test
@@ -88,12 +88,11 @@ public class DateIso8601AdapterTest {
 		c.set(Calendar.MILLISECOND, 0);
 		JsonElement serializedDate = adapter.serialize(c.getTime(), null, null);
 		// 9:14:15 GMT+8 <=> 3:14:15 GMT+2
-		assertEquals("\"2013-12-31T03:14:15+02:00\"", serializedDate.toString());
+		assertEquals("\"2013-12-31T02:14:15+01:00\"", serializedDate.toString());
 	}
 
 	@Before
 	public void setUp() {
-		System.setProperty("user.timezone", "GMT+2:00");
 		adapter = new DateIso8601Adapter();
 	}
 

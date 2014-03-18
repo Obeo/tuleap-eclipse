@@ -41,6 +41,7 @@ import org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants;
  *            The type of the agile element to deserialize.
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
+ * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
 public abstract class AbstractTuleapDeserializer<U, T extends AbstractTuleapConfigurableElement<U>> extends AbstractDetailedElementDeserializer<U, T> {
 
@@ -77,13 +78,15 @@ public abstract class AbstractTuleapDeserializer<U, T extends AbstractTuleapConf
 								.getAsBoolean())));
 					}
 				}
-			} else if (jsonField.has(ITuleapConstants.FIELD_BIND_VALUE_ID)) {
+			} else if (jsonField.has(ITuleapConstants.FIELD_BIND_VALUE_ID)
+					&& !jsonField.get(ITuleapConstants.FIELD_BIND_VALUE_ID).isJsonNull()) {
 				// sb?
 				JsonElement jsonBindValueId = jsonField.get(ITuleapConstants.FIELD_BIND_VALUE_ID);
 				int bindValueId = jsonBindValueId.getAsInt();
 				pojo.addFieldValue(new BoundFieldValue(fieldId, Lists.newArrayList(Integer
 						.valueOf(bindValueId))));
-			} else if (jsonField.has(ITuleapConstants.FIELD_BIND_VALUE_IDS)) {
+			} else if (jsonField.has(ITuleapConstants.FIELD_BIND_VALUE_IDS)
+					&& !jsonField.get(ITuleapConstants.FIELD_BIND_VALUE_IDS).isJsonNull()) {
 				// sb?, msb, cb, or tbl (open list)
 				JsonElement jsonBindValueIds = jsonField.get(ITuleapConstants.FIELD_BIND_VALUE_IDS);
 				JsonArray jsonIds = jsonBindValueIds.getAsJsonArray();
@@ -106,7 +109,8 @@ public abstract class AbstractTuleapDeserializer<U, T extends AbstractTuleapConf
 				} else {
 					pojo.addFieldValue(new BoundFieldValue(fieldId, Collections.<Integer> emptyList()));
 				}
-			} else if (jsonField.has(ITuleapConstants.FIELD_LINKS)) {
+			} else if (jsonField.has(ITuleapConstants.FIELD_LINKS)
+					&& !jsonField.get(ITuleapConstants.FIELD_LINKS).isJsonNull()) {
 				// Artifact links
 				pojo.addFieldValue(context.<ArtifactLinkFieldValue> deserialize(jsonField,
 						ArtifactLinkFieldValue.class));
@@ -116,5 +120,4 @@ public abstract class AbstractTuleapDeserializer<U, T extends AbstractTuleapConf
 
 		return pojo;
 	}
-
 }
