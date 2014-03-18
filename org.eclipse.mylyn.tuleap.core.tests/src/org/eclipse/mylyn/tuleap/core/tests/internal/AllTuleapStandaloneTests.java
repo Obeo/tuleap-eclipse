@@ -32,6 +32,7 @@ import org.eclipse.mylyn.tuleap.core.tests.internal.parser.TuleapCardwallConfigu
 import org.eclipse.mylyn.tuleap.core.tests.internal.parser.TuleapJsonParserTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.repository.TuleapRepositoryConnectorTests;
 import org.eclipse.mylyn.tuleap.core.tests.internal.repository.TuleapTaskDataHandlerTests;
+import org.eclipse.mylyn.tuleap.core.tests.internal.serializer.LiteralFieldValueSerializerTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.serializer.TuleapArtifactSerializerTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.serializer.TuleapArtifactWithCommentSerializerTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.serializer.TuleapCardSerializerTest;
@@ -57,7 +58,7 @@ import org.junit.runners.Suite;
 		TuleapRestResourceFactoryTest.class, RestResourceTest.class, RestOperationsTest.class,
 		TuleapRestClientTest.class, TuleapCardSerializerTest.class, TuleapRestClientLimitTests.class,
 		TuleapArtifactSerializerTest.class, TuleapArtifactWithCommentSerializerTest.class,
-		ArtifactLinkAdapterTest.class })
+		ArtifactLinkAdapterTest.class, LiteralFieldValueSerializerTest.class })
 public final class AllTuleapStandaloneTests {
 
 	/**

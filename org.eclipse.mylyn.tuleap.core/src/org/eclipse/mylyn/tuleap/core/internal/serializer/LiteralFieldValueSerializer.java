@@ -37,8 +37,11 @@ public class LiteralFieldValueSerializer implements JsonSerializer<LiteralFieldV
 	public JsonElement serialize(LiteralFieldValue src, Type typeOfSrc, JsonSerializationContext context) {
 		JsonObject result = new JsonObject();
 		result.add(ITuleapConstants.FIELD_ID, new JsonPrimitive(Integer.valueOf(src.getFieldId())));
-		result.add(ITuleapConstants.FIELD_VALUE, new JsonPrimitive(src.getFieldValue()));
+		if (src.getFieldValue() != null) {
+			result.add(ITuleapConstants.FIELD_VALUE, new JsonPrimitive(src.getFieldValue()));
+		} else {
+			result.add(ITuleapConstants.FIELD_VALUE, null);
+		}
 		return result;
 	}
-
 }
