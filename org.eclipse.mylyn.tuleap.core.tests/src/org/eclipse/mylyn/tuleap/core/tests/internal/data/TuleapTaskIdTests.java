@@ -16,6 +16,8 @@ import org.junit.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * Test class for {@link TuleapTaskId}.
  * 
@@ -142,5 +144,26 @@ public class TuleapTaskIdTests {
 
 		taskId = TuleapTaskId.forArtifact(123, 456, 789);
 		assertThat(taskId.isTopPlanning(), is(false));
+	}
+
+	@Test
+	public void testGettingTaskIdFromWrongUrl() {
+		TuleapTaskId taskId = TuleapTaskId.forTaskUrl("url/url");
+		assertThat(taskId.toString(), is("N/A:N/A#N/A"));
+	}
+
+	@Test
+	public void testGettingTaskIdFromGoodUrl() {
+		TuleapTaskId taskId = TuleapTaskId
+				.forTaskUrl("https://demo.tuleap.net/plugins/tracker/?group_id=4&tracker=34&aid=27");
+		assertThat(taskId.toString(), is("4:34#27"));
+		assertEquals(TuleapTaskId.forArtifact(4, 34, 27).toString(), taskId.toString());
+	}
+
+	@Test
+	public void testGetTaskUrl() {
+		TuleapTaskId taskId = TuleapTaskId.forArtifact(1, 4, 273);
+		String htmlUrl = taskId.getTaskUrl("https://tuleap.net");
+		assertThat("https://tuleap.net/plugins/tracker/?group_id=1&tracker=4&aid=273", is(htmlUrl));
 	}
 }
