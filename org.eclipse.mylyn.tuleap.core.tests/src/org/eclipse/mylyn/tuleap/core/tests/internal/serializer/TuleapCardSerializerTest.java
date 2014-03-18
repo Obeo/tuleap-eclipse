@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 
 import java.util.Arrays;
 
+import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapFileUpload;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapInteger;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapSelectBox;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapSelectBoxItem;
@@ -123,4 +124,24 @@ public class TuleapCardSerializerTest {
 				gson.toJson(card));
 	}
 
+	@Test
+	public void testWithFieldWithoutValue() {
+		TuleapCard card = new TuleapCard("123", artifactRef, projectRef);
+		card.setLabel("label");
+		card.setColumnId(12);
+		TuleapString field = new TuleapString(222);
+		card.addField(field);
+		assertEquals("{\"label\":\"label\",\"values\":[{\"field_id\":222,\"value\":null}],\"column_id\":12}",
+				gson.toJson(card));
+	}
+
+	@Test
+	public void testWithNonSerializableField() {
+		TuleapCard card = new TuleapCard("123", artifactRef, projectRef);
+		card.setLabel("label");
+		card.setColumnId(12);
+		TuleapFileUpload tuleapFileUpload = new TuleapFileUpload(12);
+		card.addField(tuleapFileUpload);
+		assertEquals("{\"label\":\"label\",\"values\":[],\"column_id\":12}", gson.toJson(card));
+	}
 }
