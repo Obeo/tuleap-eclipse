@@ -1,6 +1,15 @@
 {
     "id": 2,
-    "uri": "/tracker_reports/2",
-    "label": "Third report",
-    "report_url": "localhost:3001/api/v3.14/trackers/0/2"
+    "uri": "tracker_reports/2",
+    "label": "Default",
+    "resources": [
+        {
+            "type": "artifacts",
+            "uri": "tracker_reports/2/artifacts"
+        },
+        {
+            "type": "sprints",
+            "uri": "tracker_reports/2/sprints"
+        }
+    ]
 }

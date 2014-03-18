@@ -7,6 +7,18 @@
             {
                 "type": "trackers",
                 "uri": "projects/101/trackers"
+            },
+            {
+                "type": "backlog",
+                "uri": "projects/101/backlog"
+            },
+            {
+                "type": "milestones",
+                "uri": "projects/101/milestones"
+            },
+            {
+                "type": "plannings",
+                "uri": "projects/101/plannings"
             }
         ]
     },
@@ -15,6 +27,14 @@
         "uri": "projects/102",
         "label": "Project 1",
         "resources": [
+            {
+                "type": "backlog",
+                "uri": "projects/102/backlog"
+            },
+            {
+                "type": "milestones",
+                "uri": "projects/102/milestones"
+            },
             {
                 "type": "plannings",
                 "uri": "projects/102/plannings"

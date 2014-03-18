@@ -33,9 +33,9 @@ public class TuleapTrackerReport {
 	private String label;
 
 	/**
-	 * The url of the report.
+	 * References to the tracker report resources.
 	 */
-	private String reportUrl;
+	private TuleapResource[] resources;
 
 	/**
 	 * The constructor.
@@ -70,15 +70,6 @@ public class TuleapTrackerReport {
 	}
 
 	/**
-	 * Returns the url of the report.
-	 * 
-	 * @return The url of the report.
-	 */
-	public String getReportUrl() {
-		return this.reportUrl;
-	}
-
-	/**
 	 * Returns the uri of the report.
 	 * 
 	 * @return The uri of the report.
@@ -95,6 +86,44 @@ public class TuleapTrackerReport {
 	@Override
 	public String toString() {
 		return this.label + " [" + this.id + "]"; //$NON-NLS-1$//$NON-NLS-2$
+	}
+
+	/**
+	 * Tracker report resources getter.
+	 * 
+	 * @return the reportResources, a list that is never <code>null</code> but possibly empty.
+	 */
+	public TuleapResource[] getReportResources() {
+		return resources;
+	}
+
+	/**
+	 * Tracker report resources setter.
+	 * 
+	 * @param reportResources
+	 *            the reportResources to set
+	 */
+	public void setReportResources(TuleapResource[] reportResources) {
+		this.resources = reportResources;
+	}
+
+	/**
+	 * Indicates whether the given resource exists on this Tracker report.
+	 * 
+	 * @param key
+	 *            The resource type being looked for
+	 * @return {@code true} if and only if the given service is present in the list of services of this
+	 *         Tracker report.
+	 */
+	public boolean hasResource(String key) {
+		if (resources != null) {
+			for (TuleapResource resource : resources) {
+				if (resource.getType().equals(key)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 }
