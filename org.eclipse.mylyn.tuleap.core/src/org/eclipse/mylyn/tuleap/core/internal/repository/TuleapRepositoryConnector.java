@@ -51,6 +51,8 @@ import org.eclipse.mylyn.tuleap.core.internal.data.converter.ArtifactTaskDataCon
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapProject;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapServer;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapTracker;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapUser;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapUserGroup;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.AbstractTuleapSelectBox;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapSelectBoxItem;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifact;
@@ -458,8 +460,35 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		if (taskRepository != null) {
 			TuleapRestClient tuleapRestClient = this.getClientManager().getRestClient(taskRepository);
 			try {
-				TuleapServer tuleapServerRest = tuleapRestClient.getServer(monitor);
-				this.serversByUrl.put(taskRepository.getRepositoryUrl(), tuleapServerRest);
+				TuleapServer tuleapServer = new TuleapServer(taskRepository.getRepositoryUrl());
+				tuleapServer.setLastUpdate(new Date().getTime());
+
+				if (monitor != null) {
+					monitor.beginTask(TuleapMylynTasksMessages
+							.getString(TuleapMylynTasksMessagesKeys.retrieveTuleapServer), 100);
+				}
+
+				for (TuleapProject project : tuleapRestClient.getProjects(monitor)) {
+					tuleapServer.addProject(project);
+					tuleapRestClient.loadPlanningsInto(project);
+					for (TuleapTracker tracker : tuleapRestClient.getProjectTrackers(project.getIdentifier(),
+							monitor)) {
+						project.addTracker(tracker);
+					}
+
+					try {
+						for (TuleapUserGroup userGroup : tuleapRestClient.getProjectUserGroups(project
+								.getIdentifier(), monitor)) {
+							for (TuleapUser tuleapUser : tuleapRestClient.getUserGroupUsers(
+									userGroup.getId(), monitor)) {
+								tuleapServer.register(tuleapUser);
+							}
+						}
+					} catch (CoreException e) {
+						TuleapCoreActivator.log(e, false);
+					}
+				}
+				this.serversByUrl.put(taskRepository.getRepositoryUrl(), tuleapServer);
 			} catch (CoreException e) {
 				TuleapCoreActivator.log(e, true);
 			}

@@ -17,7 +17,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +28,6 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
-import org.eclipse.mylyn.tuleap.core.internal.TuleapCoreActivator;
 import org.eclipse.mylyn.tuleap.core.internal.data.TuleapTaskId;
 import org.eclipse.mylyn.tuleap.core.internal.model.TuleapToken;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapPlanning;
@@ -125,44 +123,6 @@ public class TuleapRestClient implements IAuthenticator {
 	}
 
 	/**
-	 * Returns the Tuleap server.
-	 * 
-	 * @param monitor
-	 *            Used to monitor the progress
-	 * @return The server
-	 * @throws CoreException
-	 *             In case of error during the retrieval of the server
-	 */
-	public TuleapServer getServer(IProgressMonitor monitor) throws CoreException {
-		TuleapServer tuleapServer = new TuleapServer(this.taskRepository.getRepositoryUrl());
-		tuleapServer.setLastUpdate(new Date().getTime());
-
-		if (monitor != null) {
-			monitor.beginTask(TuleapMylynTasksMessages
-					.getString(TuleapMylynTasksMessagesKeys.retrieveTuleapServer), 100);
-		}
-
-		for (TuleapProject project : getProjects(monitor)) {
-			tuleapServer.addProject(project);
-			loadPlanningsInto(project);
-			for (TuleapTracker tracker : getProjectTrackers(project.getIdentifier(), monitor)) {
-				project.addTracker(tracker);
-			}
-
-			try {
-				for (TuleapUserGroup userGroup : getProjectUserGroups(project.getIdentifier(), monitor)) {
-					for (TuleapUser tuleapUser : getUserGroupUsers(userGroup.getId(), monitor)) {
-						tuleapServer.register(tuleapUser);
-					}
-				}
-			} catch (CoreException e) {
-				TuleapCoreActivator.log(e, false);
-			}
-		}
-		return tuleapServer;
-	}
-
-	/**
 	 * Loads the planning into a given project after fetching them from the remote server via the REST API.
 	 * 
 	 * @param project
@@ -248,9 +208,6 @@ public class TuleapRestClient implements IAuthenticator {
 		RestResource artifactResource = restResourceFactory.artifact(artifactId).withAuthenticator(this);
 		ServerResponse response = artifactResource.get().checkedRun();
 		TuleapArtifact artifact = gson.fromJson(response.getBody(), TuleapArtifact.class);
-		for (TuleapElementComment comment : this.getArtifactComments(artifactId, server, monitor)) {
-			artifact.addComment(comment);
-		}
 		return artifact;
 	}
 

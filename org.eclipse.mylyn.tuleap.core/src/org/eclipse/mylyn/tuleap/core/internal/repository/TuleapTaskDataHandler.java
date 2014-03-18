@@ -42,6 +42,7 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapServer;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapTracker;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifact;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifactWithComment;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapElementComment;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapReference;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapBacklogItem;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapBurndown;
@@ -519,6 +520,10 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		TuleapArtifact tuleapArtifact = client.getArtifact(taskId.getArtifactId(), server, monitor);
 		TuleapTaskId refreshedTaskId = taskId;
 		if (tuleapArtifact != null) {
+			for (TuleapElementComment comment : client.getArtifactComments(tuleapArtifact.getId().intValue(),
+					server, monitor)) {
+				tuleapArtifact.addComment(comment);
+			}
 			TuleapTracker tracker = server.getTracker(tuleapArtifact.getTracker().getId());
 			if (refreshTracker) {
 				tracker = this.connector.refreshTracker(taskRepository, tracker, monitor);
