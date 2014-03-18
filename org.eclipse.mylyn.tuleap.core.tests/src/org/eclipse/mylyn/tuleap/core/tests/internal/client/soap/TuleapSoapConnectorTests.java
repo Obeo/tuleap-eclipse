@@ -14,6 +14,7 @@ import com.google.common.collect.Lists;
 
 import java.net.MalformedURLException;
 import java.rmi.RemoteException;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.rpc.ServiceException;
@@ -170,7 +171,9 @@ public class TuleapSoapConnectorTests {
 					serverConfiguration, new NullProgressMonitor());
 			assertThat(commentedArtifact.getArtifact().getArtifact_id(), is(42));
 			assertThat(commentedArtifact.getComments().size(), is(1));
-			assertThat(commentedArtifact.getComments().get(0).getSubmittedOn(), is(submittedOn));
+			Date submissionDate = new Date();
+			submissionDate.setTime(submittedOn);
+			assertThat(commentedArtifact.getComments().get(0).getSubmittedOn(), is(submissionDate));
 			assertThat(commentedArtifact.getComments().get(0).getBody(), is(body));
 			assertThat(commentedArtifact.getComments().get(0).getSubmitter(), is(notNullValue()));
 			assertThat(commentedArtifact.getComments().get(0).getSubmitter().getEmail(), is(email));
@@ -389,7 +392,8 @@ public class TuleapSoapConnectorTests {
 				 * {@inheritDoc}
 				 * 
 				 * @see org.eclipse.mylyn.tuleap.core.internal.wsdl.soap.v2.TuleapTrackerV5APIBindingStub#updateArtifact(java.lang.String,
-				 *      int, int, int, org.eclipse.mylyn.tuleap.core.internal.wsdl.soap.v2.ArtifactFieldValue[],
+				 *      int, int, int,
+				 *      org.eclipse.mylyn.tuleap.core.internal.wsdl.soap.v2.ArtifactFieldValue[],
 				 *      java.lang.String, java.lang.String)
 				 */
 				@Override

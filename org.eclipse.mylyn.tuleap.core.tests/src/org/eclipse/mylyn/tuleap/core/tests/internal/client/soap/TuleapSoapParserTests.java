@@ -240,7 +240,7 @@ public class TuleapSoapParserTests {
 		String firstCommentBody = "This is the first comment"; //$NON-NLS-1$
 		TuleapUser firstCommentSubmitter = new TuleapUser("first-username", "first-realname", 17, //$NON-NLS-1$ //$NON-NLS-2$
 				"first-email", null); //$NON-NLS-1$
-		int firstCommentSubmitDate = Long.valueOf(new Date().getTime() / 1000).intValue();
+		Date firstCommentSubmitDate = new Date();
 
 		TuleapElementComment firstTuleapElementComment = new TuleapElementComment(firstCommentBody,
 				firstCommentSubmitter, firstCommentSubmitDate);
@@ -250,7 +250,7 @@ public class TuleapSoapParserTests {
 		String secondCommentBody = "This is the second comment"; //$NON-NLS-1$
 		TuleapUser secondCommentSubmitter = new TuleapUser("second-username", "second-realname", 18, //$NON-NLS-1$ //$NON-NLS-2$
 				"second-email", null); //$NON-NLS-1$
-		int secondCommentSubmitDate = Long.valueOf(new Date().getTime() / 1000).intValue();
+		Date secondCommentSubmitDate = new Date();
 
 		TuleapElementComment secondTuleapElementComment = new TuleapElementComment(secondCommentBody,
 				secondCommentSubmitter, secondCommentSubmitDate);

@@ -834,8 +834,10 @@ public class TuleapSoapConnector {
 		for (ArtifactComments artifactComment : artifactComments) {
 			int submitterId = artifactComment.getSubmitted_by();
 			TuleapUser submitter = serverConfiguration.getUser(submitterId);
+			Date submissionDate = new Date();
+			submissionDate.setTime(artifactComment.getSubmitted_on());
 			TuleapElementComment comment = new TuleapElementComment(artifactComment.getBody(), submitter,
-					artifactComment.getSubmitted_on());
+					submissionDate);
 			comments.add(comment);
 		}
 

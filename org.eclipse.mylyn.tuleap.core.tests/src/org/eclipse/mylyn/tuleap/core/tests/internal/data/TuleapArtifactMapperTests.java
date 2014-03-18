@@ -13,6 +13,7 @@ package org.eclipse.mylyn.tuleap.core.tests.internal.data;
 import com.google.common.collect.Lists;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,6 +31,7 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapProject;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapServer;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapTracker;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapUser;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapWorkflowTransition;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapDate;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapFloat;
@@ -41,9 +43,11 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapSelectBox
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapString;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapText;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.AbstractFieldValue;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.AttachmentValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.BoundFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.LiteralFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.OpenListFieldValue;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapElementComment;
 import org.eclipse.mylyn.tuleap.core.internal.parser.DateIso8601Adapter;
 import org.eclipse.mylyn.tuleap.core.internal.repository.ITuleapRepositoryConnector;
 import org.eclipse.mylyn.tuleap.core.internal.repository.TuleapAttributeMapper;
@@ -270,6 +274,166 @@ public class TuleapArtifactMapperTests {
 		metadata = att.getMetaData();
 		assertEquals(TaskAttribute.TYPE_PERSON, metadata.getType());
 		assertTrue(metadata.isReadOnly());
+	}
+
+	/**
+	 * Verification of the task key.
+	 */
+	@Test
+	public void testTaskKey() {
+		mapper.initializeEmptyTaskData();
+
+		assertEquals("", mapper.getTaskKey());
+		mapper.setTaskKey("The new task key");
+		String value = taskData.getRoot().getAttribute(TaskAttribute.TASK_KEY).getValue();
+		assertThat(value, is("The new task key"));
+		assertEquals("The new task key", mapper.getTaskKey());
+	}
+
+	/**
+	 * Verification of the task id.
+	 */
+	@Test
+	public void testTaskId() {
+		mapper.initializeEmptyTaskData();
+		assertEquals("987:123#N/A", mapper.getTaskId().toString());
+		assertEquals(987, mapper.getTaskId().getProjectId());
+		assertEquals(123, mapper.getTaskId().getTrackerId());
+		assertEquals(-1, mapper.getTaskId().getArtifactId());
+	}
+
+	/**
+	 * Verification of the task url.
+	 */
+	@Test
+	public void testTaskUrl() {
+		mapper.initializeEmptyTaskData();
+		assertEquals("", mapper.getTaskUrl());
+		mapper.setTaskUrl("url/url");
+		String value = taskData.getRoot().getAttribute(TaskAttribute.TASK_URL).getValue();
+		assertThat(value, is("url/url"));
+		assertEquals("url/url", mapper.getTaskUrl());
+	}
+
+	/**
+	 * Verification of the artifact creation date.
+	 * 
+	 * @throws ParseException
+	 */
+	@Test
+	public void testCreationDate() throws ParseException {
+		mapper.initializeEmptyTaskData();
+		assertNull(mapper.getCreationDate());
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		Date date1 = simpleDateFormat.parse("11/03/2014");
+		mapper.setCreationDate(date1);
+		String value = taskData.getRoot().getAttribute(TaskAttribute.DATE_CREATION).getValue();
+		assertThat(value, is(Long.toString(date1.getTime())));
+	}
+
+	/**
+	 * Verification of the task modification date.
+	 * 
+	 * @throws ParseException
+	 */
+	@Test
+	public void testModificationDate() throws ParseException {
+		mapper.initializeEmptyTaskData();
+		assertNull(mapper.getModificationDate());
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		Date date1 = simpleDateFormat.parse("11/03/2014");
+		mapper.setModificationDate(date1);
+		String value = taskData.getRoot().getAttribute(TaskAttribute.DATE_MODIFICATION).getValue();
+		assertThat(value, is(Long.toString(date1.getTime())));
+	}
+
+	/**
+	 * Verification of adding a comment.
+	 * 
+	 * @throws ParseException
+	 */
+	@Test
+	public void testAddComment() throws ParseException {
+		mapper.initializeEmptyTaskData();
+		assertNull(mapper.getModificationDate());
+
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		Date date1 = simpleDateFormat.parse("11/03/2014");
+		String commentBody = "This is the first comment"; //$NON-NLS-1$
+		TuleapUser commentSubmitter = new TuleapUser("username", "realname", 17, //$NON-NLS-1$ //$NON-NLS-2$
+				"email", null); //$NON-NLS-1$
+
+		TuleapElementComment comment = new TuleapElementComment(commentBody, commentSubmitter, date1);
+		mapper.addComment(comment);
+
+		TaskAttribute att = taskData.getRoot().getMappedAttribute(TaskAttribute.PREFIX_COMMENT + "0");
+		assertNotNull(att);
+
+		TaskAttribute authorAttribute = att.getMappedAttribute(TaskAttribute.COMMENT_AUTHOR);
+		assertNotNull(authorAttribute);
+		assertEquals("email", authorAttribute.getValue());
+
+		TaskAttribute nameAttribute = authorAttribute.getMappedAttribute(TaskAttribute.PERSON_NAME);
+		assertNotNull(nameAttribute);
+		assertEquals("username", nameAttribute.getValue());
+
+		TaskAttribute dateAttribute = att.getMappedAttribute(TaskAttribute.COMMENT_DATE);
+		assertNotNull(dateAttribute);
+		assertEquals(Long.toString(date1.getTime()), dateAttribute.getValue());
+
+		TaskAttribute numberAttribute = att.getMappedAttribute(TaskAttribute.COMMENT_NUMBER);
+		assertNotNull(numberAttribute);
+		assertEquals("0", numberAttribute.getValue());
+
+		TaskAttribute textAttribute = att.getMappedAttribute(TaskAttribute.COMMENT_TEXT);
+		assertNotNull(textAttribute);
+		assertEquals("This is the first comment", textAttribute.getValue());
+	}
+
+	/**
+	 * Verification of adding an attachment.
+	 * 
+	 * @throws ParseException
+	 */
+	@Test
+	public void testAddAttachment() throws ParseException {
+		mapper.initializeEmptyTaskData();
+		assertNull(mapper.getModificationDate());
+
+		TuleapUser submitter = new TuleapUser("username", "realname", 17, //$NON-NLS-1$ //$NON-NLS-2$
+				"email", null); //$NON-NLS-1$
+		AttachmentValue attachment = new AttachmentValue("id", "name", submitter, 123456, "description",
+				"type");
+
+		mapper.addAttachment("First field", attachment);
+
+		TaskAttribute att = taskData.getRoot().getMappedAttribute(
+				TaskAttribute.PREFIX_ATTACHMENT + "First field" + "---" + "id");
+		assertNotNull(att);
+
+		TaskAttribute authorAttribute = att.getMappedAttribute(TaskAttribute.ATTACHMENT_AUTHOR);
+		assertNotNull(authorAttribute);
+		assertEquals("email", authorAttribute.getValue());
+
+		TaskAttribute nameAttribute = authorAttribute.getMappedAttribute(TaskAttribute.PERSON_NAME);
+		assertNotNull(nameAttribute);
+		assertEquals("username", nameAttribute.getValue());
+
+		TaskAttribute typeAttribute = att.getMappedAttribute(TaskAttribute.ATTACHMENT_CONTENT_TYPE);
+		assertNotNull(typeAttribute);
+		assertEquals("type", typeAttribute.getValue());
+
+		TaskAttribute descriptionAttribute = att.getMappedAttribute(TaskAttribute.ATTACHMENT_DESCRIPTION);
+		assertNotNull(descriptionAttribute);
+		assertEquals("description", descriptionAttribute.getValue());
+
+		TaskAttribute fielNameAttribute = att.getMappedAttribute(TaskAttribute.ATTACHMENT_FILENAME);
+		assertNotNull(fielNameAttribute);
+		assertEquals("name", fielNameAttribute.getValue());
+
+		TaskAttribute sizeAttribute = att.getMappedAttribute(TaskAttribute.ATTACHMENT_SIZE);
+		assertNotNull(sizeAttribute);
+		assertEquals("123456", sizeAttribute.getValue());
 	}
 
 	/**

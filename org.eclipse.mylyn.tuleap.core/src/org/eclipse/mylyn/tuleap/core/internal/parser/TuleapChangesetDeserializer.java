@@ -29,7 +29,6 @@ import static org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants.LAST_
 import static org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants.SUBMITTED_BY;
 import static org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants.SUBMITTED_ON;
 
-
 /**
  * This class is used to deserialize the JSON representation of an artifact changeset.
  * 
@@ -55,7 +54,7 @@ public class TuleapChangesetDeserializer implements JsonDeserializer<TuleapEleme
 
 		JsonObject jsonObject = element.getAsJsonObject();
 
-		int submissionDate = -1;
+		Date submissionDate = null;
 		int submittedBy = -1;
 		String email = null;
 		String body = null;
@@ -63,8 +62,7 @@ public class TuleapChangesetDeserializer implements JsonDeserializer<TuleapEleme
 		JsonElement theElement = jsonObject.get(SUBMITTED_ON);
 		if (theElement != null && !theElement.isJsonNull()) {
 			try {
-				submissionDate = Long.valueOf(
-						context.<Date> deserialize(theElement, Date.class).getTime() / 1000).intValue();
+				submissionDate = context.<Date> deserialize(theElement, Date.class);
 			} catch (JsonParseException e) {
 				TuleapCoreActivator.log(e, false);
 			}
