@@ -7,7 +7,7 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: %Bundle-Vendor
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
-Bundle-Activator: org.eclipse.mylyn.tuleap.ui.task.internal.TuleapTasksUIPlugin
+Bundle-Activator: org.eclipse.mylyn.tuleap.ui.internal.TuleapTasksUIPlugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jface.text,
  org.eclipse.ui,
@@ -21,14 +21,14 @@ Require-Bundle: org.eclipse.core.runtime,
  javax.xml.rpc;bundle-version="1.1.0",
  org.tuleap.mylyn.task.agile.ui;bundle-version="1.0.0",
  org.tuleap.mylyn.task.agile.core;bundle-version="1.0.0"
-Export-Package: org.eclipse.mylyn.tuleap.ui.task.internal;version="2.0.0";x-friends:="org.eclipse.mylyn.tuleap.ui.tests",
- org.eclipse.mylyn.tuleap.ui.task.internal.editor;version="2.0.0";x-friends:="org.eclipse.mylyn.tuleap.ui.tests",
- org.eclipse.mylyn.tuleap.ui.task.internal.preferences;version="2.0.0";x-friends:="org.eclipse.mylyn.tuleap.ui.tests",
- org.eclipse.mylyn.tuleap.ui.task.internal.repository;version="2.0.0";x-friends:="org.eclipse.mylyn.tuleap.ui.tests",
- org.eclipse.mylyn.tuleap.ui.task.internal.util;version="2.0.0";x-friends:="org.eclipse.mylyn.tuleap.ui.tests",
- org.eclipse.mylyn.tuleap.ui.task.internal.wizards;version="2.0.0";x-friends:="org.eclipse.mylyn.tuleap.ui.tests",
- org.eclipse.mylyn.tuleap.ui.task.internal.wizards.attachment;version="2.0.0";x-friends:="org.eclipse.mylyn.tuleap.ui.tests",
- org.eclipse.mylyn.tuleap.ui.task.internal.wizards.newsubmilestone;version="2.0.0";x-friends:="org.eclipse.mylyn.tuleap.ui.tests",
- org.eclipse.mylyn.tuleap.ui.task.internal.wizards.newtask;version="2.0.0";x-friends:="org.eclipse.mylyn.tuleap.ui.tests",
- org.eclipse.mylyn.tuleap.ui.task.internal.wizards.query;version="2.0.0";x-friends:="org.eclipse.mylyn.tuleap.ui.tests"
+Export-Package: org.eclipse.mylyn.tuleap.ui.internal;version="2.0.0";x-friends:="org.eclipse.mylyn.tuleap.ui.tests",
+ org.eclipse.mylyn.tuleap.ui.internal.editor;version="2.0.0";x-friends:="org.eclipse.mylyn.tuleap.ui.tests",
+ org.eclipse.mylyn.tuleap.ui.internal.preferences;version="2.0.0";x-friends:="org.eclipse.mylyn.tuleap.ui.tests",
+ org.eclipse.mylyn.tuleap.ui.internal.repository;version="2.0.0";x-friends:="org.eclipse.mylyn.tuleap.ui.tests",
+ org.eclipse.mylyn.tuleap.ui.internal.util;version="2.0.0";x-friends:="org.eclipse.mylyn.tuleap.ui.tests",
+ org.eclipse.mylyn.tuleap.ui.internal.wizards;version="2.0.0";x-friends:="org.eclipse.mylyn.tuleap.ui.tests",
+ org.eclipse.mylyn.tuleap.ui.internal.wizards.attachment;version="2.0.0";x-friends:="org.eclipse.mylyn.tuleap.ui.tests",
+ org.eclipse.mylyn.tuleap.ui.internal.wizards.newsubmilestone;version="2.0.0";x-friends:="org.eclipse.mylyn.tuleap.ui.tests",
+ org.eclipse.mylyn.tuleap.ui.internal.wizards.newtask;version="2.0.0";x-friends:="org.eclipse.mylyn.tuleap.ui.tests",
+ org.eclipse.mylyn.tuleap.ui.internal.wizards.query;version="2.0.0";x-friends:="org.eclipse.mylyn.tuleap.ui.tests"
 Service-Component: OSGI-INF/component.xml

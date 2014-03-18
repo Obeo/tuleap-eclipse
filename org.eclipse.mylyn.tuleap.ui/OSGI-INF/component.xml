@@ -10,7 +10,7 @@ Contributors:
     Obeo - initial API and implementation
 -->
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.tuleap.mylyn.task.core.agile.ui.repository.connector">
-   <implementation class="org.eclipse.mylyn.tuleap.ui.task.internal.repository.TuleapAgileRepositoryConnectorUI"/>
+   <implementation class="org.eclipse.mylyn.tuleap.ui.internal.repository.TuleapAgileRepositoryConnectorUI"/>
    
    <service>
       <provide interface="org.tuleap.mylyn.task.agile.ui.AbstractAgileRepositoryConnectorUI"/>
