@@ -12,12 +12,20 @@ package org.eclipse.mylyn.tuleap.core.tests.internal.serializer;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
+import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapUser;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapArtifactLink;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapFileUpload;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapInteger;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapSelectBox;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapSelectBoxItem;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapString;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.ArtifactLinkFieldValue;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.AttachmentFieldValue;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.AttachmentValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.BoundFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.LiteralFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifact;
@@ -159,6 +167,55 @@ public class TuleapArtifactSerializerTest {
 	}
 
 	@Test
+	public void testArtifactWithFieldAttachment() {
+		TuleapArtifact artifact = new TuleapArtifact(trackerRef, projectRef);
+
+		TuleapFileUpload field = new TuleapFileUpload(222);
+		field.setPermissions(new String[] {"submit" });
+		artifact.addField(field);
+
+		List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
+		TuleapUser firstUploadedBy = new TuleapUser(
+				"first username", "first realname", 1, "first email", null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		attachments.add(new AttachmentValue("100000", "first name", firstUploadedBy, 123456, //$NON-NLS-1$ //$NON-NLS-2$ 
+				"first description", "first type")); //$NON-NLS-1$ //$NON-NLS-2$
+		TuleapUser secondUploadedBy = new TuleapUser("second username", "second realname", 2, //$NON-NLS-1$ //$NON-NLS-2$
+				"second email", null); //$NON-NLS-1$
+		attachments.add(new AttachmentValue("100001", "second name", secondUploadedBy, 789456, //$NON-NLS-1$ //$NON-NLS-2$
+				"second description", "second type")); //$NON-NLS-1$ //$NON-NLS-2$
+		AttachmentFieldValue fileDescription = new AttachmentFieldValue(222, attachments);
+
+		artifact.addFieldValue(fileDescription);
+
+		// We do not submit TuleapFileUpload fields
+		assertEquals("{\"values\":[],\"tracker\":{\"id\":100}}", gson.toJson(artifact));
+	}
+
+	@Test
+	public void testArtifactWithFieldLinksSubmitable() {
+		TuleapArtifact artifact = new TuleapArtifact(trackerRef, projectRef);
+
+		TuleapArtifactLink field = new TuleapArtifactLink(222);
+		field.setPermissions(new String[] {"submit" });
+		artifact.addField(field);
+		artifact.addFieldValue(new ArtifactLinkFieldValue(222, new int[] {137, 133 }));
+		assertEquals(
+				"{\"values\":[{\"field_id\":222,\"links\":[{\"id\":137},{\"id\":133}]}],\"tracker\":{\"id\":100}}",
+				gson.toJson(artifact));
+	}
+
+	@Test
+	public void testArtifactWithFieldLinksNonSubmitable() {
+		TuleapArtifact artifact = new TuleapArtifact(trackerRef, projectRef);
+
+		TuleapArtifactLink field = new TuleapArtifactLink(222);
+		field.setPermissions(new String[] {"read", "update" });
+		artifact.addField(field);
+		artifact.addFieldValue(new ArtifactLinkFieldValue(222, new int[] {137, 133 }));
+		assertEquals("{\"values\":[],\"tracker\":{\"id\":100}}", gson.toJson(artifact));
+	}
+
+	@Test
 	public void testArtifactWithManyFieldsNonSubmitable() {
 		TuleapArtifact artifact = new TuleapArtifact(trackerRef, projectRef);
 
@@ -178,15 +235,32 @@ public class TuleapArtifactSerializerTest {
 		artifact.addField(secondField);
 		artifact.addFieldValue(new BoundFieldValue(221, Arrays.asList(0, 1)));
 
-		TuleapInteger thirdField = new TuleapInteger(222);
-		thirdField.setPermissions(new String[] {"read", "update" });
-		artifact.addField(thirdField);
-		artifact.addFieldValue(new LiteralFieldValue(222, "666"));
-
 		TuleapString fourthField = new TuleapString(223);
 		fourthField.setPermissions(new String[] {"read", "update" });
 		artifact.addField(fourthField);
 		artifact.addFieldValue(new LiteralFieldValue(223, "test"));
+
+		TuleapFileUpload sixthField = new TuleapFileUpload(224);
+		sixthField.setPermissions(new String[] {"read", "update" });
+		artifact.addField(sixthField);
+
+		List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
+		TuleapUser firstUploadedBy = new TuleapUser(
+				"first username", "first realname", 1, "first email", null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		attachments.add(new AttachmentValue("100000", "first name", firstUploadedBy, 123456, //$NON-NLS-1$ //$NON-NLS-2$ 
+				"first description", "first type")); //$NON-NLS-1$ //$NON-NLS-2$
+		TuleapUser secondUploadedBy = new TuleapUser("second username", "second realname", 2, //$NON-NLS-1$ //$NON-NLS-2$
+				"second email", null); //$NON-NLS-1$
+		attachments.add(new AttachmentValue("100001", "second name", secondUploadedBy, 789456, //$NON-NLS-1$ //$NON-NLS-2$
+				"second description", "second type")); //$NON-NLS-1$ //$NON-NLS-2$
+		AttachmentFieldValue fileDescription = new AttachmentFieldValue(224, attachments);
+		artifact.addFieldValue(fileDescription);
+
+		TuleapArtifactLink seventhField = new TuleapArtifactLink(222);
+		seventhField.setPermissions(new String[] {"read", "update" });
+		artifact.addField(seventhField);
+		artifact.addFieldValue(new ArtifactLinkFieldValue(222, new int[] {137, 133 }));
+
 		assertEquals("{\"values\":[],\"tracker\":{\"id\":100}}", gson.toJson(artifact));
 	}
 
@@ -219,8 +293,30 @@ public class TuleapArtifactSerializerTest {
 		fourthField.setPermissions(new String[] {"submit" });
 		artifact.addField(fourthField);
 		artifact.addFieldValue(new LiteralFieldValue(223, "test"));
+
+		TuleapFileUpload sixthField = new TuleapFileUpload(224);
+		sixthField.setPermissions(new String[] {"submit" });
+		artifact.addField(sixthField);
+
+		List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
+		TuleapUser firstUploadedBy = new TuleapUser(
+				"first username", "first realname", 1, "first email", null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		attachments.add(new AttachmentValue("100000", "first name", firstUploadedBy, 123456, //$NON-NLS-1$ //$NON-NLS-2$ 
+				"first description", "first type")); //$NON-NLS-1$ //$NON-NLS-2$
+		TuleapUser secondUploadedBy = new TuleapUser("second username", "second realname", 2, //$NON-NLS-1$ //$NON-NLS-2$
+				"second email", null); //$NON-NLS-1$
+		attachments.add(new AttachmentValue("100001", "second name", secondUploadedBy, 789456, //$NON-NLS-1$ //$NON-NLS-2$
+				"second description", "second type")); //$NON-NLS-1$ //$NON-NLS-2$
+		AttachmentFieldValue fileDescription = new AttachmentFieldValue(224, attachments);
+		artifact.addFieldValue(fileDescription);
+
+		TuleapArtifactLink seventhField = new TuleapArtifactLink(222);
+		seventhField.setPermissions(new String[] {"submit" });
+		artifact.addField(seventhField);
+		artifact.addFieldValue(new ArtifactLinkFieldValue(222, new int[] {137, 133 }));
+
 		assertEquals(
-				"{\"values\":[{\"field_id\":220,\"bind_value_ids\":[0,1]},{\"field_id\":221,\"bind_value_ids\":[0,1]},{\"field_id\":222,\"value\":\"666\"},{\"field_id\":223,\"value\":\"test\"}],\"tracker\":{\"id\":100}}",
+				"{\"values\":[{\"field_id\":220,\"bind_value_ids\":[0,1]},{\"field_id\":221,\"bind_value_ids\":[0,1]},{\"field_id\":222,\"links\":[{\"id\":137},{\"id\":133}]},{\"field_id\":223,\"value\":\"test\"}],\"tracker\":{\"id\":100}}",
 				gson.toJson(artifact));
 	}
 }
