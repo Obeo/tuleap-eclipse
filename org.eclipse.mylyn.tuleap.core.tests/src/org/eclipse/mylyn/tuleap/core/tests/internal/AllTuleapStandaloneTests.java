@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -28,6 +28,7 @@ import org.eclipse.mylyn.tuleap.core.tests.internal.parser.ArtifactLinkAdapterTe
 import org.eclipse.mylyn.tuleap.core.tests.internal.parser.TuleapJsonParserTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.repository.TuleapRepositoryConnectorTests;
 import org.eclipse.mylyn.tuleap.core.tests.internal.repository.TuleapTaskDataHandlerTests;
+import org.eclipse.mylyn.tuleap.core.tests.internal.serializer.LiteralFieldValueSerializerTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.serializer.TuleapArtifactSerializerTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.serializer.TuleapArtifactWithCommentSerializerTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.server.ServerResponseTest;
@@ -36,18 +37,19 @@ import org.junit.runners.Suite;
 
 /**
  * The stand alone unit tests suite (run as standard junit test).
- * 
+ *
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  * @since 0.7
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({TuleapTaskIdTests.class, TuleapTrackerConfigurationTests.class,
-		ServerResponseTest.class, TuleapProjectConfigurationTests.class,
-		TuleapRepositoryConnectorTests.class, TuleapJsonParserTest.class, TuleapTaskDataHandlerTests.class,
-		TuleapWorkflowTests.class, TuleapArtifactMapperTests.class, TuleapRestResourceFactoryTest.class,
-		RestResourceTest.class, RestOperationsTest.class, TuleapRestClientTest.class,
-		TuleapRestClientLimitTests.class, TuleapArtifactSerializerTest.class,
-		TuleapArtifactWithCommentSerializerTest.class, ArtifactLinkAdapterTest.class })
+	ServerResponseTest.class, TuleapTrackerConfigurationTests.class, ServerResponseTest.class,
+	TuleapProjectConfigurationTests.class, TuleapRepositoryConnectorTests.class,
+	TuleapJsonParserTest.class, TuleapTaskDataHandlerTests.class, TuleapWorkflowTests.class,
+	TuleapArtifactMapperTests.class, TuleapRestResourceFactoryTest.class, RestResourceTest.class,
+	RestOperationsTest.class, TuleapRestClientTest.class, TuleapRestClientLimitTests.class,
+	TuleapArtifactSerializerTest.class, TuleapArtifactWithCommentSerializerTest.class,
+	ArtifactLinkAdapterTest.class, LiteralFieldValueSerializerTest.class })
 public final class AllTuleapStandaloneTests {
 
 	/**
@@ -59,7 +61,7 @@ public final class AllTuleapStandaloneTests {
 
 	/**
 	 * Launches the test with the given arguments.
-	 * 
+	 *
 	 * @param args
 	 *            Arguments of the testCase.
 	 */
@@ -69,7 +71,7 @@ public final class AllTuleapStandaloneTests {
 
 	/**
 	 * Creates the {@link junit.framework.TestSuite TestSuite} for all the test.
-	 * 
+	 *
 	 * @return The test suite containing all the tests
 	 */
 	public static Test suite() {
