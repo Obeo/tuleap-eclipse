@@ -46,7 +46,6 @@ import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapStatus;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapSwimlane;
 import org.eclipse.mylyn.tuleap.core.internal.repository.TuleapRepositoryConnector;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.tuleap.mylyn.task.agile.core.data.AbstractTaskAttributeWrapper;
 import org.tuleap.mylyn.task.agile.core.data.cardwall.CardWrapper;
@@ -59,7 +58,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Tests of the milestone task data converter.
@@ -82,12 +80,6 @@ public class MilestoneTaskDataConverterTest {
 	 * Id of the milestone list task attribute.
 	 */
 	public static final String SWIMLANE_PREFIX = "mta_swi-"; //$NON-NLS-1$
-
-	private static final long START_TIME = 30 * 365L * 24L * 3600000L;
-
-	private static final long END_TIME = START_TIME + 20L * 24L * 3600000L;
-
-	private TuleapReference projectRef = new TuleapReference(666, "p/666");
 
 	/**
 	 * The wrapped task data.
@@ -177,30 +169,6 @@ public class MilestoneTaskDataConverterTest {
 	}
 
 	/**
-	 * Tests milestone submilestones conversion.
-	 */
-	@Test
-	@Ignore("Fix me ASAP")
-	public void testMilestoneSubmilestones() {
-		Date testDate = new Date();
-
-		TuleapMilestone milestone = new TuleapMilestone(50, projectRef, "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
-				"HTML URL", testDate, testDate); //$NON-NLS-1$
-
-		TuleapMilestone submilestone100 = new TuleapMilestone(100, projectRef, "submilestone100", "URL", //$NON-NLS-1$//$NON-NLS-2$
-				"HTML URL", testDate, testDate); //$NON-NLS-1$
-		submilestone100.setCapacity("123");
-		submilestone100.setStartDate(new Date(START_TIME));
-		submilestone100.setEndDate(new Date(END_TIME));
-
-		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(taskRepository, connector);
-		converter.populateTaskData(taskData, milestone, null);
-
-		TaskAttribute root = taskData.getRoot();
-		fail("Implement the actual test");
-	}
-
-	/**
 	 * Tests the swimlanes list.
 	 */
 	@Test
@@ -265,11 +233,10 @@ public class MilestoneTaskDataConverterTest {
 
 		TaskAttribute root = taskData.getRoot();
 
-		int i = 0;
 		// the first column
 		String attId = COLUMN_LIST + 600;
 		TaskAttribute firstColumnTA = root.getAttribute(attId);
-
+		assertNotNull(firstColumnTA);
 		TaskAttribute firstColumnLabelTA = root.getAttribute(attId + "-lbl");
 		assertNotNull(firstColumnLabelTA);
 		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, firstColumnLabelTA.getMetaData().getType());
@@ -278,7 +245,7 @@ public class MilestoneTaskDataConverterTest {
 		// the second column
 		attId = COLUMN_LIST + 800;
 		TaskAttribute secondColumnTA = root.getAttribute(attId);
-
+		assertNotNull(secondColumnTA);
 		TaskAttribute secondColumnLabelTA = root.getAttribute(attId + "-lbl");
 		assertNotNull(secondColumnLabelTA);
 		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, secondColumnLabelTA.getMetaData().getType());
@@ -405,7 +372,7 @@ public class MilestoneTaskDataConverterTest {
 		// The first swimlane
 		String swimlaneId = SWIMLANE_PREFIX + id++;
 		TaskAttribute firstSwimlaneTA = root.getAttribute(swimlaneId);
-
+		assertNotNull(firstSwimlaneTA);
 		String cardPrefix = swimlaneId + "-c-2_12345";
 		TaskAttribute firstCardTA = root.getAttribute(cardPrefix);
 		assertNotNull(firstCardTA);
@@ -495,13 +462,14 @@ public class MilestoneTaskDataConverterTest {
 		// The first swimlane
 		String swimlaneId = SWIMLANE_PREFIX + id++;
 		TaskAttribute firstSwimlaneTA = root.getAttribute(swimlaneId);
+		assertNotNull(firstSwimlaneTA);
 
 		String cardPrefix = swimlaneId + "-c-2_12345";
 		TaskAttribute firstCardTA = root.getAttribute(cardPrefix);
 		assertNotNull(firstCardTA);
 
 		TaskAttribute att = root.getAttribute(cardPrefix + "-art_id");
-
+		assertNotNull(att);
 		TaskAttribute statusIdFirstCardTA = root.getAttribute(cardPrefix + "-col_id");
 
 		assertNotNull(statusIdFirstCardTA);
@@ -1018,7 +986,7 @@ public class MilestoneTaskDataConverterTest {
 	 * Tests the extraction of cards when no card has changed (no card should be returned).
 	 */
 	@Test
-	public void testExtractCardWithNoCardModified() {
+	public void testExtractCardsWithNoCardModified() {
 		Date testDate = new Date();
 
 		TuleapMilestone milestone = new TuleapMilestone(50,
