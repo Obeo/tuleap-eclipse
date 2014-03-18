@@ -18,9 +18,17 @@ import com.google.gson.JsonSerializationContext;
 import java.lang.reflect.Type;
 
 import org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapArtifactLink;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapFileUpload;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapMultiSelectBox;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapOpenList;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapSelectBox;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.AbstractFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.AbstractTuleapConfigurableElement;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.ArtifactLinkFieldValue;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.AttachmentFieldValue;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.BoundFieldValue;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.LiteralFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants;
 
 /**
@@ -45,6 +53,18 @@ public abstract class AbstractTuleapSerializer<T extends AbstractTuleapConfigura
 		for (AbstractTuleapField field : element.getFields()) {
 			if (mustSerialize(field)) {
 				AbstractFieldValue fieldValue = element.getFieldValue(field.getIdentifier());
+				if (fieldValue == null) {
+					if (field instanceof TuleapFileUpload) {
+						fieldValue = new AttachmentFieldValue(field.getIdentifier(), null);
+					} else if (field instanceof TuleapArtifactLink) {
+						fieldValue = new ArtifactLinkFieldValue(field.getIdentifier(), null);
+					} else if (field instanceof TuleapOpenList || field instanceof TuleapSelectBox
+							|| field instanceof TuleapMultiSelectBox) {
+						fieldValue = new BoundFieldValue(field.getIdentifier(), null);
+					} else {
+						fieldValue = new LiteralFieldValue(field.getIdentifier(), null);
+					}
+				}
 				values.add(context.serialize(fieldValue));
 			}
 		}
