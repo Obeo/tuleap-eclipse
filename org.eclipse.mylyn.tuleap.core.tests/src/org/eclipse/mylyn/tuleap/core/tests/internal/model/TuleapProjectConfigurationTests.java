@@ -136,4 +136,18 @@ public class TuleapProjectConfigurationTests {
 		assertTrue(groups.contains(group0));
 		assertTrue(groups.contains(group1));
 	}
+
+	/**
+	 * Test getting and setting project attributes .
+	 */
+	@Test
+	public void testSetAndGetProjectAttributes() {
+		TuleapProject project = new TuleapProject("Test Project", 42);
+		project.setUri("projects/42");
+		assertEquals("projects/42", project.getUri());
+		assertEquals(42, project.getIdentifier());
+		assertEquals("Test Project", project.getLabel());
+		assertNull(project.getServer());
+	}
+
 }
