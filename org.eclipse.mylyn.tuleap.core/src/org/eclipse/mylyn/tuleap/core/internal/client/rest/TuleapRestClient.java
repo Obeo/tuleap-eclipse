@@ -221,9 +221,6 @@ public class TuleapRestClient implements IAuthenticator {
 		RestResource artifactResource = restResourceFactory.artifact(artifactId).withAuthenticator(this);
 		ServerResponse response = artifactResource.get().checkedRun();
 		TuleapArtifact artifact = gson.fromJson(response.getBody(), TuleapArtifact.class);
-		for (TuleapElementComment comment : this.getArtifactComments(artifactId, server, monitor)) {
-			artifact.addComment(comment);
-		}
 		return artifact;
 	}
 

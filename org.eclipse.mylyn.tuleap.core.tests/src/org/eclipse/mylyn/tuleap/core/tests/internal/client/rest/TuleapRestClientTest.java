@@ -28,6 +28,9 @@ import org.eclipse.mylyn.tuleap.core.internal.client.rest.TuleapRestClient;
 import org.eclipse.mylyn.tuleap.core.internal.model.TuleapToken;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapServer;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapTracker;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifact;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifactWithComment;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapReference;
 import org.eclipse.mylyn.tuleap.core.internal.parser.TuleapGsonProvider;
 import org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants;
 import org.eclipse.mylyn.tuleap.core.tests.internal.TestLogger;
@@ -154,11 +157,11 @@ public class TuleapRestClientTest {
 
 	@Test
 	public void testRetrieveTrackerReportArtifacts() throws CoreException, ParseException {
-		String jsonTrackers = ParserUtil.loadFile("/artifacts/artifacts.json");
+		String artifacts = ParserUtil.loadFile("/artifacts/artifacts.json");
 		Map<String, String> respHeaders = Maps.newHashMap();
 		respHeaders.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
 		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
-		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonTrackers, respHeaders);
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, artifacts, respHeaders);
 		connector.setResponse(response);
 		client.getTrackerReportArtifacts(10, null);
 
@@ -168,6 +171,74 @@ public class TuleapRestClientTest {
 		ServerRequest request = requestsSent.get(0);
 		assertEquals("/api/v12.3/tracker_reports/10/artifacts", request.url); //$NON-NLS-1$
 		assertEquals("GET", request.method); //$NON-NLS-1$
+	}
+
+	@Test
+	public void testRetrieveArtifact() throws CoreException, ParseException {
+		String artifact = ParserUtil.loadFile("/artifacts/artifact-0.json");
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, artifact, respHeaders);
+		connector.setResponse(response);
+		client.getArtifact(10, new TuleapServer(repository.getUrl()), null);
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(1, requestsSent.size());
+		ServerRequest request = requestsSent.get(0);
+		assertEquals("/api/v12.3/artifacts/10", request.url); //$NON-NLS-1$
+		assertEquals("GET", request.method); //$NON-NLS-1$
+	}
+
+	@Test
+	public void testCreateArtifact() throws CoreException, ParseException {
+		TuleapReference trackerRef = new TuleapReference(100, "t/100");
+		TuleapReference projectRef = new TuleapReference(50, "p/50");
+		TuleapArtifact artifact = new TuleapArtifact(trackerRef, projectRef);
+
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,POST"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,POST"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK,
+				"{\"id\": 1,\"uri\": \"artifacts/1\",\"tracker\": {\"id\": 15, \"uri\": \"trackers/15\"}}",
+				respHeaders);
+		connector.setResponse(response);
+
+		client.createArtifact(artifact, null);
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(1, requestsSent.size());
+		ServerRequest request = requestsSent.get(0);
+		assertEquals("/api/v12.3/artifacts", request.url); //$NON-NLS-1$
+		assertEquals("POST", request.method); //$NON-NLS-1$
+	}
+
+	@Test
+	public void testUpdateArtifact() throws CoreException {
+		TuleapReference trackerRef = new TuleapReference(100, "t/100");
+		TuleapReference projectRef = new TuleapReference(50, "p/50");
+		TuleapArtifactWithComment artifact = new TuleapArtifactWithComment(10, trackerRef, projectRef);
+
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK,
+				"The milestone response body", respHeaders); //$NON-NLS-1$
+
+		connector.setResponse(response);
+		client.updateArtifact(artifact, null);
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(1, requestsSent.size());
+
+		ServerRequest request = requestsSent.get(0);
+		assertEquals("/api/v12.3/artifacts/10", request.url); //$NON-NLS-1$
+		assertEquals("PUT", request.method); //$NON-NLS-1$
+		assertEquals("{\"values\":[]}", //$NON-NLS-1$
+				request.body);
 	}
 
 	@Test
@@ -297,6 +368,7 @@ public class TuleapRestClientTest {
 	@Before
 	public void setUp() {
 		connector = new MockRestConnector();
+
 		gson = TuleapGsonProvider.defaultGson();
 		this.restResourceFactory = new RestResourceFactory(apiVersion, connector, gson, new TestLogger());
 		this.repository = new TaskRepository(ITuleapConstants.CONNECTOR_KIND, serverUrl);

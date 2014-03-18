@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -51,6 +51,8 @@ import org.eclipse.mylyn.tuleap.core.internal.data.converter.ArtifactTaskDataCon
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapProject;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapServer;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapTracker;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapUser;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapUserGroup;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.AbstractTuleapSelectBox;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapSelectBoxItem;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifact;
@@ -60,7 +62,7 @@ import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
 
 /**
  * This class encapsulates common operation realized on the Tuleap repository.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
@@ -105,7 +107,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getConnectorKind()
 	 */
 	@Override
@@ -115,7 +117,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getLabel()
 	 */
 	@Override
@@ -126,7 +128,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#canCreateNewTask(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
 	@Override
@@ -136,7 +138,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#canCreateTaskFromKey(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
 	@Override
@@ -146,7 +148,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getRepositoryUrlFromTaskUrl(java.lang.String)
 	 */
 	@Override
@@ -159,7 +161,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getTaskIdFromTaskUrl(java.lang.String)
 	 */
 	@Override
@@ -173,7 +175,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getTaskDataHandler()
 	 */
 	@Override
@@ -183,7 +185,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getTaskAttachmentHandler()
 	 */
 	@Override
@@ -193,7 +195,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getTaskUrl(java.lang.String,
 	 *      java.lang.String)
 	 */
@@ -204,7 +206,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getTaskData(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
 	 */
@@ -216,7 +218,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#hasTaskChanged(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      org.eclipse.mylyn.tasks.core.ITask, org.eclipse.mylyn.tasks.core.data.TaskData)
 	 */
@@ -234,7 +236,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#canQuery(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
 	@Override
@@ -244,7 +246,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.repository.ITuleapRepositoryConnector#getClientManager()
 	 */
 	public TuleapClientManager getClientManager() {
@@ -256,7 +258,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#updateNewTaskFromTaskData(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      org.eclipse.mylyn.tasks.core.ITask, org.eclipse.mylyn.tasks.core.data.TaskData)
 	 */
@@ -267,7 +269,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#performQuery(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      org.eclipse.mylyn.tasks.core.IRepositoryQuery,
 	 *      org.eclipse.mylyn.tasks.core.data.TaskDataCollector,
@@ -290,7 +292,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * Perform a "standard" query, which is configured by a set of criteria.
-	 * 
+	 *
 	 * @param taskRepository
 	 *            The task repository
 	 * @param query
@@ -308,7 +310,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * Perform a "report" query.
-	 * 
+	 *
 	 * @param taskRepository
 	 *            The task repository
 	 * @param query
@@ -363,7 +365,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#updateRepositoryConfiguration(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
@@ -373,8 +375,34 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		if (taskRepository != null) {
 			TuleapRestClient tuleapRestClient = this.getClientManager().getRestClient(taskRepository);
 			try {
-				TuleapServer tuleapServerRest = tuleapRestClient.getServer(monitor);
-				this.serversByUrl.put(taskRepository.getRepositoryUrl(), tuleapServerRest);
+				TuleapServer tuleapServer = new TuleapServer(taskRepository.getRepositoryUrl());
+				tuleapServer.setLastUpdate(new Date().getTime());
+
+				if (monitor != null) {
+					monitor.beginTask(TuleapMylynTasksMessages
+							.getString(TuleapMylynTasksMessagesKeys.retrieveTuleapServer), 100);
+				}
+
+				for (TuleapProject project : tuleapRestClient.getProjects(monitor)) {
+					tuleapServer.addProject(project);
+					for (TuleapTracker tracker : tuleapRestClient.getProjectTrackers(project.getIdentifier(),
+							monitor)) {
+						project.addTracker(tracker);
+					}
+
+					try {
+						for (TuleapUserGroup userGroup : tuleapRestClient.getProjectUserGroups(project
+								.getIdentifier(), monitor)) {
+							for (TuleapUser tuleapUser : tuleapRestClient.getUserGroupUsers(
+									userGroup.getId(), monitor)) {
+								tuleapServer.register(tuleapUser);
+							}
+						}
+					} catch (CoreException e) {
+						TuleapCoreActivator.log(e, false);
+					}
+				}
+				this.serversByUrl.put(taskRepository.getRepositoryUrl(), tuleapServer);
 			} catch (CoreException e) {
 				TuleapCoreActivator.log(e, true);
 			}
@@ -383,7 +411,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#updateTaskFromTaskData(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      org.eclipse.mylyn.tasks.core.ITask, org.eclipse.mylyn.tasks.core.data.TaskData)
 	 */
@@ -423,7 +451,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * Indicates if the given current status of a task matches a closed status of the tracker.
-	 * 
+	 *
 	 * @param currentStatus
 	 *            The current status of a task
 	 * @param tracker
@@ -447,7 +475,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getTaskMapping(org.eclipse.mylyn.tasks.core.data.TaskData)
 	 */
 	@Override
@@ -467,7 +495,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * Returns the server matching the given url.
-	 * 
+	 *
 	 * @param repositoryUrl
 	 *            The repository url
 	 * @return The server matching the given url, or <code>null</code> if it does not exist.
@@ -478,7 +506,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.repository.ITuleapRepositoryConnector#refreshTracker(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapTracker,
 	 *      org.eclipse.core.runtime.IProgressMonitor)

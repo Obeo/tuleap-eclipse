@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -12,7 +12,9 @@ package org.eclipse.mylyn.tuleap.core.tests.internal.repository;
 
 import com.google.common.collect.Sets;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -31,8 +33,10 @@ import org.eclipse.mylyn.tuleap.core.internal.data.TuleapTaskId;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapProject;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapServer;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapTracker;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapUser;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifact;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifactWithComment;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapElementComment;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapReference;
 import org.eclipse.mylyn.tuleap.core.internal.repository.ITuleapRepositoryConnector;
 import org.eclipse.mylyn.tuleap.core.internal.repository.TuleapTaskDataHandler;
@@ -49,7 +53,7 @@ import static org.junit.Assert.fail;
 
 /**
  * The tests class for the Tuleap task data handler.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
@@ -121,7 +125,7 @@ public class TuleapTaskDataHandlerTests {
 	/**
 	 * Initialize a new task data thanks to the configuration with the given configuration identifier and
 	 * check that the dispatch has created a task with the proper task kind.
-	 * 
+	 *
 	 * @param configurationId
 	 *            The identifier of the configuration
 	 */
@@ -200,7 +204,7 @@ public class TuleapTaskDataHandlerTests {
 	/**
 	 * Retrieve the artifact with the given task id and check that the task data created has the proper task
 	 * kind.
-	 * 
+	 *
 	 * @param taskId
 	 *            The identifier of the task
 	 */
@@ -215,6 +219,32 @@ public class TuleapTaskDataHandlerTests {
 			public TuleapArtifact getArtifact(int id, TuleapServer server, IProgressMonitor monitor)
 					throws CoreException {
 				return tuleapArtifact;
+			}
+
+			@Override
+			public List<TuleapElementComment> getArtifactComments(int artifactIdentifier,
+					TuleapServer server, IProgressMonitor monitor) throws CoreException {
+				List<TuleapElementComment> comments = new ArrayList<TuleapElementComment>();
+
+				// The first comment
+				String firstCommentBody = "This is the first comment"; //$NON-NLS-1$
+				TuleapUser firstCommentSubmitter = new TuleapUser("first-username", "first-realname", 17, //$NON-NLS-1$ //$NON-NLS-2$
+						"first-email", null); //$NON-NLS-1$
+				Date commentSubmitDate = new Date();
+
+				TuleapElementComment firstTuleapElementComment = new TuleapElementComment(firstCommentBody,
+						firstCommentSubmitter, commentSubmitDate);
+				comments.add(firstTuleapElementComment);
+
+				// The second comment
+				String secondCommentBody = "This is the second comment"; //$NON-NLS-1$
+				TuleapUser secondCommentSubmitter = new TuleapUser("second-username", "second-realname", 18, //$NON-NLS-1$ //$NON-NLS-2$
+						"second-email", null); //$NON-NLS-1$
+				TuleapElementComment secondTuleapElementComment = new TuleapElementComment(secondCommentBody,
+						secondCommentSubmitter, commentSubmitDate);
+
+				comments.add(secondTuleapElementComment);
+				return comments;
 			}
 		};
 
@@ -275,7 +305,7 @@ public class TuleapTaskDataHandlerTests {
 	/**
 	 * Create and update the element with the given task data and check the identifier of the server element
 	 * created and updated.
-	 * 
+	 *
 	 * @param taskData
 	 *            The task data
 	 * @param taskId
