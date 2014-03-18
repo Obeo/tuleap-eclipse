@@ -12,7 +12,10 @@ package org.eclipse.mylyn.tuleap.core.tests.internal.parser;
 
 import com.google.gson.Gson;
 
+import java.text.ParseException;
+
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapElementComment;
+import org.eclipse.mylyn.tuleap.core.internal.parser.DateIso8601Adapter;
 import org.eclipse.mylyn.tuleap.core.internal.parser.TuleapGsonProvider;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,56 +35,68 @@ public class TuleapChangesetDeserializerTests {
 
 	/**
 	 * Test parsing a complete changeSet .
+	 * 
+	 * @throws ParseException
 	 */
 	@Test
-	public void testParsingCompleteChangeSet() {
+	public void testParsingCompleteChangeSet() throws ParseException {
 		String json = ParserUtil.loadFile("/changesets/changeset-1.json");
 		TuleapElementComment changeSet = gson.fromJson(json, TuleapElementComment.class);
 		assertNotNull(changeSet);
 		assertEquals("First comment body", changeSet.getBody()); //$NON-NLS-1$
-		assertEquals(1393518580, changeSet.getSubmittedOn());
+		assertEquals(DateIso8601Adapter.parseIso8601Date("2014-02-27T17:29:40+01:00"), changeSet
+				.getSubmittedOn());
 		assertEquals(101, changeSet.getSubmitter().getId());
 		assertEquals("email@obeo.fr", changeSet.getSubmitter().getEmail()); //$NON-NLS-1$
 	}
 
 	/**
 	 * Test parsing a changeSet with empty body .
+	 * 
+	 * @throws ParseException
 	 */
 	@Test
-	public void testParsingChangeSetWithEmptyBody() {
+	public void testParsingChangeSetWithEmptyBody() throws ParseException {
 		String json = ParserUtil.loadFile("/changesets/changeset-2.json");
 		TuleapElementComment changeSet = gson.fromJson(json, TuleapElementComment.class);
 		assertNotNull(changeSet);
 		assertEquals("", changeSet.getBody()); //$NON-NLS-1$
-		assertEquals(1393518580, changeSet.getSubmittedOn());
+		assertEquals(DateIso8601Adapter.parseIso8601Date("2014-02-27T17:29:40+01:00"), changeSet
+				.getSubmittedOn());
 		assertEquals(101, changeSet.getSubmitter().getId());
 		assertEquals("email@obeo.fr", changeSet.getSubmitter().getEmail()); //$NON-NLS-1$
 	}
 
 	/**
 	 * Test parsing a changeSet with body null.
+	 * 
+	 * @throws ParseException
 	 */
 	@Test
-	public void testParsingChangeSetWithBodyNull() {
+	public void testParsingChangeSetWithBodyNull() throws ParseException {
 		String json = ParserUtil.loadFile("/changesets/changeset-3.json");
 		TuleapElementComment changeSet = gson.fromJson(json, TuleapElementComment.class);
 		assertNotNull(changeSet);
 		assertNull(changeSet.getBody());
-		assertEquals(1393518580, changeSet.getSubmittedOn());
+		assertEquals(DateIso8601Adapter.parseIso8601Date("2014-02-27T17:29:40+01:00"), changeSet
+				.getSubmittedOn());
 		assertEquals(101, changeSet.getSubmitter().getId());
 		assertEquals("email@obeo.fr", changeSet.getSubmitter().getEmail()); //$NON-NLS-1$
 	}
 
 	/**
 	 * Test parsing a changeSet with null mail.
+	 * 
+	 * @throws ParseException
 	 */
 	@Test
-	public void testParsingChangeSetWithEmailNull() {
+	public void testParsingChangeSetWithEmailNull() throws ParseException {
 		String json = ParserUtil.loadFile("/changesets/changeset-4.json");
 		TuleapElementComment changeSet = gson.fromJson(json, TuleapElementComment.class);
 		assertNotNull(changeSet);
 		assertEquals("Fourth comment body", changeSet.getBody()); //$NON-NLS-1$
-		assertEquals(1393518580, changeSet.getSubmittedOn());
+		assertEquals(DateIso8601Adapter.parseIso8601Date("2014-02-27T17:29:40+01:00"), changeSet
+				.getSubmittedOn());
 		assertEquals(101, changeSet.getSubmitter().getId());
 		assertNull(changeSet.getSubmitter().getEmail());
 	}

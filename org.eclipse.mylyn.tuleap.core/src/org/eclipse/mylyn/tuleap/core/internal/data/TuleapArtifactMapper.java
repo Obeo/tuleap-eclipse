@@ -502,7 +502,7 @@ public class TuleapArtifactMapper extends TaskMapper {
 		taskComment.setCommentId(String.valueOf(count));
 		taskComment.setNumber(Integer.valueOf(count));
 		Calendar calendar = Calendar.getInstance();
-		calendar.setTimeInMillis(Long.valueOf(tuleapArtifactComment.getSubmittedOn()).longValue() * 1000);
+		calendar.setTime(tuleapArtifactComment.getSubmittedOn());
 		Date creationDate = calendar.getTime();
 		taskComment.setCreationDate(creationDate);
 		taskComment.setText(tuleapArtifactComment.getBody());

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.tuleap.core.internal.model.data;
 
+import java.util.Date;
+
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapUser;
 
 /**
@@ -24,9 +26,9 @@ public class TuleapElementComment {
 	private TuleapUser submitter;
 
 	/**
-	 * The timestamp of the date when the comment was submitted.
+	 * The date when the comment was submitted.
 	 */
-	private int submittedOn;
+	private Date submittedOn;
 
 	/**
 	 * The body of the comment.
@@ -40,14 +42,14 @@ public class TuleapElementComment {
 	 *            The body of the comment.
 	 * @param submitter
 	 *            The user who submitted the comment.
-	 * @param submittedOnTimestamp
-	 *            The timestamp of the date when the comment has been submitted.
+	 * @param submittedOn
+	 *            The date when the comment has been submitted.
 	 */
-	public TuleapElementComment(String commentBody, TuleapUser submitter, int submittedOnTimestamp) {
+	public TuleapElementComment(String commentBody, TuleapUser submitter, Date submittedOn) {
 		super();
 		this.body = commentBody;
 		this.submitter = submitter;
-		this.submittedOn = submittedOnTimestamp;
+		this.submittedOn = submittedOn;
 	}
 
 	/**
@@ -69,11 +71,11 @@ public class TuleapElementComment {
 	}
 
 	/**
-	 * Returns the timestamp of the date when the comment has been submitted.
+	 * Returns the date when the comment has been submitted.
 	 * 
-	 * @return The timestamp of the date when the comment has been submitted.
+	 * @return The date when the comment has been submitted.
 	 */
-	public int getSubmittedOn() {
+	public Date getSubmittedOn() {
 		return this.submittedOn;
 	}
 
