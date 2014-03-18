@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -24,7 +24,7 @@ import static org.junit.Assert.assertNotNull;
 
 /**
  * Tests of {@link RestResourceFactory}.
- * 
+ *
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
@@ -58,7 +58,7 @@ public class TuleapRestResourceFactoryTest {
 
 	/**
 	 * Checks that GET is not supported by the operation returned by {@link RestResourceFactory#artifacts()}.
-	 * 
+	 *
 	 * @throws CoreException
 	 */
 	@Test(expected = UnsupportedOperationException.class)
@@ -69,7 +69,7 @@ public class TuleapRestResourceFactoryTest {
 
 	/**
 	 * Checks that PUT is not supported by the operation returned by {@link RestResourceFactory#artifacts()}.
-	 * 
+	 *
 	 * @throws CoreException
 	 */
 	@Test(expected = UnsupportedOperationException.class)
@@ -139,36 +139,6 @@ public class TuleapRestResourceFactoryTest {
 	}
 
 	/**
-	 * Checks the basic properties of {@link RestResourceFactory#backlogItem(int)}.
-	 */
-	@Test
-	public void testGetBacklogItem() {
-		RestResource r = factory.backlogItem(234);
-		assertNotNull(r);
-		assertEquals("/api/v12.5/backlog_items/234", r.getUrl());
-	}
-
-	/**
-	 * Checks the basic properties of {@link RestResourceFactory#projectPlannings(int)}.
-	 */
-	@Test
-	public void testGetProjectPlannings() {
-		RestResource r = factory.projectPlannings(345);
-		assertNotNull(r);
-		assertEquals("/api/v12.5/projects/345/plannings", r.getUrl());
-	}
-
-	/**
-	 * Checks the basic properties of {@link RestResourceFactory#projectMilestones(int)}.
-	 */
-	@Test
-	public void testGetProjectMilestones() {
-		RestResource r = factory.projectMilestones(265);
-		assertNotNull(r);
-		assertEquals("/api/v12.5/projects/265/milestones", r.getUrl());
-	}
-
-	/**
 	 * Checks the basic properties of {@link RestResourceFactory#projectUserGroups(int)}.
 	 */
 	@Test
@@ -186,16 +156,6 @@ public class TuleapRestResourceFactoryTest {
 		RestResource r = factory.userGroupUsers("356");
 		assertNotNull(r);
 		assertEquals("/api/v12.5/user_groups/356/users", r.getUrl());
-	}
-
-	/**
-	 * Checks the basic properties of {@link RestResourceFactory#projectBacklog(int)}.
-	 */
-	@Test
-	public void testProjectBacklog() {
-		RestResource r = factory.projectBacklog(372);
-		assertNotNull(r);
-		assertEquals("/api/v12.5/projects/372/backlog", r.getUrl());
 	}
 
 	/**
