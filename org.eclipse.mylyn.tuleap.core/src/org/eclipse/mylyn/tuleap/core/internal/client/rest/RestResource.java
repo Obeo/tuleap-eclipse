@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -20,7 +20,7 @@ import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
 
 /**
  * Generic REST Resource.
- * 
+ *
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
 public class RestResource {
@@ -139,7 +139,7 @@ public class RestResource {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param url
 	 *            The URL, must no be null.
 	 * @param supportedMethods
@@ -166,7 +166,7 @@ public class RestResource {
 
 	/**
 	 * URL fragment following /api/version, should start with a slash character "/".
-	 * 
+	 *
 	 * @return The URL fragment of this resource.
 	 */
 	public String getUrl() {
@@ -176,7 +176,7 @@ public class RestResource {
 	/**
 	 * Creates a DELETE operation for this resource after checking it makes sense by sending an OPTIONS call
 	 * to this resource's URL.
-	 * 
+	 *
 	 * @return A new instance of {@link RestOperation} created with this resource operation factory.
 	 * @throws CoreException
 	 *             If a problem occurs while checking whether the DELETE method is supported by the server for
@@ -193,7 +193,7 @@ public class RestResource {
 	/**
 	 * Creates a GET operation for this resource after checking it makes sense by sending an OPTIONS call to
 	 * this resource's URL.
-	 * 
+	 *
 	 * @return A new instance of {@link RestOperation} created with this resource operation factory.
 	 * @throws CoreException
 	 *             If a problem occurs while checking whether the GET method is supported by the server for
@@ -211,7 +211,7 @@ public class RestResource {
 
 	/**
 	 * Creates an OPTIONS operation for this resource.
-	 * 
+	 *
 	 * @return A new instance of {@link RestOperation} created with this resource operation factory.
 	 */
 	public RestOperation options() {
@@ -221,7 +221,7 @@ public class RestResource {
 	/**
 	 * Creates a POST operation for this resource after checking it makes sense by sending an OPTIONS call to
 	 * this resource's URL.
-	 * 
+	 *
 	 * @return A new instance of {@link RestOperation} created with this resource operation factory.
 	 * @throws CoreException
 	 *             If a problem occurs while checking whether the GET method is supported by the server for
@@ -238,7 +238,7 @@ public class RestResource {
 	/**
 	 * Creates a PUT operation for this resource after checking it makes sense by sending an OPTIONS call to
 	 * this resource's URL.
-	 * 
+	 *
 	 * @return A new instance of {@link RestOperation} created with this resource operation factory.
 	 * @throws CoreException
 	 *             If a problem occurs while checking whether the GET method is supported by the server for
@@ -254,7 +254,7 @@ public class RestResource {
 
 	/**
 	 * Sets the authenticator to use.
-	 * 
+	 *
 	 * @param anAuthenticator
 	 *            The authenticator to use.
 	 * @return this, for a fluent API.
@@ -266,7 +266,7 @@ public class RestResource {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -303,7 +303,7 @@ public class RestResource {
 
 	/**
 	 * This interface contains the list of all the available URL in the REST api of Tuleap.
-	 * 
+	 *
 	 * @noextend This class is not intended to be subclassed by clients.
 	 * @noinstantiate This class is not intended to be instantiated by clients.
 	 * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
@@ -319,6 +319,11 @@ public class RestResource {
 		 * "artifacts".
 		 */
 		String ARTIFACTS = "artifacts"; //$NON-NLS-1$
+
+		/**
+		 * "changesets".
+		 */
+		String CHANGESETS = "changesets"; //$NON-NLS-1$
 
 		/**
 		 * "chunked_upload".
@@ -384,10 +389,5 @@ public class RestResource {
 		 * "tracker_reports".
 		 */
 		String TRACKER_REPORTS = "tracker_reports"; //$NON-NLS-1$
-
-		/**
-		 * "changesets".
-		 */
-		String CHANGESETS = "changesets"; //$NON-NLS-1$
 	}
 }

@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -22,7 +22,7 @@ import static org.eclipse.mylyn.tuleap.core.internal.client.rest.RestResource.PU
 
 /**
  * Builder class that instantiates the accessible JSON services.
- * 
+ *
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
@@ -64,7 +64,7 @@ public final class RestResourceFactory {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param apiVersion
 	 *            the API version to use.
 	 * @param connector
@@ -87,7 +87,7 @@ public final class RestResourceFactory {
 
 	/**
 	 * Provides access to the {code /api/{version}} HTTP resource.
-	 * 
+	 *
 	 * @return A resource that gives access to the {code /api/{version}} HTTP resource.
 	 */
 	public RestResource api() {
@@ -96,7 +96,7 @@ public final class RestResourceFactory {
 
 	/**
 	 * Provides access to the {code /login} HTTP resource.
-	 * 
+	 *
 	 * @return A resource that gives access to the {code /login} HTTP resource.
 	 */
 	public RestResource user() {
@@ -105,7 +105,7 @@ public final class RestResourceFactory {
 
 	/**
 	 * Provides access to the {code /tokens} HTTP resource.
-	 * 
+	 *
 	 * @return A resource that gives access to the {code /tokens} HTTP resource.
 	 */
 	public RestResource tokens() {
@@ -114,7 +114,7 @@ public final class RestResourceFactory {
 
 	/**
 	 * Provides access to the {code /projects} HTTP resource.
-	 * 
+	 *
 	 * @return A resource that gives access to the {code /projects} HTTP resource.
 	 */
 	public RestResource projects() {
@@ -123,7 +123,7 @@ public final class RestResourceFactory {
 
 	/**
 	 * Provides access to the {code /artifacts} HTTP resource.
-	 * 
+	 *
 	 * @return A resource that gives access to the {code /artifacts} HTTP resource.
 	 */
 	public RestResource artifacts() {
@@ -132,7 +132,7 @@ public final class RestResourceFactory {
 
 	/**
 	 * Provides access to the {code /artifacts/:id} HTTP resource.
-	 * 
+	 *
 	 * @param artifactId
 	 *            Id of the artifact.
 	 * @return A resource that gives access to the {code /artifacts/:id} HTTP resource.
@@ -143,7 +143,7 @@ public final class RestResourceFactory {
 
 	/**
 	 * Provides access to the {code /artifacts/:id/changesets} HTTP resource.
-	 * 
+	 *
 	 * @param artifactId
 	 *            Id of the artifact.
 	 * @return A resource that gives access to the {code /artifacts/:id/changesets} HTTP resource.
@@ -154,7 +154,7 @@ public final class RestResourceFactory {
 
 	/**
 	 * Provides access to the {code /trackers/:id} HTTP resource.
-	 * 
+	 *
 	 * @param trackerId
 	 *            Id of the tracker.
 	 * @return A resource that gives access to the {code /trackers/:id} HTTP resource.
@@ -165,7 +165,7 @@ public final class RestResourceFactory {
 
 	/**
 	 * Provides access to the {code /projects/:projectId/trackers} HTTP resource.
-	 * 
+	 *
 	 * @param projectId
 	 *            the project id
 	 * @return A resource that gives access to the {code /projects/:projectId/trackers} HTTP resource.
@@ -176,7 +176,7 @@ public final class RestResourceFactory {
 
 	/**
 	 * Provides access to the {code /projects/:id/user_groups} HTTP resource to get a project user groups.
-	 * 
+	 *
 	 * @param projectId
 	 *            the project id
 	 * @return A resource that gives access to the {code /projects/:id/user_groups} HTTP resource.
@@ -187,7 +187,7 @@ public final class RestResourceFactory {
 
 	/**
 	 * Provides access to the {code /user_groups/:id/users} HTTP resource to get a user group users.
-	 * 
+	 *
 	 * @param userGroupId
 	 *            the project id
 	 * @return A resource that gives access to the {code /user_groups/:id/users} HTTP resource.
@@ -198,7 +198,7 @@ public final class RestResourceFactory {
 
 	/**
 	 * Obtain a resource from its URL fragments.
-	 * 
+	 *
 	 * @param supportedMethods
 	 *            Flags for supported methods.
 	 * @param urlFragments
@@ -213,7 +213,7 @@ public final class RestResourceFactory {
 
 	/**
 	 * Provides access to the {code /trackers/:id/tracker_reports} HTTP resource.
-	 * 
+	 *
 	 * @param trackerId
 	 *            the tracker id
 	 * @return A resource that gives access to the {code /trackers/:id/tracker_reports} HTTP resource.
@@ -224,7 +224,7 @@ public final class RestResourceFactory {
 
 	/**
 	 * Provides access to the {code /tracker_reports/:id/artifacts } HTTP resource.
-	 * 
+	 *
 	 * @param trackerReportId
 	 *            the tracker report id
 	 * @return A resource that gives access to the {code /tracker_reports/:id/artifacts} HTTP resource.
@@ -235,7 +235,7 @@ public final class RestResourceFactory {
 
 	/**
 	 * Build a URL by concatenating the given fragments.
-	 * 
+	 *
 	 * @param urlFragments
 	 *            Fragments to concatenate.
 	 * @return The URL built by concatenating the given fragments, separated by a slash ('/') character. If

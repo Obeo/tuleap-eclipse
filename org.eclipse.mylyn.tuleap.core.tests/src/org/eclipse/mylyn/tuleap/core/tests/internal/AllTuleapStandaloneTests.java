@@ -51,17 +51,17 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({TuleapTaskIdTests.class, TuleapTrackerConfigurationTests.class,
-		ServerResponseTest.class, TuleapProjectConfigurationTests.class,
-		TuleapRepositoryConnectorTests.class, TuleapJsonParserTest.class, TuleapTaskDataHandlerTests.class,
-		TuleapWorkflowTests.class, TuleapArtifactMapperTests.class, TuleapRestResourceFactoryTest.class,
-		RestResourceTest.class, RestOperationsTest.class, TuleapRestClientTest.class,
-		TuleapRestClientLimitTests.class, TuleapArtifactSerializerTest.class,
-		TuleapArtifactWithCommentSerializerTest.class, ArtifactLinkAdapterTest.class,
-		LiteralFieldValueSerializerTest.class, BoundFieldValueSerializerTest.class,
-		ArtifactLinkAdapterTest.class, TuleapArtifactDeserializerTest.class,
-		TuleapChangesetDeserializerTests.class, TuleapProjectDeserializerTest.class,
-		TuleapTrackerDeserializerTest.class, TuleapTrackerReportDeserializerTest.class,
-		TuleapUserDeserializerTest.class, DateIso8601AdapterTest.class })
+	ServerResponseTest.class, TuleapProjectConfigurationTests.class,
+	TuleapRepositoryConnectorTests.class, TuleapJsonParserTest.class, TuleapTaskDataHandlerTests.class,
+	TuleapWorkflowTests.class, TuleapArtifactMapperTests.class, TuleapRestResourceFactoryTest.class,
+	RestResourceTest.class, RestOperationsTest.class, TuleapRestClientTest.class,
+	TuleapRestClientLimitTests.class, TuleapArtifactSerializerTest.class,
+	TuleapArtifactWithCommentSerializerTest.class, ArtifactLinkAdapterTest.class,
+	LiteralFieldValueSerializerTest.class, BoundFieldValueSerializerTest.class,
+	ArtifactLinkAdapterTest.class, TuleapArtifactDeserializerTest.class,
+	TuleapChangesetDeserializerTests.class, TuleapProjectDeserializerTest.class,
+	TuleapTrackerDeserializerTest.class, TuleapTrackerReportDeserializerTest.class,
+	TuleapUserDeserializerTest.class, DateIso8601AdapterTest.class })
 public final class AllTuleapStandaloneTests {
 
 	/**

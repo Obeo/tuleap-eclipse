@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -41,7 +41,7 @@ import static org.junit.Assert.assertNotNull;
 
 /**
  * Tests of {@link TuleapRestClient}.
- * 
+ *
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
@@ -103,7 +103,8 @@ public class TuleapRestClientTest {
 		Map<String, String> respHeaders = Maps.newHashMap();
 		respHeaders.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
 		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
-		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonTrackerReports, respHeaders);
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonTrackerReports,
+				respHeaders);
 		connector.setResponse(response);
 		client.getTrackerReports(200, null);
 
@@ -207,7 +208,7 @@ public class TuleapRestClientTest {
 
 	/**
 	 * Test that the token creation on the server is well done.
-	 * 
+	 *
 	 * @throws CoreException
 	 */
 	@Test
@@ -242,7 +243,7 @@ public class TuleapRestClientTest {
 	/**
 	 * Test that checks that a TuleapRestClient that has no token (yet) will automatically login and retrieve
 	 * a token, then re-run a request.
-	 * 
+	 *
 	 * @throws CoreException
 	 *             if something goes wrong.
 	 */

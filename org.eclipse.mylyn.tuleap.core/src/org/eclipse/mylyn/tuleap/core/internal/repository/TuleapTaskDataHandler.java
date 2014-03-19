@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -39,7 +39,7 @@ import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
 
 /**
  * This class is in charge of the publication and retrieval of the tasks data to and from the repository.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  * @since 0.7
@@ -53,7 +53,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 	/**
 	 * The constructor.
-	 * 
+	 *
 	 * @param repositoryConnector
 	 *            The Tuleap repository connector.
 	 */
@@ -63,7 +63,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler#postTaskData(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      org.eclipse.mylyn.tasks.core.data.TaskData, java.util.Set,
 	 *      org.eclipse.core.runtime.IProgressMonitor)
@@ -88,7 +88,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 	/**
 	 * Posts the given task data representing a Tuleap artifact to the server.
-	 * 
+	 *
 	 * @param tracker
 	 *            The tracker
 	 * @param taskData
@@ -125,7 +125,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler#initializeTaskData(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      org.eclipse.mylyn.tasks.core.data.TaskData, org.eclipse.mylyn.tasks.core.ITaskMapping,
 	 *      org.eclipse.core.runtime.IProgressMonitor)
@@ -163,7 +163,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler#getAttributeMapper(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
 	@Override
@@ -173,7 +173,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 	/**
 	 * Returns the Mylyn task data for the task matching the given task id in the given Mylyn task repository.
-	 * 
+	 *
 	 * @param taskRepository
 	 *            the Mylyn task repository
 	 * @param taskId
@@ -206,7 +206,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	/**
 	 * Retrieves the task data representing the Tuleap artifact with the given task id on the given task
 	 * repository.
-	 * 
+	 *
 	 * @param taskId
 	 *            The identifier of the task
 	 * @param server
@@ -223,7 +223,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 */
 	private TaskData getArtifactTaskData(TuleapTaskId taskId, TuleapServer server,
 			TaskRepository taskRepository, boolean refreshTracker, IProgressMonitor monitor)
-			throws CoreException {
+					throws CoreException {
 		TuleapRestClient client = this.connector.getClientManager().getRestClient(taskRepository);
 		TuleapArtifact tuleapArtifact = client.getArtifact(taskId.getArtifactId(), server, monitor);
 		TuleapTaskId refreshedTaskId = taskId;
@@ -254,7 +254,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler#canGetMultiTaskData(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
 	@Override
@@ -266,7 +266,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler#canInitializeSubTaskData(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      org.eclipse.mylyn.tasks.core.ITask)
 	 */

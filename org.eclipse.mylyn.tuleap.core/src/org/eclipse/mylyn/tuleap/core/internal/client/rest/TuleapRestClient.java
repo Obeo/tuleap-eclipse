@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -54,7 +54,7 @@ import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
  * editor catch these exceptions. All the operations that cannot be used from an editor will instead log their
  * errors using the logger.
  * </p>
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
@@ -82,7 +82,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * The constructor.
-	 * 
+	 *
 	 * @param resourceFactory
 	 *            The RESt resource factory to use
 	 * @param gson
@@ -100,7 +100,7 @@ public class TuleapRestClient implements IAuthenticator {
 	 * Tests that we can use the repository by validating that the server provides a compatible version of the
 	 * API and then trying to log in using the credentials from the task repository, checking the user
 	 * session, and logging out.
-	 * 
+	 *
 	 * @param monitor
 	 *            Used to monitor the progress
 	 * @return A status indicating if the server support a version of the API compatible with the one expected
@@ -119,7 +119,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Returns the Tuleap server.
-	 * 
+	 *
 	 * @param monitor
 	 *            Used to monitor the progress
 	 * @return The server
@@ -156,7 +156,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Creates an authorization token on the server and stores it so that it can be used.
-	 * 
+	 *
 	 * @throws CoreException
 	 *             In case of error during the authentication.
 	 */
@@ -178,7 +178,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.client.rest.IAuthenticator#getToken()
 	 */
 	public TuleapToken getToken() {
@@ -187,7 +187,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Create the POST token body.
-	 * 
+	 *
 	 * @param credentials
 	 *            The task repository credentials
 	 * @return The POST token body
@@ -201,7 +201,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Retrieves the artifact from the server with the given artifact id.
-	 * 
+	 *
 	 * @param artifactId
 	 *            The identifier of the artifact
 	 * @param server
@@ -229,7 +229,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Updates the artifact represented by the given task data with the given task data.
-	 * 
+	 *
 	 * @param artifact
 	 *            The artifact to submit
 	 * @param monitor
@@ -250,7 +250,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Creates the artifact on the server.
-	 * 
+	 *
 	 * @param artifact
 	 *            The artifact to create
 	 * @param monitor
@@ -273,7 +273,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Runs the report on the server for the tracker with the given tracker identifier.
-	 * 
+	 *
 	 * @param trackerId
 	 *            The identifier of the tracker
 	 * @param reportId
@@ -300,7 +300,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Runs the query on the server for the tracker with the given tracker identifier.
-	 * 
+	 *
 	 * @param trackerId
 	 *            The identifier of the tracker
 	 * @param criteras
@@ -327,7 +327,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Retrieve the content of the attachment with the given attachment identifier.
-	 * 
+	 *
 	 * @param attachmentId
 	 *            The identifier of the attachment
 	 * @param monitor
@@ -356,7 +356,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Uploads an attachment to the server for the given artifact.
-	 * 
+	 *
 	 * @param artifactId
 	 *            The identifier of the artifact
 	 * @param attachmentFieldId
@@ -372,7 +372,7 @@ public class TuleapRestClient implements IAuthenticator {
 	 */
 	public void uploadAttachment(int artifactId, int attachmentFieldId,
 			TuleapAttachmentDescriptor tuleapAttachmentDescriptor, String comment, IProgressMonitor monitor)
-			throws CoreException {
+					throws CoreException {
 		// Test the connection
 
 		// Try to log in
@@ -396,7 +396,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Retrieve a project's user groups.
-	 * 
+	 *
 	 * @param projectId
 	 *            ID of the project
 	 * @param monitor
@@ -418,7 +418,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Retrieve a user group users.
-	 * 
+	 *
 	 * @param userGroupId
 	 *            ID of the user group
 	 * @param monitor
@@ -440,7 +440,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Retrieve a tracker reports.
-	 * 
+	 *
 	 * @param trackerId
 	 *            ID of the tracker
 	 * @param monitor
@@ -462,7 +462,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Retrieve the projects.
-	 * 
+	 *
 	 * @param monitor
 	 *            Progress monitor to use
 	 * @return A list, never null but possibly empty, containing the projects.
@@ -481,7 +481,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Retrieve a project trackers.
-	 * 
+	 *
 	 * @param projectId
 	 *            The project id
 	 * @param monitor
@@ -503,7 +503,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Retrieve a tracker report artifacts.
-	 * 
+	 *
 	 * @param trackerReportId
 	 *            ID of the tracker report
 	 * @param monitor
@@ -527,7 +527,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Retrieve an artifact comments.
-	 * 
+	 *
 	 * @param artifactId
 	 *            ID of the artifact
 	 * @param server
@@ -557,7 +557,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Returns the Tuleap tracker with the given identifier from the server.
-	 * 
+	 *
 	 * @param trackerId
 	 *            The identifier of the tracker
 	 * @param monitor
