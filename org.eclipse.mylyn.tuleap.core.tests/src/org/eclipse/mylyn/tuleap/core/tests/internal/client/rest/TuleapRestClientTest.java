@@ -284,6 +284,24 @@ public class TuleapRestClientTest {
 	}
 
 	@Test
+	public void testRetrieveMilestoneBurndown() throws CoreException, ParseException {
+		String jsonMilestone = ParserUtil.loadFile("/milestones/release200.json");
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonMilestone, respHeaders);
+		connector.setResponse(response);
+		client.getMilestoneBurndown(200, null);
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(1, requestsSent.size());
+		ServerRequest request = requestsSent.get(0);
+		assertEquals("/api/v12.3/milestones/200/burndown", request.url); //$NON-NLS-1$
+		assertEquals("GET", request.method); //$NON-NLS-1$
+	}
+
+	@Test
 	public void testTracker() throws CoreException, ParseException {
 		String jsonTracker = ParserUtil.loadFile("/trackers/tracker-5.json");
 		Map<String, String> respHeaders = Maps.newHashMap();

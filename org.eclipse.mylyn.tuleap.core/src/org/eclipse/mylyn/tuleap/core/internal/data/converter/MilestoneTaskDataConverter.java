@@ -30,6 +30,7 @@ import org.eclipse.mylyn.tuleap.core.internal.model.data.AbstractFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.ArtifactReference;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapReference;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapBacklogItem;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapBurndown;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapCard;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapCardwall;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapColumn;
@@ -39,6 +40,8 @@ import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapSwimlane;
 import org.eclipse.mylyn.tuleap.core.internal.repository.ITuleapRepositoryConnector;
 import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessages;
 import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
+import org.tuleap.mylyn.task.agile.core.data.burndown.BurndownData;
+import org.tuleap.mylyn.task.agile.core.data.burndown.BurndownMapper;
 import org.tuleap.mylyn.task.agile.core.data.cardwall.CardWrapper;
 import org.tuleap.mylyn.task.agile.core.data.cardwall.CardwallWrapper;
 import org.tuleap.mylyn.task.agile.core.data.cardwall.ColumnWrapper;
@@ -124,6 +127,23 @@ public class MilestoneTaskDataConverter {
 				populateCard(cardWrapper, card, project);
 			}
 		}
+	}
+
+	/**
+	 * Populates the burndown data in a task data from the given pojo.
+	 * 
+	 * @param taskData
+	 *            The task data to fill.
+	 * @param burndown
+	 *            The burndown POJO
+	 * @param monitor
+	 *            The progress monitor to use
+	 */
+	public void populateBurndown(TaskData taskData, TuleapBurndown burndown, IProgressMonitor monitor) {
+		BurndownMapper mapper = new BurndownMapper(taskData);
+		BurndownData data = new BurndownData(burndown.getDuration(), burndown.getCapacity(), burndown
+				.getPoints());
+		mapper.setBurndownData(data);
 	}
 
 	/**

@@ -74,6 +74,11 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 	private String cardwallUri;
 
 	/**
+	 * The REST URI to get this milestone's burndown.
+	 */
+	private String burndownUri;
+
+	/**
 	 * The milestone's status label.
 	 */
 	private String statusValue;
@@ -318,6 +323,25 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 	 */
 	public void setStatusValue(String statusValue) {
 		this.statusValue = statusValue;
+	}
+
+	/**
+	 * Burndown getter.
+	 * 
+	 * @return the burndownUri
+	 */
+	public String getBurndownUri() {
+		return burndownUri;
+	}
+
+	/**
+	 * Burndown setter.
+	 * 
+	 * @param burndownUri
+	 *            the burndownUri to set
+	 */
+	public void setBurndownUri(String burndownUri) {
+		this.burndownUri = burndownUri;
 	}
 
 }

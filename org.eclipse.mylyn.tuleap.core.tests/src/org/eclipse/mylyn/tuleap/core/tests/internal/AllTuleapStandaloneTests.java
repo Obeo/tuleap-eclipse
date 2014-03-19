@@ -31,6 +31,7 @@ import org.eclipse.mylyn.tuleap.core.tests.internal.parser.ArtifactLinkAdapterTe
 import org.eclipse.mylyn.tuleap.core.tests.internal.parser.DateIso8601AdapterTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.parser.TuleapArtifactDeserializerTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.parser.TuleapBacklogItemDeserializerTest;
+import org.eclipse.mylyn.tuleap.core.tests.internal.parser.TuleapBurndownDeserializerTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.parser.TuleapCardwallConfigurationDeserializerTests;
 import org.eclipse.mylyn.tuleap.core.tests.internal.parser.TuleapChangesetDeserializerTests;
 import org.eclipse.mylyn.tuleap.core.tests.internal.parser.TuleapJsonParserTest;
@@ -74,7 +75,7 @@ import org.junit.runners.Suite;
 		TuleapChangesetDeserializerTests.class, TuleapMilestoneDeserializerTest.class,
 		TuleapPlanningDeserializerTest.class, TuleapProjectDeserializerTest.class,
 		TuleapTrackerDeserializerTest.class, TuleapTrackerReportDeserializerTest.class,
-		TuleapUserDeserializerTest.class, DateIso8601AdapterTest.class })
+		TuleapUserDeserializerTest.class, DateIso8601AdapterTest.class, TuleapBurndownDeserializerTest.class })
 public final class AllTuleapStandaloneTests {
 
 	/**

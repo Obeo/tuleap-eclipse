@@ -45,6 +45,7 @@ import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifactWithComme
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapAttachmentDescriptor;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapElementComment;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapBacklogItem;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapBurndown;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapCard;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapCardwall;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapMilestone;
@@ -498,6 +499,30 @@ public class TuleapRestClient implements IAuthenticator {
 		}
 
 		return backlogItems;
+	}
+
+	/**
+	 * Retrieve burndown of a given milestone.
+	 * 
+	 * @param milestoneId
+	 *            The milestone id
+	 * @param monitor
+	 *            The monitor to use
+	 * @return The burndown of the milestone.
+	 * @throws CoreException
+	 *             If anything goes wrong.
+	 */
+	public TuleapBurndown getMilestoneBurndown(int milestoneId, IProgressMonitor monitor)
+			throws CoreException {
+		if (monitor != null) {
+			monitor.subTask(TuleapMylynTasksMessages.getString(
+					TuleapMylynTasksMessagesKeys.retrievingBurndown, Integer.valueOf(milestoneId)));
+		}
+		RestResource restBurndown = restResourceFactory.milestoneBurndown(milestoneId)
+				.withAuthenticator(this);
+		ServerResponse burnDownResponse = restBurndown.get().checkedRun();
+		TuleapBurndown burndown = gson.fromJson(burnDownResponse.getBody(), TuleapBurndown.class);
+		return burndown;
 	}
 
 	/**

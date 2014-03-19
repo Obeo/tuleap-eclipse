@@ -44,6 +44,7 @@ import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifact;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifactWithComment;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapReference;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapBacklogItem;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapBurndown;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapCard;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapCardwall;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapMilestone;
@@ -596,6 +597,16 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				try {
 					TuleapCardwall cardwall = restClient.getCardwall(milestoneId, monitor);
 					taskDataConverter.populateCardwall(taskData, cardwall, project, monitor);
+				} catch (CoreException e) {
+					TuleapCoreActivator.log(e, true);
+				}
+			}
+
+			// Fetch burndown if necessary
+			if (milestone.getBurndownUri() != null) {
+				try {
+					TuleapBurndown burndown = restClient.getMilestoneBurndown(milestoneId, monitor);
+					taskDataConverter.populateBurndown(taskData, burndown, monitor);
 				} catch (CoreException e) {
 					TuleapCoreActivator.log(e, true);
 				}

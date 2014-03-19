@@ -20,7 +20,6 @@ import static org.eclipse.mylyn.tuleap.core.internal.client.rest.RestResource.GE
 import static org.eclipse.mylyn.tuleap.core.internal.client.rest.RestResource.POST;
 import static org.eclipse.mylyn.tuleap.core.internal.client.rest.RestResource.PUT;
 
-
 /**
  * Builder class that instantiates the accessible JSON services.
  * 
@@ -295,6 +294,17 @@ public final class RestResourceFactory {
 	 */
 	public RestResource milestoneCardwall(int milestoneId) {
 		return resource(GET, URL.MILESTONES, Integer.toString(milestoneId), URL.CARDWALL);
+	}
+
+	/**
+	 * Provides access to the {code /milestones/:id/burndown} HTTP resource.
+	 * 
+	 * @param milestoneId
+	 *            the milestone id
+	 * @return A resource that gives access to the {code /milestones/:id/burndown} HTTP resource.
+	 */
+	public RestResource milestoneBurndown(int milestoneId) {
+		return resource(GET, URL.MILESTONES, Integer.toString(milestoneId), URL.BURNDOWN);
 	}
 
 	/**

@@ -461,6 +461,16 @@ public class TuleapRestResourceFactoryTest {
 	}
 
 	/**
+	 * Checks the basic properties of {@link RestResourceFactory#milestoneBurndown(int)}.
+	 */
+	@Test
+	public void testMilestoneBurndownArtifacts() {
+		RestResource r = factory.milestoneBurndown(642);
+		assertNotNull(r);
+		assertEquals("/api/v12.5/milestones/642/burndown", r.getUrl());
+	}
+
+	/**
 	 * Set up the tests.
 	 */
 	@Before

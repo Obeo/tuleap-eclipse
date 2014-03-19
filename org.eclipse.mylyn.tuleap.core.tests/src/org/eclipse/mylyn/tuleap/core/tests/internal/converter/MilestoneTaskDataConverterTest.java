@@ -38,6 +38,7 @@ import org.eclipse.mylyn.tuleap.core.internal.model.data.BoundFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.LiteralFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapReference;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapBacklogItem;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapBurndown;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapCard;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapCardwall;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapColumn;
@@ -80,6 +81,21 @@ public class MilestoneTaskDataConverterTest {
 	 * Id of the milestone list task attribute.
 	 */
 	public static final String SWIMLANE_PREFIX = "mta_swi-"; //$NON-NLS-1$
+
+	/**
+	 * The value used to indicate that a task data represents a milestone (for instance, a sprint).
+	 */
+	public static final String BURNDOWN_ID = "org.eclipse.mylyn.task.agile.burndown"; //$NON-NLS-1$
+
+	/**
+	 * The value used to indicate that a task data represents a milestone (for instance, a sprint).
+	 */
+	public static final String META_DURATION = "org.eclipse.mylyn.task.agile.burndow.duration"; //$NON-NLS-1$
+
+	/**
+	 * The value used to indicate that a task data represents a milestone (for instance, a sprint).
+	 */
+	public static final String META_CAPACITY = "org.eclipse.mylyn.task.agile.burndow.capacity"; //$NON-NLS-1$
 
 	/**
 	 * The wrapped task data.
@@ -692,6 +708,35 @@ public class MilestoneTaskDataConverterTest {
 				+ ID_SEPARATOR + BacklogItemWrapper.SUFFIX_STATUS);
 		assertEquals(null, lastItemStatus);
 
+	}
+
+	/**
+	 * Tests populating the burndown.
+	 */
+	@Test
+	public void testPopulateBurndown() {
+		Date testDate = new Date();
+
+		TuleapMilestone milestone = new TuleapMilestone(50,
+				new TuleapReference(200, "p/200"), "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
+				"HTML URL", testDate, testDate); //$NON-NLS-1$
+
+		TuleapBurndown burndown = new TuleapBurndown(11, 27.0, new double[] {12.5, 2.6, 0.0, 7.0 });
+		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(taskRepository, connector);
+		converter.populateTaskData(taskData, milestone, null);
+		converter.populateBurndown(taskData, burndown, null);
+
+		TaskAttribute root = taskData.getRoot();
+		TaskAttribute burndownAttribute = root.getAttribute(BURNDOWN_ID);
+		assertNotNull(burndownAttribute);
+
+		assertEquals("27.0", burndownAttribute.getMetaData().getValue(META_CAPACITY));
+		assertEquals("11", burndownAttribute.getMetaData().getValue(META_DURATION));
+		assertEquals(4, burndownAttribute.getValues().size());
+		assertEquals("12.5", burndownAttribute.getValues().get(0));
+		assertEquals("2.6", burndownAttribute.getValues().get(1));
+		assertEquals("0.0", burndownAttribute.getValues().get(2));
+		assertEquals("7.0", burndownAttribute.getValues().get(3));
 	}
 
 	/**

@@ -331,6 +331,11 @@ public class RestResource {
 		String BACKLOG_ITEMS = "backlog_items"; //$NON-NLS-1$
 
 		/**
+		 * "burndown".
+		 */
+		String BURNDOWN = "burndown"; //$NON-NLS-1$
+
+		/**
 		 * "cards".
 		 */
 		String CARDS = "cards"; //$NON-NLS-1$
@@ -339,6 +344,11 @@ public class RestResource {
 		 * "cardwall".
 		 */
 		String CARDWALL = "cardwall"; //$NON-NLS-1$
+
+		/**
+		 * "changesets".
+		 */
+		String CHANGESETS = "changesets"; //$NON-NLS-1$
 
 		/**
 		 * "chunked_upload".
@@ -414,10 +424,5 @@ public class RestResource {
 		 * "tracker_reports".
 		 */
 		String TRACKER_REPORTS = "tracker_reports"; //$NON-NLS-1$
-
-		/**
-		 * "changesets".
-		 */
-		String CHANGESETS = "changesets"; //$NON-NLS-1$
 	}
 }
