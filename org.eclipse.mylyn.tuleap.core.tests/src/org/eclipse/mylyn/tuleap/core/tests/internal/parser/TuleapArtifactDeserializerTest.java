@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -15,9 +15,12 @@ import com.google.gson.Gson;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.mylyn.tuleap.core.internal.model.data.AbstractFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.ArtifactLinkFieldValue;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.AttachmentFieldValue;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.AttachmentValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.BoundFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.LiteralFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifact;
@@ -31,7 +34,7 @@ import static org.junit.Assert.assertNotNull;
 
 /**
  * Tests of the JSON deserialization of TuleapArtifact.
- * 
+ *
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
 public class TuleapArtifactDeserializerTest {
@@ -218,8 +221,15 @@ public class TuleapArtifactDeserializerTest {
 		assertEquals(101, artifact.getProject().getId());
 		assertEquals("projects/101", artifact.getProject().getUri());
 
-		// File description deserialization is not yet implemented
-		assertEquals(0, artifact.getFieldValues().size());
+		assertEquals(1, artifact.getFieldValues().size());
+		AttachmentFieldValue fieldValue = (AttachmentFieldValue)artifact.getFieldValue(452);
+		assertEquals(452, fieldValue.getFieldId());
+		List<AttachmentValue> attachments = fieldValue.getAttachments();
+		assertEquals(1, attachments.size());
+		AttachmentValue value = attachments.get(0);
+		assertEquals("12", value.getId());
+		assertEquals("artifacts/12", value.getUri());
+		assertEquals("file description", value.getDescription());
 	}
 
 	@Test

@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -25,7 +25,9 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
- * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
+ * Tests of {@link DateIso8601Adapter} class.
+ *
+ * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
 public class DateIso8601AdapterTest {
 
@@ -73,22 +75,34 @@ public class DateIso8601AdapterTest {
 
 	@Test
 	public void testSerializeDateWithoutTimezone() {
-		Calendar c = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
-		c.set(2013, Calendar.DECEMBER, 31, 9, 14, 15);
-		c.set(Calendar.MILLISECOND, 0);
-		JsonElement serializedDate = adapter.serialize(c.getTime(), null, null);
-		// 9:14:15 GMT <=> 11:14:15 GMT+2
-		assertEquals("\"2013-12-31T10:14:15+01:00\"", serializedDate.toString());
+		String oldTZ = System.getProperty("user.timezone");
+		try {
+			System.setProperty("user.timezone", "GMT");
+			Calendar c = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
+			c.set(2013, Calendar.DECEMBER, 31, 9, 14, 15);
+			c.set(Calendar.MILLISECOND, 0);
+			JsonElement serializedDate = adapter.serialize(c.getTime(), null, null);
+			// 9:14:15 GMT <=> 11:14:15 GMT+2
+			assertEquals("\"2013-12-31T09:14:15+00:00\"", serializedDate.toString());
+		} finally {
+			System.setProperty("user.timezone", oldTZ);
+		}
 	}
 
 	@Test
 	public void testSerializeDateWithTimezone() {
-		Calendar c = new GregorianCalendar(TimeZone.getTimeZone("GMT+8:00"));
-		c.set(2013, Calendar.DECEMBER, 31, 9, 14, 15);
-		c.set(Calendar.MILLISECOND, 0);
-		JsonElement serializedDate = adapter.serialize(c.getTime(), null, null);
-		// 9:14:15 GMT+8 <=> 3:14:15 GMT+2
-		assertEquals("\"2013-12-31T02:14:15+01:00\"", serializedDate.toString());
+		String oldTZ = System.getProperty("user.timezone");
+		try {
+			System.setProperty("user.timezone", "GMT");
+			Calendar c = new GregorianCalendar(TimeZone.getTimeZone("GMT+8:00"));
+			c.set(2013, Calendar.DECEMBER, 31, 9, 14, 15);
+			c.set(Calendar.MILLISECOND, 0);
+			JsonElement serializedDate = adapter.serialize(c.getTime(), null, null);
+			// 9:14:15 GMT+8 <=> 3:14:15 GMT+2
+			assertEquals("\"2013-12-31T01:14:15+00:00\"", serializedDate.toString());
+		} finally {
+			System.setProperty("user.timezone", oldTZ);
+		}
 	}
 
 	@Before

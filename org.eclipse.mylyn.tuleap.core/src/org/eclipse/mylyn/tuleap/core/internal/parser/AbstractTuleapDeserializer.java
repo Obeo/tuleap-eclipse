@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.eclipse.mylyn.tuleap.core.internal.model.data.AbstractTuleapConfigurableElement;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.ArtifactLinkFieldValue;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.AttachmentFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.BoundFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.LiteralFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.OpenListFieldValue;
@@ -34,7 +35,7 @@ import org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants;
 /**
  * This class is used to deserialize a JSON representation of a Tuleap object, for objects that have a tracker
  * ID.
- * 
+ *
  * @param <U>
  *            The type of ID of the element to deserialize.
  * @param <T>
@@ -47,7 +48,7 @@ public abstract class AbstractTuleapDeserializer<U, T extends AbstractTuleapConf
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see com.google.gson.JsonDeserializer#deserialize(com.google.gson.JsonElement, java.lang.reflect.Type,
 	 *      com.google.gson.JsonDeserializationContext)
 	 */
@@ -114,6 +115,10 @@ public abstract class AbstractTuleapDeserializer<U, T extends AbstractTuleapConf
 				// Artifact links
 				pojo.addFieldValue(context.<ArtifactLinkFieldValue> deserialize(jsonField,
 						ArtifactLinkFieldValue.class));
+			} else if (jsonField.has(ITuleapConstants.FILE_DESCRIPTIONS)
+					&& jsonField.get(ITuleapConstants.FILE_DESCRIPTIONS).isJsonArray()) {
+				AttachmentFieldValue value = context.deserialize(jsonField, AttachmentFieldValue.class);
+				pojo.addFieldValue(value);
 			}
 
 		}

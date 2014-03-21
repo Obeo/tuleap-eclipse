@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -38,7 +38,7 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * This class is used to test serializing the JSON representation of a {@link TuleapArtifactWithComment}.
- * 
+ *
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
 public class TuleapArtifactWithCommentSerializerTest {
@@ -232,18 +232,19 @@ public class TuleapArtifactWithCommentSerializerTest {
 		List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
 		TuleapUser firstUploadedBy = new TuleapUser(
 				"first username", "first realname", 1, "first email", null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		attachments.add(new AttachmentValue("100000", "first name", firstUploadedBy, 123456, //$NON-NLS-1$ //$NON-NLS-2$ 
-				"first description", "first type")); //$NON-NLS-1$ //$NON-NLS-2$
+		attachments.add(new AttachmentValue("100000", "first name", 1, 123456, //$NON-NLS-1$ //$NON-NLS-2$
+				"first description", "first type", "")); //$NON-NLS-1$ //$NON-NLS-2$
 		TuleapUser secondUploadedBy = new TuleapUser("second username", "second realname", 2, //$NON-NLS-1$ //$NON-NLS-2$
 				"second email", null); //$NON-NLS-1$
-		attachments.add(new AttachmentValue("100001", "second name", secondUploadedBy, 789456, //$NON-NLS-1$ //$NON-NLS-2$
-				"second description", "second type")); //$NON-NLS-1$ //$NON-NLS-2$
+		attachments.add(new AttachmentValue("100001", "second name", 2, 789456, //$NON-NLS-1$ //$NON-NLS-2$
+				"second description", "second type", "")); //$NON-NLS-1$ //$NON-NLS-2$
 		AttachmentFieldValue fileDescription = new AttachmentFieldValue(222, attachments);
 
 		artifact.addFieldValue(fileDescription);
 
 		// We do not update TuleapFileUpload fields
-		assertEquals("{\"values\":[],\"comment\":{\"body\":\"This is a new comment\",\"format\":\"text\"}}",
+		assertEquals(
+				"{\"values\":[{\"field_id\":222,\"value\":[100000,100001]}],\"comment\":{\"body\":\"This is a new comment\",\"format\":\"text\"}}",
 				gson.toJson(artifact));
 	}
 
@@ -315,12 +316,12 @@ public class TuleapArtifactWithCommentSerializerTest {
 		List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
 		TuleapUser firstUploadedBy = new TuleapUser(
 				"first username", "first realname", 1, "first email", null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		attachments.add(new AttachmentValue("100000", "first name", firstUploadedBy, 123456, //$NON-NLS-1$ //$NON-NLS-2$ 
-				"first description", "first type")); //$NON-NLS-1$ //$NON-NLS-2$
+		attachments.add(new AttachmentValue("100000", "first name", 1, 123456, //$NON-NLS-1$ //$NON-NLS-2$
+				"first description", "first type", "")); //$NON-NLS-1$ //$NON-NLS-2$
 		TuleapUser secondUploadedBy = new TuleapUser("second username", "second realname", 2, //$NON-NLS-1$ //$NON-NLS-2$
 				"second email", null); //$NON-NLS-1$
-		attachments.add(new AttachmentValue("100001", "second name", secondUploadedBy, 789456, //$NON-NLS-1$ //$NON-NLS-2$
-				"second description", "second type")); //$NON-NLS-1$ //$NON-NLS-2$
+		attachments.add(new AttachmentValue("100001", "second name", 2, 789456, //$NON-NLS-1$ //$NON-NLS-2$
+				"second description", "second type", "")); //$NON-NLS-1$ //$NON-NLS-2$
 		AttachmentFieldValue fileDescription = new AttachmentFieldValue(224, attachments);
 		artifact.addFieldValue(fileDescription);
 
@@ -330,7 +331,7 @@ public class TuleapArtifactWithCommentSerializerTest {
 		artifact.addFieldValue(new ArtifactLinkFieldValue(222, new int[] {137, 133 }));
 
 		assertEquals(
-				"{\"values\":[{\"field_id\":220,\"bind_value_ids\":[0,1]},{\"field_id\":221,\"bind_value_ids\":[0,1]},{\"field_id\":222,\"links\":[{\"id\":137},{\"id\":133}]},{\"field_id\":223,\"value\":\"test\"}],\"comment\":{\"body\":\"This is a new comment\",\"format\":\"text\"}}",
+				"{\"values\":[{\"field_id\":220,\"bind_value_ids\":[0,1]},{\"field_id\":221,\"bind_value_ids\":[0,1]},{\"field_id\":222,\"links\":[{\"id\":137},{\"id\":133}]},{\"field_id\":223,\"value\":\"test\"},{\"field_id\":224,\"value\":[100000,100001]}],\"comment\":{\"body\":\"This is a new comment\",\"format\":\"text\"}}",
 				gson.toJson(artifact));
 	}
 
@@ -373,12 +374,12 @@ public class TuleapArtifactWithCommentSerializerTest {
 		List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
 		TuleapUser firstUploadedBy = new TuleapUser(
 				"first username", "first realname", 1, "first email", null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		attachments.add(new AttachmentValue("100000", "first name", firstUploadedBy, 123456, //$NON-NLS-1$ //$NON-NLS-2$ 
-				"first description", "first type")); //$NON-NLS-1$ //$NON-NLS-2$
+		attachments.add(new AttachmentValue("100000", "first name", 1, 123456, //$NON-NLS-1$ //$NON-NLS-2$
+				"first description", "first type", "")); //$NON-NLS-1$ //$NON-NLS-2$
 		TuleapUser secondUploadedBy = new TuleapUser("second username", "second realname", 2, //$NON-NLS-1$ //$NON-NLS-2$
 				"second email", null); //$NON-NLS-1$
-		attachments.add(new AttachmentValue("100001", "second name", secondUploadedBy, 789456, //$NON-NLS-1$ //$NON-NLS-2$
-				"second description", "second type")); //$NON-NLS-1$ //$NON-NLS-2$
+		attachments.add(new AttachmentValue("100001", "second name", 2, 789456, //$NON-NLS-1$ //$NON-NLS-2$
+				"second description", "second type", "")); //$NON-NLS-1$ //$NON-NLS-2$
 		AttachmentFieldValue fileDescription = new AttachmentFieldValue(224, attachments);
 		artifact.addFieldValue(fileDescription);
 
@@ -388,6 +389,21 @@ public class TuleapArtifactWithCommentSerializerTest {
 		artifact.addFieldValue(new ArtifactLinkFieldValue(222, new int[] {137, 133 }));
 
 		assertEquals("{\"values\":[],\"comment\":{\"body\":\"This is a new comment\",\"format\":\"text\"}}",
+				gson.toJson(artifact));
+	}
+
+	@Test
+	public void testArtifactWithAttachment() {
+		TuleapArtifactWithComment artifact = new TuleapArtifactWithComment(3, trackerRef, projectRef);
+		final String newComment = "This is a new comment";
+		artifact.setNewComment(newComment);
+		TuleapFileUpload field = new TuleapFileUpload(666);
+		field.setPermissions(new String[] {"read", "update" });
+		artifact.addField(field);
+		artifact.addFieldValue(new AttachmentFieldValue(666, Arrays.asList(new AttachmentValue("50",
+				"Some name", 0, 500, "desc", "application/zip", ""))));
+		assertEquals(
+				"{\"values\":[{\"field_id\":666,\"value\":[50]}],\"comment\":{\"body\":\"This is a new comment\",\"format\":\"text\"}}",
 				gson.toJson(artifact));
 	}
 }

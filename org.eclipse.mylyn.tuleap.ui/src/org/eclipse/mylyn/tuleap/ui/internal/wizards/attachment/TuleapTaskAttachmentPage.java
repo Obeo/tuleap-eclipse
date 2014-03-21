@@ -158,6 +158,9 @@ public class TuleapTaskAttachmentPage extends TaskAttachmentPage {
 			Collection<AbstractTuleapField> fields = configuration.getFields();
 			for (AbstractTuleapField abstractTuleapField : fields) {
 				if (abstractTuleapField instanceof TuleapFileUpload) {
+					if (abstractTuleapField.getName() == null) {
+						abstractTuleapField.setName(abstractTuleapField.getLabel());
+					}
 					attachmentFieldsName.add(abstractTuleapField.getName());
 					this.name2label.put(abstractTuleapField.getName(), abstractTuleapField.getLabel());
 				}

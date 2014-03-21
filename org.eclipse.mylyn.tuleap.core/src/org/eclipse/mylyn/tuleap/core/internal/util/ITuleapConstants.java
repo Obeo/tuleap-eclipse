@@ -133,11 +133,6 @@ public interface ITuleapConstants {
 	String FILE_DESCRIPTIONS = "file_descriptions"; //$NON-NLS-1$
 
 	/**
-	 * The key used to retrieve the file identifier.
-	 */
-	String FILE_ID = "file_id"; //$NON-NLS-1$
-
-	/**
 	 * The key used to retrieve the person that submit the file.
 	 */
 	String SUBMITTED_BY = "submitted_by"; //$NON-NLS-1$
@@ -170,7 +165,7 @@ public interface ITuleapConstants {
 	/**
 	 * The key used to retrieve the file type.
 	 */
-	String TYPE = "type"; //$NON-NLS-1$
+	String MIME_TYPE = "mimetype"; //$NON-NLS-1$
 
 	/**
 	 * The key used to retrieve a start date.
@@ -247,5 +242,15 @@ public interface ITuleapConstants {
 	 * The key used for the user email.
 	 */
 	String EMAIL = "email"; //$NON-NLS-1$
+
+	/**
+	 * The key used for the file content.
+	 */
+	String CONTENT = "content"; //$NON-NLS-1$
+
+	/**
+	 * The key used for the file offset.
+	 */
+	String OFFSET = "offset"; //$NON-NLS-1$
 
 }

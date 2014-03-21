@@ -80,6 +80,6 @@ public abstract class AbstractTuleapSerializer<T extends AbstractTuleapConfigura
 	 * @return <code>true</code> if and only if the field must be included in the serialization.
 	 */
 	protected boolean mustSerialize(AbstractTuleapField field) {
-		return field != null && !(field instanceof TuleapFileUpload);
+		return field != null;
 	}
 }

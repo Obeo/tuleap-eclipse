@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -13,6 +13,7 @@ package org.eclipse.mylyn.tuleap.core.tests.internal.model;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapProject;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapResource;
@@ -37,7 +38,7 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Unit Tests of the TuleapTrackerConfiguration class.
- * 
+ *
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
 public class TuleapTrackerConfigurationTests {
@@ -138,25 +139,30 @@ public class TuleapTrackerConfigurationTests {
 	private String ninthUrl = "localhost:3001/api/v3.14/trackers/9"; //$NON-NLS-1$
 
 	/**
+	 * Test date.
+	 */
+	private Date testDate;
+
+	/**
 	 * Set up the test.
-	 * 
+	 *
 	 * @throws ParseException
 	 */
 	@Before
 	public void setUp() throws ParseException {
-		tracker1 = new TuleapTracker(1, firstUrl, null, null, null, -1);
-		tracker2 = new TuleapTracker(2, secondUrl, null, null, null, -1);
-		tracker3 = new TuleapTracker(3, thirdUrl, null, null, null, -1);
-		tracker4 = new TuleapTracker(4, fourthUrl, null, null, null, -1);
-		tracker5 = new TuleapTracker(5, fifthUrl, null, null, null, -1);
-		tracker6 = new TuleapTracker(6, sixthUrl, null, null, null, -1);
-		tracker7 = new TuleapTracker(7, seventhUrl, null, null, null, -1);
-		tracker8 = new TuleapTracker(8, eighthUrl, null, null, null, -1);
-		tracker9 = new TuleapTracker(9, ninthUrl, null, null, null, -1);
+		Date now = new Date();
+		tracker1 = new TuleapTracker(1, firstUrl, null, null, null, now);
+		tracker2 = new TuleapTracker(2, secondUrl, null, null, null, now);
+		tracker3 = new TuleapTracker(3, thirdUrl, null, null, null, now);
+		tracker4 = new TuleapTracker(4, fourthUrl, null, null, null, now);
+		tracker5 = new TuleapTracker(5, fifthUrl, null, null, null, now);
+		tracker6 = new TuleapTracker(6, sixthUrl, null, null, null, now);
+		tracker7 = new TuleapTracker(7, seventhUrl, null, null, null, now);
+		tracker8 = new TuleapTracker(8, eighthUrl, null, null, null, now);
+		tracker9 = new TuleapTracker(9, ninthUrl, null, null, null, now);
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		String date = "11/03/2014";
-		tracker10 = new TuleapTracker(10, "tracker/url", "Tracker", "Item name", "Description", Long
-				.valueOf(simpleDateFormat.parse(date).getTime() / 1000));
+		testDate = simpleDateFormat.parse("11/03/2014");
+		tracker10 = new TuleapTracker(10, "tracker/url", "Tracker", "Item name", "Description", testDate);
 
 	}
 
@@ -311,7 +317,7 @@ public class TuleapTrackerConfigurationTests {
 		assertEquals("Tracker", tracker10.getLabel());
 		assertEquals("Description", tracker10.getDescription());
 		assertEquals("Item name", tracker10.getItemName());
-		assertEquals(1394492400, tracker10.getLastUpdateDate());
+		assertEquals(testDate, tracker10.getLastUpdateDate());
 		assertEquals("tracker/url", tracker10.getUrl());
 		assertNull(tracker10.getProject());
 

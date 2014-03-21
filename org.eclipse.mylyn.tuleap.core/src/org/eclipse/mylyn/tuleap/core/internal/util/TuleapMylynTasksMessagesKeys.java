@@ -199,6 +199,26 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	public static String retrievingAttachmentContentFor;
 
 	/**
+	 * Downloading the file attachment.
+	 */
+	public static String retrievingFile;
+
+	/**
+	 * Deleting the file attachment.
+	 */
+	public static String deletingFile;
+
+	/**
+	 * Creating the file attachment.
+	 */
+	public static String creatingFile;
+
+	/**
+	 * Updating the file attachment.
+	 */
+	public static String updatingFile;
+
+	/**
 	 * Uploading an attachment.
 	 */
 	public static String uploadingAttachmentContent;
@@ -357,6 +377,36 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	 * Message indicating that UTF-8 is not supported for REST communication.
 	 */
 	public static String encodingUtf8NotSupported;
+
+	/**
+	 * Message for missing attachment field when trying to upload attachment. 1 parameter, the task key.
+	 */
+	public static String missingAttachmentField;
+
+	/**
+	 * Message for removing temp attachment files, no parameter.
+	 */
+	public static String removingTempFileOnFailure;
+
+	/**
+	 * Impossible to read file content for attachment upload. No parameter.
+	 */
+	public static String cannotReadFileContent;
+
+	/**
+	 * Sending chunk 1/23. 2 parameters, current index, total chunk number.
+	 */
+	public static String uploadingAttachment;
+
+	/**
+	 * Retrieving chunk 1/23. 2 parameters, current index, total chunk number.
+	 */
+	public static String downloadingAttachment;
+
+	/**
+	 * Upload of attachment failed (miserably).
+	 */
+	public static String uploadAttachmentFailed;
 
 	static {
 		// load message values from bundle file

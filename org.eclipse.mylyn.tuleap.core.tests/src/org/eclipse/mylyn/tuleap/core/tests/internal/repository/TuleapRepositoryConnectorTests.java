@@ -168,7 +168,8 @@ public class TuleapRepositoryConnectorTests {
 		final TuleapServer tuleapServer = new TuleapServer("https://tuleap.net");
 
 		TuleapProject tuleapProject = new TuleapProject("", projectRef.getId());
-		TuleapTracker trackerConfiguration = new TuleapTracker(trackerRef.getId(), null, null, null, null, 0);
+		TuleapTracker trackerConfiguration = new TuleapTracker(trackerRef.getId(), null, null, null, null,
+				new Date());
 		tuleapProject.addTracker(trackerConfiguration);
 
 		tuleapServer.addProject(tuleapProject);
@@ -241,7 +242,8 @@ public class TuleapRepositoryConnectorTests {
 		final TuleapServer tuleapServer = new TuleapServer("https://tuleap.net");
 
 		TuleapProject tuleapProject = new TuleapProject("", projectRef.getId());
-		TuleapTracker trackerConfiguration = new TuleapTracker(trackerRef.getId(), null, null, null, null, 0);
+		TuleapTracker trackerConfiguration = new TuleapTracker(trackerRef.getId(), null, null, null, null,
+				new Date());
 		tuleapProject.addTracker(trackerConfiguration);
 
 		tuleapServer.addProject(tuleapProject);
@@ -330,7 +332,8 @@ public class TuleapRepositoryConnectorTests {
 		final TuleapServer tuleapServer = new TuleapServer("https://tuleap.net");
 		TuleapProject tuleapProject = new TuleapProject(null, projectId);
 
-		TuleapTracker trackerConfiguration = new TuleapTracker(configurationId, null, null, null, null, 0);
+		TuleapTracker trackerConfiguration = new TuleapTracker(configurationId, null, null, null, null,
+				new Date());
 
 		TuleapSelectBox tuleapSelectBox = new TuleapSelectBox(0);
 		TuleapSelectBoxItem item = new TuleapSelectBoxItem(0);

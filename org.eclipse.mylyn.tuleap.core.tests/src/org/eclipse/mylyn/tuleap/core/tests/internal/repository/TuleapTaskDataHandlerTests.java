@@ -110,13 +110,13 @@ public class TuleapTaskDataHandlerTests {
 		this.tuleapServer = new TuleapServer(repositoryUrl);
 		TuleapProject project = new TuleapProject(null, projectRef.getId());
 
-		TuleapTracker tracker = new TuleapTracker(trackerRef.getId(), null, null, null, null, 0);
+		TuleapTracker tracker = new TuleapTracker(trackerRef.getId(), null, null, null, null, new Date());
 		project.addTracker(tracker);
 
-		TuleapTracker secondTracker = new TuleapTracker(secondTrackerId, null, null, null, null, 0);
+		TuleapTracker secondTracker = new TuleapTracker(secondTrackerId, null, null, null, null, new Date());
 		project.addTracker(secondTracker);
 
-		TuleapTracker thirdTracker = new TuleapTracker(thirdItemTrackerId, null, null, null, null, 0);
+		TuleapTracker thirdTracker = new TuleapTracker(thirdItemTrackerId, null, null, null, null, new Date());
 		project.addTracker(thirdTracker);
 
 		this.tuleapServer.addProject(project);

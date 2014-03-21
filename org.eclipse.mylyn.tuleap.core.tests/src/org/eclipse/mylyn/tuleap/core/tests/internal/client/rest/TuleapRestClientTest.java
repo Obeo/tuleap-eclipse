@@ -14,6 +14,7 @@ import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,9 @@ import org.eclipse.mylyn.tuleap.core.internal.client.rest.TuleapRestClient;
 import org.eclipse.mylyn.tuleap.core.internal.model.TuleapToken;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapServer;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapTracker;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapFileUpload;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.AttachmentFieldValue;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.AttachmentValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifact;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifactWithComment;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapReference;
@@ -192,6 +196,88 @@ public class TuleapRestClientTest {
 	}
 
 	@Test
+	public void testRetrieveArtifactFile() throws CoreException, ParseException {
+		String artifact = ParserUtil.loadFile("/artifact_files/file-0.json");
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, artifact, respHeaders);
+		connector.setResponse(response);
+		client.getArtifactFile(10, 0, 1024 * 1024, null);
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(1, requestsSent.size());
+		ServerRequest request = requestsSent.get(0);
+		assertEquals("/api/v12.3/artifact_files/10", request.url); //$NON-NLS-1$
+		assertEquals("GET", request.method); //$NON-NLS-1$
+	}
+
+	@Test
+	public void testCreateArtifactFile() throws CoreException, ParseException {
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,POST"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,POST"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK,
+				"{\"id\": 50, \"uri\": \"artifact_files/50\" }", respHeaders); //$NON-NLS-1$
+
+		connector.setResponse(response);
+		client.createArtifactFile("The file data", "application/zip", "fileName", "file description", null);
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(1, requestsSent.size());
+		ServerRequest request = requestsSent.get(0);
+		assertEquals("/api/v12.3/artifact_temporary_files", request.url); //$NON-NLS-1$
+		assertEquals("POST", request.method); //$NON-NLS-1$
+		assertEquals(
+				"{\"name\":\"fileName\",\"description\":\"file description\",\"mimetype\":\"application/zip\",\"content\":\"The file data\"}", //$NON-NLS-1$
+				request.body);
+	}
+
+	@Test
+	public void testUpdateArtifactFile() throws CoreException, ParseException {
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK,
+				"The response body", respHeaders); //$NON-NLS-1$
+
+		connector.setResponse(response);
+		client.updateArtifactFile(10, "The file content", 64, null);
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(1, requestsSent.size());
+
+		ServerRequest request = requestsSent.get(0);
+		assertEquals("/api/v12.3/artifact_temporary_files/10", request.url); //$NON-NLS-1$
+		assertEquals("PUT", request.method); //$NON-NLS-1$
+		assertEquals("{\"content\":\"The file content\",\"offset\":64}", //$NON-NLS-1$
+				request.body);
+	}
+
+	@Test
+	public void testDeleteArtifactFile() throws CoreException, ParseException {
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,DELETE"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,DELETE"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK,
+				"The response body", respHeaders); //$NON-NLS-1$
+
+		connector.setResponse(response);
+		client.deleteArtifactFile(10, null);
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(1, requestsSent.size());
+
+		ServerRequest request = requestsSent.get(0);
+		assertEquals("/api/v12.3/artifact_temporary_files/10", request.url); //$NON-NLS-1$
+		assertEquals("DELETE", request.method); //$NON-NLS-1$
+	}
+
+	@Test
 	public void testCreateArtifact() throws CoreException, ParseException {
 		TuleapReference trackerRef = new TuleapReference(100, "t/100");
 		TuleapReference projectRef = new TuleapReference(50, "p/50");
@@ -238,6 +324,54 @@ public class TuleapRestClientTest {
 		assertEquals("/api/v12.3/artifacts/10", request.url); //$NON-NLS-1$
 		assertEquals("PUT", request.method); //$NON-NLS-1$
 		assertEquals("{\"values\":[]}", //$NON-NLS-1$
+				request.body);
+	}
+
+	@Test
+	public void testUpdateArtifactWithSerializableAttachmentField() throws CoreException {
+		TuleapReference trackerRef = new TuleapReference(100, "t/100");
+		TuleapReference projectRef = new TuleapReference(50, "p/50");
+		TuleapArtifactWithComment artifact = new TuleapArtifactWithComment(10, trackerRef, projectRef);
+
+		final String newComment = "This is a new comment";
+		artifact.setNewComment(newComment);
+
+		TuleapFileUpload field = new TuleapFileUpload(222);
+
+		field.setPermissions(new String[] {"update" });
+		artifact.addField(field);
+
+		List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
+		// TuleapUser firstUploadedBy = new TuleapUser(
+		//				"first username", "first realname", 1, "first email", null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		attachments.add(new AttachmentValue("100000", "first name", 1, 123456, //$NON-NLS-1$ //$NON-NLS-2$
+				"first description", "first type", "")); //$NON-NLS-1$ //$NON-NLS-2$
+		//		TuleapUser secondUploadedBy = new TuleapUser("second username", "second realname", 2, //$NON-NLS-1$ //$NON-NLS-2$
+		//				"second email", null); //$NON-NLS-1$
+		attachments.add(new AttachmentValue("100001", "second name", 2, 789456, //$NON-NLS-1$ //$NON-NLS-2$
+				"second description", "second type", "")); //$NON-NLS-1$ //$NON-NLS-2$
+		AttachmentFieldValue fileDescription = new AttachmentFieldValue(222, attachments);
+
+		artifact.addFieldValue(fileDescription);
+
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK,
+				"The milestone response body", respHeaders); //$NON-NLS-1$
+
+		connector.setResponse(response);
+		client.updateArtifact(artifact, null);
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(1, requestsSent.size());
+
+		ServerRequest request = requestsSent.get(0);
+		assertEquals("/api/v12.3/artifacts/10", request.url); //$NON-NLS-1$
+		assertEquals("PUT", request.method); //$NON-NLS-1$
+		assertEquals(
+				"{\"values\":[{\"field_id\":222,\"value\":[100000,100001]}],\"comment\":{\"body\":\"This is a new comment\",\"format\":\"text\"}}", //$NON-NLS-1$
 				request.body);
 	}
 

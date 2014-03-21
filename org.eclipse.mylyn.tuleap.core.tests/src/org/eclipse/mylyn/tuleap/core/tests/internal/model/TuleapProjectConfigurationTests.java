@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -30,7 +30,7 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Unit Tests of Project configuration.
- * 
+ *
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
 public class TuleapProjectConfigurationTests {
@@ -43,9 +43,8 @@ public class TuleapProjectConfigurationTests {
 		TuleapProject project = new TuleapProject("Test Project", 42);
 
 		Date date = new Date();
-		long dateTracker = date.getTime();
 		TuleapTracker tracker = new TuleapTracker(1, "tracker/url", "Tracker", "Item name", "Description",
-				dateTracker);
+				date);
 		project.addTracker(tracker);
 
 		assertNull(project.getTracker(0));

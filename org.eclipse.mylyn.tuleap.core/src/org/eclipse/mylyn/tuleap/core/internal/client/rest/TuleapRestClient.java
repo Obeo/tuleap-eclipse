@@ -44,6 +44,9 @@ import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifact;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifactWithComment;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapAttachmentDescriptor;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapElementComment;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapReference;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapFile;
+import org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants;
 import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessages;
 import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
 
@@ -271,7 +274,122 @@ public class TuleapRestClient implements IAuthenticator {
 	}
 
 	/**
-	 * Runs the report on the server for the tracker with the given tracker identifier.
+	 * <<<<<<< HEAD Runs the report on the server for the tracker with the given tracker identifier. =======
+	 * Retrieve an artifact file attachment that is characterized by the data it contains.
+	 *
+	 * @param fileId
+	 *            The file identifier
+	 * @param offset
+	 *            the offset Where to start reading the file
+	 * @param limit
+	 *            Max number of bytes to read from the file
+	 * @param monitor
+	 *            Used to monitor the progress
+	 * @return The file
+	 * @throws CoreException
+	 *             In case of error during the attachment content retrieval
+	 */
+	public TuleapFile getArtifactFile(int fileId, int offset, int limit, IProgressMonitor monitor)
+			throws CoreException {
+		if (monitor != null) {
+			monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.retrievingFile,
+					Integer.valueOf(fileId)));
+		}
+		RestResource fileResource = restResourceFactory.artifactFile(fileId).withAuthenticator(this);
+		ServerResponse response = fileResource.get().withQueryParameter("offset", Integer.toString(offset)) //$NON-NLS-1$
+				.withQueryParameter("limit", Integer.toString(limit)) //$NON-NLS-1$
+				.checkedRun();
+		TuleapFile file = gson.fromJson(response.getBody(), TuleapFile.class);
+		if (file == null || file.getData() == null) {
+			file = new TuleapFile(""); //$NON-NLS-1$
+		}
+		return file;
+	}
+
+	/**
+	 * Create a new file attachment that is not yet attached to an artifact. If parameters are right, the
+	 * server returns the identifier and the URI of the created file.
+	 *
+	 * @param content
+	 *            the file data
+	 * @param type
+	 *            the file type
+	 * @param name
+	 *            the file name
+	 * @param description
+	 *            the file description
+	 * @param monitor
+	 *            Used to monitor the progress
+	 * @return The tuleap reference
+	 * @throws CoreException
+	 *             In case of error during the attachment content retrieval
+	 */
+	public TuleapReference createArtifactFile(String content, String type, String name, String description,
+			IProgressMonitor monitor) throws CoreException {
+		RestResource restFiles = restResourceFactory.artifactTemporaryFiles().withAuthenticator(this);
+
+		JsonObject json = new JsonObject();
+		json.add(ITuleapConstants.NAME, new JsonPrimitive(name));
+		json.add(ITuleapConstants.DESCRIPTION, new JsonPrimitive(description));
+		json.add(ITuleapConstants.MIME_TYPE, new JsonPrimitive(type));
+		json.add(ITuleapConstants.CONTENT, new JsonPrimitive(content));
+
+		String changesToPost = json.toString();
+		RestOperation operation = restFiles.post().withBody(changesToPost);
+		ServerResponse response = operation.checkedRun();
+		TuleapReference ref = gson.fromJson(response.getBody(), TuleapReference.class);
+		return ref;
+	}
+
+	/**
+	 * Update the file attachment.
+	 *
+	 * @param fileId
+	 *            The file identifier
+	 * @param data
+	 *            the file data
+	 * @param offset
+	 *            the offset
+	 * @param monitor
+	 *            Used to monitor the progress
+	 * @throws CoreException
+	 *             In case of error during the file update
+	 */
+	public void updateArtifactFile(int fileId, String data, int offset, IProgressMonitor monitor)
+			throws CoreException {
+		RestResource restFile = restResourceFactory.artifactTemporaryFile(fileId).withAuthenticator(this);
+
+		JsonObject json = new JsonObject();
+		json.add(ITuleapConstants.CONTENT, new JsonPrimitive(data));
+		json.add(ITuleapConstants.OFFSET, new JsonPrimitive(Integer.valueOf(offset)));
+
+		String changesToPut = json.toString();
+		RestOperation operation = restFile.put().withBody(changesToPut);
+		operation.checkedRun();
+	}
+
+	/**
+	 * Delete the file attachment.
+	 *
+	 * @param fileId
+	 *            The file identifier
+	 * @param monitor
+	 *            Used to monitor the progress
+	 * @throws CoreException
+	 *             In case of error during the file deletion
+	 */
+	public void deleteArtifactFile(int fileId, IProgressMonitor monitor) throws CoreException {
+		if (monitor != null) {
+			monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.deletingFile,
+					Integer.valueOf(fileId)));
+		}
+		RestResource tempFileResource = restResourceFactory.artifactTemporaryFile(fileId).withAuthenticator(
+				this);
+		tempFileResource.delete().checkedRun();
+	}
+
+	/**
+	 * Executes a Tuleap report (stored on the Tuleap server, unlike a Mylyn query).
 	 *
 	 * @param trackerId
 	 *            The identifier of the tracker
@@ -371,7 +489,7 @@ public class TuleapRestClient implements IAuthenticator {
 	 */
 	public void uploadAttachment(int artifactId, int attachmentFieldId,
 			TuleapAttachmentDescriptor tuleapAttachmentDescriptor, String comment, IProgressMonitor monitor)
-			throws CoreException {
+					throws CoreException {
 		// Test the connection
 
 		// Try to log in

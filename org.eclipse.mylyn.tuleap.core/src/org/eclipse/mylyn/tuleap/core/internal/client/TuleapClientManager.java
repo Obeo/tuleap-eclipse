@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -31,7 +31,7 @@ import org.eclipse.mylyn.tuleap.core.internal.parser.TuleapGsonProvider;
 
 /**
  * The Tuleap client manager will create new clients for a given Mylyn tasks repository or find existing ones.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
@@ -51,7 +51,7 @@ public class TuleapClientManager implements IRepositoryListener {
 	 * Returns the REST client for the given task repository. The reference to the created client should not
 	 * be kept by those calling this operation since the client can be re-created if the settings of the
 	 * repository are modified.
-	 * 
+	 *
 	 * @param taskRepository
 	 *            The task repository
 	 * @return The REST client for the given task repository
@@ -66,7 +66,7 @@ public class TuleapClientManager implements IRepositoryListener {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.IRepositoryListener#repositoryAdded(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
 	public void repositoryAdded(TaskRepository taskRepository) {
@@ -75,7 +75,7 @@ public class TuleapClientManager implements IRepositoryListener {
 
 	/**
 	 * Refresh both REST and SOAP clients for the given task repository.
-	 * 
+	 *
 	 * @param taskRepository
 	 *            The task repository
 	 */
@@ -99,7 +99,7 @@ public class TuleapClientManager implements IRepositoryListener {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.IRepositoryListener#repositoryRemoved(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
 	public void repositoryRemoved(TaskRepository taskRepository) {
@@ -109,7 +109,7 @@ public class TuleapClientManager implements IRepositoryListener {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.IRepositoryListener#repositorySettingsChanged(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
 	public void repositorySettingsChanged(TaskRepository taskRepository) {
@@ -120,7 +120,7 @@ public class TuleapClientManager implements IRepositoryListener {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.IRepositoryListener#repositoryUrlChanged(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      java.lang.String)
 	 */
