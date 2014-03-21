@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.mylyn.tuleap.core.internal.client.rest.RestResource.URL;
 
+import static org.eclipse.mylyn.tuleap.core.internal.client.rest.RestResource.DELETE;
 import static org.eclipse.mylyn.tuleap.core.internal.client.rest.RestResource.GET;
 import static org.eclipse.mylyn.tuleap.core.internal.client.rest.RestResource.POST;
 import static org.eclipse.mylyn.tuleap.core.internal.client.rest.RestResource.PUT;
@@ -150,6 +151,37 @@ public final class RestResourceFactory {
 	 */
 	public RestResource artifactChangesets(int artifactId) {
 		return resource(GET, URL.ARTIFACTS, Integer.toString(artifactId), URL.CHANGESETS);
+	}
+
+	/**
+	 * Provides access to the {code /artifact_files/:id} HTTP resource.
+	 * 
+	 * @param fileId
+	 *            Id of the artifact file
+	 * @return A resource that gives access to the {code /artifact_files/:id} HTTP resource.
+	 */
+	public RestResource artifactFile(int fileId) {
+		return resource(GET, URL.ARTIFACT_FILES, Integer.toString(fileId));
+	}
+
+	/**
+	 * Provides access to the {code /artifact_temporary_files/:id} HTTP resource.
+	 * 
+	 * @param fileId
+	 *            Id of the artifact file.
+	 * @return A resource that gives access to the {code /artifact_temporary_files/:id} HTTP resource.
+	 */
+	public RestResource artifactTemporaryFile(int fileId) {
+		return resource(GET | DELETE | PUT, URL.ARTIFACT_TEMPORARY_FILES, Integer.toString(fileId));
+	}
+
+	/**
+	 * Provides access to the {code /artifact_temporary_files} HTTP resource.
+	 * 
+	 * @return A resource that gives access to the {code /artifact_temporary_files} HTTP resource.
+	 */
+	public RestResource artifactTemporaryFiles() {
+		return resource(GET | POST, URL.ARTIFACT_TEMPORARY_FILES);
 	}
 
 	/**

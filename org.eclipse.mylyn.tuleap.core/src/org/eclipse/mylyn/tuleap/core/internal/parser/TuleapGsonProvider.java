@@ -29,7 +29,6 @@ import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapCard;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapCardwall;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapMilestone;
 import org.eclipse.mylyn.tuleap.core.internal.serializer.ArtifactLinkFieldValueAdapter;
-import org.eclipse.mylyn.tuleap.core.internal.serializer.AttachmentFieldValueSerializer;
 import org.eclipse.mylyn.tuleap.core.internal.serializer.BoundFieldValueSerializer;
 import org.eclipse.mylyn.tuleap.core.internal.serializer.LiteralFieldValueSerializer;
 import org.eclipse.mylyn.tuleap.core.internal.serializer.TuleapArtifactSerializer;
@@ -92,7 +91,7 @@ public final class TuleapGsonProvider {
 				new TuleapArtifactWithCommentSerializer());
 		gsonBuilder.registerTypeAdapter(ArtifactLinkFieldValue.class, new ArtifactLinkFieldValueAdapter());
 		gsonBuilder.registerTypeAdapter(LiteralFieldValue.class, new LiteralFieldValueSerializer());
-		gsonBuilder.registerTypeAdapter(AttachmentFieldValue.class, new AttachmentFieldValueSerializer());
+		gsonBuilder.registerTypeAdapter(AttachmentFieldValue.class, new AttachmentFieldValueAdapter());
 		gsonBuilder.registerTypeAdapter(BoundFieldValue.class, new BoundFieldValueSerializer());
 		gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
 		gsonBuilder.serializeNulls();

@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -48,7 +48,7 @@ import org.tuleap.mylyn.task.agile.core.data.AbstractTaskMapper;
 /**
  * The Tuleap Configurable Element Mapper will be used to manipulate the task data model from Mylyn with a
  * higher level of abstraction.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class TuleapArtifactMapper extends AbstractTaskMapper {
@@ -93,7 +93,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 
 	/**
 	 * The constructor.
-	 * 
+	 *
 	 * @param taskData
 	 *            The task data
 	 * @param tracker
@@ -199,7 +199,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 
 	/**
 	 * Creates the task attribute representing the new comment.
-	 * 
+	 *
 	 * @return the newly created task attribute
 	 */
 	private TaskAttribute createNewCommentTaskAttribute() {
@@ -226,7 +226,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 
 	/**
 	 * Sets the identifier of the tracker of the element (tracker id, backlog item type id, etc).
-	 * 
+	 *
 	 * @param trackerId
 	 *            The identifier of the tracker of the element
 	 */
@@ -241,7 +241,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 
 	/**
 	 * Sets the identifier of the project.
-	 * 
+	 *
 	 * @param projectId
 	 *            The identifier of the project
 	 */
@@ -258,7 +258,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 * modification date if it was not already present. On the contrary, if the task is not closed, its
 	 * completion date is forced to {@code null}, since the closed semantic is managed by mylyn <i>via</i> the
 	 * completion date presence.
-	 * 
+	 *
 	 * @param statusItemId
 	 *            The status value id
 	 */
@@ -288,7 +288,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 
 	/**
 	 * Sets the identifier of the artifact.
-	 * 
+	 *
 	 * @param taskKey
 	 *            The task key
 	 */
@@ -299,7 +299,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 
 	/**
 	 * Returns the identifier of the artifact.
-	 * 
+	 *
 	 * @return The identifier of the artifact
 	 */
 	public TuleapTaskId getTaskId() {
@@ -321,7 +321,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 
 	/**
 	 * Provides the wrapped task's key.
-	 * 
+	 *
 	 * @return The task key or null if it cannot be found.
 	 */
 	public String getTaskKey() {
@@ -331,7 +331,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 
 	/**
 	 * Sets the url of the wrapped task. Nothing happens if the given URL is null.
-	 * 
+	 *
 	 * @param url
 	 *            the url of the task
 	 */
@@ -344,7 +344,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 
 	/**
 	 * Provides the wrapped task's URL.
-	 * 
+	 *
 	 * @return The wrapped task's URL
 	 */
 	public String getTaskUrl() {
@@ -357,7 +357,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 
 	/**
 	 * Sets the summary of the wrapped task.
-	 * 
+	 *
 	 * @param value
 	 *            The value of the summary
 	 */
@@ -370,7 +370,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 
 	/**
 	 * Provides access to the completion date if it exists.
-	 * 
+	 *
 	 * @return The completion date if it exists or null.
 	 */
 	public Date getCompletionDate() {
@@ -383,7 +383,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 
 	/**
 	 * Sets the completion date in the relevant task attribute.
-	 * 
+	 *
 	 * @param completionDate
 	 *            The completion date
 	 */
@@ -396,7 +396,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 
 	/**
 	 * Provides access to the latest modification date if it exists.
-	 * 
+	 *
 	 * @return The latest modification date if it exists or null.
 	 */
 	public Date getModificationDate() {
@@ -409,7 +409,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 
 	/**
 	 * Sets the latest modification date in the relevant task attribute.
-	 * 
+	 *
 	 * @param completionDate
 	 *            The latest modification date
 	 */
@@ -422,7 +422,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 
 	/**
 	 * Provides access to the creation date if it exists.
-	 * 
+	 *
 	 * @return The creation date if it exists or null.
 	 */
 	public Date getCreationDate() {
@@ -435,7 +435,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 
 	/**
 	 * Sets the creation date in the relevant task attribute.
-	 * 
+	 *
 	 * @param creationDate
 	 *            The creation date
 	 */
@@ -449,7 +449,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	/**
 	 * Sets the values representing who this task is assigned to if a relevant field with this semantic for
 	 * mylyn exists. Such a field uses {@code TaskAttribute.USER_ASSIGNED} for id.
-	 * 
+	 *
 	 * @param valueIds
 	 *            The identifier of the field values selected
 	 */
@@ -466,7 +466,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 
 	/**
 	 * Adds a comment to the task.
-	 * 
+	 *
 	 * @param tuleapArtifactComment
 	 *            The comment to add
 	 */
@@ -498,7 +498,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 
 	/**
 	 * Add an attachment.
-	 * 
+	 *
 	 * @param tuleapFieldName
 	 *            The tuleap field name
 	 * @param tuleapAttachment
@@ -507,28 +507,29 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	public void addAttachment(String tuleapFieldName, AttachmentValue tuleapAttachment) {
 		TaskAttribute attribute = taskData.getRoot().createAttribute(
 				TaskAttribute.PREFIX_ATTACHMENT + tuleapFieldName + "---" //$NON-NLS-1$
-						+ tuleapAttachment.getAttachmentId());
+						+ tuleapAttachment.getId());
 		attribute.getMetaData().defaults().setType(TaskAttribute.TYPE_ATTACHMENT);
 		TaskAttachmentMapper taskAttachment = TaskAttachmentMapper.createFrom(attribute);
-		taskAttachment.setAttachmentId(tuleapAttachment.getAttachmentId());
+		taskAttachment.setAttachmentId(tuleapAttachment.getId());
 
-		TuleapUser person = tuleapAttachment.getPerson();
-		if (person != null) {
-			IRepositoryPerson repositoryPerson = taskData.getAttributeMapper().getTaskRepository()
-					.createPerson(person.getEmail());
-			repositoryPerson.setName(person.getUserName());
-			taskAttachment.setAuthor(repositoryPerson);
-		}
-		taskAttachment.setFileName(tuleapAttachment.getFilename());
+		// int submittedBy = tuleapAttachment.getSubmittedBy();
+		// taskAttachment.setAuthor();
+		// if (person != null) {
+		// IRepositoryPerson repositoryPerson = taskData.getAttributeMapper().getTaskRepository()
+		// .createPerson(person.getEmail());
+		// repositoryPerson.setName(person.getUserName());
+		// taskAttachment.setAuthor(repositoryPerson);
+		// }
+		taskAttachment.setFileName(tuleapAttachment.getName());
 		taskAttachment.setLength(Long.valueOf(tuleapAttachment.getSize()));
 		taskAttachment.setDescription(tuleapAttachment.getDescription());
-		taskAttachment.setContentType(tuleapAttachment.getContentType());
+		taskAttachment.setContentType(tuleapAttachment.getType());
 		taskAttachment.applyTo(attribute);
 	}
 
 	/**
 	 * Counts the number of existing comment attributes in the wrapped task data.
-	 * 
+	 *
 	 * @return the number of comment task attributes present in the task data.
 	 */
 	private int getNumberOfCommentAttributes() {
@@ -544,7 +545,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 
 	/**
 	 * Update the associated select box according to the workflow if there is a workflow.
-	 * 
+	 *
 	 * @param statusItemId
 	 *            The new status value
 	 * @param attribute
@@ -581,7 +582,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 
 	/**
 	 * Returns the set of the field values.
-	 * 
+	 *
 	 * @return The set of the field values, never null but potentially empty.
 	 */
 	public List<AbstractFieldValue> getFieldValues() {
@@ -653,7 +654,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 
 	/**
 	 * Indicates if the attribute with the given identifier should be sent to the server.
-	 * 
+	 *
 	 * @param identifier
 	 *            The identifier of the attribute
 	 * @return <code>true</code> if it should be sent to the server, <code>false</code> otherwise
@@ -663,19 +664,8 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	}
 
 	/**
-	 * Returns the mapped attribute with the given id or {@code null} if it doesn't exist.
-	 * 
-	 * @param fieldId
-	 *            The id of the task attribute being looked for
-	 * @return The mapped attribute with the given id or {@code null} if it doesn't exist.
-	 */
-	private TaskAttribute getMappedAttributeById(int fieldId) {
-		return taskData.getRoot().getMappedAttribute(String.valueOf(fieldId));
-	}
-
-	/**
 	 * Provides access to the TaskAttribute that contains the actual status value.
-	 * 
+	 *
 	 * @return The status task attribute.
 	 */
 	private TaskAttribute getStatusTaskAttribute() {
@@ -684,7 +674,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 
 	/**
 	 * The status of the task.
-	 * 
+	 *
 	 * @return the status of the task.
 	 */
 	public int getStatus() {
@@ -701,7 +691,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 
 	/**
 	 * Provides access to the parent id if it exists.
-	 * 
+	 *
 	 * @return The parent id if it exists or null.
 	 */
 	public String getParentId() {
@@ -714,7 +704,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 
 	/**
 	 * Sets the parent Id in the relevant task attribute.
-	 * 
+	 *
 	 * @param parentId
 	 *            The parent Id
 	 */
@@ -738,7 +728,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 
 	/**
 	 * Provides access to the parent display id if it exists.
-	 * 
+	 *
 	 * @return The parent display id if it exists or null.
 	 */
 	public String getParentDisplayId() {
@@ -751,7 +741,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 
 	/**
 	 * Sets the parent display Id in the relevant task attribute.
-	 * 
+	 *
 	 * @param parentDisplayId
 	 *            The parent display Id
 	 */

@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -13,6 +13,7 @@ package org.eclipse.mylyn.tuleap.core.internal.model.config;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -25,7 +26,7 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapString;
 /**
  * The repository will hold the latest known trackers of a given repository. A tracker can dramatically evolve
  * over time and should be refreshed automatically or manually.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
@@ -34,7 +35,7 @@ public class TuleapTracker implements Serializable {
 	/**
 	 * The serialization version ID.
 	 */
-	private static final long serialVersionUID = -8688658274608834147L;
+	private static final long serialVersionUID = 2502670152366755134L;
 
 	/**
 	 * References to the tracker resources.
@@ -59,7 +60,7 @@ public class TuleapTracker implements Serializable {
 	/**
 	 * The last time this tracker was updated.
 	 */
-	private long lastUpdateDate;
+	private Date lastUpdateDate;
 
 	/**
 	 * The url of the tracker.
@@ -123,7 +124,7 @@ public class TuleapTracker implements Serializable {
 
 	/**
 	 * The constructor.
-	 * 
+	 *
 	 * @param identifier
 	 *            The identifier of the tracker
 	 * @param url
@@ -138,7 +139,7 @@ public class TuleapTracker implements Serializable {
 	 *            The date at which the tracker was last updated.
 	 */
 	public TuleapTracker(int identifier, String url, String label, String itemName, String description,
-			long lastUpdateDate) {
+			Date lastUpdateDate) {
 		this.identifier = identifier;
 		this.url = url;
 		this.label = label;
@@ -149,7 +150,7 @@ public class TuleapTracker implements Serializable {
 
 	/**
 	 * Returns the uri of the tracker.
-	 * 
+	 *
 	 * @return The uri of the tracker
 	 */
 	public String getUri() {
@@ -158,7 +159,7 @@ public class TuleapTracker implements Serializable {
 
 	/**
 	 * Tracker uri setter.
-	 * 
+	 *
 	 * @param uri
 	 *            The tracker uri
 	 */
@@ -168,16 +169,16 @@ public class TuleapTracker implements Serializable {
 
 	/**
 	 * Returns the time at which the tracker was last updated.
-	 * 
+	 *
 	 * @return The time at which the tracker was last updated.
 	 */
-	public long getLastUpdateDate() {
+	public Date getLastUpdateDate() {
 		return this.lastUpdateDate;
 	}
 
 	/**
 	 * Returns the url of the tracker.
-	 * 
+	 *
 	 * @return The url of the tracker.
 	 */
 	public String getUrl() {
@@ -186,7 +187,7 @@ public class TuleapTracker implements Serializable {
 
 	/**
 	 * Returns the label of the tracker.
-	 * 
+	 *
 	 * @return The label of the tracker.
 	 */
 	public String getLabel() {
@@ -195,7 +196,7 @@ public class TuleapTracker implements Serializable {
 
 	/**
 	 * Returns the item name of the tracker.
-	 * 
+	 *
 	 * @return The item name of the tracker.
 	 */
 	public String getItemName() {
@@ -204,7 +205,7 @@ public class TuleapTracker implements Serializable {
 
 	/**
 	 * Returns the description of the repository.
-	 * 
+	 *
 	 * @return The description of the repository.
 	 */
 	public String getDescription() {
@@ -213,7 +214,7 @@ public class TuleapTracker implements Serializable {
 
 	/**
 	 * Returns a qualified label composed of the label and the identifier.
-	 * 
+	 *
 	 * @return A qualified label composed of the label and the identifier.
 	 */
 	public String getQualifiedName() {
@@ -222,7 +223,7 @@ public class TuleapTracker implements Serializable {
 
 	/**
 	 * Returns the tracker id.
-	 * 
+	 *
 	 * @return The tracker id.
 	 */
 	public int getIdentifier() {
@@ -231,7 +232,7 @@ public class TuleapTracker implements Serializable {
 
 	/**
 	 * Sets the project containing this tracker.
-	 * 
+	 *
 	 * @param project
 	 *            The project containing this tracker
 	 */
@@ -241,7 +242,7 @@ public class TuleapTracker implements Serializable {
 
 	/**
 	 * Returns the project containing this tracker.
-	 * 
+	 *
 	 * @return The project containing this tracker.
 	 */
 	public TuleapProject getProject() {
@@ -250,7 +251,7 @@ public class TuleapTracker implements Serializable {
 
 	/**
 	 * Gets the parent tracker.
-	 * 
+	 *
 	 * @return the parent tracker
 	 */
 	public TuleapTracker getParentTracker() {
@@ -259,7 +260,7 @@ public class TuleapTracker implements Serializable {
 
 	/**
 	 * Gets the list of children trackers.
-	 * 
+	 *
 	 * @return The list of the children trackers
 	 */
 	public Collection<TuleapTracker> getChildrenTrackers() {
@@ -269,7 +270,7 @@ public class TuleapTracker implements Serializable {
 	/**
 	 * Sets the parent tracker that should not be contained in the children collection and should be different
 	 * from the actual tracker.
-	 * 
+	 *
 	 * @param parentTracker
 	 *            the parent tracker to set
 	 */
@@ -283,7 +284,7 @@ public class TuleapTracker implements Serializable {
 	/**
 	 * Add a child tracker to this tracker that should be different from the parent tracker and the actual
 	 * one.
-	 * 
+	 *
 	 * @param childTracker
 	 *            the child tracker
 	 */
@@ -296,7 +297,7 @@ public class TuleapTracker implements Serializable {
 	/**
 	 * In order to avoid infinite loops we create this method that has the same behavior as the
 	 * setParentTracker(TuleapTracker parentTracker) one.
-	 * 
+	 *
 	 * @param theParentTracker
 	 *            the parent tracker to set
 	 * @return <code>true</code> if the parent is really set.
@@ -316,7 +317,7 @@ public class TuleapTracker implements Serializable {
 	/**
 	 * In order to avoid infinite loops we create this method that has the same behavior as the
 	 * addChildTracker(TuleapTracker childTracker) one.
-	 * 
+	 *
 	 * @param childTracker
 	 *            the child tracker
 	 * @return <code>true</code> if the child is really added to the collection of tracker's children.
@@ -336,7 +337,7 @@ public class TuleapTracker implements Serializable {
 	/**
 	 * Returns an immutable view of the fields of the tracker. Elements cannot be added or removed form the
 	 * returned list.
-	 * 
+	 *
 	 * @return An immutable view of the fields of the tracker.
 	 */
 	public Collection<AbstractTuleapField> getFields() {
@@ -346,7 +347,7 @@ public class TuleapTracker implements Serializable {
 	/**
 	 * Add a field to this tracker. If the given field has a specific semantic, it is cached in the relevant
 	 * field to allow for easy retrieval.
-	 * 
+	 *
 	 * @param field
 	 *            The field to add to the tracker
 	 */
@@ -368,7 +369,7 @@ public class TuleapTracker implements Serializable {
 
 	/**
 	 * Provides access to the cached title field. To use only after tracker creation.
-	 * 
+	 *
 	 * @return The field with the "title" semantic or null if sucj field doesn't exists.
 	 */
 	public TuleapString getTitleField() {
@@ -377,7 +378,7 @@ public class TuleapTracker implements Serializable {
 
 	/**
 	 * Provides access to the cached status field. To use only used after tracker creation.
-	 * 
+	 *
 	 * @return The field with the "status" semantic or null if such a field doesn't exist.
 	 */
 	public AbstractTuleapSelectBox getStatusField() {
@@ -386,7 +387,7 @@ public class TuleapTracker implements Serializable {
 
 	/**
 	 * Provides access to the cached contributor field. To use only used after tracker creation.
-	 * 
+	 *
 	 * @return The field with the "contributor" semantic or null if such a field doesn't exist.
 	 */
 	public AbstractTuleapSelectBox getContributorField() {
@@ -395,7 +396,7 @@ public class TuleapTracker implements Serializable {
 
 	/**
 	 * Provides access to the cached initial effort field. To use only used after tracker creation.
-	 * 
+	 *
 	 * @return The field with the "initial effort" semantic or null if such a field doesn't exist.
 	 */
 	public TuleapFloat geInitialEffortField() {
@@ -404,7 +405,7 @@ public class TuleapTracker implements Serializable {
 
 	/**
 	 * Provides access to the attachment field of this tracker.
-	 * 
+	 *
 	 * @return The attachment field of this tracker.
 	 */
 	public TuleapFileUpload getAttachmentField() {
@@ -413,7 +414,7 @@ public class TuleapTracker implements Serializable {
 
 	/**
 	 * Indicates whether the given status represents a closed status.
-	 * 
+	 *
 	 * @param statusItemId
 	 *            The status for which you want to know if it means the task is closed.
 	 * @return {@code true} if the tracker of the status field closed statuses contains the given status,
@@ -432,7 +433,7 @@ public class TuleapTracker implements Serializable {
 
 	/**
 	 * Provides access to a tracker field by its id.
-	 * 
+	 *
 	 * @param id
 	 *            the field identifier
 	 * @return The tracker field or null if it doesn't exist.
@@ -443,7 +444,7 @@ public class TuleapTracker implements Serializable {
 
 	/**
 	 * Tracker resources getter.
-	 * 
+	 *
 	 * @return the trackerResources, an array that is never <code>null</code> but possibly empty.
 	 */
 	public TuleapResource[] getTrackerResources() {
@@ -455,7 +456,7 @@ public class TuleapTracker implements Serializable {
 
 	/**
 	 * Tracker resources setter.
-	 * 
+	 *
 	 * @param trackerResources
 	 *            the trackerResources to set
 	 */
@@ -465,7 +466,7 @@ public class TuleapTracker implements Serializable {
 
 	/**
 	 * Indicates whether the given resource exists on this tracker.
-	 * 
+	 *
 	 * @param key
 	 *            The resource type being looked for
 	 * @return {@code true} if and only if the given service is present in the list of services of this

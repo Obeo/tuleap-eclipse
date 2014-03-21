@@ -19,8 +19,6 @@ import org.eclipse.mylyn.tuleap.core.tests.internal.client.rest.RestResourceTest
 import org.eclipse.mylyn.tuleap.core.tests.internal.client.rest.TuleapRestClientLimitTests;
 import org.eclipse.mylyn.tuleap.core.tests.internal.client.rest.TuleapRestClientTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.client.rest.TuleapRestResourceFactoryTest;
-import org.eclipse.mylyn.tuleap.core.tests.internal.client.soap.TuleapSoapConnectorTests;
-import org.eclipse.mylyn.tuleap.core.tests.internal.client.soap.TuleapSoapParserTests;
 import org.eclipse.mylyn.tuleap.core.tests.internal.converter.MilestoneTaskDataConverterTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.data.TuleapArtifactMapperTests;
 import org.eclipse.mylyn.tuleap.core.tests.internal.data.TuleapTaskIdTests;
@@ -35,6 +33,7 @@ import org.eclipse.mylyn.tuleap.core.tests.internal.parser.TuleapBacklogItemDese
 import org.eclipse.mylyn.tuleap.core.tests.internal.parser.TuleapBurndownDeserializerTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.parser.TuleapCardwallConfigurationDeserializerTests;
 import org.eclipse.mylyn.tuleap.core.tests.internal.parser.TuleapChangesetDeserializerTests;
+import org.eclipse.mylyn.tuleap.core.tests.internal.parser.TuleapFileDeserializerTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.parser.TuleapJsonParserTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.parser.TuleapMilestoneDeserializerTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.parser.TuleapPlanningDeserializerTest;
@@ -42,7 +41,9 @@ import org.eclipse.mylyn.tuleap.core.tests.internal.parser.TuleapProjectDeserial
 import org.eclipse.mylyn.tuleap.core.tests.internal.parser.TuleapTrackerDeserializerTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.parser.TuleapTrackerReportDeserializerTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.parser.TuleapUserDeserializerTest;
+import org.eclipse.mylyn.tuleap.core.tests.internal.repository.TuleapAttachmentInputStreamTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.repository.TuleapRepositoryConnectorTests;
+import org.eclipse.mylyn.tuleap.core.tests.internal.repository.TuleapTaskAttachmentHandlerTests;
 import org.eclipse.mylyn.tuleap.core.tests.internal.repository.TuleapTaskDataHandlerTests;
 import org.eclipse.mylyn.tuleap.core.tests.internal.serializer.BoundFieldValueSerializerTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.serializer.LiteralFieldValueSerializerTest;
@@ -61,23 +62,43 @@ import org.junit.runners.Suite;
  * @since 0.7
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({TuleapSoapParserTests.class, TuleapTaskIdTests.class,
-	TuleapTrackerConfigurationTests.class, ServerResponseTest.class,
-	TuleapProjectConfigurationTests.class, TuleapCardwallConfigurationDeserializerTests.class,
-	TuleapMilestoneSerializerTests.class, MilestoneTaskDataConverterTest.class,
-	TuleapSoapConnectorTests.class, TuleapRepositoryConnectorTests.class, TuleapJsonParserTest.class,
-	TuleapTaskDataHandlerTests.class, TuleapWorkflowTests.class, TuleapArtifactMapperTests.class,
-	TuleapRestResourceFactoryTest.class, RestResourceTest.class, RestOperationsTest.class,
-	TuleapRestClientTest.class, TuleapCardSerializerTest.class, TuleapRestClientLimitTests.class,
+@Suite.SuiteClasses({
+	// client.rest
+	RestOperationsTest.class,
+	RestResourceTest.class,
+	TuleapRestClientTest.class,
+	TuleapRestClientLimitTests.class,
+	TuleapRestResourceFactoryTest.class,
+	// converter
+	MilestoneTaskDataConverterTest.class,
+	// data
+	TuleapArtifactMapperTests.class,
+	TuleapTaskIdTests.class,
+	// model
+	QueryCriterionTest.class,
+	TuleapProjectConfigurationTests.class,
+	TuleapTrackerConfigurationTests.class,
+	TuleapWorkflowTests.class,
+	// parser
+	ArtifactLinkAdapterTest.class, DateIso8601AdapterTest.class, TuleapArtifactDeserializerTest.class,
+	TuleapBacklogItemDeserializerTest.class, TuleapBurndownDeserializerTest.class,
+	TuleapCardwallConfigurationDeserializerTests.class, TuleapChangesetDeserializerTests.class,
+	TuleapFileDeserializerTest.class, TuleapJsonParserTest.class, TuleapMilestoneDeserializerTest.class,
+	TuleapPlanningDeserializerTest.class,
+	TuleapProjectDeserializerTest.class,
+	TuleapTrackerDeserializerTest.class,
+	TuleapTrackerReportDeserializerTest.class,
+	TuleapUserDeserializerTest.class,
+	// repository
+	TuleapAttachmentInputStreamTest.class, TuleapRepositoryConnectorTests.class,
+	TuleapTaskAttachmentHandlerTests.class,
+	TuleapTaskDataHandlerTests.class,
+	// serializer
+	BoundFieldValueSerializerTest.class, LiteralFieldValueSerializerTest.class,
 	TuleapArtifactSerializerTest.class, TuleapArtifactWithCommentSerializerTest.class,
-	ArtifactLinkAdapterTest.class, LiteralFieldValueSerializerTest.class,
-	BoundFieldValueSerializerTest.class, ArtifactLinkAdapterTest.class,
-	TuleapArtifactDeserializerTest.class, TuleapBacklogItemDeserializerTest.class,
-	TuleapChangesetDeserializerTests.class, TuleapMilestoneDeserializerTest.class,
-	TuleapPlanningDeserializerTest.class, TuleapProjectDeserializerTest.class,
-	TuleapTrackerDeserializerTest.class, TuleapTrackerReportDeserializerTest.class,
-	TuleapUserDeserializerTest.class, DateIso8601AdapterTest.class, TuleapBurndownDeserializerTest.class,
-		QueryCriterionTest.class })
+	TuleapCardSerializerTest.class, TuleapMilestoneSerializerTests.class,
+	// server
+	ServerResponseTest.class, })
 public final class AllTuleapStandaloneTests {
 
 	/**

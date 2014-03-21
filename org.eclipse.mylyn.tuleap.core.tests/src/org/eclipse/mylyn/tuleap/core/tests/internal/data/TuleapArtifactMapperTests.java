@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -70,7 +70,7 @@ import static org.junit.Assert.fail;
 
 /**
  * Tests of the new Tuleap configurable element mapper.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
@@ -178,7 +178,7 @@ public class TuleapArtifactMapperTests {
 
 		this.repository = new TaskRepository(connectorKind, repositoryUrl);
 		this.tuleapTracker = new TuleapTracker(trackerId, repositoryUrl, trackerName, itemName,
-				repositoryDescription, System.currentTimeMillis());
+				repositoryDescription, new Date());
 
 		this.tuleapServer = new TuleapServer(repositoryUrl);
 
@@ -317,7 +317,7 @@ public class TuleapArtifactMapperTests {
 
 	/**
 	 * Verification of the artifact creation date.
-	 * 
+	 *
 	 * @throws ParseException
 	 */
 	@Test
@@ -333,7 +333,7 @@ public class TuleapArtifactMapperTests {
 
 	/**
 	 * Verification of the task modification date.
-	 * 
+	 *
 	 * @throws ParseException
 	 */
 	@Test
@@ -349,7 +349,7 @@ public class TuleapArtifactMapperTests {
 
 	/**
 	 * Verification of adding a comment.
-	 * 
+	 *
 	 * @throws ParseException
 	 */
 	@Test
@@ -392,7 +392,7 @@ public class TuleapArtifactMapperTests {
 
 	/**
 	 * Verification of adding an attachment.
-	 * 
+	 *
 	 * @throws ParseException
 	 */
 	@Test
@@ -402,8 +402,7 @@ public class TuleapArtifactMapperTests {
 
 		TuleapUser submitter = new TuleapUser("username", "realname", 17, //$NON-NLS-1$ //$NON-NLS-2$
 				"email", null); //$NON-NLS-1$
-		AttachmentValue attachment = new AttachmentValue("id", "name", submitter, 123456, "description",
-				"type");
+		AttachmentValue attachment = new AttachmentValue("id", "name", 17, 123456, "description", "type", "");
 
 		mapper.addAttachment("First field", attachment);
 
@@ -412,12 +411,13 @@ public class TuleapArtifactMapperTests {
 		assertNotNull(att);
 
 		TaskAttribute authorAttribute = att.getMappedAttribute(TaskAttribute.ATTACHMENT_AUTHOR);
-		assertNotNull(authorAttribute);
-		assertEquals("email", authorAttribute.getValue());
-
-		TaskAttribute nameAttribute = authorAttribute.getMappedAttribute(TaskAttribute.PERSON_NAME);
-		assertNotNull(nameAttribute);
-		assertEquals("username", nameAttribute.getValue());
+		// Author is ignored due to problems with user retrieval in Tuleap API
+		// Matters of security and avoiding leak of users list must be addressed
+		assertNull(authorAttribute);
+		// assertEquals("email", authorAttribute.getValue());
+		// TaskAttribute nameAttribute = authorAttribute.getMappedAttribute(TaskAttribute.PERSON_NAME);
+		// assertNotNull(nameAttribute);
+		// assertEquals("username", nameAttribute.getValue());
 
 		TaskAttribute typeAttribute = att.getMappedAttribute(TaskAttribute.ATTACHMENT_CONTENT_TYPE);
 		assertNotNull(typeAttribute);
@@ -576,7 +576,7 @@ public class TuleapArtifactMapperTests {
 		lbl = getLabelFromId(3);
 		assertEquals(lbl, att.getOption("3")); //$NON-NLS-1$
 		assertEquals(
-				"None", att.getOption(String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID))); //$NON-NLS-1$ 
+				"None", att.getOption(String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID))); //$NON-NLS-1$
 	}
 
 	/**
@@ -1016,7 +1016,7 @@ public class TuleapArtifactMapperTests {
 
 	/**
 	 * Creates a new Tuleap Date Field.
-	 * 
+	 *
 	 * @param id
 	 *            the id
 	 * @return The created field
@@ -1029,7 +1029,7 @@ public class TuleapArtifactMapperTests {
 
 	/**
 	 * Sets the description and label of the given field to a value computed from the given id.
-	 * 
+	 *
 	 * @param result
 	 *            The field to update
 	 */
@@ -1040,7 +1040,7 @@ public class TuleapArtifactMapperTests {
 
 	/**
 	 * Compute a description from an id for tests.
-	 * 
+	 *
 	 * @param id
 	 *            the id to use
 	 * @return a description for tests.
@@ -1051,7 +1051,7 @@ public class TuleapArtifactMapperTests {
 
 	/**
 	 * Compute a label from an id for tests.
-	 * 
+	 *
 	 * @param id
 	 *            id to use
 	 * @return A label for tests.
@@ -1062,7 +1062,7 @@ public class TuleapArtifactMapperTests {
 
 	/**
 	 * Creates a new Tuleap float Field.
-	 * 
+	 *
 	 * @param id
 	 *            the id
 	 * @return The created field
@@ -1075,7 +1075,7 @@ public class TuleapArtifactMapperTests {
 
 	/**
 	 * Creates a new Tuleap integer Field.
-	 * 
+	 *
 	 * @param id
 	 *            the id
 	 * @return The created field
@@ -1088,7 +1088,7 @@ public class TuleapArtifactMapperTests {
 
 	/**
 	 * Creates a new Tuleap string Field.
-	 * 
+	 *
 	 * @param id
 	 *            the id
 	 * @return The created field
@@ -1101,7 +1101,7 @@ public class TuleapArtifactMapperTests {
 
 	/**
 	 * Creates a new Tuleap string Field with the "title" semantic.
-	 * 
+	 *
 	 * @param id
 	 *            the id
 	 * @return The created field
@@ -1115,7 +1115,7 @@ public class TuleapArtifactMapperTests {
 
 	/**
 	 * Creates a new Tuleap text Field.
-	 * 
+	 *
 	 * @param id
 	 *            the id
 	 * @return The created field
@@ -1128,7 +1128,7 @@ public class TuleapArtifactMapperTests {
 
 	/**
 	 * Creates a new Tuleap open list Field (list of strings separated by commas).
-	 * 
+	 *
 	 * @param id
 	 *            the id
 	 * @return The created field
@@ -1141,7 +1141,7 @@ public class TuleapArtifactMapperTests {
 
 	/**
 	 * Creates a new Tuleap select box Field with 4 items.
-	 * 
+	 *
 	 * @param id
 	 *            the id
 	 * @return The created field
@@ -1163,7 +1163,7 @@ public class TuleapArtifactMapperTests {
 	/**
 	 * Creates a new Tuleap select box Field with the semantic "status" and 4 fields among which the 3 first
 	 * are open and the two others are closed.
-	 * 
+	 *
 	 * @param id
 	 *            the id
 	 * @return The created field
@@ -1189,7 +1189,7 @@ public class TuleapArtifactMapperTests {
 	/**
 	 * Creates a new Tuleap select box Field with the semantic "status" and 4 fields among which the 3 first
 	 * are open and the two others are closed.
-	 * 
+	 *
 	 * @param id
 	 *            the id
 	 * @return The created field
@@ -1223,7 +1223,7 @@ public class TuleapArtifactMapperTests {
 
 	/**
 	 * Creates a new Tuleap select box Field with the semantic "contributor".
-	 * 
+	 *
 	 * @param id
 	 *            the id
 	 * @return The created field
@@ -1237,7 +1237,7 @@ public class TuleapArtifactMapperTests {
 
 	/**
 	 * Creates a new Tuleap multi select box Field with the semantic "contributor".
-	 * 
+	 *
 	 * @param id
 	 *            the id
 	 * @return The created field
@@ -1251,7 +1251,7 @@ public class TuleapArtifactMapperTests {
 
 	/**
 	 * Creates a new Tuleap select box item with the given id and a computed label and description.
-	 * 
+	 *
 	 * @param id
 	 *            the id
 	 * @return The created field
@@ -1265,7 +1265,7 @@ public class TuleapArtifactMapperTests {
 
 	/**
 	 * Creates a new Tuleap Multi Select Box Field.
-	 * 
+	 *
 	 * @param id
 	 *            the id
 	 * @return The created field

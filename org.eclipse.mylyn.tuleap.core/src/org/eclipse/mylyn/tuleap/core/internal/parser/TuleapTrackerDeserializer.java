@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -21,6 +21,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
+import java.util.Date;
 import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.Assert;
@@ -48,7 +49,7 @@ import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
 
 /**
  * This class is used to deserialize the JSON representation of a tracker.
- * 
+ *
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
@@ -176,7 +177,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 
 	/**
 	 * Returns the id of the given object.
-	 * 
+	 *
 	 * @param jsonObject
 	 *            The json object
 	 * @return The id of the given object
@@ -187,7 +188,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 
 	/**
 	 * Returns the url of the given object.
-	 * 
+	 *
 	 * @param jsonObject
 	 *            The json object
 	 * @return The url of the given object
@@ -198,7 +199,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 
 	/**
 	 * Returns the uri of the given object.
-	 * 
+	 *
 	 * @param jsonObject
 	 *            The json object
 	 * @return The uri of the given object
@@ -209,7 +210,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 
 	/**
 	 * Returns the label of the given object.
-	 * 
+	 *
 	 * @param jsonObject
 	 *            The json object
 	 * @return The label of the given object
@@ -220,7 +221,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 
 	/**
 	 * Populates the given tracker with the fields parsed from the given JSON object .
-	 * 
+	 *
 	 * @param tracker
 	 *            The tracker to populate
 	 * @param jsonObject
@@ -268,7 +269,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 
 	/**
 	 * Extract a field from its JSON representation and adds it to the given tracker.
-	 * 
+	 *
 	 * @param field
 	 *            The JSON representation of the field
 	 * @param tracker
@@ -328,7 +329,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 
 	/**
 	 * Creates the right kind of {@link AbstractTuleapField}.
-	 * 
+	 *
 	 * @param fieldId
 	 *            The ID of the field to create
 	 * @param fieldType
@@ -370,7 +371,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 
 	/**
 	 * Sets the given field to be the summary field if it's the case.
-	 * 
+	 *
 	 * @param field
 	 *            A candidate field
 	 * @param fieldSemantic
@@ -391,7 +392,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 
 	/**
 	 * Returns the TuleapMultiSelectBox created from the parsing of the JSON elements.
-	 * 
+	 *
 	 * @param tracker
 	 *            The tracker
 	 * @param multiSelectBoxField
@@ -411,7 +412,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 
 	/**
 	 * Returns the TuleapSelectBox created from the parsing of the JSON elements.
-	 * 
+	 *
 	 * @param tracker
 	 *            The tracker
 	 * @param selectBoxField
@@ -437,7 +438,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 
 	/**
 	 * Returns the TuleapSelectBox created from the parsing of the JSON elements.
-	 * 
+	 *
 	 * @param tracker
 	 *            The tracker
 	 * @param selectBoxField
@@ -481,14 +482,14 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 		if (fieldSemantic != null
 				&& fieldSemantic.get(JSON_CONTRIBUTOR) != null
 				&& fieldSemantic.get(JSON_CONTRIBUTOR).getAsJsonObject().get(FIELD_ID).getAsInt() == selectBoxField
-						.getIdentifier()) {
+				.getIdentifier()) {
 			selectBoxField.setSemanticContributor(true);
 		}
 	}
 
 	/**
 	 * Extract the open statuses and configures them.
-	 * 
+	 *
 	 * @param selectBoxField
 	 *            The select box field
 	 * @param fieldSemantic
@@ -506,7 +507,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 			for (int z = 0; z < semanticStatus.get(JSON_STATUS_IDS).getAsJsonArray().size(); z++) {
 				if (selectBoxField.getIdentifier() == semanticStatus.get(FIELD_ID).getAsInt()
 						&& fieldValueId == semanticStatus.get(JSON_STATUS_IDS).getAsJsonArray().get(z)
-								.getAsInt()) {
+						.getAsInt()) {
 					selectBoxField.getOpenStatus().add(selectBoxItem);
 				}
 			}
@@ -515,7 +516,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 
 	/**
 	 * Sets the workflow and the transition for the select box.
-	 * 
+	 *
 	 * @param jsonObject
 	 *            the JSON root object
 	 * @param selectBoxField
@@ -543,7 +544,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see com.google.gson.JsonDeserializer#deserialize(com.google.gson.JsonElement, java.lang.reflect.Type,
 	 *      com.google.gson.JsonDeserializationContext)
 	 */
@@ -557,10 +558,8 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 		String uri = jsonObject.get(URI).getAsString();
 		String itemName = null;
 		String description = null;
-		long lastUpdateDate = System.currentTimeMillis();
 
-		TuleapTracker tracker = new TuleapTracker(identifier, url, label, itemName, description,
-				lastUpdateDate);
+		TuleapTracker tracker = new TuleapTracker(identifier, url, label, itemName, description, new Date());
 		tracker.setUri(uri);
 
 		tracker = this.populateConfigurableFields(tracker, jsonObject, context);

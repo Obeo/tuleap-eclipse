@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -29,7 +29,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tuleap.core.internal.client.TuleapClientManager;
 import org.eclipse.mylyn.tuleap.core.internal.client.rest.TuleapRestClient;
-import org.eclipse.mylyn.tuleap.core.internal.client.soap.TuleapSoapClient;
 import org.eclipse.mylyn.tuleap.core.internal.data.TuleapArtifactMapper;
 import org.eclipse.mylyn.tuleap.core.internal.data.TuleapTaskId;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapPlanning;
@@ -58,7 +57,7 @@ import static org.junit.Assert.fail;
 
 /**
  * The tests class for the Tuleap task data handler.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
@@ -120,13 +119,14 @@ public class TuleapTaskDataHandlerTests {
 		this.tuleapServer = new TuleapServer(repositoryUrl);
 		TuleapProject project = new TuleapProject(null, projectRef.getId());
 
-		TuleapTracker tracker = new TuleapTracker(trackerRef.getId(), null, null, null, null, 0);
+		TuleapTracker tracker = new TuleapTracker(trackerRef.getId(), null, null, null, null, new Date());
 		project.addTracker(tracker);
 
-		TuleapTracker milestoneTracker = new TuleapTracker(milestoneTrackerId, null, null, null, null, 0);
+		TuleapTracker milestoneTracker = new TuleapTracker(milestoneTrackerId, null, null, null, null,
+				new Date());
 		project.addTracker(milestoneTracker);
 
-		TuleapTracker biTracker = new TuleapTracker(backlogItemTrackerId, null, null, null, null, 0);
+		TuleapTracker biTracker = new TuleapTracker(backlogItemTrackerId, null, null, null, null, new Date());
 		project.addTracker(biTracker);
 
 		TuleapPlanning planning = new TuleapPlanning(123456, projectRef);
@@ -141,7 +141,7 @@ public class TuleapTaskDataHandlerTests {
 	/**
 	 * Initialize a new task data thanks to the configuration with the given configuration identifier and
 	 * check that the dispatch has created a task with the proper task kind.
-	 * 
+	 *
 	 * @param configurationId
 	 *            The identifier of the configuration
 	 */
@@ -220,7 +220,7 @@ public class TuleapTaskDataHandlerTests {
 	/**
 	 * Retrieve the artifact with the given task id and check that the task data created has the proper task
 	 * kind.
-	 * 
+	 *
 	 * @param taskId
 	 *            The identifier of the task
 	 */
@@ -299,11 +299,6 @@ public class TuleapTaskDataHandlerTests {
 		// mock client manager
 		final TuleapClientManager tuleapClientManager = new TuleapClientManager() {
 			@Override
-			public TuleapSoapClient getSoapClient(TaskRepository taskRepository) {
-				return null;
-			}
-
-			@Override
 			public TuleapRestClient getRestClient(TaskRepository taskRepository) {
 				return tuleapRestClient;
 			}
@@ -368,7 +363,7 @@ public class TuleapTaskDataHandlerTests {
 	/**
 	 * Create and update the element with the given task data and check the identifier of the server element
 	 * created and updated.
-	 * 
+	 *
 	 * @param taskData
 	 *            The task data
 	 * @param taskId

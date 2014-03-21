@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -62,7 +62,7 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Tests of the milestone task data converter.
- * 
+ *
  * @author <a href="mailto:firas.bacha">Firas Bacha</a>
  */
 public class MilestoneTaskDataConverterTest {
@@ -132,7 +132,7 @@ public class MilestoneTaskDataConverterTest {
 		project = new TuleapProject("The first project", 200); //$NON-NLS-1$
 		server.addProject(project);
 
-		tracker700 = new TuleapTracker(700, "700", "Tracker 700", "", "", System.currentTimeMillis());
+		tracker700 = new TuleapTracker(700, "700", "Tracker 700", "", "", new Date());
 		project.addTracker(tracker700);
 
 		field1000 = new TuleapString(1000);
@@ -322,7 +322,7 @@ public class MilestoneTaskDataConverterTest {
 		assertEquals(TaskAttribute.TYPE_INTEGER, statusIdFirstCardTA.getMetaData().getType());
 		assertEquals("10000", statusIdFirstCardTA.getValue()); //$NON-NLS-1$
 
-		TaskAttribute fieldValueFirstCardTA = root.getAttribute(swimlaneId + "-c-2_12345-f-1000"); //$NON-NLS-1$ 
+		TaskAttribute fieldValueFirstCardTA = root.getAttribute(swimlaneId + "-c-2_12345-f-1000"); //$NON-NLS-1$
 
 		assertNotNull(fieldValueFirstCardTA);
 		assertEquals("300, 301, 302", fieldValueFirstCardTA.getValue()); //$NON-NLS-1$
@@ -456,12 +456,12 @@ public class MilestoneTaskDataConverterTest {
 		List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
 		TuleapUser firstUploadedBy = new TuleapUser(
 				"first username", "first realname", 1, "first email", null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		attachments.add(new AttachmentValue("100000", "first name", firstUploadedBy, 123456, //$NON-NLS-1$ //$NON-NLS-2$ 
-				"first description", "first type")); //$NON-NLS-1$ //$NON-NLS-2$
+		attachments.add(new AttachmentValue("100000", "first name", 1, 123456, //$NON-NLS-1$ //$NON-NLS-2$
+				"first description", "first type", "")); //$NON-NLS-1$ //$NON-NLS-2$
 		TuleapUser secondUploadedBy = new TuleapUser("second username", "second realname", 2, //$NON-NLS-1$ //$NON-NLS-2$
 				"second email", null); //$NON-NLS-1$
-		attachments.add(new AttachmentValue("100001", "second name", secondUploadedBy, 789456, //$NON-NLS-1$ //$NON-NLS-2$
-				"second description", "second type")); //$NON-NLS-1$ //$NON-NLS-2$
+		attachments.add(new AttachmentValue("100001", "second name", 2, 789456, //$NON-NLS-1$ //$NON-NLS-2$
+				"second description", "second type", "")); //$NON-NLS-1$ //$NON-NLS-2$
 		AttachmentFieldValue fileDescriptions = new AttachmentFieldValue(3000, attachments);
 
 		firstCard.addFieldValue(fileDescriptions);

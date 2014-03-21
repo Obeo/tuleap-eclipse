@@ -190,7 +190,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 */
 	@Override
 	public AbstractTaskAttachmentHandler getTaskAttachmentHandler() {
-		return new TuleapTaskAttachmentHandler(this);
+		return new TuleapTaskAttachmentHandler(this, this.getClientManager());
 	}
 
 	/**

@@ -321,6 +321,16 @@ public class RestResource {
 		String ARTIFACTS = "artifacts"; //$NON-NLS-1$
 
 		/**
+		 * "artifact files".
+		 */
+		String ARTIFACT_FILES = "artifact_files"; //$NON-NLS-1$
+
+		/**
+		 * "artifact temporary files".
+		 */
+		String ARTIFACT_TEMPORARY_FILES = "artifact_temporary_files"; //$NON-NLS-1$
+
+		/**
 		 * "backlog".
 		 */
 		String BACKLOG = "backlog"; //$NON-NLS-1$

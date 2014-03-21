@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -30,10 +30,13 @@ import org.eclipse.mylyn.tuleap.core.internal.client.rest.TuleapRestClient;
 import org.eclipse.mylyn.tuleap.core.internal.model.TuleapToken;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapPlanning;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapServer;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapFileUpload;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapMultiSelectBox;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapOpenList;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapSelectBoxItem;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.ArtifactReference;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.AttachmentFieldValue;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.AttachmentValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.BoundFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.LiteralFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifact;
@@ -57,7 +60,7 @@ import static org.junit.Assert.assertNull;
 
 /**
  * Tests of {@link TuleapRestClient}.
- * 
+ *
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
@@ -188,7 +191,7 @@ public class TuleapRestClientTest {
 
 	/**
 	 * Test the retrieval of a backlog item.
-	 * 
+	 *
 	 * @throws CoreException
 	 *             The core exception to throw
 	 * @throws ParseException
@@ -340,6 +343,88 @@ public class TuleapRestClientTest {
 	}
 
 	@Test
+	public void testRetrieveArtifactFile() throws CoreException, ParseException {
+		String artifact = ParserUtil.loadFile("/artifact_files/file-0.json");
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, artifact, respHeaders);
+		connector.setResponse(response);
+		client.getArtifactFile(10, 0, 1024 * 1024, null);
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(1, requestsSent.size());
+		ServerRequest request = requestsSent.get(0);
+		assertEquals("/api/v12.3/artifact_files/10", request.url); //$NON-NLS-1$
+		assertEquals("GET", request.method); //$NON-NLS-1$
+	}
+
+	@Test
+	public void testCreateArtifactFile() throws CoreException, ParseException {
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,POST"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,POST"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK,
+				"{\"id\": 50, \"uri\": \"artifact_files/50\" }", respHeaders); //$NON-NLS-1$
+
+		connector.setResponse(response);
+		client.createArtifactFile("The file data", "application/zip", "fileName", "file description", null);
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(1, requestsSent.size());
+		ServerRequest request = requestsSent.get(0);
+		assertEquals("/api/v12.3/artifact_temporary_files", request.url); //$NON-NLS-1$
+		assertEquals("POST", request.method); //$NON-NLS-1$
+		assertEquals(
+				"{\"name\":\"fileName\",\"description\":\"file description\",\"mimetype\":\"application/zip\",\"content\":\"The file data\"}", //$NON-NLS-1$
+				request.body);
+	}
+
+	@Test
+	public void testUpdateArtifactFile() throws CoreException, ParseException {
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK,
+				"The response body", respHeaders); //$NON-NLS-1$
+
+		connector.setResponse(response);
+		client.updateArtifactFile(10, "The file content", 64, null);
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(1, requestsSent.size());
+
+		ServerRequest request = requestsSent.get(0);
+		assertEquals("/api/v12.3/artifact_temporary_files/10", request.url); //$NON-NLS-1$
+		assertEquals("PUT", request.method); //$NON-NLS-1$
+		assertEquals("{\"content\":\"The file content\",\"offset\":64}", //$NON-NLS-1$
+				request.body);
+	}
+
+	@Test
+	public void testDeleteArtifactFile() throws CoreException, ParseException {
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,DELETE"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,DELETE"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK,
+				"The response body", respHeaders); //$NON-NLS-1$
+
+		connector.setResponse(response);
+		client.deleteArtifactFile(10, null);
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(1, requestsSent.size());
+
+		ServerRequest request = requestsSent.get(0);
+		assertEquals("/api/v12.3/artifact_temporary_files/10", request.url); //$NON-NLS-1$
+		assertEquals("DELETE", request.method); //$NON-NLS-1$
+	}
+
+	@Test
 	public void testCreateArtifact() throws CoreException, ParseException {
 		TuleapReference trackerRef = new TuleapReference(100, "t/100");
 		TuleapReference projectRef = new TuleapReference(50, "p/50");
@@ -386,6 +471,54 @@ public class TuleapRestClientTest {
 		assertEquals("/api/v12.3/artifacts/10", request.url); //$NON-NLS-1$
 		assertEquals("PUT", request.method); //$NON-NLS-1$
 		assertEquals("{\"values\":[]}", //$NON-NLS-1$
+				request.body);
+	}
+
+	@Test
+	public void testUpdateArtifactWithSerializableAttachmentField() throws CoreException {
+		TuleapReference trackerRef = new TuleapReference(100, "t/100");
+		TuleapReference projectRef = new TuleapReference(50, "p/50");
+		TuleapArtifactWithComment artifact = new TuleapArtifactWithComment(10, trackerRef, projectRef);
+
+		final String newComment = "This is a new comment";
+		artifact.setNewComment(newComment);
+
+		TuleapFileUpload field = new TuleapFileUpload(222);
+
+		field.setPermissions(new String[] {"update" });
+		artifact.addField(field);
+
+		List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
+		// TuleapUser firstUploadedBy = new TuleapUser(
+		//				"first username", "first realname", 1, "first email", null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		attachments.add(new AttachmentValue("100000", "first name", 1, 123456, //$NON-NLS-1$ //$NON-NLS-2$
+				"first description", "first type", "")); //$NON-NLS-1$ //$NON-NLS-2$
+		//		TuleapUser secondUploadedBy = new TuleapUser("second username", "second realname", 2, //$NON-NLS-1$ //$NON-NLS-2$
+		//				"second email", null); //$NON-NLS-1$
+		attachments.add(new AttachmentValue("100001", "second name", 2, 789456, //$NON-NLS-1$ //$NON-NLS-2$
+				"second description", "second type", "")); //$NON-NLS-1$ //$NON-NLS-2$
+		AttachmentFieldValue fileDescription = new AttachmentFieldValue(222, attachments);
+
+		artifact.addFieldValue(fileDescription);
+
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,PUT"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,PUT"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK,
+				"The milestone response body", respHeaders); //$NON-NLS-1$
+
+		connector.setResponse(response);
+		client.updateArtifact(artifact, null);
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(1, requestsSent.size());
+
+		ServerRequest request = requestsSent.get(0);
+		assertEquals("/api/v12.3/artifacts/10", request.url); //$NON-NLS-1$
+		assertEquals("PUT", request.method); //$NON-NLS-1$
+		assertEquals(
+				"{\"values\":[{\"field_id\":222,\"value\":[100000,100001]}],\"comment\":{\"body\":\"This is a new comment\",\"format\":\"text\"}}", //$NON-NLS-1$
 				request.body);
 	}
 
@@ -445,7 +578,7 @@ public class TuleapRestClientTest {
 
 	/**
 	 * Test that a milestone backlog update is well done.
-	 * 
+	 *
 	 * @throws CoreException
 	 */
 	@Test
@@ -534,7 +667,7 @@ public class TuleapRestClientTest {
 
 	/**
 	 * Test that a milestone content update is well done.
-	 * 
+	 *
 	 * @throws CoreException
 	 */
 	@Test
@@ -581,7 +714,7 @@ public class TuleapRestClientTest {
 
 	/**
 	 * Test that the token creation on the server is well done.
-	 * 
+	 *
 	 * @throws CoreException
 	 */
 	@Test
@@ -616,7 +749,7 @@ public class TuleapRestClientTest {
 	/**
 	 * Test that checks that a TuleapRestClient that has no token (yet) will automatically login and retrieve
 	 * a token, then re-run a request.
-	 * 
+	 *
 	 * @throws CoreException
 	 *             if something goes wrong.
 	 */
@@ -669,7 +802,7 @@ public class TuleapRestClientTest {
 
 	/**
 	 * Test updating a cardwall with simple card.
-	 * 
+	 *
 	 * @throws CoreException
 	 */
 	@Test
@@ -708,7 +841,7 @@ public class TuleapRestClientTest {
 
 	/**
 	 * Test updating a cardwall with a card with literal field.
-	 * 
+	 *
 	 * @throws CoreException
 	 */
 	@Test
@@ -752,7 +885,7 @@ public class TuleapRestClientTest {
 
 	/**
 	 * Test updating a cardwall with a card with bound field.
-	 * 
+	 *
 	 * @throws CoreException
 	 */
 	@Test
@@ -806,7 +939,7 @@ public class TuleapRestClientTest {
 
 	/**
 	 * Test that a milestone content update is well done.
-	 * 
+	 *
 	 * @throws CoreException
 	 */
 	@Test
@@ -861,7 +994,7 @@ public class TuleapRestClientTest {
 
 	/**
 	 * Checks that the given backlog item corresponds to epic 301.
-	 * 
+	 *
 	 * @param item
 	 *            The backlog item
 	 */
@@ -884,7 +1017,7 @@ public class TuleapRestClientTest {
 
 	/**
 	 * Checks that the given backlog item corresponds to epic 301.
-	 * 
+	 *
 	 * @param item
 	 *            The backlog item
 	 */
@@ -907,7 +1040,7 @@ public class TuleapRestClientTest {
 
 	/**
 	 * Checks that the given backlog item corresponds to epic 301.
-	 * 
+	 *
 	 * @param item
 	 *            The backlog item
 	 * @throws ParseException
@@ -938,7 +1071,7 @@ public class TuleapRestClientTest {
 
 	/**
 	 * Checks that the given backlog item corresponds to epic 304.
-	 * 
+	 *
 	 * @param item
 	 *            The backlog item
 	 * @throws ParseException
@@ -968,7 +1101,7 @@ public class TuleapRestClientTest {
 
 	/**
 	 * Checks that the given backlog item corresponds to epic 300.
-	 * 
+	 *
 	 * @param item
 	 *            The backlog item The backlog item
 	 * @throws ParseException
@@ -999,7 +1132,7 @@ public class TuleapRestClientTest {
 
 	/**
 	 * Checks that the given backlog item corresponds to user story 350.
-	 * 
+	 *
 	 * @param item
 	 *            The backlog item
 	 * @throws ParseException
@@ -1030,7 +1163,7 @@ public class TuleapRestClientTest {
 
 	/**
 	 * Checks the content of the given milestone corresponds to release 200. Mutualized between several tests.
-	 * 
+	 *
 	 * @param tuleapMilestone
 	 * @throws ParseException
 	 */
@@ -1064,7 +1197,7 @@ public class TuleapRestClientTest {
 	/**
 	 * Checks the content of the given milestone corresponds to release 201. Mutualized between several test
 	 * cases.
-	 * 
+	 *
 	 * @param tuleapMilestone
 	 * @throws ParseException
 	 */

@@ -142,6 +142,6 @@ public class TuleapCardSerializerTest {
 		card.setColumnId(12);
 		TuleapFileUpload tuleapFileUpload = new TuleapFileUpload(12);
 		card.addField(tuleapFileUpload);
-		assertEquals("{\"label\":\"label\",\"values\":[],\"column_id\":12}", gson.toJson(card));
+		assertEquals("{\"label\":\"label\",\"values\":[{}],\"column_id\":12}", gson.toJson(card));
 	}
 }
