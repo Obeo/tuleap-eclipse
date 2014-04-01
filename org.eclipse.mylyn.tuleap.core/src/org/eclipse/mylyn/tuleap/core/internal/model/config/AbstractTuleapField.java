@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -17,12 +17,13 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field;
 import org.eclipse.mylyn.tasks.core.data.DefaultTaskSchema;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.field.ITuleapFieldVisitor;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.AbstractFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.LiteralFieldValue;
 
 /**
  * Tuleap fields represents date, textfield or combo box.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
@@ -35,7 +36,7 @@ public abstract class AbstractTuleapField extends AbstractTuleapFormElement {
 
 	/**
 	 * The constructor.
-	 * 
+	 *
 	 * @param formElementIdentifier
 	 *            The identifier of the form element
 	 */
@@ -45,21 +46,21 @@ public abstract class AbstractTuleapField extends AbstractTuleapFormElement {
 
 	/**
 	 * Returns the kind of task attribute that Mylyn should use to represent the Tuleap field.
-	 * 
+	 *
 	 * @return The kind of task attribute that Mylyn should use to represent the Tuleap field.
 	 */
 	public abstract String getMetadataKind();
 
 	/**
 	 * Returns the type of task attribute that Mylyn should use to represent the Tuleap field.
-	 * 
+	 *
 	 * @return The type of task attribute that Mylyn should use to represent the Tuleap field.
 	 */
 	public abstract String getMetadataType();
 
 	/**
 	 * Returns the default value of the task attribute that Mylyn will use.
-	 * 
+	 *
 	 * @return The default value of the task attribute that Mylyn will use.
 	 */
 	public abstract Object getDefaultValue();
@@ -67,7 +68,7 @@ public abstract class AbstractTuleapField extends AbstractTuleapFormElement {
 	/**
 	 * Indicates whether this field must provoke the creation of a TaskAttribute in the TaskData during its
 	 * initialization. This method is intended to be overridden in subclasses.
-	 * 
+	 *
 	 * @return Returns {@code true} if a task attribute must be created, and {@code false} otherwise. The
 	 *         default implementation returns systematically {@code true}.
 	 */
@@ -78,7 +79,7 @@ public abstract class AbstractTuleapField extends AbstractTuleapFormElement {
 	/**
 	 * Creates an returns a new TaskAttribute using this field. This method is meant to be overridden in the
 	 * subclasses to provide the relevant behavior depending on the type of tuleap field.
-	 * 
+	 *
 	 * @param parent
 	 *            The parent task attribute in which the new task attribute must be created.
 	 * @return The created task attribute.
@@ -100,7 +101,7 @@ public abstract class AbstractTuleapField extends AbstractTuleapFormElement {
 
 	/**
 	 * Initializes the given attribute with relevant default value, and options if need be.
-	 * 
+	 *
 	 * @param attribute
 	 *            The attribute
 	 */
@@ -112,7 +113,7 @@ public abstract class AbstractTuleapField extends AbstractTuleapFormElement {
 	/**
 	 * Instantiates the right kind of {@link AbstractFieldValue} for the given {@link TaskAttribute}. The
 	 * default implementation returns a new {@link LiteralFieldValue}.
-	 * 
+	 *
 	 * @param attribute
 	 *            The {@link TaskAttribute}
 	 * @param fieldId
@@ -129,7 +130,7 @@ public abstract class AbstractTuleapField extends AbstractTuleapFormElement {
 
 	/**
 	 * Sets the given value into the given {@link TaskAttribute}, in the relevant way.
-	 * 
+	 *
 	 * @param attribute
 	 *            The task attribute to set
 	 * @param value
@@ -140,7 +141,7 @@ public abstract class AbstractTuleapField extends AbstractTuleapFormElement {
 	/**
 	 * Initializes a newly created TaskAttribute's metadata. The default behavior is simply to set the kind to
 	 * the kind of this field, but this method should be subclassed to implement the correct behavior.
-	 * 
+	 *
 	 * @param metaData
 	 *            The newly created task attribute's metadata.
 	 */
@@ -152,7 +153,7 @@ public abstract class AbstractTuleapField extends AbstractTuleapFormElement {
 
 	/**
 	 * Update a newly created task attribute's default value.
-	 * 
+	 *
 	 * @param attribute
 	 *            The task attribute
 	 */
@@ -178,7 +179,7 @@ public abstract class AbstractTuleapField extends AbstractTuleapFormElement {
 	/**
 	 * Callback method available to allow subclasses to plug-in additional treatments after the task
 	 * attribute's creation.
-	 * 
+	 *
 	 * @param attribute
 	 *            The newly created and initialized task attribute
 	 */
@@ -192,7 +193,7 @@ public abstract class AbstractTuleapField extends AbstractTuleapFormElement {
 	 * If we can create non existing attribute (see constructor) and if an attribute with the given key does
 	 * not exists, a new one will be created.
 	 * </p>
-	 * 
+	 *
 	 * @param parent
 	 *            The parent attribute (for instance, taskData.getRoot())
 	 * @param attributeKey
@@ -216,4 +217,12 @@ public abstract class AbstractTuleapField extends AbstractTuleapFormElement {
 		}
 		return attribute;
 	}
+
+	/**
+	 * Method for visitor pattern, must be implemented in sub-classes.
+	 *
+	 * @param visitor
+	 *            The visitor.
+	 */
+	public abstract void accept(ITuleapFieldVisitor visitor);
 }

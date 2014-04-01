@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -24,6 +24,7 @@ import org.eclipse.mylyn.tuleap.core.tests.internal.client.soap.TuleapSoapParser
 import org.eclipse.mylyn.tuleap.core.tests.internal.converter.MilestoneTaskDataConverterTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.data.TuleapArtifactMapperTests;
 import org.eclipse.mylyn.tuleap.core.tests.internal.data.TuleapTaskIdTests;
+import org.eclipse.mylyn.tuleap.core.tests.internal.model.QueryCriterionTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.model.TuleapProjectConfigurationTests;
 import org.eclipse.mylyn.tuleap.core.tests.internal.model.TuleapTrackerConfigurationTests;
 import org.eclipse.mylyn.tuleap.core.tests.internal.model.TuleapWorkflowTests;
@@ -55,27 +56,28 @@ import org.junit.runners.Suite;
 
 /**
  * The stand alone unit tests suite (run as standard junit test).
- * 
+ *
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  * @since 0.7
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({TuleapSoapParserTests.class, TuleapTaskIdTests.class,
-		TuleapTrackerConfigurationTests.class, ServerResponseTest.class,
-		TuleapProjectConfigurationTests.class, TuleapCardwallConfigurationDeserializerTests.class,
-		TuleapMilestoneSerializerTests.class, MilestoneTaskDataConverterTest.class,
-		TuleapSoapConnectorTests.class, TuleapRepositoryConnectorTests.class, TuleapJsonParserTest.class,
-		TuleapTaskDataHandlerTests.class, TuleapWorkflowTests.class, TuleapArtifactMapperTests.class,
-		TuleapRestResourceFactoryTest.class, RestResourceTest.class, RestOperationsTest.class,
-		TuleapRestClientTest.class, TuleapCardSerializerTest.class, TuleapRestClientLimitTests.class,
-		TuleapArtifactSerializerTest.class, TuleapArtifactWithCommentSerializerTest.class,
-		ArtifactLinkAdapterTest.class, LiteralFieldValueSerializerTest.class,
-		BoundFieldValueSerializerTest.class, ArtifactLinkAdapterTest.class,
-		TuleapArtifactDeserializerTest.class, TuleapBacklogItemDeserializerTest.class,
-		TuleapChangesetDeserializerTests.class, TuleapMilestoneDeserializerTest.class,
-		TuleapPlanningDeserializerTest.class, TuleapProjectDeserializerTest.class,
-		TuleapTrackerDeserializerTest.class, TuleapTrackerReportDeserializerTest.class,
-		TuleapUserDeserializerTest.class, DateIso8601AdapterTest.class, TuleapBurndownDeserializerTest.class })
+	TuleapTrackerConfigurationTests.class, ServerResponseTest.class,
+	TuleapProjectConfigurationTests.class, TuleapCardwallConfigurationDeserializerTests.class,
+	TuleapMilestoneSerializerTests.class, MilestoneTaskDataConverterTest.class,
+	TuleapSoapConnectorTests.class, TuleapRepositoryConnectorTests.class, TuleapJsonParserTest.class,
+	TuleapTaskDataHandlerTests.class, TuleapWorkflowTests.class, TuleapArtifactMapperTests.class,
+	TuleapRestResourceFactoryTest.class, RestResourceTest.class, RestOperationsTest.class,
+	TuleapRestClientTest.class, TuleapCardSerializerTest.class, TuleapRestClientLimitTests.class,
+	TuleapArtifactSerializerTest.class, TuleapArtifactWithCommentSerializerTest.class,
+	ArtifactLinkAdapterTest.class, LiteralFieldValueSerializerTest.class,
+	BoundFieldValueSerializerTest.class, ArtifactLinkAdapterTest.class,
+	TuleapArtifactDeserializerTest.class, TuleapBacklogItemDeserializerTest.class,
+	TuleapChangesetDeserializerTests.class, TuleapMilestoneDeserializerTest.class,
+	TuleapPlanningDeserializerTest.class, TuleapProjectDeserializerTest.class,
+	TuleapTrackerDeserializerTest.class, TuleapTrackerReportDeserializerTest.class,
+	TuleapUserDeserializerTest.class, DateIso8601AdapterTest.class, TuleapBurndownDeserializerTest.class,
+		QueryCriterionTest.class })
 public final class AllTuleapStandaloneTests {
 
 	/**
@@ -87,7 +89,7 @@ public final class AllTuleapStandaloneTests {
 
 	/**
 	 * Launches the test with the given arguments.
-	 * 
+	 *
 	 * @param args
 	 *            Arguments of the testCase.
 	 */
@@ -97,7 +99,7 @@ public final class AllTuleapStandaloneTests {
 
 	/**
 	 * Creates the {@link junit.framework.TestSuite TestSuite} for all the test.
-	 * 
+	 *
 	 * @return The test suite containing all the tests
 	 */
 	public static Test suite() {

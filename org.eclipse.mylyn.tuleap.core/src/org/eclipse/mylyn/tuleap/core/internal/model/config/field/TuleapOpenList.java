@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -23,7 +23,7 @@ import org.eclipse.mylyn.tuleap.core.internal.model.data.OpenListFieldValue;
 
 /**
  * The Tuleap open list field.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
@@ -36,7 +36,7 @@ public class TuleapOpenList extends AbstractTuleapField {
 
 	/**
 	 * The constructor.
-	 * 
+	 *
 	 * @param formElementIdentifier
 	 *            The identifier of the form element
 	 */
@@ -46,7 +46,7 @@ public class TuleapOpenList extends AbstractTuleapField {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#getMetadataKind()
 	 */
 	@Override
@@ -56,7 +56,7 @@ public class TuleapOpenList extends AbstractTuleapField {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#getMetadataType()
 	 */
 	@Override
@@ -66,7 +66,7 @@ public class TuleapOpenList extends AbstractTuleapField {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#getDefaultValue()
 	 */
 	@Override
@@ -76,7 +76,7 @@ public class TuleapOpenList extends AbstractTuleapField {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#createFieldValue(org.eclipse.mylyn.tasks.core.data.TaskAttribute,
 	 *      int)
 	 */
@@ -93,7 +93,7 @@ public class TuleapOpenList extends AbstractTuleapField {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#setValue(org.eclipse.mylyn.tasks.core.data.TaskAttribute,
 	 *      org.eclipse.mylyn.tuleap.core.internal.model.data.AbstractFieldValue)
 	 */
@@ -126,5 +126,10 @@ public class TuleapOpenList extends AbstractTuleapField {
 			}
 			attribute.setValue(b.toString());
 		}
+	}
+
+	@Override
+	public void accept(ITuleapFieldVisitor visitor) {
+		visitor.visit(this);
 	}
 }

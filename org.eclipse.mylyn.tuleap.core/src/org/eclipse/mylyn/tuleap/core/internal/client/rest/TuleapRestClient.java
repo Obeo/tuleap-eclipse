@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -26,10 +26,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tuleap.core.internal.data.TuleapTaskId;
 import org.eclipse.mylyn.tuleap.core.internal.model.TuleapToken;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapPlanning;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapProject;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapServer;
@@ -40,7 +41,6 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapUserGroup;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.ArtifactReference;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifact;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifactWithComment;
-import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapAttachmentDescriptor;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapElementComment;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapBacklogItem;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapBurndown;
@@ -59,7 +59,7 @@ import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
  * editor catch these exceptions. All the operations that cannot be used from an editor will instead log their
  * errors using the logger.
  * </p>
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
@@ -87,7 +87,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * The constructor.
-	 * 
+	 *
 	 * @param resourceFactory
 	 *            The RESt resource factory to use
 	 * @param gson
@@ -105,7 +105,7 @@ public class TuleapRestClient implements IAuthenticator {
 	 * Tests that we can use the repository by validating that the server provides a compatible version of the
 	 * API and then trying to log in using the credentials from the task repository, checking the user
 	 * session, and logging out.
-	 * 
+	 *
 	 * @param monitor
 	 *            Used to monitor the progress
 	 * @return A status indicating if the server support a version of the API compatible with the one expected
@@ -124,7 +124,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Loads the planning into a given project after fetching them from the remote server via the REST API.
-	 * 
+	 *
 	 * @param project
 	 *            The project in which plannings must be loaded
 	 * @throws CoreException
@@ -143,7 +143,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Creates an authorization token on the server and stores it so that it can be used.
-	 * 
+	 *
 	 * @throws CoreException
 	 *             In case of error during the authentication.
 	 */
@@ -165,7 +165,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.client.rest.IAuthenticator#getToken()
 	 */
 	public TuleapToken getToken() {
@@ -174,7 +174,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Create the POST token body.
-	 * 
+	 *
 	 * @param credentials
 	 *            The task repository credentials
 	 * @return The POST token body
@@ -188,7 +188,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Retrieves the artifact from the server with the given artifact id.
-	 * 
+	 *
 	 * @param artifactId
 	 *            The identifier of the artifact
 	 * @param server
@@ -213,7 +213,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Updates the artifact represented by the given task data with the given task data.
-	 * 
+	 *
 	 * @param artifact
 	 *            The artifact to submit
 	 * @param monitor
@@ -234,7 +234,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Creates the artifact on the server.
-	 * 
+	 *
 	 * @param artifact
 	 *            The artifact to create
 	 * @param monitor
@@ -256,131 +256,8 @@ public class TuleapRestClient implements IAuthenticator {
 	}
 
 	/**
-	 * Runs the report on the server for the tracker with the given tracker identifier.
-	 * 
-	 * @param trackerId
-	 *            The identifier of the tracker
-	 * @param reportId
-	 *            The identifier of the report
-	 * @param collector
-	 *            The task data collector
-	 * @param monitor
-	 *            Used to monitor the progress
-	 * @return The number of artifact retrieved
-	 * @throws CoreException
-	 *             In case of error during the report execution
-	 */
-	public int executeReport(int trackerId, int reportId, TaskDataCollector collector,
-			IProgressMonitor monitor) throws CoreException {
-		// Test the connection
-		// Try to log in
-		// Send a request with OPTIONS to ensure that we can and have the right to run a report
-		// Run the report
-		// Create the task data from the result
-		// Put them in the task data collector
-		// Try to log out
-		return -1;
-	}
-
-	/**
-	 * Runs the query on the server for the tracker with the given tracker identifier.
-	 * 
-	 * @param trackerId
-	 *            The identifier of the tracker
-	 * @param criteras
-	 *            The criteras of the query
-	 * @param collector
-	 *            The task data collector
-	 * @param monitor
-	 *            Used to monitor the progress
-	 * @return The number of artifact retrieved
-	 * @throws CoreException
-	 *             In case of error during the query execution
-	 */
-	public int executeQuery(int trackerId, Map<String, String> criteras, TaskDataCollector collector,
-			IProgressMonitor monitor) throws CoreException {
-		// Test the connection
-		// Try to log in
-		// Send a request with OPTIONS to ensure that we can and have the right to run a query
-		// Run the report
-		// Create the task data from the result
-		// Put them in the task data collector
-		// Try to log out
-		return -1;
-	}
-
-	/**
-	 * Retrieve the content of the attachment with the given attachment identifier.
-	 * 
-	 * @param attachmentId
-	 *            The identifier of the attachment
-	 * @param monitor
-	 *            Used to monitor the progress
-	 * @return The content of the attachment
-	 * @throws CoreException
-	 *             In case of error during the attachment content retrieval
-	 */
-	public byte[] getAttachmentContent(int attachmentId, IProgressMonitor monitor) throws CoreException {
-		// Test the connection
-
-		// Try to log in
-
-		// Send a request with OPTIONS to ensure that we can and have the right to retrieve the file
-
-		// Retrieve the details of the file from the OPTIONS request (size)
-
-		// Download a chunk of the file until completion
-
-		// Assemble the whole file in an array of byte
-
-		// Try to log out
-
-		return null;
-	}
-
-	/**
-	 * Uploads an attachment to the server for the given artifact.
-	 * 
-	 * @param artifactId
-	 *            The identifier of the artifact
-	 * @param attachmentFieldId
-	 *            The identifier of the file field in the artifact
-	 * @param tuleapAttachmentDescriptor
-	 *            The descriptor of the attachment
-	 * @param comment
-	 *            The comment
-	 * @param monitor
-	 *            Used to monitor the progress
-	 * @throws CoreException
-	 *             In case of error during the attachment upload
-	 */
-	public void uploadAttachment(int artifactId, int attachmentFieldId,
-			TuleapAttachmentDescriptor tuleapAttachmentDescriptor, String comment, IProgressMonitor monitor)
-			throws CoreException {
-		// Test the connection
-
-		// Try to log in
-
-		// Send a request with OPTIONS to ensure that we can and have the right to upload a file
-
-		// Send the first chunk of data to create a temporary file
-
-		// Retrieve the upload id as a response
-
-		// Send the remaining chunk using the upload id
-
-		// Send a request with POST in order to complete the upload of the temporary file
-
-		// Send a request with OPTIONS to ensure that we can and have the right to update the artifact
-
-		// Update the artifact with a new attachment
-
-		// Try to log out
-	}
-
-	/**
 	 * Retrieves a milestone from its id.
-	 * 
+	 *
 	 * @param milestoneId
 	 *            milestone id
 	 * @param monitor
@@ -402,7 +279,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Retrieve the backlog items of a given milestone.
-	 * 
+	 *
 	 * @param milestoneId
 	 *            The milestone id
 	 * @param monitor
@@ -431,7 +308,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Retrieve the backlog items of a given milestone.
-	 * 
+	 *
 	 * @param milestoneId
 	 *            The milestone id
 	 * @param monitor
@@ -460,7 +337,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Retrieve burndown of a given milestone.
-	 * 
+	 *
 	 * @param milestoneId
 	 *            The milestone id
 	 * @param monitor
@@ -484,7 +361,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Retrieve the backlog items of a given milestone.
-	 * 
+	 *
 	 * @param milestoneId
 	 *            The milestone id
 	 * @param monitor
@@ -511,7 +388,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Retrieve a project's milestones.
-	 * 
+	 *
 	 * @param projectId
 	 *            ID of the project
 	 * @param monitor
@@ -533,7 +410,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Retrieve a project's backlog.
-	 * 
+	 *
 	 * @param projectId
 	 *            ID of the project
 	 * @param monitor
@@ -555,7 +432,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Retrieves the cardwall of a milestone, if there is one.
-	 * 
+	 *
 	 * @param milestoneId
 	 *            Id of the milestone
 	 * @param monitor
@@ -578,7 +455,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Retrieve a project's user groups.
-	 * 
+	 *
 	 * @param projectId
 	 *            ID of the project
 	 * @param monitor
@@ -600,7 +477,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Retrieve a user group users.
-	 * 
+	 *
 	 * @param userGroupId
 	 *            ID of the user group
 	 * @param monitor
@@ -622,7 +499,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Retrieve a tracker reports.
-	 * 
+	 *
 	 * @param trackerId
 	 *            ID of the tracker
 	 * @param monitor
@@ -644,7 +521,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Retrieve the projects.
-	 * 
+	 *
 	 * @param monitor
 	 *            Progress monitor to use
 	 * @return A list, never null but possibly empty, containing the projects.
@@ -663,7 +540,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Retrieve a project trackers.
-	 * 
+	 *
 	 * @param projectId
 	 *            The project id
 	 * @param monitor
@@ -685,7 +562,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Retrieve a tracker report artifacts.
-	 * 
+	 *
 	 * @param trackerReportId
 	 *            ID of the tracker report
 	 * @param monitor
@@ -708,8 +585,57 @@ public class TuleapRestClient implements IAuthenticator {
 	}
 
 	/**
+	 * Retrieves the {@link TuleapArtifact} from a query run on the server.
+	 *
+	 * @param query
+	 *            The query to run
+	 * @param tracker
+	 *            The configuration used to analyze the data from the SOAP responses
+	 * @param monitor
+	 *            the progress monitor
+	 * @return The list of the Tuleap artifact
+	 * @throws CoreException
+	 *             If communication fails.
+	 */
+	public List<TuleapArtifact> getArtifactsFromQuery(IRepositoryQuery query, TuleapTracker tracker,
+			IProgressMonitor monitor) throws CoreException {
+		RestResource r = restResourceFactory.trackerArtifacts(tracker.getIdentifier())
+				.withAuthenticator(this);
+		RestOperation op = r.get().withQueryParameter("values", "all"); //$NON-NLS-1$//$NON-NLS-2$
+		Map<String, String> attributes = query.getAttributes();
+		// We go over existing field to avoid sending criteria on fields that would still be in the query
+		// but no longer in the tracker config for any reason
+		// We cannot just serialize this map with gson since values are already JSON,
+		// not objects to serialize.
+		StringBuilder criteria = new StringBuilder();
+		boolean needComma = false;
+		for (AbstractTuleapField field : tracker.getFields()) {
+			String fieldId = Integer.toString(field.getIdentifier());
+			if (attributes.containsKey(fieldId)) {
+				if (needComma) {
+					criteria.append(',');
+				} else {
+					needComma = true;
+				}
+				String json = attributes.get(fieldId);
+				criteria.append('"').append(fieldId).append("\":").append(json); //$NON-NLS-1$
+			}
+		}
+		if (criteria.length() > 0) {
+			criteria.insert(0, '{').append('}');
+			op.withQueryParameter("query", criteria.toString()); //$NON-NLS-1$
+		}
+
+		List<TuleapArtifact> artifacts = Lists.newArrayList();
+		for (JsonElement e : op.iterable()) {
+			artifacts.add(gson.fromJson(e, TuleapArtifact.class));
+		}
+		return artifacts;
+	}
+
+	/**
 	 * Retrieve an artifact comments.
-	 * 
+	 *
 	 * @param artifactId
 	 *            ID of the artifact
 	 * @param server
@@ -739,7 +665,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Updates the backlog of a given milestone.
-	 * 
+	 *
 	 * @param milestoneId
 	 *            The milestone id
 	 * @param backlogItems
@@ -769,7 +695,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Updates the backlog of a given milestone.
-	 * 
+	 *
 	 * @param projectId
 	 *            The project id
 	 * @param backlogItems
@@ -798,7 +724,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Updates the content of a given milestone.
-	 * 
+	 *
 	 * @param milestoneId
 	 *            The milestone id
 	 * @param backlogItems
@@ -828,7 +754,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Updates the submilestones list of a given milestone.
-	 * 
+	 *
 	 * @param milestoneId
 	 *            The milestone id
 	 * @param submilestones
@@ -858,7 +784,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Updates the milestone card on the server.
-	 * 
+	 *
 	 * @param tuleapCard
 	 *            The card to update
 	 * @param monitor
@@ -885,7 +811,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Returns the Tuleap backlog item with the given identifier from the server.
-	 * 
+	 *
 	 * @param backlogItemId
 	 *            The identifier of the backlog item
 	 * @param monitor
@@ -911,7 +837,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	/**
 	 * Returns the Tuleap tracker with the given identifier from the server.
-	 * 
+	 *
 	 * @param trackerId
 	 *            The identifier of the tracker
 	 * @param monitor
@@ -923,7 +849,7 @@ public class TuleapRestClient implements IAuthenticator {
 	public TuleapTracker getTracker(int trackerId, IProgressMonitor monitor) throws CoreException {
 		if (monitor != null) {
 			monitor.subTask(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.retrievingBacklogItem, Integer.valueOf(trackerId)));
+					TuleapMylynTasksMessagesKeys.retrievingTracker, Integer.valueOf(trackerId)));
 		}
 		RestResource restTracker = restResourceFactory.tracker(trackerId).withAuthenticator(this);
 		RestOperation operation = restTracker.get();

@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -14,6 +14,7 @@ import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 
 import java.net.Proxy;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -47,6 +48,7 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapSelectBox
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapSelectBoxItem;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.ArtifactReference;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifact;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapElementComment;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapReference;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapBacklogItem;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapMilestone;
@@ -69,7 +71,7 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * Tests for the {@link TuleapRepositoryConnector}.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
@@ -266,13 +268,19 @@ public class TuleapRepositoryConnectorTests {
 
 		final TuleapClientManager tuleapClientManager = new TuleapClientManager() {
 			@Override
-			public TuleapSoapClient getSoapClient(TaskRepository taskRepository) {
-				return new TuleapSoapClient(location, null) {
+			public TuleapRestClient getRestClient(TaskRepository taskRepository) {
+				return new TuleapRestClient(null, null, null) {
+
 					@Override
 					public List<TuleapArtifact> getArtifactsFromQuery(IRepositoryQuery query,
-							TuleapServer serverConfiguration, TuleapTracker tuleapTracker,
-							IProgressMonitor monitor) {
-						return Lists.newArrayList(tuleapArtifact);
+							TuleapTracker tracker, IProgressMonitor monitor) throws CoreException {
+						return Arrays.asList(tuleapArtifact);
+					}
+
+					@Override
+					public List<TuleapElementComment> getArtifactComments(int artId, TuleapServer server,
+							IProgressMonitor monitor) throws CoreException {
+						return Collections.emptyList();
 					}
 				};
 			}

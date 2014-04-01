@@ -20,7 +20,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.tuleap.core;bundle-version="2.0.0",
  javax.xml.rpc;bundle-version="1.1.0",
  org.tuleap.mylyn.task.agile.ui;bundle-version="1.0.0",
- org.tuleap.mylyn.task.agile.core;bundle-version="1.0.0"
+ org.tuleap.mylyn.task.agile.core;bundle-version="1.0.0",
+ com.google.gson;bundle-version="2.1.0"
 Export-Package: org.eclipse.mylyn.tuleap.ui.internal;version="2.0.0";x-friends:="org.eclipse.mylyn.tuleap.ui.tests",
  org.eclipse.mylyn.tuleap.ui.internal.editor;version="2.0.0";x-friends:="org.eclipse.mylyn.tuleap.ui.tests",
  org.eclipse.mylyn.tuleap.ui.internal.preferences;version="2.0.0";x-friends:="org.eclipse.mylyn.tuleap.ui.tests",

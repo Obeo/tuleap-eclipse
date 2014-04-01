@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -44,7 +44,6 @@ import org.eclipse.mylyn.tuleap.core.internal.TuleapCoreActivator;
 import org.eclipse.mylyn.tuleap.core.internal.client.ITuleapQueryConstants;
 import org.eclipse.mylyn.tuleap.core.internal.client.TuleapClientManager;
 import org.eclipse.mylyn.tuleap.core.internal.client.rest.TuleapRestClient;
-import org.eclipse.mylyn.tuleap.core.internal.client.soap.TuleapSoapClient;
 import org.eclipse.mylyn.tuleap.core.internal.data.TuleapArtifactMapper;
 import org.eclipse.mylyn.tuleap.core.internal.data.TuleapTaskId;
 import org.eclipse.mylyn.tuleap.core.internal.data.converter.ArtifactTaskDataConverter;
@@ -56,13 +55,14 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapUserGroup;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.AbstractTuleapSelectBox;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapSelectBoxItem;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifact;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapElementComment;
 import org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants;
 import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessages;
 import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
 
 /**
  * This class encapsulates common operation realized on the Tuleap repository.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
@@ -107,7 +107,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getConnectorKind()
 	 */
 	@Override
@@ -117,7 +117,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getLabel()
 	 */
 	@Override
@@ -128,7 +128,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#canCreateNewTask(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
 	@Override
@@ -138,7 +138,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#canCreateTaskFromKey(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
 	@Override
@@ -148,7 +148,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getRepositoryUrlFromTaskUrl(java.lang.String)
 	 */
 	@Override
@@ -161,7 +161,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getTaskIdFromTaskUrl(java.lang.String)
 	 */
 	@Override
@@ -175,7 +175,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getTaskDataHandler()
 	 */
 	@Override
@@ -185,7 +185,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getTaskAttachmentHandler()
 	 */
 	@Override
@@ -195,7 +195,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getTaskUrl(java.lang.String,
 	 *      java.lang.String)
 	 */
@@ -206,7 +206,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getTaskData(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
 	 */
@@ -218,7 +218,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#hasTaskChanged(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      org.eclipse.mylyn.tasks.core.ITask, org.eclipse.mylyn.tasks.core.data.TaskData)
 	 */
@@ -236,7 +236,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#canQuery(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
 	@Override
@@ -246,7 +246,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.repository.ITuleapRepositoryConnector#getClientManager()
 	 */
 	public TuleapClientManager getClientManager() {
@@ -258,7 +258,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#updateNewTaskFromTaskData(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      org.eclipse.mylyn.tasks.core.ITask, org.eclipse.mylyn.tasks.core.data.TaskData)
 	 */
@@ -269,7 +269,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#performQuery(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      org.eclipse.mylyn.tasks.core.IRepositoryQuery,
 	 *      org.eclipse.mylyn.tasks.core.data.TaskDataCollector,
@@ -279,78 +279,35 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	@Override
 	public IStatus performQuery(TaskRepository taskRepository, IRepositoryQuery query,
 			TaskDataCollector collector, ISynchronizationSession session, IProgressMonitor monitor) {
+		if (monitor != null) {
+			monitor.subTask("Executing query " + query.getSummary()); //$NON-NLS-1$
+		}
+		IStatus status = Status.OK_STATUS;
 		// Populate the collector with the task data resulting from the query
 		String queryKind = query.getAttribute(ITuleapQueryConstants.QUERY_KIND);
-		if (ITuleapQueryConstants.QUERY_KIND_REPORT.equals(queryKind)) {
-			performReportQuery(taskRepository, query, collector, monitor);
-		} else if (ITuleapQueryConstants.QUERY_KIND_CUSTOM.equals(queryKind)) {
-			performStandardQuery(taskRepository, query, collector, monitor);
-
-		} else if (ITuleapQueryConstants.QUERY_KIND_TOP_LEVEL_PLANNING.equals(queryKind)) {
-			performProjectPlanningQuery(taskRepository, query, collector, monitor);
-		}
-		return Status.OK_STATUS;
-	}
-
-	/**
-	 * Perform a "standard" query, which is configured by a set of criteria.
-	 * 
-	 * @param taskRepository
-	 *            The task repository
-	 * @param query
-	 *            The qeury to execute
-	 * @param collector
-	 *            The taks data collector
-	 * @param monitor
-	 *            The progress monitor
-	 */
-	private void performStandardQuery(TaskRepository taskRepository, IRepositoryQuery query,
-			TaskDataCollector collector, IProgressMonitor monitor) {
-		TuleapSoapClient soapClient = this.getClientManager().getSoapClient(taskRepository);
-		int trackerId = Integer.valueOf(query.getAttribute(ITuleapQueryConstants.QUERY_TRACKER_ID))
-				.intValue();
-		TuleapServer server = this.getServer(taskRepository.getRepositoryUrl());
-		TuleapTracker tracker = server.getTracker(trackerId);
-		try {
-			tracker = this.refreshTracker(taskRepository, tracker, monitor);
-		} catch (CoreException e) {
-			TuleapCoreActivator.log(e, true);
-		}
-		ArtifactTaskDataConverter artifactTaskDataConverter = new ArtifactTaskDataConverter(tracker,
-				taskRepository, this);
-		List<TuleapArtifact> artifacts = soapClient.getArtifactsFromQuery(query, server, tracker, monitor);
-		for (TuleapArtifact artifact : artifacts) {
-			TuleapTaskId taskDataId = TuleapTaskId.forArtifact(tracker.getProject().getIdentifier(), artifact
-					.getTracker().getId(), artifact.getId().intValue());
-
-			TaskAttributeMapper attributeMapper = this.getTaskDataHandler()
-					.getAttributeMapper(taskRepository);
-			TaskData taskData = new TaskData(attributeMapper, this.getConnectorKind(), taskRepository
-					.getRepositoryUrl(), taskDataId.toString());
-			artifactTaskDataConverter.populateTaskData(taskData, artifact, monitor);
-
-			// If the tracker is a milestone tracker, retrieve milestone-specific informations
-			if (tracker.getProject().isMilestoneTracker(tracker.getIdentifier())) {
-				try {
-					taskDataHandler.fetchMilestoneData(taskData, tracker.getProject(), tracker,
-							taskRepository, monitor);
-				} catch (CoreException e) {
-					TuleapCoreActivator.log(e, true);
-				}
-			}
-
+		if (ITuleapQueryConstants.QUERY_KIND_TOP_LEVEL_PLANNING.equals(queryKind)) {
 			try {
-				collector.accept(taskData);
-			} catch (IllegalArgumentException exception) {
-				// Do not log, the query has been deleted while it was executed, see:
-				// org.eclipse.mylyn.internal.tasks.core.TaskList.getValidElement(IRepositoryElement)
+				performProjectPlanningQuery(taskRepository, query, collector, monitor);
+			} catch (CoreException e) {
+				status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
 			}
+		} else if (ITuleapQueryConstants.QUERY_KIND_REPORT.equals(queryKind)
+				|| ITuleapQueryConstants.QUERY_KIND_CUSTOM.equals(queryKind)) {
+			try {
+				performReportOrCustomQuery(taskRepository, query, collector, monitor);
+			} catch (CoreException e) {
+				status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
+			}
+		} else {
+			status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
+					"Invalid state: unknown query kind."); //$NON-NLS-1$
 		}
+		return status;
 	}
 
 	/**
-	 * Perform a "report" query.
-	 * 
+	 * Perform a custom or report query.
+	 *
 	 * @param taskRepository
 	 *            The task repository
 	 * @param query
@@ -359,9 +316,11 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 *            The task data collector
 	 * @param monitor
 	 *            The progress monitor
+	 * @throws CoreException
+	 *             If artifact retrieval goes wrong.
 	 */
-	private void performReportQuery(TaskRepository taskRepository, IRepositoryQuery query,
-			TaskDataCollector collector, IProgressMonitor monitor) {
+	private void performReportOrCustomQuery(TaskRepository taskRepository, IRepositoryQuery query,
+			TaskDataCollector collector, IProgressMonitor monitor) throws CoreException {
 		TuleapRestClient client = this.getClientManager().getRestClient(taskRepository);
 		int trackerId = Integer.valueOf(query.getAttribute(ITuleapQueryConstants.QUERY_TRACKER_ID))
 				.intValue();
@@ -374,19 +333,23 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		}
 		ArtifactTaskDataConverter artifactTaskDataConverter = new ArtifactTaskDataConverter(tracker,
 				taskRepository, this);
-		String queryReportId = query.getAttribute(ITuleapQueryConstants.QUERY_REPORT_ID);
-		int reportId = Integer.valueOf(queryReportId).intValue();
-
-		List<TuleapArtifact> artifacts = null;
-		try {
-			artifacts = client.getTrackerReportArtifacts(reportId, monitor);
-		} catch (CoreException exception) {
-			TuleapCoreActivator.log(exception, true);
-		}
+		List<TuleapArtifact> artifacts = getRawArtifacts(query, tracker, client, monitor);
 		if (artifacts != null) {
 			for (TuleapArtifact artifact : artifacts) {
+				if (monitor != null && monitor.isCanceled()) {
+					return;
+				}
 				TuleapTaskId taskDataId = TuleapTaskId.forArtifact(tracker.getProject().getIdentifier(),
 						artifact.getTracker().getId(), artifact.getId().intValue());
+				try {
+					List<TuleapElementComment> artifactComments = client.getArtifactComments(artifact.getId()
+							.intValue(), server, monitor);
+					for (TuleapElementComment comment : artifactComments) {
+						artifact.addComment(comment);
+					}
+				} catch (CoreException e) {
+					TuleapCoreActivator.log(e, true);
+				}
 
 				TaskAttributeMapper attributeMapper = this.getTaskDataHandler().getAttributeMapper(
 						taskRepository);
@@ -414,8 +377,40 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	}
 
 	/**
+	 * Retrieves artifacts without comments and agile features for the given query.
+	 *
+	 * @param query
+	 *            The query
+	 * @param tracker
+	 *            The tracker
+	 * @param client
+	 *            The Client to use.
+	 * @param monitor
+	 *            The progress monitor
+	 * @throws CoreException
+	 *             if communication goes wrong.
+	 * @return The list of artifacts, without their comments.
+	 */
+	private List<TuleapArtifact> getRawArtifacts(IRepositoryQuery query, TuleapTracker tracker,
+			TuleapRestClient client, IProgressMonitor monitor) throws CoreException {
+		List<TuleapArtifact> artifacts = null;
+		String queryKind = query.getAttribute(ITuleapQueryConstants.QUERY_KIND);
+		if (ITuleapQueryConstants.QUERY_KIND_REPORT.equals(queryKind)) {
+			String queryReportId = query.getAttribute(ITuleapQueryConstants.QUERY_REPORT_ID);
+			int reportId = Integer.valueOf(queryReportId).intValue();
+			artifacts = client.getTrackerReportArtifacts(reportId, monitor);
+		} else if (ITuleapQueryConstants.QUERY_KIND_CUSTOM.equals(queryKind)) {
+			artifacts = client.getArtifactsFromQuery(query, tracker, monitor);
+		} else {
+			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
+					"Invalid state: unknown query kind.")); //$NON-NLS-1$
+		}
+		return artifacts;
+	}
+
+	/**
 	 * Perform a query of type "Top-level planning".
-	 * 
+	 *
 	 * @param taskRepository
 	 *            The task repository
 	 * @param query
@@ -424,33 +419,30 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 *            The data collector
 	 * @param monitor
 	 *            The progress monitor
+	 * @throws CoreException
+	 *             If top-planning retrieval goes wrong.
 	 */
 	private void performProjectPlanningQuery(TaskRepository taskRepository, IRepositoryQuery query,
-			TaskDataCollector collector, IProgressMonitor monitor) {
+			TaskDataCollector collector, IProgressMonitor monitor) throws CoreException {
 		int projectId = Integer.valueOf(query.getAttribute(ITuleapQueryConstants.QUERY_PROJECT_ID))
 				.intValue();
+		TuleapTaskId taskDataId = TuleapTaskId.forTopPlanning(projectId);
+		TaskAttributeMapper attributeMapper = this.getTaskDataHandler().getAttributeMapper(taskRepository);
+		// Create the PROJECT_ID task attribute
+		TaskData taskData = new TaskData(attributeMapper, getConnectorKind(), taskRepository
+				.getRepositoryUrl(), taskDataId.toString());
+		taskData = taskDataHandler.fetchProjectPlanningData(taskData, taskRepository, monitor);
 		try {
-			TuleapTaskId taskDataId = TuleapTaskId.forTopPlanning(projectId);
-			TaskAttributeMapper attributeMapper = this.getTaskDataHandler()
-					.getAttributeMapper(taskRepository);
-			// Create the PROJECT_ID task attribute
-			TaskData taskData = new TaskData(attributeMapper, getConnectorKind(), taskRepository
-					.getRepositoryUrl(), taskDataId.toString());
-			taskData = taskDataHandler.fetchProjectPlanningData(taskData, taskRepository, monitor);
-			try {
-				collector.accept(taskData);
-			} catch (IllegalArgumentException exception) {
-				// Do not log, the query has been deleted while it was executed, see:
-				// org.eclipse.mylyn.internal.tasks.core.TaskList.getValidElement(IRepositoryElement)
-			}
-		} catch (CoreException e) {
-			TuleapCoreActivator.log(e, true);
+			collector.accept(taskData);
+		} catch (IllegalArgumentException exception) {
+			// Do not log, the query has been deleted while it was executed, see:
+			// org.eclipse.mylyn.internal.tasks.core.TaskList.getValidElement(IRepositoryElement)
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#updateRepositoryConfiguration(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
@@ -497,7 +489,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#updateTaskFromTaskData(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      org.eclipse.mylyn.tasks.core.ITask, org.eclipse.mylyn.tasks.core.data.TaskData)
 	 */
@@ -537,7 +529,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * Indicates if the given current status of a task matches a closed status of the tracker.
-	 * 
+	 *
 	 * @param currentStatus
 	 *            The current status of a task
 	 * @param tracker
@@ -561,7 +553,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getTaskMapping(org.eclipse.mylyn.tasks.core.data.TaskData)
 	 */
 	@Override
@@ -581,7 +573,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * Returns the server matching the given url.
-	 * 
+	 *
 	 * @param repositoryUrl
 	 *            The repository url
 	 * @return The server matching the given url, or <code>null</code> if it does not exist.
@@ -592,7 +584,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.repository.ITuleapRepositoryConnector#refreshTracker(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapTracker,
 	 *      org.eclipse.core.runtime.IProgressMonitor)

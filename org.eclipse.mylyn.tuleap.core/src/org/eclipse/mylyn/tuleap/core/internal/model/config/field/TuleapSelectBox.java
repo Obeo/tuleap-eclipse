@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -25,7 +25,7 @@ import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
 
 /**
  * The Tuleap select box widget.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  * @since 0.7
@@ -44,7 +44,7 @@ public class TuleapSelectBox extends AbstractTuleapSelectBox {
 
 	/**
 	 * The constructor.
-	 * 
+	 *
 	 * @param formElementIdentifier
 	 *            The identifier of the form element
 	 */
@@ -54,7 +54,7 @@ public class TuleapSelectBox extends AbstractTuleapSelectBox {
 
 	/**
 	 * Returns the workflow of the field.
-	 * 
+	 *
 	 * @return The workflow of the field, never null.
 	 */
 	public TuleapWorkflow getWorkflow() {
@@ -63,7 +63,7 @@ public class TuleapSelectBox extends AbstractTuleapSelectBox {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#getMetadataType()
 	 */
 	@Override
@@ -73,7 +73,7 @@ public class TuleapSelectBox extends AbstractTuleapSelectBox {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#afterTaskAttributeCreation(org.eclipse.mylyn.tasks.core.data.TaskAttribute)
 	 */
 	@Override
@@ -89,7 +89,7 @@ public class TuleapSelectBox extends AbstractTuleapSelectBox {
 	/**
 	 * Updates the given task attribute's options depending on the tracker workflow and the task's current
 	 * status.
-	 * 
+	 *
 	 * @param attribute
 	 *            The task attribute to update.
 	 */
@@ -122,7 +122,7 @@ public class TuleapSelectBox extends AbstractTuleapSelectBox {
 	/**
 	 * {@inheritDoc} Also creates the operation attributes required to manage the status, with the relevant
 	 * options depending on the currently selected option.
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.field.AbstractTuleapSelectBox#createStatusTaskAttribute(org.eclipse.mylyn.tasks.core.data.TaskAttribute)
 	 */
 	@Override
@@ -157,7 +157,7 @@ public class TuleapSelectBox extends AbstractTuleapSelectBox {
 
 	/**
 	 * Indicates whether this selectbox has a real workflow, i.e. one with transitions.
-	 * 
+	 *
 	 * @return {@code true} if and only if the workflow of this selectbox has at least one transition.
 	 */
 	public boolean hasWorkflow() {
@@ -166,7 +166,7 @@ public class TuleapSelectBox extends AbstractTuleapSelectBox {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#setValue(org.eclipse.mylyn.tasks.core.data.TaskAttribute,
 	 *      org.eclipse.mylyn.tuleap.core.internal.model.data.AbstractFieldValue)
 	 */
@@ -179,5 +179,10 @@ public class TuleapSelectBox extends AbstractTuleapSelectBox {
 			attribute.setValue(bindValueIds.get(0).toString());
 			updateOptionsWithWorkflow(attribute);
 		}
+	}
+
+	@Override
+	public void accept(ITuleapFieldVisitor visitor) {
+		visitor.visit(this);
 	}
 }

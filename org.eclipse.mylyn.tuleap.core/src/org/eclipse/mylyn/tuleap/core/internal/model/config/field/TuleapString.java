@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -19,7 +19,7 @@ import org.eclipse.mylyn.tuleap.core.internal.model.data.LiteralFieldValue;
 
 /**
  * The Tuleap string field.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
@@ -42,7 +42,7 @@ public class TuleapString extends AbstractTuleapField {
 
 	/**
 	 * The constructor.
-	 * 
+	 *
 	 * @param formElementIdentifier
 	 *            The identifier of the form element
 	 */
@@ -52,7 +52,7 @@ public class TuleapString extends AbstractTuleapField {
 
 	/**
 	 * Sets the maximum size of the strings.
-	 * 
+	 *
 	 * @param maximumSize
 	 *            The maximum size of the strings.
 	 */
@@ -62,7 +62,7 @@ public class TuleapString extends AbstractTuleapField {
 
 	/**
 	 * Returns the maximum size of the strings.
-	 * 
+	 *
 	 * @return The maximum size of the strings.
 	 */
 	public int getSize() {
@@ -71,7 +71,7 @@ public class TuleapString extends AbstractTuleapField {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#getMetadataKind()
 	 */
 	@Override
@@ -81,7 +81,7 @@ public class TuleapString extends AbstractTuleapField {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#getMetadataType()
 	 */
 	@Override
@@ -91,7 +91,7 @@ public class TuleapString extends AbstractTuleapField {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#getDefaultValue()
 	 */
 	@Override
@@ -101,7 +101,7 @@ public class TuleapString extends AbstractTuleapField {
 
 	/**
 	 * Sets to <code>true</code> to indicate that this field is the semantic title of the tracker.
-	 * 
+	 *
 	 * @param isTitle
 	 *            Indicates if the field is the title of the tracker.
 	 */
@@ -112,7 +112,7 @@ public class TuleapString extends AbstractTuleapField {
 	/**
 	 * Returns <code>true</code> if the field is the semantic title of the tracker, <code>false</code>
 	 * otherwise.
-	 * 
+	 *
 	 * @return <code>true</code> if the field is the semantic title of the tracker, <code>false</code>
 	 *         otherwise.
 	 */
@@ -122,7 +122,7 @@ public class TuleapString extends AbstractTuleapField {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#createTaskAttribute(org.eclipse.mylyn.tasks.core.data.TaskAttribute)
 	 */
 	@Override
@@ -135,7 +135,7 @@ public class TuleapString extends AbstractTuleapField {
 
 	/**
 	 * Creates the task attribute representing the summary.
-	 * 
+	 *
 	 * @param parent
 	 *            The parent task attribute
 	 * @return The created task attribute.
@@ -152,7 +152,7 @@ public class TuleapString extends AbstractTuleapField {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#setValue(org.eclipse.mylyn.tasks.core.data.TaskAttribute,
 	 *      org.eclipse.mylyn.tuleap.core.internal.model.data.AbstractFieldValue)
 	 */
@@ -160,5 +160,10 @@ public class TuleapString extends AbstractTuleapField {
 	public void setValue(TaskAttribute attribute, AbstractFieldValue value) {
 		Assert.isTrue(value instanceof LiteralFieldValue);
 		attribute.setValue(((LiteralFieldValue)value).getFieldValue());
+	}
+
+	@Override
+	public void accept(ITuleapFieldVisitor visitor) {
+		visitor.visit(this);
 	}
 }

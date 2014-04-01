@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -20,7 +20,7 @@ import org.eclipse.mylyn.tuleap.core.internal.model.data.BoundFieldValue;
 
 /**
  * The Tuleap multi select box.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  * @since 0.7
@@ -34,7 +34,7 @@ public class TuleapMultiSelectBox extends AbstractTuleapSelectBox {
 
 	/**
 	 * The constructor.
-	 * 
+	 *
 	 * @param formElementIdentifier
 	 *            The identifier of the form element
 	 */
@@ -44,7 +44,7 @@ public class TuleapMultiSelectBox extends AbstractTuleapSelectBox {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#getMetadataType()
 	 */
 	@Override
@@ -54,7 +54,7 @@ public class TuleapMultiSelectBox extends AbstractTuleapSelectBox {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#createFieldValue(org.eclipse.mylyn.tasks.core.data.TaskAttribute,
 	 *      int)
 	 */
@@ -69,7 +69,7 @@ public class TuleapMultiSelectBox extends AbstractTuleapSelectBox {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#setValue(org.eclipse.mylyn.tasks.core.data.TaskAttribute,
 	 *      org.eclipse.mylyn.tuleap.core.internal.model.data.AbstractFieldValue)
 	 */
@@ -83,5 +83,10 @@ public class TuleapMultiSelectBox extends AbstractTuleapSelectBox {
 			values.add(bindValueId.toString());
 		}
 		attribute.setValues(values);
+	}
+
+	@Override
+	public void accept(ITuleapFieldVisitor visitor) {
+		visitor.visit(this);
 	}
 }

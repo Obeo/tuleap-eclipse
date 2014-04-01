@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -14,7 +14,7 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * The list of all possible keys to use for internationalization.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class TuleapMylynTasksMessagesKeys extends NLS {
@@ -186,17 +186,12 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	/**
 	 * Retrieving the tracker fields.
 	 */
-	public static String retrievingTrackerFields;
-
-	/**
-	 * Retrieving the tracker semantic.
-	 */
-	public static String retrievingTrackerSemantic;
+	public static String retrievingTracker;
 
 	/**
 	 * Retrieving the reports.
 	 */
-	public static String retrievingTheReports;
+	public static String retrievingReports;
 
 	/**
 	 * Retrieving the content of the attachments.

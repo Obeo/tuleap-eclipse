@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -39,7 +39,7 @@ import org.eclipse.mylyn.tuleap.core.internal.serializer.TuleapMilestoneSerializ
 
 /**
  * Utility class to configure the Gson instance(s) used by the connector for Tuleap.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public final class TuleapGsonProvider {
@@ -54,19 +54,28 @@ public final class TuleapGsonProvider {
 	/**
 	 * Provides the default Gson properly configured to parse JSON structures from Tuleap and serialize them
 	 * too.
-	 * 
+	 *
 	 * @return A properly configured new instance of Gson.
 	 */
 	public static Gson defaultGson() {
+		return defaultBuilder().disableHtmlEscaping().create();
+	}
+
+	/**
+	 * Provides a Gson that is like the default but does perform html escaping.
+	 *
+	 * @return A properly configured Gson instance that performs HTML escaping.
+	 */
+	public static Gson nonHtmlEscapingGson() {
 		return defaultBuilder().create();
 	}
 
 	/**
 	 * Provides the default {@link GsonBuilder}.
-	 * 
+	 *
 	 * @return A new instance of GsonBuilder, properly configured for Tuleap.
 	 */
-	private static GsonBuilder defaultBuilder() {
+	public static GsonBuilder defaultBuilder() {
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(TuleapArtifact.class, new TuleapArtifactDeserializer());
 		gsonBuilder.registerTypeAdapter(TuleapCardwall.class, new TuleapCardwallDeserializer());

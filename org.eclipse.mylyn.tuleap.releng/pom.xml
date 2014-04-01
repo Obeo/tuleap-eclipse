@@ -27,7 +27,7 @@
     <module>../org.eclipse.mylyn.tuleap.ui</module>
     <module>../org.eclipse.mylyn.tuleap.server.data</module>
     <module>../org.eclipse.mylyn.tuleap.core.tests</module>
-    <!-- <module>../org.eclipse.mylyn.tuleap.ui.tests</module> -->
+    <module>../org.eclipse.mylyn.tuleap.ui.tests</module>
     <module>../org.eclipse.mylyn.tuleap.doc</module>
     <module>../org.eclipse.mylyn.tuleap-feature</module>
     <module>../org.eclipse.mylyn.tuleap.repository</module>

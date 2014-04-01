@@ -114,39 +114,33 @@ public class TuleapUiMessagesKeys extends NLS {
 	public static String unsupportedTrackerFieldType;
 
 	/**
-	 * Contains.
+	 * Invalid value for a query criterion. Uses 2 parameters:
+	 * <ul>
+	 * <li>The value</li>
+	 * <li>The expected type</li>
+	 * </ul>
 	 */
-	public static String tuleapQueryOptionsContains;
+	public static String tuleapQueryInvalidValue;
 
 	/**
-	 * Starts with.
+	 * Message for invalid date input for "between" operator.
 	 */
-	public static String tuleapQueryOptionsStartsWith;
+	public static String tuleapQueryDatesMandatoryForBetween;
 
 	/**
-	 * Ends with.
+	 * Message on top of wizard page for custome queries.
 	 */
-	public static String tuleapQueryOptionsEndsWith;
+	public static String tuleapQueryInvalidCriteria;
 
 	/**
-	 * Equals.
+	 * Message for invalid input in integer query criterion field.
 	 */
-	public static String tuleapQueryOptionsEquals;
+	public static String tuleapQueryIntegerFieldDecoratorText;
 
 	/**
-	 * Equals (used for dates).
+	 * Message for invalid input in floating-point query criterion field.
 	 */
-	public static String tuleapQueryOptionsDateEquals;
-
-	/**
-	 * Before (used for dates).
-	 */
-	public static String tuleapQueryOptionsDateBefore;
-
-	/**
-	 * After (used for dates).
-	 */
-	public static String tuleapQueryOptionsDateAfter;
+	public static String tuleapQueryDoubleFieldDecoratorText;
 
 	/**
 	 * Title of the new Tuleap wizard window.

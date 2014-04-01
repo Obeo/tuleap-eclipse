@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -29,7 +29,7 @@ import static org.junit.Assert.fail;
 
 /**
  * Basic integration tests for a Tuleap server.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 @RunWith(Junit4TestFixtureRunner.class)
@@ -37,7 +37,7 @@ import static org.junit.Assert.fail;
 public class TuleapRepositoryConnectorTests extends AbstractTuleapUiTests {
 	/**
 	 * The constructor.
-	 * 
+	 *
 	 * @param fixture
 	 *            The fixture.
 	 */

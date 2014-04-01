@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -110,7 +110,7 @@ import org.eclipse.mylyn.tuleap.core.internal.wsdl.soap.v2.TuleapTrackerV5APIPor
 
 /**
  * This class will be used to connect Mylyn to the SOAP services provided by the Tuleap instance.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @author <a href="mailto:melanie.bats@obeo.fr">Melanie Bats</a>
  * @since 0.7
@@ -194,7 +194,7 @@ public class TuleapSoapConnector {
 
 	/**
 	 * The constructor.
-	 * 
+	 *
 	 * @param location
 	 *            The location of the tracker.
 	 */
@@ -205,7 +205,7 @@ public class TuleapSoapConnector {
 
 	/**
 	 * Returns the entry point of the core SOAP API.
-	 * 
+	 *
 	 * @return The entry point of the core SOAP API
 	 */
 	protected CodendiAPIPortType getCodendiAPIPortType() {
@@ -214,7 +214,7 @@ public class TuleapSoapConnector {
 
 	/**
 	 * Returns the entry point of the tracker SOAP API.
-	 * 
+	 *
 	 * @return The entry point of the tracker SOAP API
 	 */
 	protected TuleapTrackerV5APIPortType getTuleapTrackerV5APIPortType() {
@@ -223,7 +223,7 @@ public class TuleapSoapConnector {
 
 	/**
 	 * Logs the user in the Tuleap server.
-	 * 
+	 *
 	 * @param monitor
 	 *            The progress monitor
 	 * @return A status indicating if everything went right.
@@ -267,7 +267,7 @@ public class TuleapSoapConnector {
 
 	/**
 	 * Logs the user out of the Tuleap server.
-	 * 
+	 *
 	 * @return A status indicating if everything went right.
 	 */
 	protected IStatus logout() {
@@ -312,7 +312,7 @@ public class TuleapSoapConnector {
 
 	/**
 	 * Validates the connection.
-	 * 
+	 *
 	 * @param monitor
 	 *            The progress monitor
 	 * @return A status indicating if everything went well
@@ -332,7 +332,7 @@ public class TuleapSoapConnector {
 
 	/**
 	 * Returns the configuration of the Tuleap instance.
-	 * 
+	 *
 	 * @param monitor
 	 *            The progress monitor
 	 * @return The configuration of the Tuleap instance.
@@ -414,7 +414,7 @@ public class TuleapSoapConnector {
 
 	/**
 	 * Returns the configuration of the Tuleap tracker with the given identifier.
-	 * 
+	 *
 	 * @param projectId
 	 *            The project identifier
 	 * @param trackerId
@@ -490,7 +490,7 @@ public class TuleapSoapConnector {
 
 	/**
 	 * Returns the configuration of the given tracker.
-	 * 
+	 *
 	 * @param tracker
 	 *            The Tuleap tracker
 	 * @param monitor
@@ -534,7 +534,7 @@ public class TuleapSoapConnector {
 
 	/**
 	 * Returns the tuleap tracker field for the given tracker field.
-	 * 
+	 *
 	 * @param groupId
 	 *            The group ID.
 	 * @param trackerStructure
@@ -597,7 +597,7 @@ public class TuleapSoapConnector {
 
 	/**
 	 * Creates a Tuleap Multi select box from the description of the tracker field.
-	 * 
+	 *
 	 * @param groupId
 	 *            The identifier of the group
 	 * @param trackerStructure
@@ -652,7 +652,7 @@ public class TuleapSoapConnector {
 
 	/**
 	 * Iterates on the content of the ugroup to add all the elements as items in the multi select box.
-	 * 
+	 *
 	 * @param tuleapSelectBox
 	 *            The Tuleap multi select box in which we will add the new items.
 	 * @param ugroup
@@ -686,7 +686,7 @@ public class TuleapSoapConnector {
 
 	/**
 	 * Creates a Tuleap select box from the description of the tracker field.
-	 * 
+	 *
 	 * @param trackerStructure
 	 *            The structure of the tracker
 	 * @param trackerField
@@ -739,7 +739,7 @@ public class TuleapSoapConnector {
 
 	/**
 	 * Performs the given query on the Tuleap tracker and return the tasks found.
-	 * 
+	 *
 	 * @param query
 	 *            The query to run
 	 * @param serverConfiguration
@@ -815,7 +815,7 @@ public class TuleapSoapConnector {
 
 	/**
 	 * Retrieve an artifact's comments. This method must be called during a valid SOAP session.
-	 * 
+	 *
 	 * @param artifactId
 	 *            Id of the artifact.
 	 * @param serverConfiguration
@@ -848,7 +848,7 @@ public class TuleapSoapConnector {
 
 	/**
 	 * Returns the list of the criteria to take into account for a custom query.
-	 * 
+	 *
 	 * @param query
 	 *            The query from which we have to extract the criteria
 	 * @return The list of the criteria to take into account for a custom query.
@@ -892,7 +892,7 @@ public class TuleapSoapConnector {
 
 	/**
 	 * Get attributes.
-	 * 
+	 *
 	 * @param attributes
 	 *            Attributes
 	 * @return Array of attributes values
@@ -903,7 +903,7 @@ public class TuleapSoapConnector {
 
 	/**
 	 * Returns the Tuleap Artifact with the given artifact id on the tracker with the given tracker id.
-	 * 
+	 *
 	 * @param artifactId
 	 *            The artifact id
 	 * @param serverConfiguration
@@ -940,7 +940,7 @@ public class TuleapSoapConnector {
 
 	/**
 	 * Creates a Tuleap artifact on the tracker matching the description of the Tuleap artifact.
-	 * 
+	 *
 	 * @param artifact
 	 *            The description of the artifact to create
 	 * @param monitor
@@ -979,17 +979,14 @@ public class TuleapSoapConnector {
 			}
 		}
 
-		monitor.subTask(TuleapMylynTasksMessages
-				.getString(TuleapMylynTasksMessagesKeys.retrievingTrackerFields));
+		monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.retrievingTracker,
+				Integer.valueOf(artifact.getTracker().getId())));
 
 		List<ArtifactFieldValue> valuesList = new ArrayList<ArtifactFieldValue>();
 		TrackerField[] trackerFields = this.getTuleapTrackerV5APIPortType().getTrackerFields(sessionHash,
 				groupId, artifact.getTracker().getId());
 		monitor.worked(10);
 
-		monitor.subTask(TuleapMylynTasksMessages
-				.getString(TuleapMylynTasksMessagesKeys.retrievingTrackerSemantic));
-		monitor.worked(10);
 		for (TrackerField trackerField : trackerFields) {
 			ArtifactFieldValue artifactFieldValue = getArtifactFieldValue(trackerField, artifact, true);
 			if (artifactFieldValue != null) {
@@ -1011,7 +1008,7 @@ public class TuleapSoapConnector {
 
 	/**
 	 * Updates the artifact on the Tuleap tracker with the information from the given Tuleap artifact.
-	 * 
+	 *
 	 * @param artifact
 	 *            The Tuleap artifact
 	 * @param monitor
@@ -1051,16 +1048,13 @@ public class TuleapSoapConnector {
 			}
 		}
 
-		monitor.subTask(TuleapMylynTasksMessages
-				.getString(TuleapMylynTasksMessagesKeys.retrievingTrackerFields));
+		monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.retrievingTracker,
+				Integer.valueOf(artifact.getTracker().getId())));
 		List<ArtifactFieldValue> valuesList = new ArrayList<ArtifactFieldValue>();
 		TrackerField[] trackerFields = this.getTuleapTrackerV5APIPortType().getTrackerFields(sessionHash,
 				groupId, artifact.getTracker().getId());
 		monitor.worked(10);
 
-		monitor.subTask(TuleapMylynTasksMessages
-				.getString(TuleapMylynTasksMessagesKeys.retrievingTrackerSemantic));
-		monitor.worked(10);
 		for (TrackerField trackerField : trackerFields) {
 			ArtifactFieldValue artifactFieldValue = getArtifactFieldValue(trackerField, artifact, false);
 			if (artifactFieldValue != null) {
@@ -1084,7 +1078,7 @@ public class TuleapSoapConnector {
 
 	/**
 	 * Creates the artifact field value from the given tuleap artifact and the tracker field.
-	 * 
+	 *
 	 * @param trackerField
 	 *            The field of the tracker.
 	 * @param artifact
@@ -1152,7 +1146,7 @@ public class TuleapSoapConnector {
 
 	/**
 	 * Computes the label of the bind value with the given id.
-	 * 
+	 *
 	 * @param trackerField
 	 *            The field
 	 * @param bindValueId
@@ -1171,7 +1165,7 @@ public class TuleapSoapConnector {
 
 	/**
 	 * Indicates if we can submit the value for the given type of field.
-	 * 
+	 *
 	 * @param fieldType
 	 *            The type of the field
 	 * @param value
@@ -1179,7 +1173,7 @@ public class TuleapSoapConnector {
 	 * @return <code>true</code> if we can submit the value, <code>false</code> otherwise
 	 */
 	private boolean canSubmitValue(String fieldType, String value) {
-		if (value == null || "".equals(value.trim())) { //$NON-NLS-1$			
+		if (value == null || "".equals(value.trim())) { //$NON-NLS-1$
 			boolean canSubmitEmptyValue = false;
 			canSubmitEmptyValue = canSubmitEmptyValue
 					|| ITuleapTrackerConstants.TYPE_STRING.equals(fieldType);
@@ -1191,7 +1185,7 @@ public class TuleapSoapConnector {
 
 	/**
 	 * Indicates if we should consider the given tracker field type for the creation or update or an artifact.
-	 * 
+	 *
 	 * @param trackerFieldType
 	 *            The type of the field of the tracker
 	 * @return <code>true</code> if we should consider it, <code>false</code> otherwise
@@ -1210,7 +1204,7 @@ public class TuleapSoapConnector {
 
 	/**
 	 * Returns the list of Tuleap tracker reports available for the given tracker id.
-	 * 
+	 *
 	 * @param trackerId
 	 *            The tracker id
 	 * @param monitor
@@ -1223,7 +1217,7 @@ public class TuleapSoapConnector {
 			this.login(monitor);
 
 			monitor.subTask(TuleapMylynTasksMessages
-					.getString(TuleapMylynTasksMessagesKeys.retrievingTheReports));
+					.getString(TuleapMylynTasksMessagesKeys.retrievingReports));
 
 			TrackerReport[] trackerReports = this.getTuleapTrackerV5APIPortType().getTrackerReports(
 					sessionHash, -1, trackerId);
@@ -1248,7 +1242,7 @@ public class TuleapSoapConnector {
 
 	/**
 	 * Returns the content of the attachment.
-	 * 
+	 *
 	 * @param artifactId
 	 *            The id of the artifact
 	 * @param attachmentId
@@ -1300,7 +1294,7 @@ public class TuleapSoapConnector {
 
 	/**
 	 * Uploads the attachment represented by the given descriptor on the tracker.
-	 * 
+	 *
 	 * @param trackerId
 	 *            The id of the tracker
 	 * @param artifactId

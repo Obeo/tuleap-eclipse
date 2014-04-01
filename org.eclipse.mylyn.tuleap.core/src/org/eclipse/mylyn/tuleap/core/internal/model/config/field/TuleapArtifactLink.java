@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -23,7 +23,7 @@ import org.eclipse.mylyn.tuleap.core.internal.model.data.ArtifactLinkFieldValue;
 
 /**
  * The Tuleap artifact link field.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
@@ -36,7 +36,7 @@ public class TuleapArtifactLink extends AbstractTuleapField {
 
 	/**
 	 * The constructor.
-	 * 
+	 *
 	 * @param formElementIdentifier
 	 *            The identifier of the form element
 	 */
@@ -47,7 +47,7 @@ public class TuleapArtifactLink extends AbstractTuleapField {
 	/**
 	 * Creates and returns a new TaskAttribute using this field. This method is meant to be overridden in the
 	 * subclasses to provide the relevant behavior depending on the type of tuleap field.
-	 * 
+	 *
 	 * @param parent
 	 *            The parent task attribute in which the new task attribute must be created.
 	 * @return The created task attribute.
@@ -65,7 +65,7 @@ public class TuleapArtifactLink extends AbstractTuleapField {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#getMetadataKind()
 	 */
 	@Override
@@ -75,7 +75,7 @@ public class TuleapArtifactLink extends AbstractTuleapField {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#getMetadataType()
 	 */
 	@Override
@@ -85,7 +85,7 @@ public class TuleapArtifactLink extends AbstractTuleapField {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#getDefaultValue()
 	 */
 	@Override
@@ -95,7 +95,7 @@ public class TuleapArtifactLink extends AbstractTuleapField {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#createFieldValue(org.eclipse.mylyn.tasks.core.data.TaskAttribute,
 	 *      int)
 	 */
@@ -127,7 +127,7 @@ public class TuleapArtifactLink extends AbstractTuleapField {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#setValue(org.eclipse.mylyn.tasks.core.data.TaskAttribute,
 	 *      org.eclipse.mylyn.tuleap.core.internal.model.data.AbstractFieldValue)
 	 */
@@ -140,5 +140,10 @@ public class TuleapArtifactLink extends AbstractTuleapField {
 			values.add(Integer.toString(val));
 		}
 		attribute.setValues(values);
+	}
+
+	@Override
+	public void accept(ITuleapFieldVisitor visitor) {
+		visitor.visit(this);
 	}
 }
