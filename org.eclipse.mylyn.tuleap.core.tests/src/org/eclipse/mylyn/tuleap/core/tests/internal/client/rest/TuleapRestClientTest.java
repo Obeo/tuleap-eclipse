@@ -15,10 +15,13 @@ import com.google.gson.Gson;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -497,6 +500,31 @@ public class TuleapRestClientTest {
 		req = requestsSent.get(2);
 		assertEquals("GET", req.method);
 		assertEquals("/api/v12.3/trackers/200", req.url);
+	}
+
+	@Test
+	public void testValidateConnection() throws CoreException {
+		TuleapToken token = new TuleapToken();
+		token.setUserId("123");
+		token.setToken("toktoktok");
+		token.setUri("/some/uri");
+		String json = gson.toJson(token);
+		ServerResponse response = new ServerResponse(200, json, Collections.<String, String> emptyMap());
+		connector.setResponse(response);
+		IStatus status = client.validateConnection(null);
+		assertEquals(Status.OK_STATUS, status);
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(1, requestsSent.size());
+
+		ServerRequest request = requestsSent.get(0);
+		assertEquals("/api/v12.3/tokens", request.url);
+		assertEquals("POST", request.method);
+		assertEquals("{\"username\":\"admin\",\"password\":\"password\"}", request.body);
+		assertEquals("123", client.getToken().getUserId());
+		assertEquals("toktoktok", client.getToken().getToken());
+		assertEquals("/some/uri", client.getToken().getUri());
 	}
 
 	@Before
