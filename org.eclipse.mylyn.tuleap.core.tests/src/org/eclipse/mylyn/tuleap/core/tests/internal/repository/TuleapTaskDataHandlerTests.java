@@ -49,6 +49,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
@@ -98,6 +99,11 @@ public class TuleapTaskDataHandlerTests {
 	 * The identifier of an item.
 	 */
 	private int itemId;
+
+	/**
+	 * The task data.
+	 */
+	private TaskData taskData;
 
 	/**
 	 * Prepare the Tuleap server configuration and the mock connector.
@@ -150,7 +156,7 @@ public class TuleapTaskDataHandlerTests {
 		TuleapTracker configuration = this.tuleapServer.getProject(projectRef.getId()).getTracker(
 				configurationId);
 
-		TaskData taskData = new TaskData(tuleapTaskDataHandler.getAttributeMapper(repository),
+		taskData = new TaskData(tuleapTaskDataHandler.getAttributeMapper(repository),
 				ITuleapConstants.CONNECTOR_KIND, this.repository.getRepositoryUrl(), "");
 
 		ITaskMapping initializationData = new TuleapTaskMapping(configuration);
@@ -172,7 +178,7 @@ public class TuleapTaskDataHandlerTests {
 	public void initializeAlreadyInitializedTaskData() {
 		TuleapTaskDataHandler tuleapTaskDataHandler = new TuleapTaskDataHandler(null);
 
-		TaskData taskData = new TaskData(tuleapTaskDataHandler.getAttributeMapper(repository),
+		taskData = new TaskData(tuleapTaskDataHandler.getAttributeMapper(repository),
 				ITuleapConstants.CONNECTOR_KIND, "", "test id");
 		try {
 			boolean isInitialized = tuleapTaskDataHandler.initializeTaskData(this.repository, taskData, null,
@@ -275,8 +281,7 @@ public class TuleapTaskDataHandlerTests {
 
 		TuleapTaskDataHandler tuleapTaskDataHandler = new TuleapTaskDataHandler(repositoryConnector);
 		try {
-			TaskData taskData = tuleapTaskDataHandler.getTaskData(this.repository, taskId,
-					new NullProgressMonitor());
+			taskData = tuleapTaskDataHandler.getTaskData(this.repository, taskId, new NullProgressMonitor());
 
 			assertThat(taskData, notNullValue());
 		} catch (CoreException e) {
@@ -303,17 +308,29 @@ public class TuleapTaskDataHandlerTests {
 	}
 
 	/**
+	 * Test allocating the good URL to an artifact
+	 */
+	@Test
+	public void testAllocateUrlToArtifact() {
+		this.testGetTaskData(TuleapTaskId.forArtifact(projectRef.getId(), trackerRef.getId(), artifactId));
+		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer.getProject(
+				projectRef.getId()).getTracker(trackerRef.getId()));
+		assertEquals("https://tuleap.net/plugins/tracker/?group_id=51&tracker=1&aid=42", mapper.getTaskUrl());
+
+	}
+
+	/**
 	 * Create and update the element with the given task data and check the identifier of the server element
 	 * created and updated.
 	 *
-	 * @param taskData
+	 * @param data
 	 *            The task data
 	 * @param taskId
 	 *            The identifier of the task created and updated
 	 * @param responseKind
 	 *            The kind of the response
 	 */
-	private void testPostTaskData(TaskData taskData, final TuleapTaskId taskId, ResponseKind responseKind) {
+	private void testPostTaskData(TaskData data, final TuleapTaskId taskId, ResponseKind responseKind) {
 		// Mock rest client
 		final TuleapRestClient tuleapRestClient = new TuleapRestClient(null, null, null) {
 			@Override
@@ -356,7 +373,7 @@ public class TuleapTaskDataHandlerTests {
 
 		TuleapTaskDataHandler tuleapTaskDataHandler = new TuleapTaskDataHandler(repositoryConnector);
 		try {
-			RepositoryResponse response = tuleapTaskDataHandler.postTaskData(this.repository, taskData, Sets
+			RepositoryResponse response = tuleapTaskDataHandler.postTaskData(this.repository, data, Sets
 					.<TaskAttribute> newHashSet(), new NullProgressMonitor());
 			assertThat(response.getReposonseKind(), is(responseKind));
 			assertThat(response.getTaskId(), is(taskId.toString()));
@@ -371,8 +388,8 @@ public class TuleapTaskDataHandlerTests {
 	 */
 	@Test
 	public void testPostCreateTaskDataArtifact() {
-		TaskData taskData = new TaskData(new TaskAttributeMapper(this.repository),
-				ITuleapConstants.CONNECTOR_KIND, "", "");
+		taskData = new TaskData(new TaskAttributeMapper(this.repository), ITuleapConstants.CONNECTOR_KIND,
+				"", "");
 
 		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer.getProject(
 				projectRef.getId()).getTracker(trackerRef.getId()));
@@ -388,8 +405,8 @@ public class TuleapTaskDataHandlerTests {
 	 */
 	@Test
 	public void testPostCreateTaskDataItem() {
-		TaskData taskData = new TaskData(new TaskAttributeMapper(this.repository),
-				ITuleapConstants.CONNECTOR_KIND, "", "");
+		taskData = new TaskData(new TaskAttributeMapper(this.repository), ITuleapConstants.CONNECTOR_KIND,
+				"", "");
 
 		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer.getProject(
 				projectRef.getId()).getTracker(thirdItemTrackerId));
@@ -406,8 +423,8 @@ public class TuleapTaskDataHandlerTests {
 	@Test
 	public void testPostUpdateTaskDataArtifact() {
 		TuleapTaskId taskId = TuleapTaskId.forArtifact(projectRef.getId(), trackerRef.getId(), artifactId);
-		TaskData taskData = new TaskData(new TaskAttributeMapper(this.repository),
-				ITuleapConstants.CONNECTOR_KIND, "", taskId.toString());
+		taskData = new TaskData(new TaskAttributeMapper(this.repository), ITuleapConstants.CONNECTOR_KIND,
+				"", taskId.toString());
 
 		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer.getProject(
 				projectRef.getId()).getTracker(trackerRef.getId()));
