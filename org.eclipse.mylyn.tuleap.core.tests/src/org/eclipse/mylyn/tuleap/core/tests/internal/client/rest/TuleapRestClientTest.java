@@ -11,15 +11,21 @@
 package org.eclipse.mylyn.tuleap.core.tests.internal.client.rest;
 
 import com.google.common.collect.Maps;
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -46,6 +52,7 @@ import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapBacklogItem
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapCard;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapMilestone;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapStatus;
+import org.eclipse.mylyn.tuleap.core.internal.parser.DateIso8601Adapter;
 import org.eclipse.mylyn.tuleap.core.internal.parser.TuleapGsonProvider;
 import org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants;
 import org.eclipse.mylyn.tuleap.core.tests.internal.TestLogger;
@@ -57,6 +64,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests of {@link TuleapRestClient}.
@@ -977,6 +985,121 @@ public class TuleapRestClientTest {
 		assertEquals("PUT", request.method); //$NON-NLS-1$
 		assertEquals("[201,202,203,204]", //$NON-NLS-1$
 				request.body);
+	}
+
+	@Test
+	public void testValidateConnection() throws CoreException {
+		TuleapToken token = new TuleapToken();
+		token.setUserId("123");
+		token.setToken("toktoktok");
+		token.setUri("/some/uri");
+		String json = gson.toJson(token);
+		ServerResponse response = new ServerResponse(200, json, Collections.<String, String> emptyMap());
+		connector.setResponse(response);
+		IStatus status = client.validateConnection(null);
+		assertEquals(Status.OK_STATUS, status);
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(1, requestsSent.size());
+
+		ServerRequest request = requestsSent.get(0);
+		assertEquals("/api/v12.3/tokens", request.url);
+		assertEquals("POST", request.method);
+		assertEquals("{\"username\":\"admin\",\"password\":\"password\"}", request.body);
+		assertEquals("123", client.getToken().getUserId());
+		assertEquals("toktoktok", client.getToken().getToken());
+		assertEquals("/some/uri", client.getToken().getUri());
+	}
+
+	@Test
+	public void testGetSubmilestones() throws CoreException {
+		TuleapMilestone sm0 = new TuleapMilestone(555, new TuleapReference(101, "/projects/101"));
+		TuleapReference trackerRef = new TuleapReference(321, "/trackers/321");
+		sm0.setArtifact(new ArtifactReference(555, "/artifacts/555", trackerRef));
+		sm0.setBacklogUri("/milestones/555/backlog");
+		sm0.setBurndownUri(null);
+		sm0.setCapacity("mouse");
+		sm0.setCardwallUri("/milestones/555/cardwall");
+		sm0.setContentUri("/milestones/555/content");
+		sm0.setEndDate(new Date());
+		sm0.setHtmlUrl("/some/url");
+		sm0.setLabel("Sprint Zero");
+		sm0.setLastModifiedDate(new Date());
+		sm0.setStartDate(new Date());
+		sm0.setStatusValue("Done");
+		sm0.setSubMilestonesUri(null);
+		sm0.setSubmittedBy(99);
+		sm0.setSubmittedOn(new Date());
+		sm0.setUri("/milestones/555");
+
+		TuleapMilestone sm1 = new TuleapMilestone(666, new TuleapReference(101, "/projects/101"));
+		sm1.setArtifact(new ArtifactReference(555, "/artifacts/666", trackerRef));
+		sm1.setBacklogUri("/milestones/666/backlog");
+		sm1.setBurndownUri(null);
+		sm1.setCapacity("elephant");
+		sm1.setCardwallUri("/milestones/666/cardwall");
+		sm1.setContentUri("/milestones/666/content");
+		sm1.setEndDate(new Date());
+		sm1.setHtmlUrl("/some/url");
+		sm1.setLabel("Sprint One");
+		sm1.setLastModifiedDate(new Date());
+		sm1.setStartDate(new Date());
+		sm1.setStatusValue("Current");
+		sm1.setSubMilestonesUri(null);
+		sm1.setSubmittedBy(99);
+		sm1.setSubmittedOn(new Date());
+		sm1.setUri("/milestones/666");
+
+		TuleapMilestone[] expected = new TuleapMilestone[] {sm0, sm1 };
+		String json = new GsonBuilder().registerTypeAdapter(Date.class, new DateIso8601Adapter())
+				.disableHtmlEscaping().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+				.create().toJson(expected);
+
+		// Headers for pagination?
+		ServerResponse response = new ServerResponse(200, json, Collections.<String, String> emptyMap());
+		connector.setResponse(response);
+		List<TuleapMilestone> received = client.getSubMilestones(123, null);
+		assertEquals(2, received.size());
+		checkEquals(sm0, received.get(0));
+		checkEquals(sm1, received.get(1));
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(1, requestsSent.size());
+
+		ServerRequest request = requestsSent.get(0);
+		assertEquals("/api/v12.3/milestones/123/milestones", request.url);
+		assertEquals("GET", request.method);
+		assertNull(request.body);
+	}
+
+	private void checkEquals(TuleapMilestone expected, TuleapMilestone actual) {
+		assertEquals(expected.getArtifact().getId(), actual.getArtifact().getId());
+		assertEquals(expected.getBacklogUri(), actual.getBacklogUri());
+		assertEquals(expected.getBurndownUri(), actual.getBurndownUri());
+		assertEquals(expected.getCapacity(), actual.getCapacity());
+		assertEquals(expected.getCardwallUri(), actual.getCardwallUri());
+		assertEquals(expected.getContentUri(), actual.getContentUri());
+		checkDatesEqual(expected.getEndDate(), actual.getEndDate());
+		assertEquals(expected.getHtmlUrl(), actual.getHtmlUrl());
+		assertEquals(expected.getId(), actual.getId());
+		assertEquals(expected.getLabel(), actual.getLabel());
+		checkDatesEqual(expected.getLastModifiedDate(), actual.getLastModifiedDate());
+		assertEquals(expected.getProject().getId(), actual.getProject().getId());
+		checkDatesEqual(expected.getStartDate(), actual.getStartDate());
+		assertEquals(expected.getStatusValue(), actual.getStatusValue());
+		assertEquals(expected.getSubMilestonesUri(), actual.getSubMilestonesUri());
+		assertEquals(expected.getSubmittedBy(), actual.getSubmittedBy());
+		checkDatesEqual(expected.getSubmittedOn(), actual.getSubmittedOn());
+		assertEquals(expected.getUri(), actual.getUri());
+	}
+
+	private void checkDatesEqual(Date expected, Date actual) {
+		// CHECKSTYLE:OFF
+		assertTrue(expected == null && actual == null || expected != null && actual != null
+				&& expected.getTime() - actual.getTime() < 1000);
+		// CHECKSTYLE:ON
 	}
 
 	@Before
