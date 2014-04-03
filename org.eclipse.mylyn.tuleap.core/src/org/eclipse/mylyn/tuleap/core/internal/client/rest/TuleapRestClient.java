@@ -50,8 +50,8 @@ import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapCardwall;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapFile;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapMilestone;
 import org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessages;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreMessages;
 
 /**
  * This class will be used to communicate with the server with a higher level of abstraction than raw HTTP
@@ -118,8 +118,7 @@ public class TuleapRestClient implements IAuthenticator {
 	 */
 	public IStatus validateConnection(IProgressMonitor monitor) throws CoreException {
 		if (monitor != null) {
-			monitor.beginTask(TuleapMylynTasksMessages
-					.getString(TuleapMylynTasksMessagesKeys.validateConnection), 10);
+			monitor.beginTask(TuleapCoreMessages.getString(TuleapCoreKeys.validateConnection), 10);
 		}
 		login();
 		return Status.OK_STATUS;
@@ -205,8 +204,8 @@ public class TuleapRestClient implements IAuthenticator {
 	public TuleapArtifact getArtifact(int artifactId, TuleapServer server, IProgressMonitor monitor)
 			throws CoreException {
 		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.retrievingArtifact, Integer.valueOf(artifactId)));
+			monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.retrievingArtifact, Integer
+					.valueOf(artifactId)));
 		}
 		RestResource artifactResource = restResourceFactory.artifact(artifactId).withAuthenticator(this);
 		ServerResponse response = artifactResource.get().checkedRun();
@@ -227,8 +226,7 @@ public class TuleapRestClient implements IAuthenticator {
 	public void updateArtifact(TuleapArtifactWithComment artifact, IProgressMonitor monitor)
 			throws CoreException {
 		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.updatingArtifact,
-					artifact.getId()));
+			monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.updatingArtifact, artifact.getId()));
 		}
 		RestResource artifactResource = restResourceFactory.artifact(artifact.getId().intValue())
 				.withAuthenticator(this);
@@ -249,7 +247,7 @@ public class TuleapRestClient implements IAuthenticator {
 	public TuleapTaskId createArtifact(TuleapArtifact artifact, IProgressMonitor monitor)
 			throws CoreException {
 		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.creatingArtifact));
+			monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.creatingArtifact));
 		}
 		RestResource artifactResource = restResourceFactory.artifacts().withAuthenticator(this);
 		ServerResponse response = artifactResource.post().withBody(
@@ -276,8 +274,8 @@ public class TuleapRestClient implements IAuthenticator {
 	public TuleapFile getArtifactFile(int fileId, int offset, int limit, IProgressMonitor monitor)
 			throws CoreException {
 		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.retrievingFile,
-					Integer.valueOf(fileId)));
+			monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.retrievingFile, Integer
+					.valueOf(fileId)));
 		}
 		RestResource fileResource = restResourceFactory.artifactFile(fileId).withAuthenticator(this);
 		ServerResponse response = fileResource.get().withQueryParameter("offset", Integer.toString(offset)) //$NON-NLS-1$
@@ -364,8 +362,8 @@ public class TuleapRestClient implements IAuthenticator {
 	 */
 	public void deleteArtifactFile(int fileId, IProgressMonitor monitor) throws CoreException {
 		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.deletingFile,
-					Integer.valueOf(fileId)));
+			monitor.subTask(TuleapCoreMessages
+					.getString(TuleapCoreKeys.deletingFile, Integer.valueOf(fileId)));
 		}
 		RestResource milestoneResource = restResourceFactory.artifactTemporaryFile(fileId).withAuthenticator(
 				this);
@@ -385,8 +383,8 @@ public class TuleapRestClient implements IAuthenticator {
 	 */
 	public TuleapMilestone getMilestone(int milestoneId, IProgressMonitor monitor) throws CoreException {
 		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.retrievingMilestone, Integer.valueOf(milestoneId)));
+			monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.retrievingMilestone, Integer
+					.valueOf(milestoneId)));
 		}
 		RestResource milestoneResource = restResourceFactory.milestone(milestoneId).withAuthenticator(this);
 		ServerResponse response = milestoneResource.get().checkedRun();
@@ -408,8 +406,8 @@ public class TuleapRestClient implements IAuthenticator {
 	public List<TuleapBacklogItem> getMilestoneBacklog(int milestoneId, IProgressMonitor monitor)
 			throws CoreException {
 		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.retrievingBacklogItems, Integer.valueOf(milestoneId)));
+			monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.retrievingBacklogItems, Integer
+					.valueOf(milestoneId)));
 		}
 		// The backlog BacklogItems
 		RestResource backlogResource = restResourceFactory.milestoneBacklog(milestoneId).withAuthenticator(
@@ -437,8 +435,8 @@ public class TuleapRestClient implements IAuthenticator {
 	public List<TuleapBacklogItem> getMilestoneContent(int milestoneId, IProgressMonitor monitor)
 			throws CoreException {
 		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.retrievingBacklogItems, Integer.valueOf(milestoneId)));
+			monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.retrievingBacklogItems, Integer
+					.valueOf(milestoneId)));
 		}
 		// The backlog BacklogItems
 		RestResource backlogResource = restResourceFactory.milestoneContent(milestoneId).withAuthenticator(
@@ -466,8 +464,8 @@ public class TuleapRestClient implements IAuthenticator {
 	public TuleapBurndown getMilestoneBurndown(int milestoneId, IProgressMonitor monitor)
 			throws CoreException {
 		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.retrievingBurndown, Integer.valueOf(milestoneId)));
+			monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.retrievingBurndown, Integer
+					.valueOf(milestoneId)));
 		}
 		RestResource restBurndown = restResourceFactory.milestoneBurndown(milestoneId)
 				.withAuthenticator(this);
@@ -490,8 +488,8 @@ public class TuleapRestClient implements IAuthenticator {
 	public List<TuleapMilestone> getSubMilestones(int milestoneId, IProgressMonitor monitor)
 			throws CoreException {
 		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.retrievingSubMilestones, Integer.valueOf(milestoneId)));
+			monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.retrievingSubMilestones, Integer
+					.valueOf(milestoneId)));
 		}
 		RestResource subMilestonesResource = restResourceFactory.milestoneSubmilestones(milestoneId)
 				.withAuthenticator(this);
@@ -560,8 +558,8 @@ public class TuleapRestClient implements IAuthenticator {
 	 */
 	public TuleapCardwall getCardwall(int milestoneId, IProgressMonitor monitor) throws CoreException {
 		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.retrievingCardwall, Integer.valueOf(milestoneId)));
+			monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.retrievingCardwall, Integer
+					.valueOf(milestoneId)));
 		}
 		RestResource restCardwall = restResourceFactory.milestoneCardwall(milestoneId)
 				.withAuthenticator(this);
@@ -795,8 +793,8 @@ public class TuleapRestClient implements IAuthenticator {
 	public void updateMilestoneBacklog(int milestoneId, List<TuleapBacklogItem> backlogItems,
 			IProgressMonitor monitor) throws CoreException {
 		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.updatingBacklog,
-					Integer.valueOf(milestoneId)));
+			monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.updatingBacklog, Integer
+					.valueOf(milestoneId)));
 		}
 		RestResource backlogResource = restResourceFactory.milestoneBacklog(milestoneId).withAuthenticator(
 				this);
@@ -825,8 +823,8 @@ public class TuleapRestClient implements IAuthenticator {
 	public void updateTopPlanningBacklog(int projectId, List<TuleapBacklogItem> backlogItems,
 			IProgressMonitor monitor) throws CoreException {
 		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.updatingProjectBacklog, Integer.valueOf(projectId)));
+			monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.updatingProjectBacklog, Integer
+					.valueOf(projectId)));
 		}
 		RestResource backlogResource = restResourceFactory.projectBacklog(projectId).withAuthenticator(this);
 		// from POJO to JSON
@@ -854,8 +852,8 @@ public class TuleapRestClient implements IAuthenticator {
 	public void updateMilestoneContent(int milestoneId, List<TuleapBacklogItem> backlogItems,
 			IProgressMonitor monitor) throws CoreException {
 		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.updatingContent,
-					Integer.valueOf(milestoneId)));
+			monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.updatingContent, Integer
+					.valueOf(milestoneId)));
 		}
 		RestResource backlogResource = restResourceFactory.milestoneContent(milestoneId).withAuthenticator(
 				this);
@@ -884,8 +882,8 @@ public class TuleapRestClient implements IAuthenticator {
 	public void updateMilestoneSubmilestones(int milestoneId, List<TuleapMilestone> submilestones,
 			IProgressMonitor monitor) throws CoreException {
 		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.updatingSubmilestones, Integer.valueOf(milestoneId)));
+			monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.updatingSubmilestones, Integer
+					.valueOf(milestoneId)));
 		}
 		RestResource backlogResource = restResourceFactory.milestoneSubmilestones(milestoneId)
 				.withAuthenticator(this);
@@ -912,8 +910,7 @@ public class TuleapRestClient implements IAuthenticator {
 
 	public void updateCard(TuleapCard tuleapCard, IProgressMonitor monitor) throws CoreException {
 		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.updatingCard,
-					tuleapCard.getId()));
+			monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.updatingCard, tuleapCard.getId()));
 		}
 		RestResource restCards = restResourceFactory.card(tuleapCard.getId()).withAuthenticator(this);
 
@@ -939,8 +936,8 @@ public class TuleapRestClient implements IAuthenticator {
 	 */
 	public TuleapBacklogItem getBacklogItem(int backlogItemId, IProgressMonitor monitor) throws CoreException {
 		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.retrievingBacklogItem, Integer.valueOf(backlogItemId)));
+			monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.retrievingBacklogItem, Integer
+					.valueOf(backlogItemId)));
 		}
 		RestResource restBacklogItem = restResourceFactory.backlogItem(backlogItemId).withAuthenticator(this);
 
@@ -965,8 +962,8 @@ public class TuleapRestClient implements IAuthenticator {
 	 */
 	public TuleapTracker getTracker(int trackerId, IProgressMonitor monitor) throws CoreException {
 		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.retrievingTracker, Integer.valueOf(trackerId)));
+			monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.retrievingTracker, Integer
+					.valueOf(trackerId)));
 		}
 		RestResource restTracker = restResourceFactory.tracker(trackerId).withAuthenticator(this);
 		RestOperation operation = restTracker.get();

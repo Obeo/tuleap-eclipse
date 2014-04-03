@@ -35,8 +35,8 @@ import org.eclipse.mylyn.tuleap.core.internal.parser.TuleapGsonProvider;
 import org.eclipse.mylyn.tuleap.core.internal.repository.TuleapRepositoryConnector;
 import org.eclipse.mylyn.tuleap.ui.internal.TuleapTasksUIPlugin;
 import org.eclipse.mylyn.tuleap.ui.internal.util.ITuleapUIConstants;
+import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIKeys;
 import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIMessages;
-import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUiMessagesKeys;
 import org.eclipse.mylyn.tuleap.ui.internal.wizards.TuleapTrackerPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -93,10 +93,9 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 	 *            The Tuleap tracker
 	 */
 	public TuleapCustomQueryPage(TaskRepository taskRepository, TuleapTracker tuleapTracker) {
-		super(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapCustomQueryPageName), taskRepository,
-				null);
-		this.setTitle(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapCustomQueryPageTitle));
-		this.setDescription(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapCustomQueryPageDescription));
+		super(TuleapUIMessages.getString(TuleapUIKeys.tuleapCustomQueryPageName), taskRepository, null);
+		this.setTitle(TuleapUIMessages.getString(TuleapUIKeys.tuleapCustomQueryPageTitle));
+		this.setDescription(TuleapUIMessages.getString(TuleapUIKeys.tuleapCustomQueryPageDescription));
 		this.trackerId = tuleapTracker.getIdentifier();
 		this.projectId = tuleapTracker.getProject().getIdentifier();
 	}
@@ -110,10 +109,9 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 	 *            The query to edit
 	 */
 	public TuleapCustomQueryPage(TaskRepository taskRepository, IRepositoryQuery queryToEdit) {
-		super(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapCustomQueryPageName), taskRepository,
-				queryToEdit);
-		this.setTitle(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapCustomQueryPageTitle));
-		this.setDescription(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapCustomQueryPageDescription));
+		super(TuleapUIMessages.getString(TuleapUIKeys.tuleapCustomQueryPageName), taskRepository, queryToEdit);
+		this.setTitle(TuleapUIMessages.getString(TuleapUIKeys.tuleapCustomQueryPageTitle));
+		this.setDescription(TuleapUIMessages.getString(TuleapUIKeys.tuleapCustomQueryPageDescription));
 
 		// Case existing query to edit, the tracker id is provided by the query attributes
 		if (queryToEdit != null) {
@@ -155,8 +153,8 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				connectorKind);
 		if (!(connector instanceof TuleapRepositoryConnector)) {
-			TuleapTasksUIPlugin.log(TuleapUIMessages
-					.getString(TuleapUiMessagesKeys.invalidRepositoryConnector), true);
+			TuleapTasksUIPlugin
+					.log(TuleapUIMessages.getString(TuleapUIKeys.invalidRepositoryConnector), true);
 			return;
 		}
 

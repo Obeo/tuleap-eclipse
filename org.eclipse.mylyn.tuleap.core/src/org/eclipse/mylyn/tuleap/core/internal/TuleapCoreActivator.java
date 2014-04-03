@@ -17,8 +17,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.tuleap.core.internal.repository.TuleapRepositoryConnector;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessages;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreMessages;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -112,8 +112,8 @@ public class TuleapCoreActivator extends Plugin {
 	 */
 	public static void log(Exception e, boolean blocker) {
 		if (e == null) {
-			throw new NullPointerException(TuleapMylynTasksMessages
-					.getString(TuleapMylynTasksMessagesKeys.logNullException));
+			throw new NullPointerException(TuleapCoreMessages
+					.getString(TuleapCoreKeys.logNullException));
 		}
 
 		if (getDefault() == null) {
@@ -128,8 +128,8 @@ public class TuleapCoreActivator extends Plugin {
 			if (blocker) {
 				severity = IStatus.ERROR;
 			}
-			log(new Status(severity, PLUGIN_ID, severity, TuleapMylynTasksMessages
-					.getString(TuleapMylynTasksMessagesKeys.elementNotFound), e));
+			log(new Status(severity, PLUGIN_ID, severity, TuleapCoreMessages
+					.getString(TuleapCoreKeys.elementNotFound), e));
 		} else {
 			int severity = IStatus.WARNING;
 			if (blocker) {
@@ -149,8 +149,8 @@ public class TuleapCoreActivator extends Plugin {
 		// Eclipse platform displays NullPointer on standard error instead of throwing it.
 		// We'll handle this by throwing it ourselves.
 		if (status == null) {
-			throw new NullPointerException(TuleapMylynTasksMessages
-					.getString(TuleapMylynTasksMessagesKeys.logNullStatus));
+			throw new NullPointerException(TuleapCoreMessages
+					.getString(TuleapCoreKeys.logNullStatus));
 		}
 
 		if (getDefault() != null) {
@@ -186,8 +186,8 @@ public class TuleapCoreActivator extends Plugin {
 			}
 			String errorMessage = message;
 			if (errorMessage == null || "".equals(errorMessage)) { //$NON-NLS-1$
-				errorMessage = TuleapMylynTasksMessages
-						.getString(TuleapMylynTasksMessagesKeys.unexpectedException);
+				errorMessage = TuleapCoreMessages
+						.getString(TuleapCoreKeys.unexpectedException);
 			}
 			log(new Status(severity, PLUGIN_ID, errorMessage));
 		}

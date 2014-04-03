@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -24,12 +24,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessages;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreMessages;
 
 /**
  * Date JSON TypeAdapter for dates in ISO8601.
- * 
+ *
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
 public class DateIso8601Adapter implements JsonDeserializer<Date>, JsonSerializer<Date> {
@@ -57,7 +57,7 @@ public class DateIso8601Adapter implements JsonDeserializer<Date>, JsonSerialize
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see com.google.gson.JsonSerializer#serialize(java.lang.Object, java.lang.reflect.Type,
 	 *      com.google.gson.JsonSerializationContext)
 	 */
@@ -67,7 +67,7 @@ public class DateIso8601Adapter implements JsonDeserializer<Date>, JsonSerialize
 
 	/**
 	 * Turn a date into (one of) its ISO-8601 string representation.
-	 * 
+	 *
 	 * @param date
 	 *            The date to serialize.
 	 * @return The serialized date. Must not be null.
@@ -78,7 +78,7 @@ public class DateIso8601Adapter implements JsonDeserializer<Date>, JsonSerialize
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see com.google.gson.JsonDeserializer#deserialize(com.google.gson.JsonElement, java.lang.reflect.Type,
 	 *      com.google.gson.JsonDeserializationContext)
 	 */
@@ -91,13 +91,13 @@ public class DateIso8601Adapter implements JsonDeserializer<Date>, JsonSerialize
 				throw new JsonParseException(e);
 			}
 		}
-		throw new JsonParseException(TuleapMylynTasksMessages.getString(
-				TuleapMylynTasksMessagesKeys.invalidDate, json.toString()));
+		throw new JsonParseException(TuleapCoreMessages
+				.getString(TuleapCoreKeys.invalidDate, json.toString()));
 	}
 
 	/**
 	 * Parses a date in ISO 8601 format, without Joda time...
-	 * 
+	 *
 	 * @param dateIso8601
 	 *            Date to parse.
 	 * @throws ParseException

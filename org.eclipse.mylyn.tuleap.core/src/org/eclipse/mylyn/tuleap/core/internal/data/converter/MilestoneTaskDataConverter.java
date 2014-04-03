@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -38,8 +38,8 @@ import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapMilestone;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapStatus;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapSwimlane;
 import org.eclipse.mylyn.tuleap.core.internal.repository.ITuleapRepositoryConnector;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessages;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreMessages;
 import org.tuleap.mylyn.task.agile.core.data.burndown.BurndownData;
 import org.tuleap.mylyn.task.agile.core.data.burndown.BurndownMapper;
 import org.tuleap.mylyn.task.agile.core.data.cardwall.CardWrapper;
@@ -52,7 +52,7 @@ import org.tuleap.mylyn.task.agile.core.data.planning.SubMilestoneWrapper;
 
 /**
  * Class to convert a milestone to task data and task data to milestone.
- * 
+ *
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
@@ -71,7 +71,7 @@ public class MilestoneTaskDataConverter {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param taskRepository
 	 *            The task repository to use.
 	 * @param connector
@@ -85,7 +85,7 @@ public class MilestoneTaskDataConverter {
 	/**
 	 * Populate the given task data with milestone data. Also, marks the task data kind with a value that
 	 * means this task data represents a milestone.
-	 * 
+	 *
 	 * @param taskData
 	 *            Object to populate.
 	 * @param milestone
@@ -99,7 +99,7 @@ public class MilestoneTaskDataConverter {
 
 	/**
 	 * Populates the planning data in a task data from the given pojo.
-	 * 
+	 *
 	 * @param taskData
 	 *            The task data to fill.
 	 * @param cardwall
@@ -131,7 +131,7 @@ public class MilestoneTaskDataConverter {
 
 	/**
 	 * Populates the burndown data in a task data from the given pojo.
-	 * 
+	 *
 	 * @param taskData
 	 *            The task data to fill.
 	 * @param burndown
@@ -148,7 +148,7 @@ public class MilestoneTaskDataConverter {
 
 	/**
 	 * Transfers data form the given card POJO to the given {@link CardWrapper}.
-	 * 
+	 *
 	 * @param cardWrapper
 	 *            The card wrapper.
 	 * @param card
@@ -180,9 +180,8 @@ public class MilestoneTaskDataConverter {
 		// The card ID is different from the artifact ID, but we want to display the artifact ID
 		TuleapTracker tracker = project.getTracker(artifact.getTracker().getId());
 		if (tracker != null) {
-			cardWrapper.setDisplayId(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.cardDisplayId, tracker.getLabel(), Integer.toString(artifact
-							.getId())));
+			cardWrapper.setDisplayId(TuleapCoreMessages.getString(TuleapCoreKeys.cardDisplayId, tracker
+					.getLabel(), Integer.toString(artifact.getId())));
 			// TODO Implement an init mechanism like artifact: create all card fields according to config
 			// then populate the values of received fields.
 			for (AbstractFieldValue fieldValue : card.getFieldValues()) {
@@ -203,21 +202,20 @@ public class MilestoneTaskDataConverter {
 					}
 					populateCardField(tracker, fieldValue, field, fieldAtt);
 				} else {
-					TuleapCoreActivator.log(TuleapMylynTasksMessages.getString(
-							TuleapMylynTasksMessagesKeys.cardTrackerConfigNeedsUpdate, Integer
-									.toString(trackerId)), true);
+					TuleapCoreActivator.log(TuleapCoreMessages.getString(
+							TuleapCoreKeys.cardTrackerConfigNeedsUpdate, Integer.toString(trackerId)), true);
 				}
 			}
 		} else {
 			cardWrapper.setDisplayId(Integer.toString(artifact.getId()));
-			TuleapCoreActivator.log(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.cardTrackerNotAvailable, Integer.toString(trackerId)), true);
+			TuleapCoreActivator.log(TuleapCoreMessages.getString(TuleapCoreKeys.cardTrackerNotAvailable,
+					Integer.toString(trackerId)), true);
 		}
 	}
 
 	/**
 	 * Populates a card field.
-	 * 
+	 *
 	 * @param tracker
 	 *            The tracker
 	 * @param fieldValue
@@ -235,15 +233,14 @@ public class MilestoneTaskDataConverter {
 		} catch (Exception e) {
 			// CHECKSTYLE:ON
 			TuleapCoreActivator.log(e, true);
-			TuleapCoreActivator.log(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.cardTrackerConfigNeedsUpdate, Integer.toString(tracker
-							.getIdentifier())), true);
+			TuleapCoreActivator.log(TuleapCoreMessages.getString(TuleapCoreKeys.cardTrackerConfigNeedsUpdate,
+					Integer.toString(tracker.getIdentifier())), true);
 		}
 	}
 
 	/**
 	 * Extracts the list of backlog from a Milestone {@link TaskData} object.
-	 * 
+	 *
 	 * @param taskData
 	 *            The milestone's task data
 	 * @return The list of backlog backlogitems to send to the server for update.
@@ -283,7 +280,7 @@ public class MilestoneTaskDataConverter {
 
 	/**
 	 * Indicates whether the milestone with the given ID needs to be sent to the server for update.
-	 * 
+	 *
 	 * @param taskData
 	 *            The milestone's task data.
 	 * @param submilestoneId
@@ -298,7 +295,7 @@ public class MilestoneTaskDataConverter {
 
 	/**
 	 * Indicates whether the backlog needs to be sent to the server for update.
-	 * 
+	 *
 	 * @param taskData
 	 *            The milestone's task data.
 	 * @return <code>true</code> if and only if the backlog has been modified locally.
@@ -310,7 +307,7 @@ public class MilestoneTaskDataConverter {
 
 	/**
 	 * Extracts the list of a sub-milestone content from a Milestone {@link TaskData} object.
-	 * 
+	 *
 	 * @param taskData
 	 *            The milestone's task data.
 	 * @param submilestoneId
@@ -355,7 +352,7 @@ public class MilestoneTaskDataConverter {
 
 	/**
 	 * Extracts the list of submilestones from a Milestone {@link TaskData} object.
-	 * 
+	 *
 	 * @param taskData
 	 *            The milestone's task data
 	 * @return The list of milestones to send to the server for update.
@@ -393,7 +390,7 @@ public class MilestoneTaskDataConverter {
 
 	/**
 	 * Extract the list of Cardwall cards that have at least one modification.
-	 * 
+	 *
 	 * @param taskData
 	 *            The task data
 	 * @return The list of cards to send to the server for update.
@@ -414,7 +411,7 @@ public class MilestoneTaskDataConverter {
 
 	/**
 	 * Extracts a TuleapCard from a CardWrapper.
-	 * 
+	 *
 	 * @param cardWrapper
 	 *            The card Wrapper
 	 * @return A {@link TuleapCard} object that contain modifications to send to the server, and can be null
@@ -461,7 +458,7 @@ public class MilestoneTaskDataConverter {
 	/**
 	 * Extract a field from a {@link TaskAttribute} for a {@link CardWrapper} into a {@link TuleapCard}
 	 * instance.
-	 * 
+	 *
 	 * @param cardWrapper
 	 *            the card wrapper
 	 * @param tracker
@@ -481,7 +478,7 @@ public class MilestoneTaskDataConverter {
 
 	/**
 	 * Retrieves the milestone artifact id from a milestone {@link TaskData} object.
-	 * 
+	 *
 	 * @param taskData
 	 *            the task data.
 	 * @return The milestone id.
@@ -492,7 +489,7 @@ public class MilestoneTaskDataConverter {
 
 	/**
 	 * Retrieves the project id from a milestone {@link TaskData} object.
-	 * 
+	 *
 	 * @param taskData
 	 *            the task data.
 	 * @return The milestone id.
@@ -503,7 +500,7 @@ public class MilestoneTaskDataConverter {
 
 	/**
 	 * Populates the milestone backlog with the given list of backlogItems.
-	 * 
+	 *
 	 * @param taskData
 	 *            The task data to fill.
 	 * @param backlog
@@ -539,7 +536,7 @@ public class MilestoneTaskDataConverter {
 			if (backlogItem.getParent() != null) {
 				backlogItemWrapper.setParent(TuleapTaskId.forArtifact(projectId, 0,
 						backlogItem.getParent().getId()).toString(), Integer.toString(backlogItem.getParent()
-						.getId()));
+								.getId()));
 			}
 
 		}
@@ -547,7 +544,7 @@ public class MilestoneTaskDataConverter {
 
 	/**
 	 * Add a submilestone with its given list of backlogItems.
-	 * 
+	 *
 	 * @param taskData
 	 *            The task data to fill.
 	 * @param milestone
@@ -606,7 +603,7 @@ public class MilestoneTaskDataConverter {
 			if (backlogItem.getParent() != null) {
 				backlogItemWrapper.setParent(TuleapTaskId.forArtifact(projectId, 0,
 						backlogItem.getParent().getId()).toString(), Integer.toString(backlogItem.getParent()
-						.getId()));
+								.getId()));
 			}
 		}
 

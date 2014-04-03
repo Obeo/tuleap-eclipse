@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -23,15 +23,15 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tuleap.core.internal.client.TuleapClientManager;
 import org.eclipse.mylyn.tuleap.core.internal.repository.TuleapRepositoryConnector;
 import org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants;
+import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIKeys;
 import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIMessages;
-import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUiMessagesKeys;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
  * The activator in charge of managing the lifecycle of the bundle.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
@@ -53,7 +53,7 @@ public class TuleapTasksUIPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Returns the sole instance of the activator.
-	 * 
+	 *
 	 * @return The sole instancea of the activator
 	 */
 	public static TuleapTasksUIPlugin getDefault() {
@@ -65,26 +65,22 @@ public class TuleapTasksUIPlugin extends AbstractUIPlugin {
 		super.start(context);
 		instance = this;
 
-		AbstractRepositoryConnector repositoryConnector = TasksUi
-				.getRepositoryManager().getRepositoryConnector(
-						ITuleapConstants.CONNECTOR_KIND);
+		AbstractRepositoryConnector repositoryConnector = TasksUi.getRepositoryManager()
+				.getRepositoryConnector(ITuleapConstants.CONNECTOR_KIND);
 		if (repositoryConnector instanceof TuleapRepositoryConnector) {
-			TuleapRepositoryConnector tuleapRepositoryConnector = (TuleapRepositoryConnector) repositoryConnector;
-			TuleapClientManager clientManager = tuleapRepositoryConnector
-					.getClientManager();
+			TuleapRepositoryConnector tuleapRepositoryConnector = (TuleapRepositoryConnector)repositoryConnector;
+			TuleapClientManager clientManager = tuleapRepositoryConnector.getClientManager();
 			TasksUi.getRepositoryManager().addListener(clientManager);
 		}
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		AbstractRepositoryConnector repositoryConnector = TasksUi
-				.getRepositoryManager().getRepositoryConnector(
-						ITuleapConstants.CONNECTOR_KIND);
+		AbstractRepositoryConnector repositoryConnector = TasksUi.getRepositoryManager()
+				.getRepositoryConnector(ITuleapConstants.CONNECTOR_KIND);
 		if (repositoryConnector instanceof TuleapRepositoryConnector) {
-			TuleapRepositoryConnector tuleapRepositoryConnector = (TuleapRepositoryConnector) repositoryConnector;
-			TuleapClientManager clientManager = tuleapRepositoryConnector
-					.getClientManager();
+			TuleapRepositoryConnector tuleapRepositoryConnector = (TuleapRepositoryConnector)repositoryConnector;
+			TuleapClientManager clientManager = tuleapRepositoryConnector.getClientManager();
 			TasksUi.getRepositoryManager().removeListener(clientManager);
 		}
 
@@ -99,7 +95,7 @@ public class TuleapTasksUIPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Returns an image at the given plug-in relative path.
-	 * 
+	 *
 	 * @param path
 	 *            is a plug-in relative path
 	 * @return the image
@@ -117,9 +113,8 @@ public class TuleapTasksUIPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns an image descriptor for the image file at the given plug-in
-	 * relative path.
-	 * 
+	 * Returns an image descriptor for the image file at the given plug-in relative path.
+	 *
 	 * @param path
 	 *            the path
 	 * @return the image descriptor
@@ -130,18 +125,16 @@ public class TuleapTasksUIPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Trace an Exception in the error log.
-	 * 
+	 *
 	 * @param e
 	 *            Exception to log.
 	 * @param blocker
-	 *            <code>True</code> if the exception must be logged as error,
-	 *            <code>False</code> to log it as a warning.
+	 *            <code>True</code> if the exception must be logged as error, <code>False</code> to log it as
+	 *            a warning.
 	 */
 	public static void log(Exception e, boolean blocker) {
 		if (e == null) {
-			throw new NullPointerException(
-					TuleapUIMessages
-							.getString(TuleapUiMessagesKeys.logNullException));
+			throw new NullPointerException(TuleapUIMessages.getString(TuleapUIKeys.logNullException));
 		}
 
 		if (getDefault() == null) {
@@ -150,15 +143,14 @@ public class TuleapTasksUIPlugin extends AbstractUIPlugin {
 			e.printStackTrace();
 			// CHECKSTYLE:ON
 		} else if (e instanceof CoreException) {
-			log(((CoreException) e).getStatus());
+			log(((CoreException)e).getStatus());
 		} else if (e instanceof NullPointerException) {
 			int severity = IStatus.WARNING;
 			if (blocker) {
 				severity = IStatus.ERROR;
 			}
-			log(new Status(severity, PLUGIN_ID, severity,
-					TuleapUIMessages
-							.getString(TuleapUiMessagesKeys.elementNotFound), e));
+			log(new Status(severity, PLUGIN_ID, severity, TuleapUIMessages
+					.getString(TuleapUIKeys.elementNotFound), e));
 		} else {
 			int severity = IStatus.WARNING;
 			if (blocker) {
@@ -170,7 +162,7 @@ public class TuleapTasksUIPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Puts the given status in the error log view.
-	 * 
+	 *
 	 * @param status
 	 *            Error Status.
 	 */
@@ -179,9 +171,7 @@ public class TuleapTasksUIPlugin extends AbstractUIPlugin {
 		// throwing it.
 		// We'll handle this by throwing it ourselves.
 		if (status == null) {
-			throw new NullPointerException(
-					TuleapUIMessages
-							.getString(TuleapUiMessagesKeys.logNullStatus));
+			throw new NullPointerException(TuleapUIMessages.getString(TuleapUIKeys.logNullStatus));
 		}
 
 		if (getDefault() != null) {
@@ -197,12 +187,12 @@ public class TuleapTasksUIPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Puts the given message in the error log view, as error or warning.
-	 * 
+	 *
 	 * @param message
 	 *            The message to put in the error log view.
 	 * @param blocker
-	 *            <code>True</code> if the message must be logged as error,
-	 *            <code>False</code> to log it as a warning.
+	 *            <code>True</code> if the message must be logged as error, <code>False</code> to log it as a
+	 *            warning.
 	 */
 	public static void log(String message, boolean blocker) {
 		if (getDefault() == null) {
@@ -217,8 +207,7 @@ public class TuleapTasksUIPlugin extends AbstractUIPlugin {
 			}
 			String errorMessage = message;
 			if (errorMessage == null || "".equals(errorMessage)) { //$NON-NLS-1$
-				errorMessage = TuleapUIMessages
-						.getString(TuleapUiMessagesKeys.unexpectedException);
+				errorMessage = TuleapUIMessages.getString(TuleapUIKeys.unexpectedException);
 			}
 			log(new Status(severity, PLUGIN_ID, errorMessage));
 		}

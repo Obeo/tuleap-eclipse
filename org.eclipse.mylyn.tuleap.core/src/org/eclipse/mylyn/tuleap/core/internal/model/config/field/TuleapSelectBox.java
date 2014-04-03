@@ -20,8 +20,8 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapWorkflow;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.AbstractFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.BoundFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessages;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreMessages;
 
 /**
  * The Tuleap select box widget.
@@ -130,8 +130,8 @@ public class TuleapSelectBox extends AbstractTuleapSelectBox {
 		TaskAttribute attribute = super.createStatusTaskAttribute(parent);
 
 		TaskAttribute operationAttribute = parent.createAttribute(TaskAttribute.OPERATION);
-		TaskOperation.applyTo(operationAttribute, TaskAttribute.STATUS, TuleapMylynTasksMessages
-				.getString(TuleapMylynTasksMessagesKeys.markAsLabel));
+		TaskOperation.applyTo(operationAttribute, TaskAttribute.STATUS, TuleapCoreMessages
+				.getString(TuleapCoreKeys.markAsLabel));
 
 		List<String> tuleapStatus = new ArrayList<String>();
 
@@ -146,8 +146,8 @@ public class TuleapSelectBox extends AbstractTuleapSelectBox {
 		for (TuleapSelectBoxItem item : items.values()) {
 			attrResolvedInput.putOption(Integer.toString(item.getIdentifier()), item.getLabel());
 		}
-		TaskOperation.applyTo(attrResolvedInput, TaskAttribute.STATUS, TuleapMylynTasksMessages
-				.getString(TuleapMylynTasksMessagesKeys.markAsLabel));
+		TaskOperation.applyTo(attrResolvedInput, TaskAttribute.STATUS, TuleapCoreMessages
+				.getString(TuleapCoreKeys.markAsLabel));
 
 		attrResolvedInput.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID,
 				TaskAttribute.STATUS);

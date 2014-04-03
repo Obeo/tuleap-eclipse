@@ -41,8 +41,8 @@ import org.eclipse.mylyn.tuleap.core.internal.model.data.AttachmentValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.BoundFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.LiteralFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapElementComment;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessages;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreMessages;
 import org.tuleap.mylyn.task.agile.core.data.AbstractTaskMapper;
 
 /**
@@ -161,7 +161,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	private void createCreationDateTaskAttribute() {
 		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.DATE_CREATION);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
-		metaData.setLabel(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.creationDateLabel));
+		metaData.setLabel(TuleapCoreMessages.getString(TuleapCoreKeys.creationDateLabel));
 		metaData.setType(TaskAttribute.TYPE_DATE);
 	}
 
@@ -171,8 +171,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	private void createLastUpdateDateTaskAttribute() {
 		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.DATE_MODIFICATION);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
-		metaData.setLabel(TuleapMylynTasksMessages
-				.getString(TuleapMylynTasksMessagesKeys.lastModificationDateLabel));
+		metaData.setLabel(TuleapCoreMessages.getString(TuleapCoreKeys.lastModificationDateLabel));
 		metaData.setType(TaskAttribute.TYPE_DATE);
 	}
 
@@ -192,8 +191,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	private void createCompletionDateTaskAttribute() {
 		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.DATE_COMPLETION);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
-		metaData.setLabel(TuleapMylynTasksMessages
-				.getString(TuleapMylynTasksMessagesKeys.completionDateLabel));
+		metaData.setLabel(TuleapCoreMessages.getString(TuleapCoreKeys.completionDateLabel));
 		metaData.setType(TaskAttribute.TYPE_DATE);
 	}
 
@@ -205,7 +203,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	private TaskAttribute createNewCommentTaskAttribute() {
 		TaskAttribute attribute = taskData.getRoot().createAttribute(TaskAttribute.COMMENT_NEW);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
-		metaData.setLabel(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.newCommentLabel));
+		metaData.setLabel(TuleapCoreMessages.getString(TuleapCoreKeys.newCommentLabel));
 		metaData.setType(TaskAttribute.TYPE_LONG_RICH_TEXT);
 		return attribute;
 	}
@@ -219,8 +217,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 		if (name != null) {
 			attribute.setValue(name);
 		} else {
-			attribute.setValue(TuleapMylynTasksMessages
-					.getString(TuleapMylynTasksMessagesKeys.defaultTrackerName));
+			attribute.setValue(TuleapCoreMessages.getString(TuleapCoreKeys.defaultTrackerName));
 		}
 	}
 
@@ -507,7 +504,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	public void addAttachment(String tuleapFieldName, AttachmentValue tuleapAttachment) {
 		TaskAttribute attribute = taskData.getRoot().createAttribute(
 				TaskAttribute.PREFIX_ATTACHMENT + tuleapFieldName + "---" //$NON-NLS-1$
-						+ tuleapAttachment.getId());
+				+ tuleapAttachment.getId());
 		attribute.getMetaData().defaults().setType(TaskAttribute.TYPE_ATTACHMENT);
 		TaskAttachmentMapper taskAttachment = TaskAttachmentMapper.createFrom(attribute);
 		taskAttachment.setAttachmentId(tuleapAttachment.getId());
@@ -755,8 +752,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 			att = taskData.getRoot().createMappedAttribute(PARENT_DISPLAY_ID);
 			att.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
 			att.getMetaData().setType(TaskAttribute.TYPE_SHORT_RICH_TEXT);
-			att.getMetaData().setLabel(
-					TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.parentLabel));
+			att.getMetaData().setLabel(TuleapCoreMessages.getString(TuleapCoreKeys.parentLabel));
 			att.getMetaData().setReadOnly(true);
 		} else {
 			oldValue = att.getValue();

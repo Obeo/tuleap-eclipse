@@ -18,8 +18,8 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapSelectBox
 import org.eclipse.mylyn.tuleap.core.internal.model.data.IQueryCriterion;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapQueryCriterion;
 import org.eclipse.mylyn.tuleap.ui.internal.TuleapTasksUIPlugin;
+import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIKeys;
 import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIMessages;
-import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUiMessagesKeys;
 import org.eclipse.swt.widgets.List;
 
 /**
@@ -70,8 +70,8 @@ public class TuleapSelectBoxQueryElement extends AbstractTuleapCustomQueryElemen
 						valueIds[i] = Integer.parseInt(valueId);
 					} catch (NumberFormatException e) {
 						throw new CoreException(new Status(IStatus.ERROR, TuleapTasksUIPlugin.PLUGIN_ID,
-								TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapQueryInvalidValue,
-										valueId, "int"))); //$NON-NLS-1$
+								TuleapUIMessages.getString(TuleapUIKeys.tuleapQueryInvalidValue, valueId,
+										"int"))); //$NON-NLS-1$
 					}
 				}
 			}

@@ -22,8 +22,8 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.AbstractFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.LiteralFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.parser.DateIso8601Adapter;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessages;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreMessages;
 
 /**
  * The Tuleap date field.
@@ -106,9 +106,8 @@ public class TuleapDate extends AbstractTuleapField {
 				result = DateIso8601Adapter.toIso8601String(new Date(date));
 			}
 		} catch (NumberFormatException e) {
-			String messageToLog = TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.dateParsingLogMessage, attributeValue, attribute
-							.getMetaData().getLabel());
+			String messageToLog = TuleapCoreMessages.getString(TuleapCoreKeys.dateParsingLogMessage,
+					attributeValue, attribute.getMetaData().getLabel());
 			TuleapCoreActivator.log(messageToLog, false);
 		}
 		return result;
@@ -128,7 +127,7 @@ public class TuleapDate extends AbstractTuleapField {
 					((LiteralFieldValue)value).getFieldValue()).getTime()));
 		} catch (ParseException e) {
 			TuleapCoreActivator.log(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
-					TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.dateParsingLogMessage,
+					TuleapCoreMessages.getString(TuleapCoreKeys.dateParsingLogMessage,
 							((LiteralFieldValue)value).getFieldValue(), attribute.getMetaData().getLabel())));
 		}
 	}

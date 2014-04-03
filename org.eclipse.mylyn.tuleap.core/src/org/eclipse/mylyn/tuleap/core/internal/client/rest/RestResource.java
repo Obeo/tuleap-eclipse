@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -15,12 +15,12 @@ import com.google.gson.Gson;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessages;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreMessages;
 
 /**
  * Generic REST Resource.
- * 
+ *
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
 public class RestResource {
@@ -139,7 +139,7 @@ public class RestResource {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param url
 	 *            The URL, must no be null.
 	 * @param supportedMethods
@@ -166,7 +166,7 @@ public class RestResource {
 
 	/**
 	 * URL fragment following /api/version, should start with a slash character "/".
-	 * 
+	 *
 	 * @return The URL fragment of this resource.
 	 */
 	public String getUrl() {
@@ -176,7 +176,7 @@ public class RestResource {
 	/**
 	 * Creates a DELETE operation for this resource after checking it makes sense by sending an OPTIONS call
 	 * to this resource's URL.
-	 * 
+	 *
 	 * @return A new instance of {@link RestOperation} created with this resource operation factory.
 	 * @throws CoreException
 	 *             If a problem occurs while checking whether the DELETE method is supported by the server for
@@ -184,8 +184,8 @@ public class RestResource {
 	 */
 	public RestOperation delete() throws CoreException {
 		if ((supportedMethods & DELETE) == 0) {
-			throw new UnsupportedOperationException(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, "DELETE", url)); //$NON-NLS-1$
+			throw new UnsupportedOperationException(TuleapCoreMessages.getString(
+					TuleapCoreKeys.operationNotAllowedOnResource, "DELETE", url)); //$NON-NLS-1$
 		}
 		return RestOperation.delete(url, connector, gson, logger).withAuthenticator(authenticator);
 	}
@@ -193,7 +193,7 @@ public class RestResource {
 	/**
 	 * Creates a GET operation for this resource after checking it makes sense by sending an OPTIONS call to
 	 * this resource's URL.
-	 * 
+	 *
 	 * @return A new instance of {@link RestOperation} created with this resource operation factory.
 	 * @throws CoreException
 	 *             If a problem occurs while checking whether the GET method is supported by the server for
@@ -201,8 +201,8 @@ public class RestResource {
 	 */
 	public RestOperation get() throws CoreException {
 		if ((supportedMethods & GET) == 0) {
-			throw new UnsupportedOperationException(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, "GET", getUrl())); //$NON-NLS-1$
+			throw new UnsupportedOperationException(TuleapCoreMessages.getString(
+					TuleapCoreKeys.operationNotAllowedOnResource, "GET", getUrl())); //$NON-NLS-1$
 		}
 		RestOperation operation = RestOperation.get(url, connector, gson, logger).withAuthenticator(
 				authenticator);
@@ -211,7 +211,7 @@ public class RestResource {
 
 	/**
 	 * Creates an OPTIONS operation for this resource.
-	 * 
+	 *
 	 * @return A new instance of {@link RestOperation} created with this resource operation factory.
 	 */
 	public RestOperation options() {
@@ -221,7 +221,7 @@ public class RestResource {
 	/**
 	 * Creates a POST operation for this resource after checking it makes sense by sending an OPTIONS call to
 	 * this resource's URL.
-	 * 
+	 *
 	 * @return A new instance of {@link RestOperation} created with this resource operation factory.
 	 * @throws CoreException
 	 *             If a problem occurs while checking whether the GET method is supported by the server for
@@ -229,8 +229,8 @@ public class RestResource {
 	 */
 	public RestOperation post() throws CoreException {
 		if ((supportedMethods & POST) == 0) {
-			throw new UnsupportedOperationException(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, "POST", getUrl())); //$NON-NLS-1$
+			throw new UnsupportedOperationException(TuleapCoreMessages.getString(
+					TuleapCoreKeys.operationNotAllowedOnResource, "POST", getUrl())); //$NON-NLS-1$
 		}
 		return RestOperation.post(url, connector, gson, logger).withAuthenticator(authenticator);
 	}
@@ -238,7 +238,7 @@ public class RestResource {
 	/**
 	 * Creates a PUT operation for this resource after checking it makes sense by sending an OPTIONS call to
 	 * this resource's URL.
-	 * 
+	 *
 	 * @return A new instance of {@link RestOperation} created with this resource operation factory.
 	 * @throws CoreException
 	 *             If a problem occurs while checking whether the GET method is supported by the server for
@@ -246,15 +246,15 @@ public class RestResource {
 	 */
 	public RestOperation put() throws CoreException {
 		if ((supportedMethods & PUT) == 0) {
-			throw new UnsupportedOperationException(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, "PUT", getUrl())); //$NON-NLS-1$
+			throw new UnsupportedOperationException(TuleapCoreMessages.getString(
+					TuleapCoreKeys.operationNotAllowedOnResource, "PUT", getUrl())); //$NON-NLS-1$
 		}
 		return RestOperation.put(url, connector, gson, logger).withAuthenticator(authenticator);
 	}
 
 	/**
 	 * Sets the authenticator to use.
-	 * 
+	 *
 	 * @param anAuthenticator
 	 *            The authenticator to use.
 	 * @return this, for a fluent API.
@@ -266,7 +266,7 @@ public class RestResource {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -303,7 +303,7 @@ public class RestResource {
 
 	/**
 	 * This interface contains the list of all the available URL in the REST api of Tuleap.
-	 * 
+	 *
 	 * @noextend This class is not intended to be subclassed by clients.
 	 * @noinstantiate This class is not intended to be instantiated by clients.
 	 * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>

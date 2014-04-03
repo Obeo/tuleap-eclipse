@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -19,12 +19,12 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessages;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreMessages;
 
 /**
  * Handles the pagination of a REST dialog.
- * 
+ *
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
 public class JsonResponsePaginatedIterator implements Iterator<JsonElement> {
@@ -84,7 +84,7 @@ public class JsonResponsePaginatedIterator implements Iterator<JsonElement> {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param operation
 	 *            The REST operation to perform, several times if there is pagination involved.
 	 * @param firstResponse
@@ -104,7 +104,7 @@ public class JsonResponsePaginatedIterator implements Iterator<JsonElement> {
 	/**
 	 * Extracts the counters from the given response and reinitializes the iterator used to iterate over
 	 * available elements.
-	 * 
+	 *
 	 * @param response
 	 *            The server response containing the headers to extract.
 	 */
@@ -112,15 +112,15 @@ public class JsonResponsePaginatedIterator implements Iterator<JsonElement> {
 		Map<String, String> responseHeaders = currentResponse.getHeaders();
 		String xPaginationSize = responseHeaders.get(RestResource.HEADER_X_PAGINATION_SIZE);
 		if (xPaginationSize == null) {
-			throw new IllegalArgumentException(TuleapMylynTasksMessages
-					.getString(TuleapMylynTasksMessagesKeys.invalidPaginationHeader));
+			throw new IllegalArgumentException(TuleapCoreMessages
+					.getString(TuleapCoreKeys.invalidPaginationHeader));
 		}
 		String xPaginationLimitMax = responseHeaders.get(RestResource.HEADER_X_PAGINATION_LIMIT_MAX);
 		try {
 			nbElements = Integer.parseInt(xPaginationSize);
 		} catch (NumberFormatException e) {
-			throw new IllegalArgumentException(TuleapMylynTasksMessages
-					.getString(TuleapMylynTasksMessagesKeys.invalidPaginationHeader), e);
+			throw new IllegalArgumentException(TuleapCoreMessages
+					.getString(TuleapCoreKeys.invalidPaginationHeader), e);
 		}
 		if (xPaginationLimitMax != null) {
 			try {
@@ -138,7 +138,7 @@ public class JsonResponsePaginatedIterator implements Iterator<JsonElement> {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see java.util.Iterator#hasNext()
 	 */
 	public boolean hasNext() {
@@ -147,7 +147,7 @@ public class JsonResponsePaginatedIterator implements Iterator<JsonElement> {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see java.util.Iterator#next()
 	 */
 	public JsonElement next() {
@@ -157,7 +157,7 @@ public class JsonResponsePaginatedIterator implements Iterator<JsonElement> {
 		if (!iterator.hasNext()) {
 			currentResponse = operation.withHeaders(headers).withBody(body).withQueryParameter(OFFSET,
 					Integer.toString(currentOffset)).withQueryParameter(LIMIT,
-					Integer.toString(nbElementsPerPageMax)).run();
+							Integer.toString(nbElementsPerPageMax)).run();
 			extractCounters(currentResponse);
 		}
 		currentOffset++;
@@ -166,7 +166,7 @@ public class JsonResponsePaginatedIterator implements Iterator<JsonElement> {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see java.util.Iterator#remove()
 	 */
 	public void remove() {

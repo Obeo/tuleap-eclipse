@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -31,15 +31,15 @@ import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskSearchPage;
 import org.eclipse.mylyn.tuleap.core.internal.repository.TuleapUrlUtil;
 import org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants;
+import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIKeys;
 import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIMessages;
-import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUiMessagesKeys;
 import org.eclipse.mylyn.tuleap.ui.internal.wizards.attachment.TuleapTaskAttachmentPage;
 import org.eclipse.mylyn.tuleap.ui.internal.wizards.newtask.NewTuleapTaskWizard;
 import org.eclipse.mylyn.tuleap.ui.internal.wizards.query.TuleapRepositoryQueryWizard;
 
 /**
  * Utility class managing all the user interface related operations with the Tuleap repository.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
@@ -54,7 +54,7 @@ public class TuleapConnectorUi extends AbstractRepositoryConnectorUi {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#getAccountCreationUrl(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
 	@Override
@@ -64,7 +64,7 @@ public class TuleapConnectorUi extends AbstractRepositoryConnectorUi {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#getAccountManagementUrl(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
 	@Override
@@ -74,7 +74,7 @@ public class TuleapConnectorUi extends AbstractRepositoryConnectorUi {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#findHyperlinks(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      org.eclipse.mylyn.tasks.core.ITask, java.lang.String, int, int)
 	 */
@@ -95,7 +95,7 @@ public class TuleapConnectorUi extends AbstractRepositoryConnectorUi {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#getTaskKindLabel(org.eclipse.mylyn.tasks.core.ITask)
 	 */
 	@Override
@@ -103,14 +103,14 @@ public class TuleapConnectorUi extends AbstractRepositoryConnectorUi {
 		String taskKind = task.getTaskKind();
 		if (taskKind == null || taskKind.length() == 0 || taskKind.equals(ITuleapConstants.CONNECTOR_KIND)) {
 			// By default, use the name "Artifact" if we don"t have anything, or just "tuleap"
-			taskKind = TuleapUIMessages.getString(TuleapUiMessagesKeys.taskKindLabel);
+			taskKind = TuleapUIMessages.getString(TuleapUIKeys.taskKindLabel);
 		}
 		return taskKind;
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#getConnectorKind()
 	 */
 	@Override
@@ -120,7 +120,7 @@ public class TuleapConnectorUi extends AbstractRepositoryConnectorUi {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#hasSearchPage()
 	 */
 	@Override
@@ -130,7 +130,7 @@ public class TuleapConnectorUi extends AbstractRepositoryConnectorUi {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#getSearchPage(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      org.eclipse.jface.viewers.IStructuredSelection)
 	 */
@@ -142,7 +142,7 @@ public class TuleapConnectorUi extends AbstractRepositoryConnectorUi {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#getSettingsPage(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
 	@Override
@@ -152,7 +152,7 @@ public class TuleapConnectorUi extends AbstractRepositoryConnectorUi {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#getQueryWizard(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      org.eclipse.mylyn.tasks.core.IRepositoryQuery)
 	 */
@@ -171,7 +171,7 @@ public class TuleapConnectorUi extends AbstractRepositoryConnectorUi {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#getNewTaskWizard(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      org.eclipse.mylyn.tasks.core.ITaskMapping)
 	 */
@@ -182,7 +182,7 @@ public class TuleapConnectorUi extends AbstractRepositoryConnectorUi {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#getTaskAttachmentPage(org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel)
 	 */
 	@Override

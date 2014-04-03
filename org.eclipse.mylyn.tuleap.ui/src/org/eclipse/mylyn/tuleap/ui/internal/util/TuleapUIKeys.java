@@ -17,9 +17,9 @@ import org.eclipse.osgi.util.NLS;
  *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public class TuleapUiMessagesKeys extends NLS {
+public class TuleapUIKeys extends NLS {
 	/** Qualified path to the properties file in which to seek the keys. */
-	private static final String BUNDLE_NAME = "org.eclipse.mylyn.tuleap.ui.internal.util.tuleap_mylyn_tasks_ui_messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.mylyn.tuleap.ui.internal.util.tuleap_ui_messages"; //$NON-NLS-1$
 
 	// CHECKSTYLE:OFF (Javadoc is __still__ required!)
 
@@ -241,6 +241,6 @@ public class TuleapUiMessagesKeys extends NLS {
 	 * Reloads the messages from the properties file.
 	 */
 	public static void reloadMessages() {
-		NLS.initializeMessages(BUNDLE_NAME, TuleapUiMessagesKeys.class);
+		NLS.initializeMessages(BUNDLE_NAME, TuleapUIKeys.class);
 	}
 }

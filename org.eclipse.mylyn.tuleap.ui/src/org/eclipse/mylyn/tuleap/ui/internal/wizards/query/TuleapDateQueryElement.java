@@ -22,8 +22,8 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapDate;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.IQueryCriterion;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapQueryCriterion;
 import org.eclipse.mylyn.tuleap.ui.internal.TuleapTasksUIPlugin;
+import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIKeys;
 import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIMessages;
-import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUiMessagesKeys;
 import org.eclipse.swt.widgets.Combo;
 
 /**
@@ -91,8 +91,7 @@ public class TuleapDateQueryElement extends AbstractTuleapCustomQueryElement<Tul
 					result.setValue(new Date[] {min.getTime(), max.getTime() });
 				} else {
 					throw new CoreException(new Status(IStatus.ERROR, TuleapTasksUIPlugin.PLUGIN_ID,
-							TuleapUIMessages
-							.getString(TuleapUiMessagesKeys.tuleapQueryDatesMandatoryForBetween)));
+							TuleapUIMessages.getString(TuleapUIKeys.tuleapQueryDatesMandatoryForBetween)));
 				}
 			} else {
 				result.setOperator(getOperator());
@@ -124,7 +123,7 @@ public class TuleapDateQueryElement extends AbstractTuleapCustomQueryElement<Tul
 		if (IQueryCriterion.OP_BETWEEN.equals(getOperator())
 				&& datePickerMin.getDate() == null != (datePickerMax.getDate() == null)) {
 			decorator.setDescriptionText(TuleapUIMessages
-					.getString(TuleapUiMessagesKeys.tuleapQueryDatesMandatoryForBetween));
+					.getString(TuleapUIKeys.tuleapQueryDatesMandatoryForBetween));
 			decorator.show();
 			return false;
 		}

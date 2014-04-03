@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -18,8 +18,8 @@ import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants;
 import org.eclipse.mylyn.tuleap.ui.internal.TuleapTasksUIPlugin;
 import org.eclipse.mylyn.tuleap.ui.internal.util.ITuleapUIConstants;
+import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIKeys;
 import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIMessages;
-import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUiMessagesKeys;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -34,7 +34,7 @@ import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * The preference page of Tuleap.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class TuleapPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
@@ -48,13 +48,13 @@ public class TuleapPreferencePage extends PreferencePage implements IWorkbenchPr
 	 * The constructor.
 	 */
 	public TuleapPreferencePage() {
-		super(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapPreferencesPageTitle),
-				TuleapTasksUIPlugin.getImageDescriptor(ITuleapUIConstants.Icons.TULEAP_LOGO_16X16));
+		super(TuleapUIMessages.getString(TuleapUIKeys.tuleapPreferencesPageTitle), TuleapTasksUIPlugin
+				.getImageDescriptor(ITuleapUIConstants.Icons.TULEAP_LOGO_16X16));
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
 	public void init(IWorkbench workbench) {
@@ -63,7 +63,7 @@ public class TuleapPreferencePage extends PreferencePage implements IWorkbenchPr
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
@@ -80,8 +80,7 @@ public class TuleapPreferencePage extends PreferencePage implements IWorkbenchPr
 		composite.setLayoutData(data);
 
 		enableDebugModeButton = new Button(composite, SWT.CHECK | SWT.WRAP);
-		enableDebugModeButton
-				.setText(TuleapUIMessages.getString(TuleapUiMessagesKeys.activateDebugModeLabel));
+		enableDebugModeButton.setText(TuleapUIMessages.getString(TuleapUIKeys.activateDebugModeLabel));
 		GridData gd = getButtonGridData(enableDebugModeButton);
 		enableDebugModeButton.setLayoutData(gd);
 		enableDebugModeButton.setSelection(this.getSelection());
@@ -118,7 +117,7 @@ public class TuleapPreferencePage extends PreferencePage implements IWorkbenchPr
 
 	/**
 	 * Indicates if the debug mode is activated or not.
-	 * 
+	 *
 	 * @return <code>true</code> if the debug mode is activated, <code>false</code> otherwise.
 	 */
 	private boolean getSelection() {
@@ -131,7 +130,7 @@ public class TuleapPreferencePage extends PreferencePage implements IWorkbenchPr
 
 	/**
 	 * Returns the grid data for the given button.
-	 * 
+	 *
 	 * @param button
 	 *            The button
 	 * @return The grid data for the given button

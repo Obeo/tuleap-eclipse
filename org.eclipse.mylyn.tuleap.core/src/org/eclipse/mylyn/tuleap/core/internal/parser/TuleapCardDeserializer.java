@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -23,19 +23,19 @@ import org.eclipse.mylyn.tuleap.core.internal.model.data.ArtifactReference;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapCard;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapStatus;
 import org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessages;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreMessages;
 
 /**
  * This class is used to deserialize the JSON representation of a cardwall card.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class TuleapCardDeserializer extends AbstractTuleapDeserializer<String, TuleapCard> {
 
 	/**
 	 * {@inheritDoc}.
-	 * 
+	 *
 	 * @see com.google.gson.JsonDeserializer#deserialize(com.google.gson.JsonElement, java.lang.reflect.Type,
 	 *      com.google.gson.JsonDeserializationContext)
 	 */
@@ -73,8 +73,8 @@ public class TuleapCardDeserializer extends AbstractTuleapDeserializer<String, T
 				try {
 					card.setStatus(TuleapStatus.valueOf(statusString));
 				} catch (IllegalArgumentException e) {
-					String messageToLog = TuleapMylynTasksMessages.getString(
-							TuleapMylynTasksMessagesKeys.gettingStatusValueLogMessage, statusString);
+					String messageToLog = TuleapCoreMessages.getString(
+							TuleapCoreKeys.gettingStatusValueLogMessage, statusString);
 					TuleapCoreActivator.log(messageToLog, false);
 				}
 			}
@@ -92,7 +92,7 @@ public class TuleapCardDeserializer extends AbstractTuleapDeserializer<String, T
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.parser.AbstractProjectElementDeserializer#getPrototype(String)
 	 */
 	@Override

@@ -17,8 +17,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tuleap.core.internal.client.rest.TuleapRestClient;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessages;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreMessages;
 
 /**
  * An input stream that iterates over file chunks to manage large files without consuming too much memory.
@@ -137,9 +137,8 @@ public class TuleapAttachmentInputStream extends InputStream {
 		}
 		try {
 			if (monitor != null) {
-				monitor.subTask(TuleapMylynTasksMessages.getString(
-						TuleapMylynTasksMessagesKeys.downloadingAttachment, Integer.toString(offset), Integer
-								.toString(size)));
+				monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.downloadingAttachment, Integer
+						.toString(offset), Integer.toString(size)));
 			}
 			String chunkBase64 = client.getArtifactFile(attachmentId, offset, sizeToDownload, monitor)
 					.getData();

@@ -52,8 +52,8 @@ import org.eclipse.mylyn.tuleap.core.internal.parser.DateIso8601Adapter;
 import org.eclipse.mylyn.tuleap.core.internal.repository.ITuleapRepositoryConnector;
 import org.eclipse.mylyn.tuleap.core.internal.repository.TuleapAttributeMapper;
 import org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessages;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreMessages;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -222,8 +222,7 @@ public class TuleapArtifactMapperTests {
 		att = root.getMappedAttribute(TaskAttribute.DATE_CREATION);
 		assertNotNull(att);
 		TaskAttributeMetaData metadata = att.getMetaData();
-		assertEquals(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.creationDateLabel),
-				metadata.getLabel());
+		assertEquals(TuleapCoreMessages.getString(TuleapCoreKeys.creationDateLabel), metadata.getLabel());
 		assertEquals(TaskAttribute.TYPE_DATE, metadata.getType());
 		assertFalse(metadata.isReadOnly());
 
@@ -248,24 +247,22 @@ public class TuleapArtifactMapperTests {
 		att = root.getAttribute(TaskAttribute.DATE_MODIFICATION);
 		assertNotNull(att);
 		metadata = att.getMetaData();
-		assertEquals(TuleapMylynTasksMessages
-				.getString(TuleapMylynTasksMessagesKeys.lastModificationDateLabel), metadata.getLabel());
+		assertEquals(TuleapCoreMessages.getString(TuleapCoreKeys.lastModificationDateLabel), metadata
+				.getLabel());
 		assertEquals(TaskAttribute.TYPE_DATE, metadata.getType());
 		assertFalse(metadata.isReadOnly());
 
 		att = root.getAttribute(TaskAttribute.DATE_COMPLETION);
 		assertNotNull(att);
 		metadata = att.getMetaData();
-		assertEquals(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.completionDateLabel),
-				metadata.getLabel());
+		assertEquals(TuleapCoreMessages.getString(TuleapCoreKeys.completionDateLabel), metadata.getLabel());
 		assertEquals(TaskAttribute.TYPE_DATE, metadata.getType());
 		assertFalse(metadata.isReadOnly());
 
 		att = root.getAttribute(TaskAttribute.COMMENT_NEW);
 		assertNotNull(att);
 		metadata = att.getMetaData();
-		assertEquals(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.newCommentLabel),
-				metadata.getLabel());
+		assertEquals(TuleapCoreMessages.getString(TuleapCoreKeys.newCommentLabel), metadata.getLabel());
 		assertEquals(TaskAttribute.TYPE_LONG_RICH_TEXT, metadata.getType());
 		assertFalse(metadata.isReadOnly());
 
@@ -400,8 +397,6 @@ public class TuleapArtifactMapperTests {
 		mapper.initializeEmptyTaskData();
 		assertNull(mapper.getModificationDate());
 
-		TuleapUser submitter = new TuleapUser("username", "realname", 17, //$NON-NLS-1$ //$NON-NLS-2$
-				"email", null); //$NON-NLS-1$
 		AttachmentValue attachment = new AttachmentValue("id", "name", 17, 123456, "description", "type", "");
 
 		mapper.addAttachment("First field", attachment);
@@ -565,8 +560,7 @@ public class TuleapArtifactMapperTests {
 
 		TaskAttributeMetaData metadata = att.getMetaData();
 		assertEquals(TaskAttribute.TYPE_SINGLE_SELECT, metadata.getType());
-		assertEquals(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.statusLabel), metadata
-				.getLabel());
+		assertEquals(TuleapCoreMessages.getString(TuleapCoreKeys.statusLabel), metadata.getLabel());
 		String lbl = getLabelFromId(0);
 		assertEquals(lbl, att.getOption("0")); //$NON-NLS-1$
 		lbl = getLabelFromId(1);
@@ -592,8 +586,7 @@ public class TuleapArtifactMapperTests {
 		assertNotNull(att);
 		TaskAttributeMetaData metadata = att.getMetaData();
 		assertEquals(TaskAttribute.TYPE_SINGLE_SELECT, metadata.getType());
-		assertEquals(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.statusLabel), metadata
-				.getLabel());
+		assertEquals(TuleapCoreMessages.getString(TuleapCoreKeys.statusLabel), metadata.getLabel());
 
 		// No value is assigned to the field
 		// => as if status were equal to 100, only 1 state should be accessible, state 0
@@ -679,8 +672,7 @@ public class TuleapArtifactMapperTests {
 		assertNotNull(att);
 		TaskAttributeMetaData metadata = att.getMetaData();
 		assertEquals(TaskAttribute.TYPE_SINGLE_SELECT, metadata.getType());
-		assertEquals(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.assignedToLabel),
-				metadata.getLabel());
+		assertEquals(TuleapCoreMessages.getString(TuleapCoreKeys.assignedToLabel), metadata.getLabel());
 		assertEquals(TaskAttribute.KIND_PEOPLE, metadata.getKind());
 	}
 
