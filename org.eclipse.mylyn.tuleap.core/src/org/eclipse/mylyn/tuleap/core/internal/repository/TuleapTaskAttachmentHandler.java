@@ -129,8 +129,13 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 	private TuleapFileUpload getFileUploadField(TaskRepository repository, ITask task) {
 		TuleapFileUpload result = null;
 		TuleapTaskId taskDataId = TuleapTaskId.forName(task.getTaskId());
-		TuleapServer tuleapServer = this.connector.getServer(repository.getRepositoryUrl());
-		TuleapProject project = tuleapServer.getProject(taskDataId.getProjectId());
+		TuleapServer server = this.connector.getServer(repository.getRepositoryUrl());
+		if (server == null) {
+			// Local config inexistent or incompatible with new version
+			// and task repository not refreshed
+			return null;
+		}
+		TuleapProject project = server.getProject(taskDataId.getProjectId());
 		TuleapTracker tracker = null;
 		if (project != null) {
 			// Can happen for new tasks
@@ -179,6 +184,12 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 	public void postContent(TaskRepository repository, ITask task, AbstractTaskAttachmentSource source,
 			String comment, TaskAttribute attachmentAttribute, IProgressMonitor monitor) throws CoreException {
 		TuleapServer server = this.connector.getServer(repository.getRepositoryUrl());
+		if (server == null) {
+			// Local config inexistent or incompatible with new version
+			// and task repository not refreshed
+			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
+					TuleapCoreMessages.getString(TuleapCoreKeys.configUpdateNeeded)));
+		}
 		TuleapTaskId taskDataId = TuleapTaskId.forName(task.getTaskId());
 		TuleapProject project = server.getProject(taskDataId.getProjectId());
 		TuleapTracker tracker = project.getTracker(taskDataId.getTrackerId());

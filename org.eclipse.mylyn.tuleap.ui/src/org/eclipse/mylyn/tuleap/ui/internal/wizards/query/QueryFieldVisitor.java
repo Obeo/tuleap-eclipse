@@ -11,6 +11,10 @@
 package org.eclipse.mylyn.tuleap.ui.internal.wizards.query;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -20,11 +24,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.mylyn.commons.workbench.forms.DatePicker;
+import org.eclipse.mylyn.tuleap.core.internal.client.ITuleapQueryConstants;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.AbstractTuleapFieldVisitor;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.AbstractTuleapSelectBox;
@@ -70,9 +74,9 @@ public class QueryFieldVisitor extends AbstractTuleapFieldVisitor {
 	private final List<AbstractTuleapCustomQueryElement<?>> elements;
 
 	/**
-	 * Query attributes.
+	 * Current query criteria.
 	 */
-	private final Map<String, String> queryAttributes;
+	private final JsonObject currentQueryCriteria;
 
 	/**
 	 * The composite that contains the created fields in the wizard.
@@ -114,10 +118,22 @@ public class QueryFieldVisitor extends AbstractTuleapFieldVisitor {
 	public QueryFieldVisitor(Composite group, Map<String, String> queryAttributes, Gson gson,
 			final TuleapCustomQueryPage page) {
 		this.group = group;
-		this.queryAttributes = new HashMap<String, String>(queryAttributes);
-		elements = new ArrayList<AbstractTuleapCustomQueryElement<?>>();
 		this.gson = gson;
 		this.page = page;
+		String jsonCriteria = queryAttributes.get(ITuleapQueryConstants.QUERY_CUSTOM_CRITERIA);
+		JsonParser parser = new JsonParser();
+		JsonElement jsonElement;
+		if (jsonCriteria != null) {
+			jsonElement = parser.parse(jsonCriteria);
+		} else {
+			jsonElement = JsonNull.INSTANCE;
+		}
+		if (jsonElement.isJsonObject()) {
+			currentQueryCriteria = jsonElement.getAsJsonObject();
+		} else {
+			currentQueryCriteria = new JsonObject();
+		}
+		elements = new ArrayList<AbstractTuleapCustomQueryElement<?>>();
 	}
 
 	/**
@@ -155,24 +171,33 @@ public class QueryFieldVisitor extends AbstractTuleapFieldVisitor {
 		combo.setText(IQueryCriterion.OP_LT);
 
 		// Retrieval of values for existing query
-		Calendar initialMin = GregorianCalendar.getInstance();
-		Calendar initialMax = GregorianCalendar.getInstance();
-		if (queryAttributes.containsKey(Integer.toString(field.getIdentifier()))) {
-			String json = queryAttributes.get(Integer.toString(field.getIdentifier()));
+		Calendar initialMin = null;
+		Calendar initialMax = null;
+		if (currentQueryCriteria.has(field.getName())) {
+			JsonElement json = currentQueryCriteria.get(field.getName());
 			// CHECKSTYLE:OFF
 			Type criterionType = new TypeToken<TuleapQueryCriterion<Date[]>>() {
 				// Nothing
 			}.getType();
 			// CHECKSTYLE:ON
-			TuleapQueryCriterion<Date[]> criterion = gson.fromJson(json, criterionType);
-			combo.setText(criterion.getOperator());
-			Date[] dates = criterion.getValue();
-			if (dates.length > 0 && dates[0] != null) {
-				initialMin.setTime(dates[0]);
-				if (dates.length > 1 && dates[1] != null) {
-					initialMax.setTime(dates[1]);
+			try {
+				TuleapQueryCriterion<Date[]> criterion = gson.fromJson(json, criterionType);
+				combo.setText(criterion.getOperator());
+				Date[] dates = criterion.getValue();
+				if (dates.length > 0 && dates[0] != null) {
+					initialMin = GregorianCalendar.getInstance();
+					initialMin.setTime(dates[0]);
+					if (dates.length > 1 && dates[1] != null) {
+						initialMax = GregorianCalendar.getInstance();
+						initialMax.setTime(dates[1]);
+					}
 				}
+				// CHECKSTYLE:OFF We need to prevent any exception to block here
+			} catch (Exception e) {
+				// CHECKSYLE:ON
+				TuleapTasksUIPlugin.log(e, false);
 			}
+
 		}
 		Composite composite = new Composite(group, SWT.NONE);
 		GridLayout layout = new GridLayout(2, true);
@@ -225,13 +250,12 @@ public class QueryFieldVisitor extends AbstractTuleapFieldVisitor {
 			// Nothing
 		}.getType();
 		// CHECKSTYLE:ON
-		String fieldId = Integer.toString(field.getIdentifier());
-		if (queryAttributes.containsKey(fieldId)) {
-			String json = queryAttributes.get(fieldId);
+		if (currentQueryCriteria.has(field.getName())) {
+			JsonElement json = currentQueryCriteria.get(field.getName());
 			try {
 				TuleapQueryCriterion<?> criterion = gson.fromJson(json, criterionType);
 				text.setText(String.valueOf(criterion.getValue()));
-				// CHECKSTYLE:OFF
+				// CHECKSTYLE:OFF We need to prevent any exception to block here
 			} catch (Exception e) {
 				// CHECKSYLE:ON
 				TuleapTasksUIPlugin.log(e, false);
@@ -253,13 +277,12 @@ public class QueryFieldVisitor extends AbstractTuleapFieldVisitor {
 			// Nothing
 		}.getType();
 		// CHECKSTYLE:ON
-		String fieldId = Integer.toString(field.getIdentifier());
-		if (queryAttributes.containsKey(fieldId)) {
-			String json = queryAttributes.get(fieldId);
+		if (currentQueryCriteria.has(field.getName())) {
+			JsonElement json = currentQueryCriteria.get(field.getName());
 			try {
 				TuleapQueryCriterion<?> criterion = gson.fromJson(json, criterionType);
 				text.setText(String.valueOf(criterion.getValue()));
-				// CHECKSTYLE:OFF
+				// CHECKSTYLE:OFF We need to prevent any exception to block here
 			} catch (Exception e) {
 				// CHECKSYLE:ON
 				TuleapTasksUIPlugin.log(e, false);
@@ -380,13 +403,12 @@ public class QueryFieldVisitor extends AbstractTuleapFieldVisitor {
 			// Nothing
 		}.getType();
 		// CHECKSTYLE:ON
-		String fieldId = Integer.toString(field.getIdentifier());
-		if (queryAttributes.containsKey(fieldId)) {
-			String json = queryAttributes.get(fieldId);
+		if (currentQueryCriteria.has(field.getName())) {
+			JsonElement json = currentQueryCriteria.get(field.getName());
 			try {
 				TuleapQueryCriterion<?> criterion = gson.fromJson(json, criterionType);
 				text.setText(String.valueOf(criterion.getValue()));
-				// CHECKSTYLE:OFF
+				// CHECKSTYLE:OFF We need to prevent any exception to block here
 			} catch (Exception e) {
 				// CHECKSYLE:ON
 				TuleapTasksUIPlugin.log(e, false);
@@ -414,30 +436,43 @@ public class QueryFieldVisitor extends AbstractTuleapFieldVisitor {
 		List<String> items = new ArrayList<String>();
 		items.add(""); //$NON-NLS-1$
 
-		Collection<TuleapSelectBoxItem> selectBoxItems = field.getItems();
-		List<Integer> selectedItems = new ArrayList<Integer>();
-
-		String json = null;
-		String fieldId = Integer.toString(field.getIdentifier());
-		if (queryAttributes.containsKey(fieldId)) {
-			json = queryAttributes.get(fieldId);
+		TuleapQueryCriterion<String[]> criterion = null;
+		if (currentQueryCriteria.has(field.getName())) {
+			JsonElement json = currentQueryCriteria.get(field.getName());
+			// CHECKSTYLE:OFF
+			Type boundCriterionType = new TypeToken<TuleapQueryCriterion<String[]>>() {
+				// Nothing
+			}.getType();
+			// CHECKSTYLE:ON
+			try {
+				criterion = gson.fromJson(json, boundCriterionType);
+				// CHECKSTYLE:OFF We need to prevent any exception to block here
+			} catch (Exception e) {
+				// CHECSKTYLE:ON
+				TuleapTasksUIPlugin.log(e, false);
+			}
 		}
-		// CHECKSTYLE:OFF
-		Type boundCriterionType = new TypeToken<TuleapQueryCriterion<int[]>>() {
-			// Nothing
-		}.getType();
-		// CHECKSTYLE:ON
-		TuleapQueryCriterion<int[]> criterion = gson.fromJson(json, boundCriterionType);
 
+		// We need to work with criteria values instead of internal Tuleap integer IDs
 		int index = 0;
+		List<Integer> selectedItems = new ArrayList<Integer>();
+		Collection<TuleapSelectBoxItem> selectBoxItems = field.getItems();
 		for (TuleapSelectBoxItem item : selectBoxItems) {
 			index++;
-			items.add(item.getLabel());
-			int itemId = item.getIdentifier();
-			for (int criterionId : criterion.getValue()) {
-				if (itemId == criterionId) {
-					selectedItems.add(Integer.valueOf(index));
-					break;
+			String itemLabel = item.getLabel();
+			items.add(itemLabel);
+			if (criterion != null) {
+				try {
+					for (String criterionId : criterion.getValue()) {
+						if (itemLabel.equals(criterionId)) {
+							selectedItems.add(Integer.valueOf(index));
+							break;
+						}
+					}
+					// CHECKSTYLE:OFF We need to prevent any exception to block here
+				} catch (Exception e) {
+					// CHECSKTYLE:ON
+					TuleapTasksUIPlugin.log(e, false);
 				}
 			}
 		}

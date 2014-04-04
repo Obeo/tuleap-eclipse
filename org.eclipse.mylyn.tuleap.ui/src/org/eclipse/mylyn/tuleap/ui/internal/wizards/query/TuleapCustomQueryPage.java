@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.tuleap.ui.internal.wizards.query;
 
-import com.google.gson.Gson;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +17,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.mylyn.commons.workbench.forms.SectionComposite;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -39,8 +38,8 @@ import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIKeys;
 import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIMessages;
 import org.eclipse.mylyn.tuleap.ui.internal.wizards.TuleapTrackerPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
@@ -143,10 +142,13 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 	 */
 	@Override
 	public void createControl(Composite parent) {
-		Composite composite = new Composite(parent, SWT.NONE);
-		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
-		gridData.grabExcessVerticalSpace = false;
-		composite.setLayoutData(gridData);
+		ScrolledComposite sc = new ScrolledComposite(parent, SWT.V_SCROLL);
+		sc.setExpandHorizontal(true);
+		sc.setExpandVertical(true);
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).applyTo(sc);
+		Composite composite = new Composite(sc, SWT.NONE);
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(composite);
+		sc.setContent(composite);
 		composite.setLayout(new GridLayout(1, false));
 
 		String connectorKind = this.getTaskRepository().getConnectorKind();
@@ -154,7 +156,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 				connectorKind);
 		if (!(connector instanceof TuleapRepositoryConnector)) {
 			TuleapTasksUIPlugin
-					.log(TuleapUIMessages.getString(TuleapUIKeys.invalidRepositoryConnector), true);
+			.log(TuleapUIMessages.getString(TuleapUIKeys.invalidRepositoryConnector), true);
 			return;
 		}
 
@@ -175,9 +177,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 			tuleapTracker = repositoryConfiguration.getTracker(this.trackerId);
 
 			Group group = new Group(composite, SWT.NONE);
-			gridData = new GridData(GridData.FILL_HORIZONTAL);
-			gridData.grabExcessVerticalSpace = false;
-			group.setLayoutData(gridData);
+			GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(group);
 			group.setLayout(new GridLayout(3, false));
 
 			Collection<AbstractTuleapField> fields = tuleapTracker.getFields();
@@ -190,8 +190,9 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 		}
 
 		Dialog.applyDialogFont(composite);
+		sc.setMinSize(composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 
-		this.setControl(composite);
+		this.setControl(sc);
 	}
 
 	/**
@@ -250,23 +251,19 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 					.toString());
 			query.setAttribute(ITuleapQueryConstants.QUERY_PROJECT_ID, Integer.valueOf(this.projectId)
 					.toString());
-
-			// For each field set the query attribute
-			Gson gson = TuleapGsonProvider.defaultGson();
+			Map<String, IQueryCriterion<?>> criteria = new HashMap<String, IQueryCriterion<?>>();
 			for (AbstractTuleapCustomQueryElement<?> element : elements) {
-				IQueryCriterion<?> criterion = null;
 				try {
-					criterion = element.getCriterion();
+					IQueryCriterion<?> criterion = element.getCriterion();
+					if (criterion != null) {
+						criteria.put(element.getField().getName(), criterion);
+					}
 				} catch (CoreException e) {
 					TuleapTasksUIPlugin.log(e, false);
 				}
-				if (criterion != null) {
-					query.setAttribute(Integer.toString(element.getField().getIdentifier()), gson
-							.toJson(criterion));
-				} else {
-					query.setAttribute(Integer.toString(element.getField().getIdentifier()), null);
-				}
 			}
+			query.setAttribute(ITuleapQueryConstants.QUERY_CUSTOM_CRITERIA, TuleapGsonProvider.defaultGson()
+					.toJson(criteria));
 		}
 	}
 

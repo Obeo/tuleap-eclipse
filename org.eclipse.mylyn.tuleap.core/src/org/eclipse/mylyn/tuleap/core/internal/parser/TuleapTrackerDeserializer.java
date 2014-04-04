@@ -290,6 +290,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 		if (tuleapField != null) {
 			// the field label
 			tuleapField.setLabel(field.get(LABEL).getAsString());
+			tuleapField.setName(field.get("name").getAsString()); //$NON-NLS-1$
 
 			// the field permissions
 			JsonArray permissions = field.get(PERMISSIONS).getAsJsonArray();
