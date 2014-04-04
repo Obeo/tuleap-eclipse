@@ -52,4 +52,13 @@ public interface ITuleapQueryConstants {
 	 * The key used to identify the project id on which the query will be run.
 	 */
 	String QUERY_PROJECT_ID = "tuleap_query_project_id"; //$NON-NLS-1$
+
+	/**
+	 * The key used to identify the project id on which the query will be run. The value associated to this
+	 * key must be the JSON serialization of a Map<String, Criterion> where Criterion has an operator and a
+	 * value (String, Number, String[]). This JSON is NOT exactly the same as the JSON expected by Tuleap. We
+	 * use field names instead of field_ids (which is ok with Tuleap) but alos value instead of IDs for bound
+	 * fields (combo-boxes).
+	 */
+	String QUERY_CUSTOM_CRITERIA = "tuleap_query_custom_criteria"; //$NON-NLS-1$
 }

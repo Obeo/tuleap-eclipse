@@ -528,6 +528,11 @@ public class TuleapCoreKeys extends NLS {
 	 */
 	public static String cannotLoadOldConfiguration;
 
+	/**
+	 * An update of the task repository config is required.
+	 */
+	public static String configUpdateNeeded;
+
 	static {
 		// load message values from bundle file
 		reloadMessages();

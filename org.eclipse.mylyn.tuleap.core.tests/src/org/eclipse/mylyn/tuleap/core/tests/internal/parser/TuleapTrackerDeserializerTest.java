@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -42,7 +42,7 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Tests the JSON deserialization of {@link TuleapTracker}.
- * 
+ *
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
@@ -76,6 +76,7 @@ public class TuleapTrackerDeserializerTest {
 		AbstractTuleapField firstField = iterator.next();
 
 		assertEquals(0, firstField.getIdentifier());
+		assertEquals("title", firstField.getName());
 		assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, firstField.getMetadataType());
 
 		assertEquals("Title", firstField.getLabel()); //$NON-NLS-1$

@@ -101,11 +101,11 @@ public class TuleapSelectBoxQueryElementTest {
 		TuleapSelectBoxQueryElement element = new TuleapSelectBoxQueryElement(fieldSingle, comboSingle);
 		IQueryCriterion<?> criterion = element.getCriterion();
 		assertEquals("contains", criterion.getOperator());
-		int[] value = (int[])criterion.getValue();
+		String[] value = (String[])criterion.getValue();
 		assertEquals(3, value.length);
-		assertEquals(10, value[0]);
-		assertEquals(11, value[1]);
-		assertEquals(12, value[2]);
+		assertEquals("Label SB 0", value[0]);
+		assertEquals("Label SB 1", value[1]);
+		assertEquals("Label SB 2", value[2]);
 	}
 
 	@Test
@@ -114,11 +114,11 @@ public class TuleapSelectBoxQueryElementTest {
 		TuleapSelectBoxQueryElement element = new TuleapSelectBoxQueryElement(fieldMulti, comboMulti);
 		IQueryCriterion<?> criterion = element.getCriterion();
 		assertEquals("contains", criterion.getOperator());
-		int[] value = (int[])criterion.getValue();
+		String[] value = (String[])criterion.getValue();
 		assertEquals(3, value.length);
-		assertEquals(100, value[0]);
-		assertEquals(101, value[1]);
-		assertEquals(102, value[2]);
+		assertEquals("Label MSB 0", value[0]);
+		assertEquals("Label MSB 1", value[1]);
+		assertEquals("Label MSB 2", value[2]);
 	}
 
 	@Test

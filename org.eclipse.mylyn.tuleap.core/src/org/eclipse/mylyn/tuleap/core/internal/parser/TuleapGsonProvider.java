@@ -65,7 +65,7 @@ public final class TuleapGsonProvider {
 	 *
 	 * @return A properly configured Gson instance that performs HTML escaping.
 	 */
-	public static Gson nonHtmlEscapingGson() {
+	public static Gson htmlEscapingGson() {
 		return defaultBuilder().create();
 	}
 

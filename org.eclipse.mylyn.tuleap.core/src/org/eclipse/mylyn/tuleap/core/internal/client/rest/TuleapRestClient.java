@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
 import java.util.List;
@@ -28,6 +29,7 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tuleap.core.internal.client.ITuleapQueryConstants;
 import org.eclipse.mylyn.tuleap.core.internal.data.TuleapTaskId;
 import org.eclipse.mylyn.tuleap.core.internal.model.TuleapToken;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField;
@@ -38,7 +40,10 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapTracker;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapTrackerReport;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapUser;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapUserGroup;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.field.AbstractTuleapSelectBox;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapSelectBoxItem;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.ArtifactReference;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.IQueryCriterion;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifact;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifactWithComment;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapElementComment;
@@ -718,27 +723,33 @@ public class TuleapRestClient implements IAuthenticator {
 				.withAuthenticator(this);
 		RestOperation op = r.get().withQueryParameter("values", "all"); //$NON-NLS-1$//$NON-NLS-2$
 		Map<String, String> attributes = query.getAttributes();
-		// We go over existing field to avoid sending criteria on fields that would still be in the query
-		// but no longer in the tracker config for any reason
-		// We cannot just serialize this map with gson since values are already JSON,
-		// not objects to serialize.
-		StringBuilder criteria = new StringBuilder();
-		boolean needComma = false;
-		for (AbstractTuleapField field : tracker.getFields()) {
-			String fieldId = Integer.toString(field.getIdentifier());
-			if (attributes.containsKey(fieldId)) {
-				if (needComma) {
-					criteria.append(',');
-				} else {
-					needComma = true;
-				}
-				String json = attributes.get(fieldId);
-				criteria.append('"').append(fieldId).append("\":").append(json); //$NON-NLS-1$
-			}
+		String jsonCriteria = attributes.get(ITuleapQueryConstants.QUERY_CUSTOM_CRITERIA);
+		JsonParser parser = new JsonParser();
+		JsonElement jsonElement = parser.parse(jsonCriteria);
+		JsonObject criteria;
+		if (jsonElement.isJsonObject()) {
+			criteria = jsonElement.getAsJsonObject();
+		} else {
+			criteria = new JsonObject();
 		}
-		if (criteria.length() > 0) {
-			criteria.insert(0, '{').append('}');
-			op.withQueryParameter("query", criteria.toString()); //$NON-NLS-1$
+		// The JSON in the query is not exactly the same as the one we need to send
+		// because for Combo-boxes, Tuleap expects int[] values where we have String[] values
+		// We need String[] values for other tools to import easily queries via Mylyn import mechanism
+		JsonObject criteriaToSend = new JsonObject();
+		for (AbstractTuleapField field : tracker.getFields()) {
+			String fieldName = field.getName();
+			if (criteria.has(fieldName)) {
+				JsonElement json = criteria.get(fieldName);
+				// TODO Use a visitor instead of ifs
+				if (field instanceof AbstractTuleapSelectBox) {
+					JsonObject criterionToSend = convertBoundFieldCriterion((AbstractTuleapSelectBox)field,
+							json);
+					criteriaToSend.add(fieldName, criterionToSend);
+				} else {
+					// Other kinds of fields are stored right in the query
+					criteriaToSend.add(fieldName, json);
+				}
+			}
 		}
 
 		List<TuleapArtifact> artifacts = Lists.newArrayList();
@@ -746,6 +757,37 @@ public class TuleapRestClient implements IAuthenticator {
 			artifacts.add(gson.fromJson(e, TuleapArtifact.class));
 		}
 		return artifacts;
+	}
+
+	/**
+	 * Convert a locally stored criterion for bound field (that uses labels for keys) into a criterion
+	 * sendable to Tuleap (that uses IDs for keys).
+	 *
+	 * @param sb
+	 *            The select box field
+	 * @param json
+	 *            The json criterion for this field in the query
+	 * @return The JSON that represents the criterion to send to Tuleap for the given field.
+	 */
+	private JsonObject convertBoundFieldCriterion(AbstractTuleapSelectBox sb, JsonElement json) {
+		JsonObject criterionToSend = new JsonObject();
+		criterionToSend.add("operator", new JsonPrimitive(IQueryCriterion.OP_CONTAINS)); //$NON-NLS-1$
+		JsonArray critValue = new JsonArray();
+		criterionToSend.add("value", critValue); //$NON-NLS-1$
+		JsonElement jsonValue = json.getAsJsonObject().get("value"); //$NON-NLS-1$
+		if (jsonValue.isJsonArray()) {
+			JsonArray jsonValues = jsonValue.getAsJsonArray();
+			for (JsonElement critItem : jsonValues) {
+				String critStr = critItem.getAsString();
+				for (TuleapSelectBoxItem item : sb.getItems()) {
+					if (critStr.equals(item.getLabel())) {
+						critValue.add(new JsonPrimitive(Integer.valueOf(item.getIdentifier())));
+						break;
+					}
+				}
+			}
+		}
+		return criterionToSend;
 	}
 
 	/**
