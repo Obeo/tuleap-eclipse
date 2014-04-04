@@ -465,7 +465,7 @@ public class TuleapRestClient implements IAuthenticator {
 	 */
 	public void uploadAttachment(int artifactId, int attachmentFieldId,
 			TuleapAttachmentDescriptor tuleapAttachmentDescriptor, String comment, IProgressMonitor monitor)
-					throws CoreException {
+			throws CoreException {
 		// Test the connection
 
 		// Try to log in
@@ -638,6 +638,13 @@ public class TuleapRestClient implements IAuthenticator {
 		RestOperation op = r.get().withQueryParameter("values", "all"); //$NON-NLS-1$//$NON-NLS-2$
 		Map<String, String> attributes = query.getAttributes();
 		String jsonCriteria = attributes.get(ITuleapQueryConstants.QUERY_CUSTOM_CRITERIA);
+		if (jsonCriteria == null) {
+			throw new CoreException(
+					new Status(
+							IStatus.ERROR,
+							TuleapCoreActivator.PLUGIN_ID,
+							"Query has been created with a former version of the connector and is no longer compatible. Please update your query."));
+		}
 		JsonParser parser = new JsonParser();
 		JsonElement jsonElement = parser.parse(jsonCriteria);
 		JsonObject criteria;

@@ -214,6 +214,7 @@ public class QueryFieldVisitor extends AbstractTuleapFieldVisitor {
 		to.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		from.setDate(initialMin);
 		to.setDate(initialMax);
+		to.setVisible(IQueryCriterion.OP_BETWEEN.equals(combo.getText()));
 		combo.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				if (IQueryCriterion.OP_BETWEEN.equals(((Combo)e.widget).getText())) {
