@@ -473,6 +473,8 @@ public class MilestoneTaskDataConverter {
 		String attributeId = cardWrapper.getFieldId(attribute);
 		int fieldId = Integer.parseInt(attributeId);
 		AbstractTuleapField field = tracker.getFieldById(fieldId);
+		// We need to add the field config also so that JSON serialization goes well
+		card.addField(field);
 		card.addFieldValue(field.createFieldValue(attribute, fieldId));
 	}
 
@@ -536,7 +538,7 @@ public class MilestoneTaskDataConverter {
 			if (backlogItem.getParent() != null) {
 				backlogItemWrapper.setParent(TuleapTaskId.forArtifact(projectId, 0,
 						backlogItem.getParent().getId()).toString(), Integer.toString(backlogItem.getParent()
-								.getId()));
+						.getId()));
 			}
 
 		}
@@ -603,7 +605,7 @@ public class MilestoneTaskDataConverter {
 			if (backlogItem.getParent() != null) {
 				backlogItemWrapper.setParent(TuleapTaskId.forArtifact(projectId, 0,
 						backlogItem.getParent().getId()).toString(), Integer.toString(backlogItem.getParent()
-								.getId()));
+						.getId()));
 			}
 		}
 

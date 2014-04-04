@@ -29,6 +29,7 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tuleap.core.internal.TuleapCoreActivator;
 import org.eclipse.mylyn.tuleap.core.internal.client.ITuleapQueryConstants;
 import org.eclipse.mylyn.tuleap.core.internal.data.TuleapTaskId;
 import org.eclipse.mylyn.tuleap.core.internal.model.TuleapToken;
@@ -724,6 +725,13 @@ public class TuleapRestClient implements IAuthenticator {
 		RestOperation op = r.get().withQueryParameter("values", "all"); //$NON-NLS-1$//$NON-NLS-2$
 		Map<String, String> attributes = query.getAttributes();
 		String jsonCriteria = attributes.get(ITuleapQueryConstants.QUERY_CUSTOM_CRITERIA);
+		if (jsonCriteria == null) {
+			throw new CoreException(
+					new Status(
+							IStatus.ERROR,
+							TuleapCoreActivator.PLUGIN_ID,
+							"Query has been created with a former version of the connector and is no longer compatible. Please update your query."));
+		}
 		JsonParser parser = new JsonParser();
 		JsonElement jsonElement = parser.parse(jsonCriteria);
 		JsonObject criteria;
