@@ -547,7 +547,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		refreshedTracker = client.getTracker(tracker.getIdentifier(), monitor);
 
 		if (refreshedTracker != null) {
-			TuleapServer tuleapServer = this.serversByUrl.get(taskRepository.getRepositoryUrl());
+			TuleapServer tuleapServer = getServer(taskRepository.getRepositoryUrl());
 			tuleapServer.replaceTracker(project.getIdentifier(), refreshedTracker);
 		}
 		return refreshedTracker;
