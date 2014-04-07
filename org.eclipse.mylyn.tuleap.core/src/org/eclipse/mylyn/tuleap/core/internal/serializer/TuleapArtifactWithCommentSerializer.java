@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -17,26 +17,27 @@ import com.google.gson.JsonSerializationContext;
 
 import java.lang.reflect.Type;
 
-import org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifactWithComment;
 import org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants;
 
 /**
  * This class is used to serialize the JSON representation of a {@link TuleapArtifactWithComment}.
- * 
+ *
+ * @param <U>
+ *            The type of the object to serialize
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
+ * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class TuleapArtifactWithCommentSerializer extends AbstractTuleapSerializer<TuleapArtifactWithComment> {
+public class TuleapArtifactWithCommentSerializer<U extends TuleapArtifactWithComment> extends AbstractTuleapSerializer<U> {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see com.google.gson.JsonSerializer#serialize(java.lang.Object, java.lang.reflect.Type,
 	 *      com.google.gson.JsonSerializationContext)
 	 */
 	@Override
-	public JsonElement serialize(TuleapArtifactWithComment commentedArtifact, Type type,
-			JsonSerializationContext context) {
+	public JsonElement serialize(U commentedArtifact, Type type, JsonSerializationContext context) {
 		JsonObject elementObject = (JsonObject)super.serialize(commentedArtifact, type, context);
 		elementObject.remove(ITuleapConstants.ID);
 		String comment = commentedArtifact.getNewComment();
@@ -47,16 +48,5 @@ public class TuleapArtifactWithCommentSerializer extends AbstractTuleapSerialize
 			commentObject.add(ITuleapConstants.FORMAT, new JsonPrimitive("text")); //$NON-NLS-1$
 		}
 		return elementObject;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.mylyn.tuleap.core.internal.serializer.AbstractTuleapSerializer#mustSerialize(org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField)
-	 */
-	@Override
-	protected boolean mustSerialize(AbstractTuleapField field) {
-		// Only fields valid for update are submitted
-		return super.mustSerialize(field) && field.isUpdatable();
 	}
 }

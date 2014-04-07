@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -16,31 +16,31 @@ import java.util.List;
 
 /**
  * The common root of all Tuleap form elements.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
 public abstract class AbstractTuleapFormElement implements Serializable {
 
 	/**
-	 * The serialization ID.
-	 */
-	private static final long serialVersionUID = 7487047015742226549L;
-
-	/**
 	 * Indicates that the user can read the field.
 	 */
-	private static final String PERMISSION_READ = "read"; //$NON-NLS-1$
+	public static final String PERMISSION_READ = "read"; //$NON-NLS-1$
 
 	/**
 	 * Indicates that the user can update the field.
 	 */
-	private static final String PERMISSION_UPDATE = "update"; //$NON-NLS-1$
+	public static final String PERMISSION_UPDATE = "update"; //$NON-NLS-1$
 
 	/**
 	 * Indicates that the user can submit a newly created artifact with the field set.
 	 */
-	private static final String PERMISSION_SUBMIT = "submit"; //$NON-NLS-1$
+	public static final String PERMISSION_SUBMIT = "submit"; //$NON-NLS-1$
+
+	/**
+	 * The serialization ID.
+	 */
+	private static final long serialVersionUID = -2238564479184287075L;
 
 	/**
 	 * The name of the form element.
@@ -89,7 +89,7 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 
 	/**
 	 * The constructor.
-	 * 
+	 *
 	 * @param formElementIdentifier
 	 *            The identifier of the form element
 	 */
@@ -100,7 +100,7 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 
 	/**
 	 * Returns the name of the form element.
-	 * 
+	 *
 	 * @return The name of the form element.
 	 */
 	public String getName() {
@@ -109,7 +109,7 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 
 	/**
 	 * Sets a new name for the form element.
-	 * 
+	 *
 	 * @param formElementName
 	 *            The new name to set
 	 */
@@ -119,7 +119,7 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 
 	/**
 	 * Returns the label of the form element.
-	 * 
+	 *
 	 * @return The label of the form element.
 	 */
 	public String getLabel() {
@@ -128,7 +128,7 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 
 	/**
 	 * Sets a new label for the form element.
-	 * 
+	 *
 	 * @param formElementLabel
 	 *            The new label to set
 	 */
@@ -138,7 +138,7 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 
 	/**
 	 * Returns the identifier of the form element.
-	 * 
+	 *
 	 * @return The identifier of the form element.
 	 */
 	public int getIdentifier() {
@@ -147,7 +147,7 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 
 	/**
 	 * Returns the description of the form element.
-	 * 
+	 *
 	 * @return The description of the form element.
 	 */
 	public String getDescription() {
@@ -156,7 +156,7 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 
 	/**
 	 * Sets a new description for the form element.
-	 * 
+	 *
 	 * @param formElementDescription
 	 *            The new description to set
 	 */
@@ -166,7 +166,7 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 
 	/**
 	 * Returns <code>true</code> if the form element is required, <code>false</code> otherwise.
-	 * 
+	 *
 	 * @return <code>true</code> if the form element is required, <code>false</code> otherwise.
 	 */
 	public boolean isRequired() {
@@ -175,7 +175,7 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 
 	/**
 	 * Sets the requirement of the form element.
-	 * 
+	 *
 	 * @param isFormElementRequired
 	 *            The requirement to set
 	 */
@@ -185,7 +185,7 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 
 	/**
 	 * Sets the permission on the element.
-	 * 
+	 *
 	 * @param permissions
 	 *            The array of permissions containing values among "read", "submit", "write".
 	 */
@@ -198,7 +198,7 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 
 	/**
 	 * Returns <code>true</code> if this field can be read, <code>false</code> otherwise.
-	 * 
+	 *
 	 * @return <code>true</code> if this field can be read, <code>false</code> otherwise.
 	 */
 	public boolean isReadable() {
@@ -207,7 +207,7 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 
 	/**
 	 * Returns <code>true</code> if this field can be updated, <code>false</code> otherwise.
-	 * 
+	 *
 	 * @return <code>true</code> if this field can be updated, <code>false</code> otherwise.
 	 */
 	public boolean isUpdatable() {
@@ -216,7 +216,7 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 
 	/**
 	 * Returns <code>true</code> if this field can be submitted, <code>false</code> otherwise.
-	 * 
+	 *
 	 * @return <code>true</code> if this field can be submitted, <code>false</code> otherwise.
 	 */
 	public boolean isSubmitable() {
@@ -225,7 +225,7 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 
 	/**
 	 * Sets the rank of the form element.
-	 * 
+	 *
 	 * @param formElementRank
 	 *            The rank to set
 	 */
@@ -235,7 +235,7 @@ public abstract class AbstractTuleapFormElement implements Serializable {
 
 	/**
 	 * Returns the rank of the form element.
-	 * 
+	 *
 	 * @return The rank of the form element.
 	 */
 	public int getRank() {

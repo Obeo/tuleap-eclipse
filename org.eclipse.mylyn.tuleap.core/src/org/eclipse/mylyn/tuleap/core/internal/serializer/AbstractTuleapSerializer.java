@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -33,7 +33,7 @@ import org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants;
 
 /**
  * This class is used to serialize the JSON representation of a AbstractTuleapConfigurableElement.
- * 
+ *
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  * @param <T>
  */
@@ -41,7 +41,7 @@ public abstract class AbstractTuleapSerializer<T extends AbstractTuleapConfigura
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see com.google.gson.JsonSerializer#serialize(java.lang.Object, java.lang.reflect.Type,
 	 *      com.google.gson.JsonSerializationContext)
 	 */
@@ -51,7 +51,7 @@ public abstract class AbstractTuleapSerializer<T extends AbstractTuleapConfigura
 		JsonArray values = new JsonArray();
 		json.add(ITuleapConstants.VALUES, values);
 		for (AbstractTuleapField field : element.getFields()) {
-			if (mustSerialize(field)) {
+			if (mustSerialize(field, element.isNew())) {
 				AbstractFieldValue fieldValue = element.getFieldValue(field.getIdentifier());
 				if (fieldValue == null) {
 					if (field instanceof TuleapFileUpload) {
@@ -74,12 +74,23 @@ public abstract class AbstractTuleapSerializer<T extends AbstractTuleapConfigura
 	/**
 	 * Override this method in subclasses to configure which field are serialized. By default, all fieds are
 	 * serialized.
-	 * 
+	 *
 	 * @param field
 	 *            A field present in the object to serialize.
+	 * @param isNew
+	 *            Flag indicating whether serialization is for creation or update
 	 * @return <code>true</code> if and only if the field must be included in the serialization.
 	 */
-	protected boolean mustSerialize(AbstractTuleapField field) {
-		return field != null;
+	protected boolean mustSerialize(AbstractTuleapField field, boolean isNew) {
+		if (field == null) {
+			return false;
+		}
+		boolean result = false;
+		if (isNew) {
+			result = field.isSubmitable();
+		} else {
+			result = field.isUpdatable();
+		}
+		return result;
 	}
 }

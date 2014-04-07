@@ -132,6 +132,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		TuleapRestClient client = this.connector.getClientManager().getRestClient(taskRepository);
 		if (taskData.isNew()) {
 			TuleapArtifact artifact = artifactTaskDataConverter.createTuleapArtifact(taskData);
+			Assert.isTrue(artifact.isNew());
 			TuleapTaskId artifactId = client.createArtifact(artifact, monitor);
 			response = new RepositoryResponse(ResponseKind.TASK_CREATED, artifactId.toString());
 			if (tracker.getProject().isMilestoneTracker(tracker.getIdentifier())) {
@@ -140,6 +141,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		} else {
 			TuleapArtifactWithComment artifact = artifactTaskDataConverter
 					.createTuleapArtifactWithComment(taskData);
+			Assert.isTrue(!artifact.isNew());
 			client.updateArtifact(artifact, monitor);
 			response = new RepositoryResponse(ResponseKind.TASK_UPDATED, taskData.getTaskId());
 			if (tracker.getProject().isMilestoneTracker(tracker.getIdentifier())) {

@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -27,7 +27,7 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapString;
 /**
  * Configurable element that contains fields (artifact, card). Fields need a tracker to be interpreted
  * meaningfully.
- * 
+ *
  * @param <T>
  *            The type of the element ID
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
@@ -37,7 +37,7 @@ public abstract class AbstractTuleapConfigurableElement<T> extends AbstractTulea
 	/**
 	 * The serial version UID.
 	 */
-	private static final long serialVersionUID = 4736142751490732205L;
+	private static final long serialVersionUID = 7120887559098090937L;
 
 	/**
 	 * The reference to the tracker that backs the element.
@@ -70,6 +70,12 @@ public abstract class AbstractTuleapConfigurableElement<T> extends AbstractTulea
 	private TuleapFileUpload attachmentField;
 
 	/**
+	 * Flag indicating whether the element is new (i.e. unknown from the remote server and only exists
+	 * locally) or not.
+	 */
+	private boolean isNew;
+
+	/**
 	 * The fields of the Tuleap element.
 	 */
 	private Map<Integer, AbstractTuleapField> fields = new LinkedHashMap<Integer, AbstractTuleapField>();
@@ -88,7 +94,7 @@ public abstract class AbstractTuleapConfigurableElement<T> extends AbstractTulea
 
 	/**
 	 * Constructor for new elements not yet synchronized.
-	 * 
+	 *
 	 * @param trackerRef
 	 *            The tracker ref
 	 * @param projectRef
@@ -101,7 +107,7 @@ public abstract class AbstractTuleapConfigurableElement<T> extends AbstractTulea
 
 	/**
 	 * Constructor used to update an existing element.
-	 * 
+	 *
 	 * @param elementId
 	 *            The element id
 	 * @param trackerRef
@@ -117,7 +123,7 @@ public abstract class AbstractTuleapConfigurableElement<T> extends AbstractTulea
 
 	/**
 	 * Constructor for synchronized elements.
-	 * 
+	 *
 	 * @param id
 	 *            The element id
 	 * @param projectRef
@@ -140,7 +146,7 @@ public abstract class AbstractTuleapConfigurableElement<T> extends AbstractTulea
 
 	/**
 	 * Returns a reference to the tracker.
-	 * 
+	 *
 	 * @return The id of the tracker
 	 */
 	public TuleapReference getTracker() {
@@ -149,7 +155,7 @@ public abstract class AbstractTuleapConfigurableElement<T> extends AbstractTulea
 
 	/**
 	 * Tracker reference setter.
-	 * 
+	 *
 	 * @param tracker
 	 *            the trackerRef to set
 	 */
@@ -160,7 +166,7 @@ public abstract class AbstractTuleapConfigurableElement<T> extends AbstractTulea
 	/**
 	 * Returns an immutable view of the fields of the tracker. Elements cannot be added or removed form the
 	 * returned list.
-	 * 
+	 *
 	 * @return An immutable view of the fields of the tracker.
 	 */
 	public Collection<AbstractTuleapField> getFields() {
@@ -170,7 +176,7 @@ public abstract class AbstractTuleapConfigurableElement<T> extends AbstractTulea
 	/**
 	 * Add a field to this element. If the given field has a specific semantic, it is cached in the relevant
 	 * field to allow for easy retrieval.
-	 * 
+	 *
 	 * @param field
 	 *            The field to add
 	 */
@@ -192,7 +198,7 @@ public abstract class AbstractTuleapConfigurableElement<T> extends AbstractTulea
 
 	/**
 	 * Provides access to the cached title field. To use only after element creation.
-	 * 
+	 *
 	 * @return The field with the "title" semantic or null if sucj field doesn't exists.
 	 */
 	public TuleapString getTitleField() {
@@ -201,7 +207,7 @@ public abstract class AbstractTuleapConfigurableElement<T> extends AbstractTulea
 
 	/**
 	 * Provides access to the cached status field. To use only used after element creation.
-	 * 
+	 *
 	 * @return The field with the "status" semantic or null if such a field doesn't exist.
 	 */
 	public AbstractTuleapSelectBox getStatusField() {
@@ -210,7 +216,7 @@ public abstract class AbstractTuleapConfigurableElement<T> extends AbstractTulea
 
 	/**
 	 * Provides access to the cached contributor field. To use only used after element creation.
-	 * 
+	 *
 	 * @return The field with the "contributor" semantic or null if such a field doesn't exist.
 	 */
 	public AbstractTuleapSelectBox getContributorField() {
@@ -219,7 +225,7 @@ public abstract class AbstractTuleapConfigurableElement<T> extends AbstractTulea
 
 	/**
 	 * Provides access to the cached initial effort field. To use only used after element creation.
-	 * 
+	 *
 	 * @return The field with the "initial effort" semantic or null if such a field doesn't exist.
 	 */
 	public TuleapFloat geInitialEffortField() {
@@ -228,7 +234,7 @@ public abstract class AbstractTuleapConfigurableElement<T> extends AbstractTulea
 
 	/**
 	 * Provides access to the attachment field of this element.
-	 * 
+	 *
 	 * @return The attachment field.
 	 */
 	public TuleapFileUpload getAttachmentField() {
@@ -237,7 +243,7 @@ public abstract class AbstractTuleapConfigurableElement<T> extends AbstractTulea
 
 	/**
 	 * Indicates whether the given status represents a closed status.
-	 * 
+	 *
 	 * @param statusItemId
 	 *            The status for which you want to know if it means the task is closed.
 	 * @return {@code true} if the status field closed statuses contain the given status, {@false
@@ -256,7 +262,7 @@ public abstract class AbstractTuleapConfigurableElement<T> extends AbstractTulea
 
 	/**
 	 * Provides access to a field by its id.
-	 * 
+	 *
 	 * @param id
 	 *            the field identifier
 	 * @return The field or null if it doesn't exist.
@@ -267,7 +273,7 @@ public abstract class AbstractTuleapConfigurableElement<T> extends AbstractTulea
 
 	/**
 	 * Adds a value.
-	 * 
+	 *
 	 * @param value
 	 *            The value to set.
 	 */
@@ -277,7 +283,7 @@ public abstract class AbstractTuleapConfigurableElement<T> extends AbstractTulea
 
 	/**
 	 * Get the value in relation to the given field id.
-	 * 
+	 *
 	 * @param fieldTypeId
 	 *            the field id.
 	 * @return the value of the given field.
@@ -288,11 +294,30 @@ public abstract class AbstractTuleapConfigurableElement<T> extends AbstractTulea
 
 	/**
 	 * Returns the collection of the field values.
-	 * 
+	 *
 	 * @return The collection of the field values
 	 */
 	public Collection<AbstractFieldValue> getFieldValues() {
 		return this.fieldTypeIdToValue.values();
+	}
+
+	/**
+	 * Is new.
+	 *
+	 * @return the isNew
+	 */
+	public boolean isNew() {
+		return isNew;
+	}
+
+	/**
+	 * Is new.
+	 *
+	 * @param value
+	 *            the flag to set
+	 */
+	public void setNew(boolean value) {
+		this.isNew = value;
 	}
 
 }

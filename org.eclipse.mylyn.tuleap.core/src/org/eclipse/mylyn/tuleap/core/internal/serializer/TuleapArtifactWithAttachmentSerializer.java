@@ -19,15 +19,15 @@ import java.lang.reflect.Type;
 
 import org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapFileUpload;
-import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifact;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifactWithAttachment;
 import org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants;
 
 /**
- * This class is used to serialize the JSON representation of a {@link TuleapArtifact}.
+ * This class is used to serialize the JSON representation of a {@link TuleapArtifactWithAttachment}.
  *
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
-public class TuleapArtifactSerializer extends AbstractTuleapSerializer<TuleapArtifact> {
+public class TuleapArtifactWithAttachmentSerializer extends TuleapArtifactWithCommentSerializer<TuleapArtifactWithAttachment> {
 
 	/**
 	 * {@inheritDoc}
@@ -36,7 +36,8 @@ public class TuleapArtifactSerializer extends AbstractTuleapSerializer<TuleapArt
 	 *      com.google.gson.JsonSerializationContext)
 	 */
 	@Override
-	public JsonElement serialize(TuleapArtifact tuleapArtifact, Type type, JsonSerializationContext context) {
+	public JsonElement serialize(TuleapArtifactWithAttachment tuleapArtifact, Type type,
+			JsonSerializationContext context) {
 		JsonObject elementObject = (JsonObject)super.serialize(tuleapArtifact, type, context);
 		elementObject.remove(ITuleapConstants.ID);
 		if (tuleapArtifact.getTracker() != null) {
@@ -56,7 +57,11 @@ public class TuleapArtifactSerializer extends AbstractTuleapSerializer<TuleapArt
 	 */
 	@Override
 	protected boolean mustSerialize(AbstractTuleapField field, boolean isNew) {
-		// Only fields valid for creation are submitted
-		return !(field instanceof TuleapFileUpload) && super.mustSerialize(field, isNew);
+		if (field instanceof TuleapFileUpload) {
+			// For attachments, the artifact is never new
+			// We accept to submit if the field is either updatable or creatable (semantic unclear)
+			return field.isSubmitable() || field.isUpdatable();
+		}
+		return super.mustSerialize(field, isNew);
 	}
 }

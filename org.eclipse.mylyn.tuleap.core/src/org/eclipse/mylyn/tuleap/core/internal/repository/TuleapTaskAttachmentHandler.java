@@ -39,7 +39,7 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapFileUploa
 import org.eclipse.mylyn.tuleap.core.internal.model.data.AttachmentFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.AttachmentValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifact;
-import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifactWithComment;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifactWithAttachment;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapReference;
 import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreKeys;
 import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreMessages;
@@ -271,7 +271,7 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 				checkMonitorCancelled(monitor, client, fileReference);
 				// Now, we need to associate the uploaded temporary file to the artifact.
 				// But for that, we need the current list of attachments of this artifact!
-				TuleapArtifactWithComment commentedArtifact = new TuleapArtifactWithComment();
+				TuleapArtifactWithAttachment commentedArtifact = new TuleapArtifactWithAttachment();
 				commentedArtifact.setId(Integer.valueOf(artifactId));
 				commentedArtifact.addField(field);
 				// Temporary hack while Tuleap does not provide a better API:
@@ -280,7 +280,10 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 				AttachmentFieldValue value = (AttachmentFieldValue)artifact.getFieldValue(field
 						.getIdentifier());
 				// We copy the current attachments and add the new one
-				List<AttachmentValue> attachments = new ArrayList<AttachmentValue>(value.getAttachments());
+				List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
+				if (value != null) {
+					attachments.addAll(value.getAttachments());
+				}
 				attachments.add(new AttachmentValue(String.valueOf(fileReference.getId()), filename, 0, 0,
 						description, filetype, fileReference.getUri()));
 				AttachmentFieldValue fileDescription = new AttachmentFieldValue(field.getIdentifier(),

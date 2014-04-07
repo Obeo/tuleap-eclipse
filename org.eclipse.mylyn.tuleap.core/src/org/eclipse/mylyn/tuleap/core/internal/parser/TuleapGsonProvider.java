@@ -23,6 +23,7 @@ import org.eclipse.mylyn.tuleap.core.internal.model.data.AttachmentFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.BoundFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.LiteralFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifact;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifactWithAttachment;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifactWithComment;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapElementComment;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapCard;
@@ -32,6 +33,7 @@ import org.eclipse.mylyn.tuleap.core.internal.serializer.ArtifactLinkFieldValueA
 import org.eclipse.mylyn.tuleap.core.internal.serializer.BoundFieldValueSerializer;
 import org.eclipse.mylyn.tuleap.core.internal.serializer.LiteralFieldValueSerializer;
 import org.eclipse.mylyn.tuleap.core.internal.serializer.TuleapArtifactSerializer;
+import org.eclipse.mylyn.tuleap.core.internal.serializer.TuleapArtifactWithAttachmentSerializer;
 import org.eclipse.mylyn.tuleap.core.internal.serializer.TuleapArtifactWithCommentSerializer;
 import org.eclipse.mylyn.tuleap.core.internal.serializer.TuleapCardSerializer;
 import org.eclipse.mylyn.tuleap.core.internal.serializer.TuleapMilestoneSerializer;
@@ -76,7 +78,6 @@ public final class TuleapGsonProvider {
 	 */
 	public static GsonBuilder defaultBuilder() {
 		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(TuleapArtifact.class, new TuleapArtifactDeserializer());
 		gsonBuilder.registerTypeAdapter(TuleapCardwall.class, new TuleapCardwallDeserializer());
 		gsonBuilder.registerTypeAdapter(TuleapCard.class, new TuleapCardDeserializer());
 		gsonBuilder.registerTypeAdapter(TuleapCard.class, new TuleapCardSerializer());
@@ -86,9 +87,12 @@ public final class TuleapGsonProvider {
 		gsonBuilder.registerTypeAdapter(TuleapWorkflowTransition.class,
 				new TuleapWorkflowTransitionDeserializer());
 		gsonBuilder.registerTypeAdapter(Date.class, new DateIso8601Adapter());
+		gsonBuilder.registerTypeAdapter(TuleapArtifact.class, new TuleapArtifactDeserializer());
 		gsonBuilder.registerTypeAdapter(TuleapArtifact.class, new TuleapArtifactSerializer());
 		gsonBuilder.registerTypeAdapter(TuleapArtifactWithComment.class,
-				new TuleapArtifactWithCommentSerializer());
+				new TuleapArtifactWithCommentSerializer<TuleapArtifactWithComment>());
+		gsonBuilder.registerTypeAdapter(TuleapArtifactWithAttachment.class,
+				new TuleapArtifactWithAttachmentSerializer());
 		gsonBuilder.registerTypeAdapter(ArtifactLinkFieldValue.class, new ArtifactLinkFieldValueAdapter());
 		gsonBuilder.registerTypeAdapter(LiteralFieldValue.class, new LiteralFieldValueSerializer());
 		gsonBuilder.registerTypeAdapter(AttachmentFieldValue.class, new AttachmentFieldValueAdapter());

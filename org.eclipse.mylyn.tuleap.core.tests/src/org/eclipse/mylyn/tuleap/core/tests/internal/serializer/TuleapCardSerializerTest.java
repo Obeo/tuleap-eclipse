@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -72,6 +72,7 @@ public class TuleapCardSerializerTest {
 		card.setLabel("label");
 		card.setColumnId(12);
 		TuleapString field = new TuleapString(222);
+		field.setPermissions(new String[] {"update" });
 		card.addField(field);
 		card.addFieldValue(new LiteralFieldValue(222, "test"));
 		assertEquals(
@@ -85,6 +86,7 @@ public class TuleapCardSerializerTest {
 		card.setLabel("label");
 		card.setColumnId(12);
 		TuleapInteger field = new TuleapInteger(222);
+		field.setPermissions(new String[] {"update" });
 		card.addField(field);
 		card.addFieldValue(new LiteralFieldValue(222, "666"));
 		assertEquals(
@@ -93,14 +95,16 @@ public class TuleapCardSerializerTest {
 	}
 
 	@Test
-	public void testWithFieldSelectBox() {
+	public void testWithFieldSelectBoxUpdatable() {
 		TuleapCard card = new TuleapCard("123", artifactRef, projectRef);
 		card.setLabel("label");
 		card.setColumnId(12);
 		TuleapSelectBox field = new TuleapSelectBox(222);
+		field.setPermissions(new String[] {"update" });
 		field.addItem(new TuleapSelectBoxItem(0));
 		field.addItem(new TuleapSelectBoxItem(1));
 		field.addItem(new TuleapSelectBoxItem(2));
+		field.setPermissions(new String[] {"update" });
 		card.addField(field);
 		card.addFieldValue(new BoundFieldValue(222, Arrays.asList(0)));
 		assertEquals(
@@ -109,11 +113,28 @@ public class TuleapCardSerializerTest {
 	}
 
 	@Test
+	public void testWithFieldSelectBoxNonUpdatable() {
+		TuleapCard card = new TuleapCard("123", artifactRef, projectRef);
+		card.setLabel("label");
+		card.setColumnId(12);
+		TuleapSelectBox field = new TuleapSelectBox(222);
+		field.setPermissions(new String[] {"update" });
+		field.addItem(new TuleapSelectBoxItem(0));
+		field.addItem(new TuleapSelectBoxItem(1));
+		field.addItem(new TuleapSelectBoxItem(2));
+		field.setPermissions(new String[] {"submit" });
+		card.addField(field);
+		card.addFieldValue(new BoundFieldValue(222, Arrays.asList(0)));
+		assertEquals("{\"label\":\"label\",\"values\":[],\"column_id\":12}", gson.toJson(card));
+	}
+
+	@Test
 	public void testWithFieldMultiSelectBox() {
 		TuleapCard card = new TuleapCard("123", artifactRef, projectRef);
 		card.setLabel("label");
 		card.setColumnId(12);
 		TuleapSelectBox field = new TuleapSelectBox(222);
+		field.setPermissions(new String[] {"update" });
 		field.addItem(new TuleapSelectBoxItem(0));
 		field.addItem(new TuleapSelectBoxItem(1));
 		field.addItem(new TuleapSelectBoxItem(2));
@@ -130,6 +151,7 @@ public class TuleapCardSerializerTest {
 		card.setLabel("label");
 		card.setColumnId(12);
 		TuleapString field = new TuleapString(222);
+		field.setPermissions(new String[] {"update" });
 		card.addField(field);
 		assertEquals("{\"label\":\"label\",\"values\":[{\"field_id\":222,\"value\":null}],\"column_id\":12}",
 				gson.toJson(card));
@@ -142,6 +164,6 @@ public class TuleapCardSerializerTest {
 		card.setColumnId(12);
 		TuleapFileUpload tuleapFileUpload = new TuleapFileUpload(12);
 		card.addField(tuleapFileUpload);
-		assertEquals("{\"label\":\"label\",\"values\":[{}],\"column_id\":12}", gson.toJson(card));
+		assertEquals("{\"label\":\"label\",\"values\":[],\"column_id\":12}", gson.toJson(card));
 	}
 }
