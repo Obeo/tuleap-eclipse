@@ -453,12 +453,8 @@ public class MilestoneTaskDataConverterTest {
 		firstCard.setStatus(TuleapStatus.valueOf("Open"));
 
 		List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
-		// TuleapUser firstUploadedBy = new TuleapUser(
-		// "first username", "first realname", 1, "first email", null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		attachments.add(new AttachmentValue("100000", "first name", 1, 123456, //$NON-NLS-1$ //$NON-NLS-2$
 				"first description", "first type", "")); //$NON-NLS-1$ //$NON-NLS-2$
-		// TuleapUser secondUploadedBy = new TuleapUser("second username", "second realname", 2, //$NON-NLS-1$ //$NON-NLS-2$
-		// "second email", null); //$NON-NLS-1$
 		attachments.add(new AttachmentValue("100001", "second name", 2, 789456, //$NON-NLS-1$ //$NON-NLS-2$
 				"second description", "second type", "")); //$NON-NLS-1$ //$NON-NLS-2$
 		AttachmentFieldValue fileDescriptions = new AttachmentFieldValue(3000, attachments);
@@ -517,6 +513,8 @@ public class MilestoneTaskDataConverterTest {
 	public void testAddSubmilestones() {
 		Date testDate = new Date();
 
+		TuleapReference trackerBiref = new TuleapReference(666, "t/666");
+
 		TuleapMilestone milestone = new TuleapMilestone(50,
 				new TuleapReference(200, "p/200"), "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
 				"HTML URL", testDate, testDate); //$NON-NLS-1$
@@ -528,21 +526,25 @@ public class MilestoneTaskDataConverterTest {
 		TuleapBacklogItem item0 = new TuleapBacklogItem(230,
 				new TuleapReference(200, "p/200"), "item230", null, null, null, null); //$NON-NLS-1$
 		item0.setInitialEffort("201");
+		item0.setArtifact(new ArtifactReference(230, "a/230", trackerBiref));
 		item0.setStatus(TuleapStatus.valueOf("Closed"));
 
 		TuleapBacklogItem item1 = new TuleapBacklogItem(231,
 				new TuleapReference(200, "p/200"), "item231", null, null, null, null); //$NON-NLS-1$
 		item1.setInitialEffort("201");
+		item1.setArtifact(new ArtifactReference(231, "a/231", trackerBiref));
 		item1.setStatus(TuleapStatus.valueOf("Closed"));
 
 		TuleapBacklogItem item2 = new TuleapBacklogItem(232,
 				new TuleapReference(200, "p/200"), "item232", null, null, null, null); //$NON-NLS-1$
 		item2.setInitialEffort("201");
+		item2.setArtifact(new ArtifactReference(232, "a/232", trackerBiref));
 		item2.setStatus(TuleapStatus.valueOf("Closed"));
 
 		TuleapBacklogItem item3 = new TuleapBacklogItem(233,
 				new TuleapReference(200, "p/200"), "item233", null, null, null, null); //$NON-NLS-1$
 		item3.setInitialEffort("201");
+		item3.setArtifact(new ArtifactReference(233, "a/233", trackerBiref));
 		item3.setStatus(TuleapStatus.valueOf("Closed"));
 
 		TuleapBacklogItem item4 = new TuleapBacklogItem(234,
@@ -568,7 +570,7 @@ public class MilestoneTaskDataConverterTest {
 		assertNotNull(backlogAtt);
 
 		for (int i = 0; i < 4; i++) {
-			String internalId = "200:0#" + (230 + i);
+			String internalId = "200:666#" + (230 + i);
 			TaskAttribute itemAtt = root.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + internalId);
 			assertNotNull(itemAtt);
 			assertTrue(itemAtt.getMetaData().isReadOnly());
@@ -592,8 +594,8 @@ public class MilestoneTaskDataConverterTest {
 			assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, itemStatus.getMetaData().getType());
 		}
 
-		TaskAttribute lastItemStatus = root.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + "200:0#234"
-				+ ID_SEPARATOR + BacklogItemWrapper.SUFFIX_STATUS);
+		TaskAttribute lastItemStatus = root.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM
+				+ "200:666#234" + ID_SEPARATOR + BacklogItemWrapper.SUFFIX_STATUS);
 		assertEquals(null, lastItemStatus);
 
 	}
@@ -609,49 +611,42 @@ public class MilestoneTaskDataConverterTest {
 				new TuleapReference(200, "p/200"), "The first milestone", "URL", //$NON-NLS-1$ //$NON-NLS-2$
 				"HTML URL", testDate, testDate); //$NON-NLS-1$
 
+		TuleapReference trackerBiref = new TuleapReference(666, "t/666");
+		TuleapReference trackerParentRef = new TuleapReference(500, "t/500");
+
+		String[] expectedStatuses = new String[] {"Closed", "Open", null };
+
 		TuleapBacklogItem item0 = new TuleapBacklogItem(230,
 				new TuleapReference(200, "p/200"), "item230", null, null, null, null); //$NON-NLS-1$
 		item0.setInitialEffort("201");
-		TuleapReference trackerRef = new TuleapReference(500, "tracker/500");
-		ArtifactReference item0Parent = new ArtifactReference(231, "item/231", trackerRef);
+		item0.setArtifact(new ArtifactReference(230, "a/230", trackerBiref));
+		ArtifactReference item0Parent = new ArtifactReference(231, "item/231", trackerParentRef);
 		item0.setParent(item0Parent);
 		item0.setType("Epics");
-		item0.setStatus(TuleapStatus.valueOf("Closed"));
+		item0.setStatus(TuleapStatus.valueOf(expectedStatuses[0]));
 
 		TuleapBacklogItem item1 = new TuleapBacklogItem(231,
 				new TuleapReference(200, "p/200"), "item231", null, null, null, null); //$NON-NLS-1$
 		item1.setInitialEffort("201");
-		ArtifactReference item1Parent = new ArtifactReference(232, "item/232", trackerRef);
+		item1.setArtifact(new ArtifactReference(231, "a/231", trackerBiref));
+		ArtifactReference item1Parent = new ArtifactReference(232, "item/232", trackerParentRef);
 		item1.setParent(item1Parent);
 		item1.setType("Epics");
-		item1.setStatus(TuleapStatus.valueOf("Closed"));
+		item1.setStatus(TuleapStatus.valueOf(expectedStatuses[1]));
 
 		TuleapBacklogItem item2 = new TuleapBacklogItem(232,
 				new TuleapReference(200, "p/200"), "item232", null, null, null, null); //$NON-NLS-1$
 		item2.setInitialEffort("201");
-		ArtifactReference item2Parent = new ArtifactReference(233, "item/233", trackerRef);
+		item2.setArtifact(new ArtifactReference(232, "a/232", trackerBiref));
+		ArtifactReference item2Parent = new ArtifactReference(233, "item/233", trackerParentRef);
 		item2.setParent(item2Parent);
 		item2.setType("Epics");
-		item2.setStatus(TuleapStatus.valueOf("Closed"));
-
-		TuleapBacklogItem item3 = new TuleapBacklogItem(233,
-				new TuleapReference(200, "p/200"), "item233", null, null, null, null); //$NON-NLS-1$
-		item3.setInitialEffort("201");
-		ArtifactReference item3Parent = new ArtifactReference(234, "item/234", trackerRef);
-		item3.setParent(item3Parent);
-		item3.setType("Epics");
-		item3.setStatus(TuleapStatus.valueOf("Closed"));
-
-		TuleapBacklogItem item4 = new TuleapBacklogItem(234,
-				new TuleapReference(200, "p/200"), "item234", null, null, null, null); //$NON-NLS-1$
 
 		List<TuleapBacklogItem> backlog = new ArrayList<TuleapBacklogItem>();
 
 		backlog.add(item0);
 		backlog.add(item1);
 		backlog.add(item2);
-		backlog.add(item3);
-		backlog.add(item4);
 		MilestoneTaskDataConverter converter = new MilestoneTaskDataConverter(taskRepository, connector);
 		converter.populateTaskData(taskData, milestone, null);
 		converter.populateBacklog(taskData, backlog, null);
@@ -660,8 +655,8 @@ public class MilestoneTaskDataConverterTest {
 
 		assertNotNull(root.getAttribute(MilestonePlanningWrapper.BACKLOG));
 
-		for (int i = 0; i < 4; i++) {
-			String internalId = "200:0#" + (230 + i);
+		for (int i = 0; i < 3; i++) {
+			String internalId = "200:666#" + (230 + i);
 			TaskAttribute itemAtt = root.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + internalId);
 			assertNotNull(itemAtt);
 			assertTrue(itemAtt.getMetaData().isReadOnly());
@@ -681,7 +676,7 @@ public class MilestoneTaskDataConverterTest {
 			TaskAttribute itemParent = root.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + internalId
 					+ ID_SEPARATOR + BacklogItemWrapper.SUFFIX_BI_PARENT_ID);
 			assertNotNull(itemParent);
-			assertEquals("200:0#23" + (i + 1), itemParent.getValue());
+			assertEquals("200:500#23" + (i + 1), itemParent.getValue());
 			assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, itemParent.getMetaData().getType());
 
 			TaskAttribute itemDisplayParent = root.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM
@@ -698,15 +693,13 @@ public class MilestoneTaskDataConverterTest {
 
 			TaskAttribute itemStatus = root.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + internalId
 					+ ID_SEPARATOR + BacklogItemWrapper.SUFFIX_STATUS);
-			assertNotNull(itemStatus);
-			assertEquals("Closed", itemStatus.getValue());
-			assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, itemStatus.getMetaData().getType());
+			if (i == 2) {
+				assertNull(itemStatus);
+			} else {
+				assertEquals(expectedStatuses[i], itemStatus.getValue());
+				assertEquals(TaskAttribute.TYPE_SHORT_RICH_TEXT, itemStatus.getMetaData().getType());
+			}
 		}
-
-		TaskAttribute lastItemStatus = root.getAttribute(BacklogItemWrapper.PREFIX_BACKLOG_ITEM + "200:0#234"
-				+ ID_SEPARATOR + BacklogItemWrapper.SUFFIX_STATUS);
-		assertEquals(null, lastItemStatus);
-
 	}
 
 	/**

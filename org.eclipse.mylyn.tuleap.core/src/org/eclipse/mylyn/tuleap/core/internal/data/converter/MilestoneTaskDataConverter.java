@@ -513,34 +513,9 @@ public class MilestoneTaskDataConverter {
 	public void populateBacklog(TaskData taskData, List<TuleapBacklogItem> backlog, IProgressMonitor monitor) {
 		MilestonePlanningWrapper milestonePlanning = new MilestonePlanningWrapper(taskData.getRoot());
 		for (TuleapBacklogItem backlogItem : backlog) {
-			int projectId;
-
-			TuleapReference project = backlogItem.getProject();
-			if (project != null) {
-				projectId = project.getId();
-			} else {
-				projectId = Integer.parseInt(taskData.getRoot().getAttribute(TuleapArtifactMapper.PROJECT_ID)
-						.getValue());
-			}
-			BacklogItemWrapper backlogItemWrapper = milestonePlanning.addBacklogItem(TuleapTaskId
-					.forArtifact(projectId, 0, backlogItem.getId().intValue()).toString());
-			backlogItemWrapper.setDisplayId(Integer.toString(backlogItem.getId().intValue()));
-
-			backlogItemWrapper.setLabel(backlogItem.getLabel());
-			backlogItemWrapper.setType(backlogItem.getType());
-			if (backlogItem.getStatus() != null) {
-				backlogItemWrapper.setStatus(backlogItem.getStatus().toString());
-			}
-
-			if (backlogItem.getInitialEffort() != null) {
-				backlogItemWrapper.setInitialEffort(backlogItem.getInitialEffort());
-			}
-			if (backlogItem.getParent() != null) {
-				backlogItemWrapper.setParent(TuleapTaskId.forArtifact(projectId, 0,
-						backlogItem.getParent().getId()).toString(), Integer.toString(backlogItem.getParent()
-						.getId()));
-			}
-
+			TuleapTaskId biTaskId = extractBacklogItemTaskId(backlogItem, taskData);
+			BacklogItemWrapper backlogItemWrapper = milestonePlanning.addBacklogItem(biTaskId.toString());
+			populateItem(backlogItem, biTaskId, backlogItemWrapper);
 		}
 	}
 
@@ -559,6 +534,7 @@ public class MilestoneTaskDataConverter {
 	public void addSubmilestone(TaskData taskData, TuleapMilestone milestone,
 			List<TuleapBacklogItem> milestoneContent, IProgressMonitor monitor) {
 		MilestonePlanningWrapper milestonePlanning = new MilestonePlanningWrapper(taskData.getRoot());
+		// #6636 - Tracker ID is needed otherwise navigation KO when disconnected
 		int trackerId = TuleapTaskId.UNKNOWN_ID;
 		ArtifactReference artifact = milestone.getArtifact();
 		if (artifact != null) {
@@ -580,34 +556,71 @@ public class MilestoneTaskDataConverter {
 		subMilestoneWrapper.setStatusValue(milestone.getStatusValue());
 
 		for (TuleapBacklogItem backlogItem : milestoneContent) {
-			int projectId;
-
-			TuleapReference project = backlogItem.getProject();
-			if (project != null) {
-				projectId = project.getId();
-			} else {
-				projectId = Integer.parseInt(taskData.getRoot().getAttribute(TuleapArtifactMapper.PROJECT_ID)
-						.getValue());
-			}
-			BacklogItemWrapper backlogItemWrapper = subMilestoneWrapper.addBacklogItem(TuleapTaskId
-					.forArtifact(projectId, 0, backlogItem.getId().intValue()).toString());
-			backlogItemWrapper.setDisplayId(Integer.toString(backlogItem.getId().intValue()));
-
-			backlogItemWrapper.setType(backlogItem.getType());
-			backlogItemWrapper.setLabel(backlogItem.getLabel());
-
-			if (backlogItem.getStatus() != null) {
-				backlogItemWrapper.setStatus(backlogItem.getStatus().toString());
-			}
-			if (backlogItem.getInitialEffort() != null) {
-				backlogItemWrapper.setInitialEffort(backlogItem.getInitialEffort());
-			}
-			if (backlogItem.getParent() != null) {
-				backlogItemWrapper.setParent(TuleapTaskId.forArtifact(projectId, 0,
-						backlogItem.getParent().getId()).toString(), Integer.toString(backlogItem.getParent()
-						.getId()));
-			}
+			TuleapTaskId biTaskId = extractBacklogItemTaskId(backlogItem, taskData);
+			BacklogItemWrapper backlogItemWrapper = subMilestoneWrapper.addBacklogItem(biTaskId.toString());
+			populateItem(backlogItem, biTaskId, backlogItemWrapper);
 		}
+	}
 
+	/**
+	 * Populates the parent info in the given wrapper, from the given Backlog item.
+	 *
+	 * @param backlogItem
+	 *            Input backlog item to copy into the wrapper
+	 * @param biTaskId
+	 *            Task ID of the backlog item to add in the wrapper.
+	 * @param backlogItemWrapper
+	 *            wrapper to populate
+	 */
+	private void populateItem(TuleapBacklogItem backlogItem, TuleapTaskId biTaskId,
+			BacklogItemWrapper backlogItemWrapper) {
+		backlogItemWrapper.setDisplayId(Integer.toString(backlogItem.getId().intValue()));
+		backlogItemWrapper.setType(backlogItem.getType());
+		backlogItemWrapper.setLabel(backlogItem.getLabel());
+		if (backlogItem.getStatus() != null) {
+			backlogItemWrapper.setStatus(backlogItem.getStatus().toString());
+		}
+		if (backlogItem.getInitialEffort() != null) {
+			backlogItemWrapper.setInitialEffort(backlogItem.getInitialEffort());
+		}
+		if (backlogItem.getParent() != null) {
+			// #6636 - Tracker ID is needed otherwise navigation KO when disconnected
+			int parentTrackerId = TuleapTaskId.UNKNOWN_ID;
+			TuleapReference parentTracker = backlogItem.getParent().getTracker();
+			if (parentTracker != null) {
+				parentTrackerId = parentTracker.getId();
+			}
+			backlogItemWrapper.setParent(TuleapTaskId.forArtifact(biTaskId.getProjectId(), parentTrackerId,
+					backlogItem.getParent().getId()).toString(), Integer.toString(backlogItem.getParent()
+					.getId()));
+		}
+	}
+
+	/**
+	 * Extract the backlog item's task ID from the given item and task data.
+	 *
+	 * @param backlogItem
+	 *            , which should have a project reference and a tracker reference
+	 * @param taskData
+	 *            TaskData of the milestone containing the backlog item, its project will be used if the given
+	 *            BI has no project reference.
+	 * @return The Task ID for the given backlog item.
+	 */
+	private TuleapTaskId extractBacklogItemTaskId(TuleapBacklogItem backlogItem, TaskData taskData) {
+		int projectId;
+		TuleapReference project = backlogItem.getProject();
+		if (project != null) {
+			projectId = project.getId();
+		} else {
+			projectId = Integer.parseInt(taskData.getRoot().getAttribute(TuleapArtifactMapper.PROJECT_ID)
+					.getValue());
+		}
+		ArtifactReference artifactRef = backlogItem.getArtifact();
+		// #6636 - Tracker ID is needed otherwise navigation KO when disconnected
+		int biTrackerId = TuleapTaskId.UNKNOWN_ID;
+		if (artifactRef != null && artifactRef.getTracker() != null) {
+			biTrackerId = artifactRef.getTracker().getId();
+		}
+		return TuleapTaskId.forArtifact(projectId, biTrackerId, backlogItem.getId().intValue());
 	}
 }
