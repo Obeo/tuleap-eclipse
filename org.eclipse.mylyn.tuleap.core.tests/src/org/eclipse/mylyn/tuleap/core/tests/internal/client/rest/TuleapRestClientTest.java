@@ -30,6 +30,7 @@ import org.eclipse.mylyn.tuleap.core.internal.client.rest.RestResourceFactory;
 import org.eclipse.mylyn.tuleap.core.internal.client.rest.ServerResponse;
 import org.eclipse.mylyn.tuleap.core.internal.client.rest.TuleapRestClient;
 import org.eclipse.mylyn.tuleap.core.internal.model.TuleapToken;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapFormElement;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapServer;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapTracker;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapFileUpload;
@@ -56,6 +57,24 @@ import static org.junit.Assert.assertNotNull;
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
 public class TuleapRestClientTest {
+
+	public static final String[] READ_CREATE = {AbstractTuleapFormElement.PERMISSION_READ,
+			AbstractTuleapFormElement.PERMISSION_SUBMIT, };
+
+	public static final String[] READ_UPDATE = {AbstractTuleapFormElement.PERMISSION_READ,
+			AbstractTuleapFormElement.PERMISSION_UPDATE, };
+
+	public static final String[] READ_ONLY = {AbstractTuleapFormElement.PERMISSION_READ };
+
+	public static final String[] READ_CREATE_UPDATE = {AbstractTuleapFormElement.PERMISSION_READ,
+			AbstractTuleapFormElement.PERMISSION_SUBMIT, AbstractTuleapFormElement.PERMISSION_UPDATE, };
+
+	public static final String[] CREATE_UPDATE = {AbstractTuleapFormElement.PERMISSION_SUBMIT,
+			AbstractTuleapFormElement.PERMISSION_UPDATE, };
+
+	public static final String[] CREATE_ONLY = {AbstractTuleapFormElement.PERMISSION_SUBMIT, };
+
+	public static final String[] UPDATE_ONLY = {AbstractTuleapFormElement.PERMISSION_UPDATE, };
 
 	private final String serverUrl = "https://test/url"; //$NON-NLS-1$
 

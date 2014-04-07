@@ -639,11 +639,8 @@ public class TuleapRestClient implements IAuthenticator {
 		Map<String, String> attributes = query.getAttributes();
 		String jsonCriteria = attributes.get(ITuleapQueryConstants.QUERY_CUSTOM_CRITERIA);
 		if (jsonCriteria == null) {
-			throw new CoreException(
-					new Status(
-							IStatus.ERROR,
-							TuleapCoreActivator.PLUGIN_ID,
-							"Query has been created with a former version of the connector and is no longer compatible. Please update your query."));
+			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
+					TuleapCoreMessages.getString(TuleapCoreKeys.oldQueryNotCompatible, query.getSummary())));
 		}
 		JsonParser parser = new JsonParser();
 		JsonElement jsonElement = parser.parse(jsonCriteria);

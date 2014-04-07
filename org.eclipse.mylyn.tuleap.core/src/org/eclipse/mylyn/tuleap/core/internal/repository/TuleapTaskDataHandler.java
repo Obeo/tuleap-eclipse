@@ -13,6 +13,7 @@ package org.eclipse.mylyn.tuleap.core.internal.repository;
 import java.util.Date;
 import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -112,11 +113,13 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		TuleapRestClient client = this.connector.getClientManager().getRestClient(taskRepository);
 		if (taskData.isNew()) {
 			TuleapArtifact artifact = artifactTaskDataConverter.createTuleapArtifact(taskData);
+			Assert.isTrue(artifact.isNew());
 			TuleapTaskId artifactId = client.createArtifact(artifact, monitor);
 			response = new RepositoryResponse(ResponseKind.TASK_CREATED, artifactId.toString());
 		} else {
 			TuleapArtifactWithComment artifact = artifactTaskDataConverter
 					.createTuleapArtifactWithComment(taskData);
+			Assert.isTrue(!artifact.isNew());
 			client.updateArtifact(artifact, monitor);
 			response = new RepositoryResponse(ResponseKind.TASK_UPDATED, taskData.getTaskId());
 		}
@@ -224,7 +227,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 */
 	private TaskData getArtifactTaskData(TuleapTaskId taskId, TuleapServer server,
 			TaskRepository taskRepository, boolean refreshTracker, IProgressMonitor monitor)
-			throws CoreException {
+					throws CoreException {
 		TuleapRestClient client = this.connector.getClientManager().getRestClient(taskRepository);
 		TuleapArtifact tuleapArtifact = client.getArtifact(taskId.getArtifactId(), server, monitor);
 		TuleapTaskId refreshedTaskId = taskId;

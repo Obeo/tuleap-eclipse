@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -38,7 +38,7 @@ import org.eclipse.mylyn.tuleap.core.internal.repository.ITuleapRepositoryConnec
 
 /**
  * Utility class used to transform a {@link TuleapArtifact} into a {@link TaskData} and vice versa.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class ArtifactTaskDataConverter {
@@ -60,7 +60,7 @@ public class ArtifactTaskDataConverter {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param tracker
 	 *            The tracker.
 	 * @param taskRepository
@@ -80,7 +80,7 @@ public class ArtifactTaskDataConverter {
 	/**
 	 * Utility operation used to populate the task data with all the information from the configurable fields
 	 * from an element.
-	 * 
+	 *
 	 * @param taskData
 	 *            The task data to populate
 	 * @param element
@@ -182,7 +182,7 @@ public class ArtifactTaskDataConverter {
 
 	/**
 	 * Fills a given {@link TaskData} with a given artifact data.
-	 * 
+	 *
 	 * @param taskData
 	 *            the task data to fill/update with the given artifact.
 	 * @param tuleapArtifact
@@ -196,7 +196,7 @@ public class ArtifactTaskDataConverter {
 
 	/**
 	 * Creates a tuleap artifact POJO from the related task data.
-	 * 
+	 *
 	 * @param taskData
 	 *            The task data of the task to create, <b>must be new</b>.
 	 * @return The tuleap artifact POJO.
@@ -210,6 +210,7 @@ public class ArtifactTaskDataConverter {
 		TuleapReference projectRef = new TuleapReference();
 		projectRef.setId(taskId.getProjectId());
 		TuleapArtifact tuleapArtifact = new TuleapArtifact(trackerRef, projectRef);
+		tuleapArtifact.setNew(true);
 		for (AbstractTuleapField field : tracker.getFields()) {
 			tuleapArtifact.addField(field);
 		}
@@ -222,7 +223,7 @@ public class ArtifactTaskDataConverter {
 
 	/**
 	 * Creates a tuleap artifact POJO from the related task data.
-	 * 
+	 *
 	 * @param taskData
 	 *            The task data of the task to update, <b>must not be new</b>.
 	 * @return The tuleap artifact POJO.

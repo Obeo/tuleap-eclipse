@@ -50,6 +50,8 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -329,19 +331,30 @@ public class TuleapTaskDataHandlerTests {
 	 *            The identifier of the task created and updated
 	 * @param responseKind
 	 *            The kind of the response
+	 * @param isCreation
+	 *            Flag indicating whether we want to perform a creation or an update
 	 */
-	private void testPostTaskData(TaskData data, final TuleapTaskId taskId, ResponseKind responseKind) {
+	private void testPostTaskData(TaskData data, final TuleapTaskId taskId, ResponseKind responseKind,
+			final boolean isCreation) {
 		// Mock rest client
 		final TuleapRestClient tuleapRestClient = new TuleapRestClient(null, null, null) {
 			@Override
 			public TuleapTaskId createArtifact(TuleapArtifact artifact, IProgressMonitor monitor)
 					throws CoreException {
+				if (!isCreation) {
+					fail("Should not be called for an update");
+				}
+				assertTrue(artifact.isNew());
 				return TuleapTaskId.forName(taskId.toString());
 			}
 
 			@Override
 			public void updateArtifact(TuleapArtifactWithComment artifact, IProgressMonitor monitor)
 					throws CoreException {
+				if (isCreation) {
+					fail("Should not be called for a creation");
+				}
+				assertFalse(artifact.isNew());
 				// do nothing
 			}
 		};
@@ -396,7 +409,7 @@ public class TuleapTaskDataHandlerTests {
 		mapper.initializeEmptyTaskData();
 
 		TuleapTaskId taskId = TuleapTaskId.forArtifact(projectRef.getId(), trackerRef.getId(), artifactId);
-		this.testPostTaskData(taskData, taskId, ResponseKind.TASK_CREATED);
+		this.testPostTaskData(taskData, taskId, ResponseKind.TASK_CREATED, true);
 	}
 
 	/**
@@ -413,7 +426,7 @@ public class TuleapTaskDataHandlerTests {
 		mapper.initializeEmptyTaskData();
 
 		TuleapTaskId taskId = TuleapTaskId.forArtifact(projectRef.getId(), thirdItemTrackerId, itemId);
-		this.testPostTaskData(taskData, taskId, ResponseKind.TASK_CREATED);
+		this.testPostTaskData(taskData, taskId, ResponseKind.TASK_CREATED, true);
 	}
 
 	/**
@@ -430,7 +443,6 @@ public class TuleapTaskDataHandlerTests {
 				projectRef.getId()).getTracker(trackerRef.getId()));
 		mapper.initializeEmptyTaskData();
 
-		this.testPostTaskData(taskData, taskId, ResponseKind.TASK_UPDATED);
+		this.testPostTaskData(taskData, taskId, ResponseKind.TASK_UPDATED, false);
 	}
-
 }

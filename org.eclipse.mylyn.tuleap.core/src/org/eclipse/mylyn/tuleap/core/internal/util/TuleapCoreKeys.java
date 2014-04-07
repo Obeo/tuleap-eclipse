@@ -418,6 +418,11 @@ public class TuleapCoreKeys extends NLS {
 	 */
 	public static String configUpdateNeeded;
 
+	/**
+	 * Query created with old version. 1 parameter : the query summary.
+	 */
+	public static String oldQueryNotCompatible;
+
 	static {
 		// load message values from bundle file
 		reloadMessages();
