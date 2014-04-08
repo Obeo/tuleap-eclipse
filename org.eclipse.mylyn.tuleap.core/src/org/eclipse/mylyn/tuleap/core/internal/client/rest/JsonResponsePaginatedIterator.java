@@ -30,16 +30,6 @@ import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreMessages;
 public class JsonResponsePaginatedIterator implements Iterator<JsonElement> {
 
 	/**
-	 * Query parameter used to transmit the offset.
-	 */
-	public static final String OFFSET = "offset"; //$NON-NLS-1$
-
-	/**
-	 * Query parameter used to transmit the pagination limit.
-	 */
-	public static final String LIMIT = "limit"; //$NON-NLS-1$
-
-	/**
 	 * The number of elements in the list of elements to iterate over. Corresponds to the
 	 * {@code X-PAGINATION-SIZE} HTTP header attribute.
 	 */
@@ -155,9 +145,9 @@ public class JsonResponsePaginatedIterator implements Iterator<JsonElement> {
 			throw new NoSuchElementException();
 		}
 		if (!iterator.hasNext()) {
-			currentResponse = operation.withHeaders(headers).withBody(body).withQueryParameter(OFFSET,
-					Integer.toString(currentOffset)).withQueryParameter(LIMIT,
-							Integer.toString(nbElementsPerPageMax)).run();
+			currentResponse = operation.withHeaders(headers).withBody(body).withQueryParameter(
+					RestResource.OFFSET, Integer.toString(currentOffset)).withQueryParameter(
+					RestResource.LIMIT, Integer.toString(nbElementsPerPageMax)).run();
 			extractCounters(currentResponse);
 		}
 		currentOffset++;

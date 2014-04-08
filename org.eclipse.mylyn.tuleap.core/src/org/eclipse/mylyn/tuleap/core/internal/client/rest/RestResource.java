@@ -103,6 +103,16 @@ public class RestResource {
 	public static final String LIMIT = "limit"; //$NON-NLS-1$
 
 	/**
+	 * Default value for Query parameter used to transmit the pagination limit.
+	 */
+	public static final String LIMIT_DEFAULT = "50"; //$NON-NLS-1$
+
+	/**
+	 * Query parameter used to transmit the offset.
+	 */
+	public static final String OFFSET = "offset"; //$NON-NLS-1$
+
+	/**
 	 * Separator used for toString().
 	 */
 	private static final String SEPARATOR = ", "; //$NON-NLS-1$

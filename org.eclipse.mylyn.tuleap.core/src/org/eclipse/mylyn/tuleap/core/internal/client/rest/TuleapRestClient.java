@@ -299,8 +299,8 @@ public class TuleapRestClient implements IAuthenticator {
 					.valueOf(fileId)));
 		}
 		RestResource fileResource = restResourceFactory.artifactFile(fileId).withAuthenticator(this);
-		ServerResponse response = fileResource.get().withQueryParameter("offset", Integer.toString(offset)) //$NON-NLS-1$
-				.withQueryParameter("limit", Integer.toString(limit)) //$NON-NLS-1$
+		ServerResponse response = fileResource.get().withQueryParameter(RestResource.OFFSET,
+				Integer.toString(offset)).withQueryParameter(RestResource.LIMIT, Integer.toString(limit))
 				.checkedRun();
 		TuleapFile file = gson.fromJson(response.getBody(), TuleapFile.class);
 		if (file == null || file.getData() == null) {
