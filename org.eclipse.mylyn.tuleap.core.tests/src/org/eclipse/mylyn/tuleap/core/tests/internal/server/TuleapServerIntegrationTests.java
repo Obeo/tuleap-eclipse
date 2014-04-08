@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -12,7 +12,6 @@ package org.eclipse.mylyn.tuleap.core.tests.internal.server;
 
 import com.google.gson.Gson;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
@@ -20,22 +19,24 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
+import org.eclipse.mylyn.tuleap.core.internal.TuleapCoreActivator;
 import org.eclipse.mylyn.tuleap.core.internal.client.rest.RestResourceFactory;
 import org.eclipse.mylyn.tuleap.core.internal.client.rest.TuleapRestClient;
 import org.eclipse.mylyn.tuleap.core.internal.client.rest.TuleapRestConnector;
 import org.eclipse.mylyn.tuleap.core.internal.parser.TuleapGsonProvider;
 import org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreMessages;
 import org.eclipse.mylyn.tuleap.core.tests.internal.AbstractTuleapTests;
 import org.eclipse.mylyn.tuleap.core.tests.internal.TestLogger;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  * This class will contain integration tests that have to be run against a valid Tuleap REST-based server.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class TuleapServerIntegrationTests extends AbstractTuleapTests {
@@ -56,13 +57,9 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 		RestResourceFactory restResourceFactory = new RestResourceFactory("v3.14", tuleapRestConnector, gson,
 				new TestLogger());
 		TuleapRestClient tuleapServer = new TuleapRestClient(restResourceFactory, gson, this.repository);
-		try {
-			IStatus connectionStatus = tuleapServer.validateConnection(new NullProgressMonitor());
-			assertEquals(IStatus.OK, connectionStatus.getSeverity());
-			assertEquals(0, logger.getStatus().size());
-		} catch (CoreException e) {
-			fail(e.getMessage());
-		}
+		IStatus connectionStatus = tuleapServer.validateConnection(new NullProgressMonitor());
+		assertEquals(IStatus.OK, connectionStatus.getSeverity());
+		assertEquals(0, logger.getStatus().size());
 	}
 
 	/**
@@ -78,18 +75,15 @@ public class TuleapServerIntegrationTests extends AbstractTuleapTests {
 		RestResourceFactory restResourceFactory = new RestResourceFactory("v3.14", tuleapRestConnector, gson,
 				new TestLogger());
 		TuleapRestClient tuleapServer = new TuleapRestClient(restResourceFactory, gson, this.repository);
-		try {
-			tuleapServer.validateConnection(new NullProgressMonitor());
-			fail("A CoreException should have been thrown"); //$NON-NLS-1$
-		} catch (CoreException e) {
-			assertEquals(IStatus.ERROR, e.getStatus().getSeverity());
-			assertEquals("Error 401: Unauthorized", e.getMessage()); //$NON-NLS-1$ 
-		}
+		IStatus status = tuleapServer.validateConnection(new NullProgressMonitor());
+		assertEquals(IStatus.ERROR, status.getSeverity());
+		assertEquals(TuleapCoreActivator.PLUGIN_ID, status.getPlugin());
+		assertEquals(TuleapCoreMessages.getString(TuleapCoreKeys.invalidCredentials), status.getMessage());
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.tests.internal.AbstractTuleapTests#getServerUrl()
 	 */
 	@Override
