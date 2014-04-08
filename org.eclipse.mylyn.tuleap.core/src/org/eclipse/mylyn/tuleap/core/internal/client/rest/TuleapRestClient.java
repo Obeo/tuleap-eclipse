@@ -119,14 +119,19 @@ public class TuleapRestClient implements IAuthenticator {
 	 *            Used to monitor the progress
 	 * @return A status indicating if the server support a version of the API compatible with the one expected
 	 *         by the connector and if we can successfully log in and log out from the server
-	 * @throws CoreException
-	 *             In case of error during the log in or log out process
 	 */
-	public IStatus validateConnection(IProgressMonitor monitor) throws CoreException {
+	public IStatus validateConnection(IProgressMonitor monitor) {
 		if (monitor != null) {
 			monitor.beginTask(TuleapCoreMessages.getString(TuleapCoreKeys.validateConnection), 10);
 		}
-		login();
+		try {
+			login();
+			// CHECKSTYLE:OFF We have to treat all exceptions equally here
+		} catch (Exception e) {
+			// CHECKSTYLE:ON
+			return new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, TuleapCoreMessages
+					.getString(TuleapCoreKeys.invalidCredentials));
+		}
 		return Status.OK_STATUS;
 	}
 
