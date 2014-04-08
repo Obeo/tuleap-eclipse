@@ -811,7 +811,8 @@ public class TuleapRestClient implements IAuthenticator {
 	public List<TuleapElementComment> getArtifactComments(int artifactId, TuleapServer server,
 			IProgressMonitor monitor) throws CoreException {
 		RestResource r = restResourceFactory.artifactChangesets(artifactId).withAuthenticator(this);
-		RestOperation operation = r.get();
+		// Only retrieve comments, not full changes
+		RestOperation operation = r.get().withHeader("fields", "comments"); //$NON-NLS-1$//$NON-NLS-2$
 		List<TuleapElementComment> comments = Lists.newArrayList();
 		for (JsonElement e : operation.iterable()) {
 			TuleapElementComment comment = gson.fromJson(e, TuleapElementComment.class);
