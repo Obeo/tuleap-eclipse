@@ -1111,7 +1111,7 @@ public class TuleapRestClientTest {
 			expectedCal.set(Calendar.MILLISECOND, 0);
 			expectedCal.set(Calendar.SECOND, 0);
 			expectedCal.set(Calendar.MINUTE, 0);
-			expectedCal.set(Calendar.HOUR, 0);
+			expectedCal.set(Calendar.HOUR_OF_DAY, 0);
 			checkDatesEqual(expectedCal.getTime(), actual.getEndDate());
 		} else {
 			assertNull(actual.getEndDate());
@@ -1126,7 +1126,7 @@ public class TuleapRestClientTest {
 			expectedCal.set(Calendar.MILLISECOND, 0);
 			expectedCal.set(Calendar.SECOND, 0);
 			expectedCal.set(Calendar.MINUTE, 0);
-			expectedCal.set(Calendar.HOUR, 0);
+			expectedCal.set(Calendar.HOUR_OF_DAY, 0);
 			checkDatesEqual(expectedCal.getTime(), actual.getLastModifiedDate());
 		} else {
 			assertNull(actual.getEndDate());
@@ -1139,7 +1139,7 @@ public class TuleapRestClientTest {
 			expectedCal.set(Calendar.MILLISECOND, 0);
 			expectedCal.set(Calendar.SECOND, 0);
 			expectedCal.set(Calendar.MINUTE, 0);
-			expectedCal.set(Calendar.HOUR, 0);
+			expectedCal.set(Calendar.HOUR_OF_DAY, 0);
 			checkDatesEqual(expectedCal.getTime(), actual.getStartDate());
 		} else {
 			assertNull(actual.getEndDate());
@@ -1154,7 +1154,7 @@ public class TuleapRestClientTest {
 			expectedCal.set(Calendar.MILLISECOND, 0);
 			expectedCal.set(Calendar.SECOND, 0);
 			expectedCal.set(Calendar.MINUTE, 0);
-			expectedCal.set(Calendar.HOUR, 0);
+			expectedCal.set(Calendar.HOUR_OF_DAY, 0);
 			checkDatesEqual(expectedCal.getTime(), actual.getSubmittedOn());
 		} else {
 			assertNull(actual.getEndDate());
@@ -1166,7 +1166,7 @@ public class TuleapRestClientTest {
 	private void checkDatesEqual(Date expected, Date actual) {
 		// CHECKSTYLE:OFF
 		assertTrue(expected == null && actual == null || expected != null && actual != null
-				&& expected.getTime() - actual.getTime() < 1000);
+				&& Math.abs(expected.getTime() - actual.getTime()) < 1000);
 		// CHECKSTYLE:ON
 	}
 
