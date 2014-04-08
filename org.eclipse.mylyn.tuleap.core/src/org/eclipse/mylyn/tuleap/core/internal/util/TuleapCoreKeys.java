@@ -353,6 +353,11 @@ public class TuleapCoreKeys extends NLS {
 	public static String ioError;
 
 	/**
+	 * Communication error, probably a loss of connection. A parameter, the error code/message.
+	 */
+	public static String communicationError;
+
+	/**
 	 * Label used for a select box entry that represents "unselected".
 	 */
 	public static String selectBoxNone;

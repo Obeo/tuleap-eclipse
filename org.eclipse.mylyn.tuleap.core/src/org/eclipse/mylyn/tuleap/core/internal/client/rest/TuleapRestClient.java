@@ -123,11 +123,8 @@ public class TuleapRestClient implements IAuthenticator {
 		}
 		try {
 			login();
-			// CHECKSTYLE:OFF We have to treat all exceptions equally here
-		} catch (Exception e) {
-			// CHECKSTYLE:ON
-			return new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, TuleapCoreMessages
-					.getString(TuleapCoreKeys.invalidCredentials));
+		} catch (CoreException e) {
+			return new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage());
 		}
 		return Status.OK_STATUS;
 	}

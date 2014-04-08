@@ -338,7 +338,8 @@ public class RestOperation {
 	 */
 	protected void checkServerError(ServerResponse response) throws CoreException {
 		if (!response.isOk()) {
-			TuleapErrorMessage message = gson.fromJson(response.getBody(), TuleapErrorMessage.class);
+			String responseBody = response.getBody();
+			TuleapErrorMessage message = gson.fromJson(responseBody, TuleapErrorMessage.class);
 			TuleapErrorPart errorPart = null;
 			TuleapDebugPart debugPart = null;
 			if (message != null) {
@@ -347,12 +348,17 @@ public class RestOperation {
 			}
 			String msg;
 			if (errorPart == null) {
-				msg = response.getStatus() + '/' + response.getBody();
+				// Server probably not contacted
+				String arg = Integer.toString(response.getStatus());
+				if (!responseBody.isEmpty()) {
+					arg += '/' + responseBody;
+				}
+				msg = TuleapCoreMessages.getString(TuleapCoreKeys.communicationError, arg);
 			} else {
 				if (debugPart != null) {
 					msg = TuleapCoreMessages.getString(TuleapCoreKeys.errorReturnedByServerWithDebug,
 							fullUrl, method.name(), Integer.valueOf(errorPart.getCode()), errorPart
-							.getMessage(), debugPart.getSource());
+									.getMessage(), debugPart.getSource());
 				} else {
 					msg = TuleapCoreMessages.getString(TuleapCoreKeys.errorReturnedByServer, fullUrl, method
 							.name(), Integer.valueOf(errorPart.getCode()), errorPart.getMessage());
