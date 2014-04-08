@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -21,7 +21,7 @@ import org.eclipse.mylyn.tuleap.core.internal.TuleapCoreActivator;
 
 /**
  * Iterable over an operation response JSON elements, that takes care of pagination if needed.
- * 
+ *
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
 public class RestOperationIterable implements Iterable<JsonElement> {
@@ -33,17 +33,20 @@ public class RestOperationIterable implements Iterable<JsonElement> {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param operation
 	 *            the REST operation to iterate over.
 	 */
 	public RestOperationIterable(RestOperation operation) {
 		this.operation = operation;
+		if (!operation.hasQueryParameter(RestResource.LIMIT)) {
+			operation.withQueryParameter(RestResource.LIMIT, RestResource.LIMIT_DEFAULT);
+		}
 	}
 
 	/**
 	 * Provides an iterator that will retrieve all the JSON elements.
-	 * 
+	 *
 	 * @return An iterator that will provide all the elements, taking care of pagination if needed.
 	 */
 	public Iterator<JsonElement> iterator() {

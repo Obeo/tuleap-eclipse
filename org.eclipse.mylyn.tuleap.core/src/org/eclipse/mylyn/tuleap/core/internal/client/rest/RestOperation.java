@@ -352,7 +352,7 @@ public class RestOperation {
 				if (debugPart != null) {
 					msg = TuleapCoreMessages.getString(TuleapCoreKeys.errorReturnedByServerWithDebug,
 							fullUrl, method.name(), Integer.valueOf(errorPart.getCode()), errorPart
-									.getMessage(), debugPart.getSource());
+							.getMessage(), debugPart.getSource());
 				} else {
 					msg = TuleapCoreMessages.getString(TuleapCoreKeys.errorReturnedByServer, fullUrl, method
 							.name(), Integer.valueOf(errorPart.getCode()), errorPart.getMessage());
@@ -412,6 +412,28 @@ public class RestOperation {
 	public RestOperation withHeaders(Map<String, String> someHeaders) {
 		this.requestHeaders.putAll(requestHeaders);
 		return this;
+	}
+
+	/**
+	 * Indicates whether the operation has the given header.
+	 *
+	 * @param key
+	 *            The key
+	 * @return <code>true</code> if and only if the given header already exists on this operation
+	 */
+	public boolean hasHeader(String key) {
+		return requestHeaders.containsKey(key);
+	}
+
+	/**
+	 * Indicates whether the operation has the given header.
+	 *
+	 * @param key
+	 *            The parameter key
+	 * @return <code>true</code> if and only if the given query parameter already exists on this operation
+	 */
+	public boolean hasQueryParameter(String key) {
+		return requestParameters.containsKey(key);
 	}
 
 	/**
