@@ -155,10 +155,10 @@ public class TuleapProjectPage extends WizardPage {
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {
 
 				public void run(IProgressMonitor monitor) throws InvocationTargetException,
-				InterruptedException {
+						InterruptedException {
 					ITuleapRepositoryConnector connector = (ITuleapRepositoryConnector)repositoryConnector;
 					final TuleapServer instanceConfiguration = connector
-							.getServer(TuleapProjectPage.this.repository.getRepositoryUrl());
+							.getServer(TuleapProjectPage.this.repository);
 					projectsList.addAll(instanceConfiguration.getAllProjects());
 				}
 			};

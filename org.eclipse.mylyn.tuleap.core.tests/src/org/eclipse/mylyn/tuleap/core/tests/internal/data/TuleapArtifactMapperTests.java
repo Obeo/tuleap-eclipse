@@ -193,7 +193,7 @@ public class TuleapArtifactMapperTests {
 				return null;
 			}
 
-			public TuleapServer getServer(String url) {
+			public TuleapServer getServer(TaskRepository repo) {
 				return tuleapServer;
 			}
 

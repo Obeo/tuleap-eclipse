@@ -156,7 +156,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 				connectorKind);
 		if (!(connector instanceof TuleapRepositoryConnector)) {
 			TuleapTasksUIPlugin
-			.log(TuleapUIMessages.getString(TuleapUIKeys.invalidRepositoryConnector), true);
+					.log(TuleapUIMessages.getString(TuleapUIKeys.invalidRepositoryConnector), true);
 			return;
 		}
 
@@ -172,8 +172,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 
 		if (this.trackerId != -1 && this.projectId != -1) {
 			final TuleapRepositoryConnector repositoryConnector = (TuleapRepositoryConnector)connector;
-			TuleapServer repositoryConfiguration = repositoryConnector.getServer(this.getTaskRepository()
-					.getRepositoryUrl());
+			TuleapServer repositoryConfiguration = repositoryConnector.getServer(this.getTaskRepository());
 			tuleapTracker = repositoryConfiguration.getTracker(this.trackerId);
 
 			Group group = new Group(composite, SWT.NONE);

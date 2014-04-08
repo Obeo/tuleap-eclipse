@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -19,31 +19,31 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapTracker;
 
 /**
  * This interface represents a Tuleap repository connector.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
 public interface ITuleapRepositoryConnector {
 	/**
 	 * Returns the Tuleap client manager.
-	 * 
+	 *
 	 * @return The Tuleap client manager.
 	 */
 	TuleapClientManager getClientManager();
 
 	/**
-	 * Returns the Tuleap server.
-	 * 
-	 * @param repositoryUrl
-	 *            the URL of the repository
+	 * Returns the Tuleap server configuration for the given repository.
+	 *
+	 * @param taskRepository
+	 *            the repository
 	 * @return The Tuleap server.
 	 */
-	TuleapServer getServer(String repositoryUrl);
+	TuleapServer getServer(TaskRepository taskRepository);
 
 	/**
 	 * Returns a refreshed version of the given tracker. This operation will communicate with the server. The
 	 * server will be modified to contain the refreshed version of the tracker.
-	 * 
+	 *
 	 * @param taskRepository
 	 *            the Mylyn task repository
 	 * @param tracker

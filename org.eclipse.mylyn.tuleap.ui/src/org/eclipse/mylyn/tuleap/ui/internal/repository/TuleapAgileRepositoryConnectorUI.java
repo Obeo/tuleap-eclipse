@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -36,7 +36,7 @@ import org.tuleap.mylyn.task.agile.ui.editors.ITaskEditorPageFactoryConstants;
 
 /**
  * Agile repository connector UI for Tuleap, which is exposed as an OSGI service.
- * 
+ *
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
 public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryConnectorUI {
@@ -47,7 +47,7 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 	 * The supported connector kind returned is the constant
 	 * {@code TuleapAgileRepositoryConnector.TULEAP_CONNECTOR_KIND}.
 	 * </p>
-	 * 
+	 *
 	 * @see org.tuleap.mylyn.task.agile.ui.AbstractAgileRepositoryConnectorUI#getConnectorKind()
 	 */
 	@Override
@@ -57,7 +57,7 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.tuleap.mylyn.task.agile.ui.AbstractAgileRepositoryConnectorUI#getNewMilestoneMapping(org.eclipse.mylyn.tasks.core.data.TaskData,
 	 *      java.lang.String, org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      org.eclipse.core.runtime.IProgressMonitor)
@@ -70,8 +70,8 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				connectorKind);
 		if (connector instanceof TuleapRepositoryConnector) {
-			TuleapRepositoryConnector tuleapRepositoryConnector = (TuleapRepositoryConnector)connector;
-			TuleapServer server = tuleapRepositoryConnector.getServer(taskRepository.getRepositoryUrl());
+			TuleapRepositoryConnector tuleapConnector = (TuleapRepositoryConnector)connector;
+			TuleapServer server = tuleapConnector.getServer(taskRepository);
 
 			int projectId = TuleapTaskId.forName(planningTaskData.getTaskId()).getProjectId();
 			TuleapProject project = server.getProject(projectId);
@@ -97,7 +97,7 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.tuleap.mylyn.task.agile.ui.AbstractAgileRepositoryConnectorUI#getConflictingIds(java.lang.String,
 	 *      org.eclipse.mylyn.tasks.core.ITask, org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
@@ -117,7 +117,7 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.tuleap.mylyn.task.agile.ui.AbstractAgileRepositoryConnectorUI#hasCardwall(org.eclipse.mylyn.tasks.core.ITask,
 	 *      org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
@@ -153,7 +153,7 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.tuleap.mylyn.task.agile.ui.AbstractAgileRepositoryConnectorUI#hasPlanning(org.eclipse.mylyn.tasks.core.ITask,
 	 *      org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
@@ -169,7 +169,7 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 					connectorKind);
 			if (connector instanceof TuleapRepositoryConnector) {
 				TuleapRepositoryConnector tuleapRepositoryConnector = (TuleapRepositoryConnector)connector;
-				TuleapServer server = tuleapRepositoryConnector.getServer(repository.getRepositoryUrl());
+				TuleapServer server = tuleapRepositoryConnector.getServer(repository);
 				int projectId = taskId.getProjectId();
 				TuleapProject project = server.getProject(projectId);
 				if (project.isMilestoneTracker(taskId.getTrackerId())) {
@@ -183,7 +183,7 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.tuleap.mylyn.task.agile.ui.AbstractAgileRepositoryConnectorUI#mustCreateToolbarActions(org.eclipse.mylyn.tasks.core.ITask,
 	 *      org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */

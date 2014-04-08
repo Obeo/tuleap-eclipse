@@ -163,7 +163,7 @@ public class MilestoneTaskDataConverterTest {
 
 		connector = new TuleapRepositoryConnector() {
 			@Override
-			public TuleapServer getServer(String pRepositoryUrl) {
+			public TuleapServer getServer(TaskRepository repo) {
 				return server;
 			}
 

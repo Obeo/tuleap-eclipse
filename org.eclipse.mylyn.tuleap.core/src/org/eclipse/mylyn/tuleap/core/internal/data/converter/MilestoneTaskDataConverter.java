@@ -424,7 +424,7 @@ public class MilestoneTaskDataConverter {
 		TuleapReference trackerRef = new TuleapReference();
 		trackerRef.setId(trackerId);
 
-		TuleapTracker tracker = connector.getServer(taskRepository.getUrl()).getTracker(trackerId);
+		TuleapTracker tracker = connector.getServer(taskRepository).getTracker(trackerId);
 
 		int artifactId = taskId.getArtifactId();
 		ArtifactReference artifactRef = new ArtifactReference(artifactId, null, trackerRef);
@@ -592,7 +592,7 @@ public class MilestoneTaskDataConverter {
 			}
 			backlogItemWrapper.setParent(TuleapTaskId.forArtifact(biTaskId.getProjectId(), parentTrackerId,
 					backlogItem.getParent().getId()).toString(), Integer.toString(backlogItem.getParent()
-					.getId()));
+							.getId()));
 		}
 	}
 

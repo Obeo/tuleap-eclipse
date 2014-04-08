@@ -53,7 +53,7 @@ public class TuleapRepositoryConnectorTests extends AbstractTuleapUiTests {
 	public void testCreateArtifact() {
 		try {
 			this.connector.updateRepositoryConfiguration(this.repository, new NullProgressMonitor());
-			TuleapServer server = this.connector.getServer(this.repository.getRepositoryUrl());
+			TuleapServer server = this.connector.getServer(this.repository);
 			TuleapProject project = server.getProject(this.fixture.getProjectId());
 			TuleapTracker tracker = project.getTracker(this.fixture.getBugTrackerId());
 			assertEquals("Bugs", tracker.getLabel());

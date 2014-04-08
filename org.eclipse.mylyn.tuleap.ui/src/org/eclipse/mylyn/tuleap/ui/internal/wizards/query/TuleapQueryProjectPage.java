@@ -155,7 +155,7 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 
 		reportButton = new Button(composite, SWT.RADIO);
 		reportButton
-				.setText(TuleapUIMessages.getString(TuleapUIKeys.tuleapQueryProjectPageReportButtonLabel));
+		.setText(TuleapUIMessages.getString(TuleapUIKeys.tuleapQueryProjectPageReportButtonLabel));
 		reportButton.setSelection(true);
 
 		reportButton.addSelectionListener(new SelectionListener() {
@@ -215,7 +215,7 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 	 * @return the server configuration.
 	 */
 	private TuleapServer getServerConfiguration() {
-		return ((ITuleapRepositoryConnector)getConnector()).getServer(getTaskRepository().getRepositoryUrl());
+		return ((ITuleapRepositoryConnector)getConnector()).getServer(getTaskRepository());
 	}
 
 	/**
