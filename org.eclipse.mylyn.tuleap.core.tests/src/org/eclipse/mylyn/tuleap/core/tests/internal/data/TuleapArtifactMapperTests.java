@@ -15,7 +15,9 @@ import com.google.common.collect.Lists;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -857,6 +859,12 @@ public class TuleapArtifactMapperTests {
 		String semanticContributor = "0";
 		String status = "2";
 		long date = 123456789000L;
+		Calendar expected = GregorianCalendar.getInstance();
+		expected.setTimeInMillis(date);
+		expected.set(Calendar.MILLISECOND, 0);
+		expected.set(Calendar.SECOND, 0);
+		expected.set(Calendar.MINUTE, 0);
+		expected.set(Calendar.HOUR_OF_DAY, 0);
 		String floatValue = "3.14157";
 		String integerValue = "42";
 		List<String> multiSelectBox = Lists.newArrayList("0", "2");
@@ -900,7 +908,7 @@ public class TuleapArtifactMapperTests {
 		assertThat(fieldValues.get(3), instanceOf(LiteralFieldValue.class));
 		try {
 			assertThat(DateIso8601Adapter.parseIso8601Date(((LiteralFieldValue)fieldValues.get(3))
-					.getFieldValue()), is(new Date(date)));
+					.getFieldValue()), is(expected.getTime()));
 		} catch (ParseException e) {
 			fail();
 		}

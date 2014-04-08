@@ -59,18 +59,18 @@ import static org.junit.Assert.assertNotNull;
 public class TuleapRestClientTest {
 
 	public static final String[] READ_CREATE = {AbstractTuleapFormElement.PERMISSION_READ,
-			AbstractTuleapFormElement.PERMISSION_SUBMIT, };
+		AbstractTuleapFormElement.PERMISSION_SUBMIT, };
 
 	public static final String[] READ_UPDATE = {AbstractTuleapFormElement.PERMISSION_READ,
-			AbstractTuleapFormElement.PERMISSION_UPDATE, };
+		AbstractTuleapFormElement.PERMISSION_UPDATE, };
 
 	public static final String[] READ_ONLY = {AbstractTuleapFormElement.PERMISSION_READ };
 
 	public static final String[] READ_CREATE_UPDATE = {AbstractTuleapFormElement.PERMISSION_READ,
-			AbstractTuleapFormElement.PERMISSION_SUBMIT, AbstractTuleapFormElement.PERMISSION_UPDATE, };
+		AbstractTuleapFormElement.PERMISSION_SUBMIT, AbstractTuleapFormElement.PERMISSION_UPDATE, };
 
 	public static final String[] CREATE_UPDATE = {AbstractTuleapFormElement.PERMISSION_SUBMIT,
-			AbstractTuleapFormElement.PERMISSION_UPDATE, };
+		AbstractTuleapFormElement.PERMISSION_UPDATE, };
 
 	public static final String[] CREATE_ONLY = {AbstractTuleapFormElement.PERMISSION_SUBMIT, };
 
