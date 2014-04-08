@@ -13,6 +13,7 @@ package org.eclipse.mylyn.tuleap.core.tests.internal.parser;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -34,43 +35,54 @@ public class DateIso8601AdapterTest {
 	private DateIso8601Adapter adapter;
 
 	@Test
-	public void testDeserializedateWithMilli() {
+	public void testParseTimestampWithMilli() {
 		JsonPrimitive p = new JsonPrimitive("2013-12-31T09:14:15.000+00:00");
 		Calendar c = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
 		c.set(2013, Calendar.DECEMBER, 31, 9, 14, 15);
 		c.set(Calendar.MILLISECOND, 0);
-		Date parsedDate = adapter.deserialize(p, null, null);
+		Date parsedDate = adapter.deserialize(p, Date.class, null);
 		assertEquals(c.getTime(), parsedDate);
 	}
 
 	@Test
-	public void testDeserializedateWithoutMilli() {
+	public void testParseTimestampWithoutMilli() {
 		JsonPrimitive p = new JsonPrimitive("2013-12-31T09:14:15+00:00");
 		Calendar c = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
 		c.set(2013, Calendar.DECEMBER, 31, 9, 14, 15);
 		c.set(Calendar.MILLISECOND, 0);
-		Date parsedDate = adapter.deserialize(p, null, null);
+		Date parsedDate = adapter.deserialize(p, Date.class, null);
 		assertEquals(c.getTime(), parsedDate);
 	}
 
 	@Test
-	public void testDeserializedateWithMilliWithTimezone() {
+	public void testParseTimestampWithMilliWithTimezone() {
 		JsonPrimitive p = new JsonPrimitive("2013-12-31T09:14:15.000+05:00");
 		Calendar c = new GregorianCalendar(TimeZone.getTimeZone("GMT+5:00"));
 		c.set(2013, Calendar.DECEMBER, 31, 9, 14, 15);
 		c.set(Calendar.MILLISECOND, 0);
-		Date parsedDate = adapter.deserialize(p, null, null);
+		Date parsedDate = adapter.deserialize(p, Date.class, null);
 		assertEquals(c.getTime(), parsedDate);
 	}
 
 	@Test
-	public void testDeserializedateWithoutMilliWithTimezone() {
+	public void testParseTimestampWithoutMilliWithTimezone() {
 		JsonPrimitive p = new JsonPrimitive("2013-12-31T09:14:15-05:00");
 		Calendar c = new GregorianCalendar(TimeZone.getTimeZone("GMT-5:00"));
 		c.set(2013, Calendar.DECEMBER, 31, 9, 14, 15);
 		c.set(Calendar.MILLISECOND, 0);
-		Date parsedDate = adapter.deserialize(p, null, null);
+		Date parsedDate = adapter.deserialize(p, Date.class, null);
 		assertEquals(c.getTime(), parsedDate);
+	}
+
+	@Test
+	public void testParseDateNoTimestamp() throws ParseException {
+		JsonPrimitive json = new JsonPrimitive("2014-02-28");
+		Date date = adapter.deserialize(json, Date.class, null);
+		Calendar c = GregorianCalendar.getInstance();
+		c.setTime(date);
+		assertEquals(2014, c.get(Calendar.YEAR));
+		assertEquals(Calendar.FEBRUARY, c.get(Calendar.MONTH));
+		assertEquals(28, c.get(Calendar.DATE));
 	}
 
 	@Test
@@ -83,7 +95,7 @@ public class DateIso8601AdapterTest {
 			c.set(Calendar.MILLISECOND, 0);
 			JsonElement serializedDate = adapter.serialize(c.getTime(), null, null);
 			// 9:14:15 GMT <=> 11:14:15 GMT+2
-			assertEquals("\"2013-12-31T09:14:15+00:00\"", serializedDate.toString());
+			assertEquals("\"2013-12-31\"", serializedDate.toString());
 		} finally {
 			System.setProperty("user.timezone", oldTZ);
 		}
@@ -99,7 +111,7 @@ public class DateIso8601AdapterTest {
 			c.set(Calendar.MILLISECOND, 0);
 			JsonElement serializedDate = adapter.serialize(c.getTime(), null, null);
 			// 9:14:15 GMT+8 <=> 3:14:15 GMT+2
-			assertEquals("\"2013-12-31T01:14:15+00:00\"", serializedDate.toString());
+			assertEquals("\"2013-12-31\"", serializedDate.toString());
 		} finally {
 			System.setProperty("user.timezone", oldTZ);
 		}

@@ -17,8 +17,10 @@ import com.google.gson.GsonBuilder;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 
@@ -1102,17 +1104,62 @@ public class TuleapRestClientTest {
 		assertEquals(expected.getCapacity(), actual.getCapacity());
 		assertEquals(expected.getCardwallUri(), actual.getCardwallUri());
 		assertEquals(expected.getContentUri(), actual.getContentUri());
-		checkDatesEqual(expected.getEndDate(), actual.getEndDate());
+
+		Calendar expectedCal = GregorianCalendar.getInstance();
+		if (expected.getEndDate() != null) {
+			expectedCal.setTime(expected.getEndDate());
+			expectedCal.set(Calendar.MILLISECOND, 0);
+			expectedCal.set(Calendar.SECOND, 0);
+			expectedCal.set(Calendar.MINUTE, 0);
+			expectedCal.set(Calendar.HOUR, 0);
+			checkDatesEqual(expectedCal.getTime(), actual.getEndDate());
+		} else {
+			assertNull(actual.getEndDate());
+		}
+
 		assertEquals(expected.getHtmlUrl(), actual.getHtmlUrl());
 		assertEquals(expected.getId(), actual.getId());
 		assertEquals(expected.getLabel(), actual.getLabel());
-		checkDatesEqual(expected.getLastModifiedDate(), actual.getLastModifiedDate());
+
+		if (expected.getLastModifiedDate() != null) {
+			expectedCal.setTime(expected.getLastModifiedDate());
+			expectedCal.set(Calendar.MILLISECOND, 0);
+			expectedCal.set(Calendar.SECOND, 0);
+			expectedCal.set(Calendar.MINUTE, 0);
+			expectedCal.set(Calendar.HOUR, 0);
+			checkDatesEqual(expectedCal.getTime(), actual.getLastModifiedDate());
+		} else {
+			assertNull(actual.getEndDate());
+		}
+
 		assertEquals(expected.getProject().getId(), actual.getProject().getId());
-		checkDatesEqual(expected.getStartDate(), actual.getStartDate());
+
+		if (expected.getStartDate() != null) {
+			expectedCal.setTime(expected.getStartDate());
+			expectedCal.set(Calendar.MILLISECOND, 0);
+			expectedCal.set(Calendar.SECOND, 0);
+			expectedCal.set(Calendar.MINUTE, 0);
+			expectedCal.set(Calendar.HOUR, 0);
+			checkDatesEqual(expectedCal.getTime(), actual.getStartDate());
+		} else {
+			assertNull(actual.getEndDate());
+		}
+
 		assertEquals(expected.getStatusValue(), actual.getStatusValue());
 		assertEquals(expected.getSubMilestonesUri(), actual.getSubMilestonesUri());
 		assertEquals(expected.getSubmittedBy(), actual.getSubmittedBy());
-		checkDatesEqual(expected.getSubmittedOn(), actual.getSubmittedOn());
+
+		if (expected.getSubmittedOn() != null) {
+			expectedCal.setTime(expected.getSubmittedOn());
+			expectedCal.set(Calendar.MILLISECOND, 0);
+			expectedCal.set(Calendar.SECOND, 0);
+			expectedCal.set(Calendar.MINUTE, 0);
+			expectedCal.set(Calendar.HOUR, 0);
+			checkDatesEqual(expectedCal.getTime(), actual.getSubmittedOn());
+		} else {
+			assertNull(actual.getEndDate());
+		}
+
 		assertEquals(expected.getUri(), actual.getUri());
 	}
 

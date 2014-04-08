@@ -35,25 +35,30 @@ import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreMessages;
 public class DateIso8601Adapter implements JsonDeserializer<Date>, JsonSerializer<Date> {
 
 	/**
+	 * Date format ISO-8601 without time.
+	 */
+	private static final String DATE_FORMAT = "yyyy-MM-dd"; //$NON-NLS-1$
+
+	/**
 	 * Date format ISO-8601 when using a timezone with a sign and 4 digits separated by a colon.
 	 */
-	private static final String DATE_FORMAT_WITH_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ssZ"; //$NON-NLS-1$
+	private static final String TIMESTAMP_FORMAT_WITH_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ssZ"; //$NON-NLS-1$
 
 	/**
 	 * Date format ISO-8601 with milliseconds when using a timezone with a sign and 4 digits separated by a
 	 * colon.
 	 */
-	private static final String DATE_FORMAT_MILLIS_WITH_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"; //$NON-NLS-1$
+	private static final String TIMESTAMP_FORMAT_MILLIS_WITH_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"; //$NON-NLS-1$
 
 	/**
 	 * Date format ISO-8601 with milliseconds when using the default timezone.
 	 */
-	private static final String DATE_FORMAT_MILLIS_WITH_DEFAULT_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"; //$NON-NLS-1$
+	private static final String TIMESTAMP_FORMAT_MILLIS_WITH_DEFAULT_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"; //$NON-NLS-1$
 
 	/**
 	 * Date format ISO-8601 when using the default timezone.
 	 */
-	private static final String DATE_FORMAT_WITH_DEFAULT_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ss'Z'"; //$NON-NLS-1$
+	private static final String TIMESTAMP_FORMAT_WITH_DEFAULT_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ss'Z'"; //$NON-NLS-1$
 
 	/**
 	 * {@inheritDoc}
@@ -73,7 +78,8 @@ public class DateIso8601Adapter implements JsonDeserializer<Date>, JsonSerialize
 	 * @return The serialized date. Must not be null.
 	 */
 	public static String toIso8601String(Date date) {
-		return new SimpleDateFormat(DATE_FORMAT_WITH_TIMEZONE).format(date).replaceFirst("(\\d\\d)$", ":$1"); //$NON-NLS-1$//$NON-NLS-2$
+		// Tuleap updatable dates are actually dates without timestamps
+		return new SimpleDateFormat(DATE_FORMAT).format(date);
 	}
 
 	/**
@@ -96,29 +102,45 @@ public class DateIso8601Adapter implements JsonDeserializer<Date>, JsonSerialize
 	}
 
 	/**
-	 * Parses a date in ISO 8601 format, without Joda time...
+	 * Parses a date in ISO 8601 format, without Joda time or JDK7...
 	 *
 	 * @param dateIso8601
 	 *            Date to parse.
+	 * @return The parsed date.
 	 * @throws ParseException
 	 *             if the given date is not in the right format.
-	 * @return The parsed date.
 	 */
 	public static Date parseIso8601Date(String dateIso8601) throws ParseException {
+		if (dateIso8601.indexOf('T') > 0) {
+			return parseTimestamp(dateIso8601);
+		}
+		return new SimpleDateFormat(DATE_FORMAT).parse(dateIso8601);
+	}
+
+	/**
+	 * Parses a timestamp in ISO 8601 format, without Joda time or JDK7...
+	 *
+	 * @param dateIso8601
+	 *            Timestamp to parse.
+	 * @return The parsed date.
+	 * @throws ParseException
+	 *             if the given date is not in the right format.
+	 */
+	private static Date parseTimestamp(String dateIso8601) throws ParseException {
 		SimpleDateFormat format;
 		if (dateIso8601.endsWith("Z")) { //$NON-NLS-1$
 			if (dateIso8601.indexOf('.') > 0) {
-				format = new SimpleDateFormat(DATE_FORMAT_MILLIS_WITH_DEFAULT_TIMEZONE);
+				format = new SimpleDateFormat(TIMESTAMP_FORMAT_MILLIS_WITH_DEFAULT_TIMEZONE);
 			} else {
-				format = new SimpleDateFormat(DATE_FORMAT_WITH_DEFAULT_TIMEZONE);
+				format = new SimpleDateFormat(TIMESTAMP_FORMAT_WITH_DEFAULT_TIMEZONE);
 			}
 			format.setTimeZone(TimeZone.getTimeZone("UTC")); //$NON-NLS-1$
 			return format.parse(dateIso8601);
 		}
 		if (dateIso8601.indexOf('.') > 0) {
-			format = new SimpleDateFormat(DATE_FORMAT_MILLIS_WITH_TIMEZONE);
+			format = new SimpleDateFormat(TIMESTAMP_FORMAT_MILLIS_WITH_TIMEZONE);
 		} else {
-			format = new SimpleDateFormat(DATE_FORMAT_WITH_TIMEZONE);
+			format = new SimpleDateFormat(TIMESTAMP_FORMAT_WITH_TIMEZONE);
 		}
 		return format.parse(dateIso8601.replaceFirst(":(\\d\\d)$", "$1")); //$NON-NLS-1$//$NON-NLS-2$
 	}

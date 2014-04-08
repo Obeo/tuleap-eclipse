@@ -75,9 +75,8 @@ public class QueryCriterionTest {
 		TuleapQueryCriterion<Date[]> criterion = new TuleapQueryCriterion<Date[]>();
 		criterion.setOperator(IQueryCriterion.OP_BETWEEN);
 		criterion.setValue(new Date[] {min, max });
-		assertEquals(
-				"{\"operator\":\"between\",\"value\":[\"2010-12-25T00:00:00+00:00\",\"2014-03-31T00:00:00+00:00\"]}",
-				gson.toJson(criterion));
+		assertEquals("{\"operator\":\"between\",\"value\":[\"2010-12-25\",\"2014-03-31\"]}", gson
+				.toJson(criterion));
 	}
 
 	@Test
@@ -85,7 +84,7 @@ public class QueryCriterionTest {
 		TuleapQueryCriterion<Date[]> criterion = new TuleapQueryCriterion<Date[]>();
 		criterion.setOperator(IQueryCriterion.OP_LT);
 		criterion.setValue(new Date[] {min });
-		assertEquals("{\"operator\":\"<\",\"value\":[\"2010-12-25T00:00:00+00:00\"]}", gson.toJson(criterion));
+		assertEquals("{\"operator\":\"<\",\"value\":[\"2010-12-25\"]}", gson.toJson(criterion));
 	}
 
 	@Test
@@ -93,7 +92,7 @@ public class QueryCriterionTest {
 		TuleapQueryCriterion<Date[]> criterion = new TuleapQueryCriterion<Date[]>();
 		criterion.setOperator(IQueryCriterion.OP_GT);
 		criterion.setValue(new Date[] {min });
-		assertEquals("{\"operator\":\">\",\"value\":[\"2010-12-25T00:00:00+00:00\"]}", gson.toJson(criterion));
+		assertEquals("{\"operator\":\">\",\"value\":[\"2010-12-25\"]}", gson.toJson(criterion));
 	}
 
 	@Test
@@ -101,7 +100,7 @@ public class QueryCriterionTest {
 		TuleapQueryCriterion<Date[]> criterion = new TuleapQueryCriterion<Date[]>();
 		criterion.setOperator(IQueryCriterion.OP_EQ);
 		criterion.setValue(new Date[] {min });
-		assertEquals("{\"operator\":\"=\",\"value\":[\"2010-12-25T00:00:00+00:00\"]}", gson.toJson(criterion));
+		assertEquals("{\"operator\":\"=\",\"value\":[\"2010-12-25\"]}", gson.toJson(criterion));
 	}
 
 	@Test
