@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Tasktop - initial API and implementation
  *     Obeo - Improvement for Junit 4
@@ -48,7 +48,7 @@ import static org.junit.Assert.fail;
 
 /**
  * Common superclass of all integration tests.
- * 
+ *
  * @author Mik Kersten
  * @author Rob Elves
  * @author Nathan Hapke
@@ -73,7 +73,7 @@ public abstract class AbstractTuleapUiTests {
 
 	/**
 	 * The constructor.
-	 * 
+	 *
 	 * @param fixture
 	 *            The current fixture to use
 	 */
@@ -90,7 +90,7 @@ public abstract class AbstractTuleapUiTests {
 
 	/**
 	 * Returns the {@link TaskDataModel} for the given task.
-	 * 
+	 *
 	 * @param task
 	 *            The task
 	 * @return The TaskDataModel for the given task
@@ -105,7 +105,7 @@ public abstract class AbstractTuleapUiTests {
 
 	/**
 	 * Creates a new bug in the tracker with the Tuleap bug tracker id retrieved from the fixture.
-	 * 
+	 *
 	 * @return The bug created and synchronized
 	 */
 	protected TaskData createBug() {
@@ -115,7 +115,7 @@ public abstract class AbstractTuleapUiTests {
 				.getRepositoryUrl(), "");
 		try {
 			this.connector.updateRepositoryConfiguration(repository, new NullProgressMonitor());
-			TuleapServer server = this.connector.getServer(repository.getRepositoryUrl());
+			TuleapServer server = this.connector.getServer(repository);
 
 			TuleapProject project = server.getProject(this.fixture.getProjectId());
 			TuleapTracker tracker = project.getTracker(this.fixture.getBugTrackerId());
@@ -139,7 +139,7 @@ public abstract class AbstractTuleapUiTests {
 
 	/**
 	 * Returns the task data working copy for the given task.
-	 * 
+	 *
 	 * @param task
 	 *            The task
 	 * @return The task data working copy
@@ -154,7 +154,7 @@ public abstract class AbstractTuleapUiTests {
 
 	/**
 	 * Submit the given task data model
-	 * 
+	 *
 	 * @param model
 	 *            The model to submit
 	 */
@@ -172,7 +172,7 @@ public abstract class AbstractTuleapUiTests {
 
 	/**
 	 * Synchronize the given tasks and check that they all have the given state.
-	 * 
+	 *
 	 * @param tasks
 	 *            The tasks to synchronize
 	 * @param state
@@ -188,7 +188,7 @@ public abstract class AbstractTuleapUiTests {
 
 	/**
 	 * Generate a local task and download it.
-	 * 
+	 *
 	 * @param id
 	 *            The identifier of the task
 	 * @return The newly downloaded task

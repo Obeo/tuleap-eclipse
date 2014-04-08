@@ -129,7 +129,7 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 	private TuleapFileUpload getFileUploadField(TaskRepository repository, ITask task) {
 		TuleapFileUpload result = null;
 		TuleapTaskId taskDataId = TuleapTaskId.forName(task.getTaskId());
-		TuleapServer server = this.connector.getServer(repository.getRepositoryUrl());
+		TuleapServer server = this.connector.getServer(repository);
 		if (server == null) {
 			// Local config inexistent or incompatible with new version
 			// and task repository not refreshed
@@ -183,7 +183,7 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 	@Override
 	public void postContent(TaskRepository repository, ITask task, AbstractTaskAttachmentSource source,
 			String comment, TaskAttribute attachmentAttribute, IProgressMonitor monitor) throws CoreException {
-		TuleapServer server = this.connector.getServer(repository.getRepositoryUrl());
+		TuleapServer server = this.connector.getServer(repository);
 		if (server == null) {
 			// Local config inexistent or incompatible with new version
 			// and task repository not refreshed

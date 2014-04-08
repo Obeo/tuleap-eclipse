@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -317,7 +318,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		TuleapRestClient client = this.getClientManager().getRestClient(taskRepository);
 		int trackerId = Integer.valueOf(query.getAttribute(ITuleapQueryConstants.QUERY_TRACKER_ID))
 				.intValue();
-		TuleapServer server = this.getServer(taskRepository.getRepositoryUrl());
+		TuleapServer server = this.getServer(taskRepository);
 		TuleapTracker tracker = server.getTracker(trackerId);
 		try {
 			tracker = this.refreshTracker(taskRepository, tracker, monitor);
@@ -452,7 +453,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		}
 
 		// Update the completion date of the task from the status of the task data
-		TuleapServer server = this.getServer(taskRepository.getRepositoryUrl());
+		TuleapServer server = this.getServer(taskRepository);
 
 		TuleapTaskId taskDataId = TuleapTaskId.forName(taskData.getTaskId());
 		TuleapProject project = server.getProject(taskDataId.getProjectId());
@@ -521,14 +522,27 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	}
 
 	/**
-	 * Returns the server matching the given url.
+	 * Returns the server configuration for the given URL.
 	 *
-	 * @param repositoryUrl
-	 *            The repository url
-	 * @return The server matching the given url, or <code>null</code> if it does not exist.
+	 * @param taskRepository
+	 *            The task repository
+	 * @return The server matching the given URL, or <code>null</code> if it does not exist.
 	 */
-	public TuleapServer getServer(String repositoryUrl) {
-		return serversByUrl.get(repositoryUrl);
+	public TuleapServer getServer(TaskRepository taskRepository) {
+		TuleapServer server = serversByUrl.get(taskRepository.getUrl());
+		if (server == null) {
+			// It may happen that if eclipse is killed or terminates abruptly, a recently created task
+			// repository is not saved in the configuration file.
+			// We try and refresh the server configuration in case this is why the server being looked for
+			// doesn't exist.
+			try {
+				updateRepositoryConfiguration(taskRepository, new NullProgressMonitor());
+				server = serversByUrl.get(taskRepository.getUrl());
+			} catch (CoreException e) {
+				TuleapCoreActivator.log(e, true);
+			}
+		}
+		return server;
 	}
 
 	/**
@@ -547,7 +561,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		refreshedTracker = client.getTracker(tracker.getIdentifier(), monitor);
 
 		if (refreshedTracker != null) {
-			TuleapServer tuleapServer = getServer(taskRepository.getRepositoryUrl());
+			TuleapServer tuleapServer = getServer(taskRepository);
 			tuleapServer.replaceTracker(project.getIdentifier(), refreshedTracker);
 		}
 		return refreshedTracker;

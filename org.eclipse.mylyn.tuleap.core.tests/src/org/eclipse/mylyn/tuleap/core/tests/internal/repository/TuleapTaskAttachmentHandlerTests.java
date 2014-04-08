@@ -121,7 +121,7 @@ public class TuleapTaskAttachmentHandlerTests {
 		this.repository = new TaskRepository("test", repositoryUrl);
 
 		AbstractWebLocation abstractWebLocation = new TaskRepositoryLocationFactory()
-		.createWebLocation(repository);
+				.createWebLocation(repository);
 		gson = TuleapGsonProvider.defaultGson();
 		ILog logger = Platform.getLog(Platform.getBundle(TuleapCoreActivator.PLUGIN_ID));
 		TuleapRestConnector tuleapRestConnector = new TuleapRestConnector(abstractWebLocation, logger);
@@ -197,7 +197,7 @@ public class TuleapTaskAttachmentHandlerTests {
 		this.tuleapServer.addProject(project);
 
 		repositoryConnector = new ITuleapRepositoryConnector() {
-			public TuleapServer getServer(String repoUrl) {
+			public TuleapServer getServer(TaskRepository repo) {
 				return TuleapTaskAttachmentHandlerTests.this.tuleapServer;
 			}
 
@@ -335,7 +335,7 @@ public class TuleapTaskAttachmentHandlerTests {
 	 */
 	@Test
 	public void testPostAttachmentWhenTheresAlreadyOne() throws CoreException, URISyntaxException,
-	IOException {
+			IOException {
 		// Change the current state of artifact to update so thyat it already has one attachment
 		artifactBeforeUpdate.addFieldValue(new AttachmentFieldValue(666, Arrays.asList(new AttachmentValue(
 				"777", "att 777", 0, 1500, "desc", "image/png", "/artifact_files/777"))));

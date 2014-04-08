@@ -141,8 +141,7 @@ public class TuleapTaskAttachmentPage extends TaskAttachmentPage {
 				.getConnectorKind());
 		if (repositoryConnector instanceof TuleapRepositoryConnector) {
 			TuleapRepositoryConnector tuleapRepositoryConnector = (TuleapRepositoryConnector)repositoryConnector;
-			TuleapServer repositoryConfiguration = tuleapRepositoryConnector.getServer(taskRepository
-					.getRepositoryUrl());
+			TuleapServer server = tuleapRepositoryConnector.getServer(taskRepository);
 
 			TaskAttribute attribute = this.getModel().getAttribute();
 			TaskData taskData = attribute.getTaskData();
@@ -153,16 +152,16 @@ public class TuleapTaskAttachmentPage extends TaskAttachmentPage {
 
 			List<String> attachmentFieldsName = new ArrayList<String>();
 
-			TuleapProject projectConfiguration = repositoryConfiguration.getProject(projectId);
-			TuleapTracker configuration = projectConfiguration.getTracker(trackerId);
-			Collection<AbstractTuleapField> fields = configuration.getFields();
-			for (AbstractTuleapField abstractTuleapField : fields) {
-				if (abstractTuleapField instanceof TuleapFileUpload) {
-					if (abstractTuleapField.getName() == null) {
-						abstractTuleapField.setName(abstractTuleapField.getLabel());
+			TuleapProject project = server.getProject(projectId);
+			TuleapTracker tracker = project.getTracker(trackerId);
+			Collection<AbstractTuleapField> fields = tracker.getFields();
+			for (AbstractTuleapField field : fields) {
+				if (field instanceof TuleapFileUpload) {
+					if (field.getName() == null) {
+						field.setName(field.getLabel());
 					}
-					attachmentFieldsName.add(abstractTuleapField.getName());
-					this.name2label.put(abstractTuleapField.getName(), abstractTuleapField.getLabel());
+					attachmentFieldsName.add(field.getName());
+					this.name2label.put(field.getName(), field.getLabel());
 				}
 			}
 			return attachmentFieldsName.toArray(new String[attachmentFieldsName.size()]);

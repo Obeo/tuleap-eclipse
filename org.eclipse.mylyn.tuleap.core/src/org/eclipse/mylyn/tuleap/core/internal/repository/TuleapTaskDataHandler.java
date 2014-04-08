@@ -79,7 +79,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 
 		TuleapTaskId taskId = mapper.getTaskId();
 
-		TuleapServer tuleapServer = this.connector.getServer(taskRepository.getRepositoryUrl());
+		TuleapServer tuleapServer = this.connector.getServer(taskRepository);
 		TuleapProject project = tuleapServer.getProject(taskId.getProjectId());
 		TuleapTracker tuleapTracker = project.getTracker(taskId.getTrackerId());
 		tuleapTracker = this.connector.refreshTracker(taskRepository, tuleapTracker, monitor);
@@ -142,7 +142,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		}
 
 		boolean isInitialized = false;
-		TuleapServer server = this.connector.getServer(repository.getRepositoryUrl());
+		TuleapServer server = this.connector.getServer(repository);
 		if (server != null) {
 			// Sets the creation date and last modification date.
 			if (initializationData instanceof TuleapTaskMapping) {
@@ -190,7 +190,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 */
 	public TaskData getTaskData(TaskRepository taskRepository, TuleapTaskId taskId, IProgressMonitor monitor)
 			throws CoreException {
-		TuleapServer server = this.connector.getServer(taskRepository.getRepositoryUrl());
+		TuleapServer server = this.connector.getServer(taskRepository);
 
 		int trackerId = taskId.getTrackerId();
 

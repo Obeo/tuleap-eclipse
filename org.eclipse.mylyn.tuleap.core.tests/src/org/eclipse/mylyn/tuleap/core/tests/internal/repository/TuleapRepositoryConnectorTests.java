@@ -194,7 +194,7 @@ public class TuleapRepositoryConnectorTests {
 
 		TuleapRepositoryConnector tuleapRepositoryConnector = new TuleapRepositoryConnector() {
 			@Override
-			public TuleapServer getServer(String repositoryUrl) {
+			public TuleapServer getServer(TaskRepository repo) {
 				return tuleapServer;
 			}
 
@@ -274,7 +274,7 @@ public class TuleapRepositoryConnectorTests {
 
 		TuleapRepositoryConnector tuleapRepositoryConnector = new TuleapRepositoryConnector() {
 			@Override
-			public TuleapServer getServer(String repositoryUrl) {
+			public TuleapServer getServer(TaskRepository repo) {
 				return tuleapServer;
 			}
 
@@ -356,7 +356,7 @@ public class TuleapRepositoryConnectorTests {
 
 		TuleapRepositoryConnector tuleapRepositoryConnector = new TuleapRepositoryConnector() {
 			@Override
-			public TuleapServer getServer(String repositoryUrl) {
+			public TuleapServer getServer(TaskRepository repo) {
 				return tuleapServer;
 			}
 		};
