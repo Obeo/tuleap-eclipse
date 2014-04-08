@@ -126,7 +126,7 @@ public class TuleapRestConnector implements IRestConnector {
 			serverResponse = new ServerResponse(code, responseBody, rHeaders);
 		} catch (IOException e) {
 			logger.log(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, TuleapCoreMessages.getString(
-					TuleapCoreKeys.ioError, method, e.getMessage())));
+					TuleapCoreKeys.ioError, method.getName() + ' ' + method.getPath(), e.getMessage())));
 			serverResponse = new ServerResponse(IO_ERROR_STATUS_CODE, "", Collections //$NON-NLS-1$
 					.<String, String> emptyMap());
 		} finally {
