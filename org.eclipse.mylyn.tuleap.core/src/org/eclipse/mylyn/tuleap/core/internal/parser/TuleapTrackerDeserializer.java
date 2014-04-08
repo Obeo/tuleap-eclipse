@@ -56,6 +56,16 @@ import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreMessages;
 public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker> {
 
 	/**
+	 * The JSON field for the item name.
+	 */
+	private static final String ITEM_NAME = "item_name"; //$NON-NLS-1$
+
+	/**
+	 * The JSON field key for the tracker description.
+	 */
+	private static final String DESCRIPTION = "description"; //$NON-NLS-1$
+
+	/**
 	 * The identifier keyword.
 	 */
 	private static final String ID = "id"; //$NON-NLS-1$
@@ -558,7 +568,13 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 		String label = this.getLabel(jsonObject);
 		String uri = jsonObject.get(URI).getAsString();
 		String itemName = null;
+		if (jsonObject.has(ITEM_NAME) && jsonObject.get(ITEM_NAME).isJsonPrimitive()) {
+			itemName = jsonObject.get(ITEM_NAME).getAsString();
+		}
 		String description = null;
+		if (jsonObject.has(DESCRIPTION) && jsonObject.get(DESCRIPTION).isJsonPrimitive()) {
+			description = jsonObject.get(DESCRIPTION).getAsString();
+		}
 
 		TuleapTracker tracker = new TuleapTracker(identifier, url, label, itemName, description, new Date());
 		tracker.setUri(uri);
