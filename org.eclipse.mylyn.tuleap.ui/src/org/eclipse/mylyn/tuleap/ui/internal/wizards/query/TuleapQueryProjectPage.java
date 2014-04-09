@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -28,8 +28,8 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapServer;
 import org.eclipse.mylyn.tuleap.core.internal.repository.ITuleapRepositoryConnector;
 import org.eclipse.mylyn.tuleap.ui.internal.TuleapTasksUIPlugin;
 import org.eclipse.mylyn.tuleap.ui.internal.util.ITuleapUIConstants;
+import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIKeys;
 import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIMessages;
-import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUiMessagesKeys;
 import org.eclipse.mylyn.tuleap.ui.internal.wizards.TuleapProjectContentProvider;
 import org.eclipse.mylyn.tuleap.ui.internal.wizards.TuleapProjectLabelProvider;
 import org.eclipse.swt.SWT;
@@ -45,7 +45,7 @@ import org.eclipse.ui.dialogs.PatternFilter;
 
 /**
  * This page will let the user select the project on which the task will be created.
- * 
+ *
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
 public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
@@ -67,19 +67,19 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 
 	/**
 	 * The constructor.
-	 * 
+	 *
 	 * @param taskRepository
 	 *            The task repository
 	 */
 	public TuleapQueryProjectPage(TaskRepository taskRepository) {
-		super(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapProjectPageName), taskRepository, null);
-		this.setTitle(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapProjectPageTitle));
-		this.setDescription(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapProjectPageDescription));
+		super(TuleapUIMessages.getString(TuleapUIKeys.tuleapProjectPageName), taskRepository, null);
+		this.setTitle(TuleapUIMessages.getString(TuleapUIKeys.tuleapProjectPageTitle));
+		this.setDescription(TuleapUIMessages.getString(TuleapUIKeys.tuleapProjectPageDescription));
 	}
 
 	/**
 	 * Returns the identifier of the project currently selected in the wizard. -1 if none has been selected.
-	 * 
+	 *
 	 * @return The identifier of the project currently selected in the wizard. -1 if none has been selected
 	 */
 	public TuleapProject getProjectSelected() {
@@ -93,7 +93,7 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
 	 */
 	@Override
@@ -104,7 +104,7 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.jface.wizard.WizardPage#getImage()
 	 */
 	@Override
@@ -114,7 +114,7 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2#createPageContent(org.eclipse.mylyn.commons.workbench.forms.SectionComposite)
 	 */
 	@Override
@@ -136,7 +136,7 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 				TuleapProject projectSelected = TuleapQueryProjectPage.this.getProjectSelected();
 				if (projectSelected == null) {
 					TuleapQueryProjectPage.this.setErrorMessage(TuleapUIMessages
-							.getString(TuleapUiMessagesKeys.tuleapProjectPageSelectAProject));
+							.getString(TuleapUIKeys.tuleapProjectPageSelectAProject));
 				} else {
 					TuleapQueryProjectPage.this.setErrorMessage(null);
 					TuleapQueryProjectPage.this.setMessage(null);
@@ -149,8 +149,8 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 		});
 
 		reportButton = new Button(composite, SWT.RADIO);
-		reportButton.setText(TuleapUIMessages
-				.getString(TuleapUiMessagesKeys.tuleapQueryProjectPageReportButtonLabel));
+		reportButton
+				.setText(TuleapUIMessages.getString(TuleapUIKeys.tuleapQueryProjectPageReportButtonLabel));
 		reportButton.setSelection(true);
 
 		reportButton.addSelectionListener(new SelectionListener() {
@@ -166,7 +166,7 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 
 		customQueryButton = new Button(composite, SWT.RADIO);
 		customQueryButton.setText(TuleapUIMessages
-				.getString(TuleapUiMessagesKeys.tuleapQueryProjectPageCustomQueryButtonLabel));
+				.getString(TuleapUIKeys.tuleapQueryProjectPageCustomQueryButtonLabel));
 
 		customQueryButton.addSelectionListener(new SelectionListener() {
 
@@ -182,7 +182,7 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2#hasRepositoryConfiguration()
 	 */
 	@Override
@@ -192,7 +192,7 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 
 	/**
 	 * Get the server configuration.
-	 * 
+	 *
 	 * @return the server configuration.
 	 */
 	private TuleapServer getServerConfiguration() {
@@ -201,7 +201,7 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2#restoreState(org.eclipse.mylyn.tasks.core.IRepositoryQuery)
 	 */
 	@Override
@@ -211,7 +211,7 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage#applyTo(org.eclipse.mylyn.tasks.core.IRepositoryQuery)
 	 */
 	@Override
@@ -223,7 +223,7 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2#doRefreshControls()
 	 */
 	@Override
@@ -246,7 +246,7 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 	/**
 	 * Returns <code>true</code> if the user wants to create a report based query, <code>false</code>
 	 * otherwise.
-	 * 
+	 *
 	 * @return <code>true</code> if the user wants to create a report based query, <code>false</code>
 	 *         otherwise.
 	 */
@@ -256,7 +256,7 @@ public class TuleapQueryProjectPage extends AbstractRepositoryQueryPage2 {
 
 	/**
 	 * Returns <code>true</code> if the user wants to create a custom query, <code>false</code> otherwise.
-	 * 
+	 *
 	 * @return <code>true</code> if the user wants to create a custom query, <code>false</code> otherwise.
 	 */
 	public boolean isCustomQuery() {

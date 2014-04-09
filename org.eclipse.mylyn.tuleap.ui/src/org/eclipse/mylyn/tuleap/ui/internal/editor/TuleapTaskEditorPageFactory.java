@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -17,14 +17,14 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants;
 import org.eclipse.mylyn.tuleap.ui.internal.TuleapTasksUIPlugin;
 import org.eclipse.mylyn.tuleap.ui.internal.util.ITuleapUIConstants;
+import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIKeys;
 import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIMessages;
-import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUiMessagesKeys;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.forms.editor.IFormPage;
 
 /**
  * The editor page factory will instantiate the editor page for Tuleap related content.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
@@ -37,7 +37,7 @@ public class TuleapTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory#canCreatePageFor(org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput)
 	 */
 	@Override
@@ -51,7 +51,7 @@ public class TuleapTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory#getPageImage()
 	 */
 	@Override
@@ -61,17 +61,17 @@ public class TuleapTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory#getPageText()
 	 */
 	@Override
 	public String getPageText() {
-		return TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapTabName);
+		return TuleapUIMessages.getString(TuleapUIKeys.tuleapTabName);
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory#createPage(org.eclipse.mylyn.tasks.ui.editors.TaskEditor)
 	 */
 	@Override
@@ -81,7 +81,7 @@ public class TuleapTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory#getPriority()
 	 */
 	@Override
@@ -91,7 +91,7 @@ public class TuleapTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory#getConflictingIds(org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput)
 	 */
 	@Override

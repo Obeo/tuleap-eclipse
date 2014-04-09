@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -37,8 +37,8 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapTrackerReport;
 import org.eclipse.mylyn.tuleap.core.internal.repository.ITuleapRepositoryConnector;
 import org.eclipse.mylyn.tuleap.ui.internal.TuleapTasksUIPlugin;
 import org.eclipse.mylyn.tuleap.ui.internal.util.ITuleapUIConstants;
+import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIKeys;
 import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIMessages;
-import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUiMessagesKeys;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -50,7 +50,7 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * The first page of the Tuleap query wizard.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
@@ -82,33 +82,32 @@ public class TuleapReportPage extends AbstractRepositoryQueryPage2 {
 
 	/**
 	 * the constructor.
-	 * 
+	 *
 	 * @param taskRepository
 	 *            The Mylyn tasks repository.
 	 * @param tuleapTracker
 	 *            The Tuleap tracker
 	 */
 	public TuleapReportPage(TaskRepository taskRepository, TuleapTracker tuleapTracker) {
-		super(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapReportPageName), taskRepository, null);
-		this.setTitle(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapReportPageTitle));
-		this.setDescription(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapReportPageDescription));
+		super(TuleapUIMessages.getString(TuleapUIKeys.tuleapReportPageName), taskRepository, null);
+		this.setTitle(TuleapUIMessages.getString(TuleapUIKeys.tuleapReportPageTitle));
+		this.setDescription(TuleapUIMessages.getString(TuleapUIKeys.tuleapReportPageDescription));
 		this.trackerId = tuleapTracker.getIdentifier();
 		this.projectId = tuleapTracker.getProject().getIdentifier();
 	}
 
 	/**
 	 * the constructor.
-	 * 
+	 *
 	 * @param taskRepository
 	 *            The Mylyn tasks repository.
 	 * @param queryToEdit
 	 *            The query that will be edited
 	 */
 	public TuleapReportPage(TaskRepository taskRepository, IRepositoryQuery queryToEdit) {
-		super(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapReportPageName), taskRepository,
-				queryToEdit);
-		this.setTitle(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapReportPageTitle));
-		this.setDescription(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapReportPageDescription));
+		super(TuleapUIMessages.getString(TuleapUIKeys.tuleapReportPageName), taskRepository, queryToEdit);
+		this.setTitle(TuleapUIMessages.getString(TuleapUIKeys.tuleapReportPageTitle));
+		this.setDescription(TuleapUIMessages.getString(TuleapUIKeys.tuleapReportPageDescription));
 
 		String tracker = queryToEdit.getAttribute(ITuleapQueryConstants.QUERY_TRACKER_ID);
 		this.trackerId = Integer.valueOf(tracker).intValue();
@@ -120,7 +119,7 @@ public class TuleapReportPage extends AbstractRepositoryQueryPage2 {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2#createPageContent(org.eclipse.mylyn.commons.workbench.forms.SectionComposite)
 	 */
 	@Override
@@ -132,7 +131,7 @@ public class TuleapReportPage extends AbstractRepositoryQueryPage2 {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2#createControl(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
@@ -150,7 +149,7 @@ public class TuleapReportPage extends AbstractRepositoryQueryPage2 {
 		this.reportsTableViewer.setLabelProvider(new LabelProvider() {
 			/**
 			 * {@inheritDoc}
-			 * 
+			 *
 			 * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
 			 */
 			@Override
@@ -179,7 +178,7 @@ public class TuleapReportPage extends AbstractRepositoryQueryPage2 {
 
 	/**
 	 * Updates the list of available reports for the tracker in which we will create the query.
-	 * 
+	 *
 	 * @param inWizard
 	 *            <code>true</code> if we should display the progress in the wizard container,
 	 *            <code>false</code> otherwise
@@ -241,7 +240,7 @@ public class TuleapReportPage extends AbstractRepositoryQueryPage2 {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.jface.wizard.WizardPage#getImage()
 	 */
 	@Override
@@ -251,7 +250,7 @@ public class TuleapReportPage extends AbstractRepositoryQueryPage2 {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2#setQueryTitle(java.lang.String)
 	 */
 	@Override
@@ -261,7 +260,7 @@ public class TuleapReportPage extends AbstractRepositoryQueryPage2 {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2#getQueryTitle()
 	 */
 	@Override
@@ -271,7 +270,7 @@ public class TuleapReportPage extends AbstractRepositoryQueryPage2 {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
 	 */
 	@Override
@@ -282,7 +281,7 @@ public class TuleapReportPage extends AbstractRepositoryQueryPage2 {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2#setVisible(boolean)
 	 */
 	@Override
@@ -295,7 +294,7 @@ public class TuleapReportPage extends AbstractRepositoryQueryPage2 {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2#doRefreshControls()
 	 */
 	@Override
@@ -305,7 +304,7 @@ public class TuleapReportPage extends AbstractRepositoryQueryPage2 {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2#hasRepositoryConfiguration()
 	 */
 	@Override
@@ -317,7 +316,7 @@ public class TuleapReportPage extends AbstractRepositoryQueryPage2 {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2#restoreState(org.eclipse.mylyn.tasks.core.IRepositoryQuery)
 	 */
 	@Override
@@ -327,7 +326,7 @@ public class TuleapReportPage extends AbstractRepositoryQueryPage2 {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage#applyTo(org.eclipse.mylyn.tasks.core.IRepositoryQuery)
 	 */
 	@Override

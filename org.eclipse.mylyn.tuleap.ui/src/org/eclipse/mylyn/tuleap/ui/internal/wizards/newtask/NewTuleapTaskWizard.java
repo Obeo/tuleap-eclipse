@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -17,15 +17,15 @@ import org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapProject;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapTracker;
 import org.eclipse.mylyn.tuleap.core.internal.repository.TuleapTaskMapping;
+import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIKeys;
 import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIMessages;
-import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUiMessagesKeys;
 import org.eclipse.mylyn.tuleap.ui.internal.wizards.TuleapProjectPage;
 import org.eclipse.mylyn.tuleap.ui.internal.wizards.TuleapTrackerPage;
 import org.eclipse.ui.INewWizard;
 
 /**
  * The wizard used to customize the Tuleap tasks editor.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
@@ -43,7 +43,7 @@ public class NewTuleapTaskWizard extends NewTaskWizard implements INewWizard {
 
 	/**
 	 * The constructor used when we are creating a new task.
-	 * 
+	 *
 	 * @param taskRepository
 	 *            The Mylyn tasks repository
 	 * @param taskSelection
@@ -51,12 +51,12 @@ public class NewTuleapTaskWizard extends NewTaskWizard implements INewWizard {
 	 */
 	public NewTuleapTaskWizard(TaskRepository taskRepository, ITaskMapping taskSelection) {
 		super(taskRepository, taskSelection);
-		this.setWindowTitle(TuleapUIMessages.getString(TuleapUiMessagesKeys.newTuleapWizardWindowTitle));
+		this.setWindowTitle(TuleapUIMessages.getString(TuleapUIKeys.newTuleapWizardWindowTitle));
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard#addPages()
 	 */
 	@Override
@@ -67,7 +67,7 @@ public class NewTuleapTaskWizard extends NewTaskWizard implements INewWizard {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.jface.wizard.Wizard#needsPreviousAndNextButtons()
 	 */
 	@Override
@@ -77,7 +77,7 @@ public class NewTuleapTaskWizard extends NewTaskWizard implements INewWizard {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.jface.wizard.Wizard#getNextPage(org.eclipse.jface.wizard.IWizardPage)
 	 */
 	@Override
@@ -96,7 +96,7 @@ public class NewTuleapTaskWizard extends NewTaskWizard implements INewWizard {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.jface.wizard.Wizard#getPreviousPage(org.eclipse.jface.wizard.IWizardPage)
 	 */
 	@Override
@@ -109,7 +109,7 @@ public class NewTuleapTaskWizard extends NewTaskWizard implements INewWizard {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.jface.wizard.Wizard#canFinish()
 	 */
 	@Override
@@ -124,7 +124,7 @@ public class NewTuleapTaskWizard extends NewTaskWizard implements INewWizard {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard#getInitializationData()
 	 */
 	@Override
@@ -138,7 +138,7 @@ public class NewTuleapTaskWizard extends NewTaskWizard implements INewWizard {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.jface.wizard.Wizard#needsProgressMonitor()
 	 */
 	@Override

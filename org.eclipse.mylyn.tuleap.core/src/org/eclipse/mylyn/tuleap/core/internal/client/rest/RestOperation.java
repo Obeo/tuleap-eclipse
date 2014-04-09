@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -41,13 +41,13 @@ import org.eclipse.mylyn.tuleap.core.internal.model.TuleapDebugPart;
 import org.eclipse.mylyn.tuleap.core.internal.model.TuleapErrorMessage;
 import org.eclipse.mylyn.tuleap.core.internal.model.TuleapErrorPart;
 import org.eclipse.mylyn.tuleap.core.internal.model.TuleapToken;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessages;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreMessages;
 
 // CHECKSTYLE:OFF
 /**
  * Abstract RESTful operation.
- * 
+ *
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
 public class RestOperation {
@@ -125,7 +125,7 @@ public class RestOperation {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param fullUrl
 	 *            The full URL of the resource to connect to.
 	 * @param connector
@@ -152,7 +152,7 @@ public class RestOperation {
 
 	/**
 	 * Instantiates a new GET operation for the given URL.
-	 * 
+	 *
 	 * @param fullUrl
 	 *            The full URL of the resource to connect to.
 	 * @param connector
@@ -169,7 +169,7 @@ public class RestOperation {
 
 	/**
 	 * Instantiates a new PUT operation for the given URL.
-	 * 
+	 *
 	 * @param fullUrl
 	 *            The full URL of the resource to connect to.
 	 * @param connector
@@ -186,7 +186,7 @@ public class RestOperation {
 
 	/**
 	 * Instantiates a new POST operation for the given URL.
-	 * 
+	 *
 	 * @param fullUrl
 	 *            The full URL of the resource to connect to.
 	 * @param connector
@@ -203,7 +203,7 @@ public class RestOperation {
 
 	/**
 	 * Instantiates a new OPTIONS operation for the given URL.
-	 * 
+	 *
 	 * @param fullUrl
 	 *            The full URL of the resource to connect to.
 	 * @param connector
@@ -220,7 +220,7 @@ public class RestOperation {
 
 	/**
 	 * Instantiates a new DELETE operation for the given URL.
-	 * 
+	 *
 	 * @param fullUrl
 	 *            The full URL of the resource to connect to.
 	 * @param connector
@@ -237,7 +237,7 @@ public class RestOperation {
 
 	/**
 	 * Provides the Method to run.
-	 * 
+	 *
 	 * @return The method to run.
 	 */
 	public HttpMethod createMethod() {
@@ -251,8 +251,8 @@ public class RestOperation {
 					entity = new StringRequestEntity(body, CONTENT_TYPE_JSON, ENCODING_UTF8);
 				}
 			} catch (UnsupportedEncodingException e) {
-				logger.log(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, TuleapMylynTasksMessages
-						.getString(TuleapMylynTasksMessagesKeys.encodingUtf8NotSupported)));
+				logger.log(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, TuleapCoreMessages
+						.getString(TuleapCoreKeys.encodingUtf8NotSupported)));
 				return null;
 			}
 			((EntityEnclosingMethod)m).setRequestEntity(entity);
@@ -272,7 +272,7 @@ public class RestOperation {
 
 	/**
 	 * Run this operation by sending the relevant request and returning the received response.
-	 * 
+	 *
 	 * @return The response received from the server after sending it the relevant request.
 	 */
 	public ServerResponse run() {
@@ -298,9 +298,8 @@ public class RestOperation {
 						response = connector.sendRequest(httpMethod);
 					}
 				} catch (CoreException e) {
-					logger.log(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
-							TuleapMylynTasksMessages
-									.getString(TuleapMylynTasksMessagesKeys.invalidCredentials)));
+					logger.log(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, TuleapCoreMessages
+							.getString(TuleapCoreKeys.invalidCredentials)));
 				}
 			}
 		}
@@ -309,7 +308,7 @@ public class RestOperation {
 
 	/**
 	 * Runs this operation by sending the relevant request, and checks the received response.
-	 * 
+	 *
 	 * @return The received {@link ServerResponse}.
 	 * @throws CoreException
 	 *             If the received response status is not 200 OK.
@@ -322,7 +321,7 @@ public class RestOperation {
 
 	/**
 	 * Provides an iterable view of this operation. Use this for operation that return JSON arrays.
-	 * 
+	 *
 	 * @return a new {@link RestOperationIterable} that wraps this operation.
 	 */
 	public Iterable<JsonElement> iterable() {
@@ -331,7 +330,7 @@ public class RestOperation {
 
 	/**
 	 * Throws a CoreException that encapsulates useful info about a server error.
-	 * 
+	 *
 	 * @param response
 	 *            The error response received from the server.
 	 * @throws CoreException
@@ -351,14 +350,12 @@ public class RestOperation {
 				msg = response.getStatus() + '/' + response.getBody();
 			} else {
 				if (debugPart != null) {
-					msg = TuleapMylynTasksMessages.getString(
-							TuleapMylynTasksMessagesKeys.errorReturnedByServerWithDebug, fullUrl, method
-									.name(), Integer.valueOf(errorPart.getCode()), errorPart.getMessage(),
-							debugPart.getSource());
+					msg = TuleapCoreMessages.getString(TuleapCoreKeys.errorReturnedByServerWithDebug,
+							fullUrl, method.name(), Integer.valueOf(errorPart.getCode()), errorPart
+									.getMessage(), debugPart.getSource());
 				} else {
-					msg = TuleapMylynTasksMessages.getString(
-							TuleapMylynTasksMessagesKeys.errorReturnedByServer, fullUrl, method.name(),
-							Integer.valueOf(errorPart.getCode()), errorPart.getMessage());
+					msg = TuleapCoreMessages.getString(TuleapCoreKeys.errorReturnedByServer, fullUrl, method
+							.name(), Integer.valueOf(errorPart.getCode()), errorPart.getMessage());
 				}
 			}
 			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, msg));
@@ -367,7 +364,7 @@ public class RestOperation {
 
 	/**
 	 * Sets the authentication token to use for the request.
-	 * 
+	 *
 	 * @param anAuthenticator
 	 *            The token to use. Can be <code>null</code> if no token is needed.
 	 * @return The instance on which this method has been called, for a fluent API.
@@ -379,7 +376,7 @@ public class RestOperation {
 
 	/**
 	 * Sets the body to send in the request.
-	 * 
+	 *
 	 * @param someBody
 	 *            The body to send.
 	 * @return The instance on which this method has been called, for a fluent API.
@@ -391,7 +388,7 @@ public class RestOperation {
 
 	/**
 	 * Adds a header property to send in the request.
-	 * 
+	 *
 	 * @param key
 	 *            The key of the header property to send.
 	 * @param value
@@ -406,7 +403,7 @@ public class RestOperation {
 
 	/**
 	 * Adds properties to the header to send in the request.
-	 * 
+	 *
 	 * @param someHeaders
 	 *            The headers to add to the resource. Existing entries are replaced if needed but never
 	 *            removed. The given map's entries are added to the existing map of headers.
@@ -419,7 +416,7 @@ public class RestOperation {
 
 	/**
 	 * Adds one query parameter.
-	 * 
+	 *
 	 * @param key
 	 *            The key of the parameter.
 	 * @param values
@@ -433,7 +430,7 @@ public class RestOperation {
 
 	/**
 	 * Adds query parameters to this REST resource.
-	 * 
+	 *
 	 * @param queryParameters
 	 *            The query parameters to add to the resource.
 	 * @return The instance on which this method has been called, for a fluent API.
@@ -445,7 +442,7 @@ public class RestOperation {
 
 	/**
 	 * Clears all query parameters for this resource.
-	 * 
+	 *
 	 * @return The instance on which this method has been called, for a fluent API.
 	 */
 	public RestOperation withoutQueryParameter() {
@@ -455,7 +452,7 @@ public class RestOperation {
 
 	/**
 	 * Clears the query parameters with the given key.
-	 * 
+	 *
 	 * @param key
 	 *            Key to remove from the query parameters, all entries will be removed for this key.
 	 * @return The instance on which this method has been called, for a fluent API.
@@ -467,7 +464,7 @@ public class RestOperation {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -479,7 +476,7 @@ public class RestOperation {
 
 	/**
 	 * HTTP Method.
-	 * 
+	 *
 	 * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
 	 */
 	public enum Method {
@@ -546,7 +543,7 @@ public class RestOperation {
 
 		/**
 		 * Instantiates the relevant method to use to run the HTTP communication.
-		 * 
+		 *
 		 * @return A new instance of {@link HttpMethod} of the relevant type.
 		 */
 		protected abstract HttpMethod create();

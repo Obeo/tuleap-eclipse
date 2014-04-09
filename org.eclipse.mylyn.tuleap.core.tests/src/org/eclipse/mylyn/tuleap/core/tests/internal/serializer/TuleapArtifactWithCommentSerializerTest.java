@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapUser;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapArtifactLink;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapFileUpload;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapInteger;
@@ -230,12 +229,8 @@ public class TuleapArtifactWithCommentSerializerTest {
 		artifact.addField(field);
 
 		List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
-		TuleapUser firstUploadedBy = new TuleapUser(
-				"first username", "first realname", 1, "first email", null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		attachments.add(new AttachmentValue("100000", "first name", 1, 123456, //$NON-NLS-1$ //$NON-NLS-2$
 				"first description", "first type", "")); //$NON-NLS-1$ //$NON-NLS-2$
-		TuleapUser secondUploadedBy = new TuleapUser("second username", "second realname", 2, //$NON-NLS-1$ //$NON-NLS-2$
-				"second email", null); //$NON-NLS-1$
 		attachments.add(new AttachmentValue("100001", "second name", 2, 789456, //$NON-NLS-1$ //$NON-NLS-2$
 				"second description", "second type", "")); //$NON-NLS-1$ //$NON-NLS-2$
 		AttachmentFieldValue fileDescription = new AttachmentFieldValue(222, attachments);
@@ -314,12 +309,8 @@ public class TuleapArtifactWithCommentSerializerTest {
 		artifact.addField(fifthField);
 
 		List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
-		TuleapUser firstUploadedBy = new TuleapUser(
-				"first username", "first realname", 1, "first email", null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		attachments.add(new AttachmentValue("100000", "first name", 1, 123456, //$NON-NLS-1$ //$NON-NLS-2$
 				"first description", "first type", "")); //$NON-NLS-1$ //$NON-NLS-2$
-		TuleapUser secondUploadedBy = new TuleapUser("second username", "second realname", 2, //$NON-NLS-1$ //$NON-NLS-2$
-				"second email", null); //$NON-NLS-1$
 		attachments.add(new AttachmentValue("100001", "second name", 2, 789456, //$NON-NLS-1$ //$NON-NLS-2$
 				"second description", "second type", "")); //$NON-NLS-1$ //$NON-NLS-2$
 		AttachmentFieldValue fileDescription = new AttachmentFieldValue(224, attachments);
@@ -372,12 +363,8 @@ public class TuleapArtifactWithCommentSerializerTest {
 		artifact.addField(fifthField);
 
 		List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
-		TuleapUser firstUploadedBy = new TuleapUser(
-				"first username", "first realname", 1, "first email", null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		attachments.add(new AttachmentValue("100000", "first name", 1, 123456, //$NON-NLS-1$ //$NON-NLS-2$
 				"first description", "first type", "")); //$NON-NLS-1$ //$NON-NLS-2$
-		TuleapUser secondUploadedBy = new TuleapUser("second username", "second realname", 2, //$NON-NLS-1$ //$NON-NLS-2$
-				"second email", null); //$NON-NLS-1$
 		attachments.add(new AttachmentValue("100001", "second name", 2, 789456, //$NON-NLS-1$ //$NON-NLS-2$
 				"second description", "second type", "")); //$NON-NLS-1$ //$NON-NLS-2$
 		AttachmentFieldValue fileDescription = new AttachmentFieldValue(224, attachments);

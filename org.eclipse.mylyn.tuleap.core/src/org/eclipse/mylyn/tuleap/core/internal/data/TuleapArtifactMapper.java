@@ -44,8 +44,8 @@ import org.eclipse.mylyn.tuleap.core.internal.model.data.AttachmentValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.BoundFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.LiteralFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapElementComment;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessages;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreMessages;
 
 /**
  * The Tuleap Configurable Element Mapper will be used to manipulate the task data model from Mylyn with a
@@ -153,7 +153,7 @@ public class TuleapArtifactMapper extends TaskMapper {
 	private void createCreationDateTaskAttribute() {
 		TaskAttribute attribute = getTaskData().getRoot().createMappedAttribute(TaskAttribute.DATE_CREATION);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
-		metaData.setLabel(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.creationDateLabel));
+		metaData.setLabel(TuleapCoreMessages.getString(TuleapCoreKeys.creationDateLabel));
 		metaData.setType(TaskAttribute.TYPE_DATE);
 	}
 
@@ -164,8 +164,7 @@ public class TuleapArtifactMapper extends TaskMapper {
 		TaskAttribute attribute = getTaskData().getRoot().createMappedAttribute(
 				TaskAttribute.DATE_MODIFICATION);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
-		metaData.setLabel(TuleapMylynTasksMessages
-				.getString(TuleapMylynTasksMessagesKeys.lastModificationDateLabel));
+		metaData.setLabel(TuleapCoreMessages.getString(TuleapCoreKeys.lastModificationDateLabel));
 		metaData.setType(TaskAttribute.TYPE_DATE);
 	}
 
@@ -186,8 +185,7 @@ public class TuleapArtifactMapper extends TaskMapper {
 		TaskAttribute attribute = getTaskData().getRoot()
 				.createMappedAttribute(TaskAttribute.DATE_COMPLETION);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
-		metaData.setLabel(TuleapMylynTasksMessages
-				.getString(TuleapMylynTasksMessagesKeys.completionDateLabel));
+		metaData.setLabel(TuleapCoreMessages.getString(TuleapCoreKeys.completionDateLabel));
 		metaData.setType(TaskAttribute.TYPE_DATE);
 	}
 
@@ -199,7 +197,7 @@ public class TuleapArtifactMapper extends TaskMapper {
 	private TaskAttribute createNewCommentTaskAttribute() {
 		TaskAttribute attribute = getTaskData().getRoot().createAttribute(TaskAttribute.COMMENT_NEW);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
-		metaData.setLabel(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.newCommentLabel));
+		metaData.setLabel(TuleapCoreMessages.getString(TuleapCoreKeys.newCommentLabel));
 		metaData.setType(TaskAttribute.TYPE_LONG_RICH_TEXT);
 		return attribute;
 	}
@@ -213,8 +211,7 @@ public class TuleapArtifactMapper extends TaskMapper {
 		if (name != null) {
 			attribute.setValue(name);
 		} else {
-			attribute.setValue(TuleapMylynTasksMessages
-					.getString(TuleapMylynTasksMessagesKeys.defaultTrackerName));
+			attribute.setValue(TuleapCoreMessages.getString(TuleapCoreKeys.defaultTrackerName));
 		}
 	}
 

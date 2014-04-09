@@ -41,8 +41,8 @@ import org.eclipse.mylyn.tuleap.core.internal.model.data.AttachmentValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifact;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifactWithComment;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapReference;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessages;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreMessages;
 
 /**
  * The Tuleap task attachement handler will be in charge of manipulating the task attachments.
@@ -222,17 +222,15 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 					String chunk = Base64.encodeBase64String(toSend);
 					if (fileReference == null) {
 						if (monitor != null) {
-							monitor.subTask(TuleapMylynTasksMessages.getString(
-									TuleapMylynTasksMessagesKeys.uploadingAttachment,
+							monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.uploadingAttachment,
 									"0", Long.toString(length))); //$NON-NLS-1$
 						}
 						fileReference = client.createArtifactFile(chunk, filetype, filename, description,
 								monitor);
 					} else {
 						if (monitor != null) {
-							monitor.subTask(TuleapMylynTasksMessages.getString(
-									TuleapMylynTasksMessagesKeys.uploadingAttachment, Integer
-									.toString((offset - 1) * BUFFER_SIZE), Long.toString(length)));
+							monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.uploadingAttachment,
+									Integer.toString((offset - 1) * BUFFER_SIZE), Long.toString(length)));
 						}
 						client.updateArtifactFile(fileReference.getId(), chunk, offset++, monitor);
 					}
@@ -247,8 +245,7 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 				throw e;
 			} catch (IOException e) {
 				throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
-						TuleapMylynTasksMessages
-						.getString(TuleapMylynTasksMessagesKeys.cannotReadFileContent), e));
+						TuleapCoreMessages.getString(TuleapCoreKeys.cannotReadFileContent), e));
 			} finally {
 				try {
 					if (in != null) {
@@ -289,12 +286,11 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 				TuleapCoreActivator.log(e, true);
 				deleteRemoteTempFile(monitor, client, fileReference);
 				throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
-						TuleapMylynTasksMessages
-						.getString(TuleapMylynTasksMessagesKeys.uploadAttachmentFailed), e));
+						TuleapCoreMessages.getString(TuleapCoreKeys.uploadAttachmentFailed), e));
 			}
 		} else {
-			TuleapCoreActivator.log(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.missingAttachmentField, task.getTaskKey()), true);
+			TuleapCoreActivator.log(TuleapCoreMessages.getString(TuleapCoreKeys.missingAttachmentField, task
+					.getTaskKey()), true);
 		}
 	}
 
@@ -328,7 +324,7 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 	 */
 	private void deleteRemoteTempFile(IProgressMonitor monitor, TuleapRestClient client,
 			TuleapReference fileReference) {
-		monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.deletingFile));
+		monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.deletingFile));
 		try {
 			client.deleteArtifactFile(fileReference.getId(), monitor);
 		} catch (CoreException e) {

@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -32,8 +32,8 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapServer;
 import org.eclipse.mylyn.tuleap.core.internal.repository.ITuleapRepositoryConnector;
 import org.eclipse.mylyn.tuleap.ui.internal.TuleapTasksUIPlugin;
 import org.eclipse.mylyn.tuleap.ui.internal.util.ITuleapUIConstants;
+import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIKeys;
 import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIMessages;
-import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUiMessagesKeys;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -48,7 +48,7 @@ import org.eclipse.ui.dialogs.PatternFilter;
 
 /**
  * This page will let the user select the project on which the task will be created.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class TuleapProjectPage extends WizardPage {
@@ -69,20 +69,20 @@ public class TuleapProjectPage extends WizardPage {
 
 	/**
 	 * The constructor.
-	 * 
+	 *
 	 * @param taskRepository
 	 *            The task repository
 	 */
 	public TuleapProjectPage(TaskRepository taskRepository) {
-		super(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapProjectPageName));
-		this.setTitle(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapProjectPageTitle));
-		this.setDescription(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapProjectPageDescription));
+		super(TuleapUIMessages.getString(TuleapUIKeys.tuleapProjectPageName));
+		this.setTitle(TuleapUIMessages.getString(TuleapUIKeys.tuleapProjectPageTitle));
+		this.setDescription(TuleapUIMessages.getString(TuleapUIKeys.tuleapProjectPageDescription));
 		this.repository = taskRepository;
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
 	 */
 	public void createControl(Composite parent) {
@@ -108,7 +108,7 @@ public class TuleapProjectPage extends WizardPage {
 				TuleapProject projectSelected = TuleapProjectPage.this.getProjectSelected();
 				if (projectSelected == null) {
 					TuleapProjectPage.this.setErrorMessage(TuleapUIMessages
-							.getString(TuleapUiMessagesKeys.tuleapProjectPageSelectAProject));
+							.getString(TuleapUIKeys.tuleapProjectPageSelectAProject));
 				} else {
 					TuleapProjectPage.this.setErrorMessage(null);
 					TuleapProjectPage.this.setMessage(null);
@@ -121,8 +121,7 @@ public class TuleapProjectPage extends WizardPage {
 		});
 
 		Button updateButton = new Button(composite, SWT.LEFT | SWT.PUSH);
-		updateButton.setText(TuleapUIMessages
-				.getString(TuleapUiMessagesKeys.tuleapProjectPageUpdateProjectsList));
+		updateButton.setText(TuleapUIMessages.getString(TuleapUIKeys.tuleapProjectPageUpdateProjectsList));
 		updateButton.setLayoutData(new GridData());
 		updateButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -140,7 +139,7 @@ public class TuleapProjectPage extends WizardPage {
 
 	/**
 	 * Updates the list of the projects that should be displayed in the wizard.
-	 * 
+	 *
 	 * @param forceRefresh
 	 *            Indicates if we should force the refresh of the list of the projects.
 	 * @param inWizard
@@ -156,11 +155,10 @@ public class TuleapProjectPage extends WizardPage {
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {
 
 				public void run(IProgressMonitor monitor) throws InvocationTargetException,
-						InterruptedException {
+				InterruptedException {
 					ITuleapRepositoryConnector connector = (ITuleapRepositoryConnector)repositoryConnector;
 					final TuleapServer instanceConfiguration = connector
-							.getServer(TuleapProjectPage.this.repository
-									.getRepositoryUrl());
+							.getServer(TuleapProjectPage.this.repository.getRepositoryUrl());
 					projectsList.addAll(instanceConfiguration.getAllProjects());
 				}
 			};
@@ -191,7 +189,7 @@ public class TuleapProjectPage extends WizardPage {
 
 	/**
 	 * Returns the identifier of the project currently selected in the wizard. -1 if none has been selected.
-	 * 
+	 *
 	 * @return The identifier of the project currently selected in the wizard. -1 if none has been selected
 	 */
 	public TuleapProject getProjectSelected() {
@@ -205,7 +203,7 @@ public class TuleapProjectPage extends WizardPage {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
 	 */
 	@Override
@@ -215,7 +213,7 @@ public class TuleapProjectPage extends WizardPage {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.jface.wizard.WizardPage#getImage()
 	 */
 	@Override

@@ -35,8 +35,8 @@ import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifact;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifactWithComment;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapElementComment;
 import org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessages;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreMessages;
 
 /**
  * This class is in charge of the publication and retrieval of the tasks data to and from the repository.
@@ -152,8 +152,8 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 					Date now = new Date();
 					tuleapArtifactMapper.setCreationDate(now);
 					tuleapArtifactMapper.setModificationDate(now);
-					tuleapArtifactMapper.setSummary(TuleapMylynTasksMessages.getString(
-							TuleapMylynTasksMessagesKeys.defaultNewTitle, tracker.getItemName()));
+					tuleapArtifactMapper.setSummary(TuleapCoreMessages.getString(
+							TuleapCoreKeys.defaultNewTitle, tracker.getItemName()));
 					isInitialized = true;
 					taskData.getRoot().removeAttribute(TaskAttribute.COMMENT_NEW);
 				}

@@ -17,9 +17,9 @@ import org.eclipse.osgi.util.NLS;
  *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
-public class TuleapMylynTasksMessagesKeys extends NLS {
+public class TuleapCoreKeys extends NLS {
 	/** Qualified path to the properties file in which to seek the keys. */
-	private static final String BUNDLE_NAME = "org.eclipse.mylyn.tuleap.core.internal.util.tuleap_mylyn_tasks_messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.mylyn.tuleap.core.internal.util.tuleap_core_messages"; //$NON-NLS-1$
 
 	// CHECKSTYLE:OFF (Javadoc is __still__ required!)
 	/**
@@ -408,6 +408,11 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	 */
 	public static String uploadAttachmentFailed;
 
+	/**
+	 * Message when local repository configuration cannot be deserialized.
+	 */
+	public static String cannotLoadOldConfiguration;
+
 	static {
 		// load message values from bundle file
 		reloadMessages();
@@ -417,6 +422,6 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	 * Reloads the messages from the properties file.
 	 */
 	public static void reloadMessages() {
-		NLS.initializeMessages(BUNDLE_NAME, TuleapMylynTasksMessagesKeys.class);
+		NLS.initializeMessages(BUNDLE_NAME, TuleapCoreKeys.class);
 	}
 }

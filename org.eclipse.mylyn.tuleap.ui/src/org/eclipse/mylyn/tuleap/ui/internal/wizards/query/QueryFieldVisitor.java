@@ -43,8 +43,8 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapText;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.IQueryCriterion;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapQueryCriterion;
 import org.eclipse.mylyn.tuleap.ui.internal.TuleapTasksUIPlugin;
+import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIKeys;
 import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIMessages;
-import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUiMessagesKeys;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -477,7 +477,7 @@ public class QueryFieldVisitor extends AbstractTuleapFieldVisitor {
 					} else {
 						page.setPageComplete(false);
 						page.setErrorMessage(TuleapUIMessages
-								.getString(TuleapUiMessagesKeys.tuleapQueryInvalidCriteria));
+								.getString(TuleapUIKeys.tuleapQueryInvalidCriteria));
 					}
 				}
 			};
@@ -503,7 +503,7 @@ public class QueryFieldVisitor extends AbstractTuleapFieldVisitor {
 					} else {
 						page.setPageComplete(false);
 						page.setErrorMessage(TuleapUIMessages
-								.getString(TuleapUiMessagesKeys.tuleapQueryInvalidCriteria));
+								.getString(TuleapUIKeys.tuleapQueryInvalidCriteria));
 					}
 				}
 
@@ -515,7 +515,7 @@ public class QueryFieldVisitor extends AbstractTuleapFieldVisitor {
 					} else {
 						page.setPageComplete(false);
 						page.setErrorMessage(TuleapUIMessages
-								.getString(TuleapUiMessagesKeys.tuleapQueryInvalidCriteria));
+								.getString(TuleapUIKeys.tuleapQueryInvalidCriteria));
 					}
 				}
 			};

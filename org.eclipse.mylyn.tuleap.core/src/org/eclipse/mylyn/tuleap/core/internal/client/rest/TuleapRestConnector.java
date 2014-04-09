@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -34,14 +34,14 @@ import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.tuleap.core.internal.TuleapCoreActivator;
 import org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessages;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreMessages;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.Version;
 
 /**
  * This class will be used to establish the connection with the HTTP based Tuleap server.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
@@ -74,7 +74,7 @@ public class TuleapRestConnector implements IRestConnector {
 
 	/**
 	 * the constructor.
-	 * 
+	 *
 	 * @param location
 	 *            The abstract web location, to support proxies.
 	 * @param logger
@@ -88,7 +88,7 @@ public class TuleapRestConnector implements IRestConnector {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.client.rest.IRestConnector#sendRequest(org.apache.commons.httpclient.HttpMethod)
 	 */
 	public ServerResponse sendRequest(HttpMethod method) {
@@ -125,8 +125,8 @@ public class TuleapRestConnector implements IRestConnector {
 			}
 			serverResponse = new ServerResponse(code, responseBody, rHeaders);
 		} catch (IOException e) {
-			logger.log(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, TuleapMylynTasksMessages
-					.getString(TuleapMylynTasksMessagesKeys.ioError, method, e.getMessage())));
+			logger.log(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, TuleapCoreMessages.getString(
+					TuleapCoreKeys.ioError, method, e.getMessage())));
 			serverResponse = new ServerResponse(IO_ERROR_STATUS_CODE, "", Collections //$NON-NLS-1$
 					.<String, String> emptyMap());
 		} finally {
@@ -138,7 +138,7 @@ public class TuleapRestConnector implements IRestConnector {
 
 	/**
 	 * Logs a debug message of the REST request/response.
-	 * 
+	 *
 	 * @param method
 	 *            The method executed
 	 * @param bodyReceived
@@ -183,7 +183,7 @@ public class TuleapRestConnector implements IRestConnector {
 
 	/**
 	 * Returns the user agent to use for the connection.
-	 * 
+	 *
 	 * @return The user agent to use for the connection
 	 */
 	private String getUserAgent() {

@@ -44,8 +44,8 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapSelectBox
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapSelectBoxItem;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapString;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapText;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessages;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreMessages;
 
 /**
  * This class is used to deserialize the JSON representation of a tracker.
@@ -363,8 +363,8 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 		} else if (ITuleapTrackerConstants.TYPE_FILE.equals(fieldType)) {
 			tuleapField = new TuleapFileUpload(fieldId);
 		} else if (!KNOWN_FIELD_TYPES.contains(fieldType)) {
-			TuleapCoreActivator.log(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.unsupportedTrackerFieldType, fieldType), false);
+			TuleapCoreActivator.log(TuleapCoreMessages.getString(TuleapCoreKeys.unsupportedTrackerFieldType,
+					fieldType), false);
 		}
 		return tuleapField;
 	}
@@ -482,7 +482,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 		if (fieldSemantic != null
 				&& fieldSemantic.get(JSON_CONTRIBUTOR) != null
 				&& fieldSemantic.get(JSON_CONTRIBUTOR).getAsJsonObject().get(FIELD_ID).getAsInt() == selectBoxField
-				.getIdentifier()) {
+						.getIdentifier()) {
 			selectBoxField.setSemanticContributor(true);
 		}
 	}
@@ -507,7 +507,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 			for (int z = 0; z < semanticStatus.get(JSON_STATUS_IDS).getAsJsonArray().size(); z++) {
 				if (selectBoxField.getIdentifier() == semanticStatus.get(FIELD_ID).getAsInt()
 						&& fieldValueId == semanticStatus.get(JSON_STATUS_IDS).getAsJsonArray().get(z)
-						.getAsInt()) {
+								.getAsInt()) {
 					selectBoxField.getOpenStatus().add(selectBoxItem);
 				}
 			}

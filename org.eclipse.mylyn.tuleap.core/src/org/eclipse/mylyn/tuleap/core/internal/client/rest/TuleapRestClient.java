@@ -47,8 +47,8 @@ import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapElementComment;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapReference;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapFile;
 import org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessages;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreMessages;
 
 /**
  * This class will be used to communicate with the server with a higher level of abstraction than raw HTTP
@@ -115,8 +115,7 @@ public class TuleapRestClient implements IAuthenticator {
 	 */
 	public IStatus validateConnection(IProgressMonitor monitor) throws CoreException {
 		if (monitor != null) {
-			monitor.beginTask(TuleapMylynTasksMessages
-					.getString(TuleapMylynTasksMessagesKeys.validateConnection), 10);
+			monitor.beginTask(TuleapCoreMessages.getString(TuleapCoreKeys.validateConnection), 10);
 		}
 		login();
 		return Status.OK_STATUS;
@@ -136,8 +135,7 @@ public class TuleapRestClient implements IAuthenticator {
 		tuleapServer.setLastUpdate(new Date().getTime());
 
 		if (monitor != null) {
-			monitor.beginTask(TuleapMylynTasksMessages
-					.getString(TuleapMylynTasksMessagesKeys.retrieveTuleapServer), 100);
+			monitor.beginTask(TuleapCoreMessages.getString(TuleapCoreKeys.retrieveTuleapServer), 100);
 		}
 
 		for (TuleapProject project : getProjects(monitor)) {
@@ -220,8 +218,8 @@ public class TuleapRestClient implements IAuthenticator {
 	public TuleapArtifact getArtifact(int artifactId, TuleapServer server, IProgressMonitor monitor)
 			throws CoreException {
 		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.retrievingArtifact, Integer.valueOf(artifactId)));
+			monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.retrievingArtifact, Integer
+					.valueOf(artifactId)));
 		}
 		RestResource artifactResource = restResourceFactory.artifact(artifactId).withAuthenticator(this);
 		ServerResponse response = artifactResource.get().checkedRun();
@@ -242,8 +240,7 @@ public class TuleapRestClient implements IAuthenticator {
 	public void updateArtifact(TuleapArtifactWithComment artifact, IProgressMonitor monitor)
 			throws CoreException {
 		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.updatingArtifact,
-					artifact.getId()));
+			monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.updatingArtifact, artifact.getId()));
 		}
 		RestResource artifactResource = restResourceFactory.artifact(artifact.getId().intValue())
 				.withAuthenticator(this);
@@ -264,7 +261,7 @@ public class TuleapRestClient implements IAuthenticator {
 	public TuleapTaskId createArtifact(TuleapArtifact artifact, IProgressMonitor monitor)
 			throws CoreException {
 		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.creatingArtifact));
+			monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.creatingArtifact));
 		}
 		RestResource artifactResource = restResourceFactory.artifacts().withAuthenticator(this);
 		ServerResponse response = artifactResource.post().withBody(
@@ -292,8 +289,8 @@ public class TuleapRestClient implements IAuthenticator {
 	public TuleapFile getArtifactFile(int fileId, int offset, int limit, IProgressMonitor monitor)
 			throws CoreException {
 		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.retrievingFile,
-					Integer.valueOf(fileId)));
+			monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.retrievingFile, Integer
+					.valueOf(fileId)));
 		}
 		RestResource fileResource = restResourceFactory.artifactFile(fileId).withAuthenticator(this);
 		ServerResponse response = fileResource.get().withQueryParameter("offset", Integer.toString(offset)) //$NON-NLS-1$
@@ -380,39 +377,12 @@ public class TuleapRestClient implements IAuthenticator {
 	 */
 	public void deleteArtifactFile(int fileId, IProgressMonitor monitor) throws CoreException {
 		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.deletingFile,
-					Integer.valueOf(fileId)));
+			monitor.subTask(TuleapCoreMessages
+					.getString(TuleapCoreKeys.deletingFile, Integer.valueOf(fileId)));
 		}
 		RestResource tempFileResource = restResourceFactory.artifactTemporaryFile(fileId).withAuthenticator(
 				this);
 		tempFileResource.delete().checkedRun();
-	}
-
-	/**
-	 * Executes a Tuleap report (stored on the Tuleap server, unlike a Mylyn query).
-	 *
-	 * @param trackerId
-	 *            The identifier of the tracker
-	 * @param reportId
-	 *            The identifier of the report
-	 * @param collector
-	 *            The task data collector
-	 * @param monitor
-	 *            Used to monitor the progress
-	 * @return The number of artifact retrieved
-	 * @throws CoreException
-	 *             In case of error during the report execution
-	 */
-	public int executeReport(int trackerId, int reportId, TaskDataCollector collector,
-			IProgressMonitor monitor) throws CoreException {
-		// Test the connection
-		// Try to log in
-		// Send a request with OPTIONS to ensure that we can and have the right to run a report
-		// Run the report
-		// Create the task data from the result
-		// Put them in the task data collector
-		// Try to log out
-		return -1;
 	}
 
 	/**
@@ -734,8 +704,8 @@ public class TuleapRestClient implements IAuthenticator {
 	 */
 	public TuleapTracker getTracker(int trackerId, IProgressMonitor monitor) throws CoreException {
 		if (monitor != null) {
-			monitor.subTask(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.retrievingTracker, Integer.valueOf(trackerId)));
+			monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.retrievingTracker, Integer
+					.valueOf(trackerId)));
 		}
 		RestResource restTracker = restResourceFactory.tracker(trackerId).withAuthenticator(this);
 		RestOperation operation = restTracker.get();

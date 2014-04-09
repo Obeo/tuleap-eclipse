@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -33,8 +33,8 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapTracker;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapFileUpload;
 import org.eclipse.mylyn.tuleap.core.internal.repository.TuleapRepositoryConnector;
 import org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants;
+import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIKeys;
 import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIMessages;
-import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUiMessagesKeys;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.Label;
 /**
  * This page will be the last shown in the wizard to upload attachments. It will let the user select the field
  * that will receive the attachment.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class TuleapTaskAttachmentPage extends TaskAttachmentPage {
@@ -59,7 +59,7 @@ public class TuleapTaskAttachmentPage extends TaskAttachmentPage {
 
 	/**
 	 * The constructor.
-	 * 
+	 *
 	 * @param model
 	 *            The model
 	 */
@@ -69,7 +69,7 @@ public class TuleapTaskAttachmentPage extends TaskAttachmentPage {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.TaskAttachmentPage#createControl(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
@@ -87,7 +87,7 @@ public class TuleapTaskAttachmentPage extends TaskAttachmentPage {
 	/**
 	 * Creates a section where the list of "FILE" fields for the repository will be displayed to select the
 	 * field to use for the upload of the data.
-	 * 
+	 *
 	 * @param parent
 	 *            The parent composite
 	 */
@@ -102,7 +102,7 @@ public class TuleapTaskAttachmentPage extends TaskAttachmentPage {
 		composite.setLayout(new GridLayout(3, false));
 
 		new Label(composite, SWT.NONE).setText(TuleapUIMessages
-				.getString(TuleapUiMessagesKeys.tuleapTaskAttachmentPageSelectionLabel));
+				.getString(TuleapUIKeys.tuleapTaskAttachmentPageSelectionLabel));
 		final Combo fieldNameCombo = new Combo(composite, SWT.NONE);
 		fieldNameCombo.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 2, 1));
 
@@ -132,7 +132,7 @@ public class TuleapTaskAttachmentPage extends TaskAttachmentPage {
 
 	/**
 	 * Returns the list of the name of the fields that can be used to upload a file.
-	 * 
+	 *
 	 * @return The list of the name of the fields that can be used to upload a file.
 	 */
 	private String[] retrieveAttachmentFieldsName() {

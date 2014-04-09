@@ -15,8 +15,8 @@ import com.google.gson.Gson;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessages;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreMessages;
 
 /**
  * Generic REST Resource.
@@ -184,8 +184,8 @@ public class RestResource {
 	 */
 	public RestOperation delete() throws CoreException {
 		if ((supportedMethods & DELETE) == 0) {
-			throw new UnsupportedOperationException(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, "DELETE", url)); //$NON-NLS-1$
+			throw new UnsupportedOperationException(TuleapCoreMessages.getString(
+					TuleapCoreKeys.operationNotAllowedOnResource, "DELETE", url)); //$NON-NLS-1$
 		}
 		return RestOperation.delete(url, connector, gson, logger).withAuthenticator(authenticator);
 	}
@@ -201,8 +201,8 @@ public class RestResource {
 	 */
 	public RestOperation get() throws CoreException {
 		if ((supportedMethods & GET) == 0) {
-			throw new UnsupportedOperationException(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, "GET", getUrl())); //$NON-NLS-1$
+			throw new UnsupportedOperationException(TuleapCoreMessages.getString(
+					TuleapCoreKeys.operationNotAllowedOnResource, "GET", getUrl())); //$NON-NLS-1$
 		}
 		RestOperation operation = RestOperation.get(url, connector, gson, logger).withAuthenticator(
 				authenticator);
@@ -229,8 +229,8 @@ public class RestResource {
 	 */
 	public RestOperation post() throws CoreException {
 		if ((supportedMethods & POST) == 0) {
-			throw new UnsupportedOperationException(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, "POST", getUrl())); //$NON-NLS-1$
+			throw new UnsupportedOperationException(TuleapCoreMessages.getString(
+					TuleapCoreKeys.operationNotAllowedOnResource, "POST", getUrl())); //$NON-NLS-1$
 		}
 		return RestOperation.post(url, connector, gson, logger).withAuthenticator(authenticator);
 	}
@@ -246,8 +246,8 @@ public class RestResource {
 	 */
 	public RestOperation put() throws CoreException {
 		if ((supportedMethods & PUT) == 0) {
-			throw new UnsupportedOperationException(TuleapMylynTasksMessages.getString(
-					TuleapMylynTasksMessagesKeys.operationNotAllowedOnResource, "PUT", getUrl())); //$NON-NLS-1$
+			throw new UnsupportedOperationException(TuleapCoreMessages.getString(
+					TuleapCoreKeys.operationNotAllowedOnResource, "PUT", getUrl())); //$NON-NLS-1$
 		}
 		return RestOperation.put(url, connector, gson, logger).withAuthenticator(authenticator);
 	}

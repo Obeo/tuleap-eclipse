@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -23,8 +23,8 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapTracker;
 import org.eclipse.mylyn.tuleap.ui.internal.TuleapTasksUIPlugin;
 import org.eclipse.mylyn.tuleap.ui.internal.util.ITuleapUIConstants;
+import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIKeys;
 import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIMessages;
-import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUiMessagesKeys;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -37,7 +37,7 @@ import org.eclipse.ui.dialogs.PatternFilter;
 /**
  * This page will be used when a new task is created in order to let the user select the tracker for which the
  * task will be created.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  * @since 0.7
@@ -66,20 +66,20 @@ public class TuleapTrackerPage extends WizardPage {
 
 	/**
 	 * The constructor.
-	 * 
+	 *
 	 * @param trackers
 	 *            The trackers to display
 	 */
 	public TuleapTrackerPage(List<TuleapTracker> trackers) {
-		super(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapTrackerPageName));
-		this.setTitle(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapTrackerPageTitle));
-		this.setDescription(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapTrackerPageDescription));
+		super(TuleapUIMessages.getString(TuleapUIKeys.tuleapTrackerPageName));
+		this.setTitle(TuleapUIMessages.getString(TuleapUIKeys.tuleapTrackerPageTitle));
+		this.setDescription(TuleapUIMessages.getString(TuleapUIKeys.tuleapTrackerPageDescription));
 		this.trackers = trackers;
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
 	 */
 	public void createControl(Composite parent) {
@@ -109,7 +109,7 @@ public class TuleapTrackerPage extends WizardPage {
 			this.trackerTree.getViewer().setSelection(selection);
 			String description = trackers.get(0).getDescription();
 			trackerDescriptionLabel.setText(TuleapUIMessages.getString(
-					TuleapUiMessagesKeys.tuleapTrackerPageDescriptionLabel, description));
+					TuleapUIKeys.tuleapTrackerPageDescriptionLabel, description));
 		}
 
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -118,13 +118,13 @@ public class TuleapTrackerPage extends WizardPage {
 				TuleapTracker trackerSelected = TuleapTrackerPage.this.getTrackerSelected();
 				if (trackerSelected == null) {
 					TuleapTrackerPage.this.setErrorMessage(TuleapUIMessages
-							.getString(TuleapUiMessagesKeys.tuleapTrackerPageSelectATracker));
+							.getString(TuleapUIKeys.tuleapTrackerPageSelectATracker));
 				} else {
 					TuleapTrackerPage.this.setErrorMessage(null);
 					TuleapTrackerPage.this.setMessage(null);
 					String description = trackerSelected.getDescription();
 					TuleapTrackerPage.this.trackerDescriptionLabel.setText(TuleapUIMessages.getString(
-							TuleapUiMessagesKeys.tuleapTrackerPageDescriptionLabel, description));
+							TuleapUIKeys.tuleapTrackerPageDescriptionLabel, description));
 				}
 				IWizard wizard = TuleapTrackerPage.this.getWizard();
 				wizard.getContainer().updateButtons();
@@ -138,7 +138,7 @@ public class TuleapTrackerPage extends WizardPage {
 
 	/**
 	 * Returns the tracker where the new task should be created.
-	 * 
+	 *
 	 * @return The tracker where the new task should be created.
 	 */
 	public TuleapTracker getTrackerSelected() {
@@ -151,7 +151,7 @@ public class TuleapTrackerPage extends WizardPage {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
 	 */
 	@Override
@@ -161,7 +161,7 @@ public class TuleapTrackerPage extends WizardPage {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.jface.wizard.WizardPage#getImage()
 	 */
 	@Override

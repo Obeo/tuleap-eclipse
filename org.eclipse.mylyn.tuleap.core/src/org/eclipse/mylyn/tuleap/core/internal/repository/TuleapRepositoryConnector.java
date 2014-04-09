@@ -57,8 +57,8 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapSelectBox
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifact;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapElementComment;
 import org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessages;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreMessages;
 
 /**
  * This class encapsulates common operation realized on the Tuleap repository.
@@ -122,8 +122,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 */
 	@Override
 	public String getLabel() {
-		return TuleapMylynTasksMessages
-				.getString(TuleapMylynTasksMessagesKeys.tuleapRepositoryConnectorLabel);
+		return TuleapCoreMessages.getString(TuleapCoreKeys.tuleapRepositoryConnectorLabel);
 	}
 
 	/**
@@ -408,8 +407,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 				tuleapServer.setLastUpdate(new Date().getTime());
 
 				if (monitor != null) {
-					monitor.beginTask(TuleapMylynTasksMessages
-							.getString(TuleapMylynTasksMessagesKeys.retrieveTuleapServer), 100);
+					monitor.beginTask(TuleapCoreMessages.getString(TuleapCoreKeys.retrieveTuleapServer), 100);
 				}
 
 				for (TuleapProject project : tuleapRestClient.getProjects(monitor)) {
@@ -563,42 +561,41 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			return;
 		}
 
-		synchronized(serversByUrl) {
-			ObjectInputStream in = null;
-			try {
-				in = new ObjectInputStream(new FileInputStream(repositoryConfigurationFile));
-				int size = in.readInt();
-				for (int nX = 0; nX < size; nX++) {
-					TuleapServer item = (TuleapServer)in.readObject();
-					if (item != null) {
-						serversByUrl.put(item.getUrl(), item);
-					}
+		ObjectInputStream in = null;
+		try {
+			in = new ObjectInputStream(new FileInputStream(repositoryConfigurationFile));
+			int size = in.readInt();
+			for (int nX = 0; nX < size; nX++) {
+				TuleapServer item = (TuleapServer)in.readObject();
+				if (item != null) {
+					serversByUrl.put(item.getUrl(), item);
 				}
-				// CHECKSTYLE:OFF (All exceptions are treated equally since we can't do anything about them)
-			} catch (Exception e) {
+			}
+			// CHECKSTYLE:OFF (All exceptions are treated equally since we can't do anything about them)
+		} catch (Exception e) {
+			// CHECKSTYLE:ON
+			TuleapCoreActivator.log(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
+					TuleapCoreMessages.getString(TuleapCoreKeys.cannotLoadOldConfiguration), e));
+			try {
+				if (in != null) {
+					in.close();
+				}
+				if (repositoryConfigurationFile != null && repositoryConfigurationFile.exists()) {
+					repositoryConfigurationFile.delete();
+				}
+				// CHECKSTYLE:OFF (All exceptions are treated equally since we can't do anything about
+				// them)
+			} catch (Exception ex) {
 				// CHECKSTYLE:ON
 				TuleapCoreActivator.log(e, true);
+			}
+		} finally {
+			cacheFileRead = true;
+			if (in != null) {
 				try {
-					if (in != null) {
-						in.close();
-					}
-					if (repositoryConfigurationFile != null && repositoryConfigurationFile.exists()) {
-						repositoryConfigurationFile.delete();
-					}
-					// CHECKSTYLE:OFF (All exceptions are treated equally since we can't do anything about
-					// them)
-				} catch (Exception ex) {
-					// CHECKSTYLE:ON
-					TuleapCoreActivator.log(e, true);
-				}
-			} finally {
-				cacheFileRead = true;
-				if (in != null) {
-					try {
-						in.close();
-					} catch (IOException e) {
-						// ignore
-					}
+					in.close();
+				} catch (IOException e) {
+					// ignore
 				}
 			}
 		}
@@ -607,7 +604,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	/**
 	 * Writes the repository configuration file.
 	 */
-	public void writeRepositoryConfigFile() {
+	public synchronized void writeRepositoryConfigFile() {
 		if (repositoryConfigurationFile != null) {
 			ObjectOutputStream out = null;
 			try {

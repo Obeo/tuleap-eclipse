@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -23,12 +23,12 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.AbstractFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.BoundFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessages;
-import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreKeys;
+import org.eclipse.mylyn.tuleap.core.internal.util.TuleapCoreMessages;
 
 /**
  * Super class of tuleap select box and multi-select box.
- * 
+ *
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  * @since 0.7
  */
@@ -61,7 +61,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 
 	/**
 	 * The constructor.
-	 * 
+	 *
 	 * @param formElementIdentifier
 	 *            The identifier of the form element
 	 */
@@ -71,7 +71,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 
 	/**
 	 * Returns the list of items that should be considered as opened status semantically.
-	 * 
+	 *
 	 * @return The list of items that should be considered as opened status semantically.
 	 */
 	public List<TuleapSelectBoxItem> getOpenStatus() {
@@ -80,7 +80,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 
 	/**
 	 * Returns the list of items that should be considered as closed status semantically.
-	 * 
+	 *
 	 * @return The list of items that should be considered as closed status semantically.
 	 */
 	public List<TuleapSelectBoxItem> getClosedStatus() {
@@ -92,7 +92,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 	/**
 	 * Returns <code>true</code> if this field is to be considered as the status of the artifact semantically,
 	 * <code>false</code> otherwise.
-	 * 
+	 *
 	 * @return <code>true</code> if this field is to be considered as the status of the artifact semantically,
 	 *         <code>false</code> otherwise.
 	 */
@@ -103,7 +103,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 	/**
 	 * Returns <code>true</code> if this field represents the list of contributors on the artifact of the
 	 * tracker, <code>false</code> otherwise.
-	 * 
+	 *
 	 * @return <code>true</code> if this field represents the list of contributors on the artifact of the
 	 *         tracker, <code>false</code> otherwise.
 	 */
@@ -114,7 +114,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 	/**
 	 * Sets to indicate that this field represents the list of the contributors on the artifact of the
 	 * tracker.
-	 * 
+	 *
 	 * @param isContributor
 	 *            <code>true</code> to indicate that this field represents the list of contributors on the
 	 *            artifact of the tracker.
@@ -125,7 +125,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#getMetadataKind()
 	 */
 	@Override
@@ -135,7 +135,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#getDefaultValue()
 	 */
 	@Override
@@ -154,7 +154,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 	 * {@code org.eclipse.mylyn.tuleap.core.internal.model.field.AbstractTuleapSelectBox#addItem()}</li>
 	 * </ul>
 	 * </p>
-	 * 
+	 *
 	 * @param selectBoxBinding
 	 *            The value of the binding
 	 */
@@ -164,7 +164,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 
 	/**
 	 * Returns the kind of binding used by this select box.
-	 * 
+	 *
 	 * @return The kind of binding used by this select box.
 	 */
 	public String getBinding() {
@@ -173,7 +173,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#createTaskAttribute(org.eclipse.mylyn.tasks.core.data.TaskAttribute)
 	 */
 	@Override
@@ -191,7 +191,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 
 	/**
 	 * Creates a new select box task attribute.
-	 * 
+	 *
 	 * @param parent
 	 *            the parent task attribute
 	 * @return The newly created task attribute.
@@ -202,7 +202,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 
 	/**
 	 * Creates the task attribute representing the status.
-	 * 
+	 *
 	 * @param parent
 	 *            The parent task attribute
 	 * @return The created task attribute.
@@ -213,7 +213,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 		// status section etc + a mylyn operation task attribute to modify the real status field
 		TaskAttribute attribute = parent.createAttribute(TaskAttribute.STATUS);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
-		metaData.setLabel(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.statusLabel));
+		metaData.setLabel(TuleapCoreMessages.getString(TuleapCoreKeys.statusLabel));
 		metaData.setType(getMetadataType());
 		// No task kind in order to hide this field from the "attributes" part
 
@@ -224,7 +224,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 
 	/**
 	 * Creates the task attribute representing the person to which the task is assigned.
-	 * 
+	 *
 	 * @param parent
 	 *            The parent task attribute
 	 * @return The created task attribute.
@@ -235,7 +235,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 		// people section etc
 		TaskAttribute attribute = parent.createAttribute(TaskAttribute.USER_ASSIGNED);
 		TaskAttributeMetaData metaData = attribute.getMetaData();
-		metaData.setLabel(TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.assignedToLabel));
+		metaData.setLabel(TuleapCoreMessages.getString(TuleapCoreKeys.assignedToLabel));
 		metaData.setType(getMetadataType());
 		metaData.setKind(TaskAttribute.KIND_PEOPLE);
 
@@ -246,7 +246,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 
 	/**
 	 * Returns a select box item by its id.
-	 * 
+	 *
 	 * @param itemId
 	 *            the id of the item being looked for, as a string
 	 * @return The relevant item, or {@code null} if it cannot be found.
@@ -257,7 +257,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 
 	/**
 	 * Returns the collection of items of this select box.
-	 * 
+	 *
 	 * @return The collection of items in this select box, never null.
 	 */
 	public Collection<TuleapSelectBoxItem> getItems() {
@@ -266,7 +266,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 
 	/**
 	 * Add a new option to this select box.
-	 * 
+	 *
 	 * @param item
 	 *            the item to add. If an item with the same identifier was already registered, it will be
 	 *            silently overridden.
@@ -277,7 +277,7 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 
 	/**
 	 * Copies the items in the task attribute's options.
-	 * 
+	 *
 	 * @param attribute
 	 *            the task attribute to populate
 	 */
@@ -288,13 +288,13 @@ public abstract class AbstractTuleapSelectBox extends AbstractTuleapField {
 		}
 		if (items.size() > 0) {
 			attribute.putOption(String.valueOf(ITuleapConstants.CONFIGURABLE_FIELD_NONE_BINDING_ID),
-					TuleapMylynTasksMessages.getString(TuleapMylynTasksMessagesKeys.selectBoxNone));
+					TuleapCoreMessages.getString(TuleapCoreKeys.selectBoxNone));
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#createFieldValue(org.eclipse.mylyn.tasks.core.data.TaskAttribute,
 	 *      int)
 	 */

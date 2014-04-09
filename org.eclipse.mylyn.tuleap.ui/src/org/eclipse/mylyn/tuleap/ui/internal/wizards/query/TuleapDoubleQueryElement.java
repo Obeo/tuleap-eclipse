@@ -15,8 +15,8 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.IQueryCriterion;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapQueryCriterion;
 import org.eclipse.mylyn.tuleap.ui.internal.TuleapTasksUIPlugin;
+import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIKeys;
 import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIMessages;
-import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUiMessagesKeys;
 import org.eclipse.swt.widgets.Text;
 
 /**
@@ -38,7 +38,7 @@ public class TuleapDoubleQueryElement extends TuleapLiteralQueryElement {
 	public TuleapDoubleQueryElement(AbstractTuleapField field, Text element) {
 		super(field, element);
 		createDecorator(element, TuleapUIMessages
-				.getString(TuleapUiMessagesKeys.tuleapQueryIntegerFieldDecoratorText));
+				.getString(TuleapUIKeys.tuleapQueryIntegerFieldDecoratorText));
 	}
 
 	/**
@@ -54,8 +54,8 @@ public class TuleapDoubleQueryElement extends TuleapLiteralQueryElement {
 			criterion.setValue(Double.valueOf(text));
 		} catch (NumberFormatException e) {
 			criterion = null;
-			TuleapTasksUIPlugin.log(TuleapUIMessages.getString(TuleapUiMessagesKeys.tuleapQueryInvalidValue,
-					text, "Double"), true); //$NON-NLS-1$
+			TuleapTasksUIPlugin.log(TuleapUIMessages.getString(TuleapUIKeys.tuleapQueryInvalidValue, text,
+					"Double"), true); //$NON-NLS-1$
 		}
 		return criterion;
 	}
