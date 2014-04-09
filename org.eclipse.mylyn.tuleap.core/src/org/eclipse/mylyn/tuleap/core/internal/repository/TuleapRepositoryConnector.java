@@ -361,7 +361,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	}
 
 	/**
-	 * Retrieves artifacts without comments and agile features for the given query.
+	 * Retrieves artifacts without comments for the given query.
 	 *
 	 * @param query
 	 *            The query, must be a custom or report query

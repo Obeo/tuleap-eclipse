@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.tuleap.core.internal.model.data.agile;
+package org.eclipse.mylyn.tuleap.core.internal.model.data;
 
 import java.io.Serializable;
 
