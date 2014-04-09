@@ -12,7 +12,7 @@ package org.eclipse.mylyn.tuleap.core.tests.internal.parser;
 
 import com.google.gson.Gson;
 
-import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapFile;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapFile;
 import org.eclipse.mylyn.tuleap.core.internal.parser.TuleapGsonProvider;
 import org.junit.Before;
 import org.junit.Test;

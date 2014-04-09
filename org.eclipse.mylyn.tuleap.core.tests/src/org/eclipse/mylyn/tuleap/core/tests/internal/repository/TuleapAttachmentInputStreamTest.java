@@ -26,7 +26,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 import org.eclipse.mylyn.tuleap.core.internal.client.rest.RestResourceFactory;
 import org.eclipse.mylyn.tuleap.core.internal.client.rest.TuleapRestClient;
 import org.eclipse.mylyn.tuleap.core.internal.client.rest.TuleapRestConnector;
-import org.eclipse.mylyn.tuleap.core.internal.model.data.agile.TuleapFile;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapFile;
 import org.eclipse.mylyn.tuleap.core.internal.parser.TuleapGsonProvider;
 import org.eclipse.mylyn.tuleap.core.internal.repository.TuleapAttachmentInputStream;
 import org.junit.Before;
