@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -19,7 +19,7 @@ import org.eclipse.mylyn.tuleap.core.internal.model.data.LiteralFieldValue;
 
 /**
  * The Tuleap float field.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
@@ -42,7 +42,7 @@ public class TuleapFloat extends AbstractTuleapField {
 
 	/**
 	 * The constructor.
-	 * 
+	 *
 	 * @param formElementIdentifier
 	 *            The identifier of the form element
 	 */
@@ -52,7 +52,7 @@ public class TuleapFloat extends AbstractTuleapField {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#getMetadataKind()
 	 */
 	@Override
@@ -62,7 +62,7 @@ public class TuleapFloat extends AbstractTuleapField {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#getMetadataType()
 	 */
 	@Override
@@ -72,7 +72,7 @@ public class TuleapFloat extends AbstractTuleapField {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#getDefaultValue()
 	 */
 	@Override
@@ -82,7 +82,7 @@ public class TuleapFloat extends AbstractTuleapField {
 
 	/**
 	 * Does this field have the semantic "initial effort" ?
-	 * 
+	 *
 	 * @return the initialEffort
 	 */
 	public boolean isInitialEffort() {
@@ -91,7 +91,7 @@ public class TuleapFloat extends AbstractTuleapField {
 
 	/**
 	 * Initial effort flag setter.
-	 * 
+	 *
 	 * @param initialEffort
 	 *            the initialEffort to set
 	 */
@@ -102,7 +102,7 @@ public class TuleapFloat extends AbstractTuleapField {
 	/**
 	 * {@inheritDoc} Manages the case of the semantic "initial_effort" if the field has this semantic,
 	 * otherwise invokes the super class implementation.
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#getWriteableAttribute(org.eclipse.mylyn.tasks.core.data.TaskAttribute,
 	 *      java.lang.String, java.lang.String)
 	 */
@@ -116,7 +116,7 @@ public class TuleapFloat extends AbstractTuleapField {
 
 	/**
 	 * Creates the task attribute representing the summary.
-	 * 
+	 *
 	 * @param parent
 	 *            The parent task attribute
 	 * @return The created task attribute.
@@ -133,7 +133,7 @@ public class TuleapFloat extends AbstractTuleapField {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField#setValue(org.eclipse.mylyn.tasks.core.data.TaskAttribute,
 	 *      org.eclipse.mylyn.tuleap.core.internal.model.data.AbstractFieldValue)
 	 */
@@ -141,5 +141,10 @@ public class TuleapFloat extends AbstractTuleapField {
 	public void setValue(TaskAttribute attribute, AbstractFieldValue value) {
 		Assert.isTrue(value instanceof LiteralFieldValue);
 		attribute.setValue(((LiteralFieldValue)value).getFieldValue());
+	}
+
+	@Override
+	public void accept(ITuleapFieldVisitor visitor) {
+		visitor.visit(this);
 	}
 }

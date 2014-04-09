@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -56,6 +55,7 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapUserGroup;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.AbstractTuleapSelectBox;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapSelectBoxItem;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifact;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapElementComment;
 import org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants;
 import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessages;
 import org.eclipse.mylyn.tuleap.core.internal.util.TuleapMylynTasksMessagesKeys;
@@ -279,33 +279,24 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	@Override
 	public IStatus performQuery(TaskRepository taskRepository, IRepositoryQuery query,
 			TaskDataCollector collector, ISynchronizationSession session, IProgressMonitor monitor) {
+		if (monitor != null) {
+			monitor.subTask("Executing query " + query.getSummary()); //$NON-NLS-1$
+		}
+		IStatus status = Status.OK_STATUS;
 		// Populate the collector with the task data resulting from the query
 		String queryKind = query.getAttribute(ITuleapQueryConstants.QUERY_KIND);
-		if (ITuleapQueryConstants.QUERY_KIND_REPORT.equals(queryKind)) {
-			performReportQuery(taskRepository, query, collector, monitor);
-		} else if (ITuleapQueryConstants.QUERY_KIND_CUSTOM.equals(queryKind)) {
-			performStandardQuery(taskRepository, query, collector, monitor);
-
+		if (ITuleapQueryConstants.QUERY_KIND_REPORT.equals(queryKind)
+				|| ITuleapQueryConstants.QUERY_KIND_CUSTOM.equals(queryKind)) {
+			try {
+				performReportOrCustomQuery(taskRepository, query, collector, monitor);
+			} catch (CoreException e) {
+				status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage(), e);
+			}
+		} else {
+			status = new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
+					"Invalid state: unknown query kind."); //$NON-NLS-1$
 		}
-		return Status.OK_STATUS;
-	}
-
-	/**
-	 * Perform a "standard" query, which is configured by a set of criteria.
-	 *
-	 * @param taskRepository
-	 *            The task repository
-	 * @param query
-	 *            The qeury to execute
-	 * @param collector
-	 *            The taks data collector
-	 * @param monitor
-	 *            The progress monitor
-	 */
-	private void performStandardQuery(TaskRepository taskRepository, IRepositoryQuery query,
-			TaskDataCollector collector, IProgressMonitor monitor) {
-		// TODO when Tuleap provides a REST API for this
-		throw new NotImplementedException();
+		return status;
 	}
 
 	/**
@@ -319,9 +310,11 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 *            The task data collector
 	 * @param monitor
 	 *            The progress monitor
+	 * @throws CoreException
+	 *             If artifact retrieval goes wrong.
 	 */
-	private void performReportQuery(TaskRepository taskRepository, IRepositoryQuery query,
-			TaskDataCollector collector, IProgressMonitor monitor) {
+	private void performReportOrCustomQuery(TaskRepository taskRepository, IRepositoryQuery query,
+			TaskDataCollector collector, IProgressMonitor monitor) throws CoreException {
 		TuleapRestClient client = this.getClientManager().getRestClient(taskRepository);
 		int trackerId = Integer.valueOf(query.getAttribute(ITuleapQueryConstants.QUERY_TRACKER_ID))
 				.intValue();
@@ -334,19 +327,23 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		}
 		ArtifactTaskDataConverter artifactTaskDataConverter = new ArtifactTaskDataConverter(tracker,
 				taskRepository, this);
-		String queryReportId = query.getAttribute(ITuleapQueryConstants.QUERY_REPORT_ID);
-		int reportId = Integer.valueOf(queryReportId).intValue();
-
-		List<TuleapArtifact> artifacts = null;
-		try {
-			artifacts = client.getTrackerReportArtifacts(reportId, monitor);
-		} catch (CoreException exception) {
-			TuleapCoreActivator.log(exception, true);
-		}
+		List<TuleapArtifact> artifacts = getRawArtifacts(query, tracker, client, monitor);
 		if (artifacts != null) {
 			for (TuleapArtifact artifact : artifacts) {
+				if (monitor != null && monitor.isCanceled()) {
+					return;
+				}
 				TuleapTaskId taskDataId = TuleapTaskId.forArtifact(tracker.getProject().getIdentifier(),
 						artifact.getTracker().getId(), artifact.getId().intValue());
+				try {
+					List<TuleapElementComment> artifactComments = client.getArtifactComments(artifact.getId()
+							.intValue(), server, monitor);
+					for (TuleapElementComment comment : artifactComments) {
+						artifact.addComment(comment);
+					}
+				} catch (CoreException e) {
+					TuleapCoreActivator.log(e, true);
+				}
 
 				TaskAttributeMapper attributeMapper = this.getTaskDataHandler().getAttributeMapper(
 						taskRepository);
@@ -361,6 +358,38 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 				}
 			}
 		}
+	}
+
+	/**
+	 * Retrieves artifacts without comments and agile features for the given query.
+	 *
+	 * @param query
+	 *            The query
+	 * @param tracker
+	 *            The tracker
+	 * @param client
+	 *            The Client to use.
+	 * @param monitor
+	 *            The progress monitor
+	 * @throws CoreException
+	 *             if communication goes wrong.
+	 * @return The list of artifacts, without their comments.
+	 */
+	private List<TuleapArtifact> getRawArtifacts(IRepositoryQuery query, TuleapTracker tracker,
+			TuleapRestClient client, IProgressMonitor monitor) throws CoreException {
+		List<TuleapArtifact> artifacts = null;
+		String queryKind = query.getAttribute(ITuleapQueryConstants.QUERY_KIND);
+		if (ITuleapQueryConstants.QUERY_KIND_REPORT.equals(queryKind)) {
+			String queryReportId = query.getAttribute(ITuleapQueryConstants.QUERY_REPORT_ID);
+			int reportId = Integer.valueOf(queryReportId).intValue();
+			artifacts = client.getTrackerReportArtifacts(reportId, monitor);
+		} else if (ITuleapQueryConstants.QUERY_KIND_CUSTOM.equals(queryKind)) {
+			artifacts = client.getArtifactsFromQuery(query, tracker, monitor);
+		} else {
+			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
+					"Invalid state: unknown query kind.")); //$NON-NLS-1$
+		}
+		return artifacts;
 	}
 
 	/**

@@ -20,6 +20,7 @@ import org.eclipse.mylyn.tuleap.core.tests.internal.client.rest.TuleapRestClient
 import org.eclipse.mylyn.tuleap.core.tests.internal.client.rest.TuleapRestResourceFactoryTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.data.TuleapArtifactMapperTests;
 import org.eclipse.mylyn.tuleap.core.tests.internal.data.TuleapTaskIdTests;
+import org.eclipse.mylyn.tuleap.core.tests.internal.model.QueryCriterionTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.model.TuleapProjectConfigurationTests;
 import org.eclipse.mylyn.tuleap.core.tests.internal.model.TuleapTrackerConfigurationTests;
 import org.eclipse.mylyn.tuleap.core.tests.internal.model.TuleapWorkflowTests;
@@ -60,7 +61,7 @@ import org.junit.runners.Suite;
 	TuleapArtifactDeserializerTest.class, TuleapChangesetDeserializerTests.class,
 	TuleapProjectDeserializerTest.class, TuleapTrackerDeserializerTest.class,
 	TuleapTrackerReportDeserializerTest.class, TuleapUserDeserializerTest.class,
-	DateIso8601AdapterTest.class })
+	DateIso8601AdapterTest.class, QueryCriterionTest.class })
 public final class AllTuleapStandaloneTests {
 
 	/**

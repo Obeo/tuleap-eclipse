@@ -184,19 +184,9 @@ public class TuleapMylynTasksMessagesKeys extends NLS {
 	public static String executingQuery;
 
 	/**
-	 * Retrieving the tracker fields.
-	 */
-	public static String retrievingTrackerFields;
-
-	/**
-	 * Retrieving the tracker semantic.
-	 */
-	public static String retrievingTrackerSemantic;
-
-	/**
 	 * Retrieving the reports.
 	 */
-	public static String retrievingTheReports;
+	public static String retrievingReports;
 
 	/**
 	 * Retrieving the content of the attachments.

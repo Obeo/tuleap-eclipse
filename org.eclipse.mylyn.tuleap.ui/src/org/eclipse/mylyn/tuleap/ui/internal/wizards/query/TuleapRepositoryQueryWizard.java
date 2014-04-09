@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -20,7 +20,7 @@ import org.eclipse.mylyn.tuleap.ui.internal.wizards.TuleapTrackerPage;
 
 /**
  * The wizard used to create queries.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class TuleapRepositoryQueryWizard extends RepositoryQueryWizard {
@@ -42,7 +42,7 @@ public class TuleapRepositoryQueryWizard extends RepositoryQueryWizard {
 
 	/**
 	 * The constructor.
-	 * 
+	 *
 	 * @param repository
 	 *            The task repository.
 	 */
@@ -52,7 +52,7 @@ public class TuleapRepositoryQueryWizard extends RepositoryQueryWizard {
 
 	/**
 	 * The constructor.
-	 * 
+	 *
 	 * @param repository
 	 *            The task repository.
 	 * @param queryToEdit
@@ -65,7 +65,7 @@ public class TuleapRepositoryQueryWizard extends RepositoryQueryWizard {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.jface.wizard.Wizard#addPages()
 	 */
 	@Override
@@ -90,7 +90,7 @@ public class TuleapRepositoryQueryWizard extends RepositoryQueryWizard {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.jface.wizard.Wizard#getNextPage(org.eclipse.jface.wizard.IWizardPage)
 	 */
 	@Override
@@ -129,7 +129,24 @@ public class TuleapRepositoryQueryWizard extends RepositoryQueryWizard {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
+	 * @see org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard#canFinish()
+	 */
+	@Override
+	public boolean canFinish() {
+		IWizardPage currentPage = this.getContainer().getCurrentPage();
+		boolean result = true;
+		if (currentPage instanceof TuleapQueryProjectPage) {
+			result = currentPage.isPageComplete();
+		} else if (currentPage instanceof TuleapCustomQueryPage) {
+			result = currentPage.isPageComplete();
+		}
+		return result && super.canFinish();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
 	 * @see org.eclipse.jface.wizard.Wizard#needsProgressMonitor()
 	 */
 	@Override

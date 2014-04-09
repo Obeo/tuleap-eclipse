@@ -17,7 +17,7 @@
   <prerequisites>
     <maven>3.0</maven>
   </prerequisites>
-  <groupId>org.eclipse.mylyn.task</groupId>
+  <groupId>org.tuleap.mylyn.task</groupId>
   <artifactId>org.eclipse.mylyn.tuleap.releng</artifactId>
   <version>2.0.0.qualifier</version>
   <packaging>pom</packaging>
@@ -25,11 +25,12 @@
   <modules>
     <module>../org.eclipse.mylyn.tuleap.core</module>
     <module>../org.eclipse.mylyn.tuleap.ui</module>
-    <module>../org.eclipse.mylyn.tuleap.doc</module>
     <module>../org.eclipse.mylyn.tuleap.server.data</module>
     <module>../org.eclipse.mylyn.tuleap.core.tests</module>
-    <!--<module>../org.eclipse.mylyn.tuleap.ui.tests</module> Waiting for the vagrant script for Tuleap-->
+    <module>../org.eclipse.mylyn.tuleap.ui.tests</module>
+    <module>../org.eclipse.mylyn.tuleap.doc</module>
     <module>../org.eclipse.mylyn.tuleap-feature</module>
     <module>../org.eclipse.mylyn.tuleap.repository</module>
   </modules>
 </project>
+>>>>>>> 55cb262... story #6358 - Queries using REST.

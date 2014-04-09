@@ -234,6 +234,18 @@ public final class RestResourceFactory {
 	}
 
 	/**
+	 * Provides access to the {code /trackers/:id/artifacts } HTTP resource. This resource should be used with
+	 * query parameters!
+	 *
+	 * @param trackerId
+	 *            the tracker id
+	 * @return A resource that gives access to the {code /trackers/:id/artifacts} HTTP resource.
+	 */
+	public RestResource trackerArtifacts(int trackerId) {
+		return resource(GET, URL.TRACKERS, Integer.toString(trackerId), URL.ARTIFACTS);
+	}
+
+	/**
 	 * Build a URL by concatenating the given fragments.
 	 *
 	 * @param urlFragments

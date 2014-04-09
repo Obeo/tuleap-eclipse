@@ -18,7 +18,7 @@ Export-Package: org.eclipse.mylyn.tuleap.core.internal;version="2.0.0";x-friends
  org.eclipse.mylyn.tuleap.core.internal.data;version="2.0.0";x-friends:="org.eclipse.mylyn.tuleap.ui",
  org.eclipse.mylyn.tuleap.core.internal.data.converter;version="2.0.0";x-internal:=true,
  org.eclipse.mylyn.tuleap.core.internal.model;version="2.0.0";x-internal:=true,
- org.eclipse.mylyn.tuleap.core.internal.model.config;version="2.0.0";x-friends:="org.eclipse.mylyn.tuleap.core.tests,org.eclipse.mylyn.tuleap..ui",
+ org.eclipse.mylyn.tuleap.core.internal.model.config;version="2.0.0";x-friends:="org.eclipse.mylyn.tuleap.core.tests,org.eclipse.mylyn.tuleap.ui",
  org.eclipse.mylyn.tuleap.core.internal.model.config.field;version="2.0.0";x-friends:="org.eclipse.mylyn.tuleap.core.tests,org.eclipse.mylyn.tuleap.ui",
  org.eclipse.mylyn.tuleap.core.internal.model.data;version="2.0.0";x-friends:="org.eclipse.mylyn.tuleap.core.tests,org.eclipse.mylyn.tuleap.ui",
  org.eclipse.mylyn.tuleap.core.internal.parser;version="2.0.0";x-friends:="org.eclipse.mylyn.tuleap.core.tests,org.eclipse.mylyn.tuleap.ui",

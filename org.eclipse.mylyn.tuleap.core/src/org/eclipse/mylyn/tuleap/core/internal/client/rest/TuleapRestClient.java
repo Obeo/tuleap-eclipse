@@ -26,11 +26,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tuleap.core.internal.TuleapCoreActivator;
 import org.eclipse.mylyn.tuleap.core.internal.data.TuleapTaskId;
 import org.eclipse.mylyn.tuleap.core.internal.model.TuleapToken;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapProject;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapServer;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapTracker;
@@ -369,7 +371,7 @@ public class TuleapRestClient implements IAuthenticator {
 	 */
 	public void uploadAttachment(int artifactId, int attachmentFieldId,
 			TuleapAttachmentDescriptor tuleapAttachmentDescriptor, String comment, IProgressMonitor monitor)
-					throws CoreException {
+			throws CoreException {
 		// Test the connection
 
 		// Try to log in
@@ -517,6 +519,55 @@ public class TuleapRestClient implements IAuthenticator {
 		RestOperation operation = r.get().withQueryParameter("values", "all"); //$NON-NLS-1$//$NON-NLS-2$
 		List<TuleapArtifact> artifacts = Lists.newArrayList();
 		for (JsonElement e : operation.iterable()) {
+			artifacts.add(gson.fromJson(e, TuleapArtifact.class));
+		}
+		return artifacts;
+	}
+
+	/**
+	 * Retrieves the {@link TuleapArtifact} from a query run on the server.
+	 *
+	 * @param query
+	 *            The query to run
+	 * @param tracker
+	 *            The configuration used to analyze the data from the SOAP responses
+	 * @param monitor
+	 *            the progress monitor
+	 * @return The list of the Tuleap artifact
+	 * @throws CoreException
+	 *             If communication fails.
+	 */
+	public List<TuleapArtifact> getArtifactsFromQuery(IRepositoryQuery query, TuleapTracker tracker,
+			IProgressMonitor monitor) throws CoreException {
+		RestResource r = restResourceFactory.trackerArtifacts(tracker.getIdentifier())
+				.withAuthenticator(this);
+		RestOperation op = r.get().withQueryParameter("values", "all"); //$NON-NLS-1$//$NON-NLS-2$
+		Map<String, String> attributes = query.getAttributes();
+		// We go over existing field to avoid sending criteria on fields that would still be in the query
+		// but no longer in the tracker config for any reason
+		// We cannot just serialize this map with gson since values are already JSON,
+		// not objects to serialize.
+		StringBuilder criteria = new StringBuilder();
+		boolean needComma = false;
+		for (AbstractTuleapField field : tracker.getFields()) {
+			String fieldId = Integer.toString(field.getIdentifier());
+			if (attributes.containsKey(fieldId)) {
+				if (needComma) {
+					criteria.append(',');
+				} else {
+					needComma = true;
+				}
+				String json = attributes.get(fieldId);
+				criteria.append('"').append(fieldId).append("\":").append(json); //$NON-NLS-1$
+			}
+		}
+		if (criteria.length() > 0) {
+			criteria.insert(0, '{').append('}');
+			op.withQueryParameter("query", criteria.toString()); //$NON-NLS-1$
+		}
+
+		List<TuleapArtifact> artifacts = Lists.newArrayList();
+		for (JsonElement e : op.iterable()) {
 			artifacts.add(gson.fromJson(e, TuleapArtifact.class));
 		}
 		return artifacts;
