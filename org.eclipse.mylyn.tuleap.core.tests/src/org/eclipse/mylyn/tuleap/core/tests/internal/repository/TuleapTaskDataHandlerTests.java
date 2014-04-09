@@ -201,15 +201,6 @@ public class TuleapTaskDataHandlerTests {
 	}
 
 	/**
-	 * Test the creation of an empty task data representing a Tuleap milestone. We won't test here all the
-	 * options used in the creation of said task data since other unit tests will handle it.
-	 */
-	@Test
-	public void initializeTaskDataMilestone() {
-		testNewlyInitializedElementKind(secondTrackerId);
-	}
-
-	/**
 	 * Retrieve the artifact with the given task id and check that the task data created has the proper task
 	 * kind.
 	 *
