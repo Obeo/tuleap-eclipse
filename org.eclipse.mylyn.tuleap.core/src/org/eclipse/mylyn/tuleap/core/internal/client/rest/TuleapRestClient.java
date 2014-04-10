@@ -46,6 +46,7 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapSelectBox
 import org.eclipse.mylyn.tuleap.core.internal.model.data.ArtifactReference;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.IQueryCriterion;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifact;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifactWithAttachment;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifactWithComment;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapElementComment;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapFile;
@@ -222,7 +223,7 @@ public class TuleapRestClient implements IAuthenticator {
 	}
 
 	/**
-	 * Updates the artifact represented by the given task data with the given task data.
+	 * Updates the artifact and its comment (but not its attachments).
 	 *
 	 * @param artifact
 	 *            The artifact to submit
@@ -239,6 +240,27 @@ public class TuleapRestClient implements IAuthenticator {
 		RestResource artifactResource = restResourceFactory.artifact(artifact.getId().intValue())
 				.withAuthenticator(this);
 		artifactResource.put().withBody(gson.toJson(artifact, TuleapArtifactWithComment.class)).checkedRun();
+	}
+
+	/**
+	 * Updates the artifact's attachment represented by the given object.
+	 *
+	 * @param artifact
+	 *            The artifact to submit
+	 * @param monitor
+	 *            Used to monitor the progress
+	 * @throws CoreException
+	 *             In case of error during the update of the artifact
+	 */
+	public void updateArtifactAttachments(TuleapArtifactWithAttachment artifact, IProgressMonitor monitor)
+			throws CoreException {
+		if (monitor != null) {
+			monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.updatingArtifact, artifact.getId()));
+		}
+		RestResource artifactResource = restResourceFactory.artifact(artifact.getId().intValue())
+				.withAuthenticator(this);
+		artifactResource.put().withBody(gson.toJson(artifact, TuleapArtifactWithAttachment.class))
+				.checkedRun();
 	}
 
 	/**

@@ -45,18 +45,18 @@ import static org.junit.Assert.assertEquals;
 public class TuleapArtifactSerializerTest {
 
 	public static final String[] READ_CREATE = {AbstractTuleapFormElement.PERMISSION_READ,
-			AbstractTuleapFormElement.PERMISSION_SUBMIT, };
+		AbstractTuleapFormElement.PERMISSION_SUBMIT, };
 
 	public static final String[] READ_UPDATE = {AbstractTuleapFormElement.PERMISSION_READ,
-			AbstractTuleapFormElement.PERMISSION_UPDATE, };
+		AbstractTuleapFormElement.PERMISSION_UPDATE, };
 
 	public static final String[] READ_ONLY = {AbstractTuleapFormElement.PERMISSION_READ };
 
 	public static final String[] READ_CREATE_UPDATE = {AbstractTuleapFormElement.PERMISSION_READ,
-			AbstractTuleapFormElement.PERMISSION_SUBMIT, AbstractTuleapFormElement.PERMISSION_UPDATE, };
+		AbstractTuleapFormElement.PERMISSION_SUBMIT, AbstractTuleapFormElement.PERMISSION_UPDATE, };
 
 	public static final String[] CREATE_UPDATE = {AbstractTuleapFormElement.PERMISSION_SUBMIT,
-			AbstractTuleapFormElement.PERMISSION_UPDATE, };
+		AbstractTuleapFormElement.PERMISSION_UPDATE, };
 
 	public static final String[] CREATE_ONLY = {AbstractTuleapFormElement.PERMISSION_SUBMIT, };
 
@@ -401,8 +401,7 @@ public class TuleapArtifactSerializerTest {
 		artifact.addFieldValue(fileDescription);
 
 		// We do not submit TuleapFileUpload fields for TuleapArtifact, only for TuleapArtifactWithAttachment
-		assertEquals("{\"values\":[{\"field_id\":222,\"value\":[100000,100001]}],\"tracker\":{\"id\":100}}",
-				gson.toJson(artifact));
+		assertEquals("{\"values\":[{\"field_id\":222,\"value\":[100000,100001]}]}", gson.toJson(artifact));
 	}
 
 	@Test
@@ -423,8 +422,7 @@ public class TuleapArtifactSerializerTest {
 		artifact.addFieldValue(fileDescription);
 
 		// We do not submit TuleapFileUpload fields for TuleapArtifact, only for TuleapArtifactWithAttachment
-		assertEquals("{\"values\":[{\"field_id\":222,\"value\":[100000,100001]}],\"tracker\":{\"id\":100}}",
-				gson.toJson(artifact));
+		assertEquals("{\"values\":[{\"field_id\":222,\"value\":[100000,100001]}]}", gson.toJson(artifact));
 	}
 
 	@Test

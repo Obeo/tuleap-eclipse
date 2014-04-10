@@ -10,44 +10,16 @@
  *******************************************************************************/
 package org.eclipse.mylyn.tuleap.core.internal.serializer;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-
-import java.lang.reflect.Type;
-
 import org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapFileUpload;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifactWithAttachment;
-import org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants;
 
 /**
  * This class is used to serialize the JSON representation of a {@link TuleapArtifactWithAttachment}.
  *
- * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
+ * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
 public class TuleapArtifactWithAttachmentSerializer extends TuleapArtifactWithCommentSerializer<TuleapArtifactWithAttachment> {
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see com.google.gson.JsonSerializer#serialize(java.lang.Object, java.lang.reflect.Type,
-	 *      com.google.gson.JsonSerializationContext)
-	 */
-	@Override
-	public JsonElement serialize(TuleapArtifactWithAttachment tuleapArtifact, Type type,
-			JsonSerializationContext context) {
-		JsonObject elementObject = (JsonObject)super.serialize(tuleapArtifact, type, context);
-		elementObject.remove(ITuleapConstants.ID);
-		if (tuleapArtifact.getTracker() != null) {
-			JsonObject trackerObject = new JsonObject();
-			elementObject.add(ITuleapConstants.TRACKER, trackerObject);
-			trackerObject.add(ITuleapConstants.ID, new JsonPrimitive(Integer.valueOf(tuleapArtifact
-					.getTracker().getId())));
-		}
-		return elementObject;
-	}
 
 	/**
 	 * {@inheritDoc}

@@ -72,8 +72,8 @@ public abstract class AbstractTuleapSerializer<T extends AbstractTuleapConfigura
 	}
 
 	/**
-	 * Override this method in subclasses to configure which field are serialized. By default, all fieds are
-	 * serialized.
+	 * Override this method in subclasses to configure which field are serialized. By default, all fields with
+	 * authorization matching the operation (creation or update) are serialized.
 	 *
 	 * @param field
 	 *            A field present in the object to serialize.
@@ -86,10 +86,13 @@ public abstract class AbstractTuleapSerializer<T extends AbstractTuleapConfigura
 			return false;
 		}
 		boolean result = false;
-		if (isNew) {
-			result = field.isSubmitable();
-		} else {
-			result = field.isUpdatable();
+		// By default, never send file upload field info, to prevent losing attachments
+		if (!(field instanceof TuleapFileUpload)) {
+			if (isNew) {
+				result = field.isSubmitable();
+			} else {
+				result = field.isUpdatable();
+			}
 		}
 		return result;
 	}
