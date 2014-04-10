@@ -37,6 +37,7 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapFileUploa
 import org.eclipse.mylyn.tuleap.core.internal.model.data.AttachmentFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.AttachmentValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifact;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifactWithAttachment;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifactWithComment;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapReference;
 import org.eclipse.mylyn.tuleap.core.internal.parser.TuleapGsonProvider;
@@ -353,23 +354,19 @@ public class TuleapRestClientTest {
 	public void testUpdateArtifactWithSerializableAttachmentField() throws CoreException {
 		TuleapReference trackerRef = new TuleapReference(100, "t/100");
 		TuleapReference projectRef = new TuleapReference(50, "p/50");
-		TuleapArtifactWithComment artifact = new TuleapArtifactWithComment(10, trackerRef, projectRef);
+		TuleapArtifactWithAttachment artifact = new TuleapArtifactWithAttachment(10, trackerRef, projectRef);
 
 		final String newComment = "This is a new comment";
 		artifact.setNewComment(newComment);
 
 		TuleapFileUpload field = new TuleapFileUpload(222);
 
-		field.setPermissions(new String[] {"update" });
+		field.setPermissions(UPDATE_ONLY);
 		artifact.addField(field);
 
 		List<AttachmentValue> attachments = new ArrayList<AttachmentValue>();
-		// TuleapUser firstUploadedBy = new TuleapUser(
-		//				"first username", "first realname", 1, "first email", null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		attachments.add(new AttachmentValue("100000", "first name", 1, 123456, //$NON-NLS-1$ //$NON-NLS-2$
 				"first description", "first type", "")); //$NON-NLS-1$ //$NON-NLS-2$
-		//		TuleapUser secondUploadedBy = new TuleapUser("second username", "second realname", 2, //$NON-NLS-1$ //$NON-NLS-2$
-		//				"second email", null); //$NON-NLS-1$
 		attachments.add(new AttachmentValue("100001", "second name", 2, 789456, //$NON-NLS-1$ //$NON-NLS-2$
 				"second description", "second type", "")); //$NON-NLS-1$ //$NON-NLS-2$
 		AttachmentFieldValue fileDescription = new AttachmentFieldValue(222, attachments);
@@ -383,7 +380,7 @@ public class TuleapRestClientTest {
 				"The response body", respHeaders); //$NON-NLS-1$
 
 		connector.setResponse(response);
-		client.updateArtifact(artifact, null);
+		client.updateArtifactAttachments(artifact, null);
 
 		// Let's check the requests that have been sent.
 		List<ServerRequest> requestsSent = connector.getRequestsSent();

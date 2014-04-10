@@ -293,7 +293,7 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 				if (source.getDescription() != null) {
 					commentedArtifact.setNewComment(source.getDescription());
 				}
-				client.updateArtifact(commentedArtifact, monitor);
+				client.updateArtifactAttachments(commentedArtifact, monitor);
 				// CHECKSTYLE:OFF
 			} catch (Exception e) {
 				// CHECKSTYLE:ON
@@ -338,7 +338,9 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 	 */
 	private void deleteRemoteTempFile(IProgressMonitor monitor, TuleapRestClient client,
 			TuleapReference fileReference) {
-		monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.deletingFile));
+		if (monitor != null) {
+			monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.deletingFile));
+		}
 		try {
 			client.deleteArtifactFile(fileReference.getId(), monitor);
 		} catch (CoreException e) {

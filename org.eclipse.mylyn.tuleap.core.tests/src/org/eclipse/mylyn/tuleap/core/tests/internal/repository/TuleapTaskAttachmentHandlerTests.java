@@ -54,6 +54,7 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapString;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.AttachmentFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.AttachmentValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifact;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifactWithAttachment;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifactWithComment;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapFile;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapReference;
@@ -102,6 +103,8 @@ public class TuleapTaskAttachmentHandlerTests {
 	private ITuleapRepositoryConnector repositoryConnector;
 
 	private String artifactWithComment;
+
+	private String artifactWithAttachment;
 
 	private int fileIdentifier;
 
@@ -169,6 +172,12 @@ public class TuleapTaskAttachmentHandlerTests {
 			public void updateArtifact(TuleapArtifactWithComment artifact, IProgressMonitor monitor)
 					throws CoreException {
 				artifactWithComment = gson.toJson(artifact);
+			}
+
+			@Override
+			public void updateArtifactAttachments(TuleapArtifactWithAttachment artifact, IProgressMonitor monitor)
+					throws CoreException {
+				artifactWithAttachment = gson.toJson(artifact);
 			}
 
 		};
@@ -318,7 +327,7 @@ public class TuleapTaskAttachmentHandlerTests {
 		attachmentHandler.postContent(repository, task, source, "This is a comment"/* Ignored */,
 				attachmentAttribute, null);
 
-		assertEquals("{\"values\":[{\"field_id\":666,\"value\":[50]}]}", artifactWithComment);
+		assertEquals("{\"values\":[{\"field_id\":666,\"value\":[50]}]}", artifactWithAttachment);
 		assertEquals(Base64.encodeBase64URLSafeString(StringUtils.getBytesUtf8("Text to post")), dataToPost);
 		// fileIdentifier not updated since update not called
 		assertEquals(-1, fileIdentifier);
@@ -349,7 +358,7 @@ public class TuleapTaskAttachmentHandlerTests {
 		attachmentHandler.postContent(repository, task, source, "This is a comment"/* Ignored */,
 				attachmentAttribute, null);
 
-		assertEquals("{\"values\":[{\"field_id\":666,\"value\":[777,50]}]}", artifactWithComment);
+		assertEquals("{\"values\":[{\"field_id\":666,\"value\":[777,50]}]}", artifactWithAttachment);
 		assertEquals(Base64.encodeBase64URLSafeString(StringUtils.getBytesUtf8("Text to post")), dataToPost);
 		// fileIdentifier not updated since update not called
 		assertEquals(-1, fileIdentifier);
@@ -400,7 +409,7 @@ public class TuleapTaskAttachmentHandlerTests {
 
 		assertEquals(
 				"{\"values\":[{\"field_id\":666,\"value\":[50]}],\"comment\":{\"body\":\"Comment for test\",\"format\":\"text\"}}",
-				artifactWithComment);
+				artifactWithAttachment);
 		assertNull(dataToUpdate);
 		assertEquals(-1, fileIdentifier);
 		assertEquals(new String(Base64.encodeBase64(bytes)), dataToPost);
@@ -446,7 +455,7 @@ public class TuleapTaskAttachmentHandlerTests {
 		attachmentHandler.postContent(repository, task, source, "This is a comment"/* Ignored */,
 				attachmentAttribute, null);
 
-		assertEquals("{\"values\":[{\"field_id\":666,\"value\":[50]}]}", artifactWithComment);
+		assertEquals("{\"values\":[{\"field_id\":666,\"value\":[50]}]}", artifactWithAttachment);
 		assertNull(dataToUpdate);
 		assertEquals(-1, fileIdentifier);
 		assertEquals(new String(Base64.encodeBase64(bytes)), dataToPost);

@@ -17,8 +17,6 @@ import com.google.gson.JsonSerializationContext;
 
 import java.lang.reflect.Type;
 
-import org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField;
-import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapFileUpload;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifact;
 import org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants;
 
@@ -46,17 +44,5 @@ public class TuleapArtifactSerializer extends AbstractTuleapSerializer<TuleapArt
 					.getTracker().getId())));
 		}
 		return elementObject;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.mylyn.tuleap.core.internal.serializer.AbstractTuleapSerializer#mustSerialize(org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField,
-	 *      boolean)
-	 */
-	@Override
-	protected boolean mustSerialize(AbstractTuleapField field, boolean isNew) {
-		// Only fields valid for creation are submitted
-		return !(field instanceof TuleapFileUpload) && super.mustSerialize(field, isNew);
 	}
 }
