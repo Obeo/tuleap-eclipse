@@ -101,7 +101,7 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 	@Override
 	public boolean canGetContent(TaskRepository repository, ITask task) {
 		TuleapFileUpload uploadField = this.getFileUploadField(repository, task);
-		return this.getFileUploadField(repository, task) != null && uploadField.isReadable();
+		return uploadField != null && uploadField.isReadable();
 	}
 
 	/**
@@ -113,7 +113,7 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 	@Override
 	public boolean canPostContent(TaskRepository repository, ITask task) {
 		TuleapFileUpload uploadField = this.getFileUploadField(repository, task);
-		return uploadField != null && uploadField.isUpdatable();
+		return uploadField != null && (uploadField.isUpdatable() || uploadField.isSubmitable());
 	}
 
 	/**
@@ -183,6 +183,12 @@ public class TuleapTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
 	@Override
 	public void postContent(TaskRepository repository, ITask task, AbstractTaskAttachmentSource source,
 			String comment, TaskAttribute attachmentAttribute, IProgressMonitor monitor) throws CoreException {
+		// Check post is allowed, because Mylyn doesn't
+		if (!canPostContent(repository, task)) {
+			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
+					TuleapCoreMessages.getString(TuleapCoreKeys.notAllowedToUploadAttachment, task
+							.getSummary())));
+		}
 		TuleapServer server = this.connector.getServer(repository);
 		if (server == null) {
 			// Local config inexistent or incompatible with new version

@@ -428,6 +428,11 @@ public class TuleapCoreKeys extends NLS {
 	 */
 	public static String oldQueryNotCompatible;
 
+	/**
+	 * You're not allowed to upload an attachment. 1 parameter, the task (label or id).
+	 */
+	public static String notAllowedToUploadAttachment;
+
 	static {
 		// load message values from bundle file
 		reloadMessages();
