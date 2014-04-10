@@ -17,6 +17,7 @@ import junit.textui.TestRunner;
 import org.eclipse.mylyn.tuleap.core.tests.internal.client.rest.RestOperationsTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.client.rest.RestResourceTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.client.rest.TuleapRestClientLimitTests;
+import org.eclipse.mylyn.tuleap.core.tests.internal.client.rest.TuleapRestClientQueryTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.client.rest.TuleapRestClientTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.client.rest.TuleapRestResourceFactoryTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.converter.MilestoneTaskDataConverterTest;
@@ -68,6 +69,7 @@ import org.junit.runners.Suite;
 	RestResourceTest.class,
 	TuleapRestClientTest.class,
 	TuleapRestClientLimitTests.class,
+	TuleapRestClientQueryTest.class,
 	TuleapRestResourceFactoryTest.class,
 	// converter
 	MilestoneTaskDataConverterTest.class,

@@ -113,6 +113,11 @@ public class RestResource {
 	public static final String OFFSET = "offset"; //$NON-NLS-1$
 
 	/**
+	 * Query parameter used to transmit the query criteria.
+	 */
+	public static final String QUERY = "query"; //$NON-NLS-1$
+
+	/**
 	 * Separator used for toString().
 	 */
 	private static final String SEPARATOR = ", "; //$NON-NLS-1$

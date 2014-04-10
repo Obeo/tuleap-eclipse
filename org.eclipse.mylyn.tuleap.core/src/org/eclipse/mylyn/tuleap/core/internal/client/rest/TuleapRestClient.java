@@ -781,6 +781,7 @@ public class TuleapRestClient implements IAuthenticator {
 			}
 		}
 
+		op.withQueryParameter(RestResource.QUERY, criteriaToSend.toString());
 		List<TuleapArtifact> artifacts = Lists.newArrayList();
 		for (JsonElement e : op.iterable()) {
 			artifacts.add(gson.fromJson(e, TuleapArtifact.class));
