@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -28,7 +28,7 @@ import org.eclipse.mylyn.tuleap.core.internal.client.rest.ServerResponse;
 
 /**
  * Mock object for a {@link IRestConnector}.
- * 
+ *
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
 public class MockRestConnector implements IRestConnector {
@@ -61,16 +61,16 @@ public class MockRestConnector implements IRestConnector {
 		if (method instanceof EntityEnclosingMethod) {
 			RequestEntity entity = ((EntityEnclosingMethod)method).getRequestEntity();
 			if (entity instanceof StringRequestEntity) {
-				return new ServerRequest(method.getName(), method.getPath(), header,
+				return new ServerRequest(method.getName(), method.getPath(), header, method.getQueryString(),
 						((StringRequestEntity)entity).getContent());
 			}
 		}
-		return new ServerRequest(method.getName(), method.getPath(), header);
+		return new ServerRequest(method.getName(), method.getPath(), header, method.getQueryString());
 	}
 
 	/**
 	 * The number of times sendRequest was called during this object's lifetime.
-	 * 
+	 *
 	 * @return The number of invocations made.
 	 */
 	public int getInvocationsCount() {
@@ -79,7 +79,7 @@ public class MockRestConnector implements IRestConnector {
 
 	/**
 	 * Sets the response to return.
-	 * 
+	 *
 	 * @param response
 	 */
 	public void setResponse(ServerResponse response) {
@@ -88,7 +88,7 @@ public class MockRestConnector implements IRestConnector {
 
 	/**
 	 * resource factory setter.
-	 * 
+	 *
 	 * @param resourceFactory
 	 *            the resource factory to set
 	 */
@@ -112,7 +112,7 @@ public class MockRestConnector implements IRestConnector {
 
 	/**
 	 * A request sent to the server.
-	 * 
+	 *
 	 * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
 	 */
 	public static class ServerRequest {
@@ -129,32 +129,35 @@ public class MockRestConnector implements IRestConnector {
 		/** Body (immutable) */
 		public final String body;
 
+		/** Query String (immutable) */
+		public final String queryString;
+
 		// CHECKSTYLE: ON
 
 		/**
 		 * @param method
 		 * @param url
 		 * @param headers
+		 * @param queryString
 		 */
-		public ServerRequest(String method, String url, Map<String, String> headers) {
-			super();
-			this.method = method;
-			this.url = url;
-			this.headers = Collections.unmodifiableMap(headers);
-			this.body = null;
+		public ServerRequest(String method, String url, Map<String, String> headers, String queryString) {
+			this(method, url, headers, queryString, null);
 		}
 
 		/**
 		 * @param method
 		 * @param url
 		 * @param headers
+		 * @param queryString
 		 * @param body
 		 */
-		public ServerRequest(String method, String url, Map<String, String> headers, String body) {
+		public ServerRequest(String method, String url, Map<String, String> headers, String queryString,
+				String body) {
 			super();
 			this.method = method;
 			this.url = url;
 			this.headers = Collections.unmodifiableMap(headers);
+			this.queryString = queryString;
 			this.body = body;
 		}
 

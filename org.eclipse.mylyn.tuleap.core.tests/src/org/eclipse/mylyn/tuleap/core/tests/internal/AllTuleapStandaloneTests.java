@@ -16,6 +16,7 @@ import junit.textui.TestRunner;
 
 import org.eclipse.mylyn.tuleap.core.tests.internal.client.rest.RestOperationsTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.client.rest.RestResourceTest;
+import org.eclipse.mylyn.tuleap.core.tests.internal.client.rest.TuleapRestClientQueryTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.client.rest.TuleapRestClientTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.client.rest.TuleapRestResourceFactoryTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.data.TuleapArtifactMapperTests;
@@ -54,33 +55,34 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	// client.rest
-	RestOperationsTest.class,
-	RestResourceTest.class,
-	TuleapRestClientTest.class,
-	TuleapRestResourceFactoryTest.class,
-	// data
-	TuleapArtifactMapperTests.class,
-	TuleapTaskIdTests.class,
-	// model
-	QueryCriterionTest.class,
-	TuleapProjectConfigurationTests.class,
-	TuleapTrackerConfigurationTests.class,
-	TuleapWorkflowTests.class,
-	// parser
-	ArtifactLinkAdapterTest.class, DateIso8601AdapterTest.class, TuleapArtifactDeserializerTest.class,
-	TuleapChangesetDeserializerTests.class, TuleapFileDeserializerTest.class, TuleapJsonParserTest.class,
-	TuleapProjectDeserializerTest.class, TuleapTrackerDeserializerTest.class,
-	TuleapTrackerReportDeserializerTest.class,
-	TuleapUserDeserializerTest.class,
-	// repository
-	TuleapAttachmentInputStreamTest.class, TuleapRepositoryConnectorTests.class,
-	TuleapTaskAttachmentHandlerTests.class, TuleapTaskDataHandlerTests.class,
-	// serializer
-	BoundFieldValueSerializerTest.class, LiteralFieldValueSerializerTest.class,
-	TuleapArtifactSerializerTest.class, TuleapArtifactWithCommentSerializerTest.class,
-	// server
-	ServerResponseTest.class, })
+		// client.rest
+		RestOperationsTest.class,
+		RestResourceTest.class,
+		TuleapRestClientTest.class,
+		TuleapRestClientQueryTest.class,
+		TuleapRestResourceFactoryTest.class,
+		// data
+		TuleapArtifactMapperTests.class,
+		TuleapTaskIdTests.class,
+		// model
+		QueryCriterionTest.class,
+		TuleapProjectConfigurationTests.class,
+		TuleapTrackerConfigurationTests.class,
+		TuleapWorkflowTests.class,
+		// parser
+		ArtifactLinkAdapterTest.class, DateIso8601AdapterTest.class, TuleapArtifactDeserializerTest.class,
+		TuleapChangesetDeserializerTests.class, TuleapFileDeserializerTest.class, TuleapJsonParserTest.class,
+		TuleapProjectDeserializerTest.class, TuleapTrackerDeserializerTest.class,
+		TuleapTrackerReportDeserializerTest.class,
+		TuleapUserDeserializerTest.class,
+		// repository
+		TuleapAttachmentInputStreamTest.class, TuleapRepositoryConnectorTests.class,
+		TuleapTaskAttachmentHandlerTests.class, TuleapTaskDataHandlerTests.class,
+		// serializer
+		BoundFieldValueSerializerTest.class, LiteralFieldValueSerializerTest.class,
+		TuleapArtifactSerializerTest.class, TuleapArtifactWithCommentSerializerTest.class,
+		// server
+		ServerResponseTest.class, })
 public final class AllTuleapStandaloneTests {
 
 	/**
