@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
@@ -347,21 +348,34 @@ public class RestOperation {
 				debugPart = message.getDebug();
 			}
 			String msg;
-			if (errorPart == null) {
-				// Server probably not contacted
-				String arg = Integer.toString(response.getStatus());
-				if (!responseBody.isEmpty()) {
-					arg += '/' + responseBody;
-				}
-				msg = TuleapCoreMessages.getString(TuleapCoreKeys.communicationError, arg);
+			int statusCode = response.getStatus();
+			if (statusCode >= 1000) {
+				// Communication error
+				msg = TuleapCoreMessages.getString(TuleapCoreKeys.communicationError, Integer
+						.toString(statusCode));
 			} else {
-				if (debugPart != null) {
-					msg = TuleapCoreMessages.getString(TuleapCoreKeys.errorReturnedByServerWithDebug,
-							fullUrl, method.name(), Integer.valueOf(errorPart.getCode()), errorPart
-									.getMessage(), debugPart.getSource());
+				if (errorPart == null) {
+					String arg = Integer.toString(statusCode) + ' ' + HttpStatus.getStatusText(statusCode);
+					if (!responseBody.isEmpty()) {
+						arg += '/' + responseBody;
+					}
+					if (statusCode >= HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+						// Server error
+						msg = TuleapCoreMessages.getString(TuleapCoreKeys.internalServerError, fullUrl,
+								method.name(), arg);
+					} else {
+						msg = TuleapCoreMessages.getString(TuleapCoreKeys.errorReturnedByServer, fullUrl,
+								method.name(), arg, TuleapCoreMessages.getString(TuleapCoreKeys.noMessage));
+					}
 				} else {
-					msg = TuleapCoreMessages.getString(TuleapCoreKeys.errorReturnedByServer, fullUrl, method
-							.name(), Integer.valueOf(errorPart.getCode()), errorPart.getMessage());
+					if (debugPart != null) {
+						msg = TuleapCoreMessages.getString(TuleapCoreKeys.errorReturnedByServerWithDebug,
+								fullUrl, method.name(), Integer.valueOf(errorPart.getCode()), errorPart
+										.getMessage(), debugPart.getSource());
+					} else {
+						msg = TuleapCoreMessages.getString(TuleapCoreKeys.errorReturnedByServer, fullUrl,
+								method.name(), Integer.valueOf(errorPart.getCode()), errorPart.getMessage());
+					}
 				}
 			}
 			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, msg));
