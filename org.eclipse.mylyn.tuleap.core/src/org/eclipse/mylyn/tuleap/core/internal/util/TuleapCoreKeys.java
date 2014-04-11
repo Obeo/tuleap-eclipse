@@ -295,6 +295,16 @@ public class TuleapCoreKeys extends NLS {
 	public static String errorReturnedByServerWithDebug;
 
 	/**
+	 * Server error (HTTP Code 5xx).
+	 */
+	public static String internalServerError;
+
+	/**
+	 * No message.
+	 */
+	public static String noMessage;
+
+	/**
 	 * Invalid pagination header. No parameter.
 	 */
 	public static String invalidPaginationHeader;
