@@ -123,7 +123,6 @@ public class TuleapRestClientQueryTest {
 
 		String qs = URLDecoder.decode(req.queryString, "utf-8");
 
-		System.out.println(qs);
 		assertTrue(qs.indexOf("values=all") >= 0);
 		assertTrue(qs.indexOf("limit=50") >= 0);
 		assertTrue(qs.indexOf("query=" + expectedJson) >= 0);
