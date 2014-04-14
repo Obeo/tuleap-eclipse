@@ -43,6 +43,8 @@ import org.eclipse.mylyn.tuleap.core.internal.data.TuleapTaskId;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapProject;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapServer;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapTracker;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapUser;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapUserGroup;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapSelectBox;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapSelectBoxItem;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.ArtifactReference;
@@ -67,6 +69,10 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Tests for the {@link TuleapRepositoryConnector}.
@@ -89,6 +95,11 @@ public class TuleapRepositoryConnectorTests {
 			return null;
 		}
 	};
+
+	@Before
+	public void setUp() {
+		gson = TuleapGsonProvider.defaultGson();
+	}
 
 	/**
 	 * Test the retrieval of the repository url from a given task url.
@@ -125,6 +136,18 @@ public class TuleapRepositoryConnectorTests {
 		TuleapRepositoryConnector connector = new TuleapRepositoryConnector();
 		String taskUrl = connector.getTaskUrl(repositoryUrl, taskId);
 		assertEquals("https://tuleap.net/plugins/tracker/?group_id=409&tracker=31&aid=821", taskUrl); //$NON-NLS-1$
+	}
+
+	@Test
+	public void testGetTaskIdFromTaskUrlNull() {
+		TuleapRepositoryConnector connector = new TuleapRepositoryConnector();
+		assertNull(connector.getTaskIdFromTaskUrl(null));
+	}
+
+	@Test
+	public void testGetRepositoryUrlNull() {
+		TuleapRepositoryConnector connector = new TuleapRepositoryConnector();
+		assertNull(connector.getRepositoryUrlFromTaskUrl(null));
 	}
 
 	/**
@@ -476,8 +499,266 @@ public class TuleapRepositoryConnectorTests {
 		assertThat(task.getCompletionDate(), notNullValue());
 	}
 
-	@Before
-	public void setUp() {
-		gson = TuleapGsonProvider.defaultGson();
+	@Test
+	public void testCanCreateNewTask() {
+		TaskRepository repository = new TaskRepository(ITuleapConstants.CONNECTOR_KIND, "https://test.url");
+		TuleapRepositoryConnector connector = new TuleapRepositoryConnector();
+		assertTrue(connector.canCreateNewTask(repository));
+	}
+
+	@Test
+	public void testCanCreateTaskFromKey() {
+		TaskRepository repository = new TaskRepository(ITuleapConstants.CONNECTOR_KIND, "https://test.url");
+		TuleapRepositoryConnector connector = new TuleapRepositoryConnector();
+		assertTrue(connector.canCreateTaskFromKey(repository));
+	}
+
+	@Test
+	public void testCanQuery() {
+		TaskRepository repository = new TaskRepository(ITuleapConstants.CONNECTOR_KIND, "https://test.url");
+		TuleapRepositoryConnector connector = new TuleapRepositoryConnector();
+		assertTrue(connector.canQuery(repository));
+	}
+
+	@Test
+	public void testUpdateRepositoryConfiguration() throws CoreException {
+		TaskRepository repository = new TaskRepository(ITuleapConstants.CONNECTOR_KIND, "https://test.url");
+		final int[] calls = new int[5];
+
+		final TuleapProject prj = new TuleapProject("Test project", 101);
+
+		final TuleapTracker tracker200 = new TuleapTracker(200, "t/200", "Tracker 200", "item 200",
+				"desc 200", new Date());
+		final TuleapTracker tracker201 = new TuleapTracker(201, "t/201", "Tracker 201", "item 201",
+				"desc 201", new Date());
+
+		final TuleapUserGroup group0 = new TuleapUserGroup("101_0", "Administrators");
+		final TuleapUser user999 = new TuleapUser("admin", "Admin", 999, "adming@host.com", "admin");
+
+		final FailingRestClient client = new FailingRestClient(null, null, null) {
+			@Override
+			public List<TuleapProject> getProjects(IProgressMonitor monitor) throws CoreException {
+				calls[0]++;
+				return Arrays.asList(prj);
+			}
+
+			@Override
+			public List<TuleapTracker> getProjectTrackers(int projectId, IProgressMonitor monitor)
+					throws CoreException {
+				calls[1]++;
+				if (projectId == 101) {
+					return Arrays.asList(tracker200, tracker201);
+				}
+				fail("Unexpected project ID");
+				return null;
+			}
+
+			@Override
+			public List<TuleapUserGroup> getProjectUserGroups(int projectId, IProgressMonitor monitor)
+					throws CoreException {
+				calls[2]++;
+				if (projectId == 101) {
+					return Arrays.asList(group0);
+				}
+				fail("Unexpected project ID");
+				return null;
+			}
+
+			@Override
+			public List<TuleapUser> getUserGroupUsers(String userGroupId, IProgressMonitor monitor)
+					throws CoreException {
+				calls[3]++;
+				if ("101_0".equals(userGroupId)) {
+					return Arrays.asList(user999);
+				}
+				fail("Unexpected user group ID");
+				return null;
+			}
+
+			@Override
+			public void loadPlanningsInto(TuleapProject project) throws CoreException {
+				calls[4]++;
+				if (project.getIdentifier() != 101) {
+					fail("Unexpected project ID");
+				}
+			}
+		};
+		final TuleapClientManager manager = new TuleapClientManager() {
+			@Override
+			public TuleapRestClient getRestClient(TaskRepository taskRepository) {
+				return client;
+			}
+		};
+		TuleapRepositoryConnector connector = new TuleapRepositoryConnector() {
+			@Override
+			public TuleapClientManager getClientManager() {
+				return manager;
+			}
+		};
+
+		connector.updateRepositoryConfiguration(repository, null);
+
+		assertEquals(1, calls[0]);
+		assertEquals(1, calls[1]);
+		assertEquals(1, calls[2]);
+		assertEquals(1, calls[3]);
+		assertEquals(1, calls[4]);
+
+		TuleapServer refreshedServer = connector.getServer(repository);
+
+		// Check this has not required any more call
+		assertEquals(1, calls[0]);
+		assertSame(prj, refreshedServer.getProject(101));
+		assertEquals(1, refreshedServer.getAllProjects().size());
+	}
+
+	@Test
+	public void testGetServerUpdatesConfigIfNeeded() throws CoreException {
+		TaskRepository repository = new TaskRepository(ITuleapConstants.CONNECTOR_KIND, "https://test.url");
+		final int[] calls = new int[5];
+
+		final TuleapProject prj = new TuleapProject("Test project", 101);
+
+		final TuleapTracker tracker200 = new TuleapTracker(200, "t/200", "Tracker 200", "item 200",
+				"desc 200", new Date());
+		final TuleapTracker tracker201 = new TuleapTracker(201, "t/201", "Tracker 201", "item 201",
+				"desc 201", new Date());
+
+		final TuleapUserGroup group0 = new TuleapUserGroup("101_0", "Administrators");
+		final TuleapUser user999 = new TuleapUser("admin", "Admin", 999, "adming@host.com", "admin");
+
+		final FailingRestClient client = new FailingRestClient(null, null, null) {
+			@Override
+			public List<TuleapProject> getProjects(IProgressMonitor monitor) throws CoreException {
+				calls[0]++;
+				return Arrays.asList(prj);
+			}
+
+			@Override
+			public List<TuleapTracker> getProjectTrackers(int projectId, IProgressMonitor monitor)
+					throws CoreException {
+				calls[1]++;
+				if (projectId == 101) {
+					return Arrays.asList(tracker200, tracker201);
+				}
+				fail("Unexpected project ID");
+				return null;
+			}
+
+			@Override
+			public List<TuleapUserGroup> getProjectUserGroups(int projectId, IProgressMonitor monitor)
+					throws CoreException {
+				calls[2]++;
+				if (projectId == 101) {
+					return Arrays.asList(group0);
+				}
+				fail("Unexpected project ID");
+				return null;
+			}
+
+			@Override
+			public List<TuleapUser> getUserGroupUsers(String userGroupId, IProgressMonitor monitor)
+					throws CoreException {
+				calls[3]++;
+				if ("101_0".equals(userGroupId)) {
+					return Arrays.asList(user999);
+				}
+				fail("Unexpected user group ID");
+				return null;
+			}
+
+			@Override
+			public void loadPlanningsInto(TuleapProject project) throws CoreException {
+				calls[4]++;
+				if (project.getIdentifier() != 101) {
+					fail("Unexpected project ID");
+				}
+			}
+		};
+		final TuleapClientManager manager = new TuleapClientManager() {
+			@Override
+			public TuleapRestClient getRestClient(TaskRepository taskRepository) {
+				return client;
+			}
+		};
+		final boolean[] configUpdated = {false };
+		TuleapRepositoryConnector connector = new TuleapRepositoryConnector() {
+			@Override
+			public TuleapClientManager getClientManager() {
+				return manager;
+			}
+
+			@Override
+			public void updateRepositoryConfiguration(TaskRepository taskRepository, IProgressMonitor monitor)
+					throws CoreException {
+				configUpdated[0] = true;
+				super.updateRepositoryConfiguration(taskRepository, monitor);
+			}
+		};
+
+		TuleapServer refreshedServer = connector.getServer(repository);
+
+		assertTrue(configUpdated[0]);
+		assertEquals(1, calls[0]);
+		assertEquals(1, calls[1]);
+		assertEquals(1, calls[2]);
+		assertEquals(1, calls[3]);
+		assertEquals(1, calls[4]);
+		assertSame(prj, refreshedServer.getProject(101));
+		assertEquals(1, refreshedServer.getAllProjects().size());
+	}
+
+	@Test
+	public void testUpdateTracker() throws CoreException {
+		TaskRepository repository = new TaskRepository(ITuleapConstants.CONNECTOR_KIND, "https://test.url");
+		final int[] calls = new int[1];
+
+		final TuleapServer server = new TuleapServer(repository.getUrl());
+		final TuleapProject prj = new TuleapProject("Test project", 101);
+		server.addProject(prj);
+		final TuleapTracker tracker200 = new TuleapTracker(200, "t/200", "Tracker 200", "item 200",
+				"desc 200", new Date());
+		final TuleapTracker tracker200Updated = new TuleapTracker(200, "t/200", "Tracker 200", "item 200",
+				"desc 200", new Date());
+		prj.addTracker(tracker200);
+
+		final FailingRestClient client = new FailingRestClient(null, null, null) {
+			@Override
+			public TuleapTracker getTracker(int trackerId, IProgressMonitor monitor) throws CoreException {
+				calls[0]++;
+				if (trackerId == 200) {
+					return tracker200Updated;
+				}
+				fail("Wrong tracker ID");
+				return null;
+			}
+		};
+		final TuleapClientManager manager = new TuleapClientManager() {
+			@Override
+			public TuleapRestClient getRestClient(TaskRepository taskRepository) {
+				return client;
+			}
+		};
+		TuleapRepositoryConnector connector = new TuleapRepositoryConnector() {
+			@Override
+			public TuleapClientManager getClientManager() {
+				return manager;
+			}
+
+			@Override
+			public TuleapServer getServer(TaskRepository taskRepository) {
+				if ("https://test.url".equals(taskRepository.getUrl())) {
+					return server;
+				}
+				fail("Invalid server");
+				return null;
+			}
+		};
+
+		TuleapTracker refreshedTracker = connector.refreshTracker(repository, tracker200, null);
+
+		assertEquals(1, calls[0]);
+		assertSame(tracker200Updated, refreshedTracker);
+		assertSame(tracker200Updated, prj.getTracker(200));
 	}
 }

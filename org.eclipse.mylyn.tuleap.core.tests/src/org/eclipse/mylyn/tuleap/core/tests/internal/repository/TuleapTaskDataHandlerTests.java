@@ -13,6 +13,7 @@ package org.eclipse.mylyn.tuleap.core.tests.internal.repository;
 import com.google.common.collect.Sets;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
@@ -48,6 +50,9 @@ import org.eclipse.mylyn.tuleap.core.internal.repository.TuleapTaskMapping;
 import org.eclipse.mylyn.tuleap.core.internal.util.ITuleapConstants;
 import org.junit.Before;
 import org.junit.Test;
+import org.tuleap.mylyn.task.agile.core.data.planning.BacklogItemWrapper;
+import org.tuleap.mylyn.task.agile.core.data.planning.MilestonePlanningWrapper;
+import org.tuleap.mylyn.task.agile.core.data.planning.SubMilestoneWrapper;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -80,6 +85,11 @@ public class TuleapTaskDataHandlerTests {
 	 * The identifier of a standard tracker configuration.
 	 */
 	private TuleapReference trackerRef = new TuleapReference(1, "trackers/1");
+
+	/**
+	 * The identifier of a milestone tracker configuration.
+	 */
+	private TuleapReference milestoneTrackerRef = new TuleapReference(2, "trackers/2");
 
 	/**
 	 * The identifier of a milestone tracker.
@@ -121,7 +131,7 @@ public class TuleapTaskDataHandlerTests {
 	 */
 	@Before
 	public void setUp() {
-		String repositoryUrl = "https://tuleap.net";
+		String repositoryUrl = "https://test.url";
 		this.repository = new TaskRepository(ITuleapConstants.CONNECTOR_KIND, repositoryUrl);
 
 		this.tuleapServer = new TuleapServer(repositoryUrl);
@@ -375,7 +385,7 @@ public class TuleapTaskDataHandlerTests {
 		this.testGetTaskData(TuleapTaskId.forArtifact(projectRef.getId(), trackerRef.getId(), artifactId));
 		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer.getProject(
 				projectRef.getId()).getTracker(trackerRef.getId()));
-		assertEquals("https://tuleap.net/plugins/tracker/?group_id=51&tracker=1&aid=42", mapper.getTaskUrl());
+		assertEquals("https://test.url/plugins/tracker/?group_id=51&tracker=1&aid=42", mapper.getTaskUrl());
 
 	}
 
@@ -387,7 +397,7 @@ public class TuleapTaskDataHandlerTests {
 		this.testGetTaskData(TuleapTaskId.forArtifact(projectRef.getId(), milestoneTrackerId, milestoneId));
 		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer.getProject(
 				projectRef.getId()).getTracker(trackerRef.getId()));
-		assertEquals("https://tuleap.net/plugins/tracker/?group_id=51&tracker=2&aid=43", mapper.getTaskUrl());
+		assertEquals("https://test.url/plugins/tracker/?group_id=51&tracker=2&aid=43", mapper.getTaskUrl());
 	}
 
 	/**
@@ -399,7 +409,7 @@ public class TuleapTaskDataHandlerTests {
 				.forArtifact(projectRef.getId(), backlogItemTrackerId, backlogItemId));
 		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer.getProject(
 				projectRef.getId()).getTracker(trackerRef.getId()));
-		assertEquals("https://tuleap.net/plugins/tracker/?group_id=51&tracker=3&aid=0", mapper.getTaskUrl());
+		assertEquals("https://test.url/plugins/tracker/?group_id=51&tracker=3&aid=0", mapper.getTaskUrl());
 	}
 
 	/**
@@ -418,52 +428,15 @@ public class TuleapTaskDataHandlerTests {
 	private void testPostTaskData(TaskData data, final TuleapTaskId taskId, ResponseKind responseKind,
 			final boolean isCreation) {
 		// Mock rest client
-		final TuleapRestClient tuleapRestClient = new TuleapRestClient(null, null, null) {
-			@Override
-			public TuleapTaskId createArtifact(TuleapArtifact artifact, IProgressMonitor monitor)
-					throws CoreException {
-				if (!isCreation) {
-					fail("Should not be called for an update");
-				}
-				assertTrue(artifact.isNew());
-				return TuleapTaskId.forName(taskId.toString());
-			}
-
-			@Override
-			public void updateArtifact(TuleapArtifactWithComment artifact, IProgressMonitor monitor)
-					throws CoreException {
-				if (isCreation) {
-					fail("Should not be called for a creation");
-				}
-				assertFalse(artifact.isNew());
-				// do nothing
-			}
-		};
-
-		// mock client manager
-		final TuleapClientManager tuleapClientManager = new TuleapClientManager() {
-			@Override
-			public TuleapRestClient getRestClient(TaskRepository taskRepository) {
-				return tuleapRestClient;
-			}
-		};
+		final TuleapRestClient client;
+		if (isCreation) {
+			client = mockClientForCreate(taskId);
+		} else {
+			client = mockClientForUpdate(taskId);
+		}
 
 		// mock repository connector
-		ITuleapRepositoryConnector repositoryConnector = new ITuleapRepositoryConnector() {
-
-			public TuleapServer getServer(TaskRepository repo) {
-				return TuleapTaskDataHandlerTests.this.tuleapServer;
-			}
-
-			public TuleapClientManager getClientManager() {
-				return tuleapClientManager;
-			}
-
-			public TuleapTracker refreshTracker(TaskRepository taskRepository, TuleapTracker tracker,
-					IProgressMonitor monitor) throws CoreException {
-				return tracker;
-			}
-		};
+		ITuleapRepositoryConnector repositoryConnector = mockConnector(client);
 
 		TuleapTaskDataHandler tuleapTaskDataHandler = new TuleapTaskDataHandler(repositoryConnector);
 		try {
@@ -560,5 +533,216 @@ public class TuleapTaskDataHandlerTests {
 		mapper.initializeEmptyTaskData();
 
 		this.testPostTaskData(taskData, taskId, ResponseKind.TASK_UPDATED, false);
+	}
+
+	@Test
+	public void testPostTopPlanningTaskDataWithoutSubMilestone() throws CoreException {
+		TuleapTaskId taskId = TuleapTaskId.forTopPlanning(projectRef.getId());
+		taskData = new TaskData(new TaskAttributeMapper(this.repository), ITuleapConstants.CONNECTOR_KIND,
+				repository.getUrl(), taskId.toString());
+
+		MilestonePlanningWrapper wrapper = new MilestonePlanningWrapper(taskData.getRoot());
+		BacklogItemWrapper story500 = addUserStory(wrapper, 500);
+		addUserStory(wrapper, 501);
+		BacklogItemWrapper story502 = addUserStory(wrapper, 502);
+		wrapper.markReference();
+		wrapper.moveItems(Arrays.asList(story502), story500, true, null);
+		wrapper.mark(wrapper.getBacklogTaskAttribute(), true);
+
+		final int[] calls = new int[1];
+		// Only updateTopPlanningBacklog should be called
+		FailingRestClient client = new FailingRestClient(null, null, null) {
+
+			@Override
+			public void updateTopPlanningBacklog(int projectId, List<TuleapBacklogItem> backlogItems,
+					IProgressMonitor monitor) throws CoreException {
+				calls[0]++;
+				assertEquals(projectRef.getId(), projectId);
+				assertEquals(3, backlogItems.size());
+				assertEquals(502, backlogItems.get(0).getId().intValue());
+				assertEquals(500, backlogItems.get(1).getId().intValue());
+				assertEquals(501, backlogItems.get(2).getId().intValue());
+			}
+		};
+		TuleapTaskDataHandler handler = new TuleapTaskDataHandler(mockConnector(client));
+
+		RepositoryResponse response = handler.postTaskData(repository, taskData, Sets
+				.<TaskAttribute> newHashSet(), new NullProgressMonitor());
+		assertEquals(ResponseKind.TASK_UPDATED, response.getReposonseKind());
+		assertEquals(taskId.toString(), response.getTaskId());
+		assertEquals(1, calls[0]);
+	}
+
+	@Test
+	public void testPostTopPlanningTaskDataWithSubMilestone() throws CoreException {
+		TuleapTaskId taskId = TuleapTaskId.forTopPlanning(projectRef.getId());
+		taskData = new TaskData(new TaskAttributeMapper(this.repository), ITuleapConstants.CONNECTOR_KIND,
+				repository.getUrl(), taskId.toString());
+
+		MilestonePlanningWrapper wrapper = new MilestonePlanningWrapper(taskData.getRoot());
+		BacklogItemWrapper story500 = addUserStory(wrapper, 500);
+		addUserStory(wrapper, 501);
+		addUserStory(wrapper, 502);
+		SubMilestoneWrapper subMilestone = addSubMilestone(wrapper, 200);
+		addUserStory(subMilestone, 503);
+		BacklogItemWrapper story504 = addUserStory(subMilestone, 504);
+
+		wrapper.markReference();
+
+		wrapper.moveItems(Arrays.asList(story500), story504, true, subMilestone);
+		wrapper.mark(wrapper.getBacklogTaskAttribute(), true);
+		wrapper.mark(subMilestone.getReferenceWrappedAttribute(), true);
+
+		final int[] calls = new int[2];
+		// Only updateTopPlanningBacklog should be called
+		FailingRestClient client = new FailingRestClient(null, null, null) {
+			@Override
+			public void updateTopPlanningBacklog(int projectId, List<TuleapBacklogItem> backlogItems,
+					IProgressMonitor monitor) throws CoreException {
+				calls[0]++;
+				assertEquals(projectRef.getId(), projectId);
+				assertEquals(2, backlogItems.size());
+				assertEquals(501, backlogItems.get(0).getId().intValue());
+				assertEquals(502, backlogItems.get(1).getId().intValue());
+			}
+
+			@Override
+			public void updateMilestoneContent(int smId, List<TuleapBacklogItem> backlogItems,
+					IProgressMonitor monitor) throws CoreException {
+				calls[1]++;
+				assertEquals(200, smId);
+				assertEquals(3, backlogItems.size());
+				assertEquals(503, backlogItems.get(0).getId().intValue());
+				assertEquals(500, backlogItems.get(1).getId().intValue());
+				assertEquals(504, backlogItems.get(2).getId().intValue());
+			}
+		};
+		TuleapTaskDataHandler handler = new TuleapTaskDataHandler(mockConnector(client));
+
+		RepositoryResponse response = handler.postTaskData(repository, taskData, Sets
+				.<TaskAttribute> newHashSet(), new NullProgressMonitor());
+		assertEquals(ResponseKind.TASK_UPDATED, response.getReposonseKind());
+		assertEquals(taskId.toString(), response.getTaskId());
+		assertEquals(1, calls[0]);
+		assertEquals(1, calls[1]);
+	}
+
+	@Test
+	public void testPostEmptyTopPlanningTaskData() throws CoreException {
+		TuleapTaskId taskId = TuleapTaskId.forTopPlanning(projectRef.getId());
+		taskData = new TaskData(new TaskAttributeMapper(this.repository), ITuleapConstants.CONNECTOR_KIND,
+				repository.getUrl(), taskId.toString());
+
+		// Client should not be called, so nothing to override
+		FailingRestClient client = new FailingRestClient(null, null, null);
+		TuleapTaskDataHandler handler = new TuleapTaskDataHandler(mockConnector(client));
+
+		RepositoryResponse response = handler.postTaskData(repository, taskData, Sets
+				.<TaskAttribute> newHashSet(), new NullProgressMonitor());
+		assertEquals(ResponseKind.TASK_UPDATED, response.getReposonseKind());
+		assertEquals(taskId.toString(), response.getTaskId());
+
+	}
+
+	private BacklogItemWrapper addUserStory(MilestonePlanningWrapper wrapper, int id) {
+		String itemId = TuleapTaskId.forArtifact(projectRef.getId(), trackerRef.getId(), id).toString();
+		BacklogItemWrapper item = wrapper.addBacklogItem(itemId);
+		item.setDisplayId(Integer.toString(id));
+		item.setInitialEffort("2.5");
+		item.setLabel("Label " + id);
+		item.setStatus("Open");
+		item.setType("User Story");
+		return item;
+	}
+
+	private BacklogItemWrapper addUserStory(SubMilestoneWrapper wrapper, int id) {
+		String itemId = TuleapTaskId.forArtifact(projectRef.getId(), trackerRef.getId(), id).toString();
+		BacklogItemWrapper item = wrapper.addBacklogItem(itemId);
+		item.setDisplayId(Integer.toString(id));
+		item.setInitialEffort("2.5");
+		item.setLabel("Label " + id);
+		item.setStatus("Open");
+		item.setType("User Story");
+		return item;
+	}
+
+	private SubMilestoneWrapper addSubMilestone(MilestonePlanningWrapper wrapper, int id) {
+		String smId = TuleapTaskId.forArtifact(projectRef.getId(), milestoneTrackerRef.getId(), id)
+				.toString();
+		SubMilestoneWrapper sm = wrapper.addSubMilestone(smId);
+		sm.setDisplayId(Integer.toString(id));
+		sm.setLabel("Label milestone " + id);
+		return sm;
+	}
+
+	@Test
+	public void testCanGetMultiTaskData() {
+		TuleapTaskId taskId = TuleapTaskId.forArtifact(projectRef.getId(), milestoneTrackerId, milestoneId);
+		TuleapTaskDataHandler handler = new TuleapTaskDataHandler(mockConnector(mockClientForCreate(taskId)));
+		assertFalse(handler.canGetMultiTaskData(repository));
+	}
+
+	@Test
+	public void testCanInitializeSubTaskData() {
+		TuleapTaskId taskId = TuleapTaskId.forArtifact(projectRef.getId(), milestoneTrackerId, milestoneId);
+		TuleapTaskDataHandler handler = new TuleapTaskDataHandler(mockConnector(mockClientForCreate(taskId)));
+		assertFalse(handler.canInitializeSubTaskData(repository, new TaskTask("test", repository.getUrl(),
+				taskId.toString())));
+	}
+
+	private TuleapRestClient mockClientForUpdate(final TuleapTaskId taskId) {
+		final FailingRestClient restClient = new FailingRestClient(null, null, null) {
+			@Override
+			public void updateArtifact(TuleapArtifactWithComment artifact, IProgressMonitor monitor)
+					throws CoreException {
+				assertFalse(artifact.isNew());
+				// do nothing
+			}
+		};
+		return restClient;
+	}
+
+	private TuleapRestClient mockClientForCreate(final TuleapTaskId taskId) {
+		final FailingRestClient restClient = new FailingRestClient(null, null, null) {
+			@Override
+			public TuleapTaskId createArtifact(TuleapArtifact artifact, IProgressMonitor monitor)
+					throws CoreException {
+				assertTrue(artifact.isNew());
+				return TuleapTaskId.forName(taskId.toString());
+			}
+		};
+		return restClient;
+	}
+
+	private ITuleapRepositoryConnector mockConnector(final TuleapRestClient restClient) {
+		// mock client manager
+		final TuleapClientManager clientManager = mockClientManager(restClient);
+
+		ITuleapRepositoryConnector repositoryConnector = new ITuleapRepositoryConnector() {
+
+			public TuleapServer getServer(TaskRepository repo) {
+				return TuleapTaskDataHandlerTests.this.tuleapServer;
+			}
+
+			public TuleapClientManager getClientManager() {
+				return clientManager;
+			}
+
+			public TuleapTracker refreshTracker(TaskRepository taskRepository, TuleapTracker tracker,
+					IProgressMonitor monitor) throws CoreException {
+				return tracker;
+			}
+		};
+		return repositoryConnector;
+	}
+
+	private TuleapClientManager mockClientManager(final TuleapRestClient restClient) {
+		final TuleapClientManager clientManager = new TuleapClientManager() {
+			@Override
+			public TuleapRestClient getRestClient(TaskRepository taskRepository) {
+				return restClient;
+			}
+		};
+		return clientManager;
 	}
 }
