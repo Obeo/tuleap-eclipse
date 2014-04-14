@@ -19,6 +19,7 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
@@ -112,7 +113,7 @@ public class TuleapTaskDataHandlerTests {
 	 */
 	@Before
 	public void setUp() {
-		String repositoryUrl = "https://tuleap.net";
+		String repositoryUrl = "https://test.url";
 		this.repository = new TaskRepository(ITuleapConstants.CONNECTOR_KIND, repositoryUrl);
 
 		this.tuleapServer = new TuleapServer(repositoryUrl);
@@ -308,7 +309,7 @@ public class TuleapTaskDataHandlerTests {
 		this.testGetTaskData(TuleapTaskId.forArtifact(projectRef.getId(), trackerRef.getId(), artifactId));
 		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer.getProject(
 				projectRef.getId()).getTracker(trackerRef.getId()));
-		assertEquals("https://tuleap.net/plugins/tracker/?group_id=51&tracker=1&aid=42", mapper.getTaskUrl());
+		assertEquals("https://test.url/plugins/tracker/?group_id=51&tracker=1&aid=42", mapper.getTaskUrl());
 
 	}
 
@@ -328,52 +329,15 @@ public class TuleapTaskDataHandlerTests {
 	private void testPostTaskData(TaskData data, final TuleapTaskId taskId, ResponseKind responseKind,
 			final boolean isCreation) {
 		// Mock rest client
-		final TuleapRestClient tuleapRestClient = new TuleapRestClient(null, null, null) {
-			@Override
-			public TuleapTaskId createArtifact(TuleapArtifact artifact, IProgressMonitor monitor)
-					throws CoreException {
-				if (!isCreation) {
-					fail("Should not be called for an update");
-				}
-				assertTrue(artifact.isNew());
-				return TuleapTaskId.forName(taskId.toString());
-			}
-
-			@Override
-			public void updateArtifact(TuleapArtifactWithComment artifact, IProgressMonitor monitor)
-					throws CoreException {
-				if (isCreation) {
-					fail("Should not be called for a creation");
-				}
-				assertFalse(artifact.isNew());
-				// do nothing
-			}
-		};
-
-		// mock client manager
-		final TuleapClientManager tuleapClientManager = new TuleapClientManager() {
-			@Override
-			public TuleapRestClient getRestClient(TaskRepository taskRepository) {
-				return tuleapRestClient;
-			}
-		};
+		final TuleapRestClient client;
+		if (isCreation) {
+			client = mockClientForCreate(taskId);
+		} else {
+			client = mockClientForUpdate(taskId);
+		}
 
 		// mock repository connector
-		ITuleapRepositoryConnector repositoryConnector = new ITuleapRepositoryConnector() {
-
-			public TuleapServer getServer(TaskRepository repo) {
-				return TuleapTaskDataHandlerTests.this.tuleapServer;
-			}
-
-			public TuleapClientManager getClientManager() {
-				return tuleapClientManager;
-			}
-
-			public TuleapTracker refreshTracker(TaskRepository taskRepository, TuleapTracker tracker,
-					IProgressMonitor monitor) throws CoreException {
-				return tracker;
-			}
-		};
+		ITuleapRepositoryConnector repositoryConnector = mockConnector(client);
 
 		TuleapTaskDataHandler tuleapTaskDataHandler = new TuleapTaskDataHandler(repositoryConnector);
 		try {
@@ -435,5 +399,76 @@ public class TuleapTaskDataHandlerTests {
 		mapper.initializeEmptyTaskData();
 
 		this.testPostTaskData(taskData, taskId, ResponseKind.TASK_UPDATED, false);
+	}
+
+	@Test
+	public void testCanGetMultiTaskData() {
+		TuleapTaskId taskId = TuleapTaskId.forArtifact(projectRef.getId(), trackerRef.getId(), artifactId);
+		TuleapTaskDataHandler handler = new TuleapTaskDataHandler(mockConnector(mockClientForCreate(taskId)));
+		assertFalse(handler.canGetMultiTaskData(repository));
+	}
+
+	@Test
+	public void testCanInitializeSubTaskData() {
+		TuleapTaskId taskId = TuleapTaskId.forArtifact(projectRef.getId(), trackerRef.getId(), artifactId);
+		TuleapTaskDataHandler handler = new TuleapTaskDataHandler(mockConnector(mockClientForCreate(taskId)));
+		assertFalse(handler.canInitializeSubTaskData(repository, new TaskTask("test", repository.getUrl(),
+				taskId.toString())));
+	}
+
+	private TuleapRestClient mockClientForUpdate(final TuleapTaskId taskId) {
+		final FailingRestClient restClient = new FailingRestClient(null, null, null) {
+			@Override
+			public void updateArtifact(TuleapArtifactWithComment artifact, IProgressMonitor monitor)
+					throws CoreException {
+				assertFalse(artifact.isNew());
+				// do nothing
+			}
+		};
+		return restClient;
+	}
+
+	private TuleapRestClient mockClientForCreate(final TuleapTaskId taskId) {
+		final FailingRestClient restClient = new FailingRestClient(null, null, null) {
+			@Override
+			public TuleapTaskId createArtifact(TuleapArtifact artifact, IProgressMonitor monitor)
+					throws CoreException {
+				assertTrue(artifact.isNew());
+				return TuleapTaskId.forName(taskId.toString());
+			}
+		};
+		return restClient;
+	}
+
+	private ITuleapRepositoryConnector mockConnector(final TuleapRestClient restClient) {
+		// mock client manager
+		final TuleapClientManager clientManager = mockClientManager(restClient);
+
+		ITuleapRepositoryConnector repositoryConnector = new ITuleapRepositoryConnector() {
+
+			public TuleapServer getServer(TaskRepository repo) {
+				return TuleapTaskDataHandlerTests.this.tuleapServer;
+			}
+
+			public TuleapClientManager getClientManager() {
+				return clientManager;
+			}
+
+			public TuleapTracker refreshTracker(TaskRepository taskRepository, TuleapTracker tracker,
+					IProgressMonitor monitor) throws CoreException {
+				return tracker;
+			}
+		};
+		return repositoryConnector;
+	}
+
+	private TuleapClientManager mockClientManager(final TuleapRestClient restClient) {
+		final TuleapClientManager clientManager = new TuleapClientManager() {
+			@Override
+			public TuleapRestClient getRestClient(TaskRepository taskRepository) {
+				return restClient;
+			}
+		};
+		return clientManager;
 	}
 }
