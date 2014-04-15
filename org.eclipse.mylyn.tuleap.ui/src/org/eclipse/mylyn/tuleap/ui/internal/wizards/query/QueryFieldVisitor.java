@@ -25,9 +25,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.mylyn.commons.workbench.forms.DatePicker;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tuleap.core.internal.client.ITuleapQueryConstants;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.AbstractTuleapFieldVisitor;
@@ -47,13 +47,9 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapText;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.IQueryCriterion;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapQueryCriterion;
 import org.eclipse.mylyn.tuleap.ui.internal.TuleapTasksUIPlugin;
-import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIKeys;
-import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIMessages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -89,16 +85,6 @@ public class QueryFieldVisitor extends AbstractTuleapFieldVisitor {
 	private final Gson gson;
 
 	/**
-	 * The modify listener.
-	 */
-	private ModifyListener modifyListener;
-
-	/**
-	 * The selection listener.
-	 */
-	private SelectionListener selectionListener;
-
-	/**
 	 * The wizard page.
 	 */
 	private final TuleapCustomQueryPage page;
@@ -108,23 +94,23 @@ public class QueryFieldVisitor extends AbstractTuleapFieldVisitor {
 	 *
 	 * @param group
 	 *            The parent composite.
-	 * @param queryAttributes
-	 *            Query attributes.
 	 * @param gson
 	 *            The Gson to use to deserialize query parameters.
 	 * @param page
 	 *            The wizard page.
 	 */
-	public QueryFieldVisitor(Composite group, Map<String, String> queryAttributes, Gson gson,
-			final TuleapCustomQueryPage page) {
+	public QueryFieldVisitor(Composite group, Gson gson, final TuleapCustomQueryPage page) {
 		this.group = group;
 		this.gson = gson;
 		this.page = page;
-		String jsonCriteria = queryAttributes.get(ITuleapQueryConstants.QUERY_CUSTOM_CRITERIA);
-		JsonParser parser = new JsonParser();
+		IRepositoryQuery currentQuery = page.getQuery();
+		String jsonCriteria = null;
+		if (currentQuery != null) {
+			jsonCriteria = currentQuery.getAttribute(ITuleapQueryConstants.QUERY_CUSTOM_CRITERIA);
+		}
 		JsonElement jsonElement;
 		if (jsonCriteria != null) {
-			jsonElement = parser.parse(jsonCriteria);
+			jsonElement = new JsonParser().parse(jsonCriteria);
 		} else {
 			jsonElement = JsonNull.INSTANCE;
 		}
@@ -224,9 +210,9 @@ public class QueryFieldVisitor extends AbstractTuleapFieldVisitor {
 				}
 			}
 		});
-		combo.addModifyListener(getModifyListener());
-		from.addPickerSelectionListener(getSelectionListener());
-		to.addPickerSelectionListener(getSelectionListener());
+		combo.addModifyListener(page.getModifyListener());
+		from.addPickerSelectionListener(page.getSelectionListener());
+		to.addPickerSelectionListener(page.getSelectionListener());
 		elements.add(new TuleapDateQueryElement(field, combo, from, to));
 	}
 
@@ -263,7 +249,7 @@ public class QueryFieldVisitor extends AbstractTuleapFieldVisitor {
 			}
 		}
 		elements.add(new TuleapDoubleQueryElement(field, text));
-		text.addModifyListener(getModifyListener());
+		text.addModifyListener(page.getModifyListener());
 	}
 
 	/**
@@ -290,7 +276,7 @@ public class QueryFieldVisitor extends AbstractTuleapFieldVisitor {
 			}
 		}
 		elements.add(new TuleapIntegerQueryElement(field, text));
-		text.addModifyListener(getModifyListener());
+		text.addModifyListener(page.getModifyListener());
 	}
 
 	/**
@@ -482,7 +468,7 @@ public class QueryFieldVisitor extends AbstractTuleapFieldVisitor {
 		list.setLayoutData(gridData);
 
 		selectItems(list, selectedItems);
-		combo.addModifyListener(getModifyListener());
+		combo.addModifyListener(page.getModifyListener());
 
 		elements.add(new TuleapSelectBoxQueryElement(field, list));
 	}
@@ -494,69 +480,5 @@ public class QueryFieldVisitor extends AbstractTuleapFieldVisitor {
 	 */
 	public List<AbstractTuleapCustomQueryElement<?>> getQueryElements() {
 		return Collections.unmodifiableList(elements);
-	}
-
-	/**
-	 * Provides the {@link ModifyListener} for this page's fields, after creating it and caching it if
-	 * necessary.
-	 *
-	 * @return The ModifyListener.
-	 */
-	protected ModifyListener getModifyListener() {
-		if (modifyListener == null) {
-			modifyListener = new ModifyListener() {
-				public void modifyText(ModifyEvent e) {
-					page.setErrorMessage(null);
-					boolean ok = page.isPageComplete();
-					if (ok) {
-						page.setPageComplete(true);
-					} else {
-						page.setPageComplete(false);
-						page.setErrorMessage(TuleapUIMessages
-								.getString(TuleapUIKeys.tuleapQueryInvalidCriteria));
-					}
-				}
-			};
-		}
-		return modifyListener;
-	}
-
-	/**
-	 * Provides the {@link SelectionListener} for this page's fields, after creating it and caching it if
-	 * necessary.
-	 *
-	 * @return The SelectionListener.
-	 */
-	protected SelectionListener getSelectionListener() {
-		if (selectionListener == null) {
-			// CHECKSTYLE:OFF
-			selectionListener = new SelectionListener() {
-				public void widgetSelected(SelectionEvent e) {
-					page.setErrorMessage(null);
-					boolean ok = page.isPageComplete();
-					if (ok) {
-						page.setPageComplete(true);
-					} else {
-						page.setPageComplete(false);
-						page.setErrorMessage(TuleapUIMessages
-								.getString(TuleapUIKeys.tuleapQueryInvalidCriteria));
-					}
-				}
-
-				public void widgetDefaultSelected(SelectionEvent e) {
-					page.setErrorMessage(null);
-					boolean ok = page.isPageComplete();
-					if (ok) {
-						page.setPageComplete(true);
-					} else {
-						page.setPageComplete(false);
-						page.setErrorMessage(TuleapUIMessages
-								.getString(TuleapUIKeys.tuleapQueryInvalidCriteria));
-					}
-				}
-			};
-			// CHECKSTYLE:ON
-		}
-		return selectionListener;
 	}
 }

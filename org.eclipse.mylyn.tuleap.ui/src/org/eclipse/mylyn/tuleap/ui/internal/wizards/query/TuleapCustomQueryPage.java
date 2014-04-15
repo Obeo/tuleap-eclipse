@@ -39,6 +39,10 @@ import org.eclipse.mylyn.tuleap.ui.internal.util.TuleapUIMessages;
 import org.eclipse.mylyn.tuleap.ui.internal.wizards.TuleapTrackerPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -74,14 +78,19 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 	private String queryTitle;
 
 	/**
-	 * Query attributes.
-	 */
-	private Map<String, String> queryAttributes = new HashMap<String, String>();
-
-	/**
 	 * Tracker configuration.
 	 */
 	private TuleapTracker tuleapTracker;
+
+	/**
+	 * The modify listener.
+	 */
+	private ModifyListener modifyListener;
+
+	/**
+	 * The selection listener.
+	 */
+	private SelectionListener selectionListener;
 
 	/**
 	 * The constructor.
@@ -119,7 +128,6 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 			String queryProjectId = this.getQuery().getAttribute(ITuleapQueryConstants.QUERY_PROJECT_ID);
 			this.projectId = Integer.valueOf(queryProjectId).intValue();
 			this.setQueryTitle(queryToEdit.getSummary());
-			this.queryAttributes.putAll(this.getQuery().getAttributes());
 		}
 	}
 
@@ -156,7 +164,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 				connectorKind);
 		if (!(connector instanceof TuleapRepositoryConnector)) {
 			TuleapTasksUIPlugin
-					.log(TuleapUIMessages.getString(TuleapUIKeys.invalidRepositoryConnector), true);
+			.log(TuleapUIMessages.getString(TuleapUIKeys.invalidRepositoryConnector), true);
 			return;
 		}
 
@@ -180,8 +188,7 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 			group.setLayout(new GridLayout(3, false));
 
 			Collection<AbstractTuleapField> fields = tuleapTracker.getFields();
-			QueryFieldVisitor visitor = new QueryFieldVisitor(group, queryAttributes, TuleapGsonProvider
-					.defaultGson(), this);
+			QueryFieldVisitor visitor = new QueryFieldVisitor(group, TuleapGsonProvider.defaultGson(), this);
 			for (AbstractTuleapField field : fields) {
 				field.accept(visitor);
 			}
@@ -309,5 +316,66 @@ public class TuleapCustomQueryPage extends AbstractRepositoryQueryPage2 {
 	@Override
 	public String getQueryTitle() {
 		return this.queryTitle;
+	}
+
+	/**
+	 * Provides the {@link ModifyListener} for this page's fields, after creating it and caching it if
+	 * necessary.
+	 *
+	 * @return The ModifyListener.
+	 */
+	public ModifyListener getModifyListener() {
+		if (modifyListener == null) {
+			modifyListener = new ModifyListener() {
+				public void modifyText(ModifyEvent e) {
+					setErrorMessage(null);
+					boolean ok = isPageComplete();
+					if (ok) {
+						setPageComplete(true);
+					} else {
+						setPageComplete(false);
+						setErrorMessage(TuleapUIMessages.getString(TuleapUIKeys.tuleapQueryInvalidCriteria));
+					}
+				}
+			};
+		}
+		return modifyListener;
+	}
+
+	/**
+	 * Provides the {@link SelectionListener} for this page's fields, after creating it and caching it if
+	 * necessary.
+	 *
+	 * @return The SelectionListener.
+	 */
+	public SelectionListener getSelectionListener() {
+		if (selectionListener == null) {
+			// CHECKSTYLE:OFF
+			selectionListener = new SelectionListener() {
+				public void widgetSelected(SelectionEvent e) {
+					setErrorMessage(null);
+					boolean ok = isPageComplete();
+					if (ok) {
+						setPageComplete(true);
+					} else {
+						setPageComplete(false);
+						setErrorMessage(TuleapUIMessages.getString(TuleapUIKeys.tuleapQueryInvalidCriteria));
+					}
+				}
+
+				public void widgetDefaultSelected(SelectionEvent e) {
+					setErrorMessage(null);
+					boolean ok = isPageComplete();
+					if (ok) {
+						setPageComplete(true);
+					} else {
+						setPageComplete(false);
+						setErrorMessage(TuleapUIMessages.getString(TuleapUIKeys.tuleapQueryInvalidCriteria));
+					}
+				}
+			};
+			// CHECKSTYLE:ON
+		}
+		return selectionListener;
 	}
 }
