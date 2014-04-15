@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.tuleap.ui.tests;
 
+import org.eclipse.mylyn.tuleap.ui.tests.internal.wizards.query.QueryFieldVisitorTest;
 import org.eclipse.mylyn.tuleap.ui.tests.internal.wizards.query.TuleapDateQueryElementTest;
 import org.eclipse.mylyn.tuleap.ui.tests.internal.wizards.query.TuleapDoubleQueryElementTest;
 import org.eclipse.mylyn.tuleap.ui.tests.internal.wizards.query.TuleapIntegerQueryElementTest;
@@ -26,7 +27,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({
 	// wizards.query
-	TuleapDateQueryElementTest.class, TuleapDoubleQueryElementTest.class,
+	QueryFieldVisitorTest.class, TuleapDateQueryElementTest.class, TuleapDoubleQueryElementTest.class,
 	TuleapIntegerQueryElementTest.class, TuleapSelectBoxQueryElementTest.class })
 public final class AllTuleapUiUnitTests {
 
