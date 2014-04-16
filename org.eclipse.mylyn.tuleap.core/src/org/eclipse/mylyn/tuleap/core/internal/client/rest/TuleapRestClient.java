@@ -18,7 +18,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +29,6 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tuleap.core.internal.TuleapCoreActivator;
 import org.eclipse.mylyn.tuleap.core.internal.client.ITuleapQueryConstants;
 import org.eclipse.mylyn.tuleap.core.internal.data.TuleapTaskId;
@@ -49,7 +47,6 @@ import org.eclipse.mylyn.tuleap.core.internal.model.data.IQueryCriterion;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifact;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifactWithAttachment;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifactWithComment;
-import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapAttachmentDescriptor;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapElementComment;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapFile;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapReference;
@@ -128,42 +125,6 @@ public class TuleapRestClient implements IAuthenticator {
 			return new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID, e.getMessage());
 		}
 		return Status.OK_STATUS;
-	}
-
-	/**
-	 * Returns the Tuleap server.
-	 *
-	 * @param monitor
-	 *            Used to monitor the progress
-	 * @return The server
-	 * @throws CoreException
-	 *             In case of error during the retrieval of the server
-	 */
-	public TuleapServer getServer(IProgressMonitor monitor) throws CoreException {
-		TuleapServer tuleapServer = new TuleapServer(this.taskRepository.getRepositoryUrl());
-		tuleapServer.setLastUpdate(new Date().getTime());
-
-		if (monitor != null) {
-			monitor.beginTask(TuleapCoreMessages.getString(TuleapCoreKeys.retrieveTuleapServer), 100);
-		}
-
-		for (TuleapProject project : getProjects(monitor)) {
-			tuleapServer.addProject(project);
-			for (TuleapTracker tracker : getProjectTrackers(project.getIdentifier(), monitor)) {
-				project.addTracker(tracker);
-			}
-
-			try {
-				for (TuleapUserGroup userGroup : getProjectUserGroups(project.getIdentifier(), monitor)) {
-					for (TuleapUser tuleapUser : getUserGroupUsers(userGroup.getId(), monitor)) {
-						tuleapServer.register(tuleapUser);
-					}
-				}
-			} catch (CoreException e) {
-				TuleapCoreActivator.log(e, false);
-			}
-		}
-		return tuleapServer;
 	}
 
 	/**
@@ -301,7 +262,6 @@ public class TuleapRestClient implements IAuthenticator {
 	}
 
 	/**
-	 * <<<<<<< HEAD Runs the report on the server for the tracker with the given tracker identifier. =======
 	 * Retrieve an artifact file attachment that is characterized by the data it contains.
 	 *
 	 * @param fileId
@@ -413,102 +373,6 @@ public class TuleapRestClient implements IAuthenticator {
 		RestResource tempFileResource = restResourceFactory.artifactTemporaryFile(fileId).withAuthenticator(
 				this);
 		tempFileResource.delete().checkedRun();
-	}
-
-	/**
-	 * Runs the query on the server for the tracker with the given tracker identifier.
-	 *
-	 * @param trackerId
-	 *            The identifier of the tracker
-	 * @param criteras
-	 *            The criteras of the query
-	 * @param collector
-	 *            The task data collector
-	 * @param monitor
-	 *            Used to monitor the progress
-	 * @return The number of artifact retrieved
-	 * @throws CoreException
-	 *             In case of error during the query execution
-	 */
-	public int executeQuery(int trackerId, Map<String, String> criteras, TaskDataCollector collector,
-			IProgressMonitor monitor) throws CoreException {
-		// Test the connection
-		// Try to log in
-		// Send a request with OPTIONS to ensure that we can and have the right to run a query
-		// Run the report
-		// Create the task data from the result
-		// Put them in the task data collector
-		// Try to log out
-		return -1;
-	}
-
-	/**
-	 * Retrieve the content of the attachment with the given attachment identifier.
-	 *
-	 * @param attachmentId
-	 *            The identifier of the attachment
-	 * @param monitor
-	 *            Used to monitor the progress
-	 * @return The content of the attachment
-	 * @throws CoreException
-	 *             In case of error during the attachment content retrieval
-	 */
-	public byte[] getAttachmentContent(int attachmentId, IProgressMonitor monitor) throws CoreException {
-		// Test the connection
-
-		// Try to log in
-
-		// Send a request with OPTIONS to ensure that we can and have the right to retrieve the file
-
-		// Retrieve the details of the file from the OPTIONS request (size)
-
-		// Download a chunk of the file until completion
-
-		// Assemble the whole file in an array of byte
-
-		// Try to log out
-
-		return null;
-	}
-
-	/**
-	 * Uploads an attachment to the server for the given artifact.
-	 *
-	 * @param artifactId
-	 *            The identifier of the artifact
-	 * @param attachmentFieldId
-	 *            The identifier of the file field in the artifact
-	 * @param tuleapAttachmentDescriptor
-	 *            The descriptor of the attachment
-	 * @param comment
-	 *            The comment
-	 * @param monitor
-	 *            Used to monitor the progress
-	 * @throws CoreException
-	 *             In case of error during the attachment upload
-	 */
-	public void uploadAttachment(int artifactId, int attachmentFieldId,
-			TuleapAttachmentDescriptor tuleapAttachmentDescriptor, String comment, IProgressMonitor monitor)
-			throws CoreException {
-		// Test the connection
-
-		// Try to log in
-
-		// Send a request with OPTIONS to ensure that we can and have the right to upload a file
-
-		// Send the first chunk of data to create a temporary file
-
-		// Retrieve the upload id as a response
-
-		// Send the remaining chunk using the upload id
-
-		// Send a request with POST in order to complete the upload of the temporary file
-
-		// Send a request with OPTIONS to ensure that we can and have the right to update the artifact
-
-		// Update the artifact with a new attachment
-
-		// Try to log out
 	}
 
 	/**

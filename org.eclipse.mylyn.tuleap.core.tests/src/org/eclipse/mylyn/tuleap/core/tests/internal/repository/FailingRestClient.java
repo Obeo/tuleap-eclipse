@@ -13,14 +13,12 @@ package org.eclipse.mylyn.tuleap.core.tests.internal.repository;
 import com.google.gson.Gson;
 
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tuleap.core.internal.client.rest.RestResourceFactory;
 import org.eclipse.mylyn.tuleap.core.internal.client.rest.TuleapRestClient;
 import org.eclipse.mylyn.tuleap.core.internal.data.TuleapTaskId;
@@ -34,7 +32,6 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapUserGroup;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifact;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifactWithAttachment;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapArtifactWithComment;
-import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapAttachmentDescriptor;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapElementComment;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapFile;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapReference;
@@ -70,13 +67,6 @@ public class FailingRestClient extends TuleapRestClient {
 	}
 
 	@Override
-	public int executeQuery(int trackerId, Map<String, String> criteras, TaskDataCollector collector,
-			IProgressMonitor monitor) throws CoreException {
-		fail("Should not be called.");
-		return -1;
-	}
-
-	@Override
 	public TuleapArtifact getArtifact(int artifactId, TuleapServer server, IProgressMonitor monitor)
 			throws CoreException {
 		fail("Should not be called.");
@@ -101,12 +91,6 @@ public class FailingRestClient extends TuleapRestClient {
 	public List<TuleapArtifact> getArtifactsFromQuery(IRepositoryQuery query, TuleapTracker tracker,
 			IProgressMonitor monitor) throws CoreException {
 		fail("Should not be called.");
-		return null;
-	}
-
-	@Override
-	public byte[] getAttachmentContent(int attachmentId, IProgressMonitor monitor) throws CoreException {
-		fail("Should not be called");
 		return null;
 	}
 
@@ -184,13 +168,6 @@ public class FailingRestClient extends TuleapRestClient {
 	public void updateArtifactFile(int fileId, String data, int offset, IProgressMonitor monitor)
 			throws CoreException {
 		fail("Should not be called.");
-	}
-
-	@Override
-	public void uploadAttachment(int artifactId, int attachmentFieldId,
-			TuleapAttachmentDescriptor tuleapAttachmentDescriptor, String comment, IProgressMonitor monitor)
-					throws CoreException {
-		fail("Should not be called");
 	}
 
 	@Override
