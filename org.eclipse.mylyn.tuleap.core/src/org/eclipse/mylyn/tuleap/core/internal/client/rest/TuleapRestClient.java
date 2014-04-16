@@ -159,14 +159,14 @@ public class TuleapRestClient implements IAuthenticator {
 	 *             In case of error during the authentication.
 	 */
 	public void login() throws CoreException {
-		RestResource restBacklogItem = restResourceFactory.tokens();
+		RestResource restTokens = restResourceFactory.tokens();
 		AuthenticationCredentials credentials = taskRepository.getCredentials(AuthenticationType.REPOSITORY);
 		// Credentials can be null?
 		if (credentials != null) {
 			String credentialsToPost = getCredentials(credentials);
 			// Send the POST request
 			// It is on purpose that there is no authenticator here!
-			RestOperation postOperation = restBacklogItem.post().withBody(credentialsToPost);
+			RestOperation postOperation = restTokens.post().withBody(credentialsToPost);
 			ServerResponse response = postOperation.checkedRun();
 			this.token = gson.fromJson(response.getBody(), TuleapToken.class);
 		} else {
@@ -395,9 +395,9 @@ public class TuleapRestClient implements IAuthenticator {
 			monitor.subTask(TuleapCoreMessages
 					.getString(TuleapCoreKeys.deletingFile, Integer.valueOf(fileId)));
 		}
-		RestResource milestoneResource = restResourceFactory.artifactTemporaryFile(fileId).withAuthenticator(
+		RestResource tempFileResource = restResourceFactory.artifactTemporaryFile(fileId).withAuthenticator(
 				this);
-		milestoneResource.delete().checkedRun();
+		tempFileResource.delete().checkedRun();
 	}
 
 	/**
