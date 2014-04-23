@@ -26,6 +26,7 @@ import org.eclipse.mylyn.tuleap.core.internal.model.config.AbstractTuleapField;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapProject;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.TuleapTracker;
 import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapComputedValue;
+import org.eclipse.mylyn.tuleap.core.internal.model.config.field.TuleapFileUpload;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.AbstractFieldValue;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.ArtifactReference;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapReference;
@@ -228,7 +229,11 @@ public class MilestoneTaskDataConverter {
 	private void populateCardField(TuleapTracker tracker, AbstractFieldValue fieldValue,
 			AbstractTuleapField field, TaskAttribute fieldAtt) {
 		try {
-			field.setValue(fieldAtt, fieldValue);
+			// REQ-6749 Errors when File upload in cards.
+			// File upload fields in cards need to be handled appropriately later.
+			if (!(field instanceof TuleapFileUpload)) {
+				field.setValue(fieldAtt, fieldValue);
+			}
 			// CHECKSTYLE:OFF
 		} catch (Exception e) {
 			// CHECKSTYLE:ON
