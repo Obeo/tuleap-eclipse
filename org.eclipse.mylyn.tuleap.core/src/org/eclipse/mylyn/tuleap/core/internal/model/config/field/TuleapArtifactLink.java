@@ -11,6 +11,7 @@
 package org.eclipse.mylyn.tuleap.core.internal.model.config.field;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -101,28 +102,54 @@ public class TuleapArtifactLink extends AbstractTuleapField {
 	 */
 	@Override
 	public AbstractFieldValue createFieldValue(TaskAttribute attribute, int fieldId) {
+		// For compatibility, we continue to assume that artifact links can either
+		// have one value which is a list of comma-separated IDs,
+		// or a list of values.
+		// Because older versions of the connector created a list of values for such fields,
+		// even though the mylyn editor sets one value with a comma-separated list...
+		// Request-6750
 		List<String> taskAttValues = attribute.getValues();
+		if (taskAttValues.size() == 1 && taskAttValues.get(0).contains(",")) { //$NON-NLS-1$
+			taskAttValues = Arrays.asList(taskAttValues.get(0).split(",")); //$NON-NLS-1$
+		}
 		int[] values = new int[taskAttValues.size()];
 		int i = 0;
 		for (String attValue : taskAttValues) {
-			try {
-				values[i] = Integer.parseInt(attValue);
-			} catch (NumberFormatException e) {
-				// FIXME SBE Support full task key in the task dependency fields!!!!!!!
-				// /!\HACKISH/!\ We may have, as the id of the task, an identifier (ie: 917)
-				// or a complex identifier (ie: MyRepository:MyProject[116] #917 - My Task
-				// Name). We will try to parse the value as an integer, if it fails, then we
-				// know that we have a complex identifier, in that case, we will parse the
-				// identifier from this complex identifier and use it.
-				Pattern pattern = Pattern.compile("#(\\d+)"); //$NON-NLS-1$
-				Matcher matcher = pattern.matcher(attValue);
-				if (matcher.find()) {
-					values[i] = Integer.parseInt(matcher.group(1));
-				}
+			int v = extractArtifactIdFromTaskLinkId(attValue.trim());
+			if (v != -1) {
+				values[i] = v;
 			}
 			i++;
 		}
 		return new ArtifactLinkFieldValue(fieldId, values);
+	}
+
+	/**
+	 * Extracts the integer id from the string representation of this ID, which can be complex in certain
+	 * cases.
+	 *
+	 * @param attValue
+	 *            One of the String values contained by the "artifact link" field.
+	 * @return The integer value to use, or -1 if the value cannot be extracted.
+	 */
+	private int extractArtifactIdFromTaskLinkId(String attValue) {
+		int v = -1;
+		try {
+			v = Integer.parseInt(attValue);
+		} catch (NumberFormatException e) {
+			// FIXME SBE Support full task key in the task dependency fields!!!!!!!
+			// /!\HACKISH/!\ We may have, as the id of the task, an identifier (ie: 917)
+			// or a complex identifier (ie: MyRepository:MyProject[116] #917 - My Task
+			// Name). We will try to parse the value as an integer, if it fails, then we
+			// know that we have a complex identifier, in that case, we will parse the
+			// identifier from this complex identifier and use it.
+			Pattern pattern = Pattern.compile("#(\\d+)"); //$NON-NLS-1$
+			Matcher matcher = pattern.matcher(attValue);
+			if (matcher.find()) {
+				v = Integer.parseInt(matcher.group(1));
+			}
+		}
+		return v;
 	}
 
 	/**
