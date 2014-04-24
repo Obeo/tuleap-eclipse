@@ -97,7 +97,22 @@ public class ArtifactTaskDataConverter {
 		tuleapArtifactMapper.setTaskKey(taskKey);
 
 		// URL
-		tuleapArtifactMapper.setTaskUrl(element.getHtmlUrl());
+		// We need to convert the received URL from relative to absolute
+		String artifactUrl = element.getHtmlUrl();
+		if (artifactUrl != null && !artifactUrl.isEmpty()) {
+			StringBuilder b = new StringBuilder();
+			String repoUrl = taskRepository.getUrl();
+			String slash = "/"; //$NON-NLS-1$
+			while (repoUrl.endsWith(slash)) {
+				repoUrl = repoUrl.substring(0, repoUrl.length() - 1);
+			}
+			b.append(repoUrl);
+			if (!artifactUrl.startsWith(slash)) {
+				b.append(slash);
+			}
+			b.append(artifactUrl);
+			tuleapArtifactMapper.setTaskUrl(b.toString());
+		}
 
 		// Dates
 		tuleapArtifactMapper.setCreationDate(element.getSubmittedOn());

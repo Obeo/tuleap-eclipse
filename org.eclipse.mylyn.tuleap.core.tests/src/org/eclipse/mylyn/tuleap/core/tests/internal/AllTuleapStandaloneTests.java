@@ -20,6 +20,7 @@ import org.eclipse.mylyn.tuleap.core.tests.internal.client.rest.TuleapRestClient
 import org.eclipse.mylyn.tuleap.core.tests.internal.client.rest.TuleapRestClientQueryTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.client.rest.TuleapRestClientTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.client.rest.TuleapRestResourceFactoryTest;
+import org.eclipse.mylyn.tuleap.core.tests.internal.converter.ArtifactTaskDataConverterTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.converter.MilestoneTaskDataConverterTest;
 import org.eclipse.mylyn.tuleap.core.tests.internal.data.TuleapArtifactMapperTests;
 import org.eclipse.mylyn.tuleap.core.tests.internal.data.TuleapTaskIdTests;
@@ -72,6 +73,7 @@ import org.junit.runners.Suite;
 	TuleapRestClientQueryTest.class,
 	TuleapRestResourceFactoryTest.class,
 	// converter
+	ArtifactTaskDataConverterTest.class,
 	MilestoneTaskDataConverterTest.class,
 	// data
 	TuleapArtifactMapperTests.class,

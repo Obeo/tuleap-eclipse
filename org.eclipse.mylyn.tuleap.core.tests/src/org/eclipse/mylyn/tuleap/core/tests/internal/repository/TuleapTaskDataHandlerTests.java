@@ -119,7 +119,7 @@ public class TuleapTaskDataHandlerTests {
 	/**
 	 * The identifier of the backlog item.
 	 */
-	private int backlogItemId;
+	private int backlogItemId = 1234;
 
 	/**
 	 * The task data.
@@ -246,6 +246,7 @@ public class TuleapTaskDataHandlerTests {
 		final TuleapArtifact tuleapArtifact = new TuleapArtifact(artifactId, projectRef, "", "", "",
 				new Date(), new Date());
 		tuleapArtifact.setTracker(trackerRef);
+		tuleapArtifact.setHtmlUrl("/plugins/tracker/?aid=" + taskId.getArtifactId());
 		final TuleapMilestone tuleapMilestone = new TuleapMilestone(milestoneId, projectRef, "", "", "",
 				new Date(), new Date());
 		final TuleapBacklogItem tuleapBacklogItem = new TuleapBacklogItem(backlogItemId, projectRef, "", "",
@@ -385,7 +386,7 @@ public class TuleapTaskDataHandlerTests {
 		this.testGetTaskData(TuleapTaskId.forArtifact(projectRef.getId(), trackerRef.getId(), artifactId));
 		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer.getProject(
 				projectRef.getId()).getTracker(trackerRef.getId()));
-		assertEquals("https://test.url/plugins/tracker/?group_id=51&tracker=1&aid=42", mapper.getTaskUrl());
+		assertEquals("https://test.url/plugins/tracker/?aid=42", mapper.getTaskUrl());
 
 	}
 
@@ -397,7 +398,7 @@ public class TuleapTaskDataHandlerTests {
 		this.testGetTaskData(TuleapTaskId.forArtifact(projectRef.getId(), milestoneTrackerId, milestoneId));
 		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer.getProject(
 				projectRef.getId()).getTracker(trackerRef.getId()));
-		assertEquals("https://test.url/plugins/tracker/?group_id=51&tracker=2&aid=43", mapper.getTaskUrl());
+		assertEquals("https://test.url/plugins/tracker/?aid=43", mapper.getTaskUrl());
 	}
 
 	/**
@@ -409,7 +410,7 @@ public class TuleapTaskDataHandlerTests {
 				.forArtifact(projectRef.getId(), backlogItemTrackerId, backlogItemId));
 		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer.getProject(
 				projectRef.getId()).getTracker(trackerRef.getId()));
-		assertEquals("https://test.url/plugins/tracker/?group_id=51&tracker=3&aid=0", mapper.getTaskUrl());
+		assertEquals("https://test.url/plugins/tracker/?aid=1234", mapper.getTaskUrl());
 	}
 
 	/**
