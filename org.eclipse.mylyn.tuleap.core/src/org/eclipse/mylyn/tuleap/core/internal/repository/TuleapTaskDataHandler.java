@@ -232,9 +232,6 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		TuleapArtifact tuleapArtifact = client.getArtifact(taskId.getArtifactId(), server, monitor);
 		TuleapTaskId refreshedTaskId = taskId;
 		if (tuleapArtifact != null) {
-			String repositoryUrl = server.getUrl();
-			String htmlUrl = taskId.getTaskUrl(repositoryUrl);
-			tuleapArtifact.setHtmlUrl(htmlUrl);
 			for (TuleapElementComment comment : client.getArtifactComments(tuleapArtifact.getId().intValue(),
 					server, monitor)) {
 				tuleapArtifact.addComment(comment);

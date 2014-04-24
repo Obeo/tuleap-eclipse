@@ -212,6 +212,7 @@ public class TuleapTaskDataHandlerTests {
 		final TuleapArtifact tuleapArtifact = new TuleapArtifact(artifactId, projectRef, "", "", "",
 				new Date(), new Date());
 		tuleapArtifact.setTracker(trackerRef);
+		tuleapArtifact.setHtmlUrl("/plugins/tracker/?aid=" + taskId.getArtifactId());
 
 		// Mock rest client
 		final TuleapRestClient tuleapRestClient = new TuleapRestClient(null, null, null) {
@@ -309,7 +310,7 @@ public class TuleapTaskDataHandlerTests {
 		this.testGetTaskData(TuleapTaskId.forArtifact(projectRef.getId(), trackerRef.getId(), artifactId));
 		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer.getProject(
 				projectRef.getId()).getTracker(trackerRef.getId()));
-		assertEquals("https://test.url/plugins/tracker/?group_id=51&tracker=1&aid=42", mapper.getTaskUrl());
+		assertEquals("https://test.url/plugins/tracker/?aid=42", mapper.getTaskUrl());
 
 	}
 
