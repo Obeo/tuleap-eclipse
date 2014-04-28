@@ -390,6 +390,11 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 					String parentMilestoneId = milestoneMapping.getParentMilestoneId();
 					synchronizeMilestoneParentAttributes(tuleapArtifactMapper, parentMilestoneId, server);
 				}
+				if (initializationData instanceof TuleapBacklogItemMapping) {
+					TuleapBacklogItemMapping backlogItemMapping = (TuleapBacklogItemMapping)initializationData;
+					String parentMilestoneId = backlogItemMapping.getParentMilestoneId();
+					synchronizeMilestoneParentAttributes(tuleapArtifactMapper, parentMilestoneId, server);
+				}
 			}
 		}
 		return isInitialized;

@@ -21,6 +21,7 @@ import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.tuleap.mylyn.task.agile.core.IBacklogItemMapping;
 import org.tuleap.mylyn.task.agile.core.IMilestoneMapping;
 import org.tuleap.mylyn.task.agile.core.data.cardwall.CardwallWrapper;
 import org.tuleap.mylyn.task.agile.ui.AbstractAgileRepositoryConnectorUI;
@@ -32,6 +33,7 @@ import org.tuleap.mylyn.task.core.internal.repository.TuleapRepositoryConnector;
 import org.tuleap.mylyn.task.core.internal.util.ITuleapConstants;
 import org.tuleap.mylyn.task.ui.internal.TuleapTasksUIPlugin;
 import org.tuleap.mylyn.task.ui.internal.editor.TuleapTaskEditorPageFactory;
+import org.tuleap.mylyn.task.ui.internal.wizards.newbacklogItem.NewBacklogItemWizard;
 import org.tuleap.mylyn.task.ui.internal.wizards.newsubmilestone.NewTuleapMilestoneWizard;
 
 /**
@@ -93,6 +95,40 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 		// repositoryConnector.getTaskDataHandler().initializeTaskData(TaskRepository, TaskData, ITaskMapping,
 		// IProgressMonitor);
 		// create task from task data
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see org.tuleap.mylyn.task.agile.ui.AbstractAgileRepositoryConnectorUI#getNewBacklogItemMapping(org.eclipse.mylyn.tasks.core.data.TaskData,
+	 *      java.lang.String, org.eclipse.mylyn.tasks.core.TaskRepository,
+	 *      org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	@Override
+	public IBacklogItemMapping getNewBacklogItemMapping(TaskData planningTaskData, String parentMilestoneId,
+			TaskRepository taskRepository, IProgressMonitor monitor) {
+		// Display the wizard used to select the kind of the milestone to select
+		String connectorKind = taskRepository.getConnectorKind();
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+				connectorKind);
+		if (connector instanceof TuleapRepositoryConnector) {
+			TuleapRepositoryConnector tuleapConnector = (TuleapRepositoryConnector)connector;
+			TuleapServer server = tuleapConnector.getServer(taskRepository);
+
+			int projectId = TuleapTaskId.forName(planningTaskData.getTaskId()).getProjectId();
+			TuleapProject project = server.getProject(projectId);
+
+			NewBacklogItemWizard wizard = new NewBacklogItemWizard(project, parentMilestoneId);
+
+			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+			WizardDialog dialog = new WizardDialog(shell, wizard);
+
+			int result = dialog.open();
+			if (result == WizardDialog.OK) {
+				return wizard.getBacklogItemMapping();
+			}
+		}
+		return null;
 	}
 
 	/**
