@@ -4,21 +4,25 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.tuleap.core.internal.model.data.agile;
 
+import com.google.common.collect.Maps;
+
 import java.util.Date;
+import java.util.Map;
 
 import org.eclipse.mylyn.tuleap.core.internal.model.data.AbstractTuleapDetailedElement;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.ArtifactReference;
+import org.eclipse.mylyn.tuleap.core.internal.model.data.ResourceDescription;
 import org.eclipse.mylyn.tuleap.core.internal.model.data.TuleapReference;
 
 /**
  * A milestone with its backlog items and its sub-milestones.
- * 
+ *
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
 public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
@@ -84,15 +88,20 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 	private String statusValue;
 
 	/**
+	 * The milestone's authorized resources.
+	 */
+	private Map<String, ResourceDescription> resources;
+
+	/**
 	 * Default constructor for deserialization.
 	 */
 	public TuleapMilestone() {
-		// Default constructor for deserialization.
+		resources = Maps.newHashMap();
 	}
 
 	/**
 	 * The constructor used when we are creating a milestone.
-	 * 
+	 *
 	 * @param projectRef
 	 *            The reference to the project
 	 */
@@ -102,7 +111,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 
 	/**
 	 * The constructor used when we are updating a milestone.
-	 * 
+	 *
 	 * @param id
 	 *            The identifier of the milestone
 	 * @param projectRef
@@ -114,7 +123,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 
 	/**
 	 * The constructor used when we are retrieving a milestone from the server.
-	 * 
+	 *
 	 * @param id
 	 *            The identifier of the milestone
 	 * @param projectRef
@@ -137,7 +146,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 
 	/**
 	 * Artifact ref.
-	 * 
+	 *
 	 * @return the artifactRef
 	 */
 	public ArtifactReference getArtifact() {
@@ -146,7 +155,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 
 	/**
 	 * Artifact ref.
-	 * 
+	 *
 	 * @param artifact
 	 *            the artifact reference
 	 */
@@ -156,7 +165,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 
 	/**
 	 * parent milestone.
-	 * 
+	 *
 	 * @param parent
 	 *            the parentMilestone to set
 	 */
@@ -166,7 +175,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 
 	/**
 	 * Returns the parent milestone or <code>null</code> if there is no parent for this milestone.
-	 * 
+	 *
 	 * @return The parent milestone or <code>null</code> if there is no parent for this milestone
 	 */
 	public ArtifactReference getParent() {
@@ -175,7 +184,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 
 	/**
 	 * Start date getter.
-	 * 
+	 *
 	 * @return the startDate
 	 */
 	public Date getStartDate() {
@@ -184,7 +193,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 
 	/**
 	 * Start date setter.
-	 * 
+	 *
 	 * @param startDate
 	 *            the startDate to set
 	 */
@@ -194,7 +203,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 
 	/**
 	 * End date getter.
-	 * 
+	 *
 	 * @return the startDate
 	 */
 	public Date getEndDate() {
@@ -203,7 +212,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 
 	/**
 	 * End date setter.
-	 * 
+	 *
 	 * @param endDate
 	 *            the startDate to set
 	 */
@@ -213,7 +222,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 
 	/**
 	 * capacity getter.
-	 * 
+	 *
 	 * @return the capacity
 	 */
 	public String getCapacity() {
@@ -222,7 +231,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 
 	/**
 	 * Capacity setter.
-	 * 
+	 *
 	 * @param capacity
 	 *            the capacity to set
 	 */
@@ -232,7 +241,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 
 	/**
 	 * URI for sub-milestones.
-	 * 
+	 *
 	 * @return the subMilestonesUri
 	 */
 	public String getSubMilestonesUri() {
@@ -241,7 +250,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 
 	/**
 	 * URI for sub-milestones.
-	 * 
+	 *
 	 * @param subMilestonesUri
 	 *            the subMilestonesUri to set
 	 */
@@ -251,7 +260,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 
 	/**
 	 * URI for backlog.
-	 * 
+	 *
 	 * @return the backlogUri
 	 */
 	public String getBacklogUri() {
@@ -260,7 +269,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 
 	/**
 	 * URI for backlog.
-	 * 
+	 *
 	 * @param backlogUri
 	 *            the backlogUri to set
 	 */
@@ -270,7 +279,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 
 	/**
 	 * URI for content.
-	 * 
+	 *
 	 * @return the contentUri
 	 */
 	public String getContentUri() {
@@ -279,7 +288,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 
 	/**
 	 * URI for content.
-	 * 
+	 *
 	 * @param contentUri
 	 *            the contentUri to set
 	 */
@@ -289,7 +298,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 
 	/**
 	 * URI for cardwall.
-	 * 
+	 *
 	 * @return the cardwallUri
 	 */
 	public String getCardwallUri() {
@@ -298,7 +307,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 
 	/**
 	 * URI for cardwall.
-	 * 
+	 *
 	 * @param cardwallUri
 	 *            the contentUri to set
 	 */
@@ -308,7 +317,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 
 	/**
 	 * The status label.
-	 * 
+	 *
 	 * @return the status label
 	 */
 	public String getStatusValue() {
@@ -317,7 +326,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 
 	/**
 	 * The status label.
-	 * 
+	 *
 	 * @param statusValue
 	 *            the status label to set
 	 */
@@ -327,7 +336,7 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 
 	/**
 	 * Burndown getter.
-	 * 
+	 *
 	 * @return the burndownUri
 	 */
 	public String getBurndownUri() {
@@ -336,12 +345,31 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 
 	/**
 	 * Burndown setter.
-	 * 
+	 *
 	 * @param burndownUri
 	 *            the burndownUri to set
 	 */
 	public void setBurndownUri(String burndownUri) {
 		this.burndownUri = burndownUri;
+	}
+
+	/**
+	 * Resources getter.
+	 *
+	 * @return the resources
+	 */
+	public Map<String, ResourceDescription> getResources() {
+		return resources;
+	}
+
+	/**
+	 * Resources setter.
+	 *
+	 * @param resources
+	 *            the resources to set
+	 */
+	public void setResources(Map<String, ResourceDescription> resources) {
+		this.resources = resources;
 	}
 
 }

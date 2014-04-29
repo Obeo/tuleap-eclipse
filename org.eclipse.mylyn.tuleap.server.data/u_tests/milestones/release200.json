@@ -30,5 +30,50 @@
     "status_value": "Done",
     "sub_milestones_uri": "milestones/200/milestones",
     "backlog_uri": "milestones/200/backlog",
-    "content_uri": "milestones/200/content"
+    "content_uri": "milestones/200/content",
+    "resources": {
+        "milestones": {
+            "uri": "/milestones/666/milestones",
+            "accept": {
+                "trackers": [
+                    {
+                        "id": "21",
+                        "uri": "/trackers/21"
+                    }
+                ]
+            }
+        },
+        "backlog": {
+            "uri": "/milestones/666/backlog",
+            "accept": {
+                "trackers": [
+                    {
+                        "id": "41",
+                        "uri": "/trackers/41"
+                    },
+                    {
+                        "id": "42",
+                        "uri": "/trackers/42"
+                    }
+                ]
+            }
+        },
+        "content": {
+            "uri": "/milestones/666/content",
+            "accept": {
+                "trackers": [
+                    {
+                        "id": "43",
+                        "uri": "/trackers/43"
+                    },
+                    {
+                        "id": "44",
+                        "uri": "/trackers/44"
+                    }
+                ]
+            }
+        },
+        "cardwall": null,
+        "burndown": null
+    }
 }

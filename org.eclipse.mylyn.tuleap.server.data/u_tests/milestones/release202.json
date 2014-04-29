@@ -1,16 +1,16 @@
 {
-    "id": 201,
+    "id": 202,
     "artifact": {
-        "id": 201,
-        "uri": "artifacts/201",
+        "id": 202,
+        "uri": "artifacts/202",
         "tracker": {
             "id": 901,
             "uri": "trackers/901"
         }
     },
     "parent": {
-        "id": 202,
-        "uri": "milestones/202",
+        "id": 203,
+        "uri": "milestones/203",
         "tracker": {
             "id": 901,
             "uri": "trackers/901"
@@ -21,7 +21,7 @@
         "uri": "projects/3"
     },
     "label": "Release TU",
-    "uri": "milestones/201",
+    "uri": "milestones/202",
     "submitted_by": 1,
     "submitted_on": "2013-09-23T11:44:18.963Z",
     "start_date": "2013-10-23T11:44:18.963Z",
@@ -30,12 +30,5 @@
     "status_value": "Current",
     "sub_milestones_uri": "milestones/201/milestones",
     "backlog_uri": "milestones/201/backlog",
-    "content_uri": "milestones/201/content",
-    "resources": {
-        "milestones": null,
-        "backlog": null,
-        "content": null,
-        "cardwall": null,
-        "burndown": null
-    }
+    "content_uri": "milestones/201/content"
 }
