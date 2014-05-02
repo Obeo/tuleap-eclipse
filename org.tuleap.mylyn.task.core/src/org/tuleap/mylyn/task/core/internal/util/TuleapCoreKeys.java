@@ -571,6 +571,11 @@ public class TuleapCoreKeys extends NLS {
 	 */
 	public static String addBacklogItemToMilestone;
 
+	/**
+	 * Invoking addSubmilestone can only be made on a TaskData that can have sub-milestones.
+	 */
+	public static String notAllowedAddSubmilestones;
+
 	static {
 		// load message values from bundle file
 		reloadMessages();

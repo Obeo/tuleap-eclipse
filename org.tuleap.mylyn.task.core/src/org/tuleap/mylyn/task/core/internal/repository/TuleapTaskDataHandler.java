@@ -31,6 +31,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.tuleap.mylyn.task.agile.core.data.planning.MilestonePlanningWrapper;
 import org.tuleap.mylyn.task.agile.core.data.planning.TopPlanningMapper;
 import org.tuleap.mylyn.task.core.internal.TuleapCoreActivator;
 import org.tuleap.mylyn.task.core.internal.client.rest.TuleapRestClient;
@@ -41,6 +42,7 @@ import org.tuleap.mylyn.task.core.internal.data.converter.MilestoneTaskDataConve
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapProject;
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapServer;
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapTracker;
+import org.tuleap.mylyn.task.core.internal.model.data.ResourceDescription;
 import org.tuleap.mylyn.task.core.internal.model.data.TuleapArtifact;
 import org.tuleap.mylyn.task.core.internal.model.data.TuleapArtifactWithComment;
 import org.tuleap.mylyn.task.core.internal.model.data.TuleapElementComment;
@@ -197,7 +199,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 						subMilestoneTaskId);
 				try {
 					tuleapRestClient
-					.updateMilestoneContent(subMilestone.getId().intValue(), content, monitor);
+							.updateMilestoneContent(subMilestone.getId().intValue(), content, monitor);
 				} catch (CoreException e) {
 					exceptions.add(e);
 				}
@@ -268,7 +270,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				TuleapMilestone milestone = new TuleapMilestone(id, projectRef);
 				subMilestones.add(milestone);
 				tuleapRestClient
-				.updateMilestoneSubmilestones(parentMilestoneSimpleId, subMilestones, monitor);
+						.updateMilestoneSubmilestones(parentMilestoneSimpleId, subMilestones, monitor);
 			}
 		}
 	}
@@ -310,7 +312,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 						subMilestoneTaskId);
 				try {
 					tuleapRestClient
-					.updateMilestoneContent(subMilestone.getId().intValue(), content, monitor);
+							.updateMilestoneContent(subMilestone.getId().intValue(), content, monitor);
 				} catch (CoreException e) {
 					exceptions.add(e);
 				}
@@ -527,7 +529,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 */
 	private TaskData getArtifactTaskData(TuleapTaskId taskId, TuleapServer server,
 			TaskRepository taskRepository, boolean refreshTracker, IProgressMonitor monitor)
-					throws CoreException {
+			throws CoreException {
 		TuleapRestClient client = this.connector.getClientManager().getRestClient(taskRepository);
 		TuleapArtifact tuleapArtifact = client.getArtifact(taskId.getArtifactId(), server, monitor);
 		TuleapTaskId refreshedTaskId = taskId;
@@ -588,27 +590,10 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 					connector);
 			taskDataConverter.populateTaskData(taskData, milestone, monitor);
 
-			// Fetch planning
-			try {
-				List<TuleapBacklogItem> backlog = restClient.getMilestoneBacklog(milestoneId, monitor);
-				taskDataConverter.populateBacklog(taskData, backlog, monitor);
-			} catch (CoreException e) {
-				TuleapCoreActivator.log(e, true);
+			if (milestone.getResources() != null) {
+				fetchMilestoneResources(taskData, monitor, restClient, milestoneId, milestone,
+						taskDataConverter);
 			}
-
-			List<TuleapMilestone> subMilestones = restClient.getSubMilestones(milestoneId, monitor);
-
-			for (TuleapMilestone tuleapMilestone : subMilestones) {
-				List<TuleapBacklogItem> content;
-				try {
-					content = restClient.getMilestoneContent(tuleapMilestone.getId().intValue(), monitor);
-				} catch (CoreException e) {
-					TuleapCoreActivator.log(e, true);
-					content = Collections.emptyList();
-				}
-				taskDataConverter.addSubmilestone(taskData, tuleapMilestone, content, monitor);
-			}
-
 			// Fetch cardwall if necessary
 			if (milestone.getCardwallUri() != null) {
 				try {
@@ -632,6 +617,58 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			return taskData;
 		}
 		return null;
+	}
+
+	/**
+	 * Fetch milestone available resources.
+	 *
+	 * @param taskData
+	 *            the taskData
+	 * @param monitor
+	 *            The progress monitor
+	 * @param restClient
+	 *            The rest client
+	 * @param milestoneId
+	 *            The milestone Id
+	 * @param milestone
+	 *            The milestone
+	 * @param taskDataConverter
+	 *            The milestone task data converter
+	 * @throws CoreException
+	 *             In case of issues during the download of the artifact data
+	 */
+	private void fetchMilestoneResources(TaskData taskData, IProgressMonitor monitor,
+			TuleapRestClient restClient, int milestoneId, TuleapMilestone milestone,
+			MilestoneTaskDataConverter taskDataConverter) throws CoreException {
+		// Fetch planning
+		MilestonePlanningWrapper milestonePlanning = new MilestonePlanningWrapper(taskData.getRoot());
+		try {
+			if (milestone.getResources().get(ResourceDescription.BACKLOG) != null) {
+				List<TuleapBacklogItem> backlog = restClient.getMilestoneBacklog(milestoneId, monitor);
+				taskDataConverter.populateBacklog(taskData, backlog, monitor);
+			}
+		} catch (CoreException e) {
+			TuleapCoreActivator.log(e, true);
+		}
+
+		if (milestone.getResources().get(ResourceDescription.MILESTONES) != null) {
+			milestonePlanning.setAllowedToHaveSubmilestones(true);
+			List<TuleapMilestone> subMilestones = restClient.getSubMilestones(milestoneId, monitor);
+
+			for (TuleapMilestone tuleapMilestone : subMilestones) {
+				if (tuleapMilestone.getResources().get(ResourceDescription.CONTENT) != null) {
+					List<TuleapBacklogItem> content;
+					try {
+						content = restClient.getMilestoneContent(tuleapMilestone.getId().intValue(), monitor);
+
+					} catch (CoreException e) {
+						TuleapCoreActivator.log(e, true);
+						content = Collections.emptyList();
+					}
+					taskDataConverter.addSubmilestone(taskData, tuleapMilestone, content, monitor);
+				}
+			}
+		}
 	}
 
 	/**
@@ -680,6 +717,8 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			exceptions.add(e);
 			milestones = Collections.emptyList();
 		}
+		// Add the submilestones attribute to taskData since it is the Top planning
+		new MilestonePlanningWrapper(taskData.getRoot()).setAllowedToHaveSubmilestones(true);
 		for (TuleapMilestone tuleapMilestone : milestones) {
 			try {
 				List<TuleapBacklogItem> content = restClient.getMilestoneContent(tuleapMilestone.getId()

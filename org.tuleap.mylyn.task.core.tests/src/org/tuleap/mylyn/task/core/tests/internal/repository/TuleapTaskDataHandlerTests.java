@@ -599,6 +599,7 @@ public class TuleapTaskDataHandlerTests {
 				repository.getUrl(), taskId.toString());
 
 		MilestonePlanningWrapper wrapper = new MilestonePlanningWrapper(taskData.getRoot());
+		wrapper.setAllowedToHaveSubmilestones(true);
 		BacklogItemWrapper story500 = addUserStory(wrapper, 500);
 		addUserStory(wrapper, 501);
 		addUserStory(wrapper, 502);
