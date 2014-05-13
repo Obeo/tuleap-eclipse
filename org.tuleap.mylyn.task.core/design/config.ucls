@@ -1,0 +1,197 @@
+<class-diagram version="1.1.4" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true">  
+  <class id="1" corner="BOTTOM_RIGHT" language="java" 
+    name="org.tuleap.mylyn.task.core.internal.model.config.TuleapTracker" project="org.tuleap.mylyn.task.core" 
+    file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/core/internal/model/config/TuleapTracker.java" 
+    binary="false">    
+    <position height="729" width="266" x="716" y="736"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="2" corner="BOTTOM_RIGHT" language="java" 
+    name="org.tuleap.mylyn.task.core.internal.model.config.AbstractTuleapField" project="org.tuleap.mylyn.task.core" 
+    file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/core/internal/model/config/AbstractTuleapField.java" 
+    binary="false">    
+    <position height="279" width="326" x="590" y="1525"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <interface id="3" corner="BOTTOM_RIGHT" language="java" 
+    name="org.tuleap.mylyn.task.core.internal.model.config.ITuleapTrackerConstants" project="org.tuleap.mylyn.task.core" 
+    file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/core/internal/model/config/ITuleapTrackerConstants.java" 
+    binary="false">    
+    <position height="1161" width="218" x="27" y="-465"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <class id="4" corner="BOTTOM_RIGHT" language="java" 
+    name="org.tuleap.mylyn.task.core.internal.model.config.TuleapWorkflowTransition" 
+    project="org.tuleap.mylyn.task.core" 
+    file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/core/internal/model/config/TuleapWorkflowTransition.java" 
+    binary="false">    
+    <position height="207" width="213" x="285" y="-465"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="5" corner="BOTTOM_RIGHT" language="java" 
+    name="org.tuleap.mylyn.task.core.internal.model.config.TuleapGroup" project="org.tuleap.mylyn.task.core" 
+    file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/config/TuleapGroup.java" 
+    binary="false">    
+    <position height="225" width="220" x="1042" y="736"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="6" corner="BOTTOM_RIGHT" language="java" 
+    name="org.tuleap.mylyn.task.core.internal.model.config.TuleapTrackerReport" project="org.tuleap.mylyn.task.core" 
+    file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/core/internal/model/config/TuleapTrackerReport.java" 
+    binary="false">    
+    <position height="171" width="213" x="538" y="-465"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="7" corner="BOTTOM_RIGHT" language="java" 
+    name="org.tuleap.mylyn.task.core.internal.model.config.AbstractTuleapFormElement" 
+    project="org.tuleap.mylyn.task.core" 
+    file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/core/internal/model/config/AbstractTuleapFormElement.java" 
+    binary="false">    
+    <position height="585" width="213" x="463" y="736"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="8" corner="BOTTOM_RIGHT" language="java" 
+    name="org.tuleap.mylyn.task.core.internal.model.config.TuleapServer" project="org.tuleap.mylyn.task.core" 
+    file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/core/internal/model/config/TuleapServer.java" 
+    binary="false">    
+    <position height="333" width="225" x="1302" y="736"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="9" corner="BOTTOM_RIGHT" language="java" 
+    name="org.tuleap.mylyn.task.core.internal.model.config.TuleapPerson" project="org.tuleap.mylyn.task.core" 
+    file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/internal/core/model/config/TuleapPerson.java" 
+    binary="false">    
+    <position height="243" width="213" x="1172" y="1525"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="10" corner="BOTTOM_RIGHT" language="java" 
+    name="org.tuleap.mylyn.task.core.internal.model.config.TuleapWorkflow" project="org.tuleap.mylyn.task.core" 
+    file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/core/internal/model/config/TuleapWorkflow.java" 
+    binary="false">    
+    <position height="225" width="338" x="791" y="-465"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="11" corner="BOTTOM_RIGHT" language="java" 
+    name="org.tuleap.mylyn.task.core.internal.model.config.TuleapProject" project="org.tuleap.mylyn.task.core" 
+    file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/core/internal/model/config/TuleapProject.java" 
+    binary="false">    
+    <position height="495" width="302" x="1169" y="-465"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <package id="12" corner="BOTTOM_RIGHT" language="java" name="org.tuleap.mylyn.task.core.internal.model.config.field" 
+    project="org.tuleap.mylyn.task.core" 
+    file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/core/internal/model/config/field" binary="false">    
+    <position height="111" width="323" x="338" y="51"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" visibility="true"/>  
+  </package>  
+  <class id="13" corner="BOTTOM_RIGHT" language="java" 
+    name="org.tuleap.mylyn.task.core.internal.model.config.TuleapPlanning" project="org.tuleap.mylyn.task.core" 
+    file="/org.tuleap.mylyn.task.core/src/org/tuleap/mylyn/task/core/internal/model/config/TuleapPlanning.java" 
+    binary="false">    
+    <position height="-1" width="-1" x="901" y="-31"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <association id="14">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="15" name="membersById"/>      
+      <multiplicity id="16" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="17">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="18" name="personsById"/>      
+      <multiplicity id="19" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="20">    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="21" name="planningsById"/>      
+      <multiplicity id="22" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="23">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="24" name="parentTracker"/>      
+      <multiplicity id="25" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="26">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="27" name="childrenTrackers"/>      
+      <multiplicity id="28" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="29">    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="30" name="trackersById"/>      
+      <multiplicity id="31" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="32">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="7"/>  
+  </generalization>  
+  <association id="33">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="34" name="fields"/>      
+      <multiplicity id="35" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true"/>    
+    <operations public="true" package="true" protected="true" private="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
