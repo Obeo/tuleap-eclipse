@@ -173,6 +173,11 @@ public class TuleapUIKeys extends NLS {
 	public static String tuleapTrackerPageDescriptionLabel;
 
 	/**
+	 * Retrieving trackers of project. {0} The name of the project.
+	 */
+	public static String tuleapTrackerPageMsgRetrievingTrackers;
+
+	/**
 	 * The name of the Tuleap project page.
 	 */
 	public static String tuleapProjectPageName;

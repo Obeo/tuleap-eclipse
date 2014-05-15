@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -18,12 +18,12 @@ import org.tuleap.mylyn.task.agile.core.IMilestoneMapping;
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapProject;
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.core.internal.repository.TuleapMilestoneMapping;
-import org.tuleap.mylyn.task.ui.internal.wizards.TuleapTrackerPage;
+import org.tuleap.mylyn.task.ui.internal.wizards.TuleapPlanningTrackerPage;
 
 /**
  * This wizard is used to create a new milestone. It will return a milestone mapping in order to initialize a
  * new milestone.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class NewTuleapMilestoneWizard extends Wizard {
@@ -46,11 +46,11 @@ public class NewTuleapMilestoneWizard extends Wizard {
 	/**
 	 * The page used to select a tracker.
 	 */
-	private TuleapTrackerPage trackerPage;
+	private TuleapPlanningTrackerPage trackerPage;
 
 	/**
 	 * The constructor.
-	 * 
+	 *
 	 * @param project
 	 *            The configuration of the project.
 	 * @param parentMilestoneId
@@ -63,7 +63,7 @@ public class NewTuleapMilestoneWizard extends Wizard {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.jface.wizard.Wizard#addPages()
 	 */
 	@Override
@@ -74,13 +74,13 @@ public class NewTuleapMilestoneWizard extends Wizard {
 				milestoneTrackers.add(tracker);
 			}
 		}
-		this.trackerPage = new TuleapTrackerPage(milestoneTrackers);
+		this.trackerPage = new TuleapPlanningTrackerPage(milestoneTrackers);
 		this.addPage(this.trackerPage);
 	}
 
 	/**
 	 * Returns the mapping used to create the new milestone.
-	 * 
+	 *
 	 * @return The mapping used to create the new milestone
 	 */
 	public IMilestoneMapping getMilestoneMapping() {
@@ -89,7 +89,7 @@ public class NewTuleapMilestoneWizard extends Wizard {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.jface.wizard.Wizard#performFinish()
 	 */
 	@Override

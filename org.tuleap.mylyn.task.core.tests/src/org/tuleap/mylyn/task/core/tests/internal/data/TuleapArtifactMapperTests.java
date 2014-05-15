@@ -208,6 +208,12 @@ public class TuleapArtifactMapperTests {
 				return null;
 			}
 
+			@Override
+			public void refreshProject(TaskRepository taskRepository, TuleapProject project,
+					IProgressMonitor monitor) throws CoreException {
+				// Nothing to do here
+			}
+
 		};
 
 		this.attributeMapper = new TuleapAttributeMapper(repository, repositoryConnector);

@@ -327,10 +327,29 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 				.intValue();
 		TuleapServer server = this.getServer(taskRepository);
 		TuleapTracker tracker = server.getTracker(trackerId);
-		try {
-			tracker = this.refreshTracker(taskRepository, tracker, monitor);
-		} catch (CoreException e) {
-			TuleapCoreActivator.log(e, true);
+		if (tracker == null) {
+			// We need to refresh the project configuration
+			int projectId = Integer.valueOf(query.getAttribute(ITuleapQueryConstants.QUERY_PROJECT_ID))
+					.intValue();
+			TuleapProject project = server.getProject(projectId);
+			try {
+				this.refreshProject(taskRepository, project, monitor);
+				tracker = server.getTracker(trackerId);
+			} catch (CoreException e) {
+				TuleapCoreActivator.log(e, true);
+			}
+		} else {
+			try {
+				tracker = this.refreshTracker(taskRepository, tracker, monitor);
+			} catch (CoreException e) {
+				TuleapCoreActivator.log(e, true);
+			}
+		}
+		if (tracker == null) {
+			TuleapCoreActivator.log(TuleapCoreMessages.getString(
+					TuleapCoreKeys.queryFailedBecauseMissingTracker, query.getSummary(), Integer
+					.valueOf(trackerId)), true);
+			return;
 		}
 		ArtifactTaskDataConverter artifactTaskDataConverter = new ArtifactTaskDataConverter(tracker,
 				taskRepository, this);
@@ -442,6 +461,8 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	}
 
 	/**
+	 * {@inheritDoc} This method updates the list of projects of the remote repository, and also refreshes the
+	 * config ONLY for projects whose inner configuration was already loaded -which is done somewhere else.
 	 * {@inheritDoc}
 	 *
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#updateRepositoryConfiguration(org.eclipse.mylyn.tasks.core.TaskRepository,
@@ -460,24 +481,15 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 					monitor.beginTask(TuleapCoreMessages.getString(TuleapCoreKeys.retrieveTuleapServer), 100);
 				}
 
-				for (TuleapProject project : tuleapRestClient.getProjects(monitor)) {
-					tuleapServer.addProject(project);
-					tuleapRestClient.loadPlanningsInto(project);
-					for (TuleapTracker tracker : tuleapRestClient.getProjectTrackers(project.getIdentifier(),
-							monitor)) {
-						project.addTracker(tracker);
-					}
+				// This list of projects might have changed if the user has gained or lost access to some
+				// projects
+				List<TuleapProject> availableProjects = tuleapRestClient.getProjects(monitor);
 
-					try {
-						for (TuleapUserGroup userGroup : tuleapRestClient.getProjectUserGroups(project
-								.getIdentifier(), monitor)) {
-							for (TuleapUser tuleapUser : tuleapRestClient.getUserGroupUsers(
-									userGroup.getId(), monitor)) {
-								tuleapServer.register(tuleapUser);
-							}
-						}
-					} catch (CoreException e) {
-						TuleapCoreActivator.log(e, false);
+				for (TuleapProject project : availableProjects) {
+					TuleapProject localProject = tuleapServer.getProject(project.getIdentifier());
+					tuleapServer.addProject(project); // replaces the local project
+					if (localProject != null && !localProject.getAllTrackers().isEmpty()) {
+						doRefreshProject(project, monitor, tuleapRestClient);
 					}
 				}
 				this.serversByUrl.put(taskRepository.getRepositoryUrl(), tuleapServer);
@@ -617,6 +629,54 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			tuleapServer.replaceTracker(project.getIdentifier(), refreshedTracker);
 		}
 		return refreshedTracker;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see org.tuleap.mylyn.task.core.internal.repository.ITuleapRepositoryConnector#refreshProject(org.eclipse.mylyn.tasks.core.TaskRepository,
+	 *      org.tuleap.mylyn.task.core.internal.model.config.TuleapProject,
+	 *      org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	@Override
+	public void refreshProject(TaskRepository taskRepository, TuleapProject project, IProgressMonitor monitor)
+			throws CoreException {
+		if (taskRepository != null) {
+			TuleapRestClient tuleapRestClient = this.getClientManager().getRestClient(taskRepository);
+			doRefreshProject(project, monitor, tuleapRestClient);
+		}
+	}
+
+	/**
+	 * Performs the refreshment of a project.
+	 *
+	 * @param project
+	 *            The project to refresh
+	 * @param monitor
+	 *            The progress monitor to use
+	 * @param tuleapRestClient
+	 *            The REST client to use
+	 * @throws CoreException
+	 *             If a problem occurs during the communication with the server.
+	 */
+	private void doRefreshProject(TuleapProject project, IProgressMonitor monitor,
+			TuleapRestClient tuleapRestClient) throws CoreException {
+		tuleapRestClient.loadPlanningsInto(project);
+		for (TuleapTracker tracker : tuleapRestClient.getProjectTrackers(project.getIdentifier(), monitor)) {
+			project.addTracker(tracker);
+		}
+
+		try {
+			TuleapServer server = project.getServer();
+			for (TuleapUserGroup userGroup : tuleapRestClient.getProjectUserGroups(project.getIdentifier(),
+					monitor)) {
+				for (TuleapUser tuleapUser : tuleapRestClient.getUserGroupUsers(userGroup.getId(), monitor)) {
+					server.register(tuleapUser);
+				}
+			}
+		} catch (CoreException e) {
+			TuleapCoreActivator.log(e, false);
+		}
 	}
 
 	/**

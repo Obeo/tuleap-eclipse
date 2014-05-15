@@ -181,6 +181,12 @@ public class TuleapTaskDataHandlerTests {
 					IProgressMonitor monitor) throws CoreException {
 				return null;
 			}
+
+			@Override
+			public void refreshProject(TaskRepository taskRepository, TuleapProject project,
+					IProgressMonitor monitor) throws CoreException {
+				// Nothing to do here
+			}
 		};
 
 		TuleapTaskDataHandler tuleapTaskDataHandler = new TuleapTaskDataHandler(repositoryConnector);
@@ -343,6 +349,12 @@ public class TuleapTaskDataHandlerTests {
 			public TuleapTracker refreshTracker(TaskRepository taskRepository, TuleapTracker tracker,
 					IProgressMonitor monitor) throws CoreException {
 				return tracker;
+			}
+
+			@Override
+			public void refreshProject(TaskRepository taskRepository, TuleapProject project,
+					IProgressMonitor monitor) throws CoreException {
+				// Nothing to do here
 			}
 		};
 
@@ -741,6 +753,12 @@ public class TuleapTaskDataHandlerTests {
 			public TuleapTracker refreshTracker(TaskRepository taskRepository, TuleapTracker tracker,
 					IProgressMonitor monitor) throws CoreException {
 				return tracker;
+			}
+
+			@Override
+			public void refreshProject(TaskRepository taskRepository, TuleapProject project,
+					IProgressMonitor monitor) throws CoreException {
+				// Nothing to do here
 			}
 		};
 		return repositoryConnector;
