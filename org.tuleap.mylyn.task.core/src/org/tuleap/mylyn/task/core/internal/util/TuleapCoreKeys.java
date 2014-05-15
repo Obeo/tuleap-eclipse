@@ -139,6 +139,14 @@ public class TuleapCoreKeys extends NLS {
 	public static String failToRetrieveTheConfiguration;
 
 	/**
+	 * Failed to perform query because tracker config is missing. 2 parameters :
+	 * <ul>
+	 * <li>query summary</li>
+	 * <li>tracker ID</li> </lu>
+	 */
+	public static String queryFailedBecauseMissingTracker;
+
+	/**
 	 * Validate the connection.
 	 */
 	public static String validateConnection;

@@ -158,7 +158,7 @@ public class TuleapProjectPage extends WizardPage {
 
 				@Override
 				public void run(IProgressMonitor monitor) throws InvocationTargetException,
-				InterruptedException {
+						InterruptedException {
 					ITuleapRepositoryConnector connector = (ITuleapRepositoryConnector)repositoryConnector;
 					final TuleapServer instanceConfiguration = connector
 							.getServer(TuleapProjectPage.this.repository);
@@ -173,9 +173,9 @@ public class TuleapProjectPage extends WizardPage {
 					PlatformUI.getWorkbench().getProgressService().run(true, false, runnable);
 				}
 			} catch (InvocationTargetException e) {
-				e.printStackTrace();
+				TuleapTasksUIPlugin.log(e, true);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				// Nothing to do.
 			} finally {
 				if (inWizard) {
 					this.getWizard().getContainer().updateButtons();

@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -14,7 +14,7 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * The list of all the possible keys to use for internationalization.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class TuleapUIKeys extends NLS {
@@ -171,6 +171,11 @@ public class TuleapUIKeys extends NLS {
 	 * Description of the tracker selected. {0} The description of the tracker.
 	 */
 	public static String tuleapTrackerPageDescriptionLabel;
+
+	/**
+	 * Retrieving trackers of project. {0} The name of the project.
+	 */
+	public static String tuleapTrackerPageMsgRetrievingTrackers;
 
 	/**
 	 * The name of the Tuleap project page.

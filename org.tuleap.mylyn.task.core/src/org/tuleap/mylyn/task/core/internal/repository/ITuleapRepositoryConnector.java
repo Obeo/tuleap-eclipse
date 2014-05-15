@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.tuleap.mylyn.task.core.internal.client.TuleapClientManager;
+import org.tuleap.mylyn.task.core.internal.model.config.TuleapProject;
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapServer;
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapTracker;
 
@@ -56,4 +57,20 @@ public interface ITuleapRepositoryConnector {
 	 */
 	TuleapTracker refreshTracker(TaskRepository taskRepository, TuleapTracker tracker,
 			IProgressMonitor monitor) throws CoreException;
+
+	/**
+	 * Refreshes the content of the given project. This operation will communicate with the server. The given
+	 * project will be modified to contain up-to date information.
+	 *
+	 * @param taskRepository
+	 *            the Mylyn task repository
+	 * @param project
+	 *            The project to refresh
+	 * @param monitor
+	 *            the progress monitor
+	 * @throws CoreException
+	 *             In case of issues during the connection with the server
+	 */
+	void refreshProject(TaskRepository taskRepository, TuleapProject project, IProgressMonitor monitor)
+			throws CoreException;
 }

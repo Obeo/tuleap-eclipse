@@ -86,7 +86,7 @@ public class NewTuleapTaskWizard extends NewTaskWizard implements INewWizard {
 			TuleapProjectPage projectPage = (TuleapProjectPage)page;
 			TuleapProject projectSelected = projectPage.getProjectSelected();
 			if (projectSelected != null) {
-				this.tuleapTrackerPage = new TuleapTrackerPage(projectSelected.getAllTrackers());
+				this.tuleapTrackerPage = new TuleapTrackerPage(projectSelected, getTaskRepository());
 				this.tuleapTrackerPage.setWizard(this);
 				return this.tuleapTrackerPage;
 			}

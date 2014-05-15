@@ -99,7 +99,8 @@ public class TuleapRepositoryQueryWizard extends RepositoryQueryWizard {
 		if (page instanceof TuleapQueryProjectPage) {
 			TuleapQueryProjectPage projectPage = (TuleapQueryProjectPage)page;
 			TuleapProject projectSelected = projectPage.getProjectSelected();
-			this.tuleapTrackerPage = new TuleapTrackerPage(projectSelected.getAllTrackers());
+			this.tuleapTrackerPage = new TuleapTrackerPage(projectSelected, queryProjectPage
+					.getTaskRepository());
 			this.tuleapTrackerPage.setWizard(this);
 			nextPage = tuleapTrackerPage;
 		} else if (page instanceof TuleapTrackerPage) {
