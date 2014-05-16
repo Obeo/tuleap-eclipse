@@ -289,6 +289,36 @@ public class TuleapRestClient implements IAuthenticator {
 	}
 
 	/**
+	 * Add a backlogItem to the backlog of a milestone.
+	 *
+	 * @param milestoneId
+	 *            The milestone id
+	 * @param backlogItemId
+	 *            The backlogItem id
+	 * @param monitor
+	 *            Used to monitor the progress
+	 * @throws CoreException
+	 *             In case of error during the creation of the artifact
+	 */
+	public void addBacklogItemToMilestoneBacklog(int milestoneId, int backlogItemId, IProgressMonitor monitor)
+			throws CoreException {
+		if (monitor != null) {
+			monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.addBacklogItemToMilestone, Integer
+					.valueOf(backlogItemId), Integer.valueOf(milestoneId)));
+		}
+		RestResource milestoneBacklog = restResourceFactory.milestoneBacklog(milestoneId).withAuthenticator(
+				this);
+		JsonObject jsonArtifact = new JsonObject();
+		JsonObject jsonId = new JsonObject();
+		jsonId.add(ITuleapConstants.ID, new JsonPrimitive(Integer.valueOf(backlogItemId)));
+		jsonArtifact.add(ITuleapConstants.JSON_ARTIFACT, jsonId);
+
+		String changesToPost = jsonArtifact.toString();
+		RestOperation operation = milestoneBacklog.post().withBody(changesToPost);
+		operation.checkedRun();
+	}
+
+	/**
 	 * Retrieve an artifact file attachment that is characterized by the data it contains.
 	 *
 	 * @param fileId

@@ -155,7 +155,7 @@ public final class RestResourceFactory {
 
 	/**
 	 * Provides access to the {code /artifact_files/:id} HTTP resource.
-	 * 
+	 *
 	 * @param fileId
 	 *            Id of the artifact file
 	 * @return A resource that gives access to the {code /artifact_files/:id} HTTP resource.
@@ -166,7 +166,7 @@ public final class RestResourceFactory {
 
 	/**
 	 * Provides access to the {code /artifact_temporary_files/:id} HTTP resource.
-	 * 
+	 *
 	 * @param fileId
 	 *            Id of the artifact file.
 	 * @return A resource that gives access to the {code /artifact_temporary_files/:id} HTTP resource.
@@ -177,7 +177,7 @@ public final class RestResourceFactory {
 
 	/**
 	 * Provides access to the {code /artifact_temporary_files} HTTP resource.
-	 * 
+	 *
 	 * @return A resource that gives access to the {code /artifact_temporary_files} HTTP resource.
 	 */
 	public RestResource artifactTemporaryFiles() {
@@ -303,7 +303,7 @@ public final class RestResourceFactory {
 	 * @return A resource that gives access to the {code /milestones/:id/backlog} HTTP resource.
 	 */
 	public RestResource milestoneBacklog(int milestoneId) {
-		return resource(GET | PUT, URL.MILESTONES, Integer.toString(milestoneId), URL.BACKLOG);
+		return resource(GET | PUT | POST, URL.MILESTONES, Integer.toString(milestoneId), URL.BACKLOG);
 	}
 
 	/**

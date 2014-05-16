@@ -1094,6 +1094,26 @@ public class TuleapRestClientTest {
 		assertNull(request.body);
 	}
 
+	@Test
+	public void testAddBacklogItemToMilestone() throws CoreException {
+		Map<String, String> respHeaders = Maps.newHashMap();
+		respHeaders.put(RestResource.ALLOW, "OPTIONS,POST"); //$NON-NLS-1$
+		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,POST"); //$NON-NLS-1$
+		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, "server response", respHeaders); //$NON-NLS-1$
+
+		connector.setResponse(response);
+		client.addBacklogItemToMilestoneBacklog(100, 120, null);
+
+		// Let's check the requests that have been sent.
+		List<ServerRequest> requestsSent = connector.getRequestsSent();
+		assertEquals(1, requestsSent.size());
+		ServerRequest request = requestsSent.get(0);
+		assertEquals("/api/v12.3/milestones/100/backlog", request.url); //$NON-NLS-1$
+		assertEquals("POST", request.method); //$NON-NLS-1$
+		assertEquals("{\"artifact\":{\"id\":120}}", //$NON-NLS-1$
+				request.body);
+	}
+
 	private void checkEquals(TuleapMilestone expected, TuleapMilestone actual) {
 		assertEquals(expected.getArtifact().getId(), actual.getArtifact().getId());
 		assertEquals(expected.getBacklogUri(), actual.getBacklogUri());

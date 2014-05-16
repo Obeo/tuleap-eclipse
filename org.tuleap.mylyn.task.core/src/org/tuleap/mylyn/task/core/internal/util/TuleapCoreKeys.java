@@ -566,6 +566,11 @@ public class TuleapCoreKeys extends NLS {
 	 */
 	public static String notAllowedToUploadAttachment;
 
+	/**
+	 * Add a backlogItem to the backlog of a milestone.
+	 */
+	public static String addBacklogItemToMilestone;
+
 	static {
 		// load message values from bundle file
 		reloadMessages();

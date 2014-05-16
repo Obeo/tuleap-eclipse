@@ -137,6 +137,13 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			response = new RepositoryResponse(ResponseKind.TASK_CREATED, artifactId.toString());
 			if (tracker.getProject().isMilestoneTracker(tracker.getIdentifier())) {
 				addMilestoneTaskDataToParent(taskData, artifactId, taskRepository, monitor);
+			} else if (tracker.getProject().isBacklogTracker(tracker.getIdentifier())) {
+				TuleapArtifactMapper tuleapArtifactMapper = new TuleapArtifactMapper(taskData, tracker);
+				String parentMilestoneId = tuleapArtifactMapper.getParentId();
+				if (parentMilestoneId != null) {
+					client.addBacklogItemToMilestoneBacklog(TuleapTaskId.forName(parentMilestoneId)
+							.getArtifactId(), artifactId.getArtifactId(), monitor);
+				}
 			}
 		} else {
 			TuleapArtifactWithComment artifact = artifactTaskDataConverter
@@ -146,7 +153,6 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			response = new RepositoryResponse(ResponseKind.TASK_UPDATED, taskData.getTaskId());
 			if (tracker.getProject().isMilestoneTracker(tracker.getIdentifier())) {
 				postMilestoneTaskData(taskData, taskRepository, monitor);
-
 			}
 		}
 
@@ -191,7 +197,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 						subMilestoneTaskId);
 				try {
 					tuleapRestClient
-							.updateMilestoneContent(subMilestone.getId().intValue(), content, monitor);
+					.updateMilestoneContent(subMilestone.getId().intValue(), content, monitor);
 				} catch (CoreException e) {
 					exceptions.add(e);
 				}
@@ -262,7 +268,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				TuleapMilestone milestone = new TuleapMilestone(id, projectRef);
 				subMilestones.add(milestone);
 				tuleapRestClient
-						.updateMilestoneSubmilestones(parentMilestoneSimpleId, subMilestones, monitor);
+				.updateMilestoneSubmilestones(parentMilestoneSimpleId, subMilestones, monitor);
 			}
 		}
 	}
@@ -304,7 +310,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 						subMilestoneTaskId);
 				try {
 					tuleapRestClient
-							.updateMilestoneContent(subMilestone.getId().intValue(), content, monitor);
+					.updateMilestoneContent(subMilestone.getId().intValue(), content, monitor);
 				} catch (CoreException e) {
 					exceptions.add(e);
 				}
@@ -516,7 +522,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 */
 	private TaskData getArtifactTaskData(TuleapTaskId taskId, TuleapServer server,
 			TaskRepository taskRepository, boolean refreshTracker, IProgressMonitor monitor)
-			throws CoreException {
+					throws CoreException {
 		TuleapRestClient client = this.connector.getClientManager().getRestClient(taskRepository);
 		TuleapArtifact tuleapArtifact = client.getArtifact(taskId.getArtifactId(), server, monitor);
 		TuleapTaskId refreshedTaskId = taskId;

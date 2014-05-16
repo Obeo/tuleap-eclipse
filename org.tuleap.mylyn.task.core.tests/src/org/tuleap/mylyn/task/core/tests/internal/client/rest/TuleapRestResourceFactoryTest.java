@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -31,7 +31,7 @@ import static org.junit.Assert.assertNotNull;
 
 /**
  * Tests of {@link RestResourceFactory}.
- * 
+ *
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
@@ -56,7 +56,7 @@ public class TuleapRestResourceFactoryTest {
 	/**
 	 * Checks that POST is not supported by the operation returned by
 	 * {@link RestResourceFactory#milestone(int)}.
-	 * 
+	 *
 	 * @throws CoreException
 	 */
 	@Test(expected = UnsupportedOperationException.class)
@@ -67,7 +67,7 @@ public class TuleapRestResourceFactoryTest {
 
 	/**
 	 * Checks that PUT is supported by the operation returned by {@link RestResourceFactory#milestone(int)}.
-	 * 
+	 *
 	 * @throws CoreException
 	 */
 	@Test
@@ -108,7 +108,7 @@ public class TuleapRestResourceFactoryTest {
 	/**
 	 * Checks that GET is supported by the operation returned by
 	 * {@link RestResourceFactory#milestoneBacklog(int)}.
-	 * 
+	 *
 	 * @throws CoreException
 	 */
 	@Test
@@ -128,7 +128,7 @@ public class TuleapRestResourceFactoryTest {
 	/**
 	 * Checks that GET is supported by the operation returned by
 	 * {@link RestResourceFactory#milestoneContent(int)}.
-	 * 
+	 *
 	 * @throws CoreException
 	 */
 	@Test
@@ -149,7 +149,7 @@ public class TuleapRestResourceFactoryTest {
 	 * Checks that GET is supported by the operation returned by
 	 * {@link RestResourceFactory#milestoneBacklog(int)} but sends an error if the server does not allow GET
 	 * in the OPTIONS header "access-control-allow-methods" property.
-	 * 
+	 *
 	 * @throws CoreException
 	 */
 	@Test(expected = CoreException.class)
@@ -167,7 +167,7 @@ public class TuleapRestResourceFactoryTest {
 	 * Checks that GET is supported by the operation returned by
 	 * {@link RestResourceFactory#milestoneBacklog(int)} but sends an error if the server does not allow GET
 	 * in the OPTIONS header "access-control-allow-methods" property.
-	 * 
+	 *
 	 * @throws CoreException
 	 */
 	@Test(expected = CoreException.class)
@@ -182,21 +182,31 @@ public class TuleapRestResourceFactoryTest {
 	}
 
 	/**
-	 * Checks that POST is not supported by the operation returned by
+	 * Checks that POST is supported by the operation returned by
 	 * {@link RestResourceFactory#milestoneBacklog(int)}.
-	 * 
+	 *
 	 * @throws CoreException
 	 */
-	@Test(expected = UnsupportedOperationException.class)
-	public void testGetMilestonesBacklogIsPostForbidden() throws CoreException {
+	@Test
+	public void testGetMilestonesBacklogIsPostSupported() throws CoreException {
 		RestResource r = factory.milestoneBacklog(123);
-		r.post();
+
+		Map<String, String> headers = Maps.newTreeMap();
+		headers.put(RestResource.ALLOW, "OPTIONS,POST");
+		headers.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,POST");
+		connector.setResponse(new ServerResponse(ServerResponse.STATUS_OK, "", headers));
+
+		RestOperation post = r.post();
+		assertNotNull(post);
+		HttpMethod method = post.createMethod();
+		assertEquals("POST", method.getName());
+		assertEquals("/api/v12.5/milestones/123/backlog", method.getPath());
 	}
 
 	/**
 	 * Checks that POST is not supported by the operation returned by
 	 * {@link RestResourceFactory#milestoneContent(int)}.
-	 * 
+	 *
 	 * @throws CoreException
 	 */
 	@Test(expected = UnsupportedOperationException.class)
@@ -208,7 +218,7 @@ public class TuleapRestResourceFactoryTest {
 	/**
 	 * Checks that PUT is supported by the operation returned by
 	 * {@link RestResourceFactory#milestoneBacklog(int)}.
-	 * 
+	 *
 	 * @throws CoreException
 	 */
 	@Test
@@ -230,7 +240,7 @@ public class TuleapRestResourceFactoryTest {
 	/**
 	 * Checks that PUT is supported by the operation returned by
 	 * {@link RestResourceFactory#milestoneContent(int)}.
-	 * 
+	 *
 	 * @throws CoreException
 	 */
 	@Test
@@ -290,7 +300,7 @@ public class TuleapRestResourceFactoryTest {
 
 	/**
 	 * Checks that GET is not supported by the operation returned by {@link RestResourceFactory#artifacts()}.
-	 * 
+	 *
 	 * @throws CoreException
 	 */
 	@Test(expected = UnsupportedOperationException.class)
@@ -301,7 +311,7 @@ public class TuleapRestResourceFactoryTest {
 
 	/**
 	 * Checks that PUT is not supported by the operation returned by {@link RestResourceFactory#artifacts()}.
-	 * 
+	 *
 	 * @throws CoreException
 	 */
 	@Test(expected = UnsupportedOperationException.class)
