@@ -11,7 +11,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.commons.net,
  org.eclipse.mylyn.tasks.core,
  org.apache.commons.discovery,
- org.apache.commons.codec,
+ org.apache.commons.codec;bundle-version="1.6.0",
  javax.activation,
  com.google.gson;bundle-version="2.1.0",
  com.google.guava;bundle-version="[11.0.0,12.0.0)"
