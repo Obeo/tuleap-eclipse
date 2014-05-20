@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.mylyn.tasks.ui.repositories">
+      <connectorCore
+            class="org.eclipse.mylyn.internal.tuleap.core.repository.TuleapRepositoryConnector"
+            id="tuleap"
+            name="%TuleapRepositoryConnector.Name">
+      </connectorCore>
+      <connectorUi
+            brandingIcon="icons/tools/tuleap-logo_16x16.png"
+            class="org.eclipse.mylyn.internal.tuleap.ui.repository.TuleapConnectorUi"
+            name="%TuleapRepositoryConnectorUi.Name"
+            overlayIcon="icons/tools/tuleap-logo_16x16.png">
+      </connectorUi>
+   </extension>
+</plugin>
