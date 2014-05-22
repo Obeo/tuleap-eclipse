@@ -399,6 +399,40 @@ public class TuleapRepositoryConnectorTests {
 						}
 						return Collections.emptyList();
 					}
+
+					/**
+					 * {@inheritDoc}
+					 *
+					 * @see org.tuleap.mylyn.task.core.internal.client.rest.TuleapRestClient#loadPlanningsInto(org.tuleap.mylyn.task.core.internal.model.config.TuleapProject)
+					 */
+					@Override
+					public void loadPlanningsInto(TuleapProject project) throws CoreException {
+						// Don't do anything
+					}
+
+					/**
+					 * {@inheritDoc}
+					 *
+					 * @see org.tuleap.mylyn.task.core.internal.client.rest.TuleapRestClient#getProjectTrackers(int,
+					 *      org.eclipse.core.runtime.IProgressMonitor)
+					 */
+					@Override
+					public List<TuleapTracker> getProjectTrackers(int projectId, IProgressMonitor monitor)
+							throws CoreException {
+						return Collections.emptyList();
+					}
+
+					/**
+					 * {@inheritDoc}
+					 *
+					 * @see org.tuleap.mylyn.task.core.internal.client.rest.TuleapRestClient#getProjectUserGroups(int,
+					 *      org.eclipse.core.runtime.IProgressMonitor)
+					 */
+					@Override
+					public List<TuleapUserGroup> getProjectUserGroups(int projectId, IProgressMonitor monitor)
+							throws CoreException {
+						return Collections.emptyList();
+					}
 				};
 			}
 		};
