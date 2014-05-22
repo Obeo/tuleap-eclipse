@@ -348,7 +348,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		if (tracker == null) {
 			TuleapCoreActivator.log(TuleapCoreMessages.getString(
 					TuleapCoreKeys.queryFailedBecauseMissingTracker, query.getSummary(), Integer
-					.valueOf(trackerId)), true);
+							.valueOf(trackerId)), true);
 			return;
 		}
 		ArtifactTaskDataConverter artifactTaskDataConverter = new ArtifactTaskDataConverter(tracker,
@@ -446,6 +446,16 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			TaskDataCollector collector, IProgressMonitor monitor) throws CoreException {
 		int projectId = Integer.valueOf(query.getAttribute(ITuleapQueryConstants.QUERY_PROJECT_ID))
 				.intValue();
+		// Make sure the configuration of the project is loaded, because it's not mandatory since
+		// the config of a project is only loaded lazily when necessary
+		TuleapProject project = getServer(taskRepository).getProject(projectId);
+		if (project == null) {
+			throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
+					TuleapCoreMessages.getString(TuleapCoreKeys.queryFailedBecauseMissingProject, query
+							.getSummary(), Integer.valueOf(projectId))));
+		} else if (project.getAllTrackers().isEmpty()) {
+			refreshProject(taskRepository, project, monitor);
+		}
 		TuleapTaskId taskDataId = TuleapTaskId.forTopPlanning(projectId);
 		TaskAttributeMapper attributeMapper = this.getTaskDataHandler().getAttributeMapper(taskRepository);
 		// Create the PROJECT_ID task attribute
