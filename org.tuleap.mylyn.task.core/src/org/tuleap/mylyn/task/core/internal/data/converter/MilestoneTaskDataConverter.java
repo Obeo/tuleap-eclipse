@@ -365,30 +365,29 @@ public class MilestoneTaskDataConverter {
 	public List<TuleapMilestone> extractMilestones(TaskData taskData) {
 		MilestonePlanningWrapper wrapper = new MilestonePlanningWrapper(taskData.getRoot());
 		List<TuleapMilestone> subMilestones = Lists.newArrayList();
-		for (SubMilestoneWrapper subMilestoneWrapper : wrapper.getSubMilestones()) {
+		if (wrapper.isAllowedToHaveSubmilestones()) {
+			for (SubMilestoneWrapper subMilestoneWrapper : wrapper.getSubMilestones()) {
+				TuleapTaskId subMilestoneTaskId = TuleapTaskId.forName(subMilestoneWrapper.getId());
+				int id = subMilestoneTaskId.getArtifactId();
+				int projectId = subMilestoneTaskId.getProjectId();
+				TuleapReference projectRef = new TuleapReference();
+				projectRef.setId(projectId);
+				TuleapMilestone submilestone = new TuleapMilestone(id, projectRef);
+				submilestone.setArtifact(new ArtifactReference(id, null, new TuleapReference(
+						subMilestoneTaskId.getTrackerId(), null)));
+				submilestone.setLabel(subMilestoneWrapper.getLabel());
+				if (subMilestoneWrapper.getCapacity() != null) {
+					submilestone.setCapacity(subMilestoneWrapper.getCapacity());
+				}
 
-			TuleapTaskId subMilestoneTaskId = TuleapTaskId.forName(subMilestoneWrapper.getId());
-			int id = subMilestoneTaskId.getArtifactId();
-			int projectId = subMilestoneTaskId.getProjectId();
-			TuleapReference projectRef = new TuleapReference();
-			projectRef.setId(projectId);
-			TuleapMilestone submilestone = new TuleapMilestone(id, projectRef);
-			submilestone.setArtifact(new ArtifactReference(id, null, new TuleapReference(subMilestoneTaskId
-					.getTrackerId(), null)));
-			submilestone.setLabel(subMilestoneWrapper.getLabel());
-			if (subMilestoneWrapper.getCapacity() != null) {
-				submilestone.setCapacity(subMilestoneWrapper.getCapacity());
+				if (subMilestoneWrapper.getStartDate() != null) {
+					submilestone.setStartDate(subMilestoneWrapper.getStartDate());
+				}
+				if (subMilestoneWrapper.getEndDate() != null) {
+					submilestone.setEndDate(subMilestoneWrapper.getEndDate());
+				}
+				subMilestones.add(submilestone);
 			}
-
-			if (subMilestoneWrapper.getStartDate() != null) {
-				submilestone.setStartDate(subMilestoneWrapper.getStartDate());
-			}
-			if (subMilestoneWrapper.getEndDate() != null) {
-				submilestone.setEndDate(subMilestoneWrapper.getEndDate());
-			}
-
-			subMilestones.add(submilestone);
-
 		}
 		return subMilestones;
 	}
@@ -539,6 +538,11 @@ public class MilestoneTaskDataConverter {
 	public void addSubmilestone(TaskData taskData, TuleapMilestone milestone,
 			List<TuleapBacklogItem> milestoneContent, IProgressMonitor monitor) {
 		MilestonePlanningWrapper milestonePlanning = new MilestonePlanningWrapper(taskData.getRoot());
+		if (!milestonePlanning.isAllowedToHaveSubmilestones()) {
+			throw new IllegalStateException(TuleapCoreMessages
+					.getString(TuleapCoreKeys.notAllowedAddSubmilestones));
+		}
+
 		// #6636 - Tracker ID is needed otherwise navigation KO when disconnected
 		int trackerId = TuleapTaskId.UNKNOWN_ID;
 		ArtifactReference artifact = milestone.getArtifact();
@@ -551,19 +555,22 @@ public class MilestoneTaskDataConverter {
 		TuleapTaskId internalMilestoneId = TuleapTaskId.forArtifact(milestone.getProject().getId(),
 				trackerId, milestone.getId().intValue());
 
-		SubMilestoneWrapper subMilestoneWrapper = milestonePlanning.addSubMilestone(internalMilestoneId
-				.toString());
-		subMilestoneWrapper.setDisplayId(Integer.toString(milestone.getId().intValue()));
-		subMilestoneWrapper.setLabel(milestone.getLabel());
-		subMilestoneWrapper.setStartDate(milestone.getStartDate());
-		subMilestoneWrapper.setEndDate(milestone.getEndDate());
-		subMilestoneWrapper.setCapacity(milestone.getCapacity());
-		subMilestoneWrapper.setStatusValue(milestone.getStatusValue());
+		if (milestonePlanning.isAllowedToHaveSubmilestones()) {
+			SubMilestoneWrapper subMilestoneWrapper = milestonePlanning.addSubMilestone(internalMilestoneId
+					.toString());
+			subMilestoneWrapper.setDisplayId(Integer.toString(milestone.getId().intValue()));
+			subMilestoneWrapper.setLabel(milestone.getLabel());
+			subMilestoneWrapper.setStartDate(milestone.getStartDate());
+			subMilestoneWrapper.setEndDate(milestone.getEndDate());
+			subMilestoneWrapper.setCapacity(milestone.getCapacity());
+			subMilestoneWrapper.setStatusValue(milestone.getStatusValue());
 
-		for (TuleapBacklogItem backlogItem : milestoneContent) {
-			TuleapTaskId biTaskId = extractBacklogItemTaskId(backlogItem, taskData);
-			BacklogItemWrapper backlogItemWrapper = subMilestoneWrapper.addBacklogItem(biTaskId.toString());
-			populateItem(backlogItem, biTaskId, backlogItemWrapper);
+			for (TuleapBacklogItem backlogItem : milestoneContent) {
+				TuleapTaskId biTaskId = extractBacklogItemTaskId(backlogItem, taskData);
+				BacklogItemWrapper backlogItemWrapper = subMilestoneWrapper.addBacklogItem(biTaskId
+						.toString());
+				populateItem(backlogItem, biTaskId, backlogItemWrapper);
+			}
 		}
 	}
 
