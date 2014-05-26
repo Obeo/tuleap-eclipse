@@ -422,11 +422,12 @@ public class TuleapArtifactMapperTests {
 		TaskAttribute authorAttribute = att.getMappedAttribute(TaskAttribute.ATTACHMENT_AUTHOR);
 		// Author is ignored due to problems with user retrieval in Tuleap API
 		// Matters of security and avoiding leak of users list must be addressed
-		assertNull(authorAttribute);
-		// assertEquals("email", authorAttribute.getValue());
-		// TaskAttribute nameAttribute = authorAttribute.getMappedAttribute(TaskAttribute.PERSON_NAME);
-		// assertNotNull(nameAttribute);
-		// assertEquals("username", nameAttribute.getValue());
+		assertNotNull(authorAttribute);
+		// TODO Improve this test when Tuleap API allows it
+		assertEquals("17", authorAttribute.getValue());
+		TaskAttribute nameAttribute = authorAttribute.getMappedAttribute(TaskAttribute.PERSON_NAME);
+		assertNotNull(nameAttribute);
+		assertEquals("N/A", nameAttribute.getValue());
 
 		TaskAttribute typeAttribute = att.getMappedAttribute(TaskAttribute.ATTACHMENT_CONTENT_TYPE);
 		assertNotNull(typeAttribute);

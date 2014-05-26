@@ -509,14 +509,14 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 		TaskAttachmentMapper taskAttachment = TaskAttachmentMapper.createFrom(attribute);
 		taskAttachment.setAttachmentId(tuleapAttachment.getId());
 
-		// int submittedBy = tuleapAttachment.getSubmittedBy();
-		// taskAttachment.setAuthor();
-		// if (person != null) {
-		// IRepositoryPerson repositoryPerson = taskData.getAttributeMapper().getTaskRepository()
-		// .createPerson(person.getEmail());
-		// repositoryPerson.setName(person.getUserName());
-		// taskAttachment.setAuthor(repositoryPerson);
-		// }
+		int submittedBy = tuleapAttachment.getSubmittedBy();
+		// Request-6937 - https://tuleap.net/plugins/tracker/?aid=6937
+		IRepositoryPerson author = getTaskData().getAttributeMapper().getTaskRepository().createPerson(
+				Integer.toString(submittedBy));
+		// TODO Fetch the name of the person when Tuleap's API allows it.
+		// TODO Cache the person's name locally if it's not already cached
+		author.setName("N/A"); //$NON-NLS-1$
+		taskAttachment.setAuthor(author);
 		taskAttachment.setFileName(tuleapAttachment.getName());
 		taskAttachment.setLength(Long.valueOf(tuleapAttachment.getSize()));
 		taskAttachment.setDescription(tuleapAttachment.getDescription());
