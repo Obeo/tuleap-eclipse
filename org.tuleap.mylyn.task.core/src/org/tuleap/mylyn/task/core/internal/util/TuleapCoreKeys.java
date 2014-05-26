@@ -586,6 +586,11 @@ public class TuleapCoreKeys extends NLS {
 	 */
 	public static String notAllowedAddSubmilestones;
 
+	/**
+	 * Cannot link an artifact to its parent.
+	 */
+	public static String cannotLinkArtifactToparent;
+
 	static {
 		// load message values from bundle file
 		reloadMessages();

@@ -39,9 +39,13 @@ import org.tuleap.mylyn.task.core.internal.data.TuleapArtifactMapper;
 import org.tuleap.mylyn.task.core.internal.data.TuleapTaskId;
 import org.tuleap.mylyn.task.core.internal.data.converter.ArtifactTaskDataConverter;
 import org.tuleap.mylyn.task.core.internal.data.converter.MilestoneTaskDataConverter;
+import org.tuleap.mylyn.task.core.internal.model.config.AbstractTuleapField;
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapProject;
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapServer;
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapTracker;
+import org.tuleap.mylyn.task.core.internal.model.config.field.TuleapArtifactLink;
+import org.tuleap.mylyn.task.core.internal.model.data.AbstractFieldValue;
+import org.tuleap.mylyn.task.core.internal.model.data.ArtifactLinkFieldValue;
 import org.tuleap.mylyn.task.core.internal.model.data.ResourceDescription;
 import org.tuleap.mylyn.task.core.internal.model.data.TuleapArtifact;
 import org.tuleap.mylyn.task.core.internal.model.data.TuleapArtifactWithComment;
@@ -146,6 +150,11 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 					client.addBacklogItemToMilestoneBacklog(TuleapTaskId.forName(parentMilestoneId)
 							.getArtifactId(), artifactId.getArtifactId(), monitor);
 				}
+				String parentCardId = tuleapArtifactMapper.getParentCardId();
+				if (parentCardId != null) {
+					linkParentCardToChild(taskRepository, monitor, artifactTaskDataConverter, client,
+							TuleapTaskId.forName(parentCardId), artifactId);
+				}
 			}
 		} else {
 			TuleapArtifactWithComment artifact = artifactTaskDataConverter
@@ -159,6 +168,67 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		}
 
 		return response;
+	}
+
+	/**
+	 * Link a newly created card to its parent one.
+	 *
+	 * @param taskRepository
+	 *            The task repository
+	 * @param monitor
+	 *            The progress monitor
+	 * @param artifactTaskDataConverter
+	 *            The task Data converter
+	 * @param client
+	 *            The rest client
+	 * @param parentCardId
+	 *            The parent card identifier
+	 * @param artifactId
+	 *            The artifact identifier
+	 * @throws CoreException
+	 *             In case of issues during the communication with the server
+	 */
+	private void linkParentCardToChild(TaskRepository taskRepository, IProgressMonitor monitor,
+			ArtifactTaskDataConverter artifactTaskDataConverter, TuleapRestClient client,
+			TuleapTaskId parentCardId, TuleapTaskId artifactId) throws CoreException {
+		TuleapArtifact parentCardArtifact = client.getArtifact(parentCardId.getArtifactId(), this.connector
+				.getServer(taskRepository), monitor);
+		TuleapArtifactWithComment parentArtifactWithComments = new TuleapArtifactWithComment(parentCardId
+				.getArtifactId(), parentCardArtifact.getTracker(), parentCardArtifact.getProject());
+		AbstractFieldValue link = null;
+		for (AbstractFieldValue field : parentCardArtifact.getFieldValues()) {
+			if (field instanceof ArtifactLinkFieldValue) {
+				link = field;
+				break;
+			}
+		}
+		if (link != null) {
+			TuleapTracker localTracker = this.connector.getServer(taskRepository).getTracker(
+					parentCardArtifact.getTracker().getId());
+			AbstractTuleapField field = localTracker.getFieldById(link.getFieldId());
+			if (field == null) {
+				// When the local tracker configuration is not up-to-date we have to get it from server
+				TuleapTracker refreshedTracker = client.getTracker(parentCardArtifact.getTracker().getId(),
+						monitor);
+				field = refreshedTracker.getFieldById(link.getFieldId());
+				if (field == null) {
+					TuleapCoreActivator.log(TuleapCoreMessages.getString(
+							TuleapCoreKeys.cannotLinkArtifactToparent, String.valueOf(artifactId
+									.getArtifactId()), String.valueOf(parentCardId.getArtifactId())), false);
+				}
+			}
+			if (field != null && field instanceof TuleapArtifactLink) {
+				parentArtifactWithComments.addField(field);
+				int[] links = new int[((ArtifactLinkFieldValue)link).getLinks().length + 1];
+				for (int i = 0; i < ((ArtifactLinkFieldValue)link).getLinks().length; i++) {
+					links[i] = ((ArtifactLinkFieldValue)link).getLinks()[i];
+				}
+				links[((ArtifactLinkFieldValue)link).getLinks().length] = artifactId.getArtifactId();
+				parentArtifactWithComments
+				.addFieldValue(new ArtifactLinkFieldValue(link.getFieldId(), links));
+				client.updateArtifact(parentArtifactWithComments, monitor);
+			}
+		}
 	}
 
 	/**
@@ -397,6 +467,11 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 					String parentMilestoneId = backlogItemMapping.getParentMilestoneId();
 					synchronizeMilestoneParentAttributes(tuleapArtifactMapper, parentMilestoneId, server);
 				}
+				if (initializationData instanceof TuleapCardMapping) {
+					TuleapCardMapping cardMapping = (TuleapCardMapping)initializationData;
+					String parentCardId = cardMapping.getParentCard();
+					synchronizeCardParentAttributes(tuleapArtifactMapper, parentCardId, server);
+				}
 			}
 		}
 		return isInitialized;
@@ -417,6 +492,23 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		if (tuleapArtifactMapper != null && !TuleapTaskId.forName(parentMilestoneId).isTopPlanning()) {
 			tuleapArtifactMapper.setParentId(parentMilestoneId);
 			tuleapArtifactMapper.setParentDisplayId(getMessageTracker(parentMilestoneId, server));
+		}
+	}
+
+	/**
+	 * Add the parent card information to its task attribute.
+	 *
+	 * @param tuleapArtifactMapper
+	 *            The artifact mapper
+	 * @param parentCardId
+	 *            The parent card Id
+	 * @param server
+	 *            The tuleap server
+	 */
+	private void synchronizeCardParentAttributes(TuleapArtifactMapper tuleapArtifactMapper,
+			String parentCardId, TuleapServer server) {
+		if (tuleapArtifactMapper != null) {
+			tuleapArtifactMapper.setParentCardId(parentCardId);
 		}
 	}
 
@@ -529,7 +621,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 */
 	private TaskData getArtifactTaskData(TuleapTaskId taskId, TuleapServer server,
 			TaskRepository taskRepository, boolean refreshTracker, IProgressMonitor monitor)
-			throws CoreException {
+					throws CoreException {
 		TuleapRestClient client = this.connector.getClientManager().getRestClient(taskRepository);
 		TuleapArtifact tuleapArtifact = client.getArtifact(taskId.getArtifactId(), server, monitor);
 		TuleapTaskId refreshedTaskId = taskId;

@@ -22,6 +22,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.tuleap.mylyn.task.agile.core.IBacklogItemMapping;
+import org.tuleap.mylyn.task.agile.core.ICardMapping;
 import org.tuleap.mylyn.task.agile.core.IMilestoneMapping;
 import org.tuleap.mylyn.task.agile.core.data.cardwall.CardwallWrapper;
 import org.tuleap.mylyn.task.agile.ui.AbstractAgileRepositoryConnectorUI;
@@ -33,6 +34,7 @@ import org.tuleap.mylyn.task.core.internal.repository.TuleapRepositoryConnector;
 import org.tuleap.mylyn.task.core.internal.util.ITuleapConstants;
 import org.tuleap.mylyn.task.ui.internal.TuleapTasksUIPlugin;
 import org.tuleap.mylyn.task.ui.internal.editor.TuleapTaskEditorPageFactory;
+import org.tuleap.mylyn.task.ui.internal.wizards.newCard.NewCardWizard;
 import org.tuleap.mylyn.task.ui.internal.wizards.newbacklogItem.NewBacklogItemWizard;
 import org.tuleap.mylyn.task.ui.internal.wizards.newsubmilestone.NewTuleapMilestoneWizard;
 
@@ -126,6 +128,40 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 			int result = dialog.open();
 			if (result == WizardDialog.OK) {
 				return wizard.getBacklogItemMapping();
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see org.tuleap.mylyn.task.agile.ui.AbstractAgileRepositoryConnectorUI#getNewCardMapping(org.eclipse.mylyn.tasks.core.data.TaskData,
+	 *      java.lang.String, org.eclipse.mylyn.tasks.core.TaskRepository,
+	 *      org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	@Override
+	public ICardMapping getNewCardMapping(TaskData planningTaskData, String parentCardId,
+			TaskRepository taskRepository, IProgressMonitor monitor) {
+		// Display the wizard used to select the kind of the milestone to select
+		String connectorKind = taskRepository.getConnectorKind();
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+				connectorKind);
+		if (connector instanceof TuleapRepositoryConnector) {
+			TuleapRepositoryConnector tuleapConnector = (TuleapRepositoryConnector)connector;
+			TuleapServer server = tuleapConnector.getServer(taskRepository);
+
+			int projectId = TuleapTaskId.forName(planningTaskData.getTaskId()).getProjectId();
+			TuleapProject project = server.getProject(projectId);
+
+			NewCardWizard wizard = new NewCardWizard(project, parentCardId);
+
+			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+			WizardDialog dialog = new WizardDialog(shell, wizard);
+
+			int result = dialog.open();
+			if (result == WizardDialog.OK) {
+				return wizard.getCardMapping();
 			}
 		}
 		return null;

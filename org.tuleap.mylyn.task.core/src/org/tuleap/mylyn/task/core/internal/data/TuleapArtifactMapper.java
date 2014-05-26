@@ -69,6 +69,11 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	public static final String PARENT_ID = "mtc_parent_id"; //$NON-NLS-1$
 
 	/**
+	 * The identifier of the parent card id task attribute.
+	 */
+	public static final String PARENT_CARD_ID = "mtc_parent_card_id"; //$NON-NLS-1$
+
+	/**
 	 * The identifier of the displayed parent id task attribute.
 	 */
 	public static final String PARENT_DISPLAY_ID = "mtc_parent_display_id"; //$NON-NLS-1$
@@ -700,6 +705,19 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	}
 
 	/**
+	 * Provides access to the parent card id if it exists.
+	 *
+	 * @return The parent id if it exists or null.
+	 */
+	public String getParentCardId() {
+		TaskAttribute attribute = getMappedAttribute(PARENT_CARD_ID);
+		if (attribute != null) {
+			return taskData.getAttributeMapper().getValue(attribute);
+		}
+		return null;
+	}
+
+	/**
 	 * Sets the parent Id in the relevant task attribute.
 	 *
 	 * @param parentId
@@ -713,6 +731,30 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 		String oldValue = null;
 		if (att == null) {
 			att = taskData.getRoot().createMappedAttribute(PARENT_ID);
+			att.getMetaData().setType(TaskAttribute.TYPE_SHORT_RICH_TEXT);
+			att.getMetaData().setReadOnly(true);
+		} else {
+			oldValue = att.getValue();
+		}
+		if (oldValue == null || !oldValue.equals(parentId)) {
+			att.setValue(parentId);
+		}
+	}
+
+	/**
+	 * Sets the parent card Id in the relevant task attribute.
+	 *
+	 * @param parentId
+	 *            The parent Id
+	 */
+	public void setParentCardId(String parentId) {
+		if (parentId == null) {
+			return;
+		}
+		TaskAttribute att = taskData.getRoot().getMappedAttribute(PARENT_CARD_ID);
+		String oldValue = null;
+		if (att == null) {
+			att = taskData.getRoot().createMappedAttribute(PARENT_CARD_ID);
 			att.getMetaData().setType(TaskAttribute.TYPE_SHORT_RICH_TEXT);
 			att.getMetaData().setReadOnly(true);
 		} else {
