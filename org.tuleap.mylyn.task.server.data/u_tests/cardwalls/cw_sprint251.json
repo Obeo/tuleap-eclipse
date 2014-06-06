@@ -1,0 +1,54 @@
+{
+    "columns": [
+        {
+            "id": 30,
+            "label": "Not Started",
+            "color": "#F8F8F8"
+        },
+        {
+            "id": 31,
+            "label": "In Progress",
+            "color": "#F8F8F8"
+        },
+        {
+            "id": 32,
+            "label": "Done",
+            "color": "#F8F8F8"
+        }
+    ],
+    "swimlanes": [
+        {
+            "cards": [
+                {
+                    "id": "18_275",
+                    "label": "user story 1",
+                    "uri": "cards/18_275",
+                    "project": {
+                        "id": 106,
+                        "uri": "projects/106"
+                    },
+                    "artifact": {
+                        "id": 275,
+                        "uri": "artifacts/275",
+                        "tracker": {
+                            "id": 82,
+                            "uri": "trackers/82"
+                        }
+                    },
+                    "planning_id": 18,
+                    "status": "Open",
+                    "accent_color": null,
+                    "column_id": null,
+                    "allowed_column_ids": [],
+                    "values": [
+                        {
+                            "field_id": 2953,
+                            "label": "Initial Effort Estimate",
+                            "value": null
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

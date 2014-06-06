@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -31,7 +31,7 @@ import static org.junit.Assert.assertNotNull;
 
 /**
  * Tests the deserialization of the Tuleap Cardwall configuration.
- * 
+ *
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
 public class TuleapCardwallConfigurationDeserializerTests {
@@ -68,7 +68,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 
 	/**
 	 * Test the parsing of the cards of the first cardwall swimlane.
-	 * 
+	 *
 	 * @throws ParseException
 	 */
 	@Test
@@ -162,7 +162,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 
 	/**
 	 * Test the parsing of the cards of the second cardwall swimlane.
-	 * 
+	 *
 	 * @throws ParseException
 	 */
 	@Test
@@ -256,7 +256,7 @@ public class TuleapCardwallConfigurationDeserializerTests {
 
 	/**
 	 * Test the parsing of the cards of the second cardwall swimlane.
-	 * 
+	 *
 	 * @throws ParseException
 	 */
 	@Test
@@ -348,8 +348,30 @@ public class TuleapCardwallConfigurationDeserializerTests {
 	}
 
 	/**
+	 * Test parsing cards with null field value.
+	 *
+	 * @throws ParseException
+	 */
+	@Test
+	public void testParsingNullCardFieldValues() throws ParseException {
+		String cwSprint = ParserUtil.loadFile("/cardwalls/cw_sprint251.json"); //$NON-NLS-1$
+		TuleapCardwall cardwall = this.parse(cwSprint);
+
+		List<TuleapSwimlane> swimlanes = cardwall.getSwimlanes();
+		assertEquals(1, swimlanes.size());
+
+		TuleapSwimlane secondSwimlane = swimlanes.get(0);
+		List<TuleapCard> cards = secondSwimlane.getCards();
+		TuleapCard firstCard = cards.get(0);
+
+		assertEquals(1, firstCard.getFieldValues().size());
+		assertEquals("", ((LiteralFieldValue)firstCard.getFieldValue(2953)).getFieldValue());
+
+	}
+
+	/**
 	 * Parse the content of the file and return the matching configuration.
-	 * 
+	 *
 	 * @param fileContent
 	 *            The content of the file
 	 * @return The Tuleap BacklogItem Type matching the content of the file
