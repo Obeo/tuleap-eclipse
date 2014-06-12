@@ -591,6 +591,10 @@ public class TuleapCoreKeys extends NLS {
 	 */
 	public static String cannotLinkArtifactToparent;
 
+	/**
+	 * Cannot find a proper status.
+	 */
+	public static String invalidStatus;
 	static {
 		// load message values from bundle file
 		reloadMessages();

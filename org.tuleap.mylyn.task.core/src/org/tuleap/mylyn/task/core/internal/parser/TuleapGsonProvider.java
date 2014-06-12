@@ -29,6 +29,7 @@ import org.tuleap.mylyn.task.core.internal.model.data.TuleapElementComment;
 import org.tuleap.mylyn.task.core.internal.model.data.agile.TuleapCard;
 import org.tuleap.mylyn.task.core.internal.model.data.agile.TuleapCardwall;
 import org.tuleap.mylyn.task.core.internal.model.data.agile.TuleapMilestone;
+import org.tuleap.mylyn.task.core.internal.model.data.agile.TuleapStatus;
 import org.tuleap.mylyn.task.core.internal.serializer.ArtifactLinkFieldValueAdapter;
 import org.tuleap.mylyn.task.core.internal.serializer.BoundFieldValueSerializer;
 import org.tuleap.mylyn.task.core.internal.serializer.LiteralFieldValueSerializer;
@@ -87,6 +88,7 @@ public final class TuleapGsonProvider {
 		gsonBuilder.registerTypeAdapter(TuleapWorkflowTransition.class,
 				new TuleapWorkflowTransitionDeserializer());
 		gsonBuilder.registerTypeAdapter(Date.class, new DateIso8601Adapter());
+		gsonBuilder.registerTypeAdapter(TuleapStatus.class, new TuleapStatusAdapter());
 		gsonBuilder.registerTypeAdapter(TuleapArtifact.class, new TuleapArtifactDeserializer());
 		gsonBuilder.registerTypeAdapter(TuleapArtifact.class, new TuleapArtifactSerializer());
 		gsonBuilder.registerTypeAdapter(TuleapArtifactWithComment.class,

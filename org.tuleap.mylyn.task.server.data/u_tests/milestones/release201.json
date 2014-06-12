@@ -31,6 +31,7 @@
     "sub_milestones_uri": "milestones/201/milestones",
     "backlog_uri": "milestones/201/backlog",
     "content_uri": "milestones/201/content",
+    "semantic_status": "Closed",
     "resources": {
         "milestones": null,
         "backlog": null,

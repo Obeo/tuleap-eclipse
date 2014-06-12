@@ -19,6 +19,7 @@ import org.junit.Test;
 import org.tuleap.mylyn.task.core.internal.model.data.ResourceDescription;
 import org.tuleap.mylyn.task.core.internal.model.data.TuleapReference;
 import org.tuleap.mylyn.task.core.internal.model.data.agile.TuleapMilestone;
+import org.tuleap.mylyn.task.core.internal.model.data.agile.TuleapStatus;
 import org.tuleap.mylyn.task.core.internal.parser.TuleapGsonProvider;
 
 import static org.junit.Assert.assertEquals;
@@ -79,6 +80,7 @@ public class TuleapMilestoneDeserializerTest {
 		assertEquals("milestones/200/milestones", tuleapMilestone.getSubMilestonesUri());
 		assertEquals("milestones/200/backlog", tuleapMilestone.getBacklogUri());
 		assertEquals("milestones/200/content", tuleapMilestone.getContentUri());
+		assertEquals(TuleapStatus.Open, tuleapMilestone.getStatus());
 	}
 
 	/**
@@ -179,6 +181,7 @@ public class TuleapMilestoneDeserializerTest {
 		assertEquals("milestones/201/milestones", tuleapMilestone.getSubMilestonesUri());
 		assertEquals("milestones/201/backlog", tuleapMilestone.getBacklogUri());
 		assertEquals("milestones/201/content", tuleapMilestone.getContentUri());
+		assertEquals(TuleapStatus.Closed, tuleapMilestone.getStatus());
 	}
 
 	/**

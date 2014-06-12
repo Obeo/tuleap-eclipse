@@ -93,6 +93,11 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 	private Map<String, ResourceDescription> resources;
 
 	/**
+	 * The semantic status of the milestone.
+	 */
+	private TuleapStatus semanticStatus;
+
+	/**
 	 * Default constructor for deserialization.
 	 */
 	public TuleapMilestone() {
@@ -372,4 +377,22 @@ public class TuleapMilestone extends AbstractTuleapDetailedElement<Integer> {
 		this.resources = resources;
 	}
 
+	/**
+	 * Status getter.
+	 *
+	 * @return the status
+	 */
+	public TuleapStatus getStatus() {
+		return semanticStatus;
+	}
+
+	/**
+	 * Status setter.
+	 *
+	 * @param status
+	 *            the status to set
+	 */
+	public void setStatus(TuleapStatus status) {
+		this.semanticStatus = status;
+	}
 }
