@@ -357,6 +357,8 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 			tuleapField = new TuleapComputedValue(fieldId);
 		} else if (ITuleapTrackerConstants.TYPE_SB.equals(fieldType)) {
 			tuleapField = new TuleapSelectBox(fieldId);
+		} else if (ITuleapTrackerConstants.TYPE_RB.equals(fieldType)) {
+			tuleapField = new TuleapSelectBox(fieldId);
 		} else if (ITuleapTrackerConstants.TYPE_MSB.equals(fieldType)) {
 			tuleapField = new TuleapMultiSelectBox(fieldId);
 		} else if (ITuleapTrackerConstants.TYPE_CB.equals(fieldType)) {
@@ -493,7 +495,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 		if (fieldSemantic != null
 				&& fieldSemantic.get(JSON_CONTRIBUTOR) != null
 				&& fieldSemantic.get(JSON_CONTRIBUTOR).getAsJsonObject().get(FIELD_ID).getAsInt() == selectBoxField
-				.getIdentifier()) {
+						.getIdentifier()) {
 			selectBoxField.setSemanticContributor(true);
 		}
 	}
@@ -518,7 +520,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 			for (int z = 0; z < semanticStatus.get(JSON_STATUS_IDS).getAsJsonArray().size(); z++) {
 				if (selectBoxField.getIdentifier() == semanticStatus.get(FIELD_ID).getAsInt()
 						&& fieldValueId == semanticStatus.get(JSON_STATUS_IDS).getAsJsonArray().get(z)
-						.getAsInt()) {
+								.getAsInt()) {
 					selectBoxField.getOpenStatus().add(selectBoxItem);
 				}
 			}

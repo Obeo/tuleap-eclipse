@@ -106,7 +106,7 @@ public class TuleapTrackerDeserializerTest {
 		assertEquals("trackers/1", tuleapTracker.getUri()); //$NON-NLS-1$
 
 		Collection<AbstractTuleapField> fields = tuleapTracker.getFields();
-		assertEquals(13, fields.size());
+		assertEquals(14, fields.size());
 
 		Iterator<AbstractTuleapField> iterator = fields.iterator();
 
@@ -170,6 +170,17 @@ public class TuleapTrackerDeserializerTest {
 		assertEquals(3, sbStatus.getOpenStatus().size());
 		// Workflow
 		checkWorkflow1(sbStatus, sbStatus);
+
+		iterator.next();
+
+		// Radio button
+		AbstractTuleapField fieldRadio = iterator.next();
+		assertEquals("Radio", fieldRadio.getLabel());
+		assertTrue(fieldRadio instanceof TuleapSelectBox);
+		TuleapSelectBox sbRadio = (TuleapSelectBox)fieldRadio;
+		assertEquals(2, sbRadio.getItems().size());
+		assertEquals("Value A", sbRadio.getItem("0").getLabel());
+		assertEquals("Value B", sbRadio.getItem("1").getLabel());
 
 		assertEquals(1, tuleapTracker.getTrackerResources().length);
 
