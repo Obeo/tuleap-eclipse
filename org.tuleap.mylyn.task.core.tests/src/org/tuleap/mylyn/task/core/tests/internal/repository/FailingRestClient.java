@@ -274,4 +274,16 @@ public class FailingRestClient extends TuleapRestClient {
 		fail("Should not be called.");
 		return null;
 	}
+
+	@Override
+	public void addBacklogItemToMilestoneBacklog(int milestoneId, int backlogItemId, IProgressMonitor monitor)
+			throws CoreException {
+		fail("Should not be called.");
+	}
+
+	@Override
+	public TuleapUser getCachedUser(int userId, TuleapServer server, IProgressMonitor monitor) {
+		fail("Should not be called.");
+		return null;
+	}
 }

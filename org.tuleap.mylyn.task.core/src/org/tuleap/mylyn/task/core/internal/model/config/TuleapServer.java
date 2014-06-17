@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -14,13 +14,14 @@ import com.google.common.collect.Maps;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * This class will hold the configuration of a Tuleap server instance.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
@@ -53,7 +54,7 @@ public class TuleapServer implements Serializable {
 
 	/**
 	 * The constructor.
-	 * 
+	 *
 	 * @param tuleapInstanceUrl
 	 *            The url of the Tuleap instance.
 	 */
@@ -63,7 +64,7 @@ public class TuleapServer implements Serializable {
 
 	/**
 	 * Adds the given project for the given project id in the Tuleap instance configuration.
-	 * 
+	 *
 	 * @param tuleapProject
 	 *            The project (must not be null).
 	 */
@@ -74,7 +75,7 @@ public class TuleapServer implements Serializable {
 
 	/**
 	 * Returns the project for the given project id.
-	 * 
+	 *
 	 * @param projectId
 	 *            the id of the project
 	 * @return The project for the given project id.
@@ -85,7 +86,7 @@ public class TuleapServer implements Serializable {
 
 	/**
 	 * Returns the url of the tuleap instance.
-	 * 
+	 *
 	 * @return The url of the tuleap instance.
 	 */
 	public String getUrl() {
@@ -94,7 +95,7 @@ public class TuleapServer implements Serializable {
 
 	/**
 	 * Set the time at which the server was last updated.
-	 * 
+	 *
 	 * @param time
 	 *            The time at which the server was last updated.
 	 */
@@ -104,7 +105,7 @@ public class TuleapServer implements Serializable {
 
 	/**
 	 * Returns the time at which the server was last updated.
-	 * 
+	 *
 	 * @return The time at which the server was last updated.
 	 */
 	public long getLastUpdate() {
@@ -113,7 +114,7 @@ public class TuleapServer implements Serializable {
 
 	/**
 	 * Returns the list of all the projects.
-	 * 
+	 *
 	 * @return The list of all the projects.
 	 */
 	public List<TuleapProject> getAllProjects() {
@@ -123,7 +124,7 @@ public class TuleapServer implements Serializable {
 	/**
 	 * Iterates on all the projects of the server and returns the tracker with the given identifier or null if
 	 * none can be found.
-	 * 
+	 *
 	 * @param trackerId
 	 *            The identifier of the tracker
 	 * @return The tracker with the given identifier or null if none can be found
@@ -156,7 +157,7 @@ public class TuleapServer implements Serializable {
 
 	/**
 	 * Retrieve a registered user by id.
-	 * 
+	 *
 	 * @param id
 	 *            the user id.
 	 * @return The person registered for this id, or null if none is found.
@@ -167,7 +168,7 @@ public class TuleapServer implements Serializable {
 
 	/**
 	 * Indicates whether a user is registered.
-	 * 
+	 *
 	 * @param id
 	 *            the user id.
 	 * @return {@code true} if and only if this id matches a registered user.
@@ -177,13 +178,17 @@ public class TuleapServer implements Serializable {
 	}
 
 	/**
-	 * Register a user.
-	 * 
+	 * Register a user. If the given user has no updatedOn info, it will be set to the current time.
+	 *
 	 * @param person
-	 *            The user.
+	 *            The user, whose updatedOn date will be set after calling register(), even if it was null
+	 *            before.
 	 */
 	public void register(TuleapUser person) {
 		if (person != null) {
+			if (person.getUpdatedOn() == null) {
+				person.setUpdatedOn(new Date());
+			}
 			personsById.put(Integer.valueOf(person.getId()), person);
 		}
 	}

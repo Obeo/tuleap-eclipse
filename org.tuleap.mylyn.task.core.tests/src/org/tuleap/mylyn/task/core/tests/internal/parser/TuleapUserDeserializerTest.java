@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -24,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * Tests the JSON deserialization of {@link TuleapUser} and {@link TuleapUserGroup}.
- * 
+ *
  * @author <a href="mailto:firas.bacha@obeo.fr">Firas Bacha</a>
  */
 public class TuleapUserDeserializerTest {
@@ -51,7 +51,7 @@ public class TuleapUserDeserializerTest {
 		TuleapUser aUser = gson.fromJson(json, TuleapUser.class);
 		assertEquals(0, aUser.getId());
 		assertEquals("John Doe", aUser.getRealName());
-		assertEquals("doej", aUser.getUserName());
-		assertEquals("john.doe@example.com", aUser.getEmail());
+		assertEquals("doej", aUser.getUsername());
+		assertEquals("doej@some.fr", aUser.getEmail());
 	}
 }

@@ -371,8 +371,10 @@ public class TuleapArtifactMapperTests {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Date date1 = simpleDateFormat.parse("11/03/2014");
 		String commentBody = "This is the first comment"; //$NON-NLS-1$
-		TuleapUser commentSubmitter = new TuleapUser("username", "realname", 17, //$NON-NLS-1$ //$NON-NLS-2$
-				"email", null); //$NON-NLS-1$
+		TuleapUser commentSubmitter = new TuleapUser(17);
+		commentSubmitter.setEmail("email");
+		commentSubmitter.setUsername("username");
+		commentSubmitter.setRealName("realname");
 
 		TuleapElementComment comment = new TuleapElementComment(commentBody, commentSubmitter, date1);
 		mapper.addComment(comment);
@@ -412,6 +414,7 @@ public class TuleapArtifactMapperTests {
 		assertNull(mapper.getModificationDate());
 
 		AttachmentValue attachment = new AttachmentValue("id", "name", 17, 123456, "description", "type", "");
+		attachment.setSubmittedByLabel("Darth Vader (dvader)");
 
 		mapper.addAttachment("First field", attachment);
 
@@ -420,14 +423,12 @@ public class TuleapArtifactMapperTests {
 		assertNotNull(att);
 
 		TaskAttribute authorAttribute = att.getMappedAttribute(TaskAttribute.ATTACHMENT_AUTHOR);
-		// Author is ignored due to problems with user retrieval in Tuleap API
-		// Matters of security and avoiding leak of users list must be addressed
 		assertNotNull(authorAttribute);
 		// TODO Improve this test when Tuleap API allows it
 		assertEquals("17", authorAttribute.getValue());
 		TaskAttribute nameAttribute = authorAttribute.getMappedAttribute(TaskAttribute.PERSON_NAME);
 		assertNotNull(nameAttribute);
-		assertEquals("N/A", nameAttribute.getValue());
+		assertEquals("Darth Vader (dvader)", nameAttribute.getValue());
 
 		TaskAttribute typeAttribute = att.getMappedAttribute(TaskAttribute.ATTACHMENT_CONTENT_TYPE);
 		assertNotNull(typeAttribute);

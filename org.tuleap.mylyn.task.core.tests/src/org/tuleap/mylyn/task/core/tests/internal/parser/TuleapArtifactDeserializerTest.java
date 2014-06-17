@@ -228,7 +228,11 @@ public class TuleapArtifactDeserializerTest {
 		assertEquals(1, attachments.size());
 		AttachmentValue value = attachments.get(0);
 		assertEquals("12", value.getId());
-		assertEquals("artifacts/12", value.getUri());
+		assertEquals(6543, value.getSize());
+		assertEquals(123, value.getSubmittedBy());
+		assertEquals("image/png", value.getType());
+		assertEquals("some_file.png", value.getName());
+		assertEquals("artifact_files/12", value.getUri());
 		assertEquals("file description", value.getDescription());
 	}
 

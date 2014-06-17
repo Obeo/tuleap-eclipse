@@ -172,10 +172,22 @@ public class TuleapProjectConfigurationTests {
 		assertNotNull(project.getUserGroup("0"));
 		assertNotNull(project.getUserGroup("1"));
 
-		TuleapUser user0 = new TuleapUser("zero", "John Zero", 0, "john.zero@some.where", null);
-		TuleapUser user1 = new TuleapUser("one", "John One", 1, "john.one@some.where", null);
-		TuleapUser user2 = new TuleapUser("two", "John Two", 2, "john.two@some.where", null);
-		TuleapUser user3 = new TuleapUser("three", "John Three", 3, "john.three@some.where", null);
+		TuleapUser user0 = new TuleapUser(0);
+		user0.setEmail("john.zero@some.where");
+		user0.setUsername("zero");
+		user0.setRealName("John Zero");
+		TuleapUser user1 = new TuleapUser(1);
+		user0.setEmail("john.one@some.where");
+		user0.setUsername("one");
+		user0.setRealName("John One");
+		TuleapUser user2 = new TuleapUser(2);
+		user0.setEmail("john.two@some.where");
+		user0.setUsername("two");
+		user0.setRealName("John Two");
+		TuleapUser user3 = new TuleapUser(3);
+		user0.setEmail("john.three@some.where");
+		user0.setUsername("three");
+		user0.setRealName("John Three");
 		project.addUserToUserGroup(group0, user0);
 		project.addUserToUserGroup(group0, user1);
 

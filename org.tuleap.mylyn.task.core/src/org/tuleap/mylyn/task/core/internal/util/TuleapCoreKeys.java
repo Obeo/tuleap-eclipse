@@ -595,6 +595,17 @@ public class TuleapCoreKeys extends NLS {
 	 * Cannot find a proper status.
 	 */
 	public static String invalidStatus;
+
+	/**
+	 * Retrieving user, one parameter, the user ID.
+	 */
+	public static String retrievingUser;
+
+	/**
+	 * Error while retrieving user. 2 parameters : {0} is the user ID, {1} is the error message.
+	 */
+	public static String errorWhileRetrievingUser;
+
 	static {
 		// load message values from bundle file
 		reloadMessages();

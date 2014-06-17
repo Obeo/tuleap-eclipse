@@ -96,15 +96,6 @@ public final class RestResourceFactory {
 	}
 
 	/**
-	 * Provides access to the {code /login} HTTP resource.
-	 *
-	 * @return A resource that gives access to the {code /login} HTTP resource.
-	 */
-	public RestResource user() {
-		return resource(GET, URL.USER);
-	}
-
-	/**
 	 * Provides access to the {code /tokens} HTTP resource.
 	 *
 	 * @return A resource that gives access to the {code /tokens} HTTP resource.
@@ -271,6 +262,17 @@ public final class RestResourceFactory {
 	 */
 	public RestResource userGroupUsers(String userGroupId) {
 		return resource(GET, URL.USER_GROUPS, userGroupId, URL.USERS);
+	}
+
+	/**
+	 * Provides access to /users/:id HTTP resource to get the details of a user.
+	 *
+	 * @param userId
+	 *            The user Id
+	 * @return A resource that gives access to the user's details, only allows GET.
+	 */
+	public RestResource user(int userId) {
+		return resource(GET, URL.USERS, Integer.toString(userId));
 	}
 
 	/**

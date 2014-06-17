@@ -18,10 +18,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.tuleap.mylyn.task.core.internal.client.rest.TuleapRestClient;
 import org.tuleap.mylyn.task.core.internal.data.TuleapArtifactMapper;
 import org.tuleap.mylyn.task.core.internal.data.TuleapTaskId;
 import org.tuleap.mylyn.task.core.internal.model.config.AbstractTuleapField;
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapTracker;
+import org.tuleap.mylyn.task.core.internal.model.config.TuleapUser;
 import org.tuleap.mylyn.task.core.internal.model.config.field.AbstractTuleapSelectBox;
 import org.tuleap.mylyn.task.core.internal.model.config.field.TuleapFileUpload;
 import org.tuleap.mylyn.task.core.internal.model.config.field.TuleapString;
@@ -85,9 +87,12 @@ public class ArtifactTaskDataConverter {
 	 *            The task data to populate
 	 * @param element
 	 *            The element containing the data
-	 * @return The task data configured
+	 * @param monitor
+	 *            The progress monitor to use
+	 * @return The given task data loaded with its configured field
 	 */
-	protected TaskData populateTaskDataConfigurableFields(TaskData taskData, TuleapArtifact element) {
+	protected TaskData populateTaskDataConfigurableFields(TaskData taskData, TuleapArtifact element,
+			IProgressMonitor monitor) {
 		TuleapArtifactMapper tuleapArtifactMapper = new TuleapArtifactMapper(taskData, this.tracker);
 		tuleapArtifactMapper.initializeEmptyTaskData();
 
@@ -167,6 +172,15 @@ public class ArtifactTaskDataConverter {
 				AttachmentFieldValue aFieldValue = (AttachmentFieldValue)attachmentFieldValue;
 				List<AttachmentValue> attachments = aFieldValue.getAttachments();
 				for (AttachmentValue attachment : attachments) {
+					// Update attachment by resolving its submitted_by field
+					int submittedBy = attachment.getSubmittedBy();
+					TuleapRestClient client = connector.getClientManager().getRestClient(taskRepository);
+					TuleapUser user = client.getCachedUser(submittedBy,
+							this.tracker.getProject().getServer(), monitor);
+					if (user != null) {
+						attachment.setSubmittedByLabel(String.format(
+								"%s (%s)", user.getRealName(), user.getUsername())); //$NON-NLS-1$
+					}
 					tuleapArtifactMapper.addAttachment(attachmentField.getName(), attachment);
 				}
 			}
@@ -206,7 +220,7 @@ public class ArtifactTaskDataConverter {
 	 *            The progress monitor to use
 	 */
 	public void populateTaskData(TaskData taskData, TuleapArtifact tuleapArtifact, IProgressMonitor monitor) {
-		populateTaskDataConfigurableFields(taskData, tuleapArtifact);
+		populateTaskDataConfigurableFields(taskData, tuleapArtifact, monitor);
 	}
 
 	/**

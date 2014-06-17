@@ -41,6 +41,7 @@ import org.tuleap.mylyn.task.core.internal.model.TuleapToken;
 import org.tuleap.mylyn.task.core.internal.model.config.AbstractTuleapFormElement;
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapPlanning;
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapServer;
+import org.tuleap.mylyn.task.core.internal.model.config.TuleapUser;
 import org.tuleap.mylyn.task.core.internal.model.config.field.TuleapFileUpload;
 import org.tuleap.mylyn.task.core.internal.model.config.field.TuleapMultiSelectBox;
 import org.tuleap.mylyn.task.core.internal.model.config.field.TuleapOpenList;
@@ -556,7 +557,15 @@ public class TuleapRestClientTest {
 		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonTrackers, respHeaders);
 		connector.setResponse(response);
-		client.getArtifactComments(10, new TuleapServer(repository.getUrl()), null);
+
+		// We register user 101
+		TuleapServer server = new TuleapServer(repository.getUrl());
+		TuleapUser lde = new TuleapUser(101);
+		lde.setEmail("");
+		lde.setUsername("ldelaigue");
+		lde.setRealName("Laurent Delaigue");
+		server.register(lde);
+		client.getArtifactComments(10, server, null);
 
 		// Let's check the requests that have been sent.
 		List<ServerRequest> requestsSent = connector.getRequestsSent();

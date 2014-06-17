@@ -431,11 +431,6 @@ public class RestResource {
 		String TRACKERS = "trackers"; //$NON-NLS-1$
 
 		/**
-		 * "user".
-		 */
-		String USER = "user"; //$NON-NLS-1$
-
-		/**
 		 * "users".
 		 */
 		String USERS = "users"; //$NON-NLS-1$

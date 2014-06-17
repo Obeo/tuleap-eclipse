@@ -76,6 +76,11 @@ import org.tuleap.mylyn.task.core.internal.util.TuleapCoreMessages;
 public class TuleapRestClient implements IAuthenticator {
 
 	/**
+	 * Delay to refresh a user. Every user older than 7 days will be refreshed.
+	 */
+	public static final long USER_REFRESH_DELAY = 7 * 24 * 60 * 60 * 1000L;
+
+	/**
 	 * The JSON parser.
 	 */
 	private final Gson gson;
@@ -150,6 +155,37 @@ public class TuleapRestClient implements IAuthenticator {
 			TuleapPlanning planning = gson.fromJson(element, TuleapPlanning.class);
 			project.addPlanning(planning);
 		}
+	}
+
+	/**
+	 * Retrieves a user by its ID. The user is first looked for in the local configuration cache. If it's not
+	 * there, or if it's outdated, it is then fetched from the remote server.
+	 *
+	 * @param userId
+	 *            The user ID
+	 * @param server
+	 *            The server (local configuration)
+	 * @param monitor
+	 *            The progress monitor to use.
+	 * @return An up-to-date user, or null if a user cannot be found for the given ID.
+	 */
+	public TuleapUser getCachedUser(int userId, TuleapServer server, IProgressMonitor monitor) {
+		TuleapUser user = server.getUser(userId);
+		if (user == null || user.getUpdatedOn() == null
+				|| user.getUpdatedOn().getTime() > System.currentTimeMillis()
+				|| user.getUpdatedOn().getTime() - System.currentTimeMillis() > USER_REFRESH_DELAY) {
+			// Security : if the last update of the user is after now, something weird happened, so we refresh
+			try {
+				RestResource userResource = restResourceFactory.user(userId).withAuthenticator(this);
+				ServerResponse response = userResource.get().checkedRun();
+				user = gson.fromJson(response.getBody(), TuleapUser.class);
+				server.register(user);
+			} catch (CoreException e) {
+				TuleapCoreActivator.log(TuleapCoreMessages.getString(TuleapCoreKeys.errorWhileRetrievingUser,
+						Integer.valueOf(userId), e.getMessage()), false);
+			}
+		}
+		return user;
 	}
 
 	/**
@@ -874,7 +910,7 @@ public class TuleapRestClient implements IAuthenticator {
 		for (JsonElement e : operation.iterable()) {
 			TuleapElementComment comment = gson.fromJson(e, TuleapElementComment.class);
 			int submitterId = comment.getSubmitter().getId();
-			TuleapUser submitter = server.getUser(submitterId);
+			TuleapUser submitter = getCachedUser(submitterId, server, monitor);
 			comment.setSubmitter(submitter);
 			if (comment.getBody() != null && !comment.getBody().isEmpty()) {
 				comments.add(comment);

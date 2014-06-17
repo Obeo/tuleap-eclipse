@@ -304,8 +304,10 @@ public class TuleapTaskDataHandlerTests {
 
 				// The first comment
 				String firstCommentBody = "This is the first comment"; //$NON-NLS-1$
-				TuleapUser firstCommentSubmitter = new TuleapUser("first-username", "first-realname", 17, //$NON-NLS-1$ //$NON-NLS-2$
-						"first-email", null); //$NON-NLS-1$
+				TuleapUser firstCommentSubmitter = new TuleapUser(17);
+				firstCommentSubmitter.setEmail("first-email");
+				firstCommentSubmitter.setUsername("first-username");
+				firstCommentSubmitter.setRealName("first-realname");
 				Date commentSubmitDate = new Date();
 
 				TuleapElementComment firstTuleapElementComment = new TuleapElementComment(firstCommentBody,
@@ -314,8 +316,10 @@ public class TuleapTaskDataHandlerTests {
 
 				// The second comment
 				String secondCommentBody = "This is the second comment"; //$NON-NLS-1$
-				TuleapUser secondCommentSubmitter = new TuleapUser("second-username", "second-realname", 18, //$NON-NLS-1$ //$NON-NLS-2$
-						"second-email", null); //$NON-NLS-1$
+				TuleapUser secondCommentSubmitter = new TuleapUser(18);
+				secondCommentSubmitter.setEmail("second-email");
+				secondCommentSubmitter.setUsername("second-username");
+				secondCommentSubmitter.setRealName("second-realname");
 				TuleapElementComment secondTuleapElementComment = new TuleapElementComment(secondCommentBody,
 						secondCommentSubmitter, commentSubmitDate);
 

@@ -4,78 +4,77 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
 package org.tuleap.mylyn.task.core.internal.model.config;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * A Tuleap user.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class TuleapUser implements Serializable {
 
 	/**
-	 * The serial vesion UID.
+	 * The serial version UID.
 	 */
-	private static final long serialVersionUID = 6934279209396555434L;
+	private static final long serialVersionUID = -3627121808349119815L;
 
 	/**
 	 * The identifier.
 	 */
-	private final int id;
+	private int id;
 
 	/**
 	 * The email address.
 	 */
-	private final String email;
+	private String email;
 
 	/**
 	 * The real name.
 	 */
-
-	private final String realName;
+	private String realName;
 
 	/**
 	 * The user name.
 	 */
-
-	private final String username;
+	private String username;
 
 	/**
 	 * The ldap_id.
 	 */
-	private final String ldapId;
+	private String ldapId;
 
 	/**
-	 * The constructor.
-	 * 
-	 * @param username
-	 *            The user name
-	 * @param realname
-	 *            The real name
+	 * Date of update of this user.
+	 */
+	private Date updatedOn;
+
+	/**
+	 * Default constructor.
+	 */
+	public TuleapUser() {
+		// Default constructor
+	}
+
+	/**
+	 * The constructor with the identifier, for temporary uses.
+	 *
 	 * @param identifier
 	 *            The identifier
-	 * @param mail
-	 *            The email address
-	 * @param ldapId
-	 *            The ldap identifier
 	 */
-	public TuleapUser(String username, String realname, int identifier, String mail, String ldapId) {
+	public TuleapUser(int identifier) {
 		this.id = identifier;
-		this.email = mail;
-		this.realName = realname;
-		this.username = username;
-		this.ldapId = ldapId;
 	}
 
 	/**
 	 * Returns the id.
-	 * 
+	 *
 	 * @return the id
 	 */
 	public int getId() {
@@ -83,8 +82,18 @@ public class TuleapUser implements Serializable {
 	}
 
 	/**
+	 * ID setter.
+	 *
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	/**
 	 * Returns the email.
-	 * 
+	 *
 	 * @return the email
 	 */
 	public String getEmail() {
@@ -92,8 +101,18 @@ public class TuleapUser implements Serializable {
 	}
 
 	/**
+	 * Email setter.
+	 *
+	 * @param email
+	 *            the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	/**
 	 * Returns the real name.
-	 * 
+	 *
 	 * @return The realname
 	 */
 	public String getRealName() {
@@ -101,20 +120,59 @@ public class TuleapUser implements Serializable {
 	}
 
 	/**
+	 * Real name setter.
+	 *
+	 * @param realName
+	 *            the realName to set
+	 */
+	public void setRealName(String realName) {
+		this.realName = realName;
+	}
+
+	/**
 	 * Returns the user name.
-	 * 
+	 *
 	 * @return The user name
 	 */
-	public String getUserName() {
+	public String getUsername() {
 		return username;
 	}
 
 	/**
+	 * User name setter.
+	 *
+	 * @param username
+	 *            the userName to set
+	 */
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	/**
 	 * Returns the ldap id.
-	 * 
+	 *
 	 * @return the ldap id
 	 */
 	public String getLdapId() {
 		return ldapId;
+	}
+
+	/**
+	 * Updated on getter.
+	 *
+	 * @return the updatedOn
+	 */
+	public Date getUpdatedOn() {
+		return updatedOn;
+	}
+
+	/**
+	 * Updated on setter.
+	 *
+	 * @param updatedOn
+	 *            the updatedOn to set
+	 */
+	public void setUpdatedOn(Date updatedOn) {
+		this.updatedOn = updatedOn;
 	}
 }

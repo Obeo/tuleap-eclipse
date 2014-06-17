@@ -86,7 +86,10 @@ public class TuleapChangesetDeserializer implements JsonDeserializer<TuleapEleme
 			body = theElement.getAsString();
 		}
 
-		TuleapUser user = new TuleapUser(null, null, submittedBy, email, null);
+		TuleapUser user = new TuleapUser(submittedBy);
+		// We set the email because it's present in the JSON,
+		// but the user will be retrieved from the user cache so this email won't be used 
+		user.setEmail(email);
 
 		return new TuleapElementComment(body, user, submissionDate);
 

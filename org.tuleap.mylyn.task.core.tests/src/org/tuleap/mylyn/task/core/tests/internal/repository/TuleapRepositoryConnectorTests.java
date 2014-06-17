@@ -567,7 +567,7 @@ public class TuleapRepositoryConnectorTests {
 				"desc 201", new Date());
 
 		final TuleapUserGroup group0 = new TuleapUserGroup("101_0", "Administrators");
-		final TuleapUser user999 = new TuleapUser("admin", "Admin", 999, "adming@host.com", "admin");
+		final TuleapUser user999 = newUser();
 
 		final FailingRestClient client = new FailingRestClient(null, null, null) {
 			@Override
@@ -662,7 +662,7 @@ public class TuleapRepositoryConnectorTests {
 				"desc 201", new Date());
 
 		final TuleapUserGroup group0 = new TuleapUserGroup("101_0", "Administrators");
-		final TuleapUser user999 = new TuleapUser("admin", "Admin", 999, "adming@host.com", "admin");
+		final TuleapUser user999 = newUser();
 
 		final FailingRestClient client = new FailingRestClient(null, null, null) {
 			@Override
@@ -754,7 +754,7 @@ public class TuleapRepositoryConnectorTests {
 				"desc 201", new Date());
 
 		final TuleapUserGroup group0 = new TuleapUserGroup("101_0", "Administrators");
-		final TuleapUser user999 = new TuleapUser("admin", "Admin", 999, "adming@host.com", "admin");
+		final TuleapUser user999 = newUser();
 
 		final FailingRestClient client = new FailingRestClient(null, null, null) {
 			@Override
@@ -835,6 +835,15 @@ public class TuleapRepositoryConnectorTests {
 		assertEquals(0, calls[4]);
 		assertSame(prj, refreshedServer.getProject(101));
 		assertEquals(1, refreshedServer.getAllProjects().size());
+	}
+
+	private TuleapUser newUser() {
+		final TuleapUser user999 = new TuleapUser(999);
+		user999.setEmail("adming@host.com");
+		user999.setRealName("Admin");
+		user999.setUsername("admin");
+		user999.setUpdatedOn(new Date());
+		return user999;
 	}
 
 	@Test

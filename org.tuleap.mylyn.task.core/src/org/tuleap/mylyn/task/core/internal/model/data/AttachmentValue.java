@@ -33,6 +33,11 @@ public class AttachmentValue {
 	private int submittedBy;
 
 	/**
+	 * Label of the submitter (name, with login in parenthesis).
+	 */
+	private String submittedByLabel;
+
+	/**
 	 * The size.
 	 */
 	private int size;
@@ -219,5 +224,24 @@ public class AttachmentValue {
 	 */
 	public void setUri(String uri) {
 		this.uri = uri;
+	}
+
+	/**
+	 * Submitted by label getter.
+	 *
+	 * @return the submittedByLabel
+	 */
+	public String getSubmittedByLabel() {
+		return submittedByLabel;
+	}
+
+	/**
+	 * Submitted by label setter.
+	 *
+	 * @param submittedByLabel
+	 *            the submittedByLabel to set
+	 */
+	public void setSubmittedByLabel(String submittedByLabel) {
+		this.submittedByLabel = submittedByLabel;
 	}
 }

@@ -351,13 +351,13 @@ public class TuleapRestResourceFactoryTest {
 	}
 
 	/**
-	 * Checks the basic properties of {@link RestResourceFactory#user()}.
+	 * Checks the basic properties of {@link RestResourceFactory#user(int)}.
 	 */
 	@Test
 	public void testGetUser() {
-		RestResource r = factory.user();
+		RestResource r = factory.user(123);
 		assertNotNull(r);
-		assertEquals("/api/v12.5/user", r.getUrl());
+		assertEquals("/api/v12.5/users/123", r.getUrl());
 	}
 
 	/**

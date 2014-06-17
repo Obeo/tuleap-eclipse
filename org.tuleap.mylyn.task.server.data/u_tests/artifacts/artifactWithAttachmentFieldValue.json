@@ -20,8 +20,12 @@
             "file_descriptions": [
                 {
                     "id": 12,
-                    "uri": "artifacts/12",
-                    "description": "file description"
+                    "submitted_by": 123,
+                    "description": "file description",
+                    "name": "some_file.png",
+                    "size": 6543,
+                    "type": "image/png",
+                    "uri": "artifact_files/12"
                 }
             ]
         }
