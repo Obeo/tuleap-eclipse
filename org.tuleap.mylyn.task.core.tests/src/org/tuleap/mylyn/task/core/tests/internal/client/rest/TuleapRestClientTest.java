@@ -248,42 +248,6 @@ public class TuleapRestClientTest {
 	}
 
 	@Test
-	public void testRetrieveUserGroups() throws CoreException, ParseException {
-		String jsonMilestone = ParserUtil.loadFile("/groups/groups.json");
-		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
-		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
-		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonMilestone, respHeaders);
-		connector.setResponse(response);
-		client.getProjectUserGroups(200, null);
-
-		// Let's check the requests that have been sent.
-		List<ServerRequest> requestsSent = connector.getRequestsSent();
-		assertEquals(1, requestsSent.size());
-		ServerRequest request = requestsSent.get(0);
-		assertEquals("/api/v12.3/projects/200/user_groups", request.url); //$NON-NLS-1$
-		assertEquals("GET", request.method); //$NON-NLS-1$
-	}
-
-	@Test
-	public void testRetrieveUsers() throws CoreException, ParseException {
-		String jsonMilestone = ParserUtil.loadFile("/users/project_admins.json");
-		Map<String, String> respHeaders = Maps.newHashMap();
-		respHeaders.put(RestResource.ALLOW, "OPTIONS,GET"); //$NON-NLS-1$
-		respHeaders.put(RestResource.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET"); //$NON-NLS-1$
-		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, jsonMilestone, respHeaders);
-		connector.setResponse(response);
-		client.getUserGroupUsers("200", null);
-
-		// Let's check the requests that have been sent.
-		List<ServerRequest> requestsSent = connector.getRequestsSent();
-		assertEquals(1, requestsSent.size());
-		ServerRequest request = requestsSent.get(0);
-		assertEquals("/api/v12.3/user_groups/200/users", request.url); //$NON-NLS-1$
-		assertEquals("GET", request.method); //$NON-NLS-1$
-	}
-
-	@Test
 	public void testRetrieveTrackerReports() throws CoreException, ParseException {
 		String jsonMilestone = ParserUtil.loadFile("/tracker_reports/tracker_reports.json");
 		Map<String, String> respHeaders = Maps.newHashMap();

@@ -48,6 +48,11 @@ public class TuleapServer implements Serializable {
 	private final Map<Integer, TuleapUser> personsById = Maps.newHashMap();
 
 	/**
+	 * Trackers indexed by id.
+	 */
+	private final Map<Integer, TuleapTracker> trackersById = Maps.newHashMap();
+
+	/**
 	 * This map contains the ID of the projects of the Tuleap instance and their matching configuration.
 	 */
 	private Map<Integer, TuleapProject> projectsById = new HashMap<Integer, TuleapProject>();
@@ -70,6 +75,10 @@ public class TuleapServer implements Serializable {
 	 */
 	public void addProject(TuleapProject tuleapProject) {
 		this.projectsById.put(Integer.valueOf(tuleapProject.getIdentifier()), tuleapProject);
+		// Register all the trackers of the project
+		for (TuleapTracker tracker : tuleapProject.getAllTrackers()) {
+			trackersById.put(Integer.valueOf(tracker.getIdentifier()), tracker);
+		}
 		tuleapProject.setServer(this);
 	}
 
@@ -122,6 +131,27 @@ public class TuleapServer implements Serializable {
 	}
 
 	/**
+	 * Registers the given tracker in the server cache of tracker by ID.
+	 *
+	 * @param tuleapTracker
+	 *            The tracker (must not be null).
+	 */
+	public void addTracker(TuleapTracker tuleapTracker) {
+		this.trackersById.put(Integer.valueOf(tuleapTracker.getIdentifier()), tuleapTracker);
+	}
+
+	/**
+	 * Removes from the local cache the tracker registered for the given identifie, if there is one.
+	 * 
+	 * @param trackerId
+	 *            ID of the tracker to remove
+	 * @return the removed tracker.
+	 */
+	public TuleapTracker removeTracker(int trackerId) {
+		return this.trackersById.remove(Integer.valueOf(trackerId));
+	}
+
+	/**
 	 * Iterates on all the projects of the server and returns the tracker with the given identifier or null if
 	 * none can be found.
 	 *
@@ -130,29 +160,7 @@ public class TuleapServer implements Serializable {
 	 * @return The tracker with the given identifier or null if none can be found
 	 */
 	public TuleapTracker getTracker(int trackerId) {
-		for (TuleapProject tuleapProject : this.projectsById.values()) {
-			TuleapTracker tracker = tuleapProject.getTracker(trackerId);
-			if (tracker != null) {
-				return tracker;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Replace an existing tracker in the project with the given project identifier by the newly provided
-	 * version of the tracker.
-	 * 
-	 * @param projectId
-	 *            The project identifier
-	 * @param tracker
-	 *            The new version of the tracker
-	 */
-	public void replaceTracker(int projectId, TuleapTracker tracker) {
-		TuleapProject project = this.projectsById.get(Integer.valueOf(projectId));
-		if (project != null) {
-			project.addTracker(tracker);
-		}
+		return trackersById.get(Integer.valueOf(trackerId));
 	}
 
 	/**

@@ -28,7 +28,6 @@ import org.tuleap.mylyn.task.core.internal.model.config.TuleapServer;
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapTrackerReport;
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapUser;
-import org.tuleap.mylyn.task.core.internal.model.config.TuleapUserGroup;
 import org.tuleap.mylyn.task.core.internal.model.data.TuleapArtifact;
 import org.tuleap.mylyn.task.core.internal.model.data.TuleapArtifactWithAttachment;
 import org.tuleap.mylyn.task.core.internal.model.data.TuleapArtifactWithComment;
@@ -166,13 +165,6 @@ public class FailingRestClient extends TuleapRestClient {
 	}
 
 	@Override
-	public List<TuleapUserGroup> getProjectUserGroups(int projectId, IProgressMonitor monitor)
-			throws CoreException {
-		fail("Should not be called.");
-		return null;
-	}
-
-	@Override
 	public List<TuleapMilestone> getSubMilestones(int milestoneId, IProgressMonitor monitor)
 			throws CoreException {
 		fail("Should not be called.");
@@ -200,13 +192,6 @@ public class FailingRestClient extends TuleapRestClient {
 
 	@Override
 	public List<TuleapTrackerReport> getTrackerReports(int trackerId, IProgressMonitor monitor)
-			throws CoreException {
-		fail("Should not be called.");
-		return null;
-	}
-
-	@Override
-	public List<TuleapUser> getUserGroupUsers(String userGroupId, IProgressMonitor monitor)
 			throws CoreException {
 		fail("Should not be called.");
 		return null;

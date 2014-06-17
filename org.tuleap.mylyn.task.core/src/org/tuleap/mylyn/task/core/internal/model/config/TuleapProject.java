@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -14,17 +14,14 @@ import com.google.common.collect.Maps;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.Assert;
 import org.tuleap.mylyn.task.core.internal.model.data.TuleapReference;
 
 /**
  * This class will hold a Tuleap project.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  */
 public class TuleapProject implements Serializable {
@@ -70,22 +67,16 @@ public class TuleapProject implements Serializable {
 	private final Map<Integer, TuleapPlanning> planningsById;
 
 	/**
-	 * User groups indexed by id.
-	 */
-	private final Map<String, TuleapUserGroup> userGroupsById;
-
-	/**
 	 * The constructor.
 	 */
 	public TuleapProject() {
 		trackersById = Maps.newHashMap();
 		planningsById = Maps.newHashMap();
-		userGroupsById = Maps.newHashMap();
 	}
 
 	/**
 	 * The constructor.
-	 * 
+	 *
 	 * @param projectName
 	 *            The label of the project
 	 * @param projectIdentifier
@@ -99,18 +90,33 @@ public class TuleapProject implements Serializable {
 
 	/**
 	 * Adds the given tracker for the given id in the Tuleap server.
-	 * 
+	 *
 	 * @param tracker
 	 *            The tracker.
 	 */
 	public void addTracker(TuleapTracker tracker) {
 		this.trackersById.put(Integer.valueOf(tracker.getIdentifier()), tracker);
 		tracker.setProject(this);
+		if (server != null) {
+			server.addTracker(tracker);
+		}
+	}
+
+	/**
+	 * Clears the map of trackers of this project, after unregistering all trackers from the server cache.
+	 */
+	public void clearTrackers() {
+		if (server != null) {
+			for (Integer trackerId : trackersById.keySet()) {
+				server.removeTracker(trackerId.intValue());
+			}
+		}
+		trackersById.clear();
 	}
 
 	/**
 	 * Returns the tracker for the given tracker id.
-	 * 
+	 *
 	 * @param trackerId
 	 *            the id of the tracker
 	 * @return The tracker for the given tracker id.
@@ -121,7 +127,7 @@ public class TuleapProject implements Serializable {
 
 	/**
 	 * Returns the list of all the tracker.
-	 * 
+	 *
 	 * @return The list of all the tracker.
 	 */
 	public List<TuleapTracker> getAllTrackers() {
@@ -130,7 +136,7 @@ public class TuleapProject implements Serializable {
 
 	/**
 	 * Add a planning to this project.
-	 * 
+	 *
 	 * @param planning
 	 *            The planning to add.
 	 */
@@ -140,7 +146,7 @@ public class TuleapProject implements Serializable {
 
 	/**
 	 * Get a planning by its ID.
-	 * 
+	 *
 	 * @param planningId
 	 *            The id of the planning being looked for.
 	 * @return The planning with this ID, or null if it is not registered with this project.
@@ -151,7 +157,7 @@ public class TuleapProject implements Serializable {
 
 	/**
 	 * Indicates whether the given id is the id of a tracker used to persist milestone fields.
-	 * 
+	 *
 	 * @param trackerId
 	 *            The tracker id.
 	 * @return <code>true</code> if and only if there is a planning whose milestone tracker id equals the
@@ -171,7 +177,7 @@ public class TuleapProject implements Serializable {
 
 	/**
 	 * Indicates whether the given id is the id of a tracker used to persist backlog item fields.
-	 * 
+	 *
 	 * @param trackerId
 	 *            The tracker id.
 	 * @return <code>true</code> if and only if there is a planning whose backlog tracker id equals the given
@@ -196,7 +202,7 @@ public class TuleapProject implements Serializable {
 
 	/**
 	 * Indicates whether a cardwall is active for the given tracker.
-	 * 
+	 *
 	 * @param trackerId
 	 *            id of the tracker.
 	 * @return <code>true</code> if and only if the given ID is the ID of a milestone tracker, and the
@@ -216,7 +222,7 @@ public class TuleapProject implements Serializable {
 
 	/**
 	 * Returns the label of the project.
-	 * 
+	 *
 	 * @return The label of the project
 	 */
 	public String getLabel() {
@@ -225,7 +231,7 @@ public class TuleapProject implements Serializable {
 
 	/**
 	 * Returns the uri of the project.
-	 * 
+	 *
 	 * @return The uri of the project
 	 */
 	public String getUri() {
@@ -234,7 +240,7 @@ public class TuleapProject implements Serializable {
 
 	/**
 	 * Project uri setter.
-	 * 
+	 *
 	 * @param uri
 	 *            The project uri
 	 */
@@ -244,7 +250,7 @@ public class TuleapProject implements Serializable {
 
 	/**
 	 * Returns the identifier of the project.
-	 * 
+	 *
 	 * @return The identifier of the project
 	 */
 	public int getIdentifier() {
@@ -252,61 +258,8 @@ public class TuleapProject implements Serializable {
 	}
 
 	/**
-	 * Registers a user group with this project.
-	 * 
-	 * @param group
-	 *            User group to register with this project. Must not be {@code null}.
-	 */
-	public void addGroup(TuleapUserGroup group) {
-		userGroupsById.put(group.getId(), group);
-	}
-
-	/**
-	 * Provides the group with the given id, or {@code null} if the given id matches no registered group of
-	 * this project.
-	 * 
-	 * @param groupId
-	 *            The id of the group being looked for.
-	 * @return The group with the given id if it is registered with this project, {@code null} otherwise.
-	 */
-	public TuleapUserGroup getUserGroup(String groupId) {
-		return userGroupsById.get(groupId);
-	}
-
-	/**
-	 * Provides all the registered groups of this project.
-	 * 
-	 * @return An unmodifiable view of the user groups registered with this project.
-	 */
-	public Collection<TuleapUserGroup> getAllUserGroups() {
-		return Collections.unmodifiableCollection(userGroupsById.values());
-	}
-
-	/**
-	 * Adds a user to a user group.
-	 * 
-	 * @param group
-	 *            The user group.
-	 * @param member
-	 *            The user to add to the group.
-	 */
-	public void addUserToUserGroup(TuleapUserGroup group, TuleapUser member) {
-		Assert.isNotNull(group);
-		Assert.isNotNull(member);
-		TuleapUserGroup groupToUse;
-		if (userGroupsById.containsKey(group.getId())) {
-			groupToUse = userGroupsById.get(group.getId());
-		} else {
-			userGroupsById.put(group.getId(), group);
-			groupToUse = group;
-		}
-		groupToUse.addMember(member);
-		server.register(member);
-	}
-
-	/**
 	 * The parent server setter.
-	 * 
+	 *
 	 * @param server
 	 *            The parent server.
 	 */
@@ -316,7 +269,7 @@ public class TuleapProject implements Serializable {
 
 	/**
 	 * The parent server.
-	 * 
+	 *
 	 * @return The parent server.
 	 */
 	public TuleapServer getServer() {
@@ -325,7 +278,7 @@ public class TuleapProject implements Serializable {
 
 	/**
 	 * Project resources getter.
-	 * 
+	 *
 	 * @return the projectResources, a list that is never <code>null</code> but possibly empty.
 	 */
 	public TuleapResource[] getProjectResources() {
@@ -334,7 +287,7 @@ public class TuleapProject implements Serializable {
 
 	/**
 	 * Project resources setter.
-	 * 
+	 *
 	 * @param projectResources
 	 *            the projectResources to set
 	 */
@@ -344,7 +297,7 @@ public class TuleapProject implements Serializable {
 
 	/**
 	 * Indicates whether the given resource exists on this project.
-	 * 
+	 *
 	 * @param key
 	 *            The resource type being looked for
 	 * @return {@code true} if and only if the given service is present in the list of services of this

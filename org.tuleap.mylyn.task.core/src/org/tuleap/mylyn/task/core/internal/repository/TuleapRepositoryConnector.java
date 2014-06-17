@@ -51,8 +51,6 @@ import org.tuleap.mylyn.task.core.internal.data.converter.ArtifactTaskDataConver
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapProject;
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapServer;
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapTracker;
-import org.tuleap.mylyn.task.core.internal.model.config.TuleapUser;
-import org.tuleap.mylyn.task.core.internal.model.config.TuleapUserGroup;
 import org.tuleap.mylyn.task.core.internal.model.config.field.AbstractTuleapSelectBox;
 import org.tuleap.mylyn.task.core.internal.model.config.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.core.internal.model.data.TuleapArtifact;
@@ -348,7 +346,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		if (tracker == null) {
 			TuleapCoreActivator.log(TuleapCoreMessages.getString(
 					TuleapCoreKeys.queryFailedBecauseMissingTracker, query.getSummary(), Integer
-							.valueOf(trackerId)), true);
+					.valueOf(trackerId)), true);
 			return;
 		}
 		ArtifactTaskDataConverter artifactTaskDataConverter = new ArtifactTaskDataConverter(tracker,
@@ -544,9 +542,6 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 				}
 			}
 		}
-
-		// TODO Update the task with new values from the task data
-
 	}
 
 	/**
@@ -635,8 +630,7 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		refreshedTracker = client.getTracker(tracker.getIdentifier(), monitor);
 
 		if (refreshedTracker != null) {
-			TuleapServer tuleapServer = getServer(taskRepository);
-			tuleapServer.replaceTracker(project.getIdentifier(), refreshedTracker);
+			project.addTracker(refreshedTracker);
 		}
 		return refreshedTracker;
 	}
@@ -671,22 +665,14 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 	 */
 	private void doRefreshProject(TuleapProject project, IProgressMonitor monitor,
 			TuleapRestClient tuleapRestClient) throws CoreException {
-		tuleapRestClient.loadPlanningsInto(project);
+		project.clearTrackers();
 		for (TuleapTracker tracker : tuleapRestClient.getProjectTrackers(project.getIdentifier(), monitor)) {
 			project.addTracker(tracker);
 		}
-
-		try {
-			TuleapServer server = project.getServer();
-			for (TuleapUserGroup userGroup : tuleapRestClient.getProjectUserGroups(project.getIdentifier(),
-					monitor)) {
-				for (TuleapUser tuleapUser : tuleapRestClient.getUserGroupUsers(userGroup.getId(), monitor)) {
-					server.register(tuleapUser);
-				}
-			}
-		} catch (CoreException e) {
-			TuleapCoreActivator.log(e, false);
-		}
+		tuleapRestClient.loadPlanningsInto(project);
+		// Loading user groups and users here does not work since the related APIs are only open to
+		// administrators.
+		// Consequently, users are loaded dynamically and cached each time a new one is retrieved.
 	}
 
 	/**

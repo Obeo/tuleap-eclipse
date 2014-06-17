@@ -421,26 +421,6 @@ public class TuleapRestResourceFactoryTest {
 	}
 
 	/**
-	 * Checks the basic properties of {@link RestResourceFactory#projectUserGroups(int)}.
-	 */
-	@Test
-	public void testGetProjectUserGroups() {
-		RestResource r = factory.projectUserGroups(674);
-		assertNotNull(r);
-		assertEquals("/api/v12.5/projects/674/user_groups", r.getUrl());
-	}
-
-	/**
-	 * Checks the basic properties of {@link RestResourceFactory#userGroupUsers(String)}.
-	 */
-	@Test
-	public void testGetUserGroupUsers() {
-		RestResource r = factory.userGroupUsers("356");
-		assertNotNull(r);
-		assertEquals("/api/v12.5/user_groups/356/users", r.getUrl());
-	}
-
-	/**
 	 * Checks the basic properties of {@link RestResourceFactory#projectBacklog(int)}.
 	 */
 	@Test

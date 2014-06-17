@@ -40,7 +40,6 @@ import org.tuleap.mylyn.task.core.internal.model.config.TuleapServer;
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapTrackerReport;
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapUser;
-import org.tuleap.mylyn.task.core.internal.model.config.TuleapUserGroup;
 import org.tuleap.mylyn.task.core.internal.model.config.field.AbstractTuleapSelectBox;
 import org.tuleap.mylyn.task.core.internal.model.config.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.core.internal.model.data.ArtifactReference;
@@ -664,50 +663,6 @@ public class TuleapRestClient implements IAuthenticator {
 		ServerResponse cardwallResponse = restCardwall.get().checkedRun();
 		TuleapCardwall cardwall = gson.fromJson(cardwallResponse.getBody(), TuleapCardwall.class);
 		return cardwall;
-	}
-
-	/**
-	 * Retrieve a project's user groups.
-	 *
-	 * @param projectId
-	 *            ID of the project
-	 * @param monitor
-	 *            Progress monitor to use
-	 * @return A list, never null but possibly empty, containing the project's user groups.
-	 * @throws CoreException
-	 *             If the server returns a status code different from 200 OK.
-	 */
-	public List<TuleapUserGroup> getProjectUserGroups(int projectId, IProgressMonitor monitor)
-			throws CoreException {
-		RestResource r = restResourceFactory.projectUserGroups(projectId).withAuthenticator(this);
-		RestOperation operation = r.get();
-		List<TuleapUserGroup> userGroups = Lists.newArrayList();
-		for (JsonElement e : operation.iterable()) {
-			userGroups.add(gson.fromJson(e, TuleapUserGroup.class));
-		}
-		return userGroups;
-	}
-
-	/**
-	 * Retrieve a user group users.
-	 *
-	 * @param userGroupId
-	 *            ID of the user group
-	 * @param monitor
-	 *            Progress monitor to use
-	 * @return A list, never null but possibly empty, containing the user groups's users.
-	 * @throws CoreException
-	 *             If the server returns a status code different from 200 OK.
-	 */
-	public List<TuleapUser> getUserGroupUsers(String userGroupId, IProgressMonitor monitor)
-			throws CoreException {
-		RestResource r = restResourceFactory.userGroupUsers(userGroupId).withAuthenticator(this);
-		RestOperation operation = r.get();
-		List<TuleapUser> users = Lists.newArrayList();
-		for (JsonElement e : operation.iterable()) {
-			users.add(gson.fromJson(e, TuleapUser.class));
-		}
-		return users;
 	}
 
 	/**

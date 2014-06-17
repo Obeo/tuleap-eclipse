@@ -46,8 +46,6 @@ import org.tuleap.mylyn.task.core.internal.data.TuleapTaskId;
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapProject;
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapServer;
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapTracker;
-import org.tuleap.mylyn.task.core.internal.model.config.TuleapUser;
-import org.tuleap.mylyn.task.core.internal.model.config.TuleapUserGroup;
 import org.tuleap.mylyn.task.core.internal.model.config.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.core.internal.model.config.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.core.internal.model.data.ArtifactReference;
@@ -421,18 +419,6 @@ public class TuleapRepositoryConnectorTests {
 							throws CoreException {
 						return Collections.emptyList();
 					}
-
-					/**
-					 * {@inheritDoc}
-					 *
-					 * @see org.tuleap.mylyn.task.core.internal.client.rest.TuleapRestClient#getProjectUserGroups(int,
-					 *      org.eclipse.core.runtime.IProgressMonitor)
-					 */
-					@Override
-					public List<TuleapUserGroup> getProjectUserGroups(int projectId, IProgressMonitor monitor)
-							throws CoreException {
-						return Collections.emptyList();
-					}
 				};
 			}
 		};
@@ -566,9 +552,6 @@ public class TuleapRepositoryConnectorTests {
 		final TuleapTracker tracker201 = new TuleapTracker(201, "t/201", "Tracker 201", "item 201",
 				"desc 201", new Date());
 
-		final TuleapUserGroup group0 = new TuleapUserGroup("101_0", "Administrators");
-		final TuleapUser user999 = newUser();
-
 		final FailingRestClient client = new FailingRestClient(null, null, null) {
 			@Override
 			public List<TuleapProject> getProjects(IProgressMonitor monitor) throws CoreException {
@@ -584,28 +567,6 @@ public class TuleapRepositoryConnectorTests {
 					return Arrays.asList(tracker200, tracker201);
 				}
 				fail("Unexpected project ID");
-				return null;
-			}
-
-			@Override
-			public List<TuleapUserGroup> getProjectUserGroups(int projectId, IProgressMonitor monitor)
-					throws CoreException {
-				calls[2]++;
-				if (projectId == 101) {
-					return Arrays.asList(group0);
-				}
-				fail("Unexpected project ID");
-				return null;
-			}
-
-			@Override
-			public List<TuleapUser> getUserGroupUsers(String userGroupId, IProgressMonitor monitor)
-					throws CoreException {
-				calls[3]++;
-				if ("101_0".equals(userGroupId)) {
-					return Arrays.asList(user999);
-				}
-				fail("Unexpected user group ID");
 				return null;
 			}
 
@@ -648,7 +609,7 @@ public class TuleapRepositoryConnectorTests {
 	@Test
 	public void testRefreshProject() throws CoreException {
 		TaskRepository repository = new TaskRepository(ITuleapConstants.CONNECTOR_KIND, "https://test.url");
-		final int[] calls = new int[5];
+		final int[] calls = new int[3];
 
 		TuleapServer server = new TuleapServer("https://test.url");
 
@@ -660,9 +621,6 @@ public class TuleapRepositoryConnectorTests {
 				"desc 200", new Date());
 		final TuleapTracker tracker201 = new TuleapTracker(201, "t/201", "Tracker 201", "item 201",
 				"desc 201", new Date());
-
-		final TuleapUserGroup group0 = new TuleapUserGroup("101_0", "Administrators");
-		final TuleapUser user999 = newUser();
 
 		final FailingRestClient client = new FailingRestClient(null, null, null) {
 			@Override
@@ -683,30 +641,8 @@ public class TuleapRepositoryConnectorTests {
 			}
 
 			@Override
-			public List<TuleapUserGroup> getProjectUserGroups(int projectId, IProgressMonitor monitor)
-					throws CoreException {
-				calls[2]++;
-				if (projectId == 101) {
-					return Arrays.asList(group0);
-				}
-				fail("Unexpected project ID");
-				return null;
-			}
-
-			@Override
-			public List<TuleapUser> getUserGroupUsers(String userGroupId, IProgressMonitor monitor)
-					throws CoreException {
-				calls[3]++;
-				if ("101_0".equals(userGroupId)) {
-					return Arrays.asList(user999);
-				}
-				fail("Unexpected user group ID");
-				return null;
-			}
-
-			@Override
 			public void loadPlanningsInto(TuleapProject project) throws CoreException {
-				calls[4]++;
+				calls[2]++;
 				if (project == null || project.getIdentifier() != 101) {
 					fail("Unexpected project ID");
 				}
@@ -730,8 +666,6 @@ public class TuleapRepositoryConnectorTests {
 		assertEquals(0, calls[0]);
 		assertEquals(1, calls[1]);
 		assertEquals(1, calls[2]);
-		assertEquals(1, calls[3]);
-		assertEquals(1, calls[4]);
 
 		TuleapServer refreshedServer = connector.getServer(repository);
 
@@ -753,9 +687,6 @@ public class TuleapRepositoryConnectorTests {
 		final TuleapTracker tracker201 = new TuleapTracker(201, "t/201", "Tracker 201", "item 201",
 				"desc 201", new Date());
 
-		final TuleapUserGroup group0 = new TuleapUserGroup("101_0", "Administrators");
-		final TuleapUser user999 = newUser();
-
 		final FailingRestClient client = new FailingRestClient(null, null, null) {
 			@Override
 			public List<TuleapProject> getProjects(IProgressMonitor monitor) throws CoreException {
@@ -771,28 +702,6 @@ public class TuleapRepositoryConnectorTests {
 					return Arrays.asList(tracker200, tracker201);
 				}
 				fail("Unexpected project ID");
-				return null;
-			}
-
-			@Override
-			public List<TuleapUserGroup> getProjectUserGroups(int projectId, IProgressMonitor monitor)
-					throws CoreException {
-				calls[2]++;
-				if (projectId == 101) {
-					return Arrays.asList(group0);
-				}
-				fail("Unexpected project ID");
-				return null;
-			}
-
-			@Override
-			public List<TuleapUser> getUserGroupUsers(String userGroupId, IProgressMonitor monitor)
-					throws CoreException {
-				calls[3]++;
-				if ("101_0".equals(userGroupId)) {
-					return Arrays.asList(user999);
-				}
-				fail("Unexpected user group ID");
 				return null;
 			}
 
@@ -835,15 +744,6 @@ public class TuleapRepositoryConnectorTests {
 		assertEquals(0, calls[4]);
 		assertSame(prj, refreshedServer.getProject(101));
 		assertEquals(1, refreshedServer.getAllProjects().size());
-	}
-
-	private TuleapUser newUser() {
-		final TuleapUser user999 = new TuleapUser(999);
-		user999.setEmail("adming@host.com");
-		user999.setRealName("Admin");
-		user999.setUsername("admin");
-		user999.setUpdatedOn(new Date());
-		return user999;
 	}
 
 	@Test

@@ -243,28 +243,6 @@ public final class RestResourceFactory {
 	}
 
 	/**
-	 * Provides access to the {code /projects/:id/user_groups} HTTP resource to get a project user groups.
-	 *
-	 * @param projectId
-	 *            the project id
-	 * @return A resource that gives access to the {code /projects/:id/user_groups} HTTP resource.
-	 */
-	public RestResource projectUserGroups(int projectId) {
-		return resource(GET, URL.PROJECTS, Integer.toString(projectId), URL.USER_GROUPS);
-	}
-
-	/**
-	 * Provides access to the {code /user_groups/:id/users} HTTP resource to get a user group users.
-	 *
-	 * @param userGroupId
-	 *            the project id
-	 * @return A resource that gives access to the {code /user_groups/:id/users} HTTP resource.
-	 */
-	public RestResource userGroupUsers(String userGroupId) {
-		return resource(GET, URL.USER_GROUPS, userGroupId, URL.USERS);
-	}
-
-	/**
 	 * Provides access to /users/:id HTTP resource to get the details of a user.
 	 *
 	 * @param userId
