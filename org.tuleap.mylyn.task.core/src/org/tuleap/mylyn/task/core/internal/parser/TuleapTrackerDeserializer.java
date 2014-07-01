@@ -44,6 +44,7 @@ import org.tuleap.mylyn.task.core.internal.model.config.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.core.internal.model.config.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.core.internal.model.config.field.TuleapString;
 import org.tuleap.mylyn.task.core.internal.model.config.field.TuleapText;
+import org.tuleap.mylyn.task.core.internal.model.data.TuleapReference;
 import org.tuleap.mylyn.task.core.internal.util.TuleapCoreKeys;
 import org.tuleap.mylyn.task.core.internal.util.TuleapCoreMessages;
 
@@ -169,6 +170,11 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 	 * The resources keyword.
 	 */
 	private static final String RESOURCES = "resources"; //$NON-NLS-1$
+
+	/**
+	 * The parent keyword.
+	 */
+	private static final String PARENT = "parent"; //$NON-NLS-1$
 
 	/**
 	 * Set of known field types.
@@ -495,7 +501,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 		if (fieldSemantic != null
 				&& fieldSemantic.get(JSON_CONTRIBUTOR) != null
 				&& fieldSemantic.get(JSON_CONTRIBUTOR).getAsJsonObject().get(FIELD_ID).getAsInt() == selectBoxField
-						.getIdentifier()) {
+				.getIdentifier()) {
 			selectBoxField.setSemanticContributor(true);
 		}
 	}
@@ -520,7 +526,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 			for (int z = 0; z < semanticStatus.get(JSON_STATUS_IDS).getAsJsonArray().size(); z++) {
 				if (selectBoxField.getIdentifier() == semanticStatus.get(FIELD_ID).getAsInt()
 						&& fieldValueId == semanticStatus.get(JSON_STATUS_IDS).getAsJsonArray().get(z)
-								.getAsInt()) {
+						.getAsInt()) {
 					selectBoxField.getOpenStatus().add(selectBoxItem);
 				}
 			}
@@ -570,6 +576,18 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 		String url = this.getUrl(jsonObject);
 		String label = this.getLabel(jsonObject);
 		String uri = jsonObject.get(URI).getAsString();
+
+		JsonObject parent = null;
+		JsonElement parentElement = jsonObject.get(PARENT);
+		if (parentElement != null && parentElement.isJsonObject()) {
+			parent = jsonObject.get(PARENT).getAsJsonObject();
+		}
+
+		TuleapReference parentReference = null;
+		if (parent != null) {
+			parentReference = new TuleapReference(getId(parent), getUri(parent));
+		}
+
 		String itemName = null;
 		if (jsonObject.has(ITEM_NAME) && jsonObject.get(ITEM_NAME).isJsonPrimitive()) {
 			itemName = jsonObject.get(ITEM_NAME).getAsString();
@@ -581,6 +599,7 @@ public class TuleapTrackerDeserializer implements JsonDeserializer<TuleapTracker
 
 		TuleapTracker tracker = new TuleapTracker(identifier, url, label, itemName, description, new Date());
 		tracker.setUri(uri);
+		tracker.setParentTracker(parentReference);
 
 		tracker = this.populateConfigurableFields(tracker, jsonObject, context);
 

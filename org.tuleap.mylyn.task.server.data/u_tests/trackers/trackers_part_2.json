@@ -44,6 +44,10 @@
                 ]
             }
         ],
+        "parent": {
+            "id": 82,
+            "uri": "trackers/82"
+        },
         "semantics": {
             "title": {
                 "field_id": 0

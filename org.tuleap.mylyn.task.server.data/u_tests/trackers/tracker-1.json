@@ -251,26 +251,26 @@
             ]
         },
         {
-          "field_id": 13,
-          "name": "radio",
-          "label": "Radio",
-          "type": "rb",
-          "values": [
-              {
-                  "id": 0,
-                  "label": "Value A"
-              },
-              {
-                  "id": 1,
-                  "label": "Value B"
-              }
-          ],
-          "permissions": [
-              "read",
-              "create",
-              "update"
-          ]
-      }
+            "field_id": 13,
+            "name": "radio",
+            "label": "Radio",
+            "type": "rb",
+            "values": [
+                {
+                    "id": 0,
+                    "label": "Value A"
+                },
+                {
+                    "id": 1,
+                    "label": "Value B"
+                }
+            ],
+            "permissions": [
+                "read",
+                "create",
+                "update"
+            ]
+        }
     ],
     "semantics": {
         "title": {
@@ -360,6 +360,7 @@
             }
         ]
     },
+    "parent": null,
     "resources": [
         {
             "type": "reports",

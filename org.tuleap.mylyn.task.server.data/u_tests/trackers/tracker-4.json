@@ -68,6 +68,10 @@
             "field_id": 2
         }
     },
+    "parent": {
+        "id": 82,
+        "uri": "trackers/82"
+    },
     "resources": [
         {
             "type": "reports",

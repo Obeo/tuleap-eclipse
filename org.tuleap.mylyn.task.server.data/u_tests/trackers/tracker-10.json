@@ -27,7 +27,11 @@
             "field_id": 0
         }
     },
-    "workflow": null,
+    "workflow": null ,
+    "parent": {
+        "id": 82,
+        "uri": "trackers/82"
+    },
     "resources": [
         {
             "type": "reports",

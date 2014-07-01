@@ -12,7 +12,6 @@ package org.tuleap.mylyn.task.core.internal.model.config;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -22,6 +21,7 @@ import org.tuleap.mylyn.task.core.internal.model.config.field.TuleapFileUpload;
 import org.tuleap.mylyn.task.core.internal.model.config.field.TuleapFloat;
 import org.tuleap.mylyn.task.core.internal.model.config.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.core.internal.model.config.field.TuleapString;
+import org.tuleap.mylyn.task.core.internal.model.data.TuleapReference;
 
 /**
  * The repository will hold the latest known trackers of a given repository. A tracker can dramatically evolve
@@ -45,12 +45,7 @@ public class TuleapTracker implements Serializable {
 	/**
 	 * The tracker's parent.
 	 */
-	private TuleapTracker parentTracker;
-
-	/**
-	 * The children trackers.
-	 */
-	private Map<Integer, TuleapTracker> childrenTrackers = new LinkedHashMap<Integer, TuleapTracker>();
+	private TuleapReference parent;
 
 	/**
 	 * The identifier of the configured object (tracker, backlogItem type, milestone type, card type).
@@ -254,17 +249,8 @@ public class TuleapTracker implements Serializable {
 	 *
 	 * @return the parent tracker
 	 */
-	public TuleapTracker getParentTracker() {
-		return this.parentTracker;
-	}
-
-	/**
-	 * Gets the list of children trackers.
-	 *
-	 * @return The list of the children trackers
-	 */
-	public Collection<TuleapTracker> getChildrenTrackers() {
-		return Collections.unmodifiableCollection(this.childrenTrackers.values());
+	public TuleapReference getParentTracker() {
+		return this.parent;
 	}
 
 	/**
@@ -274,64 +260,9 @@ public class TuleapTracker implements Serializable {
 	 * @param parentTracker
 	 *            the parent tracker to set
 	 */
-	public void setParentTracker(TuleapTracker parentTracker) {
-		if (this.doSetParent(parentTracker)) {
-			parentTracker.doAddChild(this);
-		}
+	public void setParentTracker(TuleapReference parentTracker) {
+		this.parent = parentTracker;
 
-	}
-
-	/**
-	 * Add a child tracker to this tracker that should be different from the parent tracker and the actual
-	 * one.
-	 *
-	 * @param childTracker
-	 *            the child tracker
-	 */
-	public void addChildTracker(TuleapTracker childTracker) {
-		if (this.doAddChild(childTracker)) {
-			childTracker.doSetParent(this);
-		}
-	}
-
-	/**
-	 * In order to avoid infinite loops we create this method that has the same behavior as the
-	 * setParentTracker(TuleapTracker parentTracker) one.
-	 *
-	 * @param theParentTracker
-	 *            the parent tracker to set
-	 * @return <code>true</code> if the parent is really set.
-	 */
-	private boolean doSetParent(TuleapTracker theParentTracker) {
-		if (this.childrenTrackers.get(Integer.valueOf(theParentTracker.identifier)) == null
-				&& theParentTracker.identifier != this.identifier) {
-			if (this.parentTracker != null) {
-				this.parentTracker.childrenTrackers.remove(Integer.valueOf(this.identifier));
-			}
-			this.parentTracker = theParentTracker;
-		}
-		return this.parentTracker == theParentTracker;
-
-	}
-
-	/**
-	 * In order to avoid infinite loops we create this method that has the same behavior as the
-	 * addChildTracker(TuleapTracker childTracker) one.
-	 *
-	 * @param childTracker
-	 *            the child tracker
-	 * @return <code>true</code> if the child is really added to the collection of tracker's children.
-	 */
-	private boolean doAddChild(TuleapTracker childTracker) {
-		if (this.parentTracker == null) {
-			if (childTracker.identifier != this.identifier) {
-				this.childrenTrackers.put(Integer.valueOf(childTracker.identifier), childTracker);
-			}
-		} else if (childTracker.identifier != this.parentTracker.identifier
-				&& childTracker.identifier != this.identifier) {
-			this.childrenTrackers.put(Integer.valueOf(childTracker.identifier), childTracker);
-		}
-		return this.childrenTrackers.containsKey(Integer.valueOf(childTracker.identifier));
 	}
 
 	/**

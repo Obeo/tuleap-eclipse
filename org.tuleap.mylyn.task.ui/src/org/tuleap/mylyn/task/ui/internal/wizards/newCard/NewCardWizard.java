@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.jface.wizard.Wizard;
 import org.tuleap.mylyn.task.agile.core.ICardMapping;
+import org.tuleap.mylyn.task.core.internal.data.TuleapTaskId;
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapProject;
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.core.internal.repository.TuleapCardMapping;
@@ -68,9 +69,12 @@ public class NewCardWizard extends Wizard {
 	@Override
 	public void addPages() {
 		List<TuleapTracker> cardTrackers = new ArrayList<TuleapTracker>();
+		int trackerId = TuleapTaskId.forName(parentCard).getTrackerId();
 		for (TuleapTracker tracker : project.getAllTrackers()) {
-			if (project.isBacklogTracker(tracker.getIdentifier())) {
-				cardTrackers.add(tracker);
+			if (tracker.getParentTracker() != null) {
+				if (tracker.getParentTracker().getId() == trackerId) {
+					cardTrackers.add(tracker);
+				}
 			}
 		}
 		this.trackerPage = new TuleapPlanningTrackerPage(cardTrackers);

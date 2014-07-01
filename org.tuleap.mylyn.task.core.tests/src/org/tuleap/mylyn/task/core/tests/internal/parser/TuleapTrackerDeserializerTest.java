@@ -32,12 +32,14 @@ import org.tuleap.mylyn.task.core.internal.model.config.field.TuleapMultiSelectB
 import org.tuleap.mylyn.task.core.internal.model.config.field.TuleapSelectBox;
 import org.tuleap.mylyn.task.core.internal.model.config.field.TuleapSelectBoxItem;
 import org.tuleap.mylyn.task.core.internal.model.config.field.TuleapString;
+import org.tuleap.mylyn.task.core.internal.model.data.TuleapReference;
 import org.tuleap.mylyn.task.core.internal.parser.TuleapGsonProvider;
 import org.tuleap.mylyn.task.core.internal.util.ITuleapConstants;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -90,6 +92,11 @@ public class TuleapTrackerDeserializerTest {
 		TuleapResource tuleapResource = tuleapTracker.getTrackerResources()[0];
 		assertEquals("reports", tuleapResource.getType()); //$NON-NLS-1$
 		assertEquals("trackers/0/tracker_reports", tuleapResource.getUri()); //$NON-NLS-1$
+
+		TuleapReference parent = tuleapTracker.getParentTracker();
+		assertEquals(82, parent.getId());
+		assertEquals("trackers/82", parent.getUri()); //$NON-NLS-1$
+
 	}
 
 	/**
@@ -187,6 +194,9 @@ public class TuleapTrackerDeserializerTest {
 		TuleapResource tuleapResource = tuleapTracker.getTrackerResources()[0];
 		assertEquals("reports", tuleapResource.getType()); //$NON-NLS-1$
 		assertEquals("trackers/1/tracker_reports", tuleapResource.getUri()); //$NON-NLS-1$
+
+		TuleapReference parent = tuleapTracker.getParentTracker();
+		assertNull(parent);
 	}
 
 	/**

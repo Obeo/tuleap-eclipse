@@ -26,6 +26,10 @@
                 "field_id": 0
             }
         },
+        "parent": {
+            "id": 82,
+            "uri": "trackers/82"
+        },
         "resources": [
             {
                 "type": "reports",
@@ -356,6 +360,7 @@
                 }
             ]
         },
+        "parent": null,
         "resources": [
             {
                 "type": "reports",
@@ -457,6 +462,10 @@
                     ]
                 }
             ]
+        },
+        "parent": {
+            "id": 82,
+            "uri": "trackers/82"
         },
         "resources": [
             {
@@ -563,6 +572,10 @@
                 "field_id": 4
             }
         },
+        "parent": {
+            "id": 82,
+            "uri": "trackers/82"
+        },
         "resources": [
             {
                 "type": "reports",
@@ -639,6 +652,10 @@
             "initial_effort": {
                 "field_id": 2
             }
+        },
+        "parent": {
+            "id": 82,
+            "uri": "trackers/82"
         },
         "resources": [
             {

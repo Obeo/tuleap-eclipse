@@ -170,6 +170,15 @@ public class MilestoneTaskDataConverter {
 				cardWrapper.addAllowedColumn(String.valueOf(columnId));
 			}
 		}
+		boolean hasChildren = false;
+		for (TuleapTracker theTracker : project.getAllTrackers()) {
+			if (theTracker.getParentTracker() != null) {
+				if (theTracker.getParentTracker().getId() == card.getArtifact().getTracker().getId()) {
+					hasChildren = true;
+				}
+			}
+		}
+		cardWrapper.setHasChildren(hasChildren);
 
 		TuleapStatus status = card.getStatus();
 		cardWrapper.setComplete(status == TuleapStatus.Closed);
@@ -606,7 +615,7 @@ public class MilestoneTaskDataConverter {
 			}
 			backlogItemWrapper.setParent(TuleapTaskId.forArtifact(biTaskId.getProjectId(), parentTrackerId,
 					backlogItem.getParent().getId()).toString(), Integer.toString(backlogItem.getParent()
-					.getId()));
+							.getId()));
 		}
 	}
 

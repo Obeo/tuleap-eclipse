@@ -96,6 +96,10 @@
             "field_id": 4
         }
     },
+    "parent": {
+        "id": 82,
+        "uri": "trackers/82"
+    },
     "resources": [
         {
             "type": "reports",

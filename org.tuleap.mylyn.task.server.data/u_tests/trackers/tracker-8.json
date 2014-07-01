@@ -29,6 +29,10 @@
             "value_ids": []
         }
     },
+    "parent": {
+        "id": 82,
+        "uri": "trackers/82"
+    },
     "resources": [
         {
             "type": "reports",

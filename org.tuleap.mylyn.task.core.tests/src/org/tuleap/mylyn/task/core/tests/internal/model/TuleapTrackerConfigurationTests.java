@@ -12,7 +12,6 @@ package org.tuleap.mylyn.task.core.tests.internal.model;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.Date;
 
 import org.junit.Before;
@@ -164,124 +163,6 @@ public class TuleapTrackerConfigurationTests {
 		testDate = simpleDateFormat.parse("11/03/2014");
 		tracker10 = new TuleapTracker(10, "tracker/url", "Tracker", "Item name", "Description", testDate);
 
-	}
-
-	/**
-	 * Testing the parent/children relationship between trackers.
-	 */
-	@Test
-	public void testParentChildrenTrackers() {
-		assertEquals(0, tracker1.getChildrenTrackers().size());
-		assertNull(tracker1.getParentTracker());
-
-		// adding the child trackers
-		tracker1.addChildTracker(tracker2);
-		tracker1.addChildTracker(tracker3);
-		tracker1.addChildTracker(tracker4);
-		tracker1.addChildTracker(tracker5);
-		tracker1.addChildTracker(tracker6);
-
-		// testing that the parent contains all children
-
-		Collection<TuleapTracker> children = tracker1.getChildrenTrackers();
-		assertEquals(5, children.size());
-		assertTrue(children.contains(tracker2));
-		assertTrue(children.contains(tracker3));
-		assertTrue(children.contains(tracker4));
-		assertTrue(children.contains(tracker5));
-		assertTrue(children.contains(tracker6));
-
-		// testing that tracker 1 is the parent of trackers 2, 3, 4, 5 and 6
-		assertEquals(tracker1, tracker2.getParentTracker());
-		assertEquals(tracker1, tracker3.getParentTracker());
-		assertEquals(tracker1, tracker4.getParentTracker());
-		assertEquals(tracker1, tracker5.getParentTracker());
-		assertEquals(tracker1, tracker6.getParentTracker());
-
-		// test changing the parent
-		tracker5.setParentTracker(tracker3);
-		assertEquals(tracker3, tracker5.getParentTracker());
-		assertEquals(1, tracker3.getChildrenTrackers().size());
-		assertTrue(tracker3.getChildrenTrackers().contains(tracker5));
-
-		assertEquals(4, children.size());
-		assertFalse(children.contains(tracker5));
-
-		// changing the parent using setParent
-
-		tracker8.setParentTracker(tracker7);
-		assertEquals(tracker7, tracker8.getParentTracker());
-		assertTrue(tracker7.getChildrenTrackers().contains(tracker8));
-
-		tracker8.setParentTracker(tracker9);
-		assertEquals(tracker9, tracker8.getParentTracker());
-		assertTrue(tracker9.getChildrenTrackers().contains(tracker8));
-		assertFalse(tracker7.getChildrenTrackers().contains(tracker8));
-
-		// changing the parent using addChild
-
-		tracker7.addChildTracker(tracker8);
-		assertEquals(tracker7, tracker8.getParentTracker());
-		assertTrue(tracker7.getChildrenTrackers().contains(tracker8));
-
-		tracker9.addChildTracker(tracker8);
-		assertEquals(tracker9, tracker8.getParentTracker());
-		assertTrue(tracker9.getChildrenTrackers().contains(tracker8));
-		assertFalse(tracker7.getChildrenTrackers().contains(tracker8));
-
-		// adding a tracker to its self as a child
-		tracker6.addChildTracker(tracker6);
-		assertEquals(0, tracker6.getChildrenTrackers().size());
-
-		// adding a tracker to its self as a parent
-		tracker4.setParentTracker(tracker4);
-		assertEquals(1, tracker4.getParentTracker().getIdentifier());
-
-	}
-
-	/**
-	 * Testing changing the parent using setParent method.
-	 */
-	@Test
-	public void testChangingParentTrackerUsingSetParent() {
-		tracker8.setParentTracker(tracker7);
-		assertEquals(tracker7, tracker8.getParentTracker());
-		assertTrue(tracker7.getChildrenTrackers().contains(tracker8));
-
-		tracker8.setParentTracker(tracker9);
-		assertEquals(tracker9, tracker8.getParentTracker());
-		assertTrue(tracker9.getChildrenTrackers().contains(tracker8));
-		assertFalse(tracker7.getChildrenTrackers().contains(tracker8));
-	}
-
-	/**
-	 * Testing changing the parent using addChild method.
-	 */
-	@Test
-	public void testParentChildrenTrackersUsingAddChild() {
-		tracker7.addChildTracker(tracker8);
-		assertEquals(tracker7, tracker8.getParentTracker());
-		assertTrue(tracker7.getChildrenTrackers().contains(tracker8));
-
-		tracker9.addChildTracker(tracker8);
-		assertEquals(tracker9, tracker8.getParentTracker());
-		assertTrue(tracker9.getChildrenTrackers().contains(tracker8));
-		assertFalse(tracker7.getChildrenTrackers().contains(tracker8));
-	}
-
-	/**
-	 * Testing irregular cases .
-	 */
-	@Test
-	public void testIrregularCases() {
-		// adding a tracker to its self as a child
-		tracker6.addChildTracker(tracker6);
-		assertEquals(0, tracker6.getChildrenTrackers().size());
-
-		// adding a tracker to its self as a parent
-		tracker4.setParentTracker(tracker1);
-		tracker4.setParentTracker(tracker4);
-		assertEquals(tracker1, tracker4.getParentTracker());
 	}
 
 	@Test
