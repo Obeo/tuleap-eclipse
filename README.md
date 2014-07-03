@@ -8,7 +8,7 @@ This is the code of the open-source **Eclipse Mylyn connector fur Tuleap**.
 It allows you to manage your Tuleap artifacts (Tasks, Bugs, User Stories, etc.)
 directly from within eclipse.
 
-Release 2.0.0 brings support of **agile features**, thus allowing the management of:
+Release 2.1.0 brings support of **agile features**, thus allowing the management of:
 
 - Release or Sprint planning
 - Cardwalls
