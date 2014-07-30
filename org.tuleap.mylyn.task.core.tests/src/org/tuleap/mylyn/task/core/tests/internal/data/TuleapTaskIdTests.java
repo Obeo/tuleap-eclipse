@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * Test class for {@link TuleapTaskId}.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
@@ -30,7 +30,7 @@ public class TuleapTaskIdTests {
 	 */
 	@Test
 	public void testGetTaskDatakey() {
-		assertThat(TuleapTaskId.getTaskDataKey("Tuleap", "Bugs", 17), is("Tuleap:Bugs-17"));
+		assertThat(TuleapTaskId.getTaskDataKey("bug", 17), is("bug #17"));
 	}
 
 	/**

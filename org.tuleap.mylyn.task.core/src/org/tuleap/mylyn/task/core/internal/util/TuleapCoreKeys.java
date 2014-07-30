@@ -38,6 +38,15 @@ public class TuleapCoreKeys extends NLS {
 	public static String trackerLabel;
 
 	/**
+	 * The task key format, with 2 parameters:
+	 * <ol>
+	 * <li>The tracker item_name</li>
+	 * <li>The artifact numeric ID</li>
+	 * </ol>
+	 */
+	public static String taskKey;
+
+	/**
 	 * The label of the repository connector used in the wizard where the user select the kind of repository
 	 * to create.
 	 */

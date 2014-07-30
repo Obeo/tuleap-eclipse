@@ -4,15 +4,18 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
 package org.tuleap.mylyn.task.core.internal.data;
 
+import org.tuleap.mylyn.task.core.internal.util.TuleapCoreKeys;
+import org.tuleap.mylyn.task.core.internal.util.TuleapCoreMessages;
+
 /**
  * Internal ID of an artifact, built from the project id, the tracker id and the artifact id.
- * 
+ *
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
 public final class TuleapTaskId {
@@ -70,7 +73,7 @@ public final class TuleapTaskId {
 
 	/**
 	 * Private constructor.
-	 * 
+	 *
 	 * @param projectId
 	 *            The project id
 	 * @param trackerId
@@ -86,7 +89,7 @@ public final class TuleapTaskId {
 
 	/**
 	 * Method to instantiate an ID when all required IDS are known.
-	 * 
+	 *
 	 * @param projectId
 	 *            The project id
 	 * @param trackerId
@@ -101,7 +104,7 @@ public final class TuleapTaskId {
 
 	/**
 	 * Method to instantiate the ID of a top-level planning.
-	 * 
+	 *
 	 * @param projectId
 	 *            The project id
 	 * @return A new ID built with the given value, that represents a top-level planning ID.
@@ -112,7 +115,7 @@ public final class TuleapTaskId {
 
 	/**
 	 * Method to instantiate the ID of a new Task not yet sent to the server. Such a task has no artifact ID.
-	 * 
+	 *
 	 * @param projectId
 	 *            The project id
 	 * @param trackerId
@@ -125,7 +128,7 @@ public final class TuleapTaskId {
 
 	/**
 	 * Method to construct a TaskDataId from its String representation.
-	 * 
+	 *
 	 * @param taskDataId
 	 *            The String representation of a task data id.
 	 * @return A TaskDataId instance.
@@ -157,7 +160,7 @@ public final class TuleapTaskId {
 
 	/**
 	 * Transforms a string into an ID, without ever failing.
-	 * 
+	 *
 	 * @param str
 	 *            The string to convert
 	 * @return The int, which is IRRELEVANT_ID if the string cannot be turned into an int.
@@ -178,7 +181,7 @@ public final class TuleapTaskId {
 
 	/**
 	 * Returns the task id from the task URL.
-	 * 
+	 *
 	 * @param taskUrl
 	 *            The task URL
 	 * @return The task id
@@ -212,7 +215,7 @@ public final class TuleapTaskId {
 
 	/**
 	 * Project id getter.
-	 * 
+	 *
 	 * @return the projectId
 	 */
 	public int getProjectId() {
@@ -221,7 +224,7 @@ public final class TuleapTaskId {
 
 	/**
 	 * Tracker id getter.
-	 * 
+	 *
 	 * @return the trackerId
 	 */
 	public int getTrackerId() {
@@ -230,7 +233,7 @@ public final class TuleapTaskId {
 
 	/**
 	 * Artifact id getter.
-	 * 
+	 *
 	 * @return the artifactId
 	 */
 	public int getArtifactId() {
@@ -239,7 +242,7 @@ public final class TuleapTaskId {
 
 	/**
 	 * Indicates whether this object represents the ID of a top-level planning.
-	 * 
+	 *
 	 * @return <code>true</code> if and only if the tracker ID is IRRELEVANT_ID and the project ID equals the
 	 *         artifact ID.
 	 */
@@ -249,7 +252,7 @@ public final class TuleapTaskId {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -279,7 +282,7 @@ public final class TuleapTaskId {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -299,7 +302,7 @@ public final class TuleapTaskId {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -310,7 +313,7 @@ public final class TuleapTaskId {
 
 	/**
 	 * Returns the URL of the task whose ID this instance represents.
-	 * 
+	 *
 	 * @param repositoryUrl
 	 *            The repository URL
 	 * @return The HTML URL of the artifact on the tuleap server.
@@ -322,18 +325,17 @@ public final class TuleapTaskId {
 	}
 
 	/**
-	 * Returns the task data key from the project name, the tracker name and the given artifact id.
-	 * 
-	 * @param projectName
-	 *            The name of the project
-	 * @param trackerName
-	 *            The name of the tracker.
+	 * Returns the task data key from the tracker item name and the given artifact id.
+	 *
+	 * @param trackerItemName
+	 *            The item_name of the tracker.
 	 * @param artifactId
 	 *            The id of the artifact
 	 * @return The task data id
 	 */
-	public static String getTaskDataKey(String projectName, String trackerName, int artifactId) {
-		return projectName + ':' + trackerName + '-' + String.valueOf(artifactId);
+	public static String getTaskDataKey(String trackerItemName, int artifactId) {
+		return TuleapCoreMessages.getString(TuleapCoreKeys.taskKey, trackerItemName, Integer
+				.valueOf(artifactId));
 	}
 
 }

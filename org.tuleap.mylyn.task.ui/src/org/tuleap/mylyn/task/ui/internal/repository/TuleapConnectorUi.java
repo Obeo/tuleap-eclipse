@@ -82,13 +82,13 @@ public class TuleapConnectorUi extends AbstractRepositoryConnectorUi {
 	public IHyperlink[] findHyperlinks(TaskRepository repository, ITask task, String text, int index,
 			int textOffset) {
 		List<IHyperlink> hyperlinks = new ArrayList<IHyperlink>();
-		Matcher matcher = Pattern.compile("(^|[\\s\\(\\)])(([A-Za-z]+):([A-Za-z]+)-\\d+)").matcher(text); //$NON-NLS-1$
+		Matcher matcher = Pattern.compile("([^\\s]+ #\\d+)").matcher(text); //$NON-NLS-1$
 		while (matcher.find()) {
-			int start = matcher.start(2);
+			int start = matcher.start();
 			int length = matcher.end() - start;
 
 			Region region = new Region(textOffset + start, length);
-			hyperlinks.add(new TaskHyperlink(region, repository, matcher.group(2)));
+			hyperlinks.add(new TaskHyperlink(region, repository, matcher.group()));
 		}
 		return hyperlinks.toArray(new IHyperlink[hyperlinks.size()]);
 	}
