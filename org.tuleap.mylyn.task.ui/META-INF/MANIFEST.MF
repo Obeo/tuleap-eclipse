@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.tuleap.mylyn.task.ui;singleton:=true
-Bundle-Version: 2.1.0.qualifier
+Bundle-Version: 2.1.1.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: %Bundle-Vendor
 Bundle-ActivationPolicy: lazy
@@ -28,6 +28,8 @@ Export-Package: org.tuleap.mylyn.task.ui.internal;version="2.0.0";x-friends:="or
  org.tuleap.mylyn.task.ui.internal.util;version="2.0.0";x-friends:="org.tuleap.mylyn.task.ui.tests",
  org.tuleap.mylyn.task.ui.internal.wizards;version="2.0.0";x-friends:="org.tuleap.mylyn.task.ui.tests",
  org.tuleap.mylyn.task.ui.internal.wizards.attachment;version="2.0.0";x-friends:="org.tuleap.mylyn.task.ui.tests",
+ org.tuleap.mylyn.task.ui.internal.wizards.newCard,
+ org.tuleap.mylyn.task.ui.internal.wizards.newbacklogItem,
  org.tuleap.mylyn.task.ui.internal.wizards.newsubmilestone;version="2.0.0";x-friends:="org.tuleap.mylyn.task.ui.tests",
  org.tuleap.mylyn.task.ui.internal.wizards.newtask;version="2.0.0";x-friends:="org.tuleap.mylyn.task.ui.tests",
  org.tuleap.mylyn.task.ui.internal.wizards.query;version="2.0.0";x-friends:="org.tuleap.mylyn.task.ui.tests"
