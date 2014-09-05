@@ -143,7 +143,12 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			response = new RepositoryResponse(ResponseKind.TASK_CREATED, artifactId.toString());
 			if (tracker.getProject().isMilestoneTracker(tracker.getIdentifier())) {
 				addMilestoneTaskDataToParent(taskData, artifactId, taskRepository, monitor);
-			} else if (tracker.getProject().isBacklogTracker(tracker.getIdentifier())) {
+			} else {
+				// request #7217 We must not check if the tracker is a BI tracker
+				// Because Tuleap does not make it mandatory for cards!
+				// A card trackers can very well not be a BI tracker...
+				// For sprints, that have no children milestones,
+				// User Stories can contain tasks,bugs, that are NOT Backlog Items.
 				TuleapArtifactMapper tuleapArtifactMapper = new TuleapArtifactMapper(taskData, tracker);
 				String parentMilestoneId = tuleapArtifactMapper.getParentId();
 				if (parentMilestoneId != null) {
