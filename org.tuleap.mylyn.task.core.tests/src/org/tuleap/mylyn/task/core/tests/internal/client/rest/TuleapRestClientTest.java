@@ -1075,12 +1075,13 @@ public class TuleapRestClientTest {
 		ServerResponse response = new ServerResponse(ServerResponse.STATUS_OK, "server response", respHeaders); //$NON-NLS-1$
 
 		connector.setResponse(response);
-		client.addBacklogItemToMilestoneBacklog(100, 120, null);
+		client.addBacklogItemToMilestoneBacklog(100, 120, null, null);
 
 		// Let's check the requests that have been sent.
 		List<ServerRequest> requestsSent = connector.getRequestsSent();
-		assertEquals(1, requestsSent.size());
-		ServerRequest request = requestsSent.get(0);
+		// 1 request OPTIONS, 1 POST
+		assertEquals(2, requestsSent.size());
+		ServerRequest request = requestsSent.get(1);
 		assertEquals("/api/v12.3/milestones/100/backlog", request.url); //$NON-NLS-1$
 		assertEquals("POST", request.method); //$NON-NLS-1$
 		assertEquals("{\"artifact\":{\"id\":120}}", //$NON-NLS-1$

@@ -41,7 +41,10 @@ import org.tuleap.mylyn.task.core.internal.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapTrackerReport;
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapUser;
 import org.tuleap.mylyn.task.core.internal.model.config.field.AbstractTuleapSelectBox;
+import org.tuleap.mylyn.task.core.internal.model.config.field.TuleapArtifactLink;
 import org.tuleap.mylyn.task.core.internal.model.config.field.TuleapSelectBoxItem;
+import org.tuleap.mylyn.task.core.internal.model.data.AbstractFieldValue;
+import org.tuleap.mylyn.task.core.internal.model.data.ArtifactLinkFieldValue;
 import org.tuleap.mylyn.task.core.internal.model.data.ArtifactReference;
 import org.tuleap.mylyn.task.core.internal.model.data.IQueryCriterion;
 import org.tuleap.mylyn.task.core.internal.model.data.TuleapArtifact;
@@ -330,13 +333,15 @@ public class TuleapRestClient implements IAuthenticator {
 	 *            The milestone id
 	 * @param backlogItemId
 	 *            The backlogItem id
+	 * @param server
+	 *            The server configuration
 	 * @param monitor
 	 *            Used to monitor the progress
 	 * @throws CoreException
 	 *             In case of error during the creation of the artifact
 	 */
-	public void addBacklogItemToMilestoneBacklog(int milestoneId, int backlogItemId, IProgressMonitor monitor)
-			throws CoreException {
+	public void addBacklogItemToMilestoneBacklog(int milestoneId, int backlogItemId, TuleapServer server,
+			IProgressMonitor monitor) throws CoreException {
 		if (monitor != null) {
 			monitor.subTask(TuleapCoreMessages.getString(TuleapCoreKeys.addBacklogItemToMilestone, Integer
 					.valueOf(backlogItemId), Integer.valueOf(milestoneId)));
@@ -349,8 +354,43 @@ public class TuleapRestClient implements IAuthenticator {
 		jsonArtifact.add(ITuleapConstants.JSON_ARTIFACT, jsonId);
 
 		String changesToPost = jsonArtifact.toString();
-		RestOperation operation = milestoneBacklog.post().withBody(changesToPost);
-		operation.checkedRun();
+		// request #7205 This API with POST is NOT available in Tuleap 7.2, 7.3, 7.4
+		ServerResponse optionsResponse = milestoneBacklog.options().checkedRun();
+		String headerAllow = optionsResponse.getHeaders().get("Allow"); //$NON-NLS-1$
+		if (headerAllow != null && headerAllow.indexOf("POST") >= 0) { //$NON-NLS-1$
+			RestOperation operation = milestoneBacklog.post().withBody(changesToPost);
+			operation.checkedRun();
+		} else {
+			// Compatibility with Tuleap 7.2, 7.3, 7.4
+			// Add the backlog item ID to the "artifact link" field of the milestone's artifact
+			TuleapArtifact milestoneArtifact = getArtifact(milestoneId, server, monitor);
+			TuleapTracker milestoneTracker = server.getTracker(milestoneArtifact.getTracker().getId());
+			if (milestoneTracker != null) {
+				TuleapArtifactLink linkField = null;
+				for (AbstractTuleapField field : milestoneTracker.getFields()) {
+					if (field instanceof TuleapArtifactLink) {
+						linkField = (TuleapArtifactLink)field;
+						break;
+					}
+				}
+				if (linkField != null) {
+					AbstractFieldValue artLinkFieldValue = milestoneArtifact.getFieldValue(linkField
+							.getIdentifier());
+					TuleapArtifact milestoneUpdate = new TuleapArtifact(milestoneArtifact.getId().intValue(),
+							milestoneArtifact.getTracker(), milestoneArtifact.getProject());
+					milestoneUpdate.addField(linkField);
+					int[] links = ((ArtifactLinkFieldValue)artLinkFieldValue).getLinks();
+					int[] updatedLinks = new int[links.length + 1];
+					System.arraycopy(links, 0, updatedLinks, 0, links.length);
+					updatedLinks[links.length] = backlogItemId;
+					milestoneUpdate.addFieldValue(new ArtifactLinkFieldValue(linkField.getIdentifier(),
+							updatedLinks));
+					RestOperation artifactOp = restResourceFactory.artifact(milestoneId).withAuthenticator(
+							this).put().withBody(gson.toJson(milestoneUpdate));
+					artifactOp.checkedRun();
+				}
+			}
+		}
 	}
 
 	/**

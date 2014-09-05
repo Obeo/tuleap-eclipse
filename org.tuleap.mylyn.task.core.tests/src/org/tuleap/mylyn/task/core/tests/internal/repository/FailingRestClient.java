@@ -261,8 +261,8 @@ public class FailingRestClient extends TuleapRestClient {
 	}
 
 	@Override
-	public void addBacklogItemToMilestoneBacklog(int milestoneId, int backlogItemId, IProgressMonitor monitor)
-			throws CoreException {
+	public void addBacklogItemToMilestoneBacklog(int milestoneId, int backlogItemId, TuleapServer server,
+			IProgressMonitor monitor) throws CoreException {
 		fail("Should not be called.");
 	}
 

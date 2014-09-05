@@ -153,7 +153,8 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				String parentMilestoneId = tuleapArtifactMapper.getParentId();
 				if (parentMilestoneId != null) {
 					client.addBacklogItemToMilestoneBacklog(TuleapTaskId.forName(parentMilestoneId)
-							.getArtifactId(), artifactId.getArtifactId(), monitor);
+							.getArtifactId(), artifactId.getArtifactId(), tracker.getProject().getServer(),
+							monitor);
 				}
 				String parentCardId = tuleapArtifactMapper.getParentCardId();
 				if (parentCardId != null) {
