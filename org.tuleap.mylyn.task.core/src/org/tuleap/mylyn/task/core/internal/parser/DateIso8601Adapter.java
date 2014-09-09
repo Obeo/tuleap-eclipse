@@ -13,6 +13,7 @@ package org.tuleap.mylyn.task.core.internal.parser;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
@@ -68,6 +69,9 @@ public class DateIso8601Adapter implements JsonDeserializer<Date>, JsonSerialize
 	 */
 	@Override
 	public JsonElement serialize(Date src, Type typeOfSrc, JsonSerializationContext context) {
+		if (src == null) {
+			return JsonNull.INSTANCE;
+		}
 		return new JsonPrimitive(toIso8601String(src));
 	}
 
@@ -76,9 +80,12 @@ public class DateIso8601Adapter implements JsonDeserializer<Date>, JsonSerialize
 	 *
 	 * @param date
 	 *            The date to serialize.
-	 * @return The serialized date. Must not be null.
+	 * @return The serialized date, or the empty string "" if the given date is null.
 	 */
 	public static String toIso8601String(Date date) {
+		if (date == null) {
+			return ""; //$NON-NLS-1$
+		}
 		// Tuleap updatable dates are actually dates without timestamps
 		return new SimpleDateFormat(DATE_FORMAT).format(date);
 	}
@@ -92,6 +99,9 @@ public class DateIso8601Adapter implements JsonDeserializer<Date>, JsonSerialize
 	@Override
 	public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
 			throws JsonParseException {
+		if (json.isJsonNull()) {
+			return null;
+		}
 		if (json.isJsonPrimitive()) {
 			try {
 				return parseIso8601Date(json.getAsString());
@@ -108,15 +118,20 @@ public class DateIso8601Adapter implements JsonDeserializer<Date>, JsonSerialize
 	 *
 	 * @param dateIso8601
 	 *            Date to parse.
-	 * @return The parsed date.
+	 * @return The parsed date, or <code>null</code> if the given String is either <code>null</code> or empty.
 	 * @throws ParseException
 	 *             if the given date is not in the right format.
 	 */
 	public static Date parseIso8601Date(String dateIso8601) throws ParseException {
-		if (dateIso8601.indexOf('T') > 0) {
-			return parseTimestamp(dateIso8601);
+		Date result = null;
+		if (dateIso8601 != null && dateIso8601.length() > 0) {
+			if (dateIso8601.indexOf('T') > 0) {
+				result = parseTimestamp(dateIso8601);
+			} else {
+				result = new SimpleDateFormat(DATE_FORMAT).parse(dateIso8601);
+			}
 		}
-		return new SimpleDateFormat(DATE_FORMAT).parse(dateIso8601);
+		return result;
 	}
 
 	/**

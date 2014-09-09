@@ -11,6 +11,7 @@
 package org.tuleap.mylyn.task.core.tests.internal.parser;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
 
 import java.text.ParseException;
@@ -24,6 +25,7 @@ import org.junit.Test;
 import org.tuleap.mylyn.task.core.internal.parser.DateIso8601Adapter;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * Tests of {@link DateIso8601Adapter} class.
@@ -115,6 +117,24 @@ public class DateIso8601AdapterTest {
 		} finally {
 			System.setProperty("user.timezone", oldTZ);
 		}
+	}
+
+	@Test
+	public void testSerializeNullDate() {
+		JsonElement serializedDate = adapter.serialize(null, null, null);
+		assertEquals(JsonNull.INSTANCE, serializedDate);
+	}
+
+	@Test
+	public void testParseJsonNullDate() {
+		Date parsed = adapter.deserialize(JsonNull.INSTANCE, Date.class, null);
+		assertNull(parsed);
+	}
+
+	@Test
+	public void testParseEmptyStringDate() {
+		Date parsed = adapter.deserialize(new JsonPrimitive(""), Date.class, null);
+		assertNull(parsed);
 	}
 
 	@Before

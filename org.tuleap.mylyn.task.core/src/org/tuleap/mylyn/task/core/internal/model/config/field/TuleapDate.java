@@ -123,8 +123,10 @@ public class TuleapDate extends AbstractTuleapField {
 	public void setValue(TaskAttribute attribute, AbstractFieldValue value) {
 		Assert.isTrue(value instanceof LiteralFieldValue);
 		try {
-			attribute.setValue(Long.toString(DateIso8601Adapter.parseIso8601Date(
-					((LiteralFieldValue)value).getFieldValue()).getTime()));
+			Date date = DateIso8601Adapter.parseIso8601Date(((LiteralFieldValue)value).getFieldValue());
+			if (date != null) {
+				attribute.setValue(Long.toString(date.getTime()));
+			}
 		} catch (ParseException e) {
 			TuleapCoreActivator.log(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
 					TuleapCoreMessages.getString(TuleapCoreKeys.dateParsingLogMessage,
