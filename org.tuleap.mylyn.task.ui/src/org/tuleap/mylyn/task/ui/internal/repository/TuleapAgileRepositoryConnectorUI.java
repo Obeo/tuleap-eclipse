@@ -80,7 +80,8 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 			int projectId = TuleapTaskId.forName(planningTaskData.getTaskId()).getProjectId();
 			TuleapProject project = server.getProject(projectId);
 
-			NewTuleapMilestoneWizard wizard = new NewTuleapMilestoneWizard(project, parentMilestoneId);
+			NewTuleapMilestoneWizard wizard = new NewTuleapMilestoneWizard(project, parentMilestoneId,
+					planningTaskData);
 
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			WizardDialog dialog = new WizardDialog(shell, wizard);
@@ -120,7 +121,8 @@ public class TuleapAgileRepositoryConnectorUI extends AbstractAgileRepositoryCon
 			int projectId = TuleapTaskId.forName(planningTaskData.getTaskId()).getProjectId();
 			TuleapProject project = server.getProject(projectId);
 
-			NewBacklogItemWizard wizard = new NewBacklogItemWizard(project, parentMilestoneId);
+			NewBacklogItemWizard wizard = new NewBacklogItemWizard(project, parentMilestoneId,
+					planningTaskData);
 
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			WizardDialog dialog = new WizardDialog(shell, wizard);

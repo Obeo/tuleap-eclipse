@@ -14,7 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.tuleap.mylyn.task.agile.core.IMilestoneMapping;
+import org.tuleap.mylyn.task.agile.core.data.planning.MilestonePlanningWrapper;
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapProject;
 import org.tuleap.mylyn.task.core.internal.model.config.TuleapTracker;
 import org.tuleap.mylyn.task.core.internal.repository.TuleapMilestoneMapping;
@@ -39,6 +41,11 @@ public class NewTuleapMilestoneWizard extends Wizard {
 	private String parentMilestoneId;
 
 	/**
+	 * The parent milestone TaskData.
+	 */
+	private final TaskData milestoneTaskData;
+
+	/**
 	 * The mapping to return in order to create the new milestone.
 	 */
 	private IMilestoneMapping milestoneMapping;
@@ -55,10 +62,14 @@ public class NewTuleapMilestoneWizard extends Wizard {
 	 *            The configuration of the project.
 	 * @param parentMilestoneId
 	 *            The identifier of the parent milestone.
+	 * @param milestoneTaskData
+	 *            TaskData of the parent milestone.
 	 */
-	public NewTuleapMilestoneWizard(TuleapProject project, String parentMilestoneId) {
+	public NewTuleapMilestoneWizard(TuleapProject project, String parentMilestoneId,
+			TaskData milestoneTaskData) {
 		this.project = project;
 		this.parentMilestoneId = parentMilestoneId;
+		this.milestoneTaskData = milestoneTaskData;
 	}
 
 	/**
@@ -69,8 +80,11 @@ public class NewTuleapMilestoneWizard extends Wizard {
 	@Override
 	public void addPages() {
 		List<TuleapTracker> milestoneTrackers = new ArrayList<TuleapTracker>();
+		// Load the relevant trackers only
+		MilestonePlanningWrapper wrapper = new MilestonePlanningWrapper(milestoneTaskData.getRoot());
+		List<String> allowedSubmilestoneTypes = wrapper.getAllowedSubmilestoneTypes();
 		for (TuleapTracker tracker : project.getAllTrackers()) {
-			if (project.isMilestoneTracker(tracker.getIdentifier())) {
+			if (allowedSubmilestoneTypes.contains(Integer.toString(tracker.getIdentifier()))) {
 				milestoneTrackers.add(tracker);
 			}
 		}
