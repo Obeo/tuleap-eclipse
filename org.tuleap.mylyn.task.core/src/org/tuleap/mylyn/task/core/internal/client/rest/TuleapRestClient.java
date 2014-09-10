@@ -297,7 +297,7 @@ public class TuleapRestClient implements IAuthenticator {
 		RestResource artifactResource = restResourceFactory.artifact(artifact.getId().intValue())
 				.withAuthenticator(this);
 		artifactResource.put().withBody(gson.toJson(artifact, TuleapArtifactWithAttachment.class))
-		.checkedRun();
+				.checkedRun();
 	}
 
 	/**
@@ -572,13 +572,13 @@ public class TuleapRestClient implements IAuthenticator {
 	}
 
 	/**
-	 * Retrieve the backlog items of a given milestone.
+	 * Retrieve the sub-milestones of a given milestone.
 	 *
 	 * @param milestoneId
 	 *            The milestone id
 	 * @param monitor
 	 *            The monitor to use
-	 * @return A list of backlog items of the milestone.
+	 * @return A list of sub-milestones of the milestone.
 	 * @throws CoreException
 	 *             If anything goes wrong.
 	 */
