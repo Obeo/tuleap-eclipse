@@ -11,6 +11,7 @@
 package org.tuleap.mylyn.task.core.internal.model.config.field;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
@@ -112,9 +113,16 @@ public class TuleapSelectBox extends AbstractTuleapSelectBox {
 				attribute.putOption(String.valueOf(stateId), stateLabel);
 			}
 
-			for (TuleapSelectBoxItem accessibleState : workflow.accessibleStates(stateId)) {
+			Collection<TuleapSelectBoxItem> accessibleStates = workflow.accessibleStates(stateId);
+			for (TuleapSelectBoxItem accessibleState : accessibleStates) {
 				attribute.putOption(String.valueOf(accessibleState.getIdentifier()), accessibleState
 						.getLabel());
+			}
+
+			// We need to apply the workflow to make sure the user does not submit an artifact
+			// without a proper initial status value
+			if (!attribute.hasValue() && !accessibleStates.isEmpty()) {
+				attribute.setValue(Integer.toString(accessibleStates.iterator().next().getIdentifier()));
 			}
 		}
 	}

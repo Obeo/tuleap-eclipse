@@ -759,7 +759,8 @@ public class TuleapArtifactMapperTests {
 		tuleapTracker.addField(newSemanticStatusWithWorkflow(statusId));
 		mapper.initializeEmptyTaskData();
 
-		assertEquals("", taskData.getRoot().getAttribute(TaskAttribute.STATUS).getValue()); //$NON-NLS-1$
+		// Check that the default state is the first actually available, that is to say "0"
+		assertEquals("0", taskData.getRoot().getAttribute(TaskAttribute.STATUS).getValue()); //$NON-NLS-1$
 
 		int statusOpen0 = 0;
 		int statusOpen1 = 1;
