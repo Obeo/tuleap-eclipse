@@ -123,9 +123,17 @@ public class TuleapCoreKeys extends NLS {
 	public static String defaultNewTitle;
 
 	/**
-	 * The label used to indicate milestone parent id.
+	 * The label used to indicate artifact parent id.
 	 */
 	public static String parentLabel;
+
+	/**
+	 * The label used to indicate a backlog item's parent milestone id. The parent milestone is not the
+	 * parent: In Tuleap the parent is the artifact that is declared as parent of this one, it must belong to
+	 * the parent tracker of this artifact's tracker. The parent milestone, on the other hand, is the
+	 * milestone to which a newly created backlog item artifact will be assigned.
+	 */
+	public static String parentMilestoneLabel;
 
 	/**
 	 * Error message for issues with the creation of the temporary file used to download attachments.

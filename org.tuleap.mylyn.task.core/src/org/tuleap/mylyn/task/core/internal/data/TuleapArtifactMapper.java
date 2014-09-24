@@ -79,6 +79,16 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	public static final String PARENT_DISPLAY_ID = "mtc_parent_display_id"; //$NON-NLS-1$
 
 	/**
+	 * The identifier of the parent id task attribute.
+	 */
+	public static final String PARENT_MILESTONE_ID = "mtc_parent_mi_id"; //$NON-NLS-1$
+
+	/**
+	 * The identifier of the displayed parent id task attribute.
+	 */
+	public static final String PARENT_MILESTONE_DISPLAY_ID = "mtc_parent_mi_display_id"; //$NON-NLS-1$
+
+	/**
 	 * The invalid status id.
 	 */
 	public static final int INVALID_STATUS_ID = -1;
@@ -799,6 +809,82 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 		}
 		if (oldValue == null || !oldValue.equals(parentDisplayId)) {
 			att.setValue(parentDisplayId);
+		}
+	}
+
+	/**
+	 * Provides access to the parent milestone id if it exists.
+	 *
+	 * @return The parent milestone id if it exists or null.
+	 */
+	public String getParentMilestoneId() {
+		TaskAttribute attribute = getMappedAttribute(PARENT_MILESTONE_ID);
+		if (attribute != null) {
+			return taskData.getAttributeMapper().getValue(attribute);
+		}
+		return null;
+	}
+
+	/**
+	 * Sets the parent milestone Id in the relevant task attribute.
+	 *
+	 * @param parentMilestoneId
+	 *            The parent milestone Id
+	 */
+	public void setParentMilestoneId(String parentMilestoneId) {
+		if (parentMilestoneId == null) {
+			return;
+		}
+		TaskAttribute att = taskData.getRoot().getMappedAttribute(PARENT_MILESTONE_ID);
+		String oldValue = null;
+		if (att == null) {
+			att = taskData.getRoot().createMappedAttribute(PARENT_MILESTONE_ID);
+			att.getMetaData().setType(TaskAttribute.TYPE_SHORT_RICH_TEXT);
+			att.getMetaData().setReadOnly(true);
+		} else {
+			oldValue = att.getValue();
+		}
+		if (oldValue == null || !oldValue.equals(parentMilestoneId)) {
+			att.setValue(parentMilestoneId);
+		}
+	}
+
+	/**
+	 * Provides access to the parent milestone display id if it exists.
+	 *
+	 * @return The parent milestone display id if it exists or null.
+	 */
+	public String getParentMilestoneDisplayId() {
+		TaskAttribute attribute = getMappedAttribute(PARENT_MILESTONE_DISPLAY_ID);
+		if (attribute != null) {
+			return taskData.getAttributeMapper().getValue(attribute);
+		}
+		return null;
+	}
+
+	/**
+	 * Sets the parent milestone display Id in the relevant task attribute.
+	 *
+	 * @param parentMilestoneDisplayId
+	 *            The parent milestone display Id
+	 */
+	public void setParentMilestoneDisplayId(String parentMilestoneDisplayId) {
+		if (parentMilestoneDisplayId == null) {
+			return;
+		}
+		TaskAttribute att = taskData.getRoot().getMappedAttribute(PARENT_MILESTONE_DISPLAY_ID);
+		String oldValue = null;
+		if (att == null) {
+			att = taskData.getRoot().createMappedAttribute(PARENT_MILESTONE_DISPLAY_ID);
+			att.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
+			att.getMetaData().setType(TaskAttribute.TYPE_SHORT_RICH_TEXT);
+			att.getMetaData().setLabel(TuleapCoreMessages.getString(TuleapCoreKeys.parentMilestoneLabel));
+			att.getMetaData().setReadOnly(true);
+		} else {
+			oldValue = att.getValue();
+		}
+		if (oldValue == null || !oldValue.equals(parentMilestoneDisplayId)) {
+			att.setValue(parentMilestoneDisplayId);
 		}
 	}
 }

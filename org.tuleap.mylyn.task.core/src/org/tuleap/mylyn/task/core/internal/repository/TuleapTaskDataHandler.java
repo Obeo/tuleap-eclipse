@@ -142,7 +142,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			TuleapTaskId artifactId = client.createArtifact(artifact, monitor);
 			response = new RepositoryResponse(ResponseKind.TASK_CREATED, artifactId.toString());
 			if (tracker.getProject().isMilestoneTracker(tracker.getIdentifier())) {
-				addMilestoneTaskDataToParent(taskData, artifactId, taskRepository, monitor);
+				addMilestoneToParentSubMilestones(taskData, artifactId, taskRepository, monitor);
 			} else {
 				// request #7217 We must not check if the tracker is a BI tracker
 				// Because Tuleap does not make it mandatory for cards!
@@ -150,7 +150,12 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				// For sprints, that have no children milestones,
 				// User Stories can contain tasks,bugs, that are NOT Backlog Items.
 				TuleapArtifactMapper tuleapArtifactMapper = new TuleapArtifactMapper(taskData, tracker);
-				String parentMilestoneId = tuleapArtifactMapper.getParentId();
+				// Here we use the parent milestone since we want to add the new BI to the parent milestone's
+				// backlog
+				// The parent of the new BI is NOT this milestone.
+				// For instance, the parent of a new User Story should be an Epic
+				// whereas the parent milestone of a User Story will be a Release or a Sprint
+				String parentMilestoneId = tuleapArtifactMapper.getParentMilestoneId();
 				if (parentMilestoneId != null) {
 					client.addBacklogItemToMilestoneBacklog(TuleapTaskId.forName(parentMilestoneId)
 							.getArtifactId(), artifactId.getArtifactId(), tracker.getProject().getServer(),
@@ -322,7 +327,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 * @throws CoreException
 	 *             In case of issues during the communication with the server
 	 */
-	private void addMilestoneTaskDataToParent(TaskData taskData, TuleapTaskId taskId,
+	private void addMilestoneToParentSubMilestones(TaskData taskData, TuleapTaskId taskId,
 			TaskRepository taskRepository, IProgressMonitor monitor) throws CoreException {
 
 		TuleapServer server = this.connector.getServer(taskRepository);
@@ -449,73 +454,63 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 		if (server != null) {
 			// Sets the creation date and last modification date.
 			if (initializationData instanceof TuleapTaskMapping) {
-				TuleapTaskMapping tuleapTaskMapping = (TuleapTaskMapping)initializationData;
-				TuleapTracker tracker = tuleapTaskMapping.getTracker();
-				TuleapArtifactMapper tuleapArtifactMapper = null;
-				if (tracker != null) {
-					tuleapArtifactMapper = new TuleapArtifactMapper(taskData, tracker);
-					tuleapArtifactMapper.initializeEmptyTaskData();
-					Date now = new Date();
-					tuleapArtifactMapper.setCreationDate(now);
-					tuleapArtifactMapper.setModificationDate(now);
-					tuleapArtifactMapper.setSummary(TuleapCoreMessages.getString(
-							TuleapCoreKeys.defaultNewTitle, tracker.getItemName()));
-					isInitialized = true;
-					taskData.getRoot().removeAttribute(TaskAttribute.COMMENT_NEW);
-				}
-				if (initializationData instanceof TuleapMilestoneMapping) {
-					TuleapMilestoneMapping milestoneMapping = (TuleapMilestoneMapping)initializationData;
-					String parentMilestoneId = milestoneMapping.getParentMilestoneId();
-					synchronizeMilestoneParentAttributes(tuleapArtifactMapper, parentMilestoneId, server);
-				}
-				if (initializationData instanceof TuleapBacklogItemMapping) {
-					TuleapBacklogItemMapping backlogItemMapping = (TuleapBacklogItemMapping)initializationData;
-					String parentMilestoneId = backlogItemMapping.getParentMilestoneId();
-					synchronizeMilestoneParentAttributes(tuleapArtifactMapper, parentMilestoneId, server);
-				}
-				if (initializationData instanceof TuleapCardMapping) {
-					TuleapCardMapping cardMapping = (TuleapCardMapping)initializationData;
-					String parentCardId = cardMapping.getParentCard();
-					synchronizeCardParentAttributes(tuleapArtifactMapper, parentCardId, server);
-				}
+				isInitialized = initializeFromTaskMapping(taskData, (TuleapTaskMapping)initializationData,
+						server);
 			}
 		}
 		return isInitialized;
 	}
 
 	/**
-	 * Add the milestone parent information to its task attribute.
+	 * Continues to initialize the given TaskData using the given TuleaPTaskMapping object.
 	 *
-	 * @param tuleapArtifactMapper
-	 *            The artifact mapper
-	 * @param parentMilestoneId
-	 *            The parent milestone Id
+	 * @param taskData
+	 *            The TaskData to initialize
+	 * @param tuleapTaskMapping
+	 *            The mapping to use for initialization
 	 * @param server
-	 *            The tuleap server
+	 *            The server (configuration)
+	 * @return <code>true</code> if and only if initialization was performed all right.
 	 */
-	private void synchronizeMilestoneParentAttributes(TuleapArtifactMapper tuleapArtifactMapper,
-			String parentMilestoneId, TuleapServer server) {
-		if (tuleapArtifactMapper != null && !TuleapTaskId.forName(parentMilestoneId).isTopPlanning()) {
-			tuleapArtifactMapper.setParentId(parentMilestoneId);
-			tuleapArtifactMapper.setParentDisplayId(getMessageTracker(parentMilestoneId, server));
-		}
-	}
+	private boolean initializeFromTaskMapping(TaskData taskData, TuleapTaskMapping tuleapTaskMapping,
+			TuleapServer server) {
+		TuleapTracker tracker = tuleapTaskMapping.getTracker();
+		TuleapArtifactMapper tuleapArtifactMapper = null;
+		if (tracker != null) {
+			tuleapArtifactMapper = new TuleapArtifactMapper(taskData, tracker);
+			tuleapArtifactMapper.initializeEmptyTaskData();
+			Date now = new Date();
+			tuleapArtifactMapper.setCreationDate(now);
+			tuleapArtifactMapper.setModificationDate(now);
+			tuleapArtifactMapper.setSummary(TuleapCoreMessages.getString(TuleapCoreKeys.defaultNewTitle,
+					tracker.getItemName()));
+			taskData.getRoot().removeAttribute(TaskAttribute.COMMENT_NEW);
 
-	/**
-	 * Add the parent card information to its task attribute.
-	 *
-	 * @param tuleapArtifactMapper
-	 *            The artifact mapper
-	 * @param parentCardId
-	 *            The parent card Id
-	 * @param server
-	 *            The tuleap server
-	 */
-	private void synchronizeCardParentAttributes(TuleapArtifactMapper tuleapArtifactMapper,
-			String parentCardId, TuleapServer server) {
-		if (tuleapArtifactMapper != null) {
-			tuleapArtifactMapper.setParentCardId(parentCardId);
+			if (tuleapTaskMapping instanceof TuleapMilestoneMapping) {
+				TuleapMilestoneMapping milestoneMapping = (TuleapMilestoneMapping)tuleapTaskMapping;
+				String parentMilestoneId = milestoneMapping.getParentMilestoneId();
+				if (!TuleapTaskId.forName(parentMilestoneId).isTopPlanning()) {
+					tuleapArtifactMapper.setParentId(parentMilestoneId);
+					tuleapArtifactMapper.setParentDisplayId(getMessageTracker(parentMilestoneId, server));
+				}
+			}
+			if (tuleapTaskMapping instanceof TuleapBacklogItemMapping) {
+				TuleapBacklogItemMapping backlogItemMapping = (TuleapBacklogItemMapping)tuleapTaskMapping;
+				String parentMilestoneId = backlogItemMapping.getParentMilestoneId();
+				if (!TuleapTaskId.forName(parentMilestoneId).isTopPlanning()) {
+					tuleapArtifactMapper.setParentMilestoneId(parentMilestoneId);
+					tuleapArtifactMapper.setParentMilestoneDisplayId(getMessageTracker(parentMilestoneId,
+							server));
+				}
+			}
+			if (tuleapTaskMapping instanceof TuleapCardMapping) {
+				TuleapCardMapping cardMapping = (TuleapCardMapping)tuleapTaskMapping;
+				String parentCardId = cardMapping.getParentCard();
+				tuleapArtifactMapper.setParentCardId(parentCardId);
+			}
+			return true;
 		}
+		return false;
 	}
 
 	/**

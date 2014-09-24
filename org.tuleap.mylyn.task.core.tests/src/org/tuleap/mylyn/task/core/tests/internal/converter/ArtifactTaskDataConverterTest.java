@@ -108,7 +108,7 @@ public class ArtifactTaskDataConverterTest {
 	}
 
 	@Test
-	public void testStatusField() {
+	public void testContributorField() {
 		TaskData taskData = new TaskData(new TuleapAttributeMapper(repository, connector), "test",
 				"https://test.url", "101:123#1001");
 		TuleapArtifact artifact = new TuleapArtifact(1001, new TuleapReference(123, "t/123"),
@@ -121,7 +121,7 @@ public class ArtifactTaskDataConverterTest {
 	}
 
 	@Test
-	public void testContributorField() {
+	public void testStatusField() {
 		TaskData taskData = new TaskData(new TuleapAttributeMapper(repository, connector), "test",
 				"https://test.url", "101:123#1001");
 		TuleapArtifact artifact = new TuleapArtifact(1001, new TuleapReference(123, "t/123"),
