@@ -187,6 +187,12 @@ public class TuleapTaskDataHandlerTests {
 					IProgressMonitor monitor) throws CoreException {
 				// Nothing to do here
 			}
+
+			@Override
+			public TuleapTracker getTracker(TaskRepository taskRepository, int atrackerId, int aprojectId,
+					boolean forceRefresh, IProgressMonitor monitor) throws CoreException {
+				return tuleapServer.getTracker(atrackerId);
+			}
 		};
 
 		TuleapTaskDataHandler tuleapTaskDataHandler = new TuleapTaskDataHandler(repositoryConnector);
@@ -360,6 +366,12 @@ public class TuleapTaskDataHandlerTests {
 					IProgressMonitor monitor) throws CoreException {
 				// Nothing to do here
 			}
+
+			@Override
+			public TuleapTracker getTracker(TaskRepository taskRepository, int atrackerId, int aprojectId,
+					boolean forceRefresh, IProgressMonitor monitor) throws CoreException {
+				return tuleapServer.getTracker(atrackerId);
+			}
 		};
 
 		TuleapTaskDataHandler tuleapTaskDataHandler = new TuleapTaskDataHandler(repositoryConnector);
@@ -483,7 +495,7 @@ public class TuleapTaskDataHandlerTests {
 
 		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer.getProject(
 				projectRef.getId()).getTracker(trackerRef.getId()));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		TuleapTaskId taskId = TuleapTaskId.forArtifact(projectRef.getId(), trackerRef.getId(), artifactId);
 		this.testPostTaskData(taskData, taskId, ResponseKind.TASK_CREATED, true);
@@ -500,7 +512,7 @@ public class TuleapTaskDataHandlerTests {
 
 		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer.getProject(
 				projectRef.getId()).getTracker(milestoneTrackerId));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		TuleapTaskId taskId = TuleapTaskId.forArtifact(projectRef.getId(), milestoneTrackerId, milestoneId);
 		this.testPostTaskData(taskData, taskId, ResponseKind.TASK_CREATED, true);
@@ -517,7 +529,7 @@ public class TuleapTaskDataHandlerTests {
 
 		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer.getProject(
 				projectRef.getId()).getTracker(backlogItemTrackerId));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		TuleapTaskId taskId = TuleapTaskId.forArtifact(projectRef.getId(), backlogItemTrackerId,
 				backlogItemId);
@@ -536,7 +548,7 @@ public class TuleapTaskDataHandlerTests {
 
 		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer.getProject(
 				projectRef.getId()).getTracker(trackerRef.getId()));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		this.testPostTaskData(taskData, taskId, ResponseKind.TASK_UPDATED, false);
 	}
@@ -553,7 +565,7 @@ public class TuleapTaskDataHandlerTests {
 
 		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, this.tuleapServer.getProject(
 				projectRef.getId()).getTracker(milestoneTrackerId));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		this.testPostTaskData(taskData, taskId, ResponseKind.TASK_UPDATED, false);
 	}
@@ -764,6 +776,12 @@ public class TuleapTaskDataHandlerTests {
 			public void refreshProject(TaskRepository taskRepository, TuleapProject project,
 					IProgressMonitor monitor) throws CoreException {
 				// Nothing to do here
+			}
+
+			@Override
+			public TuleapTracker getTracker(TaskRepository taskRepository, int atrackerId, int aprojectId,
+					boolean forceRefresh, IProgressMonitor monitor) throws CoreException {
+				return tuleapServer.getTracker(atrackerId);
 			}
 		};
 		return repositoryConnector;

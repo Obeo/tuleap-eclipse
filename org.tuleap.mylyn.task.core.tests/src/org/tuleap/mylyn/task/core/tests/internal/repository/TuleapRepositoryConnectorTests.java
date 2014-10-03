@@ -243,6 +243,7 @@ public class TuleapRepositoryConnectorTests {
 
 		IRepositoryQuery query = new RepositoryQuery(ITuleapConstants.CONNECTOR_KIND, "");
 		query.setAttribute(ITuleapQueryConstants.QUERY_KIND, ITuleapQueryConstants.QUERY_KIND_REPORT);
+		query.setAttribute(ITuleapQueryConstants.QUERY_PROJECT_ID, String.valueOf(projectRef.getId()));
 		query.setAttribute(ITuleapQueryConstants.QUERY_TRACKER_ID, String.valueOf(trackerRef.getId()));
 		query.setAttribute(ITuleapQueryConstants.QUERY_REPORT_ID, "100");
 
@@ -322,6 +323,7 @@ public class TuleapRepositoryConnectorTests {
 
 		IRepositoryQuery query = new RepositoryQuery(ITuleapConstants.CONNECTOR_KIND, "");
 		query.setAttribute(ITuleapQueryConstants.QUERY_KIND, ITuleapQueryConstants.QUERY_KIND_CUSTOM);
+		query.setAttribute(ITuleapQueryConstants.QUERY_PROJECT_ID, String.valueOf(projectRef.getId()));
 		query.setAttribute(ITuleapQueryConstants.QUERY_TRACKER_ID, String.valueOf(trackerRef.getId()));
 
 		tuleapRepositoryConnector.performQuery(taskRepository, query, collector, null,
@@ -498,7 +500,7 @@ public class TuleapRepositoryConnectorTests {
 		tuleapServer.addProject(tuleapProject);
 
 		TuleapArtifactMapper mapper = new TuleapArtifactMapper(taskData, trackerConfiguration);
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 		mapper.setStatus(openStatusId);
 
 		TuleapRepositoryConnector tuleapRepositoryConnector = new TuleapRepositoryConnector() {

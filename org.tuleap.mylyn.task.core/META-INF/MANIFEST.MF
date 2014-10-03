@@ -32,3 +32,4 @@ Export-Package: org.tuleap.mylyn.task.core.internal;version="2.0.0";x-friends:="
  org.tuleap.mylyn.task.core.internal.util;version="2.0.0";x-friends:="org.tuleap.mylyn.task.core.tests,org.tuleap.mylyn.task.ui"
 Bundle-Activator: org.tuleap.mylyn.task.core.internal.TuleapCoreActivator
 Service-Component: OSGI-INF/component.xml
+Import-Package: com.google.common.base

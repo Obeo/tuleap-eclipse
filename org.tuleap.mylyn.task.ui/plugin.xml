@@ -31,5 +31,15 @@
             name="%TuleapPreferencePage.Name">
       </page>
    </extension>
+   <extension
+         point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
+      <hyperlinkDetector
+            id="org.tuleap.mylyn.task.ui.TuleapHyperlinkDetector"
+            targetId="org.eclipse.mylyn.tasks.ui.TaskEditor"
+            class="org.tuleap.mylyn.task.ui.internal.editor.TuleapHyperlinkDetector"
+            name="%TuleapHyperlinkDetector">
+      </hyperlinkDetector>
+   </extension>
+   
 
 </plugin>

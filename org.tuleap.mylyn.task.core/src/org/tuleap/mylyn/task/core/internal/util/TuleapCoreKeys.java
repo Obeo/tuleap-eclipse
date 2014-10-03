@@ -623,6 +623,21 @@ public class TuleapCoreKeys extends NLS {
 	 */
 	public static String errorWhileRetrievingUser;
 
+	/**
+	 * Label for parent artifact field. One parameter {0} is the parent tracker item name.
+	 */
+	public static String parentArtifactLabel;
+
+	/**
+	 * Label for attempt to access inaccessible project. One parameter, the project ID.
+	 */
+	public static String notAllowedToAccessProject;
+
+	/**
+	 * Label for attempt to access inaccessible tracker. One parameter, the tracker ID.
+	 */
+	public static String notAllowedToAccessTracker;
+
 	static {
 		// load message values from bundle file
 		reloadMessages();

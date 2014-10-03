@@ -139,11 +139,17 @@ public final class TuleapTaskId {
 		String projectId = null;
 		String trackerId = null;
 		String artifactId = null;
-		if (indexOfColon <= 0) {
-			if (indexOfHash <= 0) {
-				projectId = taskDataId;
+		if (indexOfColon < 0) {
+			if (indexOfHash < 0) {
+				artifactId = taskDataId;
 			} else {
-				projectId = taskDataId.substring(0, indexOfHash);
+				artifactId = taskDataId.substring(indexOfHash + 1);
+			}
+		} else if (indexOfColon == 0) {
+			if (indexOfHash < 0) {
+				trackerId = taskDataId;
+			} else {
+				trackerId = taskDataId.substring(0, indexOfHash);
 				artifactId = taskDataId.substring(indexOfHash + 1);
 			}
 		} else {
@@ -247,7 +253,7 @@ public final class TuleapTaskId {
 	 *         artifact ID.
 	 */
 	public boolean isTopPlanning() {
-		return trackerId == IRRELEVANT_ID && projectId == artifactId;
+		return trackerId == IRRELEVANT_ID && projectId == artifactId && projectId > 0;
 	}
 
 	/**

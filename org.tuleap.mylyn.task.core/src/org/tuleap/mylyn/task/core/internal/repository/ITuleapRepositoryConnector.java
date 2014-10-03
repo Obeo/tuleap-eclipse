@@ -73,4 +73,25 @@ public interface ITuleapRepositoryConnector {
 	 */
 	void refreshProject(TaskRepository taskRepository, TuleapProject project, IProgressMonitor monitor)
 			throws CoreException;
+
+	/**
+	 * Provides the tracker of a given Tuleap Task Id.
+	 *
+	 * @param taskRepository
+	 *            The Task Repository
+	 * @param trackerId
+	 *            The tracker Id
+	 * @param projectId
+	 *            The project Id
+	 * @param forceRefresh
+	 *            flag to indicate whether the tracker must be refreshed before being returned
+	 * @param monitor
+	 *            The progress monitor to use
+	 * @return The artifact's tracker, never null. It may be necessary to retrieve the artifact's project
+	 *         configuration in case it is not currently known.
+	 * @throws CoreException
+	 *             If anything goes wrong
+	 */
+	TuleapTracker getTracker(TaskRepository taskRepository, int trackerId, int projectId,
+			boolean forceRefresh, IProgressMonitor monitor) throws CoreException;
 }

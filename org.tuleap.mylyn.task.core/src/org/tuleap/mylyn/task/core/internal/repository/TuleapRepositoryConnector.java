@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -104,51 +105,26 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getConnectorKind()
-	 */
 	@Override
 	public String getConnectorKind() {
 		return ITuleapConstants.CONNECTOR_KIND;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getLabel()
-	 */
 	@Override
 	public String getLabel() {
 		return TuleapCoreMessages.getString(TuleapCoreKeys.tuleapRepositoryConnectorLabel);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#canCreateNewTask(org.eclipse.mylyn.tasks.core.TaskRepository)
-	 */
 	@Override
 	public boolean canCreateNewTask(TaskRepository repository) {
 		return true;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#canCreateTaskFromKey(org.eclipse.mylyn.tasks.core.TaskRepository)
-	 */
 	@Override
 	public boolean canCreateTaskFromKey(TaskRepository repository) {
 		return true;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getRepositoryUrlFromTaskUrl(java.lang.String)
-	 */
 	@Override
 	public String getRepositoryUrlFromTaskUrl(String url) {
 		if (url == null) {
@@ -157,11 +133,6 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		return TuleapUrlUtil.getRepositoryUrlFromTaskUrl(url);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getTaskIdFromTaskUrl(java.lang.String)
-	 */
 	@Override
 	public String getTaskIdFromTaskUrl(String url) {
 		if (url == null) {
@@ -171,55 +142,31 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		return TuleapTaskId.forTaskUrl(url).toString();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getTaskDataHandler()
-	 */
 	@Override
 	public TuleapTaskDataHandler getTaskDataHandler() {
 		return this.taskDataHandler;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getTaskAttachmentHandler()
-	 */
 	@Override
 	public AbstractTaskAttachmentHandler getTaskAttachmentHandler() {
 		return new TuleapTaskAttachmentHandler(this, this.getClientManager());
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getTaskUrl(java.lang.String,
-	 *      java.lang.String)
-	 */
 	@Override
 	public String getTaskUrl(String repositoryUrl, String taskId) {
-		return TuleapTaskId.forName(taskId).getTaskUrl(repositoryUrl);
+		TuleapTaskId ttid = TuleapTaskId.forName(taskId);
+		if (ttid.isTopPlanning() || ttid.getArtifactId() > 0) {
+			return ttid.getTaskUrl(repositoryUrl);
+		}
+		return null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getTaskData(org.eclipse.mylyn.tasks.core.TaskRepository,
-	 *      java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
-	 */
 	@Override
 	public TaskData getTaskData(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
 		return this.taskDataHandler.getTaskData(taskRepository, TuleapTaskId.forName(taskId), monitor);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#hasTaskChanged(org.eclipse.mylyn.tasks.core.TaskRepository,
-	 *      org.eclipse.mylyn.tasks.core.ITask, org.eclipse.mylyn.tasks.core.data.TaskData)
-	 */
 	@Override
 	public boolean hasTaskChanged(TaskRepository taskRepository, ITask task, TaskData taskData) {
 		ITaskMapping scheme = getTaskMapping(taskData);
@@ -232,21 +179,11 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		return true;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#canQuery(org.eclipse.mylyn.tasks.core.TaskRepository)
-	 */
 	@Override
 	public boolean canQuery(TaskRepository repository) {
 		return true;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see org.tuleap.mylyn.task.core.internal.repository.ITuleapRepositoryConnector#getClientManager()
-	 */
 	@Override
 	public TuleapClientManager getClientManager() {
 		if (clientManager == null) {
@@ -255,26 +192,11 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		return clientManager;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#updateNewTaskFromTaskData(org.eclipse.mylyn.tasks.core.TaskRepository,
-	 *      org.eclipse.mylyn.tasks.core.ITask, org.eclipse.mylyn.tasks.core.data.TaskData)
-	 */
 	@Override
 	public void updateNewTaskFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData) {
 		// Let's do the job in the task data handler
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#performQuery(org.eclipse.mylyn.tasks.core.TaskRepository,
-	 *      org.eclipse.mylyn.tasks.core.IRepositoryQuery,
-	 *      org.eclipse.mylyn.tasks.core.data.TaskDataCollector,
-	 *      org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession,
-	 *      org.eclipse.core.runtime.IProgressMonitor)
-	 */
 	@Override
 	public IStatus performQuery(TaskRepository taskRepository, IRepositoryQuery query,
 			TaskDataCollector collector, ISynchronizationSession session, IProgressMonitor monitor) {
@@ -323,26 +245,10 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		TuleapRestClient client = this.getClientManager().getRestClient(taskRepository);
 		int trackerId = Integer.valueOf(query.getAttribute(ITuleapQueryConstants.QUERY_TRACKER_ID))
 				.intValue();
+		int projectId = Integer.valueOf(query.getAttribute(ITuleapQueryConstants.QUERY_PROJECT_ID))
+				.intValue();
 		TuleapServer server = this.getServer(taskRepository);
-		TuleapTracker tracker = server.getTracker(trackerId);
-		if (tracker == null) {
-			// We need to refresh the project configuration
-			int projectId = Integer.valueOf(query.getAttribute(ITuleapQueryConstants.QUERY_PROJECT_ID))
-					.intValue();
-			TuleapProject project = server.getProject(projectId);
-			try {
-				this.refreshProject(taskRepository, project, monitor);
-				tracker = server.getTracker(trackerId);
-			} catch (CoreException e) {
-				TuleapCoreActivator.log(e, true);
-			}
-		} else {
-			try {
-				tracker = this.refreshTracker(taskRepository, tracker, monitor);
-			} catch (CoreException e) {
-				TuleapCoreActivator.log(e, true);
-			}
-		}
+		TuleapTracker tracker = getTracker(taskRepository, trackerId, projectId, true, monitor);
 		if (tracker == null) {
 			TuleapCoreActivator.log(TuleapCoreMessages.getString(
 					TuleapCoreKeys.queryFailedBecauseMissingTracker, query.getSummary(), Integer
@@ -507,12 +413,6 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#updateTaskFromTaskData(org.eclipse.mylyn.tasks.core.TaskRepository,
-	 *      org.eclipse.mylyn.tasks.core.ITask, org.eclipse.mylyn.tasks.core.data.TaskData)
-	 */
 	@Override
 	public void updateTaskFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData) {
 		// Populate the task with the necessary data from the repository using the task data.
@@ -568,11 +468,6 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		return false;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getTaskMapping(org.eclipse.mylyn.tasks.core.data.TaskData)
-	 */
 	@Override
 	public ITaskMapping getTaskMapping(final TaskData taskData) {
 		return new TaskMapper(taskData) {
@@ -613,13 +508,6 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		return server;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see org.tuleap.mylyn.task.core.internal.repository.ITuleapRepositoryConnector#refreshTracker(org.eclipse.mylyn.tasks.core.TaskRepository,
-	 *      org.tuleap.mylyn.task.core.internal.model.config.TuleapTracker,
-	 *      org.eclipse.core.runtime.IProgressMonitor)
-	 */
 	@Override
 	public TuleapTracker refreshTracker(TaskRepository taskRepository, TuleapTracker tracker,
 			IProgressMonitor monitor) throws CoreException {
@@ -635,13 +523,6 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 		return refreshedTracker;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see org.tuleap.mylyn.task.core.internal.repository.ITuleapRepositoryConnector#refreshProject(org.eclipse.mylyn.tasks.core.TaskRepository,
-	 *      org.tuleap.mylyn.task.core.internal.model.config.TuleapProject,
-	 *      org.eclipse.core.runtime.IProgressMonitor)
-	 */
 	@Override
 	public void refreshProject(TaskRepository taskRepository, TuleapProject project, IProgressMonitor monitor)
 			throws CoreException {
@@ -649,6 +530,38 @@ public class TuleapRepositoryConnector extends AbstractRepositoryConnector imple
 			TuleapRestClient tuleapRestClient = this.getClientManager().getRestClient(taskRepository);
 			doRefreshProject(project, monitor, tuleapRestClient);
 		}
+	}
+
+	@Override
+	public TuleapTracker getTracker(TaskRepository taskRepository, int trackerId, int projectId,
+			boolean forceRefresh, IProgressMonitor monitor) throws CoreException {
+		TuleapServer server = getServer(taskRepository);
+		TuleapProject project = server.getProject(projectId);
+		if (project == null) {
+			// Either the user does not have the right to see the project or the config is outdated
+			updateRepositoryConfiguration(taskRepository, new NullProgressMonitor());
+			server = serversByUrl.get(taskRepository.getUrl());
+			project = server.getProject(projectId);
+			if (project == null) {
+				throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
+						TuleapCoreMessages.getString(TuleapCoreKeys.notAllowedToAccessProject, Integer
+								.toString(projectId))));
+			}
+		}
+		TuleapTracker tracker = server.getTracker(trackerId);
+		if (tracker == null) {
+			refreshProject(taskRepository, project, monitor);
+			tracker = server.getTracker(trackerId);
+			if (tracker == null) {
+				throw new CoreException(new Status(IStatus.ERROR, TuleapCoreActivator.PLUGIN_ID,
+						TuleapCoreMessages.getString(TuleapCoreKeys.notAllowedToAccessTracker, Integer
+								.toString(trackerId))));
+			}
+		} else if (forceRefresh) {
+			tracker = refreshTracker(taskRepository, tracker, monitor);
+		}
+		Assert.isNotNull(tracker);
+		return tracker;
 	}
 
 	/**

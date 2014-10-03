@@ -94,7 +94,7 @@ public class ArtifactTaskDataConverter {
 	protected TaskData populateTaskDataConfigurableFields(TaskData taskData, TuleapArtifact element,
 			IProgressMonitor monitor) {
 		TuleapArtifactMapper tuleapArtifactMapper = new TuleapArtifactMapper(taskData, tracker);
-		tuleapArtifactMapper.initializeEmptyTaskData();
+		tuleapArtifactMapper.initializeEmptyTaskData(taskData.isNew());
 
 		// Task Key
 		String taskKey = TuleapTaskId.getTaskDataKey(tracker.getItemName(), element.getId().intValue());

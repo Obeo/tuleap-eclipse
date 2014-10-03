@@ -69,11 +69,6 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	public static final String PARENT_ID = "mtc_parent_id"; //$NON-NLS-1$
 
 	/**
-	 * The identifier of the parent card id task attribute.
-	 */
-	public static final String PARENT_CARD_ID = "mtc_parent_card_id"; //$NON-NLS-1$
-
-	/**
 	 * The identifier of the displayed parent id task attribute.
 	 */
 	public static final String PARENT_DISPLAY_ID = "mtc_parent_display_id"; //$NON-NLS-1$
@@ -121,8 +116,11 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 
 	/**
 	 * Initialize an empty task data from the given tracker.
+	 *
+	 * @param isNew
+	 *            Flag to indicate whether the init is performed for a new (unsubmitted) task or not.
 	 */
-	public void initializeEmptyTaskData() {
+	public void initializeEmptyTaskData(boolean isNew) {
 		createTaskKindTaskAttribute();
 
 		// The project id and the tracker id
@@ -144,6 +142,11 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 			if (abstractTuleapField.needsTaskAttributeForInitialization()) {
 				abstractTuleapField.createTaskAttribute(root);
 			}
+		}
+
+		// request #7215 - Be able to select a parent artifact when tracker has a parent
+		if (isNew && tracker.getParentTracker() != null) {
+			createParentArtifactAttribute();
 		}
 
 		// call all the other private method (createXXXX)
@@ -234,6 +237,19 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 		} else {
 			attribute.setValue(TuleapCoreMessages.getString(TuleapCoreKeys.defaultTrackerName));
 		}
+	}
+
+	/**
+	 * Creates the read-only task attribute representing the parent artifact ID.
+	 */
+	private void createParentArtifactAttribute() {
+		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(PARENT_ID);
+		TaskAttributeMetaData metaData = attribute.getMetaData();
+		metaData.setType(TaskAttribute.TYPE_TASK_DEPENDENCY);
+		metaData.setKind(TaskAttribute.KIND_DEFAULT);
+		metaData.setLabel(TuleapCoreMessages.getString(TuleapCoreKeys.parentArtifactLabel, tracker
+				.getProject().getTracker(tracker.getParentTracker().getId()).getItemName()));
+		metaData.setReadOnly(false);
 	}
 
 	/**
@@ -706,20 +722,7 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 	 */
 	public String getParentId() {
 		TaskAttribute attribute = getMappedAttribute(PARENT_ID);
-		if (attribute != null) {
-			return taskData.getAttributeMapper().getValue(attribute);
-		}
-		return null;
-	}
-
-	/**
-	 * Provides access to the parent card id if it exists.
-	 *
-	 * @return The parent id if it exists or null.
-	 */
-	public String getParentCardId() {
-		TaskAttribute attribute = getMappedAttribute(PARENT_CARD_ID);
-		if (attribute != null) {
+		if (attribute != null && attribute.hasValue()) {
 			return taskData.getAttributeMapper().getValue(attribute);
 		}
 		return null;
@@ -735,80 +738,12 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 		if (parentId == null) {
 			return;
 		}
-		TaskAttribute att = taskData.getRoot().getMappedAttribute(PARENT_ID);
-		String oldValue = null;
-		if (att == null) {
-			att = taskData.getRoot().createMappedAttribute(PARENT_ID);
-			att.getMetaData().setType(TaskAttribute.TYPE_SHORT_RICH_TEXT);
-			att.getMetaData().setReadOnly(true);
-		} else {
-			oldValue = att.getValue();
-		}
-		if (oldValue == null || !oldValue.equals(parentId)) {
-			att.setValue(parentId);
-		}
-	}
-
-	/**
-	 * Sets the parent card Id in the relevant task attribute.
-	 *
-	 * @param parentId
-	 *            The parent Id
-	 */
-	public void setParentCardId(String parentId) {
-		if (parentId == null) {
-			return;
-		}
-		TaskAttribute att = taskData.getRoot().getMappedAttribute(PARENT_CARD_ID);
-		String oldValue = null;
-		if (att == null) {
-			att = taskData.getRoot().createMappedAttribute(PARENT_CARD_ID);
-			att.getMetaData().setType(TaskAttribute.TYPE_SHORT_RICH_TEXT);
-			att.getMetaData().setReadOnly(true);
-		} else {
-			oldValue = att.getValue();
-		}
-		if (oldValue == null || !oldValue.equals(parentId)) {
-			att.setValue(parentId);
-		}
-	}
-
-	/**
-	 * Provides access to the parent display id if it exists.
-	 *
-	 * @return The parent display id if it exists or null.
-	 */
-	public String getParentDisplayId() {
-		TaskAttribute attribute = getMappedAttribute(PARENT_DISPLAY_ID);
-		if (attribute != null) {
-			return taskData.getAttributeMapper().getValue(attribute);
-		}
-		return null;
-	}
-
-	/**
-	 * Sets the parent display Id in the relevant task attribute.
-	 *
-	 * @param parentDisplayId
-	 *            The parent display Id
-	 */
-	public void setParentDisplayId(String parentDisplayId) {
-		if (parentDisplayId == null) {
-			return;
-		}
-		TaskAttribute att = taskData.getRoot().getMappedAttribute(PARENT_DISPLAY_ID);
-		String oldValue = null;
-		if (att == null) {
-			att = taskData.getRoot().createMappedAttribute(PARENT_DISPLAY_ID);
-			att.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
-			att.getMetaData().setType(TaskAttribute.TYPE_SHORT_RICH_TEXT);
-			att.getMetaData().setLabel(TuleapCoreMessages.getString(TuleapCoreKeys.parentLabel));
-			att.getMetaData().setReadOnly(true);
-		} else {
-			oldValue = att.getValue();
-		}
-		if (oldValue == null || !oldValue.equals(parentDisplayId)) {
-			att.setValue(parentDisplayId);
+		TaskAttribute att = getMappedAttribute(PARENT_ID);
+		if (att != null) {
+			String oldValue = att.getValue();
+			if (!parentId.equals(oldValue)) {
+				att.setValue(parentId);
+			}
 		}
 	}
 
@@ -839,43 +774,6 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 		String oldValue = null;
 		if (att == null) {
 			att = taskData.getRoot().createMappedAttribute(PARENT_MILESTONE_ID);
-			att.getMetaData().setType(TaskAttribute.TYPE_SHORT_RICH_TEXT);
-			att.getMetaData().setReadOnly(true);
-		} else {
-			oldValue = att.getValue();
-		}
-		if (oldValue == null || !oldValue.equals(parentMilestoneId)) {
-			att.setValue(parentMilestoneId);
-		}
-	}
-
-	/**
-	 * Provides access to the parent milestone display id if it exists.
-	 *
-	 * @return The parent milestone display id if it exists or null.
-	 */
-	public String getParentMilestoneDisplayId() {
-		TaskAttribute attribute = getMappedAttribute(PARENT_MILESTONE_DISPLAY_ID);
-		if (attribute != null) {
-			return taskData.getAttributeMapper().getValue(attribute);
-		}
-		return null;
-	}
-
-	/**
-	 * Sets the parent milestone display Id in the relevant task attribute.
-	 *
-	 * @param parentMilestoneDisplayId
-	 *            The parent milestone display Id
-	 */
-	public void setParentMilestoneDisplayId(String parentMilestoneDisplayId) {
-		if (parentMilestoneDisplayId == null) {
-			return;
-		}
-		TaskAttribute att = taskData.getRoot().getMappedAttribute(PARENT_MILESTONE_DISPLAY_ID);
-		String oldValue = null;
-		if (att == null) {
-			att = taskData.getRoot().createMappedAttribute(PARENT_MILESTONE_DISPLAY_ID);
 			att.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
 			att.getMetaData().setType(TaskAttribute.TYPE_SHORT_RICH_TEXT);
 			att.getMetaData().setLabel(TuleapCoreMessages.getString(TuleapCoreKeys.parentMilestoneLabel));
@@ -883,8 +781,8 @@ public class TuleapArtifactMapper extends AbstractTaskMapper {
 		} else {
 			oldValue = att.getValue();
 		}
-		if (oldValue == null || !oldValue.equals(parentMilestoneDisplayId)) {
-			att.setValue(parentMilestoneDisplayId);
+		if (oldValue == null || !oldValue.equals(parentMilestoneId)) {
+			att.setValue(parentMilestoneId);
 		}
 	}
 }

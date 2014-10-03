@@ -67,16 +67,29 @@ public class TuleapTaskIdTests {
 		assertThat(TuleapTaskId.forName("invalidprojectid:17#42").getProjectId(),
 				is(TuleapTaskId.IRRELEVANT_ID));
 		assertThat(TuleapTaskId.forName(":17#42").getProjectId(), is(TuleapTaskId.IRRELEVANT_ID));
-		assertThat(TuleapTaskId.forName("17#42").getProjectId(), is(17));
+		assertThat(TuleapTaskId.forName("17#42").getProjectId(), is(TuleapTaskId.IRRELEVANT_ID));
 		assertThat(TuleapTaskId.forName("N/A:17#42").getProjectId(), is(TuleapTaskId.IRRELEVANT_ID));
 	}
 
 	/**
-	 * Test the retrieval of the configuration id from the task data id.
+	 * Test the retrieval of the artifact id from the task data id.
 	 */
 	@Test
-	public void testGetTrackerIdFromTaskDataId() {
+	public void testStandardTaskDataForName() {
+		assertThat(TuleapTaskId.forName("123:17#42").getArtifactId(), is(42));
 		assertThat(TuleapTaskId.forName("123:17#42").getTrackerId(), is(17));
+		assertThat(TuleapTaskId.forName("123:17#42").getProjectId(), is(123));
+	}
+
+	/**
+	 * Test the retrieval of the artifact id from a String starting by a "#" like "#42". This is useful
+	 * because such strings are detected as hyperlinks in Tuleap task editor.
+	 */
+	@Test
+	public void testTaskDataForNameForStringStartingBySharp() {
+		assertThat(TuleapTaskId.forName("#42").getArtifactId(), is(42));
+		assertThat(TuleapTaskId.forName("#42").getTrackerId(), is(TuleapTaskId.IRRELEVANT_ID));
+		assertThat(TuleapTaskId.forName("#42").getProjectId(), is(TuleapTaskId.IRRELEVANT_ID));
 	}
 
 	/**

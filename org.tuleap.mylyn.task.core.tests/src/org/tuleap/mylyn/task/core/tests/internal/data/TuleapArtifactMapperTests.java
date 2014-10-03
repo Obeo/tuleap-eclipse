@@ -55,6 +55,7 @@ import org.tuleap.mylyn.task.core.internal.model.data.BoundFieldValue;
 import org.tuleap.mylyn.task.core.internal.model.data.LiteralFieldValue;
 import org.tuleap.mylyn.task.core.internal.model.data.OpenListFieldValue;
 import org.tuleap.mylyn.task.core.internal.model.data.TuleapElementComment;
+import org.tuleap.mylyn.task.core.internal.model.data.TuleapReference;
 import org.tuleap.mylyn.task.core.internal.parser.DateIso8601Adapter;
 import org.tuleap.mylyn.task.core.internal.repository.ITuleapRepositoryConnector;
 import org.tuleap.mylyn.task.core.internal.repository.TuleapAttributeMapper;
@@ -214,6 +215,12 @@ public class TuleapArtifactMapperTests {
 				// Nothing to do here
 			}
 
+			@Override
+			public TuleapTracker getTracker(TaskRepository taskRepository, int atrackerId, int aprojectId,
+					boolean forceRefresh, IProgressMonitor monitor) throws CoreException {
+				return tuleapServer.getTracker(atrackerId);
+			}
+
 		};
 
 		this.attributeMapper = new TuleapAttributeMapper(repository, repositoryConnector);
@@ -227,7 +234,7 @@ public class TuleapArtifactMapperTests {
 	 */
 	@Test
 	public void testInitializeEmptyTaskDataWithEmptyTrackerConfiguration() {
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 		TaskAttribute root = taskData.getRoot();
 
 		TaskAttribute att = root.getAttribute(TaskAttribute.TASK_KIND);
@@ -292,7 +299,7 @@ public class TuleapArtifactMapperTests {
 	 */
 	@Test
 	public void testTaskKey() {
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		assertEquals("", mapper.getTaskKey());
 		mapper.setTaskKey("The new task key");
@@ -306,7 +313,7 @@ public class TuleapArtifactMapperTests {
 	 */
 	@Test
 	public void testTaskId() {
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 		assertEquals("987:123#N/A", mapper.getTaskId().toString());
 		assertEquals(987, mapper.getTaskId().getProjectId());
 		assertEquals(123, mapper.getTaskId().getTrackerId());
@@ -318,7 +325,7 @@ public class TuleapArtifactMapperTests {
 	 */
 	@Test
 	public void testTaskUrl() {
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 		assertEquals("", mapper.getTaskUrl());
 		mapper.setTaskUrl("url/url");
 		String value = taskData.getRoot().getAttribute(TaskAttribute.TASK_URL).getValue();
@@ -333,7 +340,7 @@ public class TuleapArtifactMapperTests {
 	 */
 	@Test
 	public void testCreationDate() throws ParseException {
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 		assertNull(mapper.getCreationDate());
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Date date1 = simpleDateFormat.parse("11/03/2014");
@@ -349,7 +356,7 @@ public class TuleapArtifactMapperTests {
 	 */
 	@Test
 	public void testModificationDate() throws ParseException {
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 		assertNull(mapper.getModificationDate());
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Date date1 = simpleDateFormat.parse("11/03/2014");
@@ -365,7 +372,7 @@ public class TuleapArtifactMapperTests {
 	 */
 	@Test
 	public void testAddComment() throws ParseException {
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 		assertNull(mapper.getModificationDate());
 
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -410,7 +417,7 @@ public class TuleapArtifactMapperTests {
 	 */
 	@Test
 	public void testAddAttachment() throws ParseException {
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 		assertNull(mapper.getModificationDate());
 
 		AttachmentValue attachment = new AttachmentValue("id", "name", 17, 123456, "description", "type", "");
@@ -454,7 +461,7 @@ public class TuleapArtifactMapperTests {
 	public void testInitializeEmptyTaskDataWithSemanticTitle() {
 		int id = 401;
 		tuleapTracker.addField(newSemanticTitle(id));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		TaskAttribute att = taskData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY);
 		assertNotNull(att);
@@ -470,7 +477,7 @@ public class TuleapArtifactMapperTests {
 	public void testInitializeEmptyTaskDataWithDate() {
 		int id = 402;
 		tuleapTracker.addField(newTuleapDate(id));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		TaskAttribute att = taskData.getRoot().getMappedAttribute(String.valueOf(id));
 		assertNotNull(att);
@@ -486,7 +493,7 @@ public class TuleapArtifactMapperTests {
 	public void testInitializeEmptyTaskDataWithString() {
 		int id = 403;
 		tuleapTracker.addField(newTuleapString(id));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		TaskAttribute att = taskData.getRoot().getMappedAttribute(String.valueOf(id));
 		assertNotNull(att);
@@ -502,7 +509,7 @@ public class TuleapArtifactMapperTests {
 	public void testInitializeEmptyTaskDataWithText() {
 		int id = 403;
 		tuleapTracker.addField(newTuleapText(id));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		TaskAttribute att = taskData.getRoot().getMappedAttribute(String.valueOf(id));
 		assertNotNull(att);
@@ -518,7 +525,7 @@ public class TuleapArtifactMapperTests {
 	public void testInitializeEmptyTaskDataWithInteger() {
 		int id = 403;
 		tuleapTracker.addField(newTuleapInteger(id));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		TaskAttribute att = taskData.getRoot().getMappedAttribute(String.valueOf(id));
 		assertNotNull(att);
@@ -534,7 +541,7 @@ public class TuleapArtifactMapperTests {
 	public void testInitializeEmptyTaskDataWithFloat() {
 		int id = 403;
 		tuleapTracker.addField(newTuleapFloat(id));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		TaskAttribute att = taskData.getRoot().getMappedAttribute(String.valueOf(id));
 		assertNotNull(att);
@@ -550,7 +557,7 @@ public class TuleapArtifactMapperTests {
 	public void testInitializeEmptyTaskDataWithOpenList() {
 		int id = 403;
 		tuleapTracker.addField(newTuleapOpenList(id));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		TaskAttribute att = taskData.getRoot().getMappedAttribute(String.valueOf(id));
 		assertNotNull(att);
@@ -566,7 +573,7 @@ public class TuleapArtifactMapperTests {
 	public void testInitializeEmptyTaskDataWithArtifactLink() {
 		int id = 403;
 		tuleapTracker.addField(newArtifactLink(id));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		TaskAttribute att = taskData.getRoot().getMappedAttribute(String.valueOf(id));
 		assertNotNull(att);
@@ -582,7 +589,7 @@ public class TuleapArtifactMapperTests {
 	public void testInitializeEmptyTaskDataWithSemanticStatus() {
 		int id = 403;
 		tuleapTracker.addField(newSemanticStatus(id));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		TaskAttribute att = taskData.getRoot().getMappedAttribute(String.valueOf(id));
 		assertNull(att);
@@ -612,7 +619,7 @@ public class TuleapArtifactMapperTests {
 	public void testInitializeEmptyTaskDataWithSemanticStatusWithWorkflow() {
 		int id = 403;
 		tuleapTracker.addField(newSemanticStatusWithWorkflow(id));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		TaskAttribute att = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
 		assertNotNull(att);
@@ -659,7 +666,7 @@ public class TuleapArtifactMapperTests {
 		transition.setTo(1);
 		selectBox.getWorkflow().addTransition(transition);
 		tuleapTracker.addField(selectBox);
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		// No value is assigned to the field
 		// => as if status were equal to 100, only 1 state should be accessible, state 0
@@ -682,7 +689,7 @@ public class TuleapArtifactMapperTests {
 	public void testInitializeEmptyTaskDataWithMultiSelectBox() {
 		int id = 405;
 		tuleapTracker.addField(newTuleapMultiSelectBox(id));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		TaskAttribute att = taskData.getRoot().getMappedAttribute(String.valueOf(id));
 		assertNotNull(att);
@@ -698,7 +705,7 @@ public class TuleapArtifactMapperTests {
 	public void testInitializeEmptyTaskDataWithSemanticContributor() {
 		int id = 408;
 		tuleapTracker.addField(newSemanticContributorSingle(id));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		TaskAttribute att = taskData.getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED);
 		assertNotNull(att);
@@ -716,7 +723,7 @@ public class TuleapArtifactMapperTests {
 	public void testSetStatus() {
 		int statusId = 555;
 		tuleapTracker.addField(newSemanticStatus(statusId));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		assertEquals("", taskData.getRoot().getAttribute(TaskAttribute.STATUS).getValue()); //$NON-NLS-1$
 
@@ -757,7 +764,7 @@ public class TuleapArtifactMapperTests {
 		int statusId = 556;
 		// 100 -> 0 -> 1 <-> 2 -> 3
 		tuleapTracker.addField(newSemanticStatusWithWorkflow(statusId));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		// Check that the default state is the first actually available, that is to say "0"
 		assertEquals("0", taskData.getRoot().getAttribute(TaskAttribute.STATUS).getValue()); //$NON-NLS-1$
@@ -819,7 +826,7 @@ public class TuleapArtifactMapperTests {
 	@Test
 	public void testTaskURLAccessors() {
 		// There is no specific field description in the configuration
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 		assertEquals("", mapper.getTaskUrl()); //$NON-NLS-1$
 		String url = "http://www.tuleap.net/some/url/123"; //$NON-NLS-1$
 		mapper.setTaskUrl(url);
@@ -835,7 +842,7 @@ public class TuleapArtifactMapperTests {
 	public void testSetAssignedToSingle() {
 		int id = 408;
 		tuleapTracker.addField(newSemanticContributorSingle(id));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 		mapper.setAssignedTo(Lists.newArrayList(Integer.valueOf(1)));
 
 		assertEquals("1", taskData.getRoot().getAttribute(TaskAttribute.USER_ASSIGNED).getValue()); //$NON-NLS-1$
@@ -848,7 +855,7 @@ public class TuleapArtifactMapperTests {
 	public void testSetAssignedToMultiple() {
 		int id = 408;
 		tuleapTracker.addField(newSemanticContributorMultiple(id));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 		List<Integer> valueIds = new ArrayList<Integer>();
 		valueIds.add(Integer.valueOf(117));
 		valueIds.add(Integer.valueOf(1023));
@@ -871,7 +878,7 @@ public class TuleapArtifactMapperTests {
 	public void testSetSummary() {
 		int id = 408;
 		tuleapTracker.addField(newSemanticTitle(id));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 		String summary = "Hello World";
 		mapper.setSummary(summary);
 
@@ -884,7 +891,14 @@ public class TuleapArtifactMapperTests {
 	 */
 	@Test
 	public void testSetParentId() {
-		mapper.initializeEmptyTaskData();
+		// In this test we want a tracker with a parent
+		TuleapTracker parentTracker = new TuleapTracker(666, "", "ParentTracker", "parent", "", new Date());
+		tuleapProject.addTracker(parentTracker);
+		tuleapTracker.setParentTracker(new TuleapReference(666, ""));
+
+		mapper.initializeEmptyTaskData(true);
+		assertNotNull(taskData.getRoot().getAttribute(PARENT_ID));
+
 		String parentId = "150";
 		mapper.setParentId(parentId);
 
@@ -897,42 +911,39 @@ public class TuleapArtifactMapperTests {
 	 */
 	@Test
 	public void testGetParentId() {
-		mapper.initializeEmptyTaskData();
+		// In this test we want a tracker with a parent
+		TuleapTracker parentTracker = new TuleapTracker(666, "", "ParentTracker", "parent", "", new Date());
+		tuleapProject.addTracker(parentTracker);
+		tuleapTracker.setParentTracker(new TuleapReference(666, ""));
+
+		mapper.initializeEmptyTaskData(true);
 		String parentId = "150";
 		mapper.setParentId(parentId);
-		String value = mapper.getParentId();
-		assertThat(value, is(parentId));
+
+		assertThat(mapper.getParentId(), is(parentId));
 	}
 
-	/**
-	 * Test the creation of the parent display Id task attribute in the task data.
-	 */
 	@Test
-	public void testSetParentDisplayId() {
-		mapper.initializeEmptyTaskData();
-		String parentDisplayId = "150";
-		mapper.setParentDisplayId(parentDisplayId);
+	public void testSetInvalidParentIdDoesNothing() {
+		// In this test the tracker has no parent
+		mapper.initializeEmptyTaskData(true);
+		String parentId = "150";
+		mapper.setParentId(parentId);
 
-		String value = taskData.getRoot().getAttribute(PARENT_DISPLAY_ID).getValue();
-		assertThat(value, is(parentDisplayId));
+		assertNull(mapper.getParentId());
 	}
 
-	/**
-	 * Test getting the parent display Id task attribute in the task data.
-	 */
 	@Test
-	public void testGetParentDisplayId() {
-		mapper.initializeEmptyTaskData();
-		String parentDisplayId = "150";
-		mapper.setParentDisplayId(parentDisplayId);
-		String value = mapper.getParentDisplayId();
-		assertThat(value, is(parentDisplayId));
+	public void testInitializeEmptyTaskDataWithTrackerNoParent() {
+		// In this test the tracker has no parent
+		mapper.initializeEmptyTaskData(true);
+		assertNull(taskData.getRoot().getAttribute(PARENT_ID));
 	}
 
 	@Test
 	public void testGetSummaryFieldValues() {
 		tuleapTracker.addField(this.newSemanticTitle(0));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		// Populate the task data
 		this.taskData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY).setValue("Title");
@@ -949,7 +960,7 @@ public class TuleapArtifactMapperTests {
 	@Test
 	public void testGetContributorSingleValues() {
 		tuleapTracker.addField(this.newSemanticContributorSingle(1));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		// Populate the task data
 		this.taskData.getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED).setValue("5");
@@ -967,7 +978,7 @@ public class TuleapArtifactMapperTests {
 	@Test
 	public void testGetContributorMultipleValues() {
 		tuleapTracker.addField(this.newSemanticContributorMultiple(1));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		// Populate the task data
 		this.taskData.getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED).setValues(
@@ -986,7 +997,7 @@ public class TuleapArtifactMapperTests {
 	@Test
 	public void testGetStatusValues() {
 		tuleapTracker.addField(this.newSemanticStatus(2));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		// Populate the task data
 		this.taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS).setValue("4");
@@ -1004,7 +1015,7 @@ public class TuleapArtifactMapperTests {
 	@Test
 	public void testGetDateFieldValue() {
 		tuleapTracker.addField(this.newTuleapDate(3));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		long date = 123456789000L;
 		Calendar expected = GregorianCalendar.getInstance();
@@ -1034,7 +1045,7 @@ public class TuleapArtifactMapperTests {
 	@Test
 	public void testGetFloatFieldValue() {
 		tuleapTracker.addField(this.newTuleapFloat(4));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		// Populate the task data
 		this.taskData.getRoot().getMappedAttribute(String.valueOf(4)).setValue("2.5");
@@ -1052,7 +1063,7 @@ public class TuleapArtifactMapperTests {
 	@Test
 	public void testGetIntegerFieldValue() {
 		tuleapTracker.addField(this.newTuleapFloat(5));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		// Populate the task data
 		this.taskData.getRoot().getMappedAttribute(String.valueOf(5)).setValue("256");
@@ -1070,7 +1081,7 @@ public class TuleapArtifactMapperTests {
 	@Test
 	public void testGetOpenListFieldValue() {
 		tuleapTracker.addField(this.newTuleapOpenList(5));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		// Populate the task data
 		this.taskData.getRoot().getMappedAttribute(String.valueOf(5)).setValue("256,123");
@@ -1088,7 +1099,7 @@ public class TuleapArtifactMapperTests {
 	@Test
 	public void testGetStringFieldValue() {
 		tuleapTracker.addField(this.newTuleapString(5));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		// Populate the task data
 		this.taskData.getRoot().getMappedAttribute(String.valueOf(5)).setValue("Some text");
@@ -1106,7 +1117,7 @@ public class TuleapArtifactMapperTests {
 	@Test
 	public void testGetTextFieldValue() {
 		tuleapTracker.addField(this.newTuleapText(5));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		// Populate the task data
 		this.taskData.getRoot().getMappedAttribute(String.valueOf(5)).setValue("Some text");
@@ -1124,7 +1135,7 @@ public class TuleapArtifactMapperTests {
 	@Test
 	public void testGetSelectBoxFieldValue() {
 		tuleapTracker.addField(this.newTuleapSelectBox(5));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		// Populate the task data
 		this.taskData.getRoot().getMappedAttribute(String.valueOf(5)).setValue("123");
@@ -1142,7 +1153,7 @@ public class TuleapArtifactMapperTests {
 	@Test
 	public void testGetMultiSelectBoxFieldValue() {
 		tuleapTracker.addField(this.newTuleapMultiSelectBox(5));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		// Populate the task data
 		this.taskData.getRoot().getMappedAttribute(String.valueOf(5)).setValues(
@@ -1164,7 +1175,7 @@ public class TuleapArtifactMapperTests {
 	@Test
 	public void testGetArtifactLinkFieldValuesOldFashion() {
 		tuleapTracker.addField(this.newArtifactLink(11));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		long date = 123456789000L;
 		Calendar expected = GregorianCalendar.getInstance();
@@ -1195,7 +1206,7 @@ public class TuleapArtifactMapperTests {
 	@Test
 	public void testGetArtifactLinkFieldValuesNewFashion() {
 		tuleapTracker.addField(this.newArtifactLink(11));
-		mapper.initializeEmptyTaskData();
+		mapper.initializeEmptyTaskData(false);
 
 		long date = 123456789000L;
 		Calendar expected = GregorianCalendar.getInstance();

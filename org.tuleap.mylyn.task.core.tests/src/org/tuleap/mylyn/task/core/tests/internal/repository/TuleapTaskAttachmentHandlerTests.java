@@ -227,6 +227,12 @@ public class TuleapTaskAttachmentHandlerTests {
 					IProgressMonitor monitor) throws CoreException {
 				// Nothing to do here
 			}
+
+			@Override
+			public TuleapTracker getTracker(TaskRepository taskRepository, int atrackerId, int aprojectId,
+					boolean forceRefresh, IProgressMonitor monitor) throws CoreException {
+				return tuleapServer.getTracker(atrackerId);
+			}
 		};
 
 		artifactBeforeUpdate = new TuleapArtifact(42, new TuleapReference(101, "/trackers/101"),

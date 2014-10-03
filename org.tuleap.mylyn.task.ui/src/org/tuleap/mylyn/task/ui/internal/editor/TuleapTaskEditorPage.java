@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
@@ -35,7 +35,7 @@ import org.tuleap.mylyn.task.ui.internal.TuleapTasksUIPlugin;
 
 /**
  * The Tuleap task editor page.
- * 
+ *
  * @author <a href="mailto:stephane.begaudeau@obeo.fr">Stephane Begaudeau</a>
  * @since 0.7
  */
@@ -43,7 +43,7 @@ public class TuleapTaskEditorPage extends AbstractTaskEditorPage {
 
 	/**
 	 * The constructor.
-	 * 
+	 *
 	 * @param editor
 	 *            The task editor
 	 */
@@ -53,11 +53,6 @@ public class TuleapTaskEditorPage extends AbstractTaskEditorPage {
 		this.setNeedsSubmitButton(true);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage#createPartDescriptors()
-	 */
 	@Override
 	protected Set<TaskEditorPartDescriptor> createPartDescriptors() {
 		Set<TaskEditorPartDescriptor> descriptors = super.createPartDescriptors();
@@ -88,7 +83,7 @@ public class TuleapTaskEditorPage extends AbstractTaskEditorPage {
 
 	/**
 	 * Removes the parts with an ID matching the given partId from the set of parts.
-	 * 
+	 *
 	 * @param parts
 	 *            The set of parts
 	 * @param partId
@@ -104,11 +99,6 @@ public class TuleapTaskEditorPage extends AbstractTaskEditorPage {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage#createModel(org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput)
-	 */
 	@Override
 	protected TaskDataModel createModel(TaskEditorInput input) throws CoreException {
 		String connectorKind = input.getTaskRepository().getConnectorKind();
@@ -138,11 +128,6 @@ public class TuleapTaskEditorPage extends AbstractTaskEditorPage {
 		return super.createModel(input);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage#dispose()
-	 */
 	@Override
 	public void dispose() {
 		TaskDataModel taskDataModel = getModel();
@@ -163,7 +148,7 @@ public class TuleapTaskEditorPage extends AbstractTaskEditorPage {
 	/**
 	 * Returns the {@link AbstractAgileRepositoryConnectorUI} with the given connector kind or
 	 * <code>null</code> if none can be found.
-	 * 
+	 *
 	 * @param connectorKind
 	 *            The connector kind
 	 * @return The {@link AbstractAgileRepositoryConnectorUI}.
@@ -192,11 +177,6 @@ public class TuleapTaskEditorPage extends AbstractTaskEditorPage {
 		return connector;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage#doSave(org.eclipse.core.runtime.IProgressMonitor)
-	 */
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		AbstractAgileRepositoryConnectorUI connector = this.getAgileRepositoryConnectorUI(getConnectorKind());
