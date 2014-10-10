@@ -528,8 +528,9 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			if (tuleapTaskMapping instanceof TuleapMilestoneMapping) {
 				TuleapMilestoneMapping milestoneMapping = (TuleapMilestoneMapping)tuleapTaskMapping;
 				String parentMilestoneId = milestoneMapping.getParentMilestoneId();
-				if (!TuleapTaskId.forName(parentMilestoneId).isTopPlanning()) {
-					tuleapArtifactMapper.setParentId(parentMilestoneId);
+				TuleapTaskId parentTaskId = TuleapTaskId.forName(parentMilestoneId);
+				if (!parentTaskId.isTopPlanning()) {
+					tuleapArtifactMapper.setParentId(Integer.toString(parentTaskId.getArtifactId()));
 				}
 			}
 			if (tuleapTaskMapping instanceof TuleapBacklogItemMapping) {
