@@ -86,6 +86,6 @@ public class TuleapAttributeMapper extends TaskAttributeMapper {
 				}
 			}
 		}
-		attribute.setValue(Joiner.on(",").join(valuesToSet));
+		attribute.setValue(Joiner.on(",").join(valuesToSet)); //$NON-NLS-1$
 	}
 }
