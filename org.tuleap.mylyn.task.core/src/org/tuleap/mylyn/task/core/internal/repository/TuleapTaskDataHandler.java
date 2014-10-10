@@ -319,7 +319,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 						subMilestoneTaskId);
 				try {
 					tuleapRestClient
-					.updateMilestoneContent(subMilestone.getId().intValue(), content, monitor);
+							.updateMilestoneContent(subMilestone.getId().intValue(), content, monitor);
 				} catch (CoreException e) {
 					exceptions.add(e);
 				}
@@ -390,7 +390,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 				TuleapMilestone milestone = new TuleapMilestone(id, projectRef);
 				subMilestones.add(milestone);
 				tuleapRestClient
-				.updateMilestoneSubmilestones(parentMilestoneSimpleId, subMilestones, monitor);
+						.updateMilestoneSubmilestones(parentMilestoneSimpleId, subMilestones, monitor);
 			}
 		}
 	}
@@ -432,7 +432,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 						subMilestoneTaskId);
 				try {
 					tuleapRestClient
-					.updateMilestoneContent(subMilestone.getId().intValue(), content, monitor);
+							.updateMilestoneContent(subMilestone.getId().intValue(), content, monitor);
 				} catch (CoreException e) {
 					exceptions.add(e);
 				}
@@ -544,7 +544,8 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 			if (tuleapTaskMapping instanceof TuleapCardMapping) {
 				TuleapCardMapping cardMapping = (TuleapCardMapping)tuleapTaskMapping;
 				String parentCardId = cardMapping.getParentCard();
-				tuleapArtifactMapper.setParentId(parentCardId);
+				TuleapTaskId parentTaskId = TuleapTaskId.forName(parentCardId);
+				tuleapArtifactMapper.setParentId(Integer.toString(parentTaskId.getArtifactId()));
 			}
 			return true;
 		}
@@ -569,7 +570,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 					.valueOf(artifactId));
 		}
 		// Degraded behavior without tracker item name
-		return "#" + artifactId; //$NON-NLS-1$
+		return Integer.toString(artifactId);
 	}
 
 	/**
@@ -664,7 +665,7 @@ public class TuleapTaskDataHandler extends AbstractTaskDataHandler {
 	 */
 	private TaskData getArtifactTaskData(TuleapTaskId taskId, TuleapServer server,
 			TaskRepository taskRepository, boolean refreshTracker, IProgressMonitor monitor)
-			throws CoreException {
+					throws CoreException {
 		TuleapRestClient client = this.connector.getClientManager().getRestClient(taskRepository);
 		TuleapArtifact tuleapArtifact = client.getArtifact(taskId.getArtifactId(), server, monitor);
 		TuleapTaskId refreshedTaskId = taskId;
