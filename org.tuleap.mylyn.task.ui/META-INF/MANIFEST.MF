@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.tuleap.mylyn.task.ui;singleton:=true
-Bundle-Version: 2.1.1.qualifier
+Bundle-Version: 2.2.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: %Bundle-Vendor
 Bundle-ActivationPolicy: lazy
@@ -17,9 +17,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.commons.ui,
  org.eclipse.mylyn.tasks.core,
  org.eclipse.mylyn.tasks.ui,
- org.tuleap.mylyn.task.core;bundle-version="2.0.0",
- org.tuleap.mylyn.task.agile.ui;bundle-version="1.0.0",
- org.tuleap.mylyn.task.agile.core;bundle-version="1.0.1",
+ org.tuleap.mylyn.task.core;bundle-version="2.2.0",
+ org.tuleap.mylyn.task.agile.ui;bundle-version="1.1.0",
+ org.tuleap.mylyn.task.agile.core;bundle-version="1.1.0",
  com.google.gson;bundle-version="2.1.0"
 Export-Package: org.tuleap.mylyn.task.ui.internal;version="2.0.0";x-friends:="org.tuleap.mylyn.task.ui.tests",
  org.tuleap.mylyn.task.ui.internal.editor;version="2.0.0";x-friends:="org.tuleap.mylyn.task.ui.tests",

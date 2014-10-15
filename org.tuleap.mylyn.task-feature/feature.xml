@@ -12,7 +12,7 @@
 <feature
       id="org.tuleap.mylyn.task-feature"
       label="%featureName"
-      version="2.1.1.qualifier"
+      version="2.2.0.qualifier"
       provider-name="%providerName"
       plugin="org.tuleap.mylyn.task.ui">
 
@@ -39,11 +39,11 @@
       <import plugin="org.eclipse.mylyn.tasks.ui" version="3.0.0" match="compatible"/>
       <import plugin="org.eclipse.osgi"/>
       <import feature="org.eclipse.mylyn_feature" version="3.3.0.I20091013" match="compatible"/>
-      <import plugin="org.tuleap.mylyn.task.agile.core" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.tuleap.mylyn.task.agile.core" version="1.1.0" match="greaterOrEqual"/>
       <import plugin="com.google.gson" version="2.1.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.mylyn.commons.workbench"/>
-      <import plugin="org.tuleap.mylyn.task.core" version="2.0.0" match="greaterOrEqual"/>
-      <import plugin="org.tuleap.mylyn.task.agile.ui" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.tuleap.mylyn.task.core" version="2.1.0" match="greaterOrEqual"/>
+      <import plugin="org.tuleap.mylyn.task.agile.ui" version="1.1.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
